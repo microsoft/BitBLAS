@@ -479,32 +479,13 @@ def emit_tvm_ir_v2(exprss, input_dict, extra_outputs):
     if k not in extra_outputs:
         output_dict[k] = ast_outputs_dict[k]
 
-    # Registry Global Argument Properties
-    arg_props = {'_in': [], '_out': []}
-    for k in input_dict:
-        prop = copy.deepcopy(input_dict[k])
-        prop['name'] = k
-        arg_props['_in'].append(prop)
-    for k in output_dict:
-        prop = copy.deepcopy(output_dict[k])
-        prop['name'] = k
-        arg_props['_out'].append(prop)
-    arg_props['_in'].sort(key=lambda x: x['name'])
-    arg_props['_out'].sort(key=lambda x: x['name'])
+    def input_key(name):
+        assert name.startswith("input")
+        return int(name[5:])
 
-    # import importlib
-    # passes = os.listdir('lang/pass')
-    # passes.sort()
-    # for pas in passes:
-    #     if pas.endswith('.py'):
-    #         pass_stage = importlib.import_module('lang.pass.%s' % pas[:-3])
-    #         pass_stage.run_pass_v2(ast_seq, input_dict, output_dict)
-
-    # Generate LL_IR body for ast_seq
     def emit_input_body(input_dict):
-        # input_body = '_id = input("_id", [1], dtype="int32")[0]; '
         input_body = str()
-        for key in input_dict:
+        for key in sorted(input_dict.keys(), key=input_key):
             input_info = input_dict[key]
             input_body += '%s = input("%s", %s, dtype="%s"); ' % (
                 key, key, input_info['shape'], input_info['dtype'])
