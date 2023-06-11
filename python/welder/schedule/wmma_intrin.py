@@ -212,6 +212,7 @@ def intrin_wmma_gemm(AL_gemm, WL_gemm, CL_compute, strides_A, strides_W, strides
         else:
             warp_index_B = warp_idnex(BB.elem_offset, wmma_n, wmma_k)
         warp_index_C = warp_idnex(BC.elem_offset, wmma_m, wmma_n)
+        zero = tvm.tir.IntImm("int32", 0).astype(C.dtype)
 
         def init():
             ib = tvm.tir.ir_builder.create()
@@ -224,7 +225,7 @@ def intrin_wmma_gemm(AL_gemm, WL_gemm, CL_compute, strides_A, strides_W, strides
                     wmma_n,
                     wmma_k,
                     warp_index_C,
-                    0.0,
+                    zero
                 )
             )
             return ib.get()
