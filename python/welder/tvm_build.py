@@ -8,7 +8,7 @@ from .schedule.scheduler_base import SchedulerBase
 
 TVM_DEFAULT_NAME = "default_function_kernel0"
 _type_map = {"float32": "float", "float16": "half", "float64": "double", "int64": "int64_t", "int32": "int", "bool": "int8_t", "int8": "int8_t"}
-_type_bytes = {"float": 4, "double": 8, "half": 2, "int": 4, "int64_t": 8, "bool": 1, "int8_t": 1, "signed char": 1}
+_type_bytes = {"float": 4, "double": 8, "half": 2, "int": 4, "int64_t": 8, "bool": 1, "int8_t": 1, "signed char": 1, "uint4": 16}
 
 def get_valid_name(var):
     if var.name.find(".") >= 0:
