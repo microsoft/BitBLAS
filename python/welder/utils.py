@@ -201,7 +201,7 @@ extern "C" float profile({}) {{
         torch.cuda.synchronize(device)
         outputs = []
         for i, arg in enumerate(self.args):
-            if arg.name.startswith("output"):
+            if isinstance(arg.op, tvm.te.ComputeOp):
                 outputs.append(torch_arrs[i].cpu().numpy())
         return outputs
 

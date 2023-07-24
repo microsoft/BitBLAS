@@ -3,9 +3,8 @@ from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
 import tvm
-from tvm import arith, te
+from tvm import te
 
-from .config import Stride
 from .lang import translate_ir_to_tvm
 from .shape_inference import get_analyzer_by_te
 from .te_utils import *
@@ -130,9 +129,9 @@ class IRNode(Node):
     def __init__(self, inputs, compute: Union[str, List[te.Tensor], None], name="Compute") -> None:
         super().__init__(inputs, name)
         if compute is None: return
-        if isinstance(compute, str):
+        elif isinstance(compute, str):
             input_args, output_args = translate_ir_to_tvm(compute)
-        elif isinstance(compute, list):
+        else:
             input_args, output_args = [], []
             for arg in compute:
                 if isinstance(arg.op, te.PlaceholderOp):
@@ -141,16 +140,6 @@ class IRNode(Node):
                     output_args.append(arg)
 
         self.ana = get_analyzer_by_te(input_args + output_args)
-        if len(input_args) < len(self.inputs):
-            # some placeholders are extra info that might not be used in tensor computation
-            new_input_edges = []
-            for idx, arg in enumerate(input_args):
-                name = arg.name
-                assert name.startswith("input")
-                input_edge = self.inputs[int(name[5:])]
-                input_edge.dst_id = idx
-                new_input_edges.append(input_edge)
-            self._in_edges = new_input_edges
         self.args = input_args + output_args
 
         # set input shapes and dtypes

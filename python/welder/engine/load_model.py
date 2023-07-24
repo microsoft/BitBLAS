@@ -2,7 +2,7 @@ import json
 from typing import List
 
 from ..graph import IRNode, Node, OutputNode
-
+from ..lang import translate_ir_to_tvm
 
 # internal name for debug
 def get_node_name(id, op_type):
@@ -41,8 +41,20 @@ def load_model(fname: str) -> List[Node]:
                 else:
                     option_kv[option] = True
             if "skip" in option_kv and option_kv["skip"] == True:
-                ir = None
-            node = IRNode(input_list, ir, get_node_name(node_id, op_type))
+                args = None
+            else:
+                input_args, output_args = translate_ir_to_tvm(ir)
+                args = input_args + output_args
+                input_idx_list = []
+                for arg in input_args:
+                    assert arg.name.startswith("input")
+                    input_idx = int(arg.name[5:])
+                    input_idx_list.append(input_idx)
+                new_input_list = [input_list[i] for i in input_idx_list]
+                if input_list != new_input_list:
+                    option_kv["nnf_input_idx"] = input_idx_list
+                    input_list = new_input_list
+            node = IRNode(input_list, args, get_node_name(node_id, op_type))
             for k, v in option_kv.items(): node.add_tag(k, v)
         node_map[node_id] = node
         ordered_nodes.append(node)

@@ -70,9 +70,9 @@ def _extract_subgraph(nodes, connections=[]):
     for node in ordered_nodes:
         if node.is_placeholder():
             dst_node = node.outputs[0].dst_node
-            x = dst_node.args[node.outputs[0].dst_id].name
-            assert(x.startswith("input"))
-            dst_id = int(x[5:]) # node.outputs[0].dst_id is not the same with dst_id, since some inputs might be unused and removed
+            dst_id = node.outputs[0].dst_id
+            if dst_node.get_tag("nnf_input_idx"):
+                dst_id = dst_node.get_tag("nnf_input_idx")[dst_id]
             input_desc.append([dst_node.name, dst_id])
         elif node.is_output():
             output_desc.append([node.inputs[0].src_node.name, node.inputs[0].src_id])
