@@ -93,3 +93,25 @@ def connect_tensor_graph(a: List[te.Tensor], b: List[te.Tensor], connection):
     pre_order_traverse(b, functor)
 
     return return_args
+
+def normalize_tensor_names(args: List[te.Tensor]):
+    idx = 0
+    tensor_map = {}
+    return_args = []
+    used_names = set()
+    def functor(tensor: te.Tensor):
+        nonlocal idx
+        if tensor.name not in used_names:
+            name = tensor.name
+        else:
+            name = tensor.name + "_" + str(idx)
+        assert name not in used_names
+        used_names.add(name)
+        replaced = tensor_replace_input(tensor, name, tensor_map)
+        idx += 1
+        tensor_map[tensor] = replaced
+        if tensor in args:
+            return_args.append(replaced)
+
+    pre_order_traverse(args, functor)
+    return return_args

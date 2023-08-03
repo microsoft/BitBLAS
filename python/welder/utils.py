@@ -79,6 +79,41 @@ extern "C" float profile({}) {{
         profiling_code = header + self.code + "\n" + host_funcs
         return profiling_code
 
+    def create_code_for_tvm(self, symbol):
+        """ generate something like this:
+
+            extern "C" int symbol(DLTensor* args0, DLTensor* args1) {
+                kernel_<<<grid, block>>>(static_cast<float*>(args0->data), static_cast<float*>(args1->data));
+                return 0;
+            }
+        """
+        num_params = len(self.args)
+        args = ["static_cast<{}*>(args{}->data)".format(_type_map[self.args[i].dtype], i) for i in range(num_params)]
+        call_args = ", ".join(args)
+        args = ["DLTensor* args{}".format(i) for i in range(num_params)]
+        def_args = ", ".join(["DLTensor* args{}".format(i) for i in range(num_params)])
+        block_str = "dim3({}, {}, {})".format(self.block_size[0], self.block_size[1], self.block_size[2])
+        grid_str = "dim3({}, {}, {})".format(self.grid_size[0], self.grid_size[1], self.grid_size[2])
+        call_str = "{}<<<{}, {}>>>({})".format(self.name, grid_str, block_str, call_args)
+        host_funcs = f"""
+extern "C" int {symbol}({def_args}) {{
+    {call_str};
+    return 0;
+}}
+"""
+        header = tvm_rt_header + cuda_default_header + cutlass_header
+        if self.use_fp16:
+            header += cuda_fp16_header
+        return header + self.code + "\n" + host_funcs
+
+    def create_tvm_link_code(self, tvm_symbol, symbol):
+        num_params = len(self.args)
+        def_args = ", ".join([f"DLTensor* args{i}" for i in range(num_params)])
+        return tvm_rt_header + f"""
+extern "C" int {symbol}({def_args});
+TVM_DLL_EXPORT_TYPED_FUNC({tvm_symbol}, {symbol});
+"""
+
     def compile(self, arch, timeout: float=None):
         if arch.platform == "CUDA":
             profiling_code = self._create_code_for_profiling()
@@ -114,7 +149,7 @@ extern "C" float profile({}) {{
 
     def remove_lib(self):
         if self.lib_name:
-            subprocess.run(["rm", self.lib_name], check=True)
+            os.remove(self.lib_name)
         self.lib_name = None
 
     def compile_and_load(self, arch, timeout: float = None) -> ctypes.CDLL:

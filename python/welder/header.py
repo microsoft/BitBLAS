@@ -1,3 +1,8 @@
+tvm_rt_header = """
+#include <tvm/runtime/c_backend_api.h>
+#include <tvm/runtime/packed_func.h>
+"""
+
 cuda_default_header = """
 #include <cuda_runtime.h>
 #include <math.h>

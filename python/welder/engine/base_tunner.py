@@ -130,6 +130,16 @@ class Tunner(object):
     def count_cache(self, sig):
         return sig in self._cache
 
+    def dump_cache(self, fname: str):
+        import pickle
+        with open(fname, "wb") as f:
+            pickle.dump(self._cache, f)
+
+    def load_cache(self, fname: str):
+        import pickle
+        with open(fname, "rb") as f:
+            self._cache = pickle.load(f)
+
     def set_cache(self, sig, value):
         self._cache[sig] = value
 
