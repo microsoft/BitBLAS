@@ -1,12 +1,9 @@
-from typing import List
-
 import numpy as np
 import regex as re
 import tvm
 
 from .schedule.scheduler_base import SchedulerBase
 
-TVM_DEFAULT_NAME = "default_function_kernel0"
 _type_map = {"float32": "float", "float16": "half", "float64": "double", "int64": "int64_t", "int32": "int", "bool": "int8_t", "int8": "int8_t"}
 _type_bytes = {"float": 4, "double": 8, "half": 2, "int": 4, "int64_t": 8, "bool": 1, "int8_t": 1, "signed char": 1, "uint4": 16}
 
@@ -48,7 +45,13 @@ def get_block_reorder_code(block_reoder_expr: tvm.tir.PrimExpr) -> str:
     return "  int __bid = blockIdx.x;\n  const dim3 blockIdx({}, 0, 0);\n"\
         .format(_lower_C_simple(block_reoder_expr))
 
-def tvm_build(sch: SchedulerBase, target: tvm.target.Target, name: str = TVM_DEFAULT_NAME,
+def match_global_kernel(source: str) -> int:
+    pattern = r"__global__\s+void\s+[__launch_bounds__\(\d+\)\s+]\w+"
+    matched = re.findall(pattern, source)
+    assert len(matched) == 1
+    return source.index(matched[0])
+
+def tvm_build(sch: SchedulerBase, target: tvm.target.Target, name: str = "default_kernel",
               global_kernel=True, flatten_block=True, reuse_disabled_inputs=[]) -> str:
     func_args = ", ".join(["{}* __restrict__ {}".format(_type_map[var.dtype], get_valid_name(var)) for var in sch.args])
 
@@ -81,7 +84,7 @@ def tvm_build(sch: SchedulerBase, target: tvm.target.Target, name: str = TVM_DEF
         else:
             exteral_shared_memroy_size[idx] = int(np.prod(tile_shape)) * dtype_bytes
 
-    index = src.rindex(TVM_DEFAULT_NAME)
+    index = match_global_kernel(src)
     index = src.index("{", index)
     if flatten_block:
         flat_block_code = get_block_flatten_code(sch.block_size)
