@@ -51,6 +51,12 @@ def match_global_kernel(source: str) -> int:
     assert len(matched) == 1
     return source.index(matched[0])
 
+def unset_tvm_cuda_compile():
+    tvm.register_func("tvm_callback_cuda_compile", lambda *x:"", override=True)
+
+def reset_tvm_cuda_compile():
+    tvm.register_func("tvm_callback_cuda_compile", tvm.contrib.nvcc.tvm_callback_cuda_compile, override=True)
+
 def tvm_build(sch: SchedulerBase, target: tvm.target.Target, name: str = "default_kernel",
               global_kernel=True, flatten_block=True, reuse_disabled_inputs=[]) -> str:
     func_args = ", ".join(["{}* __restrict__ {}".format(_type_map[var.dtype], get_valid_name(var)) for var in sch.args])
@@ -66,10 +72,9 @@ def tvm_build(sch: SchedulerBase, target: tvm.target.Target, name: str = "defaul
     tvm._ffi.register_func("memopt.is_independent_alloc", is_independent_alloc, override=True)
     tvm._ffi.register_func("memopt.is_reuse_disabled", is_reuse_disabled, override=True)
 
-    old_entry = tvm.get_global_func("tvm_callback_cuda_compile")
-    tvm.register_func("tvm_callback_cuda_compile", override=True)(lambda x:"")
+    unset_tvm_cuda_compile()
     src = sch.build(target)
-    tvm.register_func("tvm_callback_cuda_compile", override=True)(old_entry)
+    reset_tvm_cuda_compile()
     tvm._ffi.register_func("memopt.is_independent_alloc", lambda x:False, override=True)
     tvm._ffi.register_func("memopt.is_reuse_disabled", lambda x:False, override=True)
 

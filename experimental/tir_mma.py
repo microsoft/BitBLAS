@@ -9,7 +9,8 @@ from tvm.tir.tensor_intrin.cuda import (LDMATRIX_16x16_A_INTRIN,
                                         shared_16x16_to_ldmatrix_32x8_layout)
 from welder.utils import CompileResult
 
-tvm.register_func("tvm_callback_cuda_compile", override=True)(lambda x:"")
+from welder.tvm_build import unset_tvm_cuda_compile
+unset_tvm_cuda_compile()
 
 def gemm(n, m, k):
     """TVM expression for vector add"""

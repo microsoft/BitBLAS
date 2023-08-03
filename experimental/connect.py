@@ -7,8 +7,9 @@ from welder.layout import *
 from welder.schedule.cutlass_intrin import *
 from welder.te_utils import *
 from welder.utils import CompileResult
+from welder.tvm_build import unset_tvm_cuda_compile
 
-tvm.register_func("tvm_callback_cuda_compile", override=True)(lambda x:"")
+unset_tvm_cuda_compile()
 
 def gemm(n, m, k):
     """TVM expression for vector add"""

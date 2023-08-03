@@ -1,12 +1,13 @@
+import welder
 import numpy as np
 import tvm
-import welder
 from tvm import te
 from welder.layout import *
 from welder.schedule.cutlass_intrin import *
 from welder.utils import CompileResult
 
-tvm.register_func("tvm_callback_cuda_compile", override=True)(lambda x:"")
+from welder.tvm_build import unset_tvm_cuda_compile
+unset_tvm_cuda_compile()
 
 def gemm(n, m, k):
     """TVM expression for vector add"""
