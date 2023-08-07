@@ -8,4 +8,5 @@ from .remove_condition import RemoveConditionInVectorizePass
 from .welder_expr_rewrite import WelderExprRewrite
 from .welder_fuse_ops import WelderFuseOps
 from .welder_tune_pass import WelderTunePass
+from .welder_dot_splitk import WelderDotSplitK
 from .annotate_tensorcore import AnnotateTensorCore
