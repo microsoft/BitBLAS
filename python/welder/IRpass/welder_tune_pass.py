@@ -45,19 +45,23 @@ class WelderTunePass(relay.ExprMutator):
             params = []
             function_body = []
             ret_type = []
-            idx = 0
-            for node_name, input_idx in group.cpresult.input_desc:
-                shape = group.cpresult.args[idx].shape
-                dtype = group.cpresult.args[idx].dtype
+            for idx, (node_name, input_idx) in enumerate(group.cpresult.input_desc):
+                shape = name_map[node_name].args[input_idx].checked_type.shape
+                dtype = name_map[node_name].args[input_idx].checked_type.dtype
                 params.append(relay.Var(f"p{idx}", relay.TensorType(shape, dtype)))
                 args.append(self.visit(name_map[node_name].args[input_idx]))
-                idx += 1
             for node_name, output_idx in group.cpresult.output_desc:
-                shape = group.cpresult.args[idx].shape
-                dtype = group.cpresult.args[idx].dtype
+                type = name_map[node_name].checked_type
+                if isinstance(type, relay.TensorType):
+                    shape = type.shape
+                    dtype = type.dtype
+                elif isinstance(type, relay.TupleType):
+                    shape = type.fields[output_idx].shape
+                    dtype = type.fields[output_idx].dtype
+                else:
+                    assert(0)
                 function_body.append(relay.zeros(shape, dtype))
                 ret_type.append(relay.TensorType(shape, dtype))
-                idx += 1
             if len(function_body) == 1:
                 function_body = function_body[0]
                 ret_type = ret_type[0]
@@ -133,8 +137,6 @@ class TileGraphExtractor(relay.ExprVisitor):
             self.ordered_nodes.append(node)
             self.node_map[node] = call
         else:
-            from welder.debug import debug
-            debug(locals())
             raise NotImplementedError()
         return node
 
