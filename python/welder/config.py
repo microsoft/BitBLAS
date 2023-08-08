@@ -97,7 +97,7 @@ class Config:
         self.cached_tensors = []
         self.block_order = None
         self.output_strides = {}
-        self.schedule_stage = None
+        self.schedule_stages = None
 
         # Experimental
         self._raxis_order = []

@@ -16,7 +16,12 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
         shared_inputs_strides: Dict[te.Tensor, Stride] = {}, shared_outputs = []):
     ops = get_compute_ops(args)
     reduces_ops, _ = seperate_reduce_ops(ops)
-    schedule_on_inner_stage = config.schedule_stage != args[-1].name
+
+    schedule_on_inner_stage = False
+    for tensor in args:
+        if isinstance(tensor.op, te.ComputeOp) and tensor.name not in config.schedule_stages:
+            schedule_on_inner_stage = True
+
     if len(reduces_ops) == 0:
         assert(not schedule_on_inner_stage)
         template = TEElementWiseScheduler

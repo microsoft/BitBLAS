@@ -162,17 +162,20 @@ class IRNode(Node):
             self.reduce_op = None
             self.raxis = {}
 
-        self.schedule_stage = self.args[-1].op
+        self.schedule_stages = []
+        for tensor in self.args:
+            if isinstance(tensor.op, te.ComputeOp):
+                self.schedule_stages.append(tensor.op)
 
     @functools.lru_cache()
     def get_space_dim(self):
         dim_size = []
-        for axis in self.schedule_stage.axis:
+        for axis in self.schedule_stages[0].axis:
             dim_size.append(int(axis.dom.extent))
         return dim_size
 
     def propogate(self, tile, rstep={}, targets=None):
-        shape = {name: [tvm.arith.ConstIntBound(0, val - 1) for val in tile] for name in [self.schedule_stage.name]}
+        shape = {stage.name: [tvm.arith.ConstIntBound(0, val - 1) for val in tile] for stage in self.schedule_stages}
         return self.ana.infer(shape, rstep, targets)
 
     def propogate_inputs(self, tile, rstep={}) -> List[List[int]]:
@@ -278,7 +281,7 @@ class IRNode(Node):
             num_block = (ax_len + tile_len - 1) // tile_len
             space_expr.append(block_expr % num_block * tile_len)
             block_expr = block_expr // num_block
-        output_exprs = {self.schedule_stage.name : list(reversed(space_expr))}
+        output_exprs = {stage.name : list(reversed(space_expr)) for stage in self.schedule_stages}
         input_exprs = self.ana.get_input_exprs(output_exprs)
         result = []
         for i in range(len(self.inputs)):
@@ -300,7 +303,8 @@ class IRNode(Node):
         return new_node
 
     def get_ir(self) -> str:
-        return "\n".join([str(op) for op in self.compute_ops]) + "\n" + str(self.schedule_stage.name)
+        return "\n".join([str(op) for op in self.compute_ops]) + \
+                "\n" + str([stage.name for stage in self.schedule_stages])
 
 def topo_order(list_of_nodes) -> List[Node]:
     input_ready_count = {node : len(node.inputs) for node in list_of_nodes}

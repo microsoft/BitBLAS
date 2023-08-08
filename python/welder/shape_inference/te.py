@@ -69,7 +69,7 @@ class InputShapeInference():
                 if dep.op.name not in mapping:
                     mapping[dep.op.name] = [output_indices]
                 elif not region_exist_in_list(output_indices, mapping[dep.op.name]):
-                    raise Exception(f"Cannot perform shape inference from {targets}")
+                    mapping[dep.op.name].append(output_indices)
 
         for dep in reversed(self.deps):
             indices_list = mapping[dep.op.name]

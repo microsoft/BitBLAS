@@ -466,7 +466,7 @@ class DefaultPolicy:
         codegen_dict.rstep = [rsteps[ax] for ax in node.raxis]
         codegen_dict.reduce_thread = [reduce_thread[ax] for ax in node.raxis]
         codegen_dict.cached_tensors = td.cached_tensors_map[node]
-        codegen_dict.schedule_stage = node.schedule_stage.name
+        codegen_dict.schedule_stages = [stage.name for stage in node.schedule_stages]
         if node.get_dtype().bits == 16: # set step=2 for fp16 case
             codegen_dict._step = [1 for _ in range(ndim)]
             for i in reversed(range(ndim)):
