@@ -82,7 +82,7 @@ class WelderTunePass(relay.ExprMutator):
             else:
                 for i, (node_name, output_idx) in enumerate(group.cpresult.output_desc):
                     original_call = name_map[node_name]
-                    if isinstance(original_call.body, relay.Tuple):
+                    if isinstance(original_call.op.body, relay.Tuple):
                         self.memo_map[original_call] = call
                         if original_call not in self.tuple_index_redirect:
                             self.tuple_index_redirect[original_call] = {}

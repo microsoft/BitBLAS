@@ -79,19 +79,21 @@ extern "C" float profile({}) {{
         profiling_code = header + self.code + "\n" + host_funcs
         return profiling_code
 
-    def create_code_for_tvm(self, symbol):
+    def create_code_for_tvm(self, symbol, index_map: List[int], num_fparam: int):
         """ generate something like this:
-
             extern "C" int symbol(DLTensor* args0, DLTensor* args1) {
-                kernel_<<<grid, block>>>(static_cast<float*>(args0->data), static_cast<float*>(args1->data));
+                kernel_<<<grid, block>>>(
+                    static_cast<float*>(args[index_map[0]]->data),
+                    static_cast<float*>(args[index_map[1]]->data)
+                );
                 return 0;
             }
         """
-        num_params = len(self.args)
-        args = ["static_cast<{}*>(args{}->data)".format(_type_map[self.args[i].dtype], i) for i in range(num_params)]
+        num_param = len(self.args)
+        args = ["static_cast<{}*>(args{}->data)".format(_type_map[self.args[index_map[i]].dtype], index_map[i]) for i in range(num_param)]
         call_args = ", ".join(args)
-        args = ["DLTensor* args{}".format(i) for i in range(num_params)]
-        def_args = ", ".join(["DLTensor* args{}".format(i) for i in range(num_params)])
+        args = ["DLTensor* args{}".format(i) for i in range(num_fparam)]
+        def_args = ", ".join(args)
         block_str = "dim3({}, {}, {})".format(self.block_size[0], self.block_size[1], self.block_size[2])
         grid_str = "dim3({}, {}, {})".format(self.grid_size[0], self.grid_size[1], self.grid_size[2])
         call_str = "{}<<<{}, {}>>>({})".format(self.name, grid_str, block_str, call_args)
@@ -105,14 +107,6 @@ extern "C" int {symbol}({def_args}) {{
         if self.use_fp16:
             header += cuda_fp16_header
         return header + self.code + "\n" + host_funcs
-
-    def create_tvm_link_code(self, tvm_symbol, symbol):
-        num_params = len(self.args)
-        def_args = ", ".join([f"DLTensor* args{i}" for i in range(num_params)])
-        return tvm_rt_header + f"""
-extern "C" int {symbol}({def_args});
-TVM_DLL_EXPORT_TYPED_FUNC({tvm_symbol}, {symbol});
-"""
 
     def compile(self, arch, timeout: float=None):
         if arch.platform == "CUDA":

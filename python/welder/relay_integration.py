@@ -1,11 +1,13 @@
-import tvm
-from tvm import relay
-from tvm import _ffi
-from .utils import CompileResult
 from typing import Dict
 import tempfile
 import os
 import subprocess
+
+import tvm
+from tvm import _ffi
+
+from .utils import CompileResult
+from .header import tvm_rt_header
 
 _global_dict: Dict[str, CompileResult] = {}
 
@@ -14,23 +16,42 @@ _source_mod_cache = {}
 def add_source(key, cpresult: CompileResult) -> None:
     _global_dict[key] = cpresult
 
+def create_tvm_link_code(tvm_symbol, symbol, num_params):
+    def_args = ", ".join([f"DLTensor* args{i}" for i in range(num_params)])
+    return tvm_rt_header + f"""
+extern "C" int {symbol}({def_args});
+TVM_DLL_EXPORT_TYPED_FUNC({tvm_symbol}, {symbol});
+"""
+
 @tvm._ffi.register_func("relay.ext.welder")
 def _compiler(func):
-    v = _ffi.get_global_func("runtime.CSourceModuleCreate")
-    tvm_symbol = func.attrs["global_symbol"]
-    target = func.body.op.attrs["Composite"]
-    cpresult = _global_dict[target]
+    cpresult = _global_dict[func.body.op.attrs["Composite"]]
     if cpresult.origin is not None:
         cpresult = cpresult.origin
+
     symbol = cpresult.name + "_host"
-    link_code = cpresult.create_tvm_link_code(tvm_symbol, symbol)
-    link_mod = v(link_code, "cc", [tvm_symbol], [])
+    tvm_symbol = func.attrs["global_symbol"]
+
+    fparam = list(func.params)
+    fargs = list(func.body.args)
+    index_map = [fparam.index(arg) for arg in fargs]
+    num_fparam = len(fparam)
+    for _ in cpresult.output_desc:
+        index_map.append(num_fparam)
+        num_fparam += 1
+
+    link_code = create_tvm_link_code(tvm_symbol, symbol, num_fparam)
+    csrc_module_create = _ffi.get_global_func("runtime.CSourceModuleCreate")
+    link_mod = csrc_module_create(link_code, "cc", [tvm_symbol], [])
+
     if cpresult not in _source_mod_cache:
-        source_code = cpresult.create_code_for_tvm(symbol)
-        source_mod = v(source_code, "cu", [symbol], [])
+        source_code = cpresult.create_code_for_tvm(symbol, index_map, num_fparam)
+        source_mod = csrc_module_create(source_code, "cu", [symbol], [])
         _source_mod_cache[cpresult] = source_mod
     source_mod = _source_mod_cache[cpresult]
+
     link_mod.import_module(source_mod)
+
     return link_mod
 
 def call_cuda_compile(output, objects, options=None, cc="nvcc"):
@@ -60,7 +81,7 @@ def call_cuda_compile(output, objects, options=None, cc="nvcc"):
 def update_lib(lib, arch, lib_path):
     compute_version = arch.compute_capability
     cutlass_dir = os.path.expanduser("~/cutlass/include")
-    options = ["-std=c++17",
+    options = ["-std=c++17", "-O3", "--prec-sqrt=false", "--ftz=true", "--prec-div=false", "--fmad=true",
                f"-gencode=arch=compute_{compute_version},code=compute_{compute_version}",
                f"-I{cutlass_dir}"]
     lib.export_library(lib_path, fcompile=call_cuda_compile, options=options)
