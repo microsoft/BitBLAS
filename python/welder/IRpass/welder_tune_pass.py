@@ -29,12 +29,14 @@ class WelderTunePass(relay.ExprMutator):
         ordered_nodes = extractor.ordered_nodes
         node_map = extractor.node_map
         from welder.engine import Engine, MultiProcTunner, Tunner
-        # tune_node(ordered_nodes, "nn_dense_26")
-        tunner = Tunner(arch=self.arch, device="cuda:0", topk=10)
+        # tune_node(ordered_nodes, ["subtract_multiply_21"])
+        tunner = Tunner(arch=self.arch, device="cuda:0", topk=20)
         engine = Engine(tunner)
         # tunner.load_cache("a.pkl")
         fusion_groups = engine.run(ordered_nodes)
         # tunner.dump_cache("a.pkl")
+        # from welder.engine import save_results
+        # save_results(fusion_groups, "temp/small_bert/tuned1.json")
         # apply fusion groups
 
         name_map = {node.name : (node_map[node] if node in node_map else None) for node in ordered_nodes}
@@ -129,7 +131,7 @@ class TileGraphExtractor(relay.ExprVisitor):
                 f.visit(call.op)
                 op_name = "_".join(f.op_names) + "_" + str(len(self.ordered_nodes))
             if call.op.attrs and "tensorCoreConfig" in call.op.attrs:
-                options["tensorCoreConfig"] = call.op.attrs["tensorCoreConfig"]
+                options["tensorCoreConfig"] = [int(x) for x in call.op.attrs["tensorCoreConfig"]]
             node = IRNode(node_inputs, args, op_name)
             if call.op.attrs and "relay.reshape_only" in call.op.attrs and call.op.attrs["relay.reshape_only"]:
                 options["memcpy"] = True

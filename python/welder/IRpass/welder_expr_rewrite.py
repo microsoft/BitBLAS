@@ -1,5 +1,5 @@
 from tvm import relay, ir
-from tvm.relay.dataflow_pattern import DFPatternCallback, wildcard, is_op, is_expr
+from tvm.relay.dataflow_pattern import DFPatternCallback, wildcard, is_op, is_constant
 from typing import List
 
 from tvm.relay.expr import RelayExpr as Expr
@@ -92,11 +92,15 @@ class SoftmaxRewriter(DFPatternCallback):
 class PowerRewriter(DFPatternCallback):
     def __init__(self, require_type=False, rewrite_once=False):
         super().__init__(require_type, rewrite_once)
-        self.pattern = is_op("power")(wildcard(), is_expr(relay.const(2.0)))
+        self.pattern = is_op("power")(wildcard(), is_constant())
 
     def callback(self, pre: relay.Expr, post: relay.Expr, node_map: ir.container.Map) -> relay.Expr:
-        x = post.args[0]
-        return relay.op.multiply(x, x)
+        power = post.args[1]
+        if power.data.asnumpy() == 2:
+            x = post.args[0]
+            return relay.op.multiply(x, x)
+        else:
+            return post
 
 @relay.transform.function_pass(opt_level=0)
 class WelderExprRewrite(relay.ExprMutator):

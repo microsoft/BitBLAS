@@ -11,11 +11,15 @@ cuda_default_header = """
 
 cuda_fp16_header = """
 #include <cuda_fp16.h>
-__device__ half max(half a, half b)
+
+#pragma push
+#pragma diag_suppress 177 // suppress "function was declared but never referenced warning"
+
+__device__ half static max(half a, half b)
 {
   return __hgt(__half(a), __half(b)) ? a : b;
 }
-__device__ half min(half a, half b)
+__device__ half static min(half a, half b)
 {
   return __hlt(__half(a), __half(b)) ? a : b;
 }
@@ -23,7 +27,7 @@ __device__ half min(half a, half b)
 #define __int8_t_defined
 
 #define CUDA_UNSUPPORTED_HALF_MATH_BINARY(HALF_MATH_NAME, FP32_MATH_NAME) \
-inline __device__ half HALF_MATH_NAME(half x, half y) {   \
+inline __device__ static half HALF_MATH_NAME(half x, half y) {            \
   float tmp_x = __half2float(x);                                          \
   float tmp_y = __half2float(y);                                          \
   float result = FP32_MATH_NAME(tmp_x, tmp_y);                            \
@@ -31,7 +35,7 @@ inline __device__ half HALF_MATH_NAME(half x, half y) {   \
 }
 
 #define CUDA_UNSUPPORTED_HALF_MATH_UNARY(HALF_MATH_NAME, FP32_MATH_NAME) \
-inline __device__ half HALF_MATH_NAME(half x) {          \
+inline __device__ static half HALF_MATH_NAME(half x) {                   \
   float tmp_x = __half2float(x);                                         \
   float result = FP32_MATH_NAME(tmp_x);                                  \
   return __float2half(result);                                           \
@@ -47,7 +51,7 @@ CUDA_UNSUPPORTED_HALF_MATH_UNARY(herf, erf)
 #undef CUDA_UNSUPPORTED_HALF_MATH_UNARY
 
 // Pack two half values.
-inline __device__ __host__ unsigned
+inline __device__ __host__ static unsigned
 __pack_half2(const half x, const half y) {
   unsigned v0 = *((unsigned short *)&x);
   unsigned v1 = *((unsigned short *)&y);
@@ -55,7 +59,7 @@ __pack_half2(const half x, const half y) {
 }
 
 // There is no make_int8 in cuda, but TVM codegen seem to use it
-inline __device__ longlong4 make_int8(int x0, int x1, int x2, int x3, int x4, int x5, int x6, int x7) {
+inline __device__ static longlong4 make_int8(int x0, int x1, int x2, int x3, int x4, int x5, int x6, int x7) {
   int2 i0 = make_int2(x0, x1);
   int2 i1 = make_int2(x2, x3);
   int2 i2 = make_int2(x4, x5);
@@ -66,6 +70,8 @@ inline __device__ longlong4 make_int8(int x0, int x1, int x2, int x3, int x4, in
   long long l3 = *(long long*)&i3;
   return make_longlong4(l0, l1, l2, l3);
 }
+
+#pragma pop
 
 """
 
