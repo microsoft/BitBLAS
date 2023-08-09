@@ -124,7 +124,7 @@ class TileGraphExtractor(relay.ExprVisitor):
                 op_name = "Opaque" + "_" + str(len(self.ordered_nodes))
                 options["skip"] = True
             else:
-                out = te_compiler.get().lower(call.op, self.target)
+                out = tvm._ffi.get_global_func("relay.backend.LowerToTE")(call.op)
                 args = list(out.inputs) + list(out.outputs)
                 args = normalize_tensor_names(args)
                 f = self.NameExtractor()

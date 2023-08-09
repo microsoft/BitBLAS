@@ -33,9 +33,6 @@ def compute_dotsplitk(attrs, inputs, output_type):
     C = te.compute(out_shape, fcompute=fcompute, name="T_dotsplitk")
     return [C]
 
-def schedule_dotsplitk(*args):
-    raise NotImplementedError()
-
 @target.override_native_generic_func("strategy_dotsplitk")
 def strategy_dotsplitk(attrs, inputs, out_type, target):
     strategy = relay.op.OpStrategy()
@@ -72,10 +69,10 @@ class WelderDotSplitK(relay.ExprMutator):
         return self.visit(func)
 
     def visit_call(self, call):
-        if call.op.name == "nn.matmul" or call.op.name == "nn.dense":
+        if call.op.name in ["welder.matmul", "nn.matmul", "nn.dense"]:
             shape = call.checked_type.shape
             dtype = call.checked_type.dtype
-            if call.op.name == "nn.matmul":
+            if call.op.name in ["welder.matmul", "nn.matmul"]:
                 trans_a, trans_b = call.attrs.transpose_a, call.attrs.transpose_b
             else:
                 trans_a, trans_b = False, True
