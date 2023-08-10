@@ -73,9 +73,13 @@ class WelderTunePass(relay.ExprMutator):
             else:
                 assert(0)
             function = relay.Function(params, function_body, ret_type)
-            composite_name = "welder." + str(group.group_id)
-            add_source(composite_name, group.cpresult)
-            function = function.with_attr("Composite", composite_name)
+            is_reshape_only = all([node.get_tag("memcpy") for node in group.nodes])
+            if is_reshape_only:
+                function = function.with_attr({"relay.reshape_only": 1, "Primitive": 1})
+            else:
+                composite_name = "welder." + str(group.group_id)
+                function = function.with_attr("Composite", composite_name)
+                add_source(composite_name, group.cpresult)
             call = relay.Call(function, args)
             if len(group.cpresult.output_desc) == 1:
                 node_name, output_idx = group.cpresult.output_desc[0]
