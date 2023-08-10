@@ -1,5 +1,5 @@
 import tvm
-from tvm import relay
+from tvm import relay, ir
 from tvm.relay.backend import te_compiler
 from ..graph import IRNode, OutputNode, Node
 from ..te_utils import normalize_tensor_names
@@ -136,6 +136,13 @@ class TileGraphExtractor(relay.ExprVisitor):
             if call.op.attrs and "relay.reshape_only" in call.op.attrs and call.op.attrs["relay.reshape_only"]:
                 options["memcpy"] = True
             for k, v in options.items(): node.add_tag(k, v)
+            self.ordered_nodes.append(node)
+            self.node_map[node] = call
+        elif isinstance(call.op, ir.expr.GlobalVar):
+            args = None
+            op_name = "Opaque" + "_" + str(len(self.ordered_nodes))
+            node = IRNode(node_inputs, args, op_name)
+            node.add_tag("skip", True)
             self.ordered_nodes.append(node)
             self.node_map[node] = call
         else:

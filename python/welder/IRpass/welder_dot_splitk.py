@@ -69,7 +69,7 @@ class WelderDotSplitK(relay.ExprMutator):
         return self.visit(func)
 
     def visit_call(self, call):
-        if call.op.name in ["welder.matmul", "nn.matmul", "nn.dense"]:
+        if isinstance(call.op, ir.Op) and call.op.name in ["welder.matmul", "nn.matmul", "nn.dense"]:
             shape = call.checked_type.shape
             dtype = call.checked_type.dtype
             if call.op.name in ["welder.matmul", "nn.matmul"]:
