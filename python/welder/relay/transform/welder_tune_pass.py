@@ -1,9 +1,8 @@
 import tvm
 from tvm import relay, ir
-from tvm.relay.backend import te_compiler
-from ..graph import IRNode, OutputNode, Node
-from ..te_utils import normalize_tensor_names
-from ..relay_integration import add_source
+from welder.graph import IRNode, OutputNode, Node
+from welder.te_utils import normalize_tensor_names
+from ..integration import add_source
 
 def tune_node(ordered_nodes, names):
     nodes = []
@@ -32,7 +31,7 @@ class WelderTunePass(relay.ExprMutator):
         # tune_node(ordered_nodes, ["subtract_multiply_21"])
         tunner = Tunner(arch=self.arch, device="cuda:0", topk=20)
         engine = Engine(tunner)
-        # tunner.load_cache("a.pkl")
+        #tunner.load_cache("a.pkl")
         fusion_groups = engine.run(ordered_nodes)
         # tunner.dump_cache("a.pkl")
         # from welder.engine import save_results

@@ -30,9 +30,9 @@ def compute_welder_matmul(attrs, inputs, output_type):
     assert len(inputs) == 2, "input arg number mismatch!"
     transpose_a = attrs["transpose_a"]
     transpose_b = attrs["transpose_b"]
+    out_shape = output_type.shape
     out_dtype = output_type.dtype
     A, B = inputs
-    out_shape = compute_matmul_shape(A.shape, B.shape, transpose_a, transpose_b)
     K_size = A.shape[-2] if transpose_a else A.shape[-1]
     k = te.reduce_axis((0, K_size), name="k")
     def fcompute(*args):
@@ -81,3 +81,5 @@ def register_welder_matmul():
     reg.register_strategy(op_name, strategy_welder_matmul)
 
 register_welder_matmul()
+
+__all__ = []

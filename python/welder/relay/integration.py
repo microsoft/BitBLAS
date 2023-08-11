@@ -6,8 +6,8 @@ import subprocess
 import tvm
 from tvm import _ffi
 
-from .utils import CompileResult
-from .header import tvm_rt_header
+from ..utils import CompileResult
+from ..header import tvm_rt_header
 
 _global_dict: Dict[str, CompileResult] = {}
 

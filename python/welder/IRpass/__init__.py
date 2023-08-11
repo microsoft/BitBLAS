@@ -5,8 +5,3 @@ from .rewrite_input_pass import RewriteInputPass
 from .rewrite_output_pass import RewriteOutputPass
 from .check_vector_load_pass import CheckVectorLoadPass
 from .remove_condition import RemoveConditionInVectorizePass
-from .welder_expr_rewrite import WelderExprRewrite
-from .welder_fuse_ops import WelderFuseOps
-from .welder_tune_pass import WelderTunePass
-from .welder_dot_splitk import WelderDotSplitK
-from .annotate_tensorcore import AnnotateTensorCore
