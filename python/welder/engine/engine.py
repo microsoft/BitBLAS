@@ -1,11 +1,10 @@
 from typing import List
+import logging
 
 from ..graph import Node, find_topo_sort_priority
-from ..logging import get_log_level
 from ..utils import CompileResult
 from .base_tunner import Tunner
 from .common import FusionGroup
-
 
 def _get_nodes_dependency(nodes: List[Node], processed: List[Node]) -> List[Node]:
     """
@@ -44,8 +43,8 @@ class Engine:
                 continue
             fg = self._build_fusion_group(node)
             fusion_groups.append(fg)
-            if get_log_level() >= 1:
-                print("Fusion group created: ", fg.group_id , [node.name for node in fg.nodes])
+            logger = logging.getLogger(__name__)
+            logger.info(f"Fusion group created: {fg.group_id} {[node.name for node in fg.nodes]}")
         return fusion_groups
 
     def run_no_fusion(self, ordered_nodes: List[Node]) -> List[FusionGroup]:

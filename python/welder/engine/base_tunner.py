@@ -1,12 +1,11 @@
 import hashlib
 import sys
 import traceback
-
+import logging
 import numpy as np
 
 from ..code_generator import CodeGenerator
 from ..graph import Edge, OutputNode, find_topo_sort
-from ..logging import get_log_level
 from ..policy import DefaultPolicy, TCPolicy
 from ..reference import get_subgraph_reference_outputs
 from ..utils import CompileResult, compile_parallel
@@ -14,6 +13,7 @@ from .utils import insert_local_connections
 from . import profiler
 from tvm.contrib.popen_pool import PopenPoolExecutor
 
+logger = logging.getLogger(__name__)
 
 def get_max_diff(tensor_list_a, tensor_list_b):
     assert len(tensor_list_a) > 0
@@ -174,7 +174,7 @@ class Tunner(object):
 
     def select_best(self, output_nodes, compile_results):
         for cpresult in compile_results:
-            if get_log_level() >= 2: print(cpresult.config)
+            logger.debug(cpresult.config)
             if cpresult.lib_name is None:
                 cpresult.latency = 1e8
             else:
@@ -185,16 +185,14 @@ class Tunner(object):
                     cpresult.latency = 1e8
                 finally:
                     cpresult.remove_lib()
-            if get_log_level() >= 2: print(cpresult.latency)
+            logger.debug(cpresult.latency)
         compile_results = list(filter(lambda x:x.latency<1e8, compile_results))
         compile_results = sorted(compile_results, key=lambda x:x.latency)
         if len(compile_results) == 0:
             return None
 
-        if get_log_level() >= 2:
-            print("Best Config:", compile_results[0].config)
-        if get_log_level() >= 1:
-            print("result: {}".format(compile_results[0].latency), flush=True)
+        logger.debug(f"Best Config: {compile_results[0].config}")
+        logger.info(f"result: {compile_results[0].latency}")
         if not self.check:
             return compile_results[0]
 
@@ -202,7 +200,7 @@ class Tunner(object):
         for best in compile_results:
             out = best.get_example_outputs(self.device)
             total_diff = get_max_diff(out, ref_out)
-            if get_log_level() >= 1: print("Diff:", total_diff)
+            logger.info(f"Diff: {total_diff}")
             if total_diff > 1e-3:
                 continue
             return best
@@ -213,13 +211,12 @@ class Tunner(object):
             return None
         self.current_nodes = nodes
         self.local_connections = local_connections
-        if get_log_level() >= 1:
-            print("Tuning", [node.name for node in self.current_nodes])
+        logger.info(f"Tuning {[node.name for node in self.current_nodes]}")
         output_nodes, input_desc, output_desc = _extract_subgraph(self.current_nodes, self.local_connections)
         eliminate_memcpy(output_nodes)
         signature = subgraph_hash(output_nodes)
         if self.count_cache(signature):
-            print("Found in cache")
+            logger.info("Found in cache")
             cached = self.get_cache(signature)
             if cached is None:
                 return None
