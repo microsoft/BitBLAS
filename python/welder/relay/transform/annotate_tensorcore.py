@@ -21,10 +21,13 @@ class OpVisitor(relay.ExprVisitor):
         self.axis = None
 
     def visit_call(self, call):
-        if call.op.name in ["nn.dense", "nn.batch_matmul", "nn.matmul", "dotsplitk", "welder.matmul"]:
+        if call.op.name in ["nn.dense", "nn.batch_matmul", "nn.matmul", "dotsplitk", "welder.matmul", "welder.C2DImplicitGemm"]:
             M, N = call.checked_type.shape[-2], call.checked_type.shape[-1]
             A_shape = call.args[0].checked_type.shape
-            if call.op.name in ["nn.batch_matmul", "nn.matmul"] and call.attrs.transpose_a:
+            B_shape = call.args[1].checked_type.shape
+            if call.op.name == "welder.C2DImplicitGemm":
+                K = B_shape[1] if call.attrs.kernel_layout == "OIHW" else B_shape[0]
+            elif call.op.name in ["nn.batch_matmul", "nn.matmul"] and call.attrs.transpose_a:
                 K = A_shape[-2]
             elif call.op.name == "dotsplitk" and call.attrs["transpose_a"]:
                 K = A_shape[-2]
