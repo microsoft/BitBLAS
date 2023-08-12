@@ -1,20 +1,25 @@
 from tvm import relay, target, te, topi
 from tvm.relay.op.strategy import wrap_topi_schedule
 from tvm.relay import reg
+from .utils import compute_matmul_shape
 
 def rel_dotsplitk(arg_types, attrs):
     assert len(arg_types) == 2, "type relation arg number mismatch!"
-    return attrs["ret_type"]
+    a_shape = arg_types[0].shape
+    b_shape = arg_types[1].shape
+    out_shape = compute_matmul_shape(a_shape, b_shape, attrs["transpose_a"], attrs["transpose_b"])
+    out_shape = [attrs["splitk_factor"]] + out_shape
+    return relay.TensorType(out_shape, attrs["out_dtype"])
 
 def compute_dotsplitk(attrs, inputs, output_type):
     assert len(inputs) == 2, "input arg number mismatch!"
     out_shape = output_type.shape
     out_dtype = output_type.dtype
-    transpose_A = attrs["transpose_A"]
-    transpose_B = attrs["transpose_B"]
+    transpose_a = attrs["transpose_a"]
+    transpose_b = attrs["transpose_b"]
     splitk_factor = attrs["splitk_factor"]
     A, B = inputs
-    k1_size = (A.shape[-2] if transpose_A else A.shape[-1]) // splitk_factor
+    k1_size = (A.shape[-2] if transpose_a else A.shape[-1]) // splitk_factor
     k1 = te.reduce_axis((0, k1_size), name="k")
     def fcompute(*args):
         k0 = args[0]
@@ -27,8 +32,8 @@ def compute_dotsplitk(attrs, inputs, output_type):
                 A_args.append(arg)
             if len(B.shape) >= 2 + len(BS) - i:
                 B_args.append(arg)
-        A_args += [k, m] if transpose_A else [m, k]
-        B_args += [n, k] if transpose_B else [k, n]
+        A_args += [k, m] if transpose_a else [m, k]
+        B_args += [n, k] if transpose_b else [k, n]
         return te.sum(
             A.__getitem__(tuple(A_args)).astype(out_dtype) * B.__getitem__(tuple(B_args)).astype(out_dtype),
             axis=k1

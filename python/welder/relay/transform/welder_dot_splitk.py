@@ -24,12 +24,11 @@ class WelderDotSplitK(relay.ExprMutator):
             if np.prod(shape) <= self.size_limit \
                 and k_size % self.split_factor == 0 and k_size // self.split_factor >= 32:
 
-                ret_type = relay.TensorType([self.split_factor] + list(shape), dtype)
                 args = [self.visit(arg) for arg in call.args]
                 attrs = ir.make_node("DictAttrs",
-                                    ret_type=ret_type,
-                                    transpose_A=trans_a,
-                                    transpose_B=trans_b,
+                                    out_dtype=dtype,
+                                    transpose_a=trans_a,
+                                    transpose_b=trans_b,
                                     splitk_factor=self.split_factor
                 )
                 dotsplitk = relay.Call(relay.op.get("dotsplitk"), args, attrs)

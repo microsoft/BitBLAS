@@ -26,7 +26,7 @@ class OpVisitor(relay.ExprVisitor):
             A_shape = call.args[0].checked_type.shape
             if call.op.name in ["nn.batch_matmul", "nn.matmul"] and call.attrs.transpose_a:
                 K = A_shape[-2]
-            elif call.op.name == "dotsplitk" and call.attrs["transpose_A"]:
+            elif call.op.name == "dotsplitk" and call.attrs["transpose_a"]:
                 K = A_shape[-2]
             else:
                 K = A_shape[-1]

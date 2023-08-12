@@ -1,23 +1,7 @@
 from tvm import relay, ir, target, te, topi
 from tvm.relay.op.strategy import wrap_topi_schedule
 from tvm.relay import reg
-
-def compute_matmul_shape(a_shape, b_shape, transpose_a, transpose_b):
-    a_shape = [int(x) for x in a_shape]
-    b_shape = [int(x) for x in b_shape]
-    rankdiff = len(a_shape) - len(b_shape)
-    if rankdiff > 0:
-        b_shape = [1] * rankdiff + b_shape
-    elif rankdiff < 0:
-        a_shape = [1] * -rankdiff + a_shape
-    out_shape = []
-    for ax, bx in zip(a_shape[:-2], b_shape[:-2]):
-        assert ax == bx or ax == 1 or bx == 1
-        out_shape.append(max(ax, bx))
-    m_value = a_shape[-1] if transpose_a else a_shape[-2]
-    n_value = b_shape[-2] if transpose_b else b_shape[-1]
-    out_shape += [m_value, n_value]
-    return out_shape
+from .utils import compute_matmul_shape
 
 def rel_welder_matmul(arg_types, attrs):
     assert len(arg_types) == 2, "type relation arg number mismatch!"
