@@ -66,6 +66,7 @@ class InputShapeInference():
                 if name not in mapping: continue
                 indices = mapping[name][0]
                 output_indices = dep.make_reverse(name, indices)
+                if dep.op.name in targets: continue
                 if dep.op.name not in mapping:
                     mapping[dep.op.name] = [output_indices]
                 elif not region_exist_in_list(output_indices, mapping[dep.op.name]):
@@ -75,6 +76,7 @@ class InputShapeInference():
             indices_list = mapping[dep.op.name]
             ax_vars = [ax.var for ax in dep.op.axis]
             for input_name, regions in dep.dependent_region.items():
+                if input_name in targets: continue
                 if input_name not in mapping:
                     mapping[input_name] = []
                 for indices in indices_list:

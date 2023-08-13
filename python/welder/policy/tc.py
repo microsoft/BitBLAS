@@ -78,6 +78,9 @@ class TCPolicy(DefaultPolicy):
                 return super()._assign_reduce_step(node)
         return result
 
+    def _expand_reduce_axis(self, td):
+        return
+
     def get_node_reduce_step_candidates(self, node):
         if not node.get_tag("tensorCoreConfig"):
             return super().get_node_reduce_step_candidates(node)

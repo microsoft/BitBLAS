@@ -2,6 +2,7 @@ import tvm
 from tvm import relay, ir
 from welder.graph import IRNode, OutputNode, Node
 from welder.te_utils import normalize_tensor_names
+from welder.engine import Engine, MultiProcTunner
 from ..integration import add_source
 
 def tune_node(ordered_nodes, names):
@@ -9,9 +10,8 @@ def tune_node(ordered_nodes, names):
     for node in ordered_nodes:
         if node.name in names:
             nodes.append(node)
-    from welder.engine import Tunner
     from welder.arch import V100
-    tunner = Tunner(V100(), device=0, topk=20)
+    tunner = MultiProcTunner(ordered_nodes, V100(), device=0, topk=20)
     best = tunner.tune(nodes)
 
 @relay.transform.function_pass(opt_level=0)
@@ -27,17 +27,13 @@ class WelderTunePass(relay.ExprMutator):
 
         ordered_nodes = extractor.ordered_nodes
         node_map = extractor.node_map
-        from welder.engine import Engine, MultiProcTunner, Tunner
-        # tune_node(ordered_nodes, ["subtract_multiply_21"])
-        tunner = Tunner(arch=self.arch, device="cuda:0", topk=20)
+        tunner = MultiProcTunner(ordered_nodes, arch=self.arch, device="cuda:0", topk=20)
         engine = Engine(tunner)
-        #tunner.load_cache("a.pkl")
+        # tunner.load_cache("a.pkl")
         fusion_groups = engine.run(ordered_nodes)
         # tunner.dump_cache("a.pkl")
-        # from welder.engine import save_results
-        # save_results(fusion_groups, "temp/small_bert/tuned1.json")
-        # apply fusion groups
 
+        # apply fusion groups
         name_map = {node.name : (node_map[node] if node in node_map else None) for node in ordered_nodes}
         for group in fusion_groups:
             if group.cpresult is None:

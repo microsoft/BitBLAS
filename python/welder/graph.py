@@ -111,7 +111,7 @@ class PlaceHolderNode(Node):
         return True
 
     def get_ir(self) -> str:
-        return f"placeholder({self.get_shape()}, {self.get_dtype()})"
+        return "placeholder"
 
 class OutputNode(Node):
     def __init__(self, node, id=0):
@@ -128,7 +128,9 @@ class OutputNode(Node):
 class IRNode(Node):
     def __init__(self, inputs, compute: Union[str, List[te.Tensor], None], name="Compute") -> None:
         super().__init__(inputs, name)
-        if compute is None: return
+        if compute is None:
+            self.args = None
+            return
         elif isinstance(compute, str):
             input_args, output_args = translate_ir_to_tvm(compute)
         else:
@@ -303,8 +305,7 @@ class IRNode(Node):
         return new_node
 
     def get_ir(self) -> str:
-        return "\n".join([str(op) for op in self.compute_ops]) + \
-                "\n" + str([stage.name for stage in self.schedule_stages])
+        return tvm.ir.save_json(self.args)
 
 def topo_order(list_of_nodes) -> List[Node]:
     input_ready_count = {node : len(node.inputs) for node in list_of_nodes}

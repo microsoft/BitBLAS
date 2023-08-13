@@ -23,7 +23,7 @@ if __name__ == "__main__":
     start_time = time.time()
     ordered_nodes = load_model(args.input_file)
     # tunner = Tunner(arch=arch.__getattribute__(args.arch)(), device="cuda:{}".format(args.device), topk=args.topk, check=args.check)
-    tunner = MultiProcTunner(input_file_path=args.input_file,
+    tunner = MultiProcTunner(ordered_nodes,
         arch=arch.__getattribute__(args.arch)(), device="cuda:{}".format(args.device), topk=args.topk, check=args.check)
     engine = Engine(tunner)
     if args.nofusion:
