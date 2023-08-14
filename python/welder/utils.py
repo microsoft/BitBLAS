@@ -115,7 +115,7 @@ extern "C" int {symbol}({def_args}) {{
             lib_name = src.name.replace(".cu", ".so")
             compute_version = arch.compute_capability
             cutlass_dir = os.path.expanduser("~/cutlass/include")
-            command = ["nvcc", "--compiler-options", "'-fPIC'", "--shared", src.name, "-lcuda",
+            command = ["nvcc", "-Xcudafe", "--diag_suppress=177", "--compiler-options", "'-fPIC'", "--shared", src.name, "-lcuda",
                 f"-gencode=arch=compute_{compute_version},code=compute_{compute_version}",
                 f"-I{cutlass_dir}", "-o", lib_name]
         elif arch.platform == "ROCm":
