@@ -74,24 +74,24 @@ class RewriteOutputPass(PassBase):
     def run_flattened(self, f: tir.PrimFunc, mod: tvm.IRModule, ctx: tvm.transform.PassContext) -> tvm.tir.PrimFunc:
         target_buffer = {}
         for idx in self.shared_output:
-            target_buffer[f.buffer_map[f.params[idx]]] = idx
+            target_buffer[f.buffer_map[f.params[idx]].data] = idx
         tile_shape, full_shape = self.tile_shape
 
         def process(op):
             nonlocal buffer_map
             indices = op.indices
-            if op.buffer in target_buffer:
+            if op.buffer.data in target_buffer:
                 assert len(op.indices) == 1
                 assert op.buffer not in buffer_map
-                if target_buffer[op.buffer] in self.strides:
-                    strides = self.strides[target_buffer[op.buffer]].compute_strides_from_shape(tile_shape)
+                if target_buffer[op.buffer.data] in self.strides:
+                    strides = self.strides[target_buffer[op.buffer.data]].compute_strides_from_shape(tile_shape)
                 else:
                     strides = Stride().compute_elements_from_shape(tile_shape)
                 new_indices = [self.remap_ndim(self.remove_blockIdx(indices[0]), full_shape, strides)]
-                
+
                 buffer = tvm.tir.decl_buffer([strides[0] * tile_shape[0]], op.buffer.dtype, op.buffer.name, op.buffer.data, op.buffer.strides,
                     op.buffer.elem_offset, op.buffer.scope, op.buffer.data_alignment, op.buffer.offset_factor)
-                buffer_map[op.buffer] = buffer
+                buffer_map[op.buffer.data] = buffer
                 op = tvm.tir.BufferStore(buffer, op.value, new_indices, op.span)
                 return op
             return op
@@ -99,12 +99,12 @@ class RewriteOutputPass(PassBase):
         buffer_map = {}
         body = tvm.tir.stmt_functor.ir_transform(f.body, None, process, ["tir.BufferStore"])
         body = self.add_memory_barrier(body, buffer_map)
-        
+
         # ------------------- reshape outputs if use shared_memory ------------------------
         new_buffer_map = {}
         for k, v in f.buffer_map.items():
-            if v in buffer_map:
-                v = buffer_map[v]
+            if v.data in buffer_map:
+                v = buffer_map[v.data]
             new_buffer_map[k] = v
 
         return tvm.tir.function.PrimFunc(params=f.params, body=body,
