@@ -10,8 +10,8 @@ def tune_node(ordered_nodes, names):
     for node in ordered_nodes:
         if node.name in names:
             nodes.append(node)
-    from welder.arch import V100
-    tunner = MultiProcTunner(ordered_nodes, V100(), device=0, topk=20)
+    from welder.arch import cuda
+    tunner = MultiProcTunner(ordered_nodes, cuda(), device=0, topk=20)
     best = tunner.tune(nodes)
 
 @relay.transform.function_pass(opt_level=0)

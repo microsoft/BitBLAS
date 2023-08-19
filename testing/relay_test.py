@@ -41,7 +41,7 @@ def run(prefix, arch):
     if args.nhwc:
         # must convert bias_add -> broadcast_add to propogate the layout
         mod = relay.transform.CanonicalizeOps()(mod)
-        mod = relay.transform.ConvertLayout({"nn.conv2d": ["NHWC", "HWIO"]})(mod)
+        mod = relay.transform.ConvertLayout({"nn.conv2d": ["NHWC", "default"]})(mod)
         mod = relay.transform.FoldConstant()(mod)
 
     mod = welder.relay.transform.WelderExprRewrite()(mod)
@@ -66,7 +66,7 @@ def run(prefix, arch):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--prefix', type=str, default="temp")
-    parser.add_argument('--arch', type=str, default="V100")
+    parser.add_argument('--arch', type=str, default="cuda")
     parser.add_argument('--cublas', action="store_true")
     parser.add_argument('--cudnn', action="store_true")
     parser.add_argument('--nhwc', action="store_true")

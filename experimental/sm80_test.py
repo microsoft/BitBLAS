@@ -1,6 +1,6 @@
 import numpy as np
-import tvm
 import welder
+import tvm
 from tvm import te
 from welder.layout import *
 from welder.schedule.cutlass_intrin import *
@@ -114,7 +114,7 @@ kernel_code = kernel_code[kernel_code.index('extern "C" __global__ void'):]
 
 print(kernel_code)
 cp = CompileResult(None, kernel_code, block, grid, "default_function_kernel0", args)
-cp.compile_and_load(welder.arch.g3090())
+cp.compile_and_load(welder.arch.cuda())
 a = cp.get_example_outputs()[0]
 print(a)
 print(cp.profile())

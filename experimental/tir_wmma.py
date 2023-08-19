@@ -224,7 +224,7 @@ kernel_code = mod.imported_modules[0].get_source()
 kernel_code = kernel_code[kernel_code.index('extern "C" __global__ void'):]
 print(kernel_code)
 cp = CompileResult(None, kernel_code, [32, 4, 1], [64, 1, 1], "default_function_kernel0", args)
-cp.compile_and_load(welder.arch.V100())
+cp.compile_and_load(welder.arch.cuda())
 a = cp.get_example_outputs()
 print(cp.profile())
 print(a)

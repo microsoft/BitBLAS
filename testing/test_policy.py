@@ -1,12 +1,11 @@
 import numpy as np
 import welder
 from ops import *
-from welder.arch import *
 from welder.graph import IRNode, OutputNode
 from welder.policy import DefaultPolicy
 from welder.reference import get_subgraph_reference_outputs
 
-arch = V100()
+arch = welder.arch.cuda()
 
 def test_policy(ir, input_dict, name="test", check=False):
     expr = "- einstein_v2('{}', {})".format(ir, str(input_dict))

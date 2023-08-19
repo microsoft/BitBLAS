@@ -13,7 +13,7 @@ if __name__ == "__main__":
     parser.add_argument('output_file', type=str, default="")
     parser.add_argument('--topk', type=int, default=10)
     parser.add_argument('--device', type=int, default=0)
-    parser.add_argument('--arch', type=str, default="V100")
+    parser.add_argument('--arch', type=str, default="cuda")
     parser.add_argument('--verbose', type=int, default=logging.INFO)
     parser.add_argument('--check', action="store_true")
     parser.add_argument('--nofusion', action="store_true")
