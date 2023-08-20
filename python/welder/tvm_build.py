@@ -1,8 +1,10 @@
 import numpy as np
 import regex as re
+from typing import Union
 import tvm
 
 from .schedule.scheduler_base import SchedulerBase
+from .rasterization import Rasterization
 
 _type_map = {"float32": "float", "float16": "half", "float64": "double", "int64": "int64_t", "int32": "int", "bool": "int8_t", "int8": "int8_t"}
 _type_bytes = {"float": 4, "double": 8, "half": 2, "int": 4, "int64_t": 8, "bool": 1, "int8_t": 1, "signed char": 1, "uint4": 16}
@@ -41,7 +43,9 @@ def _lower_C_simple(expr : tvm.tir.PrimExpr) -> str:
     else:
         raise NotImplementedError(expr)
 
-def get_block_reorder_code(block_reoder_expr: tvm.tir.PrimExpr) -> str:
+def get_block_reorder_code(block_reoder_expr: Union[tvm.tir.PrimExpr, Rasterization]) -> str:
+    if isinstance(block_reoder_expr, Rasterization):
+        return "  " + "\n  ".join(block_reoder_expr.get_code()) + "\n"
     return "  int __bid = blockIdx.x;\n  const dim3 blockIdx({}, 0, 0);\n"\
         .format(_lower_C_simple(block_reoder_expr))
 

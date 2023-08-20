@@ -76,6 +76,7 @@ class CodeGenerator():
         self.target = target
         compute_nodes = list(filter(lambda node: not(node.is_output() or node.is_placeholder()), self.topo_order))
         if len(compute_nodes) == 1:
+            configs[compute_nodes[0]].block_order = configs["globals"]["Rasterization"]
             return self._compile_single_node(compute_nodes[0], configs[compute_nodes[0]])
         global_args_name_map = self._get_tensor_name_map() # {Tensor : "input0"}
 
@@ -156,6 +157,7 @@ class CodeGenerator():
             arg_list.append(f"shared+{internal_shared_mem.start}")
             statements.append(func_name + "(" + ", ".join(arg_list) + ");")
 
+        statements = configs["globals"]["Rasterization"].get_code() + statements
         code = self._write_code(kernel_codes, statements, global_args_name_map)
 
         # fused kernel args

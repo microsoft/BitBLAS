@@ -12,7 +12,7 @@ from ..config import Config, Stride, TileDict
 from ..graph import IRNode, Node, find_topo_sort
 from .common import (coalesced_factor, coalesced_tensor_shape, factorize,
                      get_all_factors)
-
+from ..rasterization import NoRasterization
 
 class DefaultPolicy:
     def __init__(self, output_nodes: List[Node], arch:Arch) -> None:
@@ -48,12 +48,14 @@ class DefaultPolicy:
             if block_orders is False:
                 continue
             self._expand_reduce_axis(td)
+            rasterization = self.plan_rasterization(td)
             for codegen_dicts in self.assign_block_size(td):
                 # handle cases where block is not ordinal (e.g. transpose)
                 for node, block_order in block_orders.items():
                     codegen_dicts[node].block_order = block_order
                 for node, strides in td.output_strides_map.items():
                     codegen_dicts[node].output_strides = strides
+                codegen_dicts["globals"]["Rasterization"] = rasterization
                 results.append(codegen_dicts)
                 if len(results) >= topk:break
             if len(results) >= topk:break
@@ -384,6 +386,7 @@ class DefaultPolicy:
         block_size_ordered = self.recommend_block_size(td)
         for block_size in block_size_ordered:
             result = {}
+            result["globals"] = {}
             failed = False
             for node in self.ordered_nodes:
                 result[node] = self._assign_block_size(node, td, block_size)
@@ -499,3 +502,6 @@ class DefaultPolicy:
                     vectorize_result[tensor] = v
                     break
         return vectorize_result
+
+    def plan_rasterization(self, td: TileDict):
+        return NoRasterization()

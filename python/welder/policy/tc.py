@@ -7,7 +7,7 @@ from ..config import Config, Stride, TileDict
 from ..graph import IRNode, Node
 from .common import factorize, get_all_factors
 from .default import DefaultPolicy
-
+from ..rasterization import *
 
 class TCPolicy(DefaultPolicy):
     def __init__(self, output_nodes: List[Node], arch: Arch) -> None:
@@ -184,3 +184,25 @@ class TCPolicy(DefaultPolicy):
         codegen_dict.schedule_stages = [stage.name for stage in node.schedule_stages]
         codegen_dict.complete_config(node)
         return codegen_dict
+
+    def plan_rasterization(self, td: TileDict):
+        if len(self.ordered_nodes) > 1:
+            # only consider single node case for now
+            return NoRasterization()
+        if td.num_wave < 4:
+            # small op don't need this
+            return NoRasterization()
+        if self.arch.compute_capability < "80":
+            # only on Ampere+ arch
+            return NoRasterization()
+        for node, tile in td.tile_map.items():
+            # TODO: infer len(tile) > 2 case
+            if node.get_tag("tensorCoreConfig") and len(tile) == 2:
+                ax_m, ax_n = node.get_tag("tensorCoreConfig")
+                row_size = (node.get_shape()[ax_m] + tile[ax_m] - 1) // tile[ax_m]
+                col_size = (node.get_shape()[ax_n] + tile[ax_n] - 1) // tile[ax_n]
+                if tile[ax_m] >= tile[ax_n]:
+                    return Rasterization2DRow(row_size, col_size)
+                else:
+                    return Rasterization2DColumn(row_size, col_size)
+        return NoRasterization()

@@ -21,6 +21,7 @@ def call_build(node_names, connections, send_config, kernel_name, target_str):
     output_nodes, _, _ = _extract_subgraph(nodes, connections)
     eliminate_memcpy(output_nodes)
     config = {}
+    config["globals"] = send_config["globals"]
     for node in find_topo_sort(output_nodes):
         if node.name in send_config:
             config[node] = send_config[node.name]
@@ -74,7 +75,8 @@ class MultiProcTunner(Tunner):
         node_names = [node.name for node in self.current_nodes]
         futures = []
         for config in configs:
-            send_config = {node.name : config[node] for node in config}
+            send_config = {key.name if isinstance(key, IRNode) else key : config[key] for key in config}
+            send_config["globals"] = config["globals"]
             futures.append(self.pool.submit(call_build, node_names, self.local_connections, send_config, kernel_name, str(self.arch.target)))
         for future, config in zip(futures, configs):
             try:

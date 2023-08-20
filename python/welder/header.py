@@ -70,6 +70,36 @@ inline __device__ longlong4 make_int8(int x0, int x1, int x2, int x3, int x4, in
   return make_longlong4(l0, l1, l2, l3);
 }
 
+template<int row_size, int col_size, int panel_width>
+__device__ int rasterization2DRow(int idx) {
+  const int block_size = row_size * col_size;
+  const int panel_size = panel_width * col_size;
+  const int block_offset = idx % block_size;
+  const int block_idx = idx / block_size;
+  const int panel_offset = block_offset % panel_size;
+  const int panel_idx = block_offset / panel_size;
+  const int total_panel = (block_size + panel_size - 1) / panel_size;
+  const int stride = panel_idx + 1 < total_panel ? panel_width : (block_size - panel_idx * panel_size) / col_size;
+  const int col_idx = (panel_idx & 1) ? col_size - 1 - panel_offset / stride : panel_offset / stride;
+  const int row_idx = panel_offset % stride + panel_idx * panel_width;
+  return block_idx * block_size + row_idx * col_size + col_idx;
+}
+
+template<int row_size, int col_size, int panel_width>
+__device__ int rasterization2DColumn(int idx) {
+  const int block_size = row_size * col_size;
+  const int panel_size = panel_width * row_size;
+  const int block_offset = idx % block_size;
+  const int block_idx = idx / block_size;
+  const int panel_offset = block_offset % panel_size;
+  const int panel_idx = block_offset / panel_size;
+  const int total_panel = (block_size + panel_size - 1) / panel_size;
+  const int stride = panel_idx + 1 < total_panel ? panel_width : (block_size - panel_idx * panel_size) / row_size;
+  const int row_idx = (panel_idx & 1) ? row_size - 1 - panel_offset / stride : panel_offset / stride;
+  const int col_idx = panel_offset % stride + panel_idx * panel_width;
+  return block_idx * block_size + row_idx * col_size + col_idx;
+}
+
 }
 """
 
