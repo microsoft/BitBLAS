@@ -1,1 +1,1 @@
-from . import matmul, dot_splitk, conv
+from . import matmul, dot_splitk, conv, reshape

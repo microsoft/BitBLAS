@@ -47,7 +47,7 @@ def tensor_replace_input(tensor: te.Tensor, name: str=None, rmap: Dict[te.Tensor
         if isinstance(op, te.PlaceholderOp):
             op = _ffi.get_global_func("te.PlaceholderOp")(name, op.shape, op.dtype)
         elif isinstance(op, te.ComputeOp):
-            op = _ffi.get_global_func("te.ComputeOp")(name, op.tag, op.attrs, op.axis, op.body)
+            op = _ffi.get_global_func("te.ComputeOp")(name, op.tag, {}, op.axis, op.body)
         else:
             raise NotImplementedError()
     if len(rmap) > 0:

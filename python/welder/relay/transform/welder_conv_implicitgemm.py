@@ -10,6 +10,25 @@ class WelderConvImplicitGemm(relay.ExprMutator):
         return self.visit(func)
 
     def visit_call(self, call):
+        if isinstance(call.op, ir.Op) and call.op.name == "welder.matmul":
+            if call.checked_type.dtype != 'float16':
+                return super().visit_call(call)
+            transpose_a = bool(call.attrs["transpose_a"])
+            transpose_b = bool(call.attrs["transpose_b"])
+            A_shape = call.args[0].checked_type.shape
+            B_shape = call.args[1].checked_type.shape
+            A, B = self.visit(call.args[0]), self.visit(call.args[1])
+            if len(A_shape) > 2 and len(B_shape) == 2 and not transpose_a and np.prod(A_shape[:-2]) > 1:
+                M = np.prod(A_shape[:-1])
+                N = call.checked_type.shape[-1]
+                K = A_shape[-1]
+                if K % 16 != 0 or M % 8 != 0 or N % 8 != 0 or M * N % 256 != 0:
+                    return super().visit_call(call)
+                reshape_A = relay.reshape(A, [M, K])
+                C = relay.nn.matmul(reshape_A, B, out_dtype=call.checked_type.dtype, transpose_a=transpose_a, transpose_b=transpose_b)
+                reshape_C = relay.reshape(C, call.checked_type.shape)
+                return reshape_C
+            return super().visit_call(call)
         if isinstance(call.op, ir.Op) and call.op.name == "nn.conv2d":
             if call.attrs.groups > 1:
                 return super().visit_call(call)

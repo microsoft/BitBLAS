@@ -29,7 +29,7 @@ class OpVisitor(relay.ExprVisitor):
                 K = B_shape[1] if call.attrs.kernel_layout == "OIHW" else B_shape[0]
             elif call.op.name in ["nn.batch_matmul", "nn.matmul"] and call.attrs.transpose_a:
                 K = A_shape[-2]
-            elif call.op.name == "dotsplitk" and call.attrs["transpose_a"]:
+            elif call.op.name in ["welder.matmul", "dotsplitk"] and call.attrs["transpose_a"]:
                 K = A_shape[-2]
             else:
                 K = A_shape[-1]
