@@ -65,7 +65,7 @@ def run(prefix, arch):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--prefix', type=str, default="temp")
+    parser.add_argument('prefix', type=str)
     parser.add_argument('--arch', type=str, default="cuda")
     parser.add_argument('--cublas', action="store_true")
     parser.add_argument('--cudnn', action="store_true")

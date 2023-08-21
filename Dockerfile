@@ -15,21 +15,16 @@ ENV PATH="/opt/conda/bin:${PATH}"
 
 RUN conda install python~=3.10 pip cmake && conda clean --all
 
-RUN pip install --no-cache-dir --default-timeout=1000 torch==1.12 torchvision==0.13 timm==0.5.4 einops \
-    onnx==1.12 onnxruntime-gpu==1.12 onnxconverter_common==1.12 \
+RUN pip install --no-cache-dir --default-timeout=1000 torch torchvision timm einops \
+    onnx onnxruntime-gpu \
     attrs cloudpickle decorator psutil synr tornado xgboost regex \
     && rm -rf ~/.cache/pip
 
-RUN git clone https://github.com/nox-410/tvm --recursive -b welder \
+RUN git clone https://github.com/nox-410/tvm --recursive -b develop \
   && mkdir tvm/build && cd tvm/build && cp ../cmake/config.cmake . \
   && echo "set(USE_LLVM ON)" >> config.cmake && echo "set(USE_CUDA ON)" >> config.cmake \
   && cmake .. && make -j
 ENV PYTHONPATH /root/tvm/python:$PYTHONPATH
-
-RUN git clone https://github.com/nox-410/nnfusion -b welder \
-  && mkdir nnfusion/build \
-  && cd nnfusion/build && cmake .. && make -j
-ENV PATH /root/nnfusion/build/src/tools/nnfusion:$PATH
 
 RUN git clone https://github.com/nox-410/cutlass -b welder
 ENV CPLUS_INCLUDE_PATH /root/cutlass/include:$CPLUS_INCLUDE_PATH

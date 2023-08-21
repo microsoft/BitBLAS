@@ -64,7 +64,6 @@ def get_welder_outs(prefix, inputs):
     for i in range(rt_mod.get_num_outputs()):
         out = rt_mod.get_output(i).asnumpy()
         outputs.append(out)
-    print(rt_mod.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
     return outputs
 
 if __name__ == "__main__":
