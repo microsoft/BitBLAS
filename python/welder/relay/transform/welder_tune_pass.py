@@ -14,16 +14,16 @@ def tune_node(ordered_nodes, names):
     tunner = MultiProcTunner(ordered_nodes, cuda(), device=0, topk=20)
     best = tunner.tune(nodes)
 
-@relay.transform.function_pass(opt_level=0)
+@ir.transform.module_pass(opt_level=0)
 class WelderTunePass(relay.ExprMutator):
-    def __init__(self, arch):
+    def __init__(self, arch, save_perf_log=None):
         super().__init__()
         self.arch = arch
-        self.tuple_index_redirect = {}
+        self.save_perf_log_ = save_perf_log
 
-    def transform_function(self, func, mod, ctx):
+    def transform_module(self, mod, ctx):
         extractor = TileGraphExtractor(self.arch.target)
-        extractor.visit(func)
+        extractor.visit(mod["main"])
 
         ordered_nodes = extractor.ordered_nodes
         node_map = extractor.node_map
@@ -32,8 +32,12 @@ class WelderTunePass(relay.ExprMutator):
         # tunner.load_cache("a.pkl")
         fusion_groups = engine.run(ordered_nodes)
         # tunner.dump_cache("a.pkl")
+        if self.save_perf_log_:
+            from ...engine import save_results
+            save_results(fusion_groups, self.save_perf_log_)
 
         # apply fusion groups
+        tuple_index_redirect = {}
         name_map = {node.name : (node_map[node] if node in node_map else None) for node in ordered_nodes}
         for group in fusion_groups:
             if group.cpresult is None:
@@ -71,11 +75,15 @@ class WelderTunePass(relay.ExprMutator):
             is_reshape_only = all([node.get_tag("memcpy") for node in group.nodes])
             if is_reshape_only:
                 function = function.with_attr({"relay.reshape_only": 1, "Primitive": 1})
+                var = function
             else:
-                composite_name = "welder." + str(group.group_id)
-                function = function.with_attr("Composite", composite_name)
-                add_source(composite_name, group.cpresult)
-            call = relay.Call(function, args)
+                global_symbol = "tvmgen_welder_" + str("_".join([node.name for node in group.nodes]))
+                func = function.with_attr({"Compiler": "welder", "global_symbol": global_symbol, "Primitive": 1, "Inline": 1})
+                var = ir.GlobalVar(global_symbol)
+                mod.update_func(var, func)
+                add_source(global_symbol, group.cpresult.origin)
+            call = relay.Call(var, args)
+
             if len(group.cpresult.output_desc) == 1:
                 node_name, output_idx = group.cpresult.output_desc[0]
                 assert output_idx == 0
@@ -85,16 +93,14 @@ class WelderTunePass(relay.ExprMutator):
                     original_call = name_map[node_name]
                     if isinstance(original_call.op.body, relay.Tuple):
                         self.memo_map[original_call] = call
-                        if original_call not in self.tuple_index_redirect:
-                            self.tuple_index_redirect[original_call] = {}
-                        self.tuple_index_redirect[original_call][output_idx] = i
+                        if original_call not in tuple_index_redirect:
+                            tuple_index_redirect[original_call] = {}
+                        tuple_index_redirect[original_call][output_idx] = i
                     else:
                         self.memo_map[original_call] = relay.TupleGetItem(call, i)
-
-        return self.visit(func)
-
-    def visit_tuple_getitem(self, op: relay.TupleGetItem):
-        return super().visit_tuple_getitem(op)
+        mod.update_func(mod.get_global_var("main"), self.visit(mod["main"]))
+        mod = relay.transform.InferType()(mod)
+        return mod
 
 class TileGraphExtractor(relay.ExprVisitor):
     def __init__(self, target):

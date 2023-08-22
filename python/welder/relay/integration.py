@@ -25,20 +25,12 @@ TVM_DLL_EXPORT_TYPED_FUNC({tvm_symbol}, {symbol});
 
 @tvm._ffi.register_func("relay.ext.welder")
 def _compiler(func):
-    cpresult = _global_dict[func.body.op.attrs["Composite"]]
-    if cpresult.origin is not None:
-        cpresult = cpresult.origin
-
-    symbol = cpresult.name + "_host"
     tvm_symbol = func.attrs["global_symbol"]
+    cpresult = _global_dict[func.attrs["global_symbol"]]
+    symbol = cpresult.name + "_host"
 
-    fparam = list(func.params)
-    fargs = list(func.body.args)
-    index_map = [fparam.index(arg) for arg in fargs]
-    num_fparam = len(fparam)
-    for _ in cpresult.output_desc:
-        index_map.append(num_fparam)
-        num_fparam += 1
+    num_fparam = len(func.params) + len(cpresult.output_desc)
+    index_map = [i for i in range(num_fparam)]
 
     link_code = create_tvm_link_code(tvm_symbol, symbol, num_fparam)
     csrc_module_create = _ffi.get_global_func("runtime.CSourceModuleCreate")

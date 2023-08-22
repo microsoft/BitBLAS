@@ -6,6 +6,8 @@ from ..utils import CompileResult
 from .base_tunner import Tunner
 from .common import FusionGroup
 
+logger = logging.getLogger(__name__)
+
 def _get_nodes_dependency(nodes: List[Node], processed: List[Node]) -> List[Node]:
     """
         returns dependency for input nodes (not in processed, not placeholder),
@@ -123,11 +125,14 @@ class Engine:
                 for i in range(n.num_outputs()):
                     queue.append((n, i))
 
-        if cp_result is None: # tune  single op if no fusion is possible
+        if cp_result is None: # tune single op if no fusion is possible
             assert len(cur_group) == 1
-            cp_result = self.tunner.tune(cur_group, kernel_name="Group"+str(cur_group_id))
-            if cp_result is None:
-                print("Cannot generate code for", top_node)
+            if not top_node.get_tag("skip"):
+                cp_result = self.tunner.tune(cur_group, kernel_name="Group"+str(cur_group_id))
+                if cp_result is None:
+                    logger.error("Cannot generate code for " + top_node.name)
+            else:
+                logger.info("Skipping node " + top_node.name)
         return FusionGroup(cur_group, cur_group_id, cp_result, cur_latency_gain)
 
     def compute_gain(self, group: List[Node], cp_result: CompileResult) -> float:

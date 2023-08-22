@@ -60,8 +60,7 @@ def cast_dtype(dtype):
     if idx < 0:
         return dtype
     else:
-        print(dtype)
-        raise NotImplementedError
+        raise NotImplementedError(dtype)
 
 
 def input(name, shape, dtype="float32"):  # pylint:disable=redefined-builtin

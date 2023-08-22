@@ -51,9 +51,8 @@ def run(prefix, arch):
     mod = relay.transform.FoldConstant()(mod)
     mod = welder.relay.transform.WelderFuseOps()(mod)
     mod = welder.relay.transform.AnnotateTensorCore()(mod)
-    mod = welder.relay.transform.WelderTunePass(arch)(mod)
-    mod = relay.transform.AnnotateTarget("welder", include_non_call_ops=False)(mod)
-    mod = relay.transform.PartitionGraph(bind_constants=False)(mod)
+    mod = welder.relay.transform.WelderTunePass(arch, osp.join(prefix, "welder_tuned.json"))(mod)
+
     factory = relay.build(mod, arch.target, params=params)
     lib = welder.relay.update_lib(factory.get_lib(), arch, osp.join(prefix, "model.so"))
     with open(osp.join(prefix, "graph.json"), "w") as f:
