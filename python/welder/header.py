@@ -5,6 +5,7 @@ tvm_rt_header = """
 
 cuda_default_header = """
 #include <cuda_runtime.h>
+#include <math_constants.h>
 #include <math.h>
 #include <mma.h>
 """

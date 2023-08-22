@@ -10,7 +10,8 @@ from tvm.contrib import graph_executor
 
 def run(prefix, arch):
     onnx_model = onnx.load(osp.join(prefix, "model.onnx"))
-    mod, params = relay.frontend.from_onnx(onnx_model, convert_config={"use_welder_matmul": True})
+    mod, params = relay.frontend.from_onnx(onnx_model, convert_config={"use_welder_matmul": not args.cublas})
+    mod = relay.transform.SimplifyInference()(mod) # remove BN, dropout ...
 
     if args.cublas:
         from tvm.relay.op.contrib.cublas import pattern_table

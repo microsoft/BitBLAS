@@ -81,7 +81,7 @@ class InputShapeInference():
                     mapping[input_name] = []
                 for indices in indices_list:
                     for region in regions:
-                        vmap = {k: v for k, v in zip(ax_vars, indices)}
+                        vmap = {k: (tir.Cast(k.dtype, v) if v.dtype != k.dtype else v) for k, v in zip(ax_vars, indices)}
                         region = [ana.simplify(tir.stmt_functor.substitute(ax, vmap)) for ax in region]
                         if not region_exist_in_list(region, mapping[input_name]):
                             mapping[input_name].append(region)
@@ -124,6 +124,8 @@ class InputShapeInference():
         vmap = {}
         for vars, exprs in zip(input_vars, output_exprs.values()):
             for var, expr in zip(vars, exprs):
+                if expr.dtype != var.dtype:
+                    expr = tir.Cast(var.dtype, expr)
                 vmap[var] = expr
         result = {}
 
@@ -159,7 +161,12 @@ def walk_indice(expr):
         return expr
     elif isinstance(expr, tir.ProducerLoad):
         return None
-    elif isinstance(expr, (tir.Call, tir.Cast)):
+    elif isinstance(expr, tir.Cast):
+        a = walk_indice(expr.value)
+        if a is not None:
+            return expr
+        return None
+    elif isinstance(expr, tir.Call):
         return None
     else:
         raise Exception('Unhandled node type in walk_indice(): %s' % expr)
