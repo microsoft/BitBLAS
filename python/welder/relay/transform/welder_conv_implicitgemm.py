@@ -37,14 +37,15 @@ class WelderConvImplicitGemm(relay.ExprMutator):
             for type in call.type_args:
                 if type.dtype != "float16":
                     return super().visit_call(call)
+            output_shape = call.checked_type.shape
             input_shape = call.args[0].checked_type.shape
             kernel_shape = call.args[1].checked_type.shape
             N = call.attrs.channels
             if call.attrs.data_layout == "NCHW":
-                M = input_shape[0] * input_shape[2] * input_shape[3]
+                M = output_shape[0] * output_shape[2] * output_shape[3]
                 K = input_shape[1] * call.attrs.kernel_size[0] * call.attrs.kernel_size[1]
             elif call.attrs.data_layout == "NHWC":
-                M = input_shape[0] * input_shape[1] * input_shape[2]
+                M = output_shape[0] * output_shape[1] * output_shape[2]
                 K = input_shape[3] * call.attrs.kernel_size[0] * call.attrs.kernel_size[1]
             if K % 16 != 0 or M % 8 != 0 or N % 8 != 0 or M * N % 256 != 0:
                 return super().visit_call(call)
