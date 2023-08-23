@@ -46,8 +46,8 @@ def run(prefix, arch):
         mod = relay.transform.FoldConstant()(mod)
 
     mod = welder.relay.transform.WelderExprRewrite()(mod)
-    mod = welder.relay.transform.WelderDotSplitK()(mod)
     mod = welder.relay.transform.WelderConvImplicitGemm()(mod)
+    mod = welder.relay.transform.WelderDotSplitK()(mod)
     mod = relay.transform.FoldConstant()(mod)
     mod = welder.relay.transform.WelderFuseOps()(mod)
     mod = welder.relay.transform.AnnotateTensorCore()(mod)

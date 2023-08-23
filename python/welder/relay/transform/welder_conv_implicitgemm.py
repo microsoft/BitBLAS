@@ -66,5 +66,41 @@ class WelderConvImplicitGemm(relay.ExprMutator):
             else:
                 # NHW, C -> N, H, W, C
                 return relay.reshape(gemm, out_shape)
+        if isinstance(call.op, ir.Op) and call.op.name == "nn.conv1d":
+            if call.attrs.groups > 1:
+                return super().visit_call(call)
+            if (call.attrs.data_layout, call.attrs.kernel_layout) not in [("NCW", "OIW"), ("NWC", "WIO")]:
+                return super().visit_call(call)
+            for type in call.type_args:
+                if type.dtype != "float16":
+                    return super().visit_call(call)
+            output_shape = call.checked_type.shape
+            input_shape = call.args[0].checked_type.shape
+            kernel_shape = call.args[1].checked_type.shape
+            N = call.attrs.channels
+            if call.attrs.data_layout == "NCW":
+                M = output_shape[0] * output_shape[2]
+                K = input_shape[1] * call.attrs.kernel_size[0]
+            elif call.attrs.data_layout == "NWC":
+                M = output_shape[0] * output_shape[1]
+                K = input_shape[2] * call.attrs.kernel_size[0]
+            if K % 16 != 0 or M % 8 != 0 or N % 8 != 0 or M * N % 256 != 0:
+                return super().visit_call(call)
 
+            data = self.visit(call.args[0])
+            kernel = self.visit(call.args[1])
+            if call.attrs.kernel_layout == "OIW":
+                reshape_kernel = relay.reshape(kernel, [kernel_shape[0], -1])
+            elif call.attrs.kernel_layout == "WIO":
+                reshape_kernel = relay.reshape(kernel, [-1, kernel_shape[2]])
+            gemm = relay.Call(relay.op.get("welder.C1DImplicitGemm"), [data, reshape_kernel], call.attrs)
+            out_shape = call.checked_type.shape
+            if call.attrs.data_layout == "NCW":
+                # C, NW -> C, N, W -> N, C, W
+                reshape = relay.reshape(gemm, [out_shape[1], out_shape[0], out_shape[2]])
+                transpose = relay.transpose(reshape, [1, 0, 2])
+                return relay.reshape(transpose, out_shape)
+            else:
+                # NW, C -> N, W, C
+                return relay.reshape(gemm, out_shape)
         return super().visit_call(call)
