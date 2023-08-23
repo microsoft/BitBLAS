@@ -1,3 +1,4 @@
+import sys
 import code
 import readline
 import rlcompleter
@@ -5,10 +6,14 @@ import rlcompleter
 """
 This function can start a interactive debug console
 example:
-from .debug import debug
-debug({**globals(), **locals()})
+    from .debug import debug
+    debug()
+press CTRL+D to exit the debug console and go on
 """
-def debug(vars):
+def debug():
+    frame = sys._getframe().f_back
+    vars = {**frame.f_locals, **frame.f_globals}
     readline.set_completer(rlcompleter.Completer(vars).complete)
     readline.parse_and_bind("tab: complete")
-    code.InteractiveConsole(vars).interact()
+    banner = f"(DebugConsole) {frame.f_code.co_filename}:{frame.f_lineno}"
+    code.InteractiveConsole(vars).interact(banner)
