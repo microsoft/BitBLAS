@@ -39,7 +39,6 @@ def test_policy(ir, input_dict, name="test", check=True):
             best = cpresult
         print(latency)
     print(best.config)
-    print(best.code)
     print(name ,"top1: {} \ttop10: {}".format(values[0], min(values)))
     print("-" * 80, flush=True)
     if check==True:
@@ -97,6 +96,21 @@ c_lists = [
     ('C43', conv_nhwc_implicit_gemm, [128, 336, 21, 21, 1344, 1, 1, 1, 1, 0]),
 ]
 
-test_list = c_lists
+gemm_lists = [
+    ('G0', matmul_nn, [8192, 8192, 8192, "float16"]),
+    ('G1', matmul_nn, [16384, 16384, 16384, "float16"]),
+    ('G2', matmul_nn, [4096, 4096, 4096, "float16"]),
+    ('G3', matmul_nn, [8192, 32768, 8192, "float16"]),
+    ('G4', matmul_nn, [32768, 8192, 8192, "float16"]),
+    ('G5', matmul_nn, [8192, 8192, 32768, "float16"]),
+    ('G6', matmul_nt, [8192, 8192, 8192, "float16"]),
+    ('G7', matmul_nt, [16384, 16384, 16384, "float16"]),
+    ('G8', matmul_nt, [4096, 4096, 4096, "float16"]),
+    ('G9', matmul_nt, [8192, 32768, 8192, "float16"]),
+    ('G10', matmul_nt, [32768, 8192, 8192, "float16"]),
+    ('G11', matmul_nt, [8192, 8192, 32768, "float16"]),
+]
+
+test_list = gemm_lists
 for name, func, args in test_list:
     test_policy(*func(*args), name, False)

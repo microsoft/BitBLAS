@@ -271,12 +271,14 @@ class DefaultPolicy:
             for i, edge in enumerate(node.inputs):
                 op_tile_map[edge.src_node] = input_shapes[i]
                 if edge.src_node.is_placeholder():
-                    read_transaction_elements = self.arch.transaction_size[1] // ((edge.src_node.get_dtype().bits + 7) // 8)
-                    traffic += coalesced_tensor_shape(input_shapes[i], edge.src_node.get_shape(), read_transaction_elements)
+                    nbytes = (edge.src_node.get_dtype().bits + 7) // 8
+                    read_transaction_elements = self.arch.transaction_size[1] // nbytes
+                    traffic += coalesced_tensor_shape(input_shapes[i], edge.src_node.get_shape(), read_transaction_elements) * nbytes
             for edge in node.outputs:
                 if edge.dst_node.is_output():
-                    write_transaction_elements = self.arch.transaction_size[0] // ((edge.src_node.get_dtype().bits + 7) // 8)
-                    traffic += coalesced_tensor_shape(output_shapes[edge.src_id], node.get_shape(edge.src_id), write_transaction_elements)
+                    nbytes = (edge.src_node.get_dtype().bits + 7) // 8
+                    write_transaction_elements = self.arch.transaction_size[0] // nbytes
+                    traffic += coalesced_tensor_shape(output_shapes[edge.src_id], node.get_shape(edge.src_id), write_transaction_elements) * nbytes
         return traffic, op_tile_map
 
     def infer_node_smem_usage(self, td: TileDict, node: IRNode):

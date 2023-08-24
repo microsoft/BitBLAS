@@ -1,5 +1,4 @@
 from typing import Dict, List, Tuple
-
 import numpy as np
 
 from ..arch import Arch
@@ -201,8 +200,10 @@ class TCPolicy(DefaultPolicy):
                 ax_m, ax_n = node.get_tag("tensorCoreConfig")
                 row_size = (node.get_shape()[ax_m] + tile[ax_m] - 1) // tile[ax_m]
                 col_size = (node.get_shape()[ax_n] + tile[ax_n] - 1) // tile[ax_n]
+                L2_size = 25 * 1024 * 1024
+                panel_width = max(min(round(L2_size / td.traffic), 16), 1)
                 if tile[ax_m] >= tile[ax_n]:
-                    return Rasterization2DRow(row_size, col_size)
+                    return Rasterization2DRow(row_size, col_size, panel_width)
                 else:
-                    return Rasterization2DColumn(row_size, col_size)
+                    return Rasterization2DColumn(row_size, col_size, panel_width)
         return NoRasterization()
