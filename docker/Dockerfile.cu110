@@ -9,20 +9,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   libgtest-dev libprotobuf-dev protobuf-compiler libgflags-dev libsqlite3-dev llvm-dev \
   && apt-get clean autoclean && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
 
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O install_miniconda.sh && \
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py310_23.5.2-0-Linux-x86_64.sh -O install_miniconda.sh && \
   bash install_miniconda.sh -b -p /opt/conda && rm install_miniconda.sh
 ENV PATH="/opt/conda/bin:${PATH}"
 
-RUN conda install python~=3.10 pip cmake && conda clean --all
+RUN conda install pip cmake && conda clean --all
 
-RUN pip install --no-cache-dir --default-timeout=1000 torch torchvision timm einops \
-    onnx onnxruntime-gpu \
+RUN pip install --no-cache-dir --default-timeout=1000 torch==1.12 torchvision==0.13 timm==0.5.4 einops \
+    onnx==1.12 onnxruntime-gpu==1.12 \
     attrs cloudpickle decorator psutil synr tornado xgboost regex \
     && rm -rf ~/.cache/pip
 
 RUN git clone https://github.com/nox-410/tvm --recursive -b develop \
   && mkdir tvm/build && cd tvm/build && cp ../cmake/config.cmake . \
-  && echo "set(USE_LLVM ON)" >> config.cmake && echo "set(USE_CUDA ON)" >> config.cmake \
+  && echo "set(USE_LLVM \"llvm-config --link-static\")" >> config.cmake \
+  && echo "set(HIDE_PRIVATE_SYMBOLS ON)" >> config.cmake \
+  && echo "set(USE_CUDA ON)" >> config.cmake \
   && cmake .. && make -j
 ENV PYTHONPATH /root/tvm/python:$PYTHONPATH
 
