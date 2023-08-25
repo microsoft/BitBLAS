@@ -50,13 +50,8 @@ def ref_output(onnx_model_path):
 def get_welder_outs(prefix, inputs):
     import tvm
     lib_path = os.path.join(prefix, "model.so")
-    with open(os.path.join(prefix, "graph.json")) as f:
-        graph_json = f.read()
-    with open(os.path.join(prefix, "graph.params"), "rb") as f_params:
-        params = f_params.read()
     lib = tvm.runtime.load_module(lib_path)
-    rt_mod = graph_executor.create(graph_json, lib, tvm.cuda(0))
-    rt_mod.load_params(params)
+    rt_mod = graph_executor.GraphModule(lib["default"](tvm.cuda(0)))
     for i, tensor in enumerate(inputs):
         rt_mod.set_input(i, tensor)
     rt_mod.run()

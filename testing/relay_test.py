@@ -54,13 +54,8 @@ def run(prefix, arch):
     mod = welder.relay.transform.WelderTunePass(arch, osp.join(prefix, "welder_tuned.json"))(mod)
 
     factory = relay.build(mod, arch.target, params=params)
-    lib = welder.relay.update_lib(factory.get_lib(), arch, osp.join(prefix, "model.so"))
-    with open(osp.join(prefix, "graph.json"), "w") as f:
-        f.write(factory.get_graph_json())
-    with open(osp.join(prefix, "graph.params"), "wb") as f_params:
-        f_params.write(tvm.runtime.save_param_dict(factory.get_params()))
-    rt_mod = graph_executor.create(factory.get_graph_json(), lib, tvm.cuda(0))
-    rt_mod.set_input(**factory.get_params())
+    lib = welder.relay.update_lib(factory, arch, osp.join(prefix, "model.so"))
+    rt_mod = graph_executor.GraphModule(lib["default"](tvm.cuda()))
     print(rt_mod.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
 
 if __name__ == "__main__":

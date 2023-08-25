@@ -14,18 +14,14 @@ def get_rand_tensor(shape, dtype):
     return tensor
 
 def perf_welder(prefix):
+    lib_path = os.path.join(prefix, "model.so")
+    lib = tvm.runtime.load_module(lib_path)
     if args.debug:
-        from tvm.contrib.debugger.debug_runtime import debug_executor as graph_executor
+        from tvm.contrib.debugger.debug_runtime import debug_executor
+        rt_mod = debug_executor.GraphModuleDebug(lib["debug_create"]("default", tvm.cuda(0)), [tvm.cuda(0)], lib["get_graph_json"](), None)
     else:
         from tvm.contrib import graph_executor
-    lib_path = os.path.join(prefix, "model.so")
-    with open(os.path.join(prefix, "graph.json")) as f:
-        graph_json = f.read()
-    with open(os.path.join(prefix, "graph.params"), "rb") as f_params:
-        params = f_params.read()
-    lib = tvm.runtime.load_module(lib_path)
-    rt_mod = graph_executor.create(graph_json, lib, tvm.cuda(0))
-    rt_mod.load_params(params)
+        rt_mod = graph_executor.GraphModule(lib["default"](tvm.cuda(0)))
     shape_dict, dtype_dict = rt_mod.get_input_info()
     for name in shape_dict:
         rt_mod.set_input(name, get_rand_tensor(shape_dict[name], dtype_dict[name]))
