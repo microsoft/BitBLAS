@@ -7,6 +7,10 @@ from ..layout import *
 from .cutlass_intrin import *
 from .tir_base import TIRSchedulerBase
 
+def get_pad_size(n, factor):
+    if n % factor == 0:
+        return 0
+    return int(factor - n % factor)
 
 class TIRCutlassMMAScheduler(TIRSchedulerBase):
     def schedule(self) -> tir.Schedule:
@@ -25,8 +29,19 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         out_dtype = self.reduce_op.output(0).dtype
         in_dtype = self.reduce_op.input_tensors[0].dtype
 
-        # ------------------------ Block and Warp level job partition ------------------------
+        AS = sch.cache_read(C, 0, "shared")
+        BS = sch.cache_read(C, 1, "shared")
+        C_warp = sch.cache_write(C, 0, "cutlass.warp.mma")
+        # ------------------------ Padding for TensorCore ------------------------
+        padding = []
+        for i, ax in enumerate(self.reduce_op.axis):
+            padding.append(get_pad_size(ax.dom.extent, config.block[i]))
+        for i, ax in enumerate(self.reduce_op.reduce_axis):
+            padding.append(get_pad_size(ax.dom.extent, config.rstep[i]))
+        if sum(padding) > 0:
+            sch.pad_einsum(C, padding)
 
+        # ------------------------ Block and Warp level job partition ------------------------
         block_axis = []
         warp_axis = []
         inner_axis = []
@@ -85,8 +100,6 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             else:
                 layoutB = RowMajorLayout(chunk_size, block_tile_N)
 
-        AS = sch.cache_read(C, 0, "shared")
-        BS = sch.cache_read(C, 1, "shared")
         sch.compute_at(AS, K_outer)
         sch.compute_at(BS, K_outer)
 
@@ -108,9 +121,11 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             layoutB.set_pad(padB)
             B_stride = Stride(int(np.prod(config.tc_extra_conf.BS_shape[B_high_ax+1:])) + padB, B_high_ax)
 
-        # dim_offset = 3 (block_fused, warp_fused, K_outer)
-        self.cooperative_fetch(AS, 3, A_stride, vector_load=layoutA.get_vectorize(), use_pragma_unroll=True)
-        self.cooperative_fetch(BS, 3, B_stride, vector_load=layoutB.get_vectorize(), use_pragma_unroll=True)
+        vector_load_A, vector_load_B = layoutA.get_vectorize(), layoutB.get_vectorize()
+        if sum(padding) > 0:
+            vector_load_A, vector_load_B = 1, 1
+        self.cooperative_fetch(AS, 3, A_stride, vector_load=vector_load_A, use_pragma_unroll=True)
+        self.cooperative_fetch(BS, 3, B_stride, vector_load=vector_load_B, use_pragma_unroll=True)
 
         # ------------------------ Schedule output fragment layout ------------------------
         if config.use_tc >= "80":
@@ -119,7 +134,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         elif config.use_tc >= "70":
             layoutC = voltaFragmentCLayout32x32(warp_tile_M, warp_tile_N)
             cls_code = register_volta_cutlass_warp_mma(warp_tile_M, warp_tile_N, chunk_size, layoutA, layoutB)
-        C_warp = sch.cache_write(C, 0, "cutlass.warp.mma")
+
         sch.reverse_compute_at(C_warp, warp_fused)
         block_init_c = sch.decompose_reduction(C, sch.get_loops(C)[2])
         sch.transform_loop(C_warp, 2, layoutC)

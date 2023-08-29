@@ -1,5 +1,7 @@
 from tvm import relay
 
+from .utils import check_tensor_core_valid_shape
+
 @relay.transform.function_pass(opt_level=0)
 class AnnotateTensorCore(relay.ExprMutator):
     def __init__(self):
@@ -43,9 +45,7 @@ class OpVisitor(relay.ExprVisitor):
             if call.checked_type.dtype != "float16":
                 is_type_verified = False
 
-            is_shape_verified = True
-            if K % 16 != 0 or M % 8 != 0 or N % 8 != 0 or M * N % 256 != 0:
-                is_shape_verified = False
+            is_shape_verified = check_tensor_core_valid_shape(M, N, K)
 
             if is_type_verified and is_shape_verified:
                 num_axis = int(len(call.checked_type.shape))

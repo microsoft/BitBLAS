@@ -71,7 +71,9 @@ class TCPolicy(DefaultPolicy):
             return super()._assign_reduce_step(node)
         result = {}
         for k in node.raxis:
-            if node.raxis[k] % 32 == 0:
+            if node.raxis[k] % 16 > 0:
+                result[k] = 16 if node.raxis[k] < 32 else 32 # padding
+            elif node.raxis[k] % 32 == 0:
                 result[k] = 32
             else:
                 return super()._assign_reduce_step(node)

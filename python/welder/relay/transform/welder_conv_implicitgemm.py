@@ -1,6 +1,8 @@
 from tvm import relay, ir
 import numpy as np
 
+from .utils import check_tensor_core_valid_shape
+
 @relay.transform.function_pass(opt_level=0, required=["InferType"])
 class WelderConvImplicitGemm(relay.ExprMutator):
     def __init__(self):
@@ -22,7 +24,7 @@ class WelderConvImplicitGemm(relay.ExprMutator):
                 M = np.prod(A_shape[:-1])
                 N = call.checked_type.shape[-1]
                 K = A_shape[-1]
-                if K % 16 != 0 or M % 8 != 0 or N % 8 != 0 or M * N % 256 != 0:
+                if not check_tensor_core_valid_shape(M, N, K):
                     return super().visit_call(call)
                 reshape_A = relay.reshape(A, [M, K])
                 C = relay.nn.matmul(reshape_A, B, out_dtype=call.checked_type.dtype, transpose_a=transpose_a, transpose_b=transpose_b)
@@ -47,7 +49,7 @@ class WelderConvImplicitGemm(relay.ExprMutator):
             elif call.attrs.data_layout == "NHWC":
                 M = output_shape[0] * output_shape[1] * output_shape[2]
                 K = input_shape[3] * call.attrs.kernel_size[0] * call.attrs.kernel_size[1]
-            if K % 16 != 0 or M % 8 != 0 or N % 8 != 0 or M * N % 256 != 0:
+            if not check_tensor_core_valid_shape(M, N, K):
                 return super().visit_call(call)
 
             data = self.visit(call.args[0])
@@ -84,7 +86,7 @@ class WelderConvImplicitGemm(relay.ExprMutator):
             elif call.attrs.data_layout == "NWC":
                 M = output_shape[0] * output_shape[1]
                 K = input_shape[2] * call.attrs.kernel_size[0]
-            if K % 16 != 0 or M % 8 != 0 or N % 8 != 0 or M * N % 256 != 0:
+            if not check_tensor_core_valid_shape(M, N, K):
                 return super().visit_call(call)
 
             data = self.visit(call.args[0])
