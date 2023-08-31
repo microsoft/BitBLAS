@@ -192,14 +192,14 @@ class ColumnMajorVoltaTensorOpMultiplicandCrosswise(RowMajorVoltaTensorOpMultipl
     def local_layout_name(self):
         return "cutlass::layout::ColumnMajor"
 
-# used for Ampere/Turing fp16/bf16
+# used for Ampere/Turing
 class TensorOpMultiplicand:
-    def __init__(self, stride, continuous, factor) -> None:
-        assert (factor==1 or factor==2)
-        self._access_elements = 8
+    def __init__(self, stride, continuous, element_size, crosswise) -> None:
+        self._access_elements = 128 // element_size
         self._ldm = continuous
-        self._kfactor = factor
-        self._tile_shape = (8 // self._kfactor, 8 // self._kfactor)
+        self._kfactor = 8 * self._access_elements // crosswise
+        assert (self._kfactor > 0)
+        self._tile_shape = (8 // self._kfactor, max(8 // self._kfactor, 4))
         self._partition_shape = (4, 4)
         self._num_element = stride * continuous
 
@@ -229,59 +229,63 @@ class TensorOpMultiplicand:
         return vec_strided_idx * self._ldm * self._kfactor + element_contiguous + stage_idx * self._num_element
 
 class RowMajorTensorOpMultiplicandCongruous(Layout):
-    def __init__(self, stride, continuous) -> None:
+    def __init__(self, stride, continuous, element_size=16, crosswise=64) -> None:
         super().__init__()
         assert(stride % 16 == 0)
         assert(continuous % 64 == 0)
-        self.base = TensorOpMultiplicand(stride, continuous, 1)
+        self.element_size = element_size
+        self.crosswise = crosswise
+        self.base = TensorOpMultiplicand(stride, continuous, element_size, crosswise)
 
     def __call__(self, offset):
         return self.base(offset)
 
     def smem_layout_name(self):
-        return "cutlass::layout::RowMajorTensorOpMultiplicandCongruous<16, 64>"
+        return f"cutlass::layout::RowMajorTensorOpMultiplicandCongruous<{self.element_size}, {self.crosswise}>"
 
     def local_layout_name(self):
         return "cutlass::layout::RowMajor"
 
     def get_vectorize(self) -> int:
-        return 8
+        return 128 // self.element_size
 
     def get_stride(self) -> int:
         return self.base._ldm
 
 class RowMajorTensorOpMultiplicandCrosswise(Layout):
-    def __init__(self, stride, continuous) -> None:
+    def __init__(self, stride, continuous, element_size=16, crosswise=32) -> None:
         super().__init__()
         assert(stride % 16 == 0)
         assert(continuous % 32 == 0)
-        self.base = TensorOpMultiplicand(stride, continuous, 2)
+        self.element_size = element_size
+        self.crosswise = crosswise
+        self.base = TensorOpMultiplicand(stride, continuous, element_size, crosswise)
 
     def __call__(self, offset):
         return self.base(offset)
 
     def smem_layout_name(self):
-        return "cutlass::layout::RowMajorTensorOpMultiplicandCrosswise<16, 32>"
+        return f"cutlass::layout::RowMajorTensorOpMultiplicandCrosswise<{self.element_size}, {self.crosswise}>"
 
     def local_layout_name(self):
         return "cutlass::layout::RowMajor"
 
     def get_vectorize(self) -> int:
-        return 8
+        return 128 // self.element_size
 
     def get_stride(self) -> int:
         return self.base._ldm
 
 class ColumnMajorTensorOpMultiplicandCongruous(RowMajorTensorOpMultiplicandCongruous):
     def smem_layout_name(self):
-        return "cutlass::layout::ColumnMajorTensorOpMultiplicandCongruous<16, 64>"
+        return f"cutlass::layout::ColumnMajorTensorOpMultiplicandCongruous<{self.element_size}, {self.crosswise}>"
 
     def local_layout_name(self):
         return "cutlass::layout::ColumnMajor"
 
 class ColumnMajorTensorOpMultiplicandCrosswise(RowMajorTensorOpMultiplicandCrosswise):
     def smem_layout_name(self):
-        return "cutlass::layout::ColumnMajorTensorOpMultiplicandCrosswise<16, 32>"
+        return f"cutlass::layout::ColumnMajorTensorOpMultiplicandCrosswise<{self.element_size}, {self.crosswise}>"
 
     def local_layout_name(self):
         return "cutlass::layout::ColumnMajor"

@@ -1,6 +1,3 @@
-from typing import Callable, List
-
-import tvm
 from tvm import te, tir
 from tvm.script import tir as T
 from tvm.tir import TensorIntrin
@@ -8,6 +5,14 @@ from tvm.tir import TensorIntrin
 
 def register_cutlass_warp_mma(warp_M, warp_N, warp_K, layoutA, layoutB):
     cls_code = f"""cutlass::gemm::warp::GemmTensorOp<
+    cutlass::gemm::GemmShape<{warp_M}, {warp_N}, {warp_K}>,
+    {layoutA.smem_layout_name()},
+    {layoutB.smem_layout_name()}
+>"""
+    return cls_code
+
+def register_cutlass_i8_warp_mma(warp_M, warp_N, warp_K, layoutA, layoutB):
+    cls_code = f"""cutlass::gemm::warp::GemmI8TensorOp<
     cutlass::gemm::GemmShape<{warp_M}, {warp_N}, {warp_K}>,
     {layoutA.smem_layout_name()},
     {layoutB.smem_layout_name()}
@@ -52,15 +57,12 @@ def register_cutlass_warp_init_intrin(m_dim: int, n_dim: int, dtype: str, cls_na
             T.writes(C[0:m_dim, 0:n_dim])
             warp_idx = T.env_thread("threadIdx.y")
             T.launch_thread(warp_idx, num_warp)
-            T.evaluate(
-                T.cutlass_init_fragment(
-                    C.data,
-                    cls_name,
-                    get_warp_idx_m(warp_idx),
-                    get_warp_idx_n(warp_idx),
-                    dtype="handle",
-                )
-            )
+            thread_in_warp = T.env_thread("threadIdx.x")
+            T.launch_thread(thread_in_warp, 32)
+            # Use a macro trick here to make allocation of cutlass mma object
+            T.call_extern("handle", "ALLOCATE_CUTLASS_OBJECT", C.data,
+                          T.call_extern("handle", cls_name,
+                          get_warp_idx_m(warp_idx), get_warp_idx_n(warp_idx), thread_in_warp))
     TensorIntrin.register("mma_fill", desc, impl, override=True)
     return "mma_fill"
 
@@ -101,7 +103,7 @@ def register_gemm_intrin(m_dim: int, n_dim: int, k_dim: int, in_dtype: str, out_
                     vii, vjj, vkk = T.axis.remap("SSR", [i, j, k])
                     ai, ak = maybe_swap_A(vii, vkk)
                     bk, bj = maybe_swap_B(vkk, vjj)
-                    C[vii, vjj] = C[vii, vjj] + A[ai, ak] * B[bk, bj]
+                    C[vii, vjj] = C[vii, vjj] + A[ai, ak].astype(out_dtype) * B[bk, bj].astype(out_dtype)
     read_ptr = lambda buffer: buffer.access_ptr("r", offset=-buffer.elem_offset)
     stride_A = layoutA.get_stride()
     stride_B = layoutB.get_stride()
@@ -120,22 +122,8 @@ def register_gemm_intrin(m_dim: int, n_dim: int, k_dim: int, in_dtype: str, out_
         with T.block("root"):
             T.reads(C[0:m_dim, 0:n_dim], A[0:A_shape_0, 0:A_shape_1], B[0:B_shape_0, 0:B_shape_1])
             T.writes(C[0:m_dim, 0:n_dim])
-            T.evaluate(
-                T.cutlass_warp_mma(
-                    C.data,
-                    "prologue",
-                    read_ptr(A),
-                    stride_A,
-                    read_ptr(B),
-                    stride_B,
-                    dtype="handle",
-                )
-            )
-            T.evaluate(
-                T.cutlass_warp_mma(C.data, "body", read_ptr(A), read_ptr(B), dtype="handle")
-            )
-            T.evaluate(
-                T.cutlass_warp_mma(C.data, "epilogue", dtype="handle")
-            )
+            T.call_extern("handle", "call_cutlass_mma_prologue", C.data, read_ptr(A), read_ptr(B), stride_A, stride_B)
+            T.call_extern("handle", "call_cutlass_mma_body", C.data)
+            T.call_extern("handle", "call_cutlass_mma_epilogue", C.data)
     TensorIntrin.register("mma_sync", desc, impl, override=True)
     return "mma_sync"
