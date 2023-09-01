@@ -27,7 +27,7 @@ class RewriteInputPass(PassBase):
         def process(op):
             lhs_name = op.buffer.name
             if lhs_name.endswith(".shared") and lhs_name[:-len(".shared")] in shared_input_names:
-                return tvm.tir.stmt.SeqStmt([])
+                return tir.Evaluate(0)
             return op
         def process2(op):
             if op.buffer.name not in shared_input_names:

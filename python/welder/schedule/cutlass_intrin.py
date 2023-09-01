@@ -101,8 +101,8 @@ def register_gemm_intrin(m_dim: int, n_dim: int, k_dim: int, in_dtype: str, out_
             for i, j, k in T.grid(m_dim, n_dim, k_dim):
                 with T.block(""):
                     vii, vjj, vkk = T.axis.remap("SSR", [i, j, k])
-                    ai, ak = maybe_swap_A(vii, vkk)
-                    bk, bj = maybe_swap_B(vkk, vjj)
+                    ai, ak = T.meta_var(maybe_swap_A(vii, vkk))
+                    bk, bj = T.meta_var(maybe_swap_B(vkk, vjj))
                     C[vii, vjj] = C[vii, vjj] + A[ai, ak].astype(out_dtype) * B[bk, bj].astype(out_dtype)
     read_ptr = lambda buffer: buffer.access_ptr("r", offset=-buffer.elem_offset)
     stride_A = layoutA.get_stride()
