@@ -25,10 +25,7 @@ def call_build(node_names, connections, send_config, kernel_name, target_str):
     for node in find_topo_sort(output_nodes):
         if node.name in send_config:
             config[node] = send_config[node.name]
-    try:
-        cpresult = cgen.compile(output_nodes, config, tvm.target.Target(target_str), kernel_name=kernel_name)
-    except Exception as e:
-        return e
+    cpresult = cgen.compile(output_nodes, config, tvm.target.Target(target_str), kernel_name=kernel_name)
     return [cpresult.code, cpresult.block_size, cpresult.grid_size, cpresult.args]
 
 def save_tile_graph(ordered_nodes: List[IRNode]) -> List:
@@ -81,10 +78,11 @@ class MultiProcTunner(Tunner):
         for future, config in zip(futures, configs):
             try:
                 result = future.result()
+            except TimeoutError as e:
+                self.write_error_log(config, "Compiler timeout.")
+                continue
             except Exception as e:
-                result = e
-            if isinstance(result, Exception):
-                print(result)
+                self.write_error_log(config, e)
                 continue
             code, block_size, grid_size, args = result
             compile_results.append(CompileResult(config, code, block_size, grid_size, kernel_name, args))

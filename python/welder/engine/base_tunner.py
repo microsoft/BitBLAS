@@ -1,6 +1,4 @@
 import hashlib
-import sys
-import traceback
 import logging
 import numpy as np
 
@@ -123,6 +121,7 @@ class Tunner(object):
         self.topk = topk
         self.arch = arch
         self.profiler = PopenPoolExecutor(max_workers=1, timeout=None, initializer=profiler.init_server, initargs=[arch])
+        self.error_log = None
 
     def get_cache(self, sig):
         return self._cache[sig]
@@ -142,6 +141,13 @@ class Tunner(object):
 
     def set_cache(self, sig, value):
         self._cache[sig] = value
+
+    def write_error_log(self, config, msg):
+        if self.error_log is None:
+            self.error_log = open("welder_error.log", "w")
+        print([node.name for node in self.current_nodes], file=self.error_log)
+        print(config, file=self.error_log)
+        print(msg, file=self.error_log, flush=True)
 
     def get_policy_list(self):
         policy_list = [DefaultPolicy]
@@ -167,7 +173,7 @@ class Tunner(object):
             try:
                 cpresult = cgen.compile(output_nodes, config, self.arch.target, kernel_name=kernel_name)
             except Exception as e:
-                traceback.print_exc(file=sys.stdout)
+                self.write_error_log(config, e)
                 continue
             compile_results.append(cpresult)
         return compile_results
