@@ -47,7 +47,7 @@ class TESchedulerBase(SchedulerBase):
         return sche
 
     def build(self, target) -> str:
-        with tvm.transform.PassContext(config={"tir.add_lower_pass": self.passes}):
+        with tvm.transform.PassContext(config={"tir.add_lower_pass": self.passes, "tir.disable_cse_tir": True}):
             mod = tvm.build(self.sche, self.args, target=target)
         return mod.imported_modules[0].get_source()
 
