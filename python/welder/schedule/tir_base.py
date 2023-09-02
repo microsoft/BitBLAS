@@ -81,7 +81,6 @@ class TIRSchedulerBase(SchedulerBase):
         return op_input_map
 
     def requires_cache(self, tensor, op):
-        assert tensor in op.input_tensors
         if tensor in self.shared_inputs:
             return True
         return tensor.name in self.config.cached_tensors

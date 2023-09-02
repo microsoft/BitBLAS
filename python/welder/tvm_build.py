@@ -40,6 +40,8 @@ def _lower_C_simple(expr : tvm.tir.PrimExpr) -> str:
         return "__bid"
     elif isinstance(expr, tvm.tir.expr.ConstExpr):
         return str(expr.value)
+    elif isinstance(expr, tvm.tir.Cast):
+        return f"({_type_map[expr.dtype]}({_lower_C_simple(expr.value)}))"
     else:
         raise NotImplementedError(expr)
 
