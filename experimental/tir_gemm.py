@@ -71,7 +71,7 @@ sche_gemm(sch)
 mod = tvm.build(sch.mod["main"], target="cuda")
 kernel_code = mod.imported_modules[0].get_source()
 
-cp = CompileResult(None, kernel_code, [128, 1, 1], [64, 1, 1], "default_function_kernel0", args)
+cp = CompileResult(None, kernel_code, [128, 1, 1], [64, 1, 1], "default_function_kernel", args)
 cp.compile_and_load(welder.arch.cuda())
 a = cp.get_example_outputs()
 print(cp.profile())
