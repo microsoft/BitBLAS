@@ -353,7 +353,7 @@ class DefaultPolicy:
             td.valid = False
             return td
         td.block_per_SM = min(self.arch.max_smem_usage // max(td.smem_cost, 1), self.arch.reg_cap // max(reg_usage, 1), self.arch.sm_partition)
-        td.num_wave = int(np.ceil(td.grid_size / (td.block_per_SM * self.arch.compute_max_core)))
+        td.num_wave = int(np.ceil(td.grid_size / int(td.block_per_SM * self.arch.compute_max_core)))
         return td
 
     def check_tile_shape_isvalid(self, td: TileDict):
@@ -471,7 +471,7 @@ class DefaultPolicy:
         codegen_dict.rstep = [rsteps[ax] for ax in node.raxis]
         codegen_dict.reduce_thread = [reduce_thread[ax] for ax in node.raxis]
         codegen_dict.cached_tensors = td.cached_tensors_map[node]
-        codegen_dict.schedule_stages = [stage.name for stage in node.schedule_stages]
+        codegen_dict.schedule_stages = [stage.name for stage in node._schedule_compute_stages]
         if node.get_dtype().bits == 16: # set step=2 for fp16 case
             codegen_dict._step = [1 for _ in range(ndim)]
             for i in reversed(range(ndim)):

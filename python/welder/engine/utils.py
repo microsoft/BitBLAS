@@ -45,7 +45,7 @@ def _inline_node(A: IRNode, B: IRNode):
     for k, v in B._tag.items():
         C.add_tag(k, v)
     if C.reduce_op:
-        C.schedule_stages = [C.reduce_op]
+        C._schedule_compute_stages = [C.reduce_op]
     return C
 
 def insert_local_connections(output_nodes, connections):

@@ -80,9 +80,17 @@ class TileDict:
     def __hash__(self) -> int:
         return hash(tuple(self.output_tile))
 
+class LadderConfig:
+    def __init__(self, propagate_inter_a, propagate_inter_b, pipeline_stage) -> None:
+        self.propagate_inter_a = propagate_inter_a
+        self.propagate_inter_b = propagate_inter_b
+        self.pipeline_stage = pipeline_stage
+
+
 class Config:
     def __init__(self) -> None:
         self.use_tc = None
+        self.use_ladder = None
         # spacial axes tiling info
         self.block = []
         self.thread = []
@@ -93,17 +101,19 @@ class Config:
         # reduce axes tiling info
         self.rstep = []
         self.reduce_thread = []
-
+        self.raster_factor = 0
         self.cached_tensors = []
         self.block_order = None
         self.output_strides = {}
         self.schedule_stages = None
-
+        # Ladder
+        self.ladder_config: Optional[LadderConfig] = None
         # Experimental
         self._raxis_order = []
         self._step = []
         self.vectorize : Dict[str, int] = {}
         self.use_cutlass = False
+        self.pipeline_stage = 1
 
     def to_dict(self) -> Dict:
         dic = {}

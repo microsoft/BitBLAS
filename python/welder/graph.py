@@ -165,15 +165,27 @@ class IRNode(Node):
             self.raxis = {}
 
         self.schedule_stages = []
+        self._schedule_compute_stages = []
+        
+        if self.reduce_op:
+            self.schedule_stages.append(self.reduce_op)
+        else:
+            for tensor in self.args:
+                if isinstance(tensor.op, te.ComputeOp):
+                    self.schedule_stages.append(tensor.op)
         for tensor in self.args:
             if isinstance(tensor.op, te.ComputeOp):
-                self.schedule_stages.append(tensor.op)
-
+                self._schedule_compute_stages.append(tensor.op)
+        
     @functools.lru_cache()
     def get_space_dim(self):
         dim_size = []
-        for axis in self.schedule_stages[0].axis:
-            dim_size.append(int(axis.dom.extent))
+        if self.reduce_op:
+            for axis in self.reduce_op.axis:
+                dim_size.append(int(axis.dom.extent))
+        else:
+            for axis in self.schedule_stages[0].axis:
+                dim_size.append(int(axis.dom.extent))
         return dim_size
 
     def propogate(self, tile, rstep={}, targets=None):
@@ -272,8 +284,8 @@ class IRNode(Node):
         CL_shape = [1] * len(self.get_space_dim())
         shapes = self.propogate_reduction_inputs(CL_shape, {x : wmma_k for x in self.raxis})
         A_deps, B_deps = shapes.values()
-        A_ax_k = A_deps.index(wmma_k)
-        B_ax_k = B_deps.index(wmma_k)
+        A_ax_k = len(A_deps) - 1 - A_deps[::-1].index(wmma_k)  
+        B_ax_k = len(B_deps) - 1 - B_deps[::-1].index(wmma_k)
         tc_axis = (A_ax_m, A_ax_k, B_ax_k, B_ax_n, C_ax_m, C_ax_n)
         return tc_axis
 

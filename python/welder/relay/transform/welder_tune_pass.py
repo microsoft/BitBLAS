@@ -27,6 +27,8 @@ class WelderTunePass(relay.ExprMutator):
 
         ordered_nodes = extractor.ordered_nodes
         node_map = extractor.node_map
+        # tune_node(ordered_nodes, ['ladder_perfect_im2col_conv_7'])
+        # raise NotImplementedError()
         tunner = MultiProcTunner(ordered_nodes, arch=self.arch, device="cuda:0", topk=20)
         engine = Engine(tunner)
         # tunner.load_cache("a.pkl")
@@ -137,6 +139,8 @@ class TileGraphExtractor(relay.ExprVisitor):
                 op_name = "_".join(f.op_names) + "_" + str(len(self.ordered_nodes))
             if call.op.attrs and "tensorCoreConfig" in call.op.attrs:
                 options["tensorCoreConfig"] = [int(x) for x in call.op.attrs["tensorCoreConfig"]]
+            if call.op.attrs and "ladder_config" in call.op.attrs:
+                options["ladder_config"] = call.op.attrs["ladder_config"]
             node = IRNode(node_inputs, args, op_name)
             if call.op.attrs and "relay.reshape_only" in call.op.attrs and call.op.attrs["relay.reshape_only"]:
                 options["memcpy"] = True

@@ -182,7 +182,7 @@ class TCPolicy(DefaultPolicy):
         codegen_dict.cached_tensors = td.cached_tensors_map[node]
         codegen_dict.wmma = wmma
         codegen_dict.use_cutlass = td.use_cutlass_mma[node]
-        codegen_dict.schedule_stages = [stage.name for stage in node.schedule_stages]
+        codegen_dict.schedule_stages = [stage.name for stage in node._schedule_compute_stages]
         codegen_dict.complete_config(node)
         return codegen_dict
 

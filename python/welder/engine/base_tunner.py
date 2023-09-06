@@ -4,7 +4,7 @@ import numpy as np
 
 from ..code_generator import CodeGenerator
 from ..graph import Edge, OutputNode, find_topo_sort
-from ..policy import DefaultPolicy, TCPolicy
+from ..policy import DefaultPolicy, TCPolicy, LadderPolicy
 from ..reference import get_subgraph_reference_outputs
 from ..utils import CompileResult, compile_parallel
 from .utils import insert_local_connections
@@ -154,6 +154,8 @@ class Tunner(object):
         for node in self.current_nodes:
             if node.get_tag("tensorCoreConfig"):
                 policy_list = [TCPolicy, DefaultPolicy]
+                if node.get_tag("ladder_config"):
+                    policy_list = [LadderPolicy]
                 break
         return policy_list
 
@@ -235,6 +237,7 @@ class Tunner(object):
 
         policy_list = self.get_policy_list()
         configs = self.generate_configs(policy_list, output_nodes)
+
         if len(configs) == 0:
             self.set_cache(signature, None)
             return None

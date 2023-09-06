@@ -3,4 +3,7 @@ from .welder_expr_rewrite import WelderExprRewrite
 from .welder_fuse_ops import WelderFuseOps
 from .welder_tune_pass import WelderTunePass
 from .welder_conv_implicitgemm import WelderConvImplicitGemm
+from .ladder_conv_implicitgemm import LadderConvImplicitGemm
+from .ladder_inception_layout import LadderRewriteInceptionLayout
 from .annotate_tensorcore import *
+from .annotate_ladder_tensorcore import *

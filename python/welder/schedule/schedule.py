@@ -10,13 +10,16 @@ from .te_reduce_interthread import *
 from .te_wmma import *
 from .tir_mma import TIRCutlassMMAScheduler
 from .tir_simt import *
+from .tir_ladder import TIRLadderMMAScheduler4D
+from .tir_ladder_pad import TIRLadderMMAPadScheduler2D
+import logging 
 
+logger = logging.getLogger(__name__)
 
 def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tensor] = [],
         shared_inputs_strides: Dict[te.Tensor, Stride] = {}, shared_outputs = []):
     ops = get_compute_ops(args)
     reduces_ops, _ = seperate_reduce_ops(ops)
-
     schedule_on_inner_stage = False
     for tensor in args:
         if isinstance(tensor.op, te.ComputeOp) and tensor.name not in config.schedule_stages:
@@ -25,6 +28,11 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
     if len(reduces_ops) == 0:
         assert(not schedule_on_inner_stage)
         template = TEElementWiseScheduler
+    elif config.use_ladder:
+        if len(config.rstep) == 1:
+            template = TIRLadderMMAPadScheduler2D
+        elif len(config.rstep) == 2:
+            template = TIRLadderMMAScheduler4D
     elif config.use_tc and config.use_cutlass:
         template = TIRCutlassMMAScheduler
     elif config.use_tc and not config.use_cutlass:
@@ -34,12 +42,10 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
         if schedule_on_inner_stage: raise NotImplementedError("Schedule not implemented")
         template = TEReduceInterThreadScheduler
     else:
-        if schedule_on_inner_stage:
-            raise NotImplementedError("Schedule not implemented")
-            template = TIRSIMTScheduler
-        else:
-            template = TEReduceScheduler
-
+        template = TIRSIMTScheduler
+            
+    logger.debug(f"Using template: {template} config: {config}")
+    
     scheduler = template(args, config)
 
     scheduler.shared_inputs = shared_inputs

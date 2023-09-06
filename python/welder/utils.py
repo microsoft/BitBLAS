@@ -60,7 +60,7 @@ extern "C" float profile({}) {{
     if (cudaEventSynchronize(stop) != cudaSuccess) return -1;
     if (cudaGetLastError() != cudaSuccess) return -1;
     cudaEventElapsedTime(&ms, start, stop);
-    int repeats = int(ceil(100.0 / ms));
+    int repeats = int(ceil(1000.0 / ms));
     cudaEventRecord(start, 0);
     for (int _ = 0; _ < repeats; _++)
         {};
@@ -111,11 +111,11 @@ extern "C" int {symbol}({def_args}) {{
     def compile(self, arch, timeout: float=None):
         if arch.platform == "CUDA":
             profiling_code = self._create_code_for_profiling()
-            src = tempfile.NamedTemporaryFile(mode='w', suffix=".cu")
+            src = tempfile.NamedTemporaryFile(mode='w', suffix=".cu", delete=True)
             lib_name = src.name.replace(".cu", ".so")
             compute_version = arch.compute_capability
             cutlass_dir = os.path.expanduser("~/cutlass/include")
-            command = ["nvcc", "-std=c++17", "-Xcudafe", "--diag_suppress=177", "--compiler-options", "'-fPIC'", "--shared", src.name, "-lcuda",
+            command = ["nvcc", "-std=c++17", "-Xcudafe", "--diag_suppress=177", "--compiler-options", "'-fPIC'", "-lineinfo", "--shared", src.name, "-lcuda",
                 f"-gencode=arch=compute_{compute_version},code=compute_{compute_version}",
                 f"-I{cutlass_dir}", "-o", lib_name]
         elif arch.platform == "ROCm":
@@ -181,7 +181,7 @@ extern "C" float profile({}) {{
     if (hipEventSynchronize(stop) != hipSuccess) return -1;
     if (hipGetLastError() != hipSuccess) return -1;
     hipEventElapsedTime(&ms, start, stop);
-    int repeats = int(ceil(100.0 / ms));
+    int repeats = int(ceil(1000.0 / ms));
     hipEventRecord(start, 0);
     for (int _ = 0; _ < repeats; _++)
         {};
