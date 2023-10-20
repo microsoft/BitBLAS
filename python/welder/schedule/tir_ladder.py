@@ -17,7 +17,21 @@ from .ladder_intrin import (
     C_shared_16x16_to_ldmatrix_32x8_layout,
     A_B_shared_16x16_to_ldmatrix_32x8_layout,
     ASYNC_COPY_F16_X8_INTRIN,
-    ASYNC_COPY_S8_X16_INTRIN
+    ASYNC_COPY_S8_X16_INTRIN,
+    TRICKY_MMA_fill_16x16_i32_INTRIN,
+    TRICKY_LDMATRIX_16x32_A_INTRIN,
+    TRICKY_LDMATRIX_32x16_B_INTRIN,
+    TRICKY_LDMATRIX_16x32_B_TRANS_INTRIN,
+    TRICKY_MMA_i8i8i32_INTRIN,
+    TRICKY_MMA_i8i8i32_TRANS_INTRIN,
+    TRICKY_MMA_store_16x16_i32_shared_INTRIN,
+    TRICKY_MMA_store_16x16_i32_global_INTRIN,
+    shared_16x16_to_ldmatrix_32x8_layout,
+    shared_32x16_to_ldmatrix_32x16_layout,
+    shared_16x32_to_ldmatrix_32x16_layout,
+    shared_16x32_to_ldmatrix_32x16_permutation,
+    A_global_16x32_to_shared_load_16x32_layout,
+    B_global_16x32_to_shared_load_16x32_layout,
 )
 
 # for debugging.
@@ -49,16 +63,41 @@ def write_sch(sch, path, fname):
     cu_fname = fname + ".cu"
     write_code(sch.mod.astext(), path, cu_fname)
 
+
+def write_code(code, path, fname):
+    global count
+    # if path not exist, create it
+    fname = str(count) + "." + fname
+    count += 1
+    if not os.path.exists(path):
+        os.makedirs(path)
+    # join path and fname
+    fname = os.path.join(path, fname)
+    with open(fname, "w") as f:
+        f.write(code)
+
+
+def write_sch(sch, path, fname):
+    py_fname = fname + ".py"
+    write_code(sch.mod["main"].script(), path, py_fname)
+    cu_fname = fname + ".cu"
+    write_code(sch.mod.astext(), path, cu_fname)
+    
 class TIRLadderMMAScheduler4D(TIRSchedulerBase):
     
     def schedule_consistent(self):
         # const val for testing
         warp_size = 32
-        wmma_m, wmma_n, wmma_k = 16, 16, 16
+        compute_dtype = self.reduce_op.output(0).dtype
+        wmma_k = 32 if compute_dtype == "int32" else 16
         sch, config = self.sche, self.config
         write_sch(sch, log_path, "original")
         C = sch.get_block(self.reduce_op.name)
-        i, j, kernel_i, kernel_j, k, kernel_k = sch.get_loops(C)
+        try:
+            i, j, kernel_i, kernel_j, k, kernel_k = sch.get_loops(C)
+        except ValueError:
+            b, i, j, kernel_i, kernel_j, k, kernel_k = sch.get_loops(C)
+            sch.bind(b, "blockIdx.z")
         A_ax_m, A_ax_k, B_ax_k, B_ax_n, C_ax_m, C_ax_n = config.tc_extra_conf.tc_axis
         propagate_inter_a= config.ladder_config.propagate_inter_a
         propagate_inter_b = config.ladder_config.propagate_inter_b 
@@ -68,7 +107,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         warp_tile_M, warp_tile_N = self.config.warp[0], self.config.warp[1]
         out_dtype = self.reduce_op.output(0).dtype
         def get_vec(in_dtype):
-            if in_dtype == "float32":
+            if in_dtype == "float32" or in_dtype == "int32":
                 vec = 4
             elif in_dtype == "float16":
                 vec = 8
@@ -157,19 +196,22 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
         write_sch(sch, log_path, "schedule_compute_inline")
 
-        def A_permutation(*args):  
-            kernel_i, kernel_j = args[-2], args[-1]  
-            other_args = args[:-2]    
-            result = (*other_args, *A_global_16x16_to_shared_load_16x16_layout(kernel_i, kernel_j))  
-            return result  
+        a_prmt_func = A_global_16x32_to_shared_load_16x32_layout if compute_dtype == "int32" else A_global_16x16_to_shared_load_16x16_layout
+        b_prmt_func = B_global_16x32_to_shared_load_16x32_layout if compute_dtype == "int32" else B_global_16x16_to_shared_load_16x16_layout
+
+        def A_permutation(*args):
+            kernel_i, kernel_j = args[-2], args[-1]
+            other_args = args[:-2]
+            result = (*other_args, *a_prmt_func(kernel_i, kernel_j))
+            return result
 
         def B_permutation(*args):
             kernel_i, kernel_j = args[-2], args[-1]
-            other_args = args[:-2]      
+            other_args = args[:-2]
             if transpose_B:
-                return (*other_args, *B_global_16x16_to_shared_load_16x16_layout(kernel_i, kernel_j))
-            else:            
-                return (*other_args, *A_global_16x16_to_shared_load_16x16_layout(kernel_i, kernel_j))
+                return (*other_args, *b_prmt_func(kernel_i, kernel_j))
+            else:
+                return (*other_args, *a_prmt_func(kernel_i, kernel_j))
 
         if not propagate_inter_a:
             sch.transform_layout(AS, ("read", 0),
@@ -211,20 +253,24 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         BW = sch.cache_read(C, 1, "warp")
         sch.compute_at(AW, ki, preserve_unit_loops=True)
         sch.compute_at(BW, ki, preserve_unit_loops=True)
-
+        
+        a_index_map = shared_16x32_to_ldmatrix_32x16_layout if compute_dtype == "int32" else A_B_shared_16x16_to_ldmatrix_32x8_layout
+        b_index_map = shared_16x32_to_ldmatrix_32x16_layout if compute_dtype == "int32" else A_B_shared_16x16_to_ldmatrix_32x8_layout
+        c_index_map = shared_16x16_to_ldmatrix_32x8_layout if compute_dtype == "int32" else C_shared_16x16_to_ldmatrix_32x8_layout
+        
         def index_map_A(i, k, wmma_m, wmma_k):
-            return (i, k, *A_B_shared_16x16_to_ldmatrix_32x8_layout(wmma_m, wmma_k))
+            return (i, k, *a_index_map(wmma_m, wmma_k))
 
 
         def index_map_B(*args):
             kernel_i, kernel_j = args[-2], args[-1]  
             other_args = args[:-2]    
-            result = (*other_args, *A_B_shared_16x16_to_ldmatrix_32x8_layout(kernel_i, kernel_j))  
+            result = (*other_args, *b_index_map(kernel_i, kernel_j))
             return result
 
 
         def index_map_C(m, n, wmma_m, wmma_n):
-            return (m, n, *C_shared_16x16_to_ldmatrix_32x8_layout(wmma_m, wmma_n),)
+            return (m, n, *c_index_map(wmma_m, wmma_n),)
 
 
         sch.transform_layout(AW, ("write", 0), index_map_A)
@@ -232,27 +278,35 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         sch.transform_layout(C_warp, ("read", 0), index_map_C)
         
         # ------------------------ Tensorize and Pipelining -------------------------
+        init_intrin = TRICKY_MMA_fill_16x16_i32_INTRIN if compute_dtype == "int32" else TRICKY_MMA_fill_16x16_f16_INTRIN
+        load_a_intrin = TRICKY_LDMATRIX_16x32_A_INTRIN if compute_dtype == "int32" else TRICKY_LDMATRIX_16x16_A_INTRIN
+        load_b_intrin = TRICKY_LDMATRIX_32x16_B_INTRIN if compute_dtype == "int32" else TRICKY_LDMATRIX_16x16_B_INTRIN
+        load_b_intrin_trans = TRICKY_LDMATRIX_16x32_B_TRANS_INTRIN if compute_dtype == "int32" else TRICKY_LDMATRIX_16x16_B_TRANS_INTRIN
+        compute_intrin = TRICKY_MMA_i8i8i32_INTRIN if compute_dtype == "int32" else TRICKY_MMA_f16f16f16_INTRIN
+        compute_trans_intrin = TRICKY_MMA_i8i8i32_TRANS_INTRIN if compute_dtype == "int32" else TRICKY_MMA_f16f16f16_TRANS_INTRIN
+        store_intrin = TRICKY_MMA_store_16x16_i32_shared_INTRIN if compute_dtype == "int32" else TRICKY_MMA_store_16x16_f16_shared_INTRIN
         init_block_b = sch.decompose_reduction(C, ko)
         write_sch(sch, log_path, "decompose_reduction")
         init_block_b_loops = sch.get_loops(init_block_b)
         init_block_b_i, init_block_b_j = sch.get_loops(init_block_b)[-4:-2]
         sch.annotate(init_block_b_i, "pragma_unroll_explicit", False)
         sch.annotate(init_block_b_j, "pragma_unroll_explicit", False)
-        sch.tensorize(sch.get_loops(init_block_b)[-2], TRICKY_MMA_fill_16x16_f16_INTRIN)
+        sch.tensorize(sch.get_loops(init_block_b)[-2], init_intrin)
         sch.tensorize(
-        sch.get_loops(AW)[-2], TRICKY_LDMATRIX_16x16_A_INTRIN
+            sch.get_loops(AW)[-2], load_a_intrin
         )
         sch.tensorize(
-            sch.get_loops(BW)[-2], TRICKY_LDMATRIX_16x16_B_INTRIN if not transpose_B else TRICKY_LDMATRIX_16x16_B_TRANS_INTRIN
+            sch.get_loops(
+                BW)[-2], load_b_intrin if not transpose_B else load_b_intrin_trans
         )
-        sch.tensorize(kernel_i, TRICKY_MMA_f16f16f16_INTRIN if not transpose_B else TRICKY_MMA_f16f16f16_TRANS_INTRIN)
+        sch.tensorize(
+            kernel_i, compute_intrin if not transpose_B else compute_trans_intrin)
         sch.tensorize(
             sch.get_loops(C_warp)[-2],
-            TRICKY_MMA_store_16x16_f16_shared_INTRIN,
+            store_intrin,
         )
-        write_sch(sch, log_path, "tensorize_store")
         if raster > 0:
-            sch.annotate(init_block_b_loops[-4], ann_key="thread_rasterization", ann_val=raster)
+            sch.annotate(ko, ann_key="thread_rasterization", ann_val=raster)
         if stage > 1:
             if stage > 1:
                 sch.annotate(ko, ann_key="software_pipeline_stage", ann_val=[0, 0, stage - 1])
@@ -266,7 +320,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
     
     def schedule_inconsistent(self, is_a_consistent=False, is_b_consistent=False):
          # const val for testing
-        assert is_a_consistent, "currently A should be consistent"
+        # assert is_a_consistent, "currently A should be consistent"
         num_args = len(self.args)
         is_lut = False
         if num_args >= 4:
@@ -275,7 +329,8 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             if lut_shape == 16:
                 is_lut = True
         warp_size = 32
-        wmma_m, wmma_n, wmma_k = 16, 16, 16
+        compute_dtype = self.reduce_op.output(0).dtype
+        wmma_k = 32 if compute_dtype == "int32" else 16
         
         sch, config = self.sche, self.config
         write_sch(sch, log_path, "original")
@@ -290,7 +345,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         warp_tile_M, warp_tile_N = self.config.warp[0], self.config.warp[1]
         out_dtype = self.reduce_op.output(0).dtype
         def get_vec(in_dtype):
-            if in_dtype == "float32":
+            if in_dtype == "float32" or in_dtype == "int32":
                 vec = 4
             elif in_dtype == "float16":
                 vec = 8
@@ -362,20 +417,22 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         
         write_sch(sch, log_path, "schedule_warp")
         
+        a_prmt_func = A_global_16x32_to_shared_load_16x32_layout if compute_dtype == "int32" else A_global_16x16_to_shared_load_16x16_layout
+        b_prmt_func = B_global_16x32_to_shared_load_16x32_layout if compute_dtype == "int32" else B_global_16x16_to_shared_load_16x16_layout
 
-        def A_permutation(*args):  
-            kernel_i, kernel_j = args[-2], args[-1]  
-            other_args = args[:-2]    
-            result = (*other_args, *A_global_16x16_to_shared_load_16x16_layout(kernel_i, kernel_j))  
-            return result  
+        def A_permutation(*args):
+            kernel_i, kernel_j = args[-2], args[-1]
+            other_args = args[:-2]
+            result = (*other_args, *a_prmt_func(kernel_i, kernel_j))
+            return result
 
         def B_permutation(*args):
             kernel_i, kernel_j = args[-2], args[-1]
-            other_args = args[:-2]      
+            other_args = args[:-2]
             if transpose_B:
-                return (*other_args, *B_global_16x16_to_shared_load_16x16_layout(kernel_i, kernel_j))
-            else:            
-                return (*other_args, *A_global_16x16_to_shared_load_16x16_layout(kernel_i, kernel_j))
+                return (*other_args, *b_prmt_func(kernel_i, kernel_j))
+            else:
+                return (*other_args, *a_prmt_func(kernel_i, kernel_j))
 
         if not propagate_inter_a:
             sch.transform_layout(AS, ("read", 0),
@@ -418,11 +475,6 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             self.schedule_compute_inline()
             if is_lut:
                 block_local_B = sch.cache_read(block_local_B_decompress, 1, "local")
-                block_shared_lut = sch.cache_read(block_local_B_decompress, 0, "shared")
-                sch.reverse_compute_at(block_shared_lut, block_j)
-                _, B_shared_tx = sch.split(
-                    sch.get_loops(block_shared_lut)[-1], factors=[None, warp_size])
-                sch.bind(B_shared_tx, "threadIdx.x")
             else:
                 block_local_B = sch.cache_read(block_local_B_decompress, 0, "local")
             sch.compute_at(block_local_B_decompress, B_shared_vi)
@@ -435,6 +487,12 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             sch.bind(B_shared_tx, "threadIdx.x")
             sch.bind(B_shared_ty, "threadIdx.y")
             sch.bind(B_shared_tz, "threadIdx.z")
+            if is_lut:
+                block_shared_lut = sch.cache_read(block_local_B_decompress, 0, "shared")
+                sch.reverse_compute_at(block_shared_lut, j)
+                _, B_shared_tx = sch.split(
+                    sch.get_loops(block_shared_lut)[-1], factors=[None, warp_size])
+                sch.bind(B_shared_tx, "threadIdx.x")
         else:
             cooperative_fetch(BS, dims=4, vec=vecB, use_pragma_unroll=True, force_async_copy=(propagate_inter_b and not propagate_inter_a))
  
@@ -445,20 +503,21 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         sch.compute_at(AW, ki, preserve_unit_loops=True)
         sch.compute_at(BW, ki, preserve_unit_loops=True)
 
+        a_index_map = shared_16x32_to_ldmatrix_32x16_layout if compute_dtype == "int32" else A_B_shared_16x16_to_ldmatrix_32x8_layout
+        b_index_map = shared_16x32_to_ldmatrix_32x16_layout if compute_dtype == "int32" else A_B_shared_16x16_to_ldmatrix_32x8_layout
+        c_index_map = shared_16x16_to_ldmatrix_32x8_layout if compute_dtype == "int32" else C_shared_16x16_to_ldmatrix_32x8_layout
 
         def index_map_A(i, k, wmma_m, wmma_k):
-            return (i, k, *A_B_shared_16x16_to_ldmatrix_32x8_layout(wmma_m, wmma_k))
-
+            return (i, k, *a_index_map(wmma_m, wmma_k))
 
         def index_map_B(*args):
-            kernel_i, kernel_j = args[-2], args[-1]  
-            other_args = args[:-2]    
-            result = (*other_args, *A_B_shared_16x16_to_ldmatrix_32x8_layout(kernel_i, kernel_j))  
+            kernel_i, kernel_j = args[-2], args[-1]
+            other_args = args[:-2]
+            result = (*other_args, *b_index_map(kernel_i, kernel_j))
             return result
 
-
         def index_map_C(m, n, wmma_m, wmma_n):
-            return (m, n, *C_shared_16x16_to_ldmatrix_32x8_layout(wmma_m, wmma_n),)
+            return (m, n, *c_index_map(wmma_m, wmma_n),)
 
 
         sch.transform_layout(AW, ("write", 0), index_map_A)
@@ -466,23 +525,32 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         sch.transform_layout(C_warp, ("read", 0), index_map_C)
         
         # ------------------------ Tensorize and Pipelining -------------------------
+        init_intrin = TRICKY_MMA_fill_16x16_i32_INTRIN if compute_dtype == "int32" else TRICKY_MMA_fill_16x16_f16_INTRIN
+        load_a_intrin = TRICKY_LDMATRIX_16x32_A_INTRIN if compute_dtype == "int32" else TRICKY_LDMATRIX_16x16_A_INTRIN
+        load_b_intrin = TRICKY_LDMATRIX_32x16_B_INTRIN if compute_dtype == "int32" else TRICKY_LDMATRIX_16x16_B_INTRIN
+        load_b_intrin_trans = TRICKY_LDMATRIX_16x32_B_TRANS_INTRIN if compute_dtype == "int32" else TRICKY_LDMATRIX_16x16_B_TRANS_INTRIN
+        compute_intrin = TRICKY_MMA_i8i8i32_INTRIN if compute_dtype == "int32" else TRICKY_MMA_f16f16f16_INTRIN
+        compute_trans_intrin = TRICKY_MMA_i8i8i32_TRANS_INTRIN if compute_dtype == "int32" else TRICKY_MMA_f16f16f16_TRANS_INTRIN
+        store_intrin = TRICKY_MMA_store_16x16_i32_shared_INTRIN if compute_dtype == "int32" else TRICKY_MMA_store_16x16_f16_shared_INTRIN
         init_block_b = sch.decompose_reduction(C, ko)
         write_sch(sch, log_path, "decompose_reduction")
         init_block_b_loops = sch.get_loops(init_block_b)
         init_block_b_i, init_block_b_j = sch.get_loops(init_block_b)[-4:-2]
         sch.annotate(init_block_b_i, "pragma_unroll_explicit", False)
         sch.annotate(init_block_b_j, "pragma_unroll_explicit", False)
-        sch.tensorize(sch.get_loops(init_block_b)[-2], TRICKY_MMA_fill_16x16_f16_INTRIN)
+        sch.tensorize(sch.get_loops(init_block_b)[-2], init_intrin)
         sch.tensorize(
-        sch.get_loops(AW)[-2], TRICKY_LDMATRIX_16x16_A_INTRIN
+            sch.get_loops(AW)[-2], load_a_intrin
         )
         sch.tensorize(
-            sch.get_loops(BW)[-2], TRICKY_LDMATRIX_16x16_B_INTRIN if not transpose_B else TRICKY_LDMATRIX_16x16_B_TRANS_INTRIN
+            sch.get_loops(
+                BW)[-2], load_b_intrin if not transpose_B else load_b_intrin_trans
         )
-        sch.tensorize(kernel_i, TRICKY_MMA_f16f16f16_INTRIN if not transpose_B else TRICKY_MMA_f16f16f16_TRANS_INTRIN)
+        sch.tensorize(
+            kernel_i, compute_intrin if not transpose_B else compute_trans_intrin)
         sch.tensorize(
             sch.get_loops(C_warp)[-2],
-            TRICKY_MMA_store_16x16_f16_shared_INTRIN,
+            store_intrin,
         )
         write_sch(sch, log_path, "tensorize_store")
         if raster > 0:
@@ -501,14 +569,14 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
     def schedule(self) -> tir.Schedule:
         input0_dtype = self.args[0].dtype
         input1_dtype = self.args[1].dtype
-        is_consistent = input0_dtype == input1_dtype
+        wmma_k = 32 if self.reduce_op.output(0).dtype == "int32" else 16
+        
+        is_a_consistent = self.args[0].shape[-1] == wmma_k
+        is_b_consistent = self.args[1].shape[-1] == wmma_k
+        is_consistent = is_a_consistent and is_b_consistent
         if is_consistent:
             return self.schedule_consistent()
         else:
-            reduce_op = self.reduce_op
-            reduce_input0_dtype = reduce_op.input_tensors[0].dtype
-            reduce_input1_dtype = reduce_op.input_tensors[1].dtype
-            is_a_consistent = reduce_input0_dtype == input0_dtype
-            is_b_consistent = reduce_input1_dtype == input1_dtype    
             print(f"the computation is inconsistent, is_a_consistent: {is_a_consistent}, is_b_consistent: {is_b_consistent}")
+            
             return self.schedule_inconsistent(is_a_consistent, is_b_consistent)

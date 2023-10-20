@@ -34,7 +34,8 @@ class DefaultPolicy:
     def emit_config(self, topk: int) -> List[Dict[Node, Config]]:
         try:
             base_tile = self.get_base_tile()
-        except Exception:
+        except Exception as e:
+            print(e)
             return []
         if base_tile is None:
             return []
@@ -362,6 +363,11 @@ class DefaultPolicy:
             node_grid_size = np.prod([(y + x - 1) // x for x, y in zip(td.get_tile(node), node.get_space_dim())])
             if node_grid_size != td.grid_size:
                 return False
+            if hasattr(node, 'reduce_op') and node.reduce_op is not None and len(node.reduce_op.axis) == len(td.output_tile):
+                for i, tile_extent in enumerate(td.output_tile):
+                    if node.reduce_op.axis[i].dom.extent % tile_extent:
+                        return False
+                
         return True
 
     def recommend_block_size(self, td: TileDict) -> List[int]:
@@ -466,6 +472,7 @@ class DefaultPolicy:
                 reduce_thread[target_ax] *= factor
 
         codegen_dict = Config()
+        codegen_dict.use_ladder = node.get_tag("ladder_config")
         codegen_dict.block = tile
         codegen_dict.thread = cur_threads
         codegen_dict.rstep = [rsteps[ax] for ax in node.raxis]
@@ -477,6 +484,12 @@ class DefaultPolicy:
             for i in reversed(range(ndim)):
                 if codegen_dict.block[i] // codegen_dict.thread[i] % 2 == 0:
                     codegen_dict._step[i] = 2
+                    break
+        elif node.get_dtype().bits == 8:  # set step=4 for 8bit case
+            codegen_dict._step = [1 for _ in range(ndim)]
+            for i in reversed(range(ndim)):
+                if codegen_dict.block[i] // codegen_dict.thread[i] % 4 == 0:
+                    codegen_dict._step[i] = 4
                     break
         # Plan vectorize
         codegen_dict.vectorize = self._plan_vectorize(node, td, block_size)

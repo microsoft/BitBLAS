@@ -7,7 +7,7 @@ from tvm import te
 from ..config import Stride
 from ..IRpass import *
 from .scheduler_base import SchedulerBase
-
+from ..te_utils import create_proxy_output
 
 class TESchedulerBase(SchedulerBase):
     def cooperative_fetch(self, shared, strides: Stride = Stride(), inner_step: int = 1, vectorize_inner=True):
@@ -55,3 +55,8 @@ class TESchedulerBase(SchedulerBase):
         self.passes.append(RewriteOutputPass(self.shared_outputs, self.config.output_strides, self.config.block, True).get_pass())
         self.passes.append(RewriteInputPass(self.shared_inputs, True).get_pass())
         self.passes.append(FixCudaCastPass().get_pass())
+
+    def proxy_outputs(self, output_args) -> List[te.Tensor]:
+        if len(output_args) > 1:
+            output_args = create_proxy_output(output_args)    
+        return output_args

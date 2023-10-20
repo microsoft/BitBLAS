@@ -1,9 +1,31 @@
 import numpy as np
+import tvm
 from tvm import te
 
 from ..config import Config, Stride
 from .te_base import TESchedulerBase
 
+# for debugging.
+import os
+# get file name and remove the suffix
+fname = os.path.basename(__file__)
+fname = os.path.splitext(fname)[0]
+# create log path
+log_path = "progress/" + fname
+count = 0
+
+
+def write_code(code, path, fname):
+    global count
+    # if path not exist, create it
+    fname = str(count) + "." + fname
+    count += 1
+    if not os.path.exists(path):
+        os.makedirs(path)
+    # join path and fname
+    fname = os.path.join(path, fname)
+    with open(fname, "w") as f:
+        f.write(code)
 
 class TEElementWiseScheduler(TESchedulerBase):
     def schedule(self) -> te.Schedule:
@@ -13,7 +35,8 @@ class TEElementWiseScheduler(TESchedulerBase):
                 sch[op].compute_inline()
         out = self.output_op
         self.block_size[0] = int(np.prod(config.thread))
-
+        write_code(
+            str(tvm.lower(sch, self.args, simple_mode=True)), log_path, 'origin.py')
         blck_axis = []
         vthd_axis = []
         thrd_axis = []
@@ -35,9 +58,11 @@ class TEElementWiseScheduler(TESchedulerBase):
         for va in vthd_axis:
             sch[out].bind(va, te.thread_axis("vthread"))
         sch[out].bind(thrd_fused, te.thread_axis("threadIdx.x"))
+
         for tn in tile_axis:
             sch[out].unroll(tn)
-
+        write_code(
+            str(tvm.lower(sch, self.args, simple_mode=True)), log_path, 'unroll.py')
         cache_plan = {}
         for op in self.none_reduce_ops:
             for tensor in op.input_tensors:
@@ -46,6 +71,9 @@ class TEElementWiseScheduler(TESchedulerBase):
                         cache_plan[tensor] = []
                     cache_plan[tensor].append(op)
 
+
+        write_code(
+            str(tvm.lower(sch, self.args, simple_mode=True)), log_path, 'cached.py')
         for tensor, consumers in cache_plan.items():
             tensor_shared = sch.cache_read(tensor, "shared", consumers)
             sch[tensor_shared].compute_at(sch[out], thrd_fused)
@@ -57,4 +85,6 @@ class TEElementWiseScheduler(TESchedulerBase):
             if len(self.shared_outputs) == 0: continue
             tensor_local = sch.cache_read(tensor_shared, "local", consumers)
             sch[tensor_local].compute_at(sch[out], thrd_fused)
+        write_code(
+            str(tvm.lower(sch, self.args, simple_mode=True)), log_path, 'scheduled.py')
         return sch

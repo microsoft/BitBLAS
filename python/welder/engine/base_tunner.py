@@ -236,14 +236,21 @@ class Tunner(object):
             return result
 
         policy_list = self.get_policy_list()
-        configs = self.generate_configs(policy_list, output_nodes)
+        # configs = self.generate_configs(policy_list, output_nodes)
 
+        try:
+            configs = self.generate_configs(policy_list, output_nodes)
+        except Exception as e:
+            self.write_error_log(None, e)
+            self.set_cache(signature, None)
+            return None
         if len(configs) == 0:
             self.set_cache(signature, None)
             return None
         compile_results = self.generate_code(output_nodes, configs, kernel_name)
         for cpresult in compile_results:
             cpresult.set_io_desc(input_desc, output_desc)
+            # print(cpresult.code)
         compile_parallel(compile_results, self.arch, timeout=30)
         best = self.select_best(output_nodes, compile_results)
         self.set_cache(signature, best)

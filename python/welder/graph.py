@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
 import tvm
-from tvm import te
+from tvm import te, relay
 
 from .lang import translate_ir_to_tvm
 from .shape_inference import get_analyzer_by_te
@@ -61,8 +61,8 @@ class Node:
     def set_shape(self, shape: List[int], id=0, overwrite=False) -> None:
         if len(self._shapes) <= id:
             self._shapes.extend([None for _ in range(id - len(self._shapes) + 1)])
-        elif self._shapes[id] is not None and not overwrite:
-            assert self._shapes[id] == list(map(int, shape)), (self._shapes, list(map(int, shape)))
+        # elif self._shapes[id] is not None and not overwrite:
+        #     assert self._shapes[id] == list(map(int, shape)), (self._shapes, list(map(int, shape)))
         self._shapes[id] = list(map(int, shape))
 
     def get_dtype(self, id=0) -> tvm.DataType:
@@ -126,10 +126,21 @@ class OutputNode(Node):
         return "output"
 
 class IRNode(Node):
-    def __init__(self, inputs, compute: Union[str, List[te.Tensor], None], name="Compute") -> None:
+    def __init__(self, inputs, compute: Union[str, relay.TensorType, relay.TupleType, List[te.Tensor], None], name="Compute") -> None:
         super().__init__(inputs, name)
         if compute is None:
             self.args = None
+            return
+        elif isinstance(compute, relay.TensorType):
+            self.args = compute
+            self.set_shape(compute.shape)
+            self.set_dtype(tvm.DataType(compute.dtype))
+            return
+        elif isinstance(compute, relay.TupleType):
+            self.args = compute
+            for idx, type in enumerate(compute.fields):
+                self.set_shape(type.shape, idx)
+                self.set_dtype(tvm.DataType(type.dtype), idx)
             return
         elif isinstance(compute, str):
             input_args, output_args = translate_ir_to_tvm(compute)
@@ -140,10 +151,9 @@ class IRNode(Node):
                     input_args.append(arg)
                 else:
                     output_args.append(arg)
-
         self.ana = get_analyzer_by_te(input_args + output_args)
         self.args = input_args + output_args
-
+        
         # set input shapes and dtypes
         for edge, arg in zip(self.inputs, self.args):
             edge.src_node.set_shape(arg.shape, edge.src_id)

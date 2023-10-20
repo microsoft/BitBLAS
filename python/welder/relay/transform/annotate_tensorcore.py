@@ -23,7 +23,7 @@ class OpVisitor(relay.ExprVisitor):
         self.axis = None
 
     def visit_call(self, call):
-        if call.op.name in ["nn.dense", "nn.batch_matmul", "nn.matmul", "dotsplitk", "welder.matmul", "welder.C2DImplicitGemm", "welder.C1DImplicitGemm"]:
+        if call.op.name in ["nn.dense", "nn.batch_matmul", "nn.matmul", "dotsplitk", "welder.matmul", "welder.C2DImplicitGemm", "welder.C1DImplicitGemm", "ladder.quant_linear"]:
             M, N = call.checked_type.shape[-2], call.checked_type.shape[-1]
             A_shape = call.args[0].checked_type.shape
             B_shape = call.args[1].checked_type.shape

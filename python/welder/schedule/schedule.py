@@ -5,6 +5,7 @@ from tvm import te
 from ..config import Config, Stride
 from ..te_utils import get_compute_ops, seperate_reduce_ops
 from .te_elementwise import *
+from .tir_elementwise import *
 from .te_reduce import *
 from .te_reduce_interthread import *
 from .te_wmma import *
@@ -18,6 +19,14 @@ logger = logging.getLogger(__name__)
 
 def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tensor] = [],
         shared_inputs_strides: Dict[te.Tensor, Stride] = {}, shared_outputs = []):
+    
+    input_args, output_args = [], []
+    for arg in args:
+        if isinstance(arg.op, te.PlaceholderOp):
+            input_args.append(arg)
+        else:
+            output_args.append(arg)
+    
     ops = get_compute_ops(args)
     reduces_ops, _ = seperate_reduce_ops(ops)
     schedule_on_inner_stage = False
@@ -27,12 +36,48 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
 
     if len(reduces_ops) == 0:
         assert(not schedule_on_inner_stage)
-        template = TEElementWiseScheduler
+        # TODO(v-leiwang3): adhoc handler for bloom, in future it should be fixed through tir infra or simplify or template enhancement.
+        if len(output_args) == 1 and 'reshape' in output_args[0].name:
+            template = TIRElementWiseScheduler
+            
+            try:
+                scheduler = template(args, config)
+
+                scheduler.shared_inputs = shared_inputs
+                scheduler.shared_outputs = shared_outputs
+                scheduler.shared_inputs_strides = {
+                    tensor: Stride() for tensor in shared_inputs}
+                scheduler.shared_inputs_strides.update(shared_inputs_strides)
+
+                scheduler.make_passes()
+                scheduler.schedule()
+            except Exception as e:
+                print(e)
+                template = TEElementWiseScheduler
+                scheduler = template(args, config)
+
+                scheduler.shared_inputs = shared_inputs
+                scheduler.shared_outputs = shared_outputs
+                scheduler.shared_inputs_strides = {
+                    tensor: Stride() for tensor in shared_inputs}
+                scheduler.shared_inputs_strides.update(shared_inputs_strides)
+
+                scheduler.make_passes()
+                scheduler.schedule()
+            
+            return scheduler
+        else:
+            template = TEElementWiseScheduler
+        
     elif config.use_ladder:
-        if len(config.rstep) == 1:
+        if not config.use_tc:
+            template = TIRSIMTScheduler
+        elif len(config.rstep) == 1:
             template = TIRLadderMMAPadScheduler2D
         elif len(config.rstep) == 2:
             template = TIRLadderMMAScheduler4D
+        else:
+            raise NotImplementedError("Schedule not implemented")
     elif config.use_tc and config.use_cutlass:
         template = TIRCutlassMMAScheduler
     elif config.use_tc and not config.use_cutlass:
@@ -43,7 +88,7 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
         template = TEReduceInterThreadScheduler
     else:
         template = TIRSIMTScheduler
-            
+
     logger.debug(f"Using template: {template} config: {config}")
     
     scheduler = template(args, config)
@@ -55,5 +100,6 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
 
     scheduler.make_passes()
     scheduler.schedule()
+    
 
     return scheduler
