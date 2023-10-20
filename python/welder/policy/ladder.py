@@ -14,7 +14,8 @@ class LadderPolicy(DefaultPolicy):
         super().__init__(output_nodes, arch)
         self.wmma_m = 16
         self.wmma_n = 16
-        self.wmma_k = 16
+        compute_dtype = str(self.output_nodes[-1]._dtypes[-1])
+        self.wmma_k = 32 if compute_dtype == "int32" else 16
 
     def _compute_tc_strides(self, node: IRNode, tile: List[int], rstep: Dict[str, int]={}) -> Tuple[Stride, Stride, Stride]:
         shapes = node.propogate_reduction_inputs(tile, rstep)
@@ -54,20 +55,22 @@ class LadderPolicy(DefaultPolicy):
         ladder_configs = node.get_tag("ladder_config")
         pipeline_stage = ladder_configs[2] if len(ladder_configs) > 2 else 1
         # assume A is always not transposed.
-        is_matmul = (output_shape[-1] == 16 and output_shape[-2] == 16)
+        is_matmul = (output_shape[-1] == self.wmma_n and output_shape[-2] == self.wmma_n)
 
-        print('output_shape: ', output_shape)
         if len(output_shape) == 2:
             M = output_shape[0]
             N = output_shape[1]
         elif len(output_shape) == 4:
-            
             if is_matmul:
                 M = output_shape[0] * output_shape[2]
                 N = output_shape[1] * output_shape[3]
             else:
                 M = output_shape[0] * output_shape[1] * output_shape[2]
                 N = output_shape[3]
+        elif len(output_shape) == 5:
+            # it's batched matmul
+            M = output_shape[1] * output_shape[3]
+            N = output_shape[2] * output_shape[4]
         elif len(output_shape) == 6 and is_matmul:
             M = output_shape[0] * output_shape[1] * output_shape[2] * output_shape[-2]
             N = output_shape[3] * output_shape[-1]
@@ -89,11 +92,18 @@ class LadderPolicy(DefaultPolicy):
                 K = kernel_shape[1] * kernel_shape[3]
             else:
                 K = kernel_shape[0] * kernel_shape[2]
+        elif len(kernel_shape) == 5:
+            if transpose_B:
+                K = kernel_shape[2] * kernel_shape[4]
+            else:
+                K = kernel_shape[1] * kernel_shape[3]
 
         if len(input_shape) == 2:
             AK = input_shape[1]
         elif len(input_shape) == 4:
             AK = input_shape[1] * input_shape[3]
+        elif len(input_shape) == 5:
+            AK = input_shape[2] * input_shape[-1]
         elif len(input_shape) == 6:
             is_nhwc = input_shape[1] == input_shape[2]
             if is_nhwc:
@@ -101,24 +111,27 @@ class LadderPolicy(DefaultPolicy):
             else:
                 AK = input_shape[1] * input_shape[-1]
         print(input_shape)
-        print(f"Considering a gemm problem M N K CHANNEL", M, N, K, AK)
+        print(f"Considering a gemm problem M N K CHANNEL", M, N, K)
 
         if len(node.raxis) == 1:
             for k in node.raxis:
                 if output_dtype == 'float16':
                     result[k] = 32
-                elif output_dtype == 'int8':
+                elif output_dtype == 'int32' or output_dtype == 'int8':
                     result[k] = 64
                 else:
                     raise NotImplementedError
         else:
             for i, k in enumerate(node.raxis):
                 if i == 0:
+                    if output_dtype == 'int32' or output_dtype == 'int8':
+                        result[k] = 64
+                        continue
                     if AK % 32 != 0 and AK % 16 == 0:
                         result[k] = 16
                         continue
                     if node.raxis[k] % 2 == 0:
-                        if M <= 512 or N <= 512:
+                        if M <= 128 or N <= 512:
                             if N <= 64 and (K % 96 == 0 and K > 96) and pipeline_stage == 1:
                                 result[k] = 96
                             elif K > 64 and K % 64 == 0 and pipeline_stage == 1:
@@ -181,7 +194,7 @@ class LadderPolicy(DefaultPolicy):
         input_shape = node.args[0].shape
         kernel_shape = node.args[1].shape
         output_shape = node.reduce_op.output(0).shape
-        _dtype = node._dtypes[0]
+        _dtype = self.output_nodes[-1]._dtypes[-1]
         size_per_element = _dtype.bits // 8
         # assume A is always not transposed.
         if len(output_shape) == 4:
@@ -190,6 +203,9 @@ class LadderPolicy(DefaultPolicy):
         elif len(output_shape) == 2:
             M = output_shape[0]
             N = output_shape[1]
+        elif len(output_shape) == 5:
+            M = output_shape[1] * output_shape[3]
+            N = output_shape[2] * output_shape[4]
         elif len(output_shape) == 6:
             # nhwc1616
             M = output_shape[0] * output_shape[-2]
@@ -210,8 +226,14 @@ class LadderPolicy(DefaultPolicy):
                 K = kernel_shape[1] * kernel_shape[3]
             else:
                 K = kernel_shape[0] * kernel_shape[2]
+        elif len(kernel_shape) == 5:
+            if transpose_B:
+                K = kernel_shape[2] * kernel_shape[4]
+            else:
+                K = kernel_shape[1] * kernel_shape[3]
         total_size = (M * N  + M * K + N * K) * size_per_element
-        if total_size < 6 * 1024 * 1024:
+        if total_size < 6 * 1024 * 1024 and total_size > 0:
+            print(f"total size {total_size} is too small")
             return raster_factor
         raster_factor = int(self.arch.compute_max_core ** 0.5)
         return raster_factor
@@ -225,7 +247,7 @@ class LadderPolicy(DefaultPolicy):
         tile, rsteps = td.get_tile(node), td.get_rstep(node)
         warps = block_size // self.arch.warp_size
         ndim = len(tile)
-        wmma = [16, 16, 16]
+        wmma = [self.wmma_m, self.wmma_n, self.wmma_k]
         wmma_tile = [1 for i in range(ndim)]
         wmma_tile[ax_m] = wmma[0]
         wmma_tile[ax_n] = wmma[1]

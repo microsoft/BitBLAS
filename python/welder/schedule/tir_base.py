@@ -8,7 +8,6 @@ from ..config import Stride
 from ..IRpass import *
 from .scheduler_base import SchedulerBase
 
-
 class TIRSchedulerBase(SchedulerBase):
     def create_schedule(self) -> tir.Schedule:
         workload = te.create_prim_func(self.args)
@@ -20,12 +19,13 @@ class TIRSchedulerBase(SchedulerBase):
 
     def schedule_compute_inline(self) -> None:
         for op in reversed(self.ops):
-            if op not in (self.reduce_op, self.output_op):
+            if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
                 block = self.sche.get_block(op.name)
                 self.sche.compute_inline(block)
         if self.reduce_op != None and self.reduce_op != self.output_op:
             block = self.sche.get_block(self.output_op.name)
             self.sche.reverse_compute_inline(block)
+            
 
     def cooperative_fetch(self, SS: tir.Block, dim_offset: int, strides: Stride=Stride(), vector_load: int=1, use_pragma_unroll: bool=False):
         loops = self.sche.get_loops(SS)

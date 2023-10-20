@@ -1,8 +1,6 @@
 import numpy as np
 from tvm import tir
 import os
-from ..config import Stride
-from ..IRpass import ApplyLayoutPass
 from ..layout import *
 from .tir_base import TIRSchedulerBase
 from tvm.tir.tensor_intrin.cuda import (
@@ -78,8 +76,8 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         warp_row_tiles = warp_tile_M // wmma_m
         warp_col_tiles = warp_tile_N // wmma_n
         chunk = chunk_size
-        stage = 1
-        use_async = 0
+        stage = config.pipeline_stage
+        use_async = stage > 1
         output_shape = self.reduce_op.output(0).shape
         is_matmul = (output_shape[-1] == 16 and output_shape[-2] == 16)
         if len(output_shape) == 2:  
@@ -160,9 +158,16 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         
         C_warp = sch.cache_write(C, 0, "wmma.accumulator")
         sch.reverse_compute_at(C_warp, j, preserve_unit_loops=True)
+        
+        out_i, out_j = sch.get_loops(C_warp)[-2:]
+        out_i, ok_i = sch.split(out_i, factors=[None, wmma_m])
+        out_j, ok_j = sch.split(out_j, factors=[None, wmma_n])
+        sch.reorder(out_i, out_j, ok_i, ok_j)
+        sch.unroll(out_j)
+        
         sch.reverse_compute_at(
             C_shared,
-            sch.get_loops(C_warp)[-4],
+            sch.get_loops(C_warp)[-3],
             preserve_unit_loops=True,
         )
         def transform_out(i, j):
@@ -206,13 +211,13 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         sch.compute_at(AW, ki, preserve_unit_loops=True)
         sch.compute_at(BW, ki, preserve_unit_loops=True)
         def tricky_extract_cache(block, sub_i, sub_j):
-                i, j = sch.get_loops(block)[-2:]
-                i, kernel_i = sch.split(i, factors=[None, sub_i])
-                j, kernel_j = sch.split(j, factors=[None, sub_j])
-                sch.reorder(i, j, kernel_i, kernel_j)
-                sch.unroll(i)
-                sch.unroll(j)
-                return (i, j, kernel_i, kernel_j)
+            i, j = sch.get_loops(block)[-2:]
+            i, kernel_i = sch.split(i, factors=[None, sub_i])
+            j, kernel_j = sch.split(j, factors=[None, sub_j])
+            sch.reorder(i, j, kernel_i, kernel_j)
+            sch.unroll(i)
+            sch.unroll(j)
+            return (i, j, kernel_i, kernel_j)
 
 
         block_conv_input_frag_loops = tricky_extract_cache(
@@ -234,12 +239,6 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
             sch.get_loops(BW)[-2], WMMA_LOAD_16x16x16_F16_B_INTRIN if not transpose_B else WMMA_LOAD_16x16x16_F16_B_TRANS_INTRIN
         )
         sch.tensorize(kernel_i, WMMA_SYNC_16x16x16_f16f16f16_INTRIN if not transpose_B else WMMA_SYNC_16x16x16_f16f16f16_TRANS_INTRIN)
-      
-        out_i, out_j = sch.get_loops(C_warp)[-2:]
-        out_i, ok_i = sch.split(out_i, factors=[None, wmma_m])
-        out_j, ok_j = sch.split(out_j, factors=[None, wmma_n])
-        sch.reorder(out_i, out_j, ok_i, ok_j)
-        sch.unroll(out_j)
 
         sch.tensorize(
             sch.get_loops(C_warp)[-2],
@@ -248,7 +247,14 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         write_sch(sch, log_path, "tensorize_store")
         if raster > 0:
             sch.annotate(init_block_b_loops[-4], ann_key="thread_rasterization", ann_val=raster)
-        
+        if stage > 1:
+            sch.annotate(ko, ann_key="software_pipeline_stage",
+                         ann_val=[0, 0, stage - 1])
+            sch.annotate(ko, ann_key="software_pipeline_order",
+                         ann_val=[0, 1, 2])
+            if use_async:
+                sch.annotate(ko, "software_pipeline_async_stages", [0])
+
         # ------------------------ Cache small tensors -------------------------------
         # cache_plan = self.make_cache_plan()
         # if len(self.shared_outputs) > 0:

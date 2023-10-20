@@ -104,12 +104,14 @@ class PowerRewriter(DFPatternCallback):
 
 @relay.transform.function_pass(opt_level=0)
 class WelderExprRewrite(relay.ExprMutator):
-    def __init__(self):
+    def __init__(self, enable_softmax=True):
         super().__init__()
+        self.enable_softmax = enable_softmax
 
     def transform_function(self, func, mod, ctx):
         func = SplitRewriter().rewrite(func)
-        func = SoftmaxRewriter().rewrite(func)
+        if self.enable_softmax:
+            func = SoftmaxRewriter().rewrite(func)
         func = PowerRewriter().rewrite(func)
         return self.visit(func)
 

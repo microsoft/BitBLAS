@@ -60,7 +60,8 @@ extern "C" float profile({}) {{
     if (cudaEventSynchronize(stop) != cudaSuccess) return -1;
     if (cudaGetLastError() != cudaSuccess) return -1;
     cudaEventElapsedTime(&ms, start, stop);
-    int repeats = int(ceil(1000.0 / ms));
+    int repeats = int(ceil(100.0 / ms));
+    if (repeats <= 3) repeats = 5;
     cudaEventRecord(start, 0);
     for (int _ = 0; _ < repeats; _++)
         {};
@@ -181,7 +182,7 @@ extern "C" float profile({}) {{
     if (hipEventSynchronize(stop) != hipSuccess) return -1;
     if (hipGetLastError() != hipSuccess) return -1;
     hipEventElapsedTime(&ms, start, stop);
-    int repeats = int(ceil(1000.0 / ms));
+    int repeats = int(ceil(100.0 / ms));
     hipEventRecord(start, 0);
     for (int _ = 0; _ < repeats; _++)
         {};

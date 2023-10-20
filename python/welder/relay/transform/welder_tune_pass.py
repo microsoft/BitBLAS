@@ -16,9 +16,10 @@ def tune_node(ordered_nodes, names):
 
 @ir.transform.module_pass(opt_level=0)
 class WelderTunePass(relay.ExprMutator):
-    def __init__(self, arch, save_perf_log=None):
+    def __init__(self, arch, topk=20, save_perf_log=None):
         super().__init__()
         self.arch = arch
+        self.topk = topk
         self.save_perf_log_ = save_perf_log
 
     def transform_module(self, mod, ctx):
@@ -27,9 +28,9 @@ class WelderTunePass(relay.ExprMutator):
 
         ordered_nodes = extractor.ordered_nodes
         node_map = extractor.node_map
-        # tune_node(ordered_nodes, ['ladder_perfect_im2col_conv_7'])
+        # tune_node(ordered_nodes, ['layout_transform_reshape_350'])
         # raise NotImplementedError()
-        tunner = MultiProcTunner(ordered_nodes, arch=self.arch, device="cuda:0", topk=20)
+        tunner = MultiProcTunner(ordered_nodes, arch=self.arch, device="cuda:0", topk=self.topk)
         engine = Engine(tunner)
         # tunner.load_cache("a.pkl")
         fusion_groups = engine.run(ordered_nodes)
@@ -148,7 +149,7 @@ class TileGraphExtractor(relay.ExprVisitor):
             self.ordered_nodes.append(node)
             self.node_map[node] = call
         elif isinstance(call.op, ir.expr.GlobalVar):
-            args = None
+            args = call.checked_type
             op_name = "Opaque" + "_" + str(len(self.ordered_nodes))
             node = IRNode(node_inputs, args, op_name)
             node.add_tag("skip", True)

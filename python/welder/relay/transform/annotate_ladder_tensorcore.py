@@ -24,7 +24,7 @@ class OpVisitor(relay.ExprVisitor):
         self.ladder_config = None
 
     def visit_call(self, call):
-        if call.op.name in ["ladder.perfect_im2col_conv", "ladder.C2DImplicitGemm"]:
+        if call.op.name in ["ladder.perfect_im2col_conv", "ladder.C2DImplicitGemm", "ladder.perfect_matmul", "ladder.perfect_quant_linear"]:
             A_shape = call.args[0].checked_type.shape
             B_shape = call.args[1].checked_type.shape
             if call.op.name == "ladder.perfect_im2col_conv":
@@ -62,4 +62,17 @@ class OpVisitor(relay.ExprVisitor):
                 num_axis = int(len(call.checked_type.shape))
                 self.axis = (num_axis - 2, num_axis - 1)
                 self.ladder_config = (False, False)
+            elif call.op.name == "ladder.perfect_matmul":
+                num_axis = int(len(call.checked_type.shape))
+                self.axis = (num_axis - 2, num_axis - 1)
+                can_propagate = call.attrs.can_propagate
+                self.ladder_config = (True, True) if can_propagate else (False, False)
+            elif call.op.name == "ladder.perfect_quant_linear":
+                num_axis = int(len(call.checked_type.shape))
+                self.axis = (num_axis - 2, num_axis - 1)
+                can_propagate = call.attrs.can_propagate
+                self.ladder_config = (True, True) if can_propagate else (False, False)
+            elif call.op.name == "ladder.quant_linear":
+                self.ladder_config = (False, False)
+
         return super().visit_call(call)

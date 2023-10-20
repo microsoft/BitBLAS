@@ -1,12 +1,39 @@
 import numpy as np
 from tvm import tir
-
+import os
 from ..config import Config, Stride
 from .tir_base import TIRSchedulerBase
+# get file name and remove the suffix
+fname = os.path.basename(__file__)
+fname = os.path.splitext(fname)[0]
+# create log path
+log_path = "progress/" + fname
+count = 0
+
+
+def write_code(code, path, fname):
+    global count
+    # if path not exist, create it
+    fname = str(count) + "." + fname
+    count += 1
+    if not os.path.exists(path):
+        os.makedirs(path)
+    # join path and fname
+    fname = os.path.join(path, fname)
+    with open(fname, "w") as f:
+        f.write(code)
+
+
+def write_sch(sch, path, fname):
+    py_fname = fname + ".py"
+    write_code(sch.mod["main"].script(), path, py_fname)
+    cu_fname = fname + ".cu"
+    write_code(sch.mod.astext(), path, cu_fname)
 
 
 class TIRSIMTScheduler(TIRSchedulerBase):
-    def schedule(self) -> tir.Schedule:
+    
+    def schedule_consistent(self) -> tir.Schedule:
         sch, config = self.sche, self.config
         self.block_size[0] = int(np.prod(config.thread))
 
@@ -78,6 +105,7 @@ class TIRSIMTScheduler(TIRSchedulerBase):
         if len(tile_axis) > 0:
             for ax in sch.get_loops(CL)[-len(tile_axis):]:
                 sch.unroll(ax)
+    
         sch.decompose_reduction(C, reduce_outer_axis[0])
         self.schedule_compute_inline()
 
@@ -110,5 +138,84 @@ class TIRSIMTScheduler(TIRSchedulerBase):
                 strides = Stride()
             dim_offset = len(vthd_axis) + 2 # outer loops are: blck_fused vthd_axis thrd_fused
             self.cooperative_fetch(tensor_shared, dim_offset, strides)
+        write_sch(sch, log_path, "cache_small_tensor")
 
         return sch.mod["main"]
+
+
+    def schedule_inconsistent(self, is_a_consistent: bool, is_b_consistent: bool) -> tir.Schedule:
+        sch, config = self.sche, self.config
+        assert config.block[0] == 1, "inconsistent computation only support gemv case"
+        tx = np.prod(config.thread) * np.prod(config.reduce_thread)
+        try:
+            vec = list(config.vectorize.values())[-1]
+        except IndexError:
+            vec = 8
+        num_warps = config.block[-1] // config.thread[-1]
+        warp_size = config.thread[-1] * config.reduce_thread[-1]
+        
+        # num_warps = 1
+        # warp_size = 32
+        # print(f"tx: {tx}, vec: {vec}, num_warps: {num_warps}, warp_size: {warp_size}")
+        block_b = sch.get_block(self.reduce_op.name)
+        
+        # compute inline
+        for op in reversed(self.ops):
+            if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
+                block = self.sche.get_block(op.name)
+                self.sche.compute_inline(block)
+    
+        i, j, k = sch.get_loops(block_b)    
+        block_shared_local_A = sch.cache_read(block_b, 0, "local")
+        block_shared_local_B = sch.cache_read(block_b, 1, "local")
+        block_local_C = sch.cache_write(block_b, 0, "local")
+        write_sch(sch, log_path, "cache_related")
+        # reverse inline
+        if self.reduce_op != None and self.reduce_op != self.output_op:
+            block = self.sche.get_block(self.output_op.name)
+            self.sche.reverse_compute_inline(block)
+        bx, j = sch.split(j, factors=[None, num_warps])
+        k, tx, vk = sch.split(k, factors=[None, warp_size, vec])
+        sch.reorder(bx, j, i, k, tx)
+
+        sch.bind(bx, "blockIdx.x")
+        sch.bind(tx, "threadIdx.x")
+        sch.bind(j, "threadIdx.y")
+        
+        self.block_size = [sch.get_sref(tx).stmt.extent, sch.get_sref(j).stmt.extent, 1]
+        self.grid_size = [sch.get_sref(bx).stmt.extent, 1, 1]
+        
+        write_sch(sch, log_path, "do_split")
+
+        sch.compute_at(block_shared_local_A, tx, preserve_unit_loops=True)
+        sch.compute_at(block_shared_local_B, tx, preserve_unit_loops=True)
+        sch.reverse_compute_at(block_local_C, j, preserve_unit_loops=True)
+        write_sch(sch, log_path, "compute_at_related")
+
+        block_local_a_v = sch.get_loops(block_shared_local_A)[-1]
+        sch.vectorize(block_local_a_v)
+
+        block_local_b_v = sch.get_loops(block_shared_local_B)[-1]
+        sch.vectorize(block_local_b_v)
+
+        # sch.decompose_reduction(block_b, k)
+        write_sch(sch, log_path, "decompose_reduction")
+        
+        return sch.mod["main"]
+        
+    def schedule(self) -> tir.Schedule:
+        input0_dtype = self.args[0].dtype
+        input1_dtype = self.args[1].dtype
+        is_consistent = input0_dtype == input1_dtype
+        if is_consistent:
+            return self.schedule_consistent()
+        else:
+            reduce_op = self.reduce_op
+            reduce_input0_dtype = reduce_op.input_tensors[0].dtype
+            reduce_input1_dtype = reduce_op.input_tensors[1].dtype
+            is_a_consistent = reduce_input0_dtype == input0_dtype
+            is_b_consistent = reduce_input1_dtype == input1_dtype
+            print(
+                f"the computation is inconsistent, is_a_consistent: {is_a_consistent}, is_b_consistent: {is_b_consistent}")
+
+            return self.schedule_inconsistent(is_a_consistent, is_b_consistent)

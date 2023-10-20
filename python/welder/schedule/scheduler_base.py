@@ -18,8 +18,8 @@ class SchedulerBase:
             else:
                 output_args.append(arg)
 
-        if len(output_args) > 1:
-            output_args = create_proxy_output(output_args)
+        output_args = self.proxy_outputs(output_args)
+        self.output_args = output_args
         self.args = input_args + output_args
         self.config = config
         self.ops = get_compute_ops(self.args)
@@ -31,9 +31,10 @@ class SchedulerBase:
         elif len(reduce_ops) == 1:
             self.reduce_op = reduce_ops[0]
         else:
-            raise RuntimeError("Can't' schedule Op with multiple reduce stages.")
+            raise RuntimeError(
+                "Can't' schedule Op with multiple reduce stages.")
 
-        self.block_size = [1, 1, 1] # blockDim.xyz
+        self.block_size = [1, 1, 1]  # blockDim.xyz
         self.compute_grid_size()
         self.sche = self.create_schedule()
         self.passes = []
@@ -69,3 +70,6 @@ class SchedulerBase:
 
     def schedule(self) -> Union[te.Schedule, tir.Schedule]:
         raise NotImplementedError()
+
+    def proxy_outputs(self, output_args) -> List[te.Tensor]:
+        return output_args
