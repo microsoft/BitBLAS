@@ -8,6 +8,20 @@ cuda_default_header = """
 #include <math_constants.h>
 #include <math.h>
 #include <mma.h>
+
+
+#if (((__CUDACC_VER_MAJOR__ == 11) && (__CUDACC_VER_MINOR__ >= 4)) || (__CUDACC_VER_MAJOR__ > 11))
+#define TVM_ENABLE_L2_PREFETCH 1
+#else
+#define TVM_ENABLE_L2_PREFETCH 0
+#endif
+
+#if defined(__CUDA_ARCH__) && __CUDA_ARCH__ == 800
+#define TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST 1
+#else
+#define TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST 0
+#endif
+
 """
 
 cuda_fp16_header = """

@@ -216,14 +216,16 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 if self.block_size[2] > 1:
                     ax, tz = self.sche.split(ax, factors=[None, self.block_size[2]])
                     self.sche.bind(tz, "threadIdx.z")
-                self.sche.unroll(ax)
+                # self.sche.unroll(ax)
                 if use_pragma_unroll:
                     self.sche.annotate(ax, "pragma_unroll_explicit", False)
-            cooperative_fetch(BSS, 3, strides=B_stride, vector_load=4, use_pragma_unroll=True)
+            cooperative_fetch(BSS, 3, strides=B_stride, vector_load=4, use_pragma_unroll=False)
+            cooperative_fetch(BS, 3, strides=B_stride, vector_load=8, use_pragma_unroll=False)
             write_sch(sch, log_path, "cooperative_fetch_BSS")
-            sch.reverse_compute_at(BL1, self.sche.get_loops(BSS)[-3])
-            sch.reverse_compute_at(BL0, self.sche.get_loops(BSS)[-3])
-            sch.reverse_compute_at(BS, self.sche.get_loops(BSS)[-3])
+            
+            sch.compute_at(BL0, self.sche.get_loops(BS)[-3])
+            sch.compute_at(BL1, self.sche.get_loops(BS)[-3])
+
             if is_lut:
                 block_shared_lut = sch.cache_read(BL0, 0, "shared")
                 sch.reverse_compute_at(block_shared_lut, block_fused)
@@ -235,7 +237,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             write_sch(sch, log_path, "reverse_compute_at")
             bv = sch.get_loops(BL0)[-1]
             _, bv = sch.split(bv, factors=[None, 4])
-            sch.vectorize(bv)
+            # sch.vectorize(bv)
             sch.compute_at(BL1, self.sche.get_loops(BL0)[-2])
             bv = sch.get_loops(BL1)[-1]
             sch.vectorize(bv)
@@ -263,10 +265,14 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 1, 1, 1])
                 sch.annotate(K_outer, "software_pipeline_order", [0, 1, 2, 3, 4])
             else:
-                sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 1, 1, 2])
-                sch.annotate(K_outer, "software_pipeline_order", [0, 1, 2, 4, 3])
+                if is_fpa_intb:
+                    sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 1, 1, 1, 1])
+                    sch.annotate(K_outer, "software_pipeline_order", [0, 1, 2, 3, 4, 5])
+                else:
+                    sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 1, 1, 2])
+                    sch.annotate(K_outer, "software_pipeline_order", [0, 1, 2, 4, 3])
             sch.annotate(K_outer, "software_pipeline_async_stages", [0])
-            # self.passes.append((3, tvm.tir.transform.InjectPTXAsyncCopy()))
+            self.passes.append((3, tvm.tir.transform.InjectPTXAsyncCopy()))
         elif config.use_tc >= "70":
             if chunk_size % 8 != 0:
                 sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 0, 0, 1, 1, 1])
