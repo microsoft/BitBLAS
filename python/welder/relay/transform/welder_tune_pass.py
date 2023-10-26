@@ -13,6 +13,7 @@ def tune_node(ordered_nodes, names):
     from welder.arch import cuda
     tunner = MultiProcTunner(ordered_nodes, cuda(), device=0, topk=20)
     best = tunner.tune(nodes)
+    return best
 
 @ir.transform.module_pass(opt_level=0)
 class WelderTunePass(relay.ExprMutator):
@@ -28,7 +29,7 @@ class WelderTunePass(relay.ExprMutator):
 
         ordered_nodes = extractor.ordered_nodes
         node_map = extractor.node_map
-        # tune_node(ordered_nodes, ['layout_transform_reshape_350'])
+        # print(tune_node(ordered_nodes, ['divide_multiply_add_reshape_layout_transform_8']))
         # raise NotImplementedError()
         tunner = MultiProcTunner(ordered_nodes, arch=self.arch, device="cuda:0", topk=self.topk)
         engine = Engine(tunner)

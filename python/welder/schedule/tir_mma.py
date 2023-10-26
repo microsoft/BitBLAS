@@ -235,7 +235,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             write_sch(sch, log_path, "reverse_compute_at")
             bv = sch.get_loops(BL0)[-1]
             _, bv = sch.split(bv, factors=[None, 4])
-            sch.vectorize(bv)
+            # sch.vectorize(bv)
             sch.compute_at(BL1, self.sche.get_loops(BL0)[-2])
             bv = sch.get_loops(BL1)[-1]
             sch.vectorize(bv)
@@ -266,7 +266,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 1, 1, 2])
                 sch.annotate(K_outer, "software_pipeline_order", [0, 1, 2, 4, 3])
             sch.annotate(K_outer, "software_pipeline_async_stages", [0])
-            # self.passes.append((3, tvm.tir.transform.InjectPTXAsyncCopy()))
+            self.passes.append((3, tvm.tir.transform.InjectPTXAsyncCopy()))
         elif config.use_tc >= "70":
             if chunk_size % 8 != 0:
                 sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 0, 0, 1, 1, 1])
