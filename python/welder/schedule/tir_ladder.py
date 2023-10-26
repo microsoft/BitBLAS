@@ -306,7 +306,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             store_intrin,
         )
         if raster > 0:
-            sch.annotate(ko, ann_key="thread_rasterization", ann_val=raster)
+            sch.annotate(init_block_b_loops[-4], ann_key="thread_rasterization", ann_val=raster)
         if stage > 1:
             if stage > 1:
                 sch.annotate(ko, ann_key="software_pipeline_stage", ann_val=[0, 0, stage - 1])
@@ -617,9 +617,18 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
 
         ## params for debugging
+        # block_row_warps = 4
+        # block_col_warps = 16
+        # warp_row_tiles = 4
+        # warp_col_tiles = 8
+        # chunk = 4
+        # stage = 2
+        # use_async = 1
+        # raster = 10
+       
         # block_row_warps = 2
         # block_col_warps = 2
-        # warp_row_tiles = 4
+        # warp_row_tiles = 8
         # warp_col_tiles = 4
         # chunk = 2
         # stage = 2
@@ -754,13 +763,21 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             sch.vectorize(sch.get_loops(block_local_B_shared_cache_local)[-1])
 
             block_local_B_shared_cache_fused = sch.fuse(*sch.get_loops(block_local_B_shared_cache)[-4:])
+            assert (self.args[1].dtype == "int8"), "currently only support b stored in int8 format"
+            def calculate_prop_vec(top=16):
+                # todo(leiwang) : top should be wmma_ak / wmma_bk * vecb
+                vec = top
+                limit = sch.get_sref(block_local_B_shared_cache_fused).stmt.extent // (block_row_warps * block_col_warps * warp_size)
+                if limit >= vec:
+                    return vec
+                return limit
+            _vec = calculate_prop_vec()
             B_shared_inner, B_shared_ty, B_shared_tz, B_shared_tx, B_shared_vi = sch.split(
                 block_local_B_shared_cache_fused, factors=[None, block_row_warps, block_col_warps, warp_size, 16])
             sch.bind(B_shared_tx, "threadIdx.x")
             sch.bind(B_shared_ty, "threadIdx.y")
             sch.bind(B_shared_tz, "threadIdx.z")
             sch.vectorize(B_shared_vi)
-            # cooperative_fetch(block_local_B_shared_cache, dims=4, vec=16, use_pragma_unroll=True, force_async_copy=False)
 
             if is_lut:
                 block_shared_lut = sch.cache_read(block_local_B_decompress, 0, "shared")
@@ -831,7 +848,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         if raster > 0:
             sch.annotate(init_block_b_loops[-4], ann_key="thread_rasterization", ann_val=raster)
         if stage > 1:
-            sch.annotate(ko, ann_key="software_pipeline_stage", ann_val=[0, 0, 1, 1])
+            sch.annotate(ko, ann_key="software_pipeline_stage", ann_val=[0, 0, stage - 1, stage - 1])
             sch.annotate(ko, ann_key="software_pipeline_order", ann_val=[0, 1, 2, 3])
             if use_async:
                 sch.annotate(ko, "software_pipeline_async_stages", [0])
@@ -842,8 +859,6 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
 
     def schedule(self) -> tir.Schedule:
-        input0_dtype = self.args[0].dtype
-        input1_dtype = self.args[1].dtype
         wmma_k = 32 if self.reduce_op.output(0).dtype == "int32" else 16
         
         is_a_consistent = self.args[0].shape[-1] == wmma_k

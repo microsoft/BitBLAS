@@ -41,7 +41,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         self.block_size[1] = int(np.prod(self.config.block)) // int(np.prod(self.config.warp))
         C = sch.get_block(self.reduce_op.name)
         space_loops = sch.get_loops(C)[:len(self.reduce_op.axis)]
-        assert(len(self.reduce_op.reduce_axis) == 1)
+        assert (len(self.reduce_op.reduce_axis) == 1)
         ax_K = sch.get_loops(C)[-1]
         A_ax_m, A_ax_k, B_ax_k, B_ax_n, C_ax_m, C_ax_n = config.tc_extra_conf.tc_axis
         transpose_A = A_ax_k < A_ax_m
@@ -51,7 +51,11 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         out_dtype = self.reduce_op.output(0).dtype
         in_dtype = self.reduce_op.input_tensors[0].dtype
         # log_path = f"progress/tir_mma_{block_tile_M}_{block_tile_N}_{warp_tile_M}_{warp_tile_N}"
-        is_fpa_intb = self.args[0].dtype == "float16" and self.args[1].dtype == "int8"
+        AK = self.args[0].shape[-2] if transpose_A else self.args[0].shape[-1]
+        BK = self.args[1].shape[-1] if transpose_B else self.args[1].shape[-2]
+        is_fpa_intb = (AK != BK)
+        print("is_fpa_intb, ", is_fpa_intb)
+
         num_args = len(self.args)
         is_lut = False
         if num_args >= 4:
@@ -61,7 +65,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 is_lut = True
         # ------------------------ Block and Warp level job partition ------------------------
         def get_vec(in_dtype):
-            if in_dtype == "float32":
+            if in_dtype == "float32" or in_dtype == "int32":
                 vec = 4
             elif in_dtype == "float16":
                 vec = 8
@@ -73,6 +77,10 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         vecA = get_vec(self.args[0].dtype)
         vecB = get_vec(self.args[1].dtype)
         vecC = get_vec(self.args[2].dtype)
+
+        if is_fpa_intb:
+            assert (self.args[1].dtype == "int8"), "currently only support b stored in int8 format"
+            outer_vec_fetch = vecB // (AK // BK)
 
         block_axis = []
         warp_axis = []
@@ -158,7 +166,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
 
         if vecB == 16 and vecA == 8:
             vecB = 4
-        self.cooperative_fetch(AS, 3, A_stride, vector_load=vecA, use_pragma_unroll=True)
+        self.cooperative_fetch(AS, 3, A_stride, vector_load=layoutA.get_vectorize(), use_pragma_unroll=True)
         if not is_fpa_intb:
             self.cooperative_fetch(BS, 3, B_stride, vector_load=vecB, use_pragma_unroll=True)
 
@@ -176,7 +184,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         sch.transform_loop(C_warp, 2, layoutC)
         sch.bind(sch.get_loops(C_warp)[-2], "threadIdx.x")
         oo, vec = sch.split(sch.get_loops(C_warp)[-1], factors=[None, layoutC.get_vectorize()])
-        sch.vectorize(vec)
+        # sch.vectorize(vec)
         sch.unroll(oo)
         sch.annotate(oo, "pragma_unroll_explicit", False)
         if not is_fpa_intb:
@@ -205,7 +213,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 ax, tv = self.sche.split(ax, factors=[None, vector_load])
                 if vector_load > 1:
                     _, tv = self.sche.split(tv, factors=[None, vector_load])
-                    self.sche.vectorize(tv)
+                    # self.sche.vectorize(tv)
                 ax = self.sche.fuse(axes[-2], ax)
                 if self.block_size[0] > 1:
                     ax, tx = self.sche.split(ax, factors=[None, self.block_size[0]])
@@ -219,8 +227,9 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 # self.sche.unroll(ax)
                 if use_pragma_unroll:
                     self.sche.annotate(ax, "pragma_unroll_explicit", False)
-            cooperative_fetch(BSS, 3, strides=B_stride, vector_load=4, use_pragma_unroll=False)
-            cooperative_fetch(BS, 3, strides=B_stride, vector_load=8, use_pragma_unroll=False)
+            
+            cooperative_fetch(BSS, 3, strides=B_stride, vector_load=outer_vec_fetch, use_pragma_unroll=False)
+            cooperative_fetch(BS, 3, strides=B_stride, vector_load=vecB, use_pragma_unroll=False)
             write_sch(sch, log_path, "cooperative_fetch_BSS")
             
             sch.compute_at(BL0, self.sche.get_loops(BS)[-3])
@@ -240,9 +249,9 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             # sch.vectorize(bv)
             sch.compute_at(BL1, self.sche.get_loops(BL0)[-2])
             bv = sch.get_loops(BL1)[-1]
-            sch.vectorize(bv)
+            # sch.vectorize(bv)
             bv = sch.get_loops(BS)[-1]
-            sch.vectorize(bv)
+            # sch.vectorize(bv)
             write_sch(sch, log_path, "schedule bs")
 
 
