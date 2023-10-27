@@ -39,6 +39,105 @@ class Statement():
 def _merge_two_bounds(x: arith.ConstIntBound, y: arith.ConstIntBound):
     return arith.ConstIntBound(min(x.min_value, y.min_value), max(x.max_value, y.max_value))
 
+
+class TensorDepNode(object):
+    '''
+    For tensor dependency analysis.
+    '''
+    def __init__(self, name):
+        self.name = name
+        self._next = []
+        self._prev = []
+
+    def add_next(self, node):
+        self._next.append(node)
+        self.deduplicate(self._next)
+
+    def add_prev(self, node):
+        self._prev.append(node)
+        self.deduplicate(self._prev)
+
+    def deduplicate(self, lst):
+        seen = set()
+        lst[:] = [n for n in lst if not (n in seen or seen.add(n))]
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.name
+
+
+class DependencyAnalysis(object):
+    def __init__(self, deps):
+        self.deps = deps
+        self.name2dep = {dep.op.name: dep for dep in self.deps}
+        self.mapping = {}  # name -> TensorDepNode
+
+    def get_or_create_node(self, name):
+        if name not in self.mapping:
+            self.mapping[name] = TensorDepNode(name)
+        return self.mapping[name]
+
+    def traverse_dependencies(self, compute):
+        node = self.get_or_create_node(compute.op.name)
+
+        # Check if it's a PlaceholderOp, which means we've reached an input
+        if isinstance(compute.op, te.PlaceholderOp):
+            return node
+
+        # Loop through input tensors
+        for input_tensor in compute.op.input_tensors:
+            # Get the input node
+            input_node = self.traverse_dependencies(input_tensor)
+            input_node.add_next(node)
+            node.add_prev(input_node)
+
+        return node
+
+    def analyze(self):
+        # Starting point for traversal
+        for _, compute in self.name2dep.items():
+            self.traverse_dependencies(compute)
+
+    def print_dependencies(self):
+        for name, node in self.mapping.items():
+            print(f"{name} depends on {', '.join([prev.name for prev in node._prev])}")
+
+    def find_path_from_source(self, start_name, target_name):
+        """
+        Finds the path (if it exists) from a starting node (source) to a target node.
+        Returns the path as a list of nodes.
+        """
+        visited = set()
+        path = []
+        if self._find_path_recursive(self.mapping[start_name], target_name, visited, path):
+            return path
+        return []
+
+    def _find_path_recursive(self, current_node, target_name, visited, path):
+        """
+        Recursive helper function for find_path_from_source.
+        """
+        if current_node.name == target_name:
+            path.append(current_node)
+            return True
+        
+        if current_node.name in visited:
+            return False
+        
+        visited.add(current_node.name)
+        path.append(current_node)
+        
+        for next_node in current_node._next:
+            if self._find_path_recursive(next_node, target_name, visited, path):
+                return True
+        
+        path.pop()
+        return False
+
+
+
 class InputShapeInference():
     def __init__(self, deps: List[Statement]):
         self.deps = deps
@@ -47,6 +146,9 @@ class InputShapeInference():
         for dep in self.deps:
             for ax in dep.op.reduce_axis:
                 self.reduce_axes.append(ax)
+        self.dep_analysis = DependencyAnalysis(self.deps)
+        self.dep_analysis.analyze() 
+
 
     def construct_dependency_target(self, targets: Tuple[str]):
         if targets in self.target_mapping:
@@ -90,7 +192,8 @@ class InputShapeInference():
         return input_vars, mapping
 
     def infer(self, shape: Dict[str, List[arith.ConstIntBound]], rstep: Dict[str, int]={}, targets=None):
-        input_vars, mapping = self.construct_dependency_target(tuple(shape.keys()))
+        compute_targets = tuple(shape.keys())
+        input_vars, mapping = self.construct_dependency_target(compute_targets)
         ana = arith.Analyzer()
         results = {}
         for vars, bounds in zip(input_vars, shape.values()):
@@ -106,11 +209,27 @@ class InputShapeInference():
         for name, regions in mapping.items():
             if targets is not None and name not in targets:
                 continue
-            for region in regions:
-                bound = [ana.const_int_bound(indice) for indice in region]
-                if name in results: # simply merge two bounds
-                    bound = [_merge_two_bounds(x, y) for x, y in zip(results[name], bound)]
-                results[name] = bound
+            if compute_targets[0:1] == compute_targets:
+                compute_target, = compute_targets
+                path = self.dep_analysis.find_path_from_source(name, compute_target)
+                if len(path) > 2:
+                    intermediate_nodes = path[1:-1]
+                    for node in intermediate_nodes:
+                        iters = mapping[node.name]
+                        if len(*iters) != len(*regions):
+                            break
+                        regions = iters
+                for region in regions:
+                    bound = [ana.const_int_bound(indice) for indice in region]
+                    if name in results: # simply merge two bounds
+                        bound = [_merge_two_bounds(x, y) for x, y in zip(results[name], bound)]
+                    results[name] = bound
+            else:
+                for region in regions:
+                    bound = [ana.const_int_bound(indice) for indice in region]
+                    if name in results: # simply merge two bounds
+                        bound = [_merge_two_bounds(x, y) for x, y in zip(results[name], bound)]
+                    results[name] = bound
 
         for name, bounds in results.items():
             results[name] = [c.max_value - c.min_value + 1 for c in bounds]
