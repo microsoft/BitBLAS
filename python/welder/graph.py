@@ -205,9 +205,12 @@ class IRNode(Node):
     def propogate_inputs(self, tile, rstep={}) -> List[List[int]]:
         read_idx_offset = len(self.inputs)
         targets = [t.name for t in self.args[:read_idx_offset]]
-        shapes = self.propogate(tile, rstep, targets)
+        shapes, intermediate_bind = self.propogate(tile, rstep, targets)
         results = []
         for i, arg in enumerate(self.args[:read_idx_offset]):
+            if arg.name in intermediate_bind:
+                results.append(shapes[arg.name])
+                continue
             # should not exceed original shape
             trimmed_shape = list(map(min, zip(shapes[arg.name], self.inputs[i].src_node.get_shape())))
             results.append(trimmed_shape)
@@ -216,7 +219,7 @@ class IRNode(Node):
     def propogate_outputs(self, tile, rstep={}):
         read_idx_offset = len(self.inputs)
         targets = [t.name for t in self.args[read_idx_offset:]]
-        shapes = self.propogate(tile, rstep, targets)
+        shapes, _ = self.propogate(tile, rstep, targets)
         results = []
         for i, arg in enumerate(self.args[read_idx_offset:]):
             # should not exceed original shape
@@ -228,7 +231,7 @@ class IRNode(Node):
         if self.reduce_op is None:
             return {}
         targets = [t.name for t in self.reduce_op.input_tensors]
-        results = self.propogate(shape, rstep, targets)
+        results, _ = self.propogate(shape, rstep, targets)
         return results
 
     def get_reduce_inputs_dtype(self):
@@ -238,7 +241,7 @@ class IRNode(Node):
 
     def footprint(self, shape, rstep, stride_map={}) -> int:
         result = 0
-        shapes = self.propogate(shape, rstep)
+        shapes, _ = self.propogate(shape, rstep)
 
         def is_broadcast_pattern(tensor, op):
             return isinstance(tensor.op, tvm.te.PlaceholderOp) \

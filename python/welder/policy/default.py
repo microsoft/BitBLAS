@@ -42,8 +42,6 @@ class DefaultPolicy:
         rstep_map = {node : self._assign_reduce_step(node) for node in self.ordered_nodes}
         smem_tile_condidates = self.DFS_smem_tile(base_tile, topk, rstep_map)
         results = []
-        for i in range(10):
-            print(smem_tile_condidates[i].tile_map)
         for td in smem_tile_condidates:
             if not self.check_tile_shape_isvalid(td):
                 continue

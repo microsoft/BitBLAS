@@ -90,7 +90,7 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
         template = TIRSIMTScheduler
 
     # logger.debug(f"Using template: {template} config: {config}")
-    print(f"Using template: {template} config: {config}")
+    # print(f"Using template: {template} config: {config}")
     scheduler = template(args, config)
 
     scheduler.shared_inputs = shared_inputs
