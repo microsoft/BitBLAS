@@ -3,6 +3,9 @@ from tvm import tir
 import os
 from ..layout import *
 from .tir_base import TIRSchedulerBase
+from .lop3_intrin import (
+    LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
+)
 from .ladder_intrin import (
     TRICKY_MMA_fill_16x16_f16_INTRIN,
     TRICKY_LDMATRIX_16x16_A_INTRIN,
@@ -613,7 +616,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             return vec
         vecA = get_vec(self.args[0].dtype)
         vecB = get_vec(self.args[1].dtype)
-        vecC = get_vec(self.args[2].dtype)
+        vecC = get_vec(self.reduce_op.output(0).dtype)
         raster = self.config.raster_factor
         # ------------------------ Block and Warp level job partition ------------------------
         chunk_size = config.rstep[0] // wmma_k
@@ -763,6 +766,9 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
             sch.compute_at(block_local_B_decompress, B_shared_vi)
             sch.compute_at(block_local_B_shared_cache_local, B_shared_vi)
+
+            # lop3 tensorize
+            # sch.tensorize(sch.get_loops(block_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN)
 
             B_shared_fused = sch.fuse(*sch.get_loops(BS)[-6:-2])
             B_shared_inner, B_shared_ty, B_shared_tz, B_shared_tx = sch.split(
