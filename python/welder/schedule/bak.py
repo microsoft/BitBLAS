@@ -3,9 +3,6 @@ from tvm import tir
 import os
 from ..layout import *
 from .tir_base import TIRSchedulerBase
-from .lop3_intrin import (
-    LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
-)
 from .ladder_intrin import (
     TRICKY_MMA_fill_16x16_f16_INTRIN,
     TRICKY_LDMATRIX_16x16_A_INTRIN,
@@ -332,7 +329,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         return sch.mod["main"]
     
     def schedule_inconsistent(self, is_a_consistent=False, is_b_consistent=False):
-        # const val for testing
+         # const val for testing
         # assert is_a_consistent, "currently A should be consistent"
         num_args = len(self.args)
         is_lut = False
@@ -616,7 +613,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             return vec
         vecA = get_vec(self.args[0].dtype)
         vecB = get_vec(self.args[1].dtype)
-        vecC = get_vec(self.args[-1].dtype)
+        vecC = get_vec(self.args[2].dtype)
         raster = self.config.raster_factor
         # ------------------------ Block and Warp level job partition ------------------------
         chunk_size = config.rstep[0] // wmma_k
@@ -630,11 +627,11 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
 
         ## params for debugging
-        # block_row_warps = 2
-        # block_col_warps = 2
-        # warp_row_tiles = 8
-        # warp_col_tiles = 2
-        # chunk = 2
+        # block_row_warps = 4
+        # block_col_warps = 1
+        # warp_row_tiles = 2
+        # warp_col_tiles = 7
+        # chunk = 4
         # stage = 2
         # use_async = 1
         # raster = 10
@@ -747,13 +744,9 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
         cooperative_fetch(AS, dims=4, vec=vecA, use_pragma_unroll=True, force_async_copy=(propagate_inter_a and not propagate_inter_b))
         if not is_b_consistent:
-            if compute_dtype == "int32":
-                b_smem_store_vec = 16
-            elif compute_dtype == "float16":
-                b_smem_store_vec = 8
             # cache_decompress
             B_shared_jj = sch.get_loops(BS)[-1]
-            B_shared_jj, B_shared_vi, B_shared_vj = sch.split(B_shared_jj, factors=[None, 1, b_smem_store_vec])
+            B_shared_jj, B_shared_vi, B_shared_vj = sch.split(B_shared_jj, factors=[None, 1, 16])
             block_local_B_decompress = sch.cache_read(BS, 0, "local")
             write_sch(sch, log_path, "schedule_compute_inline")
             self.schedule_compute_inline()
@@ -766,9 +759,6 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
             sch.compute_at(block_local_B_decompress, B_shared_vi)
             sch.compute_at(block_local_B_shared_cache_local, B_shared_vi)
-
-            # lop3 tensorize
-            # sch.tensorize(sch.get_loops(block_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN)
 
             B_shared_fused = sch.fuse(*sch.get_loops(BS)[-6:-2])
             B_shared_inner, B_shared_ty, B_shared_tz, B_shared_tx = sch.split(
@@ -785,14 +775,14 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             assert (self.args[1].dtype == "int8"), "currently only support b stored in int8 format"
             def calculate_prop_vec(top=16):
                 # todo(leiwang) : top should be wmma_ak / wmma_bk * vecb
-                wmma_ak = self.args[0].shape[-2] if transpose_A else self.args[0].shape[-1]
-                wmma_bk= self.args[1].shape[-1] if transpose_B else self.args[1].shape[-2]
-                compressed_bits = wmma_ak // wmma_bk # int1b -> 8 , int4b -> 2
-                _vec = 32 // compressed_bits
-                return _vec
+                vec = top
+                limit = sch.get_sref(block_local_B_shared_cache_fused).stmt.extent // (block_row_warps * block_col_warps * warp_size)
+                if limit >= vec:
+                    return vec
+                return limit
             _vec = calculate_prop_vec()
             B_shared_inner, B_shared_ty, B_shared_tz, B_shared_tx, B_shared_vi = sch.split(
-                block_local_B_shared_cache_fused, factors=[None, block_row_warps, block_col_warps, warp_size, _vec])
+                block_local_B_shared_cache_fused, factors=[None, block_row_warps, block_col_warps, warp_size, 4])
             sch.bind(B_shared_tx, "threadIdx.x")
             sch.bind(B_shared_ty, "threadIdx.y")
             sch.bind(B_shared_tz, "threadIdx.z")

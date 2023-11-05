@@ -196,6 +196,7 @@ class InputShapeInference():
         input_vars, mapping = self.construct_dependency_target(compute_targets)
         ana = arith.Analyzer()
         results = {}
+        intermediate_bind = {}
         for vars, bounds in zip(input_vars, shape.values()):
             for var, bound in zip(vars, bounds):
                 ana.update(var, bound, True)
@@ -219,6 +220,8 @@ class InputShapeInference():
                         if len(*iters) != len(*regions):
                             break
                         regions = iters
+                        intermediate_bind[name] = compute_target
+
                 for region in regions:
                     bound = [ana.const_int_bound(indice) for indice in region]
                     if name in results: # simply merge two bounds
@@ -233,7 +236,7 @@ class InputShapeInference():
 
         for name, bounds in results.items():
             results[name] = [c.max_value - c.min_value + 1 for c in bounds]
-        return results
+        return results, intermediate_bind
 
     def get_input_exprs(self, output_exprs):
         input_vars, mapping = self.construct_dependency_target(tuple(output_exprs.keys()))
