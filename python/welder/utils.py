@@ -78,7 +78,6 @@ extern "C" float profile({}) {{
         if self.use_fp16:
             header += cuda_fp16_header
         profiling_code = header + self.code + "\n" + host_funcs
-        print(profiling_code)
         return profiling_code
 
     def create_code_for_tvm(self, symbol, index_map: List[int], num_fparam: int):

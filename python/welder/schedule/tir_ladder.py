@@ -616,7 +616,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             return vec
         vecA = get_vec(self.args[0].dtype)
         vecB = get_vec(self.args[1].dtype)
-        vecC = get_vec(self.reduce_op.output(0).dtype)
+        vecC = get_vec(self.args[-1].dtype)
         raster = self.config.raster_factor
         # ------------------------ Block and Warp level job partition ------------------------
         chunk_size = config.rstep[0] // wmma_k
@@ -630,14 +630,14 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
 
         ## params for debugging
-        block_row_warps = 2
-        block_col_warps = 2
-        warp_row_tiles = 8
-        warp_col_tiles = 2
-        chunk = 2
-        stage = 2
-        use_async = 1
-        raster = 10
+        # block_row_warps = 2
+        # block_col_warps = 2
+        # warp_row_tiles = 8
+        # warp_col_tiles = 2
+        # chunk = 2
+        # stage = 2
+        # use_async = 1
+        # raster = 10
        
         # block_row_warps = 2
         # block_col_warps = 2
