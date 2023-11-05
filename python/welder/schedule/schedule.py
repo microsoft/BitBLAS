@@ -36,39 +36,7 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
 
     if len(reduces_ops) == 0:
         assert(not schedule_on_inner_stage)
-        # TODO(v-leiwang3): adhoc handler for bloom, in future it should be fixed through tir infra or simplify or template enhancement.
-        if len(output_args) == 1 and 'reshape' in output_args[0].name:
-            template = TIRElementWiseScheduler
-            
-            try:
-                scheduler = template(args, config)
-
-                scheduler.shared_inputs = shared_inputs
-                scheduler.shared_outputs = shared_outputs
-                scheduler.shared_inputs_strides = {
-                    tensor: Stride() for tensor in shared_inputs}
-                scheduler.shared_inputs_strides.update(shared_inputs_strides)
-
-                scheduler.make_passes()
-                scheduler.schedule()
-            except Exception as e:
-                print(e)
-                template = TEElementWiseScheduler
-                scheduler = template(args, config)
-
-                scheduler.shared_inputs = shared_inputs
-                scheduler.shared_outputs = shared_outputs
-                scheduler.shared_inputs_strides = {
-                    tensor: Stride() for tensor in shared_inputs}
-                scheduler.shared_inputs_strides.update(shared_inputs_strides)
-
-                scheduler.make_passes()
-                scheduler.schedule()
-            
-            return scheduler
-        else:
-            template = TEElementWiseScheduler
-        
+        template = TIRElementWiseScheduler if len(output_args) == 1 else TEElementWiseScheduler
     elif config.use_ladder:
         if not config.use_tc:
             template = TIRSIMTScheduler
@@ -89,17 +57,28 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
     else:
         template = TIRSIMTScheduler
 
-    # logger.debug(f"Using template: {template} config: {config}")
-    print(f"Using template: {template} config: {config}")
-    scheduler = template(args, config)
+    logger.debug(f"Using template: {template} config: {config}")
 
-    scheduler.shared_inputs = shared_inputs
-    scheduler.shared_outputs = shared_outputs
-    scheduler.shared_inputs_strides = {tensor: Stride() for tensor in shared_inputs}
-    scheduler.shared_inputs_strides.update(shared_inputs_strides)
+    def initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides):
+        scheduler = template(args, config)
+        scheduler.shared_inputs = shared_inputs
+        scheduler.shared_outputs = shared_outputs
+        scheduler.shared_inputs_strides = {tensor: Stride() for tensor in shared_inputs}
+        scheduler.shared_inputs_strides.update(shared_inputs_strides)
+        scheduler.make_passes()
+        scheduler.schedule()
+        return scheduler
 
-    scheduler.make_passes()
-    scheduler.schedule()
+    if template == TIRElementWiseScheduler:
+        try:
+            scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
+        except Exception as e:
+            logger.debug(f"Tir template failed because {e}, fallback to te")
+            template = TEElementWiseScheduler
+            scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
+    else:
+        scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
+
     
 
     return scheduler

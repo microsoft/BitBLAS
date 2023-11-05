@@ -29,7 +29,7 @@ class WelderTunePass(relay.ExprMutator):
 
         ordered_nodes = extractor.ordered_nodes
         node_map = extractor.node_map
-        # print(tune_node(ordered_nodes, ['divide_multiply_add_reshape_layout_transform_8']))
+        # print(tune_node(ordered_nodes, ['layout_transform_reshape_add_multiply_multiply_multiply_multiply_27']))
         # raise NotImplementedError()
         tunner = MultiProcTunner(ordered_nodes, arch=self.arch, device="cuda:0", topk=self.topk)
         engine = Engine(tunner)

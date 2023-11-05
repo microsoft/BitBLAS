@@ -34,7 +34,14 @@ class TEElementWiseScheduler(TESchedulerBase):
             if op is not self.output_op:
                 sch[op].compute_inline()
         out = self.output_op
-        self.block_size[0] = int(np.prod(config.thread))
+        # block = [8, 4, 16, 16]
+        # thread = [4, 4, 1, 8]
+        # step = [1, 1, 1, 2]
+        thread = config.thread
+        block = config.block
+        step = config.step
+
+        self.block_size[0] = int(np.prod(thread))
         write_code(
             str(tvm.lower(sch, self.args, simple_mode=True)), log_path, 'origin.py')
         blck_axis = []
@@ -42,18 +49,26 @@ class TEElementWiseScheduler(TESchedulerBase):
         thrd_axis = []
         tile_axis = []
         for i, axis in enumerate(sch[out].op.axis):
-            bx, _t = sch[out].split(axis, factor=config.block[i])
-            vx, _t = sch[out].split(_t, factor=config.thread[i] * config.step[i])
-            tx, tn = sch[out].split(_t, factor=config.step[i])
+            bx, _t = sch[out].split(axis, factor=block[i])
+            vx, _t = sch[out].split(_t, factor=thread[i] * step[i])
+            tx, tn = sch[out].split(_t, factor=step[i])
             blck_axis.append(bx)
             vthd_axis.append(vx)
             thrd_axis.append(tx)
             tile_axis.append(tn)
+        write_code(
+            str(tvm.lower(sch, self.args, simple_mode=True)), log_path, 'split.py')
         vthd_axis = list(reversed(vthd_axis)) # inner virtual thread first
         axis_order = blck_axis + vthd_axis + thrd_axis + tile_axis
         sch[out].reorder(*axis_order)
+        write_code(
+            str(tvm.lower(sch, self.args, simple_mode=True)), log_path, 'reorder.py')
         blck_fused = sch[out].fuse(*blck_axis)
+        write_code(
+            str(tvm.lower(sch, self.args, simple_mode=True)), log_path, 'block_fused.py')
         thrd_fused = sch[out].fuse(*thrd_axis)
+        write_code(
+            str(tvm.lower(sch, self.args, simple_mode=True)), log_path, 'thrd_fused.py')
         sch[out].bind(blck_fused, te.thread_axis("blockIdx.x"))
         for va in vthd_axis:
             sch[out].bind(va, te.thread_axis("vthread"))
@@ -71,20 +86,19 @@ class TEElementWiseScheduler(TESchedulerBase):
                         cache_plan[tensor] = []
                     cache_plan[tensor].append(op)
 
-
-        write_code(
-            str(tvm.lower(sch, self.args, simple_mode=True)), log_path, 'cached.py')
         for tensor, consumers in cache_plan.items():
             tensor_shared = sch.cache_read(tensor, "shared", consumers)
             sch[tensor_shared].compute_at(sch[out], thrd_fused)
+
             if tensor in self.shared_inputs_strides:
                 strides = self.shared_inputs_strides[tensor]
             else:
                 strides = Stride()
+
             self.cooperative_fetch(tensor_shared, strides)
+
             if len(self.shared_outputs) == 0: continue
             tensor_local = sch.cache_read(tensor_shared, "local", consumers)
             sch[tensor_local].compute_at(sch[out], thrd_fused)
-        write_code(
-            str(tvm.lower(sch, self.args, simple_mode=True)), log_path, 'scheduled.py')
+        
         return sch

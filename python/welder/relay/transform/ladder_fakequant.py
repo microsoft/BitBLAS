@@ -5,14 +5,23 @@ import numpy as np
 
 @relay.transform.function_pass(opt_level=0, required=["InferType"])
 class LadderFakeQuant(relay.ExprMutator):
-    def __init__(self, quant_type=0):
+    def __init__(self, quant_weight_candidate=None, quant_type=0):
         super().__init__()
         '''
+        quant_gemm_candidate: list of weight candidates
+            (
+                (N, K, is_transpose),
+                (N, K, is_transpose),
+                ...
+            )
+
+        quant_type:
             0: qweight
             1: qweight + scales
             2: qweight + scales + zeros
             
         '''
+        self.quant_weight_candidate = quant_weight_candidate
         self.quant_type = quant_type
 
     def transform_function(self, func, mod, ctx):
@@ -54,6 +63,13 @@ class LadderFakeQuant(relay.ExprMutator):
             else:
                 _, N = kernel_shape
             
+            # check if the shape is in the candidate list
+            if self.quant_weight_candidate is not None:
+                if (N, K, transpose_b) not in self.quant_weight_candidate:
+                    return super().visit_call(call)
+                else:
+                    print("quantize weight for {}".format((N, K, transpose_b)))
+
             out_shape = call.checked_type.shape
             out_dtype = call.checked_type.dtype
             # if the data's node has only one output, we can propagate the layout

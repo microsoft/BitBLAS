@@ -86,25 +86,25 @@ class TIRElementWiseScheduler(TIRSchedulerBase):
         self.schedule_compute_inline()
 
         # ----- cache small tensors -----
-        cached_stages = []
-        for i, input_tensor in enumerate(self.output_op.input_tensors):
-            cached_stages.append(input_tensor.name)
+        # cached_stages = []
+        # for i, input_tensor in enumerate(self.output_op.input_tensors):
+        #     cached_stages.append(input_tensor.name)
 
-        cache_plan = self.make_cache_plan()
-        print(cache_plan)
-        for tensor in cache_plan:
-            tensor_shared = sch.cache_read(C, tensor.name, "shared")
-            sch.compute_at(tensor_shared, thrd_fused)
-            if tensor in self.shared_inputs_strides:
-                strides = self.shared_inputs_strides[tensor]
-            else:
-                strides = Stride()
-            dim_offset = len(vthd_axis) + 2 # outer loops are: blck_fused vthd_axis thrd_fused
-            self.cooperative_fetch(tensor_shared, dim_offset, strides)
-            if len(self.shared_outputs) == 0:
-                continue
-            tensor_local = sch.cache_read(C, tensor.name, "local")
-            sch.compute_at(tensor_local, thrd_fused)
+        # cache_plan = self.make_cache_plan()
+        # print(cache_plan)
+        # for tensor in cache_plan:
+        #     tensor_shared = sch.cache_read(C, tensor.name, "shared")
+        #     sch.compute_at(tensor_shared, thrd_fused)
+        #     if tensor in self.shared_inputs_strides:
+        #         strides = self.shared_inputs_strides[tensor]
+        #     else:
+        #         strides = Stride()
+        #     dim_offset = len(vthd_axis) + 2 # outer loops are: blck_fused vthd_axis thrd_fused
+        #     self.cooperative_fetch(tensor_shared, dim_offset, strides)
+        #     if len(self.shared_outputs) == 0:
+        #         continue
+        #     tensor_local = sch.cache_read(C, tensor.name, "local")
+        #     sch.compute_at(tensor_local, thrd_fused)
 
         write_sch(sch, log_path, "cache_small_tensor")
 

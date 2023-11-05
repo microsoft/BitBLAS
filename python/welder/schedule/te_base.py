@@ -22,9 +22,9 @@ class TESchedulerBase(SchedulerBase):
         self.sche[shared].reorder(oo, ty, tx)
         if vectorize_inner:
             self.sche[shared].vectorize(tv)
-        else:
-            self.sche[shared].unroll(tv)
-        self.sche[shared].unroll(oo)
+        # else:
+        #     self.sche[shared].unroll(tv)
+        # self.sche[shared].unroll(oo)
         self.sche[shared].bind(tx, te.thread_axis("threadIdx.x"))
         self.sche[shared].bind(ty, te.thread_axis("threadIdx.y"))
 
