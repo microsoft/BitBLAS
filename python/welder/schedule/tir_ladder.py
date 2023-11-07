@@ -136,6 +136,14 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
        
         ## params for debugging
 
+        # block_row_warps = 2
+        # block_col_warps = 2
+        # warp_row_tiles = 8
+        # warp_col_tiles = 2
+        # chunk = 2
+        # stage = 2
+        # use_async = 1
+        # raster = 10
         # block_row_warps = 4
         # block_col_warps = 1
         # warp_row_tiles = 2
@@ -783,20 +791,39 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
             block_local_B_shared_cache_fused = sch.fuse(*sch.get_loops(block_local_B_shared_cache)[-4:])
             assert (self.args[1].dtype == "int8"), "currently only support b stored in int8 format"
-            def calculate_prop_vec(top=16):
-                # todo(leiwang) : top should be wmma_ak / wmma_bk * vecb
-                wmma_ak = self.args[0].shape[-2] if transpose_A else self.args[0].shape[-1]
-                wmma_bk= self.args[1].shape[-1] if transpose_B else self.args[1].shape[-2]
-                compressed_bits = wmma_ak // wmma_bk # int1b -> 8 , int4b -> 2
-                _vec = 32 // compressed_bits
-                return _vec
-            _vec = calculate_prop_vec()
-            B_shared_inner, B_shared_ty, B_shared_tz, B_shared_tx, B_shared_vi = sch.split(
-                block_local_B_shared_cache_fused, factors=[None, block_row_warps, block_col_warps, warp_size, _vec])
-            sch.bind(B_shared_tx, "threadIdx.x")
-            sch.bind(B_shared_ty, "threadIdx.y")
-            sch.bind(B_shared_tz, "threadIdx.z")
-            sch.vectorize(B_shared_vi)
+            
+            _extent_for_bcache = sch.get_sref(block_local_B_shared_cache_fused).stmt.extent
+            if _extent_for_bcache // (vecB * warp_size) == 0:
+                block_local_B_shared_cache_fused, B_shared_tx, B_shared_vi = sch.split(
+                    block_local_B_shared_cache_fused, factors=[1, warp_size, None])
+                sch.bind(B_shared_tx, "threadIdx.x")
+                sch.vectorize(B_shared_vi)
+                _extent_for_bcache = sch.get_sref(block_local_B_shared_cache_fused).stmt.extent
+
+            # warp_size - 1 handling for 32x7 alike case, which may cause unaligned threadIdx.x mapping.
+            if _extent_for_bcache // vecB >= 1 and _extent_for_bcache & (vecB - 1) == 0 and (_extent_for_bcache // vecB) & (warp_size -1) == 0:
+                block_local_B_shared_cache_fused, B_shared_vi = sch.split(
+                block_local_B_shared_cache_fused, factors=[None, vecB])
+                sch.vectorize(B_shared_vi)
+                _extent_for_bcache = sch.get_sref(block_local_B_shared_cache_fused).stmt.extent
+
+            if _extent_for_bcache // warp_size >= 1 and _extent_for_bcache % warp_size == 0:
+                block_local_B_shared_cache_fused, B_shared_tx = sch.split(
+                    block_local_B_shared_cache_fused, factors=[None, warp_size])
+                sch.bind(B_shared_tx, "threadIdx.x")
+                _extent_for_bcache = sch.get_sref(block_local_B_shared_cache_fused).stmt.extent
+
+            if _extent_for_bcache // block_row_warps >= 1 and _extent_for_bcache % block_row_warps == 0:
+                block_local_B_shared_cache_fused, B_shared_ty = sch.split(
+                    block_local_B_shared_cache_fused, factors=[None, block_row_warps])
+                sch.bind(B_shared_ty, "threadIdx.y")
+                _extent_for_bcache = sch.get_sref(block_local_B_shared_cache_fused).stmt.extent
+            
+            if _extent_for_bcache // block_col_warps >= 1 and _extent_for_bcache % block_col_warps == 0:
+                block_local_B_shared_cache_fused, B_shared_tz = sch.split(
+                    block_local_B_shared_cache_fused, factors=[None, block_col_warps])
+                sch.bind(B_shared_tz, "threadIdx.z")
+                _extent_for_bcache = sch.get_sref(block_local_B_shared_cache_fused).stmt.extent
 
             if is_lut:
                 block_shared_lut = sch.cache_read(block_local_B_decompress, 0, "shared")
