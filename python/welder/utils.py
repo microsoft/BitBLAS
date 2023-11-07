@@ -112,11 +112,11 @@ extern "C" int {symbol}({def_args}) {{
     def compile(self, arch, timeout: float=None):
         if arch.platform == "CUDA":
             profiling_code = self._create_code_for_profiling()
-            src = tempfile.NamedTemporaryFile(mode='w', suffix=".cu", delete=True)
+            src = tempfile.NamedTemporaryFile(mode='w', suffix=".cu", delete=False)
             lib_name = src.name.replace(".cu", ".so")
             compute_version = arch.compute_capability
             cutlass_dir = os.path.expanduser("~/cutlass/include")
-            command = ["nvcc", "-std=c++17", "-Xcudafe", "--diag_suppress=177", "--compiler-options", "'-fPIC'", "-lineinfo", "--shared", src.name, "-lcuda",
+            command = ["nvcc", "-lineinfo", "-std=c++17", "-Xcudafe", "--diag_suppress=177", "--compiler-options", "'-fPIC'", "-lineinfo", "--shared", src.name, "-lcuda",
                 f"-gencode=arch=compute_{compute_version},code=compute_{compute_version}",
                 f"-I{cutlass_dir}", "-o", lib_name]
         elif arch.platform == "ROCm":
