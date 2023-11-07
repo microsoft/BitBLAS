@@ -217,8 +217,6 @@ class InputShapeInference():
                     intermediate_nodes = path[1:-1]
                     for node in intermediate_nodes:
                         iters = mapping[node.name]
-                        print(iters)
-                        print(regions)
                         if len(iters) != len(regions) or len(iters) != 1:
                             continue
                         if len(*iters) != len(*regions):
