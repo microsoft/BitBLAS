@@ -215,6 +215,7 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
                 is_b=False,
                 transpose=transpose_a,
                 is_inverse=False,
+
             )
             perfect_data = relay.Call(
                 relay.op.get("ladder.layout_transform"), [
@@ -225,9 +226,8 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
             perfect_kernel = relay.layout_transform(kernel, "HW", "HW16h8w")
 
             attrs = ir.make_node(
-                "DictAttrs", out_dtype=out_dtype,
-                transpose_a=transpose_a,
-                transpose_b=transpose_b,
+                "DictAttrs",
+                **call.attrs,
                 can_propagate=True
             )
             other_inputs = []

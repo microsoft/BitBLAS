@@ -3,6 +3,7 @@ from tvm.relay.op.strategy import wrap_topi_schedule
 from tvm.relay import reg
 from .utils import compute_matmul_shape
 
+
 def rel_ladder_quant_linear(arg_types, attrs):
     a_shape = arg_types[0].shape
     b_shape = arg_types[1].shape
@@ -21,12 +22,12 @@ def rel_ladder_quant_linear(arg_types, attrs):
         dequant_b_shape = [b_shape[0], K_size]
     else:
         dequant_b_shape = [K_size, b_shape[1]]
-    
+
     out_shape = compute_matmul_shape(a_shape, dequant_b_shape, transpose_a, transpose_b)
-    return relay.TensorType(out_shape,output_dtype)
+    return relay.TensorType(out_shape, output_dtype)
+
 
 def compute_ladder_quant_linear(attrs, inputs, output_type):
-
     transpose_a = attrs["transpose_a"]
     transpose_b = attrs["transpose_b"]
     out_shape = output_type.shape
@@ -40,8 +41,10 @@ def compute_ladder_quant_linear(attrs, inputs, output_type):
         Scales = inputs[2]
         Zeros = inputs[3]
 
-    group_size = -1
-    bits = 4
+    group_size = attrs["group_size"]
+    bits = attrs["bits"]
+    format = attrs["format"]
+    assert format == "int", "Only support int format currently"
     n_float_per_i8 = 8 // bits
     K_size = A.shape[-2] if transpose_a else A.shape[-1]
     k = te.reduce_axis((0, K_size), name="k")
@@ -49,15 +52,17 @@ def compute_ladder_quant_linear(attrs, inputs, output_type):
         dequant_b_shape = [B.shape[0], K_size]
     else:
         dequant_b_shape = [K_size, B.shape[1]]
-        
+
     if group_size == -1:
         group_size = K_size
-        
-    def _tir_u8_to_int_to_float(nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr, dtype: str):
+
+    def _tir_u8_to_int_to_float(
+        nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr, dtype: str
+    ):
         assert val.dtype == "int8"
         mask = tir.const((1 << nbit) - 1, "int8")
         return ((val >> (pos * nbit).astype("int8")) & mask).astype(dtype)
-    
+
     def fcompute(*args):
         m, n = args[-2], args[-1]
         A_args = [k, m] if transpose_a else [m, k]
@@ -76,29 +81,41 @@ def compute_ladder_quant_linear(attrs, inputs, output_type):
 
         def decode_func(n, k):
             if transpose_b:
-                w = _tir_u8_to_int_to_float(bits, B[n, k // n_float_per_i8], k % n_float_per_i8, dtype="float16")
+                if bits <= 4:
+                    w = _tir_u8_to_int_to_float(
+                        bits,
+                        B[n, k // n_float_per_i8],
+                        k % n_float_per_i8,
+                        dtype="float16",
+                    )
+                else:
+                    w = B[n, k // n_float_per_i8].astype(A.dtype)
             else:
-                w = _tir_u8_to_int_to_float(bits, B[n // n_float_per_i8, k], n % n_float_per_i8, dtype="float16")
-            
+                if bits <= 4:    
+                    w = _tir_u8_to_int_to_float(
+                        bits, B[n // n_float_per_i8, k], n % n_float_per_i8, dtype="float16"
+                    )
+                else:
+                    w = B[n // n_float_per_i8, k].astype(A.dtype)
+
             if Scales is None:
                 return w
             elif Zeros is None:
                 return w * Scales[0, n]
-            else:            
+            else:
                 return w * Scales[0, n] + Zeros[0, n]
 
-        B_decode = te.compute(
-            dequant_b_shape,
-            decode_func,
-            name='B_decode'
-        )
-        
+        B_decode = te.compute(dequant_b_shape, decode_func, name="B_decode")
+
         return te.sum(
-            A.__getitem__(tuple(A_args)).astype(out_dtype) * B_decode.__getitem__(tuple(B_args)).astype(out_dtype),
-            axis=[k]
+            A.__getitem__(tuple(A_args)).astype(out_dtype)
+            * B_decode.__getitem__(tuple(B_args)).astype(out_dtype),
+            axis=[k],
         )
+
     C = te.compute(out_shape, fcompute=fcompute, name="T_quant_linear")
     return [C]
+
 
 @target.override_native_generic_func("strategy_ladder_quant_linear")
 def strategy_ladder_quant_linear(attrs, inputs, out_type, target):
@@ -109,6 +126,7 @@ def strategy_ladder_quant_linear(attrs, inputs, out_type, target):
         name="ladder.quant_linear.generic",
     )
     return strategy
+
 
 def register_ladder_quant_linear():
     op_name = "ladder.quant_linear"
@@ -121,6 +139,7 @@ def register_ladder_quant_linear():
     op.set_attrs_type_key("DictAttrs")
     reg.register_pattern(op_name, relay.op.OpPattern.OUT_ELEMWISE_FUSABLE)
     reg.register_strategy(op_name, strategy_ladder_quant_linear)
+
 
 register_ladder_quant_linear()
 
