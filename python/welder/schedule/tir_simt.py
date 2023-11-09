@@ -3,6 +3,7 @@ from tvm import tir
 import os
 from ..config import Config, Stride
 from .tir_base import TIRSchedulerBase
+from welder.schedule.lop3_intrin import LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN
 # get file name and remove the suffix
 fname = os.path.basename(__file__)
 fname = os.path.splitext(fname)[0]
@@ -105,9 +106,11 @@ class TIRSIMTScheduler(TIRSchedulerBase):
         if len(tile_axis) > 0:
             for ax in sch.get_loops(CL)[-len(tile_axis):]:
                 sch.unroll(ax)
-    
+        
         sch.decompose_reduction(C, reduce_outer_axis[0])
+
         self.schedule_compute_inline()
+        
 
         # ----- cache small tensors -----
         cache_plan = self.make_cache_plan()
@@ -143,7 +146,7 @@ class TIRSIMTScheduler(TIRSchedulerBase):
         return sch.mod["main"]
 
 
-    def schedule_inconsistent(self, is_a_consistent: bool, is_b_consistent: bool) -> tir.Schedule:
+    def schedule_inconsistent(self, is_a_consistent: bool, is_b_consistent: bool, use_dp4a=False) -> tir.Schedule:
         sch, config = self.sche, self.config
         assert config.block[0] == 1, "inconsistent computation only support gemv case"
         tx = np.prod(config.thread) * np.prod(config.reduce_thread)
@@ -153,7 +156,7 @@ class TIRSIMTScheduler(TIRSchedulerBase):
             vec = 8
         num_warps = config.block[-1] // config.thread[-1]
         warp_size = config.thread[-1] * config.reduce_thread[-1]
-        
+        write_sch(sch, log_path, "origin")
         # num_warps = 1
         # warp_size = 32
         # print(f"tx: {tx}, vec: {vec}, num_warps: {num_warps}, warp_size: {warp_size}")
@@ -194,28 +197,109 @@ class TIRSIMTScheduler(TIRSchedulerBase):
 
         block_local_a_v = sch.get_loops(block_shared_local_A)[-1]
         sch.vectorize(block_local_a_v)
-
         block_local_b_v = sch.get_loops(block_shared_local_B)[-1]
         sch.vectorize(block_local_b_v)
-
-        # sch.decompose_reduction(block_b, k)
+        if use_dp4a:
+            vo, vi = sch.split(vk, [None, 4])
         write_sch(sch, log_path, "decompose_reduction")
         
+        return sch.mod["main"]
+    
+    def schedule_inconsistent_shared_decode(self, is_a_consistent: bool, is_b_consistent: bool, use_dp4a=False) -> tir.Schedule:
+        sch, config = self.sche, self.config
+        assert config.block[0] == 1, "inconsistent computation only support gemv case"
+        tx = np.prod(config.thread) * np.prod(config.reduce_thread)
+        try:
+            vec = list(config.vectorize.values())[-1]
+        except IndexError:
+            vec = 8
+        num_warps = config.block[-1] // config.thread[-1]
+        warp_size = config.thread[-1] * config.reduce_thread[-1]
+        write_sch(sch, log_path, "origin")
+        
+        block_b = sch.get_block(self.reduce_op.name)
+        decode_block = None
+        other_blocks = []
+
+        for op in reversed(self.ops):
+            if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
+                if 'decode' in op.name or 'decompress' in op.name:
+                    decode_block = self.sche.get_block(op.name)
+                else:
+                    other_blocks.append(self.sche.get_block(op.name))
+    
+        i, j, k = sch.get_loops(block_b)    
+        block_shared_local_A = sch.cache_read(block_b, 0, "local")
+        block_shared_local_B_rescale = sch.cache_read(block_b, 1, "local")
+        for block in other_blocks:
+            self.sche.compute_inline(block)
+        block_shared_local_B_decompress= sch.cache_read(block_shared_local_B_rescale, 0, "local")
+        if decode_block != None:
+            sch.compute_inline(decode_block)        
+        block_shared_local_B_prefetch = sch.cache_read(block_shared_local_B_decompress, 0, "local")
+        block_local_C = sch.cache_write(block_b, 0, "local")
+        write_sch(sch, log_path, "cache_related")
+        # reverse inline
+        if self.reduce_op != None and self.reduce_op != self.output_op:
+            block = self.sche.get_block(self.output_op.name)
+            self.sche.reverse_compute_inline(block)
+        bx, j = sch.split(j, factors=[None, num_warps])
+        k, tx, vk = sch.split(k, factors=[None, warp_size, vec])
+        sch.reorder(bx, j, i, k, tx)
+
+        sch.bind(bx, "blockIdx.x")
+        sch.bind(tx, "threadIdx.x")
+        sch.bind(j, "threadIdx.y")
+        
+        self.block_size = [sch.get_sref(tx).stmt.extent, sch.get_sref(j).stmt.extent, 1]
+        self.grid_size = [sch.get_sref(bx).stmt.extent, 1, 1]
+        
+        write_sch(sch, log_path, "do_split")
+
+        sch.compute_at(block_shared_local_A, tx, preserve_unit_loops=True)
+        sch.compute_at(block_shared_local_B_rescale, tx, preserve_unit_loops=True)
+        sch.compute_at(block_shared_local_B_decompress, tx, preserve_unit_loops=True)
+        sch.compute_at(block_shared_local_B_prefetch, tx, preserve_unit_loops=True)
+        sch.reverse_compute_at(block_local_C, j, preserve_unit_loops=True)
+        write_sch(sch, log_path, "compute_at_related")
+
+        block_local_a_v = sch.get_loops(block_shared_local_A)[-1]
+        sch.vectorize(block_local_a_v)
+
+        block_local_b_v = sch.get_loops(block_shared_local_B_prefetch)[-1]
+        sch.vectorize(block_local_b_v)
+        if use_dp4a:
+            vo, vi = sch.split(vk, [None, 4])
+        write_sch(sch, log_path, "decompose_reduction")
+        if decode_block:
+            try:
+                sch.tensorize(sch.get_loops(block_shared_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN)
+            except Exception as e:
+                print(e)
+        
+        write_sch(sch, log_path, "tensorize_lop3")
         return sch.mod["main"]
         
     def schedule(self) -> tir.Schedule:
         input0_dtype = self.args[0].dtype
         input1_dtype = self.args[1].dtype
         is_consistent = input0_dtype == input1_dtype
+        reduce_op = self.reduce_op
+        reduce_input0_dtype = reduce_op.input_tensors[0].dtype
+        reduce_input1_dtype = reduce_op.input_tensors[1].dtype
+        is_a_consistent = reduce_input0_dtype == input0_dtype
+        is_b_consistent = reduce_input1_dtype == input1_dtype
+        use_dp4a = input0_dtype == 'int8' and self.reduce_op.output(0).dtype == "int32"
+        if use_dp4a:
+            if self.config.compute_capability == "80":
+                return self.schedule_inconsistent_shared_decode(is_a_consistent, is_b_consistent, use_dp4a=True)
+            return self.schedule_inconsistent(is_a_consistent, is_b_consistent, use_dp4a=True)
         if is_consistent:
             return self.schedule_consistent()
         else:
-            reduce_op = self.reduce_op
-            reduce_input0_dtype = reduce_op.input_tensors[0].dtype
-            reduce_input1_dtype = reduce_op.input_tensors[1].dtype
-            is_a_consistent = reduce_input0_dtype == input0_dtype
-            is_b_consistent = reduce_input1_dtype == input1_dtype
             print(
                 f"the computation is inconsistent, is_a_consistent: {is_a_consistent}, is_b_consistent: {is_b_consistent}")
-
+            print(f"self.config.compute_capability {self.config.compute_capability}")
+            if self.config.compute_capability == "80":
+                return self.schedule_inconsistent_shared_decode(is_a_consistent, is_b_consistent)
             return self.schedule_inconsistent(is_a_consistent, is_b_consistent)
