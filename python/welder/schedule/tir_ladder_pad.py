@@ -3,16 +3,6 @@ from tvm import tir
 import os
 from ..layout import *
 from .tir_base import TIRSchedulerBase
-from tvm.tir.tensor_intrin.cuda import (
-    WMMA_FILL_16x16x16_F16_INTRIN,
-    WMMA_LOAD_16x16x16_F16_A_INTRIN,
-    WMMA_LOAD_16x16x16_F16_B_INTRIN,
-    WMMA_LOAD_16x16x16_F16_B_TRANS_INTRIN,
-    WMMA_SYNC_16x16x16_f16f16f16_TRANS_INTRIN,
-    WMMA_SYNC_16x16x16_f16f16f16_INTRIN,
-    WMMA_STORE_16x16x16_F16_GLOBAL_INTRIN,
-    WMMA_STORE_16x16x16_F16_SHARED_INTRIN,
-)
 
 # for debugging.
 
@@ -44,8 +34,17 @@ def write_sch(sch, path, fname):
     write_code(sch.mod.astext(), path, cu_fname)
 
 class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
-    
     def schedule(self) -> tir.Schedule:
+        from tvm.tir.tensor_intrin.cuda import (
+            WMMA_FILL_16x16x16_F16_INTRIN,
+            WMMA_LOAD_16x16x16_F16_A_INTRIN,
+            WMMA_LOAD_16x16x16_F16_B_INTRIN,
+            WMMA_LOAD_16x16x16_F16_B_TRANS_INTRIN,
+            WMMA_SYNC_16x16x16_f16f16f16_TRANS_INTRIN,
+            WMMA_SYNC_16x16x16_f16f16f16_INTRIN,
+            WMMA_STORE_16x16x16_F16_GLOBAL_INTRIN,
+            WMMA_STORE_16x16x16_F16_SHARED_INTRIN,
+        )
         # const val for testing
         warp_size = 32
         wmma_m, wmma_n, wmma_k = 16, 16, 16
@@ -59,7 +58,7 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         warp_tile_M, warp_tile_N = self.config.warp[0], self.config.warp[1]
         out_dtype = self.reduce_op.output(0).dtype
         in_dtype = self.reduce_op.input_tensors[0].dtype
-        print(config)
+
         if in_dtype == "float32":
             vec = 4
         elif in_dtype == "float16":

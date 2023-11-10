@@ -41,10 +41,10 @@ class LadderRewriteInceptionLayout(relay.ExprMutator):
                 print('lhs or rhs is constant')
             else:
                 # if one is relu or maxpool
-                lhs_is_relu = isinstance(lhs.op, ir.Op) and lhs.op.name == "nn.relu"
-                rhs_is_relu = isinstance(rhs.op, ir.Op) and rhs.op.name == "nn.relu"
-                lhs_is_maxpool = isinstance(lhs.op, ir.Op) and lhs.op.name == "nn.max_pool2d"
-                rhs_is_maxpool = isinstance(rhs.op, ir.Op) and rhs.op.name == "nn.max_pool2d"
+                lhs_is_relu = hasattr(lhs,'op') and isinstance(lhs.op, ir.Op) and lhs.op.name == "nn.relu"
+                rhs_is_relu = hasattr(rhs,'op') and isinstance(rhs.op, ir.Op) and rhs.op.name == "nn.relu"
+                lhs_is_maxpool = hasattr(lhs,'op') and isinstance(lhs.op, ir.Op) and lhs.op.name == "nn.max_pool2d"
+                rhs_is_maxpool = hasattr(rhs,'op') and isinstance(rhs.op, ir.Op) and rhs.op.name == "nn.max_pool2d"
                 if lhs_is_relu or rhs_is_relu or lhs_is_maxpool or rhs_is_maxpool:
                     the_relu_or_maxpool = lhs if lhs_is_relu or lhs_is_maxpool else rhs
                     def detect_layout_transform(node):

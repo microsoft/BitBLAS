@@ -171,16 +171,13 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
             out_shape = call.checked_type.shape
             out_dtype = call.checked_type.dtype
             
-            # TODO(v-leiwang3): currently only support weight only quantization.
-            for type in call.type_args:
-                if type.dtype != "float16":
-                    return super().visit_call(call)
+  
             input_shape = call.args[0].checked_type.shape
             kernel_shape = call.args[1].checked_type.shape
-
+            bits = int(call.attrs["bits"])
             warp_compute_tile_m = 16
             warp_compute_tile_n = 16
-            warp_compute_tile_k = 16
+            warp_compute_tile_k = 32 if out_dtype == "int32" else 16
             data = self.visit(call.args[0])
             transpose_a, transpose_b = call.attrs.transpose_a, call.attrs.transpose_b
             if transpose_a:
@@ -209,25 +206,30 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
                     data, (K, M)) if transpose_a else relay.reshape(data, (M, K))
             print("input_shape", input_shape)
             print("kernel_shape", kernel_shape)
-            perfect_data = relay.layout_transform(data, "HW", "HW16h16w")
+            perfect_data = relay.layout_transform(data, "HW", f"HW16h{warp_compute_tile_k}w")
             attrs = ir.make_node(
                 "DictAttrs",
                 is_b=False,
                 transpose=transpose_a,
                 is_inverse=False,
+
             )
             perfect_data = relay.Call(
                 relay.op.get("ladder.layout_transform"), [
                     perfect_data], attrs
             )
             
+            _compressed_rate = 0
+            if out_dtype == "int32":
+                _compressed_rate = 32 // (8 // bits)
+            elif out_dtype == "float16":
+                _compressed_rate = 16 // (8 // bits)
             # TODO(v-leiwang3): fake kernel for performance
-            perfect_kernel = relay.layout_transform(kernel, "HW", "HW16h8w")
+            perfect_kernel = relay.layout_transform(kernel, "HW", f"HW16h{_compressed_rate}w")
 
             attrs = ir.make_node(
-                "DictAttrs", out_dtype=out_dtype,
-                transpose_a=transpose_a,
-                transpose_b=transpose_b,
+                "DictAttrs",
+                **call.attrs,
                 can_propagate=True
             )
             other_inputs = []
@@ -238,7 +240,7 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
                 [perfect_data, perfect_kernel, *other_inputs],
                 attrs,
             )
-            layout_convert = relay.layout_transform(gemm, "HW16h16w", "HW")
+            layout_convert = relay.layout_transform(gemm, f"HW{warp_compute_tile_m}h{warp_compute_tile_n}w", "HW")
             reshape = relay.reshape(layout_convert, out_shape)
             return reshape
             

@@ -58,6 +58,14 @@ def match_global_kernel(source: str) -> int:
     assert len(matched) == 1
     return source.index(matched[0])
 
+def tensor_replace_dp4a(source: str) -> str:
+    # as under some senario, like block reduction, the dp4a tensorize will fail. but we still need it.
+    import re
+    pattern = r"""for\s*\(int\s*(?P<k_var>\w+)\s*=\s*0;\s*\1\s*<\s*4;\s*\+\+\1\)\s*\{\s*(?P<c_var>\w+)\[0\]\s*=\s*\(\2\[0\]\s*\+\s*\(\(\(int\)(?P<a_var>\w+)\[\(\((?P<idx_a_var>\w+)\s*\*\s*4\)\s*\+\s*\1\)\]\)\s*\*\s*\(\(int\)(?P<b_var>\w+)\[\(\((?P<idx_b_var>\w+)\s*\*\s*4\)\s*\+\s*\1\)\]\)\)\);\s*\}"""
+    replacement = r"""\2[0] = __dp4a(*(int *)&\3[((\4 * 4))],*(int *)&\5[((\6 * 4))], \2[0]);"""
+    source = re.sub(pattern, replacement, source)
+    return source
+
 def unset_tvm_cuda_compile():
     tvm.register_func("tvm_callback_cuda_compile", lambda *x:"", override=True)
 
@@ -139,4 +147,5 @@ def tvm_build(sch: SchedulerBase, target: tvm.target.Target, name: str = "defaul
             buffer_len = int(size) * _type_bytes[dtype]
             buffer_len = (buffer_len + 31) // 32 * 32
             src = re.sub(r"__shared__ ((?:signed |unsigned )?\w+) {}\[\d+\];".format(var), r"__shared__ \1 {}[{}];".format(var, buffer_len // _type_bytes[dtype]), src, 1)
+    src = tensor_replace_dp4a(src)
     return src, exteral_shared_memroy_size, total_internal_shared_memory

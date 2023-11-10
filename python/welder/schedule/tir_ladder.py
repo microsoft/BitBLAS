@@ -3,39 +3,6 @@ from tvm import tir
 import os
 from ..layout import *
 from .tir_base import TIRSchedulerBase
-from .lop3_intrin import (
-    LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
-)
-from .ladder_intrin import (
-    TRICKY_MMA_fill_16x16_f16_INTRIN,
-    TRICKY_LDMATRIX_16x16_A_INTRIN,
-    TRICKY_LDMATRIX_16x16_B_INTRIN,
-    TRICKY_LDMATRIX_16x16_B_TRANS_INTRIN,
-    TRICKY_MMA_f16f16f16_INTRIN,
-    TRICKY_MMA_f16f16f16_TRANS_INTRIN,
-    TRICKY_MMA_store_16x16_f16_global_INTRIN,
-    TRICKY_MMA_store_16x16_f16_shared_INTRIN,
-    A_global_16x16_to_shared_load_16x16_layout,
-    B_global_16x16_to_shared_load_16x16_layout,
-    C_shared_16x16_to_ldmatrix_32x8_layout,
-    A_B_shared_16x16_to_ldmatrix_32x8_layout,
-    ASYNC_COPY_F16_X8_INTRIN,
-    ASYNC_COPY_S8_X16_INTRIN,
-    TRICKY_MMA_fill_16x16_i32_INTRIN,
-    TRICKY_LDMATRIX_16x32_A_INTRIN,
-    TRICKY_LDMATRIX_32x16_B_INTRIN,
-    TRICKY_LDMATRIX_16x32_B_TRANS_INTRIN,
-    TRICKY_MMA_i8i8i32_INTRIN,
-    TRICKY_MMA_i8i8i32_TRANS_INTRIN,
-    TRICKY_MMA_store_16x16_i32_shared_INTRIN,
-    TRICKY_MMA_store_16x16_i32_global_INTRIN,
-    shared_16x16_to_ldmatrix_32x8_layout,
-    shared_32x16_to_ldmatrix_32x16_layout,
-    shared_16x32_to_ldmatrix_32x16_layout,
-    shared_16x32_to_ldmatrix_32x16_permutation,
-    A_global_16x32_to_shared_load_16x32_layout,
-    B_global_16x32_to_shared_load_16x32_layout,
-)
 
 # for debugging.
 
@@ -89,6 +56,36 @@ def write_sch(sch, path, fname):
 class TIRLadderMMAScheduler4D(TIRSchedulerBase):
     
     def schedule_consistent(self):
+        from .ladder_intrin import (
+            TRICKY_MMA_fill_16x16_f16_INTRIN,
+            TRICKY_LDMATRIX_16x16_A_INTRIN,
+            TRICKY_LDMATRIX_16x16_B_INTRIN,
+            TRICKY_LDMATRIX_16x16_B_TRANS_INTRIN,
+            TRICKY_MMA_f16f16f16_INTRIN,
+            TRICKY_MMA_f16f16f16_TRANS_INTRIN,
+            TRICKY_MMA_store_16x16_f16_global_INTRIN,
+            TRICKY_MMA_store_16x16_f16_shared_INTRIN,
+            A_global_16x16_to_shared_load_16x16_layout,
+            B_global_16x16_to_shared_load_16x16_layout,
+            C_shared_16x16_to_ldmatrix_32x8_layout,
+            A_B_shared_16x16_to_ldmatrix_32x8_layout,
+            ASYNC_COPY_F16_X8_INTRIN,
+            ASYNC_COPY_S8_X16_INTRIN,
+            TRICKY_MMA_fill_16x16_i32_INTRIN,
+            TRICKY_LDMATRIX_16x32_A_INTRIN,
+            TRICKY_LDMATRIX_32x16_B_INTRIN,
+            TRICKY_LDMATRIX_16x32_B_TRANS_INTRIN,
+            TRICKY_MMA_i8i8i32_INTRIN,
+            TRICKY_MMA_i8i8i32_TRANS_INTRIN,
+            TRICKY_MMA_store_16x16_i32_shared_INTRIN,
+            TRICKY_MMA_store_16x16_i32_global_INTRIN,
+            shared_16x16_to_ldmatrix_32x8_layout,
+            shared_32x16_to_ldmatrix_32x16_layout,
+            shared_16x32_to_ldmatrix_32x16_layout,
+            shared_16x32_to_ldmatrix_32x16_permutation,
+            A_global_16x32_to_shared_load_16x32_layout,
+            B_global_16x32_to_shared_load_16x32_layout,
+        )
         # const val for testing
         warp_size = 32
         compute_dtype = self.reduce_op.output(0).dtype
@@ -141,14 +138,6 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         # warp_row_tiles = 8
         # warp_col_tiles = 2
         # chunk = 2
-        # stage = 2
-        # use_async = 1
-        # raster = 10
-        # block_row_warps = 4
-        # block_col_warps = 1
-        # warp_row_tiles = 2
-        # warp_col_tiles = 7
-        # chunk = 4
         # stage = 2
         # use_async = 1
         # raster = 10
@@ -340,6 +329,36 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         return sch.mod["main"]
     
     def schedule_inconsistent(self, is_a_consistent=False, is_b_consistent=False):
+        from .ladder_intrin import (
+            TRICKY_MMA_fill_16x16_f16_INTRIN,
+            TRICKY_LDMATRIX_16x16_A_INTRIN,
+            TRICKY_LDMATRIX_16x16_B_INTRIN,
+            TRICKY_LDMATRIX_16x16_B_TRANS_INTRIN,
+            TRICKY_MMA_f16f16f16_INTRIN,
+            TRICKY_MMA_f16f16f16_TRANS_INTRIN,
+            TRICKY_MMA_store_16x16_f16_global_INTRIN,
+            TRICKY_MMA_store_16x16_f16_shared_INTRIN,
+            A_global_16x16_to_shared_load_16x16_layout,
+            B_global_16x16_to_shared_load_16x16_layout,
+            C_shared_16x16_to_ldmatrix_32x8_layout,
+            A_B_shared_16x16_to_ldmatrix_32x8_layout,
+            ASYNC_COPY_F16_X8_INTRIN,
+            ASYNC_COPY_S8_X16_INTRIN,
+            TRICKY_MMA_fill_16x16_i32_INTRIN,
+            TRICKY_LDMATRIX_16x32_A_INTRIN,
+            TRICKY_LDMATRIX_32x16_B_INTRIN,
+            TRICKY_LDMATRIX_16x32_B_TRANS_INTRIN,
+            TRICKY_MMA_i8i8i32_INTRIN,
+            TRICKY_MMA_i8i8i32_TRANS_INTRIN,
+            TRICKY_MMA_store_16x16_i32_shared_INTRIN,
+            TRICKY_MMA_store_16x16_i32_global_INTRIN,
+            shared_16x16_to_ldmatrix_32x8_layout,
+            shared_32x16_to_ldmatrix_32x16_layout,
+            shared_16x32_to_ldmatrix_32x16_layout,
+            shared_16x32_to_ldmatrix_32x16_permutation,
+            A_global_16x32_to_shared_load_16x32_layout,
+            B_global_16x32_to_shared_load_16x32_layout,
+        )
         # const val for testing
         # assert is_a_consistent, "currently A should be consistent"
         num_args = len(self.args)
@@ -587,6 +606,36 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         return sch.mod["main"]
 
     def schedule_inconsistent_shared_decode(self, is_a_consistent=False, is_b_consistent=False):
+        from .ladder_intrin import (
+            TRICKY_MMA_fill_16x16_f16_INTRIN,
+            TRICKY_LDMATRIX_16x16_A_INTRIN,
+            TRICKY_LDMATRIX_16x16_B_INTRIN,
+            TRICKY_LDMATRIX_16x16_B_TRANS_INTRIN,
+            TRICKY_MMA_f16f16f16_INTRIN,
+            TRICKY_MMA_f16f16f16_TRANS_INTRIN,
+            TRICKY_MMA_store_16x16_f16_global_INTRIN,
+            TRICKY_MMA_store_16x16_f16_shared_INTRIN,
+            A_global_16x16_to_shared_load_16x16_layout,
+            B_global_16x16_to_shared_load_16x16_layout,
+            C_shared_16x16_to_ldmatrix_32x8_layout,
+            A_B_shared_16x16_to_ldmatrix_32x8_layout,
+            ASYNC_COPY_F16_X8_INTRIN,
+            ASYNC_COPY_S8_X16_INTRIN,
+            TRICKY_MMA_fill_16x16_i32_INTRIN,
+            TRICKY_LDMATRIX_16x32_A_INTRIN,
+            TRICKY_LDMATRIX_32x16_B_INTRIN,
+            TRICKY_LDMATRIX_16x32_B_TRANS_INTRIN,
+            TRICKY_MMA_i8i8i32_INTRIN,
+            TRICKY_MMA_i8i8i32_TRANS_INTRIN,
+            TRICKY_MMA_store_16x16_i32_shared_INTRIN,
+            TRICKY_MMA_store_16x16_i32_global_INTRIN,
+            shared_16x16_to_ldmatrix_32x8_layout,
+            shared_32x16_to_ldmatrix_32x16_layout,
+            shared_16x32_to_ldmatrix_32x16_layout,
+            shared_16x32_to_ldmatrix_32x16_permutation,
+            A_global_16x32_to_shared_load_16x32_layout,
+            B_global_16x32_to_shared_load_16x32_layout,
+        )
          # const val for testing
         # assert is_a_consistent, "currently A should be consistent"
         num_args = len(self.args)
@@ -764,7 +813,29 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             B_shared_jj, B_shared_vi, B_shared_vj = sch.split(B_shared_jj, factors=[None, 1, b_smem_store_vec])
             block_local_B_decompress = sch.cache_read(BS, 0, "local")
             write_sch(sch, log_path, "schedule_compute_inline")
-            self.schedule_compute_inline()
+            
+            decode_block = None
+            other_blocks = []
+            for op in reversed(self.ops):
+                if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
+                    if 'decode' in op.name or 'decompress' in op.name or 'mediate0' in op.name:
+                        decode_block = self.sche.get_block(op.name)
+                    else:
+                        other_blocks.append(self.sche.get_block(op.name))
+            for block in other_blocks:
+                self.sche.compute_inline(block)
+            if self.reduce_op != None and self.reduce_op != self.output_op:
+                block = self.sche.get_block(self.output_op.name)
+                self.sche.reverse_compute_inline(block)
+            if decode_block != None:
+                read_shape = sch.get_sref(decode_block).stmt.reads[0].buffer.shape
+                write_shape = sch.get_sref(decode_block).stmt.writes[0].buffer.shape
+                compress_rate = np.prod(write_shape) // np.prod(read_shape) 
+                if self.args[0].dtype == 'float16':
+                    bits = 16 // compress_rate
+                elif self.args[0].dtype == 'int8':
+                    bits = 8 // compress_rate
+                sch.compute_inline(decode_block)   
             if is_lut:            
                 block_local_B_shared_cache = sch.cache_read(block_local_B_decompress, 1, "shared")
                 block_local_B_shared_cache_local = sch.cache_read(block_local_B_decompress, 1, "local")
@@ -775,8 +846,32 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             sch.compute_at(block_local_B_decompress, B_shared_vi)
             sch.compute_at(block_local_B_shared_cache_local, B_shared_vi)
 
-            # lop3 tensorize
-            # sch.tensorize(sch.get_loops(block_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN)
+            # fast decoding
+            if False:
+                from welder.schedule.lop3_intrin import (
+                    LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
+                    LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN,
+                    LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN_L16,
+                    LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L8,
+                    LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L16,
+                    LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16,
+                )
+                if self.args[0].dtype == 'float16':
+                    sch.tensorize(sch.get_loops(block_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN)
+                elif self.args[0].dtype == 'int8':
+                    loop = sch.get_loops(block_local_B_decompress)[-1]
+                    loop_extent = sch.get_sref(loop).stmt.extent
+                    # compute the decode bits.
+                    if bits == 4:
+                        if loop_extent == 16:
+                            sch.tensorize(sch.get_loops(block_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN_L16)
+                        elif loop_extent == 8:
+                            sch.tensorize(sch.get_loops(block_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN)
+                    elif bits == 2:
+                        if loop_extent == 16:
+                            sch.tensorize(loop, LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L16)
+                    elif bits == 1:
+                        sch.tensorize(sch.get_loops(block_local_B_decompress)[-1], LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16)
 
             B_shared_fused = sch.fuse(*sch.get_loops(BS)[-6:-2])
             B_shared_inner, B_shared_ty, B_shared_tz, B_shared_tx = sch.split(
@@ -856,7 +951,6 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
         def index_map_C(m, n, wmma_m, wmma_n):
             return (m, n, *c_index_map(wmma_m, wmma_n),)
-
 
         sch.transform_layout(AW, ("write", 0), index_map_A)
         sch.transform_layout(BW, ("write", 0), index_map_A if not transpose_B else index_map_B)

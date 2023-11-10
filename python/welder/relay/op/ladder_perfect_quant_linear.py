@@ -12,7 +12,7 @@ def rel_ladder_perfect_quant_linear(arg_types, attrs):
     transpose_a = attrs["transpose_a"]
     transpose_b = attrs["transpose_b"]
     out_dtype = attrs.out_dtype if hasattr(
-        attrs, 'out_dtype') and attrs.out_dtype else arg_types[0].dtype
+        attrs, 'out_dtype') and attrs.out_dtype else a_type
     if transpose_a:
         K, M, wmma_k, wmma_m = a_shape
     else:
@@ -26,11 +26,9 @@ def rel_ladder_perfect_quant_linear(arg_types, attrs):
     return relay.TensorType(out_shape, out_dtype)
 
 def compute_ladder_perfect_quant_linear(attrs, inputs, output_type):
-
     transpose_a = attrs["transpose_a"]
     transpose_b = attrs["transpose_b"]
     out_shape = output_type.shape
-    print(out_shape)
     out_dtype = output_type.dtype
     A, B = inputs[:2]
     Scales = None
@@ -41,18 +39,19 @@ def compute_ladder_perfect_quant_linear(attrs, inputs, output_type):
         Scales = inputs[2]
         Zeros = inputs[3]
 
-    group_size = -1
-    bits = 4
+    group_size = int(attrs['group_size'])
+    bits = int(attrs['bits'])
+    format = str(attrs['format'])
+    assert format=="int", "Only support int format currently"
     n_float_per_i8 = 8 // bits
     K_size = A.shape[0] if transpose_a else A.shape[1]
-    wmma_k = A.shape[-1] if transpose_a else A.shape[-2]
+    wmma_k = A.shape[-2] if transpose_a else A.shape[-1]
     k = te.reduce_axis((0, K_size), name="k")
     if transpose_b:
         dequant_b_shape = [*B.shape[0:3], wmma_k]
     else:
         dequant_b_shape = [*B.shape[0:2], wmma_k, B.shape[-1]]
     
-    print(dequant_b_shape)
     if group_size == -1:
         group_size = K_size
     
@@ -88,11 +87,17 @@ def compute_ladder_perfect_quant_linear(attrs, inputs, output_type):
         
         def decode_func(n, k, nn, kk):
             if transpose_b:
-                w = _tir_u8_to_int_to_float(
-                    bits, B[n, k, nn, kk // n_float_per_i8], kk % n_float_per_i8, dtype="float16")
+                if bits <= 4:
+                    w = _tir_u8_to_int_to_float(
+                        bits, B[n, k, nn, kk // n_float_per_i8], kk % n_float_per_i8, dtype=A.dtype)
+                else:
+                    w = B[n, k, nn, kk].astype(A.dtype)
             else:
-                w = _tir_u8_to_int_to_float(
-                    bits, B[n, k, nn // n_float_per_i8, kk], nn % n_float_per_i8, dtype="float16")
+                if bits <= 4:
+                    w = _tir_u8_to_int_to_float(
+                        bits, B[n, k, nn // n_float_per_i8, kk], nn % n_float_per_i8, dtype=A.dtype)
+                else:
+                    w = B[n, k, nn, kk].astype(A.dtype)                
 
             wmma_m = wmma_n = wmma_k = 16
             if Scales is None:

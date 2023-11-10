@@ -473,6 +473,7 @@ class DefaultPolicy:
 
         codegen_dict = Config()
         codegen_dict.use_ladder = node.get_tag("ladder_config")
+        codegen_dict.compute_capability = self.arch.compute_capability
         codegen_dict.block = tile
         codegen_dict.thread = cur_threads
         codegen_dict.rstep = [rsteps[ax] for ax in node.raxis]
@@ -507,7 +508,7 @@ class DefaultPolicy:
             return int(np.prod(shape)) % factor == 0
         def is_type_allowed(dtype, vec):
             return dtype.bits * vec <= 128
-        vectorize_sizes = [8, 4, 2]
+        vectorize_sizes = [16, 8, 4, 2]
         dtypes = node.get_reduce_inputs_dtype()
         shapes = node.propogate_reduction_inputs(td.get_tile(node), td.get_rstep(node))
         vectorize_result = {}
