@@ -26,7 +26,6 @@ def rel_ladder_perfect_quant_linear(arg_types, attrs):
     return relay.TensorType(out_shape, out_dtype)
 
 def compute_ladder_perfect_quant_linear(attrs, inputs, output_type):
-
     transpose_a = attrs["transpose_a"]
     transpose_b = attrs["transpose_b"]
     out_shape = output_type.shape

@@ -2,14 +2,15 @@ from tvm import relay
 
 @relay.transform.function_pass(opt_level=0)
 class AnnotateLadderTensorCore(relay.ExprMutator):
-    def __init__(self):
+    def __init__(self, arch=None):
         super().__init__()
+        self.arch = arch
 
     def transform_function(self, func, mod, ctx):
         return super().visit_function(func)
 
     def visit_function(self, func):
-        visitor = OpVisitor()
+        visitor = OpVisitor(self.arch)
         visitor.visit(func)
         if visitor.axis is not None:
             print("ladder_config: ", visitor.ladder_config)
@@ -18,13 +19,18 @@ class AnnotateLadderTensorCore(relay.ExprMutator):
         return super().visit_function(func)
 
 class OpVisitor(relay.ExprVisitor):
-    def __init__(self):
+    def __init__(self, arch):
         super().__init__()
+        self.arch = arch
         self.axis = None
         self.ladder_config = None
 
     def visit_call(self, call):
         if call.op.name in ["ladder.perfect_im2col_conv", "ladder.C2DImplicitGemm", "ladder.perfect_matmul", "ladder.perfect_quant_linear"]:
+            if self.arch.compute_capability == '80':
+                pipleline_stage = 2
+            else:
+                pipleline_stage = 1
             A_shape = call.args[0].checked_type.shape
             B_shape = call.args[1].checked_type.shape
             if call.op.name == "ladder.perfect_im2col_conv":
@@ -66,12 +72,12 @@ class OpVisitor(relay.ExprVisitor):
                 num_axis = int(len(call.checked_type.shape))
                 self.axis = (num_axis - 2, num_axis - 1)
                 can_propagate = call.attrs.can_propagate
-                self.ladder_config = (True, True) if can_propagate else (False, False)
+                self.ladder_config = (True, True, pipleline_stage) if can_propagate else (False, False)
             elif call.op.name == "ladder.perfect_quant_linear":
                 num_axis = int(len(call.checked_type.shape))
                 self.axis = (num_axis - 2, num_axis - 1)
                 can_propagate = call.attrs.can_propagate
-                self.ladder_config = (True, True) if can_propagate else (False, False)
+                self.ladder_config = (True, True, pipleline_stage) if can_propagate else (False, False)
             elif call.op.name == "ladder.quant_linear":
                 self.ladder_config = (False, False)
 
