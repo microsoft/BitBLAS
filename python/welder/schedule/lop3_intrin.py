@@ -67,6 +67,18 @@ TensorIntrin.register(
     get_fast_decode_intrin(storage_nbit=4, storage_dtype="int8", target_dtype="int8")
 )
 
+LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN_L16 = "lop3_fast_decode_int4_to_int8_l16"
+TensorIntrin.register(
+    LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN_L16, *
+    get_fast_decode_intrin(storage_nbit=4, storage_dtype="int8", target_dtype="int8", loops_extent=16)
+)
+
+LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L8 = "lop3_fast_decode_int2_to_int8_l8"
+TensorIntrin.register(
+    LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L8, *
+    get_fast_decode_intrin(storage_nbit=2, storage_dtype="int8", target_dtype="int8", loops_extent=8)
+)
+
 LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L16 = "lop3_fast_decode_int2_to_int8_l16"
 TensorIntrin.register(
     LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L16, *

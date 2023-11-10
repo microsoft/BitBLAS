@@ -15,7 +15,10 @@ def rel_ladder_quant_linear(arg_types, attrs):
     transpose_a = attrs["transpose_a"]
     transpose_b = attrs["transpose_b"]
     b_type in ["int8", "uint8"]
-    output_dtype = a_type
+    if hasattr(attrs, "out_dtype"):
+        output_dtype = attrs["out_dtype"]
+    else:
+        output_dtype = a_type
     K_size = a_shape[-2] if transpose_a else a_shape[-1]
     # assert b dtype is int8
     if transpose_b:
@@ -41,9 +44,9 @@ def compute_ladder_quant_linear(attrs, inputs, output_type):
         Scales = inputs[2]
         Zeros = inputs[3]
 
-    group_size = attrs["group_size"]
-    bits = attrs["bits"]
-    format = attrs["format"]
+    group_size = int(attrs["group_size"])
+    bits = int(attrs["bits"])
+    format = str(attrs["format"])
     assert format == "int", "Only support int format currently"
     n_float_per_i8 = 8 // bits
     K_size = A.shape[-2] if transpose_a else A.shape[-1]
@@ -86,14 +89,14 @@ def compute_ladder_quant_linear(attrs, inputs, output_type):
                         bits,
                         B[n, k // n_float_per_i8],
                         k % n_float_per_i8,
-                        dtype="float16",
+                        dtype=A.dtype,
                     )
                 else:
                     w = B[n, k // n_float_per_i8].astype(A.dtype)
             else:
                 if bits <= 4:    
                     w = _tir_u8_to_int_to_float(
-                        bits, B[n // n_float_per_i8, k], n % n_float_per_i8, dtype="float16"
+                        bits, B[n // n_float_per_i8, k], n % n_float_per_i8, dtype=A.dtype
                     )
                 else:
                     w = B[n // n_float_per_i8, k].astype(A.dtype)

@@ -22,6 +22,68 @@ cuda_default_header = """
 #define TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST 0
 #endif
 
+template <typename T1, typename T2>
+__device__ void decode_i1s_to_i8s(T1 *_i1s, T2 *_i8s, const int N = 32)
+{
+  uint *i8s = reinterpret_cast<uint *>(_i8s);
+  uint const i1s = *reinterpret_cast<uint *>(_i1s);
+
+  // First, we extract the i4s and construct an intermediate fp16 number.
+  static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;      // 0b11101010
+  static constexpr uint BOTTOM_MASK = 0x01010101;           // 0xf -> 0b01 select 0,1
+  static constexpr uint I4s_TO_I8s_MAGIC_NUM = 0x00000000; // 1024
+
+  for (int i = 0; i < N; i++){
+  asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                : "=r"(i8s[i])
+                : "r"(i1s >> i), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
+  }
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i2s_to_i8s(T1 *_i2s, T2 *_i8s, const int N = 16)
+{
+  // convert 8 int2b_t to 8 int8b_t -> 2 int32
+  uint *i8s = reinterpret_cast<uint *>(_i8s);
+
+  // i2s = {e7,e6,e5,e4,e3,e2,e1,e0}
+  // also require interleave {e7,e3,e6,e2,e5,e1,e4,e0}
+  uint const i2s = *_i2s;
+
+  // First, we extract the i4s and construct an intermediate fp16 number.
+  static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;      // 0b11101010
+  static constexpr uint BOTTOM_MASK = 0x03030303;           // 0xf -> 0b11 select 0,3
+  static constexpr uint I4s_TO_I8s_MAGIC_NUM = 0x00000000; // 1024
+  
+  #pragma unroll
+  for (int i = 0; i < (N / 2); i++)
+  {
+    asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                 : "=r"(i8s[i])
+                 : "r"(i2s >> (2 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
+  }
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i4s_to_i8s(T1 *_i4s, T2 *_i8s, const int N = 8)
+{
+  uint *i8s = reinterpret_cast<uint *>(_i8s);
+  uint i4s = *_i4s;
+  // First, we extract the i4s and construct an intermediate fp16 number.
+  static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;      // 0b11101010
+  static constexpr uint BOTTOM_MASK = 0x0f0f0f0f;           // 0xf -> 0b1111 select 0,4
+  static constexpr uint I4s_TO_I8s_MAGIC_NUM = 0x00000000; // 1024
+  
+  #pragma unroll
+  for (int i = 0; i < (N / 4); i++)
+  {
+    // Extract elt_01 - (i4s & 0x000f000f) | 0x64006400
+  asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+               : "=r"(i8s[i])
+               : "r"(i4s >> (4 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
+  }
+}
+  
 
 """
 
@@ -117,7 +179,7 @@ __device__ int rasterization2DColumn(int idx) {
 }
 
 
-__device__ void decode_i4s_to_f16(int *i4s, half* B_local_decode) {
+__device__ void decode_i4s_to_f16(int *i4s, half* B_local_decode, const int N = 8) {
   uint* h = reinterpret_cast<uint*>(B_local_decode);
   
   static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;

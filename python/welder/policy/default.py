@@ -508,7 +508,7 @@ class DefaultPolicy:
             return int(np.prod(shape)) % factor == 0
         def is_type_allowed(dtype, vec):
             return dtype.bits * vec <= 128
-        vectorize_sizes = [8, 4, 2]
+        vectorize_sizes = [16, 8, 4, 2]
         dtypes = node.get_reduce_inputs_dtype()
         shapes = node.propogate_reduction_inputs(td.get_tile(node), td.get_rstep(node))
         vectorize_result = {}

@@ -12,7 +12,7 @@ def rel_ladder_perfect_quant_linear(arg_types, attrs):
     transpose_a = attrs["transpose_a"]
     transpose_b = attrs["transpose_b"]
     out_dtype = attrs.out_dtype if hasattr(
-        attrs, 'out_dtype') and attrs.out_dtype else arg_types[0].dtype
+        attrs, 'out_dtype') and attrs.out_dtype else a_type
     if transpose_a:
         K, M, wmma_k, wmma_m = a_shape
     else:
@@ -46,7 +46,7 @@ def compute_ladder_perfect_quant_linear(attrs, inputs, output_type):
     assert format=="int", "Only support int format currently"
     n_float_per_i8 = 8 // bits
     K_size = A.shape[0] if transpose_a else A.shape[1]
-    wmma_k = A.shape[-1] if transpose_a else A.shape[-2]
+    wmma_k = A.shape[-2] if transpose_a else A.shape[-1]
     k = te.reduce_axis((0, K_size), name="k")
     if transpose_b:
         dequant_b_shape = [*B.shape[0:3], wmma_k]
