@@ -4,7 +4,6 @@ import tvm
 import os
 from ..config import Config, Stride
 from .tir_base import TIRSchedulerBase
-from tvm.tir.transform import Simplify
 from tvm import te
 # get file name and remove the suffix
 fname = os.path.basename(__file__)
@@ -39,7 +38,7 @@ class TIRElementWiseScheduler(TIRSchedulerBase):
     def create_schedule(self) -> tir.Schedule:
         workload = te.create_prim_func(self.args)
         ir_module = tvm.IRModule({"main": workload})
-        return tir.Schedule(Simplify()(ir_module))
+        return tir.Schedule(ir_module)
 
     def schedule(self) -> tir.Schedule:
         
