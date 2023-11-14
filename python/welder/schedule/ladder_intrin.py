@@ -22,13 +22,6 @@ def A_B_shared_16x16_to_ldmatrix_32x8_layout(i, j):
     return (i * 2 + j // 8, j % 8)
 
 
-@register_func("tir.index_map.shared_16x16_to_ldmatrix_32x8_layout")
-def index_map_shared_16x16_to_ldmatrix_32x8_layout(ind):
-    i, j = ind[0], ind[1]
-    thread_id, local_id = C_shared_16x16_to_ldmatrix_32x8_layout(i, j)
-    return convert([thread_id, local_id])
-
-
 def shared_32x16_to_ldmatrix_32x16_layout(i, j):
     return (i * 2 + j // 16, j % 16)
 

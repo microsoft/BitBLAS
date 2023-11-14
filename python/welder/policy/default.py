@@ -473,6 +473,7 @@ class DefaultPolicy:
 
         codegen_dict = Config()
         codegen_dict.use_ladder = node.get_tag("ladder_config")
+        codegen_dict.fast_decoding = node.get_tag("fast_decoding")
         codegen_dict.compute_capability = self.arch.compute_capability
         codegen_dict.block = tile
         codegen_dict.thread = cur_threads

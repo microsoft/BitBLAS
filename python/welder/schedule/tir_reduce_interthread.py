@@ -267,25 +267,28 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         return sch.mod["main"]
        
     def schedule(self) -> tir.Schedule:
-        input0_dtype = self.args[0].dtype
-        input1_dtype = self.args[1].dtype
-        is_consistent = input0_dtype == input1_dtype
-        reduce_op = self.reduce_op
-        reduce_input0_dtype = reduce_op.input_tensors[0].dtype
-        reduce_input1_dtype = reduce_op.input_tensors[1].dtype
-        is_a_consistent = reduce_input0_dtype == input0_dtype
-        is_b_consistent = reduce_input1_dtype == input1_dtype
-        use_dp4a = input0_dtype == 'int8' and self.reduce_op.output(0).dtype == "int32"
-        if use_dp4a:
-            if self.config.compute_capability == "80":
-                return self.schedule_inconsistent_shared_decode(is_a_consistent, is_b_consistent, use_dp4a=True)
-            return self.schedule_inconsistent(is_a_consistent, is_b_consistent, use_dp4a=True)
-        if is_consistent:
-            return self.schedule_consistent()
+        if len(self.reduce_op.input_tensors) > 1:
+            input0_dtype = self.args[0].dtype
+            input1_dtype = self.args[1].dtype
+            is_consistent = input0_dtype == input1_dtype
+            reduce_op = self.reduce_op
+            reduce_input0_dtype = reduce_op.input_tensors[0].dtype
+            reduce_input1_dtype = reduce_op.input_tensors[1].dtype
+            is_a_consistent = reduce_input0_dtype == input0_dtype
+            is_b_consistent = reduce_input1_dtype == input1_dtype
+            use_dp4a = input0_dtype == 'int8' and self.reduce_op.output(0).dtype == "int32"
+            if use_dp4a:
+                if self.config.compute_capability == "80":
+                    return self.schedule_inconsistent_shared_decode(is_a_consistent, is_b_consistent, use_dp4a=True)
+                return self.schedule_inconsistent(is_a_consistent, is_b_consistent, use_dp4a=True)
+            if is_consistent:
+                return self.schedule_consistent()
+            else:
+                print(
+                    f"the computation is inconsistent, is_a_consistent: {is_a_consistent}, is_b_consistent: {is_b_consistent}")
+                print(f"self.config.compute_capability {self.config.compute_capability}")
+                if self.config.compute_capability == "80":
+                    return self.schedule_inconsistent_shared_decode(is_a_consistent, is_b_consistent)
+                return self.schedule_inconsistent(is_a_consistent, is_b_consistent)
         else:
-            print(
-                f"the computation is inconsistent, is_a_consistent: {is_a_consistent}, is_b_consistent: {is_b_consistent}")
-            print(f"self.config.compute_capability {self.config.compute_capability}")
-            if self.config.compute_capability == "80":
-                return self.schedule_inconsistent_shared_decode(is_a_consistent, is_b_consistent)
-            return self.schedule_inconsistent(is_a_consistent, is_b_consistent)
+            return self.schedule_consistent()

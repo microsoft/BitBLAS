@@ -77,7 +77,7 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
             logger.debug(f"Tir template failed because {e}, fallback to te")
             template = TEElementWiseScheduler
             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
-    elif template == TIRSIMTScheduler:
+    elif template == TIRReduceInterThreadScheduler:
         try:
             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
         except Exception as e:
