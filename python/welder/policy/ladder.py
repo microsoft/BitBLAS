@@ -284,6 +284,7 @@ class LadderPolicy(DefaultPolicy):
         propagate_inter_a, propagate_inter_b = ladder_configs[0:2]
         pipeline_stage = ladder_configs[2] if len(ladder_configs) > 2 else 1
         codegen_dict = Config()
+        codegen_dict.fast_decoding = node.get_tag("fast_decoding")
         codegen_dict.use_tc = self.arch.compute_capability
         codegen_dict.block = tile
         codegen_dict.use_ladder = True

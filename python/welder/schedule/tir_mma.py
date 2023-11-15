@@ -185,15 +185,15 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         sch.transform_loop(C_warp, 2, layoutC)
         sch.bind(sch.get_loops(C_warp)[-2], "threadIdx.x")
         oo, vec = sch.split(sch.get_loops(C_warp)[-1], factors=[None, layoutC.get_vectorize()])
-        # sch.vectorize(vec)
+        sch.vectorize(vec)
         sch.unroll(oo)
         sch.annotate(oo, "pragma_unroll_explicit", False)
         if not is_fpa_intb:
             self.schedule_compute_inline()
         
+        decode_block = None
         if is_fpa_intb:
             BL0 = sch.cache_read(BS, 0, "local")
-            decode_block = None
             other_blocks = []
             for op in reversed(self.ops):
                 if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
@@ -290,6 +290,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
 
 
         # ------------------------ Tensorize and Pipelining -------------------------
+        print("config.fast_decoding: ", config.fast_decoding)
         if decode_block and self.config.fast_decoding:
             from welder.schedule.lop3_intrin import (
                 LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
@@ -333,8 +334,8 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 else:
                     sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 1, 1, 2])
                     sch.annotate(K_outer, "software_pipeline_order", [0, 1, 2, 4, 3])
-            sch.annotate(K_outer, "software_pipeline_async_stages", [0])
-            self.passes.append((3, tvm.tir.transform.InjectPTXAsyncCopy()))
+            # sch.annotate(K_outer, "software_pipeline_async_stages", [0])
+            # self.passes.append((3, tvm.tir.transform.InjectPTXAsyncCopy()))
         elif config.use_tc >= "70":
             if chunk_size % 8 != 0:
                 sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 0, 0, 1, 1, 1])
