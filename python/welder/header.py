@@ -210,6 +210,8 @@ __device__ void decode_i4s_to_f16(T1 *_i4s, T2* B_local_decode, const int N = 8)
 rocm_default_header = """
 #include <hip/hip_runtime.h>
 #include <math.h>
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+#define min(a, b) (((a) < (b)) ? (a) : (b))
 """
 
 rocm_fp16_header = """
