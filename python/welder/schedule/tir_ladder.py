@@ -851,7 +851,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             sch.compute_at(block_local_B_shared_cache_local, B_shared_vi)
 
             # fast decoding
-            if False:
+            if self.config.fast_decoding:
                 from welder.schedule.lop3_intrin import (
                     LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
                     LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN,

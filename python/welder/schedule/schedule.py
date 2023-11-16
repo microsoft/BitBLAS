@@ -11,6 +11,7 @@ from .te_reduce_interthread import *
 from .te_wmma import *
 from .tir_mma import TIRCutlassMMAScheduler
 from .tir_simt import *
+from .tir_reduce_interthread import *
 from .tir_ladder import TIRLadderMMAScheduler4D
 from .tir_ladder_pad import TIRLadderMMAPadScheduler2D
 import logging 
@@ -51,6 +52,9 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
     elif config.use_tc and not config.use_cutlass:
         if schedule_on_inner_stage: raise NotImplementedError("Schedule not implemented")
         template = TEWarpMMAScheduler
+    elif any([t > 1 for t in config.reduce_thread]):
+        if schedule_on_inner_stage: raise NotImplementedError("Schedule not implemented")
+        template = TIRReduceInterThreadScheduler
     else:
         template = TIRSIMTScheduler
 
@@ -73,17 +77,17 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
             logger.debug(f"Tir template failed because {e}, fallback to te")
             template = TEElementWiseScheduler
             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
-    # elif template == TIRSIMTScheduler:
-    #     try:
-    #         scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
-    #     except Exception as e:
-    #         logger.debug(f"Tir template failed because {traceback.print_exc()}, fallback to te")
-    #         if any([t > 1 for t in config.reduce_thread]) and not schedule_on_inner_stage:
-    #             template = TEReduceInterThreadScheduler
-    #             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
-    #         else:
-    #             template = TEReduceScheduler
-    #             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)    
+        else:
+            template = TEReduceScheduler
+            scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)   
+    elif template == TIRReduceInterThreadScheduler:
+        try:
+            scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
+        except Exception as e:
+            if any([t > 1 for t in config.reduce_thread]) and not schedule_on_inner_stage:
+                logger.debug(f"Tir template failed because {e}, fallback to te")
+                template = TEReduceInterThreadScheduler
+                scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
     else:
         scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
 

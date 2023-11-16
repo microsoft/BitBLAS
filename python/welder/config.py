@@ -91,6 +91,7 @@ class Config:
     def __init__(self) -> None:
         self.arch = None
         self.use_tc = None
+        self.fast_decoding = False
         self.compute_capability = None
         self.use_ladder = None
         # spacial axes tiling info

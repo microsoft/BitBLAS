@@ -175,6 +175,7 @@ class TCPolicy(DefaultPolicy):
             warp_tile[dim_order[0]] *= factor
 
         codegen_dict = Config()
+        codegen_dict.fast_decoding = node.get_tag("fast_decoding")
         codegen_dict.use_tc = self.arch.compute_capability
         codegen_dict.block = tile
         codegen_dict.warp = warp_tile

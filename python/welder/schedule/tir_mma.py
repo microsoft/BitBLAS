@@ -50,12 +50,13 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         warp_tile_M, warp_tile_N = self.config.warp[C_ax_m], self.config.warp[C_ax_n]
         out_dtype = self.reduce_op.output(0).dtype
         in_dtype = self.reduce_op.input_tensors[0].dtype
-        # log_path = f"progress/tir_mma_{block_tile_M}_{block_tile_N}_{warp_tile_M}_{warp_tile_N}"
+        log_path = f"progress/tir_mma_{block_tile_M}_{block_tile_N}_{warp_tile_M}_{warp_tile_N}"
         AK = self.args[0].shape[-2] if transpose_A else self.args[0].shape[-1]
         BK = self.args[1].shape[-1] if transpose_B else self.args[1].shape[-2]
         is_fpa_intb = (AK != BK)
-        print("is_fpa_intb, ", is_fpa_intb)
-
+        
+        write_sch(sch, log_path, "original")
+        
         num_args = len(self.args)
         is_lut = False
         if num_args >= 4:
@@ -80,7 +81,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
 
         if is_fpa_intb:
             assert (self.args[1].dtype == "int8"), "currently only support b stored in int8 format"
-            outer_vec_fetch = vecB // (AK // BK)
+            outer_vec_fetch = 16
 
         block_axis = []
         warp_axis = []
@@ -165,7 +166,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             B_stride = Stride(int(np.prod(config.tc_extra_conf.BS_shape[B_high_ax+1:])) + padB, B_high_ax)
 
         if vecB == 16 and vecA == 8:
-            vecB = 4
+            vecB = 8
         self.cooperative_fetch(AS, 3, A_stride, vector_load=layoutA.get_vectorize(), use_pragma_unroll=True)
         if not is_fpa_intb:
             self.cooperative_fetch(BS, 3, B_stride, vector_load=vecB, use_pragma_unroll=True)
@@ -184,23 +185,51 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         sch.transform_loop(C_warp, 2, layoutC)
         sch.bind(sch.get_loops(C_warp)[-2], "threadIdx.x")
         oo, vec = sch.split(sch.get_loops(C_warp)[-1], factors=[None, layoutC.get_vectorize()])
-        # sch.vectorize(vec)
+        sch.vectorize(vec)
         sch.unroll(oo)
         sch.annotate(oo, "pragma_unroll_explicit", False)
         if not is_fpa_intb:
             self.schedule_compute_inline()
         
+        decode_block = None
         if is_fpa_intb:
             BL0 = sch.cache_read(BS, 0, "local")
-            self.schedule_compute_inline()
+            other_blocks = []
+            for op in reversed(self.ops):
+                if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
+                    if 'decode' in op.name or 'decompress' in op.name or 'mediate0' in op.name:
+                        decode_block = self.sche.get_block(op.name)
+                    else:
+                        other_blocks.append(self.sche.get_block(op.name))
+            for block in other_blocks:
+                self.sche.compute_inline(block)
+            write_sch(sch, log_path, "compute_inline_other_blocks")
+            if self.reduce_op != None and self.reduce_op != self.output_op:
+                block = self.sche.get_block(self.output_op.name)
+                self.sche.reverse_compute_inline(block)
+            decode_block_local = sch.cache_read(BL0, 0, "local")
+            write_sch(sch, log_path, "cache_decode_block_local")
+            if decode_block != None:
+                read_shape = sch.get_sref(decode_block).stmt.reads[0].buffer.shape
+                write_shape = sch.get_sref(decode_block).stmt.writes[0].buffer.shape
+                compress_rate = np.prod(write_shape) // np.prod(read_shape) 
+                if self.args[0].dtype == 'float16':
+                    bits = 16 // compress_rate
+                elif self.args[0].dtype == 'int8':
+                    bits = 8 // compress_rate
+                sch.compute_inline(decode_block)
             sch.compute_at(BL0, K_outer)
             if is_lut:
-                BL1 = sch.cache_read(BL0, 1, "local")
+                block_prefecth = sch.cache_read(decode_block_local, 1, "local")
             else:
-                BL1 = sch.cache_read(BL0, 0, "local")
-            BSS = sch.cache_read(BL1, 0, "shared")
-            
-            sch.compute_at(BL1, K_outer)
+                block_prefecth = sch.cache_read(decode_block_local, 0, "local")
+            write_sch(sch, log_path, "cache_read_prefetch")
+            BSS = sch.cache_read(block_prefecth, 0, "shared")
+            write_sch(sch, log_path, "cache_read_BSS")
+
+            # uninlined stage: block_prefecth, decode_block, BL0
+            sch.compute_at(decode_block_local, K_outer)
+            sch.compute_at(block_prefecth, K_outer)
             sch.compute_at(BSS, K_outer)
             
             def cooperative_fetch(SS: tir.Block, dim_offset: int, strides: Stride=Stride(), vector_load: int=1, use_pragma_unroll: bool=False):
@@ -210,10 +239,15 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 if strides.is_valid():
                     self.sche.storage_align(SS, 0, strides.ax, strides.stride - 1, strides.stride)
                 ax = axes[-1]
+                overall_loop_extent = 1
+                for _ax in axes:
+                    overall_loop_extent *= self.sche.get_sref(_ax).stmt.extent
+                if vector_load * self.block_size[0] * self.block_size[1] * self.block_size[2] > overall_loop_extent:
+                    vector_load = 4
                 ax, tv = self.sche.split(ax, factors=[None, vector_load])
                 if vector_load > 1:
                     _, tv = self.sche.split(tv, factors=[None, vector_load])
-                    # self.sche.vectorize(tv)
+                    self.sche.vectorize(tv)
                 ax = self.sche.fuse(axes[-2], ax)
                 if self.block_size[0] > 1:
                     ax, tx = self.sche.split(ax, factors=[None, self.block_size[0]])
@@ -224,7 +258,6 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 if self.block_size[2] > 1:
                     ax, tz = self.sche.split(ax, factors=[None, self.block_size[2]])
                     self.sche.bind(tz, "threadIdx.z")
-                # self.sche.unroll(ax)
                 if use_pragma_unroll:
                     self.sche.annotate(ax, "pragma_unroll_explicit", False)
             
@@ -233,7 +266,9 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             write_sch(sch, log_path, "cooperative_fetch_BSS")
             
             sch.compute_at(BL0, self.sche.get_loops(BS)[-3])
-            sch.compute_at(BL1, self.sche.get_loops(BS)[-3])
+            sch.compute_at(decode_block_local, self.sche.get_loops(BS)[-3])
+            sch.compute_at(block_prefecth, self.sche.get_loops(BS)[-3])
+            write_sch(sch, log_path, "compute_at_bs_loop")
 
             if is_lut:
                 block_shared_lut = sch.cache_read(BL0, 0, "shared")
@@ -245,18 +280,37 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 self.sche.storage_align(BS, 0, B_stride.ax, B_stride.stride - 1, B_stride.stride)
             write_sch(sch, log_path, "reverse_compute_at")
             bv = sch.get_loops(BL0)[-1]
-            _, bv = sch.split(bv, factors=[None, 4])
+            # _, bv = sch.split(bv, factors=[None, 4])
             # sch.vectorize(bv)
-            sch.compute_at(BL1, self.sche.get_loops(BL0)[-2])
-            bv = sch.get_loops(BL1)[-1]
-            # sch.vectorize(bv)
+            bv = sch.get_loops(block_prefecth)[-1]
+            sch.vectorize(bv)
             bv = sch.get_loops(BS)[-1]
-            # sch.vectorize(bv)
+            sch.vectorize(bv)
             write_sch(sch, log_path, "schedule bs")
 
 
         # ------------------------ Tensorize and Pipelining -------------------------
-        
+        print("config.fast_decoding: ", config.fast_decoding)
+        if decode_block and self.config.fast_decoding:
+            from welder.schedule.lop3_intrin import (
+                LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
+                LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN_L4,
+                LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN,
+                LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L8,
+                LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L16,
+                LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16,
+            )
+            try:
+                if self.args[0].dtype == 'float16':
+                    loop = sch.get_loops(decode_block_local)[-1]
+                    loop_extent = sch.get_sref(loop).stmt.extent
+                    if loop_extent == 8:
+                        sch.tensorize(loop, LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN)
+                    elif loop_extent == 4:
+                        sch.tensorize(loop, LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN_L4)
+
+            except Exception as e:
+                print(e)
         sch.tensorize(sch.get_loops(block_init_c)[-2],
             register_cutlass_warp_init_intrin(warp_tile_M, warp_tile_N, out_dtype,
             cls_code, block_tile_M // warp_tile_M, block_tile_N // warp_tile_N)
@@ -280,8 +334,8 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 else:
                     sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 1, 1, 2])
                     sch.annotate(K_outer, "software_pipeline_order", [0, 1, 2, 4, 3])
-            sch.annotate(K_outer, "software_pipeline_async_stages", [0])
-            self.passes.append((3, tvm.tir.transform.InjectPTXAsyncCopy()))
+            # sch.annotate(K_outer, "software_pipeline_async_stages", [0])
+            # self.passes.append((3, tvm.tir.transform.InjectPTXAsyncCopy()))
         elif config.use_tc >= "70":
             if chunk_size % 8 != 0:
                 sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 0, 0, 1, 1, 1])
