@@ -251,6 +251,23 @@ inline __device__ longlong4 make_int8(int x0, int x1, int x2, int x3, int x4, in
   long long l3 = *(long long*)&i3;
   return make_longlong4(l0, l1, l2, l3);
 }
+
+using float16_t = _Float16;
+using float16x2
+ = __attribute__((__vector_size__(2 * sizeof(float16_t)))) float16_t;
+using float16x4
+ = __attribute__((__vector_size__(4 * sizeof(float16_t)))) float16_t;
+using float16x8
+ = __attribute__((__vector_size__(8 * sizeof(float16_t)))) float16_t;
+using float16x16
+ = __attribute__((__vector_size__(16 * sizeof(float16_t)))) float16_t;
+using int32x4
+ = __attribute__((__vector_size__(4 * sizeof(int)))) int;
+using float32x4
+ = __attribute__((__vector_size__(4 * sizeof(float)))) float;
+using float32x16
+ = __attribute__((__vector_size__(16 * sizeof(float)))) float;
+ 
 """
 
 cutlass_header = """

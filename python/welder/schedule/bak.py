@@ -166,7 +166,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         sch.bind(block_j, "blockIdx.x")
         sch.bind(i, "threadIdx.y")
         sch.bind(j, "threadIdx.z")
-        self.block_size = (32, sch.get_sref(i).stmt.extent, sch.get_sref(j).stmt.extent)
+        self.block_size = (self.config.arch.warp_size, sch.get_sref(i).stmt.extent, sch.get_sref(j).stmt.extent)
         self.grid_size = (sch.get_sref(block_j).stmt.extent, sch.get_sref(block_i).stmt.extent, 1)
         write_sch(sch, log_path, "thread_bind")
 
@@ -391,7 +391,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         sch.bind(block_j, "blockIdx.x")
         sch.bind(i, "threadIdx.y")
         sch.bind(j, "threadIdx.z")
-        self.block_size = (32, sch.get_sref(i).stmt.extent, sch.get_sref(j).stmt.extent)
+        self.block_size = (self.config.arch.warp_size, sch.get_sref(i).stmt.extent, sch.get_sref(j).stmt.extent)
         self.grid_size = (sch.get_sref(block_j).stmt.extent, sch.get_sref(block_i).stmt.extent, 1)
         write_sch(sch, log_path, "thread_bind")
 
@@ -658,7 +658,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         sch.bind(block_j, "blockIdx.x")
         sch.bind(i, "threadIdx.y")
         sch.bind(j, "threadIdx.z")
-        self.block_size = (32, sch.get_sref(i).stmt.extent, sch.get_sref(j).stmt.extent)
+        self.block_size = (self.config.arch.warp_size, sch.get_sref(i).stmt.extent, sch.get_sref(j).stmt.extent)
         self.grid_size = (sch.get_sref(block_j).stmt.extent, sch.get_sref(block_i).stmt.extent, 1)
         write_sch(sch, log_path, "thread_bind")
 

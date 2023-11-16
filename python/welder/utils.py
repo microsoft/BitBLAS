@@ -119,12 +119,12 @@ extern "C" int {symbol}({def_args}) {{
             command = ["nvcc", "-lineinfo", "-std=c++17", "-Xcudafe", "--diag_suppress=177", "--compiler-options", "'-fPIC'", "-lineinfo", "--shared", src.name, "-lcuda",
                 f"-gencode=arch=compute_{compute_version},code=compute_{compute_version}",
                 f"-I{cutlass_dir}", "-o", lib_name]
-        elif arch.platform == "ROCm":
+        elif "ROCm" in arch.platform:
             profiling_code = self._create_rocm_code_for_profiling()
             src = tempfile.NamedTemporaryFile(mode='w', suffix=".cpp")
             lib_name = src.name.replace(".cpp", ".so")
             compute_version = arch.compute_capability
-            command = ["hipcc", "-fPIC", "--shared", "-O2", "-ffast-math", "--amdgpu-target={}".format(compute_version),
+            command = ["hipcc", "-fPIC", "--shared", "-O3", "--offload-arch={}".format(compute_version),
             src.name, "-o", lib_name]
         else:
             raise NotImplementedError(arch.platform)
@@ -183,6 +183,7 @@ extern "C" float profile({}) {{
     if (hipGetLastError() != hipSuccess) return -1;
     hipEventElapsedTime(&ms, start, stop);
     int repeats = int(ceil(100.0 / ms));
+    if (repeats <= 3) repeats = 5;
     hipEventRecord(start, 0);
     for (int _ = 0; _ < repeats; _++)
         {};
@@ -246,6 +247,13 @@ extern "C" float profile({}) {{
 
     def __del__(self):
         self.close_lib()
+
+# def compile_and_load_parallel(cpresults, arch, timeout : float = None):
+#     libs = []
+#     for cpresult in cpresults:
+#         lib = cpresult.compile_and_load(arch, timeout)
+#         libs.append(lib)
+#     return list(libs)
 
 def compile_and_load_parallel(cpresults, arch, timeout : float = None):
     with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
