@@ -1438,7 +1438,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         is_a_consistent = self.args[0].shape[-1] == wmma_k
         is_b_consistent = self.args[1].shape[-1] == wmma_k
         is_consistent = is_a_consistent and is_b_consistent
-        if self.config.arch.platform == "cuda":
+        if self.config.arch.platform == "CUDA":
             if is_consistent:
                 return self.schedule_consistent()
             else:

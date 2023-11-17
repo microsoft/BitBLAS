@@ -334,8 +334,8 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 else:
                     sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 1, 1, 2])
                     sch.annotate(K_outer, "software_pipeline_order", [0, 1, 2, 4, 3])
-            # sch.annotate(K_outer, "software_pipeline_async_stages", [0])
-            # self.passes.append((3, tvm.tir.transform.InjectPTXAsyncCopy()))
+            sch.annotate(K_outer, "software_pipeline_async_stages", [0])
+            self.passes.append((3, tvm.tir.transform.InjectPTXAsyncCopy()))
         elif config.use_tc >= "70":
             if chunk_size % 8 != 0:
                 sch.annotate(K_outer, "software_pipeline_stage", [0, 0, 0, 0, 1, 1, 1])
