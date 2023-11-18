@@ -50,10 +50,13 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         warp_tile_M, warp_tile_N = self.config.warp[C_ax_m], self.config.warp[C_ax_n]
         out_dtype = self.reduce_op.output(0).dtype
         in_dtype = self.reduce_op.input_tensors[0].dtype
-        log_path = f"progress/tir_mma_{block_tile_M}_{block_tile_N}_{warp_tile_M}_{warp_tile_N}"
-        AK = self.args[0].shape[-2] if transpose_A else self.args[0].shape[-1]
-        BK = self.args[1].shape[-1] if transpose_B else self.args[1].shape[-2]
-        is_fpa_intb = (AK != BK)
+        # log_path = f"progress/tir_mma_{block_tile_M}_{block_tile_N}_{warp_tile_M}_{warp_tile_N}"
+        is_fpa_intb = False
+        if len(self.args[0].shape) == 2 and len(self.args[1].shape) == 2:
+            # make sure it's a gemm case
+            AK = self.args[0].shape[-2] if transpose_A else self.args[0].shape[-1]
+            BK = self.args[1].shape[-1] if transpose_B else self.args[1].shape[-2]
+            is_fpa_intb = (AK != BK)
         
         write_sch(sch, log_path, "original")
         

@@ -74,10 +74,10 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
         try:
             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
         except Exception as e:
-            logger.debug(f"Tir template failed because {e}, fallback to te")
+            logger.info(f"Tir template failed because {e}, fallback to te")
             template = TEElementWiseScheduler
             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
-    elif template == TIRReduceInterThreadScheduler:
+    elif template == TIRReduceInterThreadScheduler or template == TIRSIMTScheduler:
         try:
             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
         except Exception as e:
@@ -88,7 +88,6 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
             else:
                 template = TEReduceScheduler
                 scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)   
-
     else:
         scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
 

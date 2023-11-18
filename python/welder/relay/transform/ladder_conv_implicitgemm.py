@@ -81,6 +81,7 @@ class LadderConvImplicitGemm(relay.ExprMutator):
                 if type.dtype != "float16":
                     return super().visit_call(call)
             # should pass if previous compute node is a conv node with 3 channels (this sort conv has performance issue when we use layout propagate)
+            # Vulnerable Networks: VGG
             previous_fusible_node = self.node_previous_fusible_node[call]
                         
             def check_not_fusbile(node):
@@ -160,16 +161,16 @@ class LadderConvImplicitGemm(relay.ExprMutator):
                     #         can_propagate = False
                 # if not (M < 128 or N < 128):
                 #     can_propagate = False
-                print(
-                    "data.op.num_outputs: ",
-                    len(self.node_output_map[call.args[0]]),
-                    "data.name: ",
-                    call.args[0].op.name,
-                    "call.name: ",
-                    call.op.name,
-                    "can_propagate: ",
-                    can_propagate,
-                )
+                # print(
+                #     "data.op.num_outputs: ",
+                #     len(self.node_output_map[call.args[0]]),
+                #     "data.name: ",
+                #     call.args[0].op.name,
+                #     "call.name: ",
+                #     call.op.name,
+                #     "can_propagate: ",
+                #     can_propagate,
+                # )
 
             perfect_data = relay.layout_transform(data, "NHWC", "NHWC16n16c")
             perfect_kernel = relay.layout_transform(kernel, "HWIO", "HWIO16i16o")

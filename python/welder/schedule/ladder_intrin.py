@@ -93,6 +93,16 @@ def global_16x32_to_shared_load_16x32_layout(i, j):
 def shared_16x32_to_ldmatrix_32x16_permutation(i, j):
     return (j // 16) * 16 + (i // 8) * 8 + i % 8, j % 16
 
+def C_shared_16x16_to_ldmatrix_32x8_layout(i, j):
+    thread_id = 4 * (i % 8) + (j % 8) // 2
+    return thread_id, 4 * (j // 8) + (i // 8) * 2 + (j % 2)
+
+@register_func("tir.index_map.shared_16x16_to_ldmatrix_32x8_layout", override=True)
+def index_map_shared_16x16_to_ldmatrix_32x8_layout(ind):
+    i, j = ind[0], ind[1]
+    thread_id, local_id = C_shared_16x16_to_ldmatrix_32x8_layout(i, j)
+    return convert([thread_id, local_id])
+
 
 # def shared_16x32_to_ldmatrix_32x16_layout(i, j):
 #     return shared_16x32_to_ldmatrix_32x16_permutation(i, j)

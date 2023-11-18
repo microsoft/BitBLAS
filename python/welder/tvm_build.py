@@ -127,10 +127,11 @@ def tvm_build(sch: SchedulerBase, target: tvm.target.Target, name: str = "defaul
     for tensor in sch.shared_inputs:
         shared_var_name = tensor.name + "_shared"
         matched = re.findall(r"__shared__ ((?:signed |unsigned )?\w+) {}\[(\d+)\];".format(shared_var_name), src)
-        assert len(matched) == 1
-        dtype, size = matched[0]
-        exteral_shared_memroy_size[tensor] = int(size) * _type_bytes[dtype]
-        src = re.sub(r"__shared__ ((?:signed |unsigned )?\w+) {}\[\d+\];".format(shared_var_name), r"\1* {} = (\1*){};".format(shared_var_name, tensor.name), src, 1)
+        assert len(matched) <= 1, f"shared memory allocation not found, use schedule {sch}, {sch.shared_inputs}, {matched}, {src}"
+        if len(matched):
+            dtype, size = matched[0]
+            exteral_shared_memroy_size[tensor] = int(size) * _type_bytes[dtype]
+            src = re.sub(r"__shared__ ((?:signed |unsigned )?\w+) {}\[\d+\];".format(shared_var_name), r"\1* {} = (\1*){};".format(shared_var_name, tensor.name), src, 1)
     if not global_kernel:
         pattern = r"__shared__ ((?:signed |unsigned )?\w+) (\w+)\[(\d+)\];"
         offset = 0

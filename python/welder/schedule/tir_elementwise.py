@@ -11,6 +11,10 @@ fname = os.path.splitext(fname)[0]
 # create log path
 log_path = "progress/" + fname
 count = 0
+import logging 
+
+logger = logging.getLogger(__name__)
+
 
 
 def write_code(code, path, fname):
@@ -82,17 +86,33 @@ class TIRElementWiseScheduler(TIRSchedulerBase):
 
         write_sch(sch, log_path, "unroll")
 
+        if len(self.shared_inputs):
+            raise NotImplementedError("Shared memory is not implemented yet.")
+                
+        write_sch(sch, log_path, "cache_input")
+        
         self.schedule_compute_inline()
 
         # ----- cache small tensors -----
-        # cached_stages = []
-        # for i, input_tensor in enumerate(self.output_op.input_tensors):
-        #     cached_stages.append(input_tensor.name)
-
+        # not implemented yet       
         # cache_plan = self.make_cache_plan()
-        # print(cache_plan)
+        # consumer_ops = {t.op for t in self.output_op.input_tensors}
+        # consumer_ops.add(self.output_op)
+        # op_input_map = self.detect_op_inputs(consumer_ops)
         # for tensor in cache_plan:
-        #     tensor_shared = sch.cache_read(C, tensor.name, "shared")
+        #     block = None
+        #     for i, t in enumerate(self.output_op.input_tensors):
+        #         if tensor.op in op_input_map[t.op]:
+        #             block = cached_stages[i]
+        #             break
+        #     assert block
+        #     tensor_shared = sch.cache_read(block, tensor.name, "shared")
+        #     if len(self.shared_outputs) > 0:
+        #         tensor_local = sch.cache_read(block, tensor.name + "_shared", "local")
+        #         sch.compute_at(tensor_local, thrd_fused)
+        #         if len(tile_axis) > 0:
+        #             for ax in sch.get_loops(tensor_local)[-len(tile_axis):]:
+        #                 sch.unroll(ax)
         #     sch.compute_at(tensor_shared, thrd_fused)
         #     if tensor in self.shared_inputs_strides:
         #         strides = self.shared_inputs_strides[tensor]
@@ -100,11 +120,6 @@ class TIRElementWiseScheduler(TIRSchedulerBase):
         #         strides = Stride()
         #     dim_offset = len(vthd_axis) + 2 # outer loops are: blck_fused vthd_axis thrd_fused
         #     self.cooperative_fetch(tensor_shared, dim_offset, strides)
-        #     if len(self.shared_outputs) == 0:
-        #         continue
-        #     tensor_local = sch.cache_read(C, tensor.name, "local")
-        #     sch.compute_at(tensor_local, thrd_fused)
-
         write_sch(sch, log_path, "cache_small_tensor")
 
         return sch.mod["main"]
