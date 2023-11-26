@@ -44,6 +44,9 @@ class PreviousOutputFusibleTracer(relay.ExprVisitor):
                     find_previous_output = True
                     
                 for input_node in opnode_list:
+                    if not (hasattr(input_node, "op") and hasattr(input_node.op, "name")):
+                        current_node = input_node
+                        continue
                     if input_node.op.name in self.output_fusible_list:
                         self.node_previous_fusible_node[call] = input_node
                         find_previous_output = True

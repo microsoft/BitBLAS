@@ -14,6 +14,7 @@ log_path = "progress/" + fname
 count = 0
 
 
+
 def write_code(code, path, fname):
     global count
     # if path not exist, create it
@@ -333,13 +334,16 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
     def schedule_inconsistent(self, is_a_consistent=False, is_b_consistent=False):
         from .ladder_intrin import (
             TRICKY_MMA_fill_16x16_f16_INTRIN,
+            TRICKY_MMA_fill_16x16_f32_INTRIN,
             TRICKY_LDMATRIX_16x16_A_INTRIN,
             TRICKY_LDMATRIX_16x16_B_INTRIN,
             TRICKY_LDMATRIX_16x16_B_TRANS_INTRIN,
             TRICKY_MMA_f16f16f16_INTRIN,
             TRICKY_MMA_f16f16f16_TRANS_INTRIN,
-            TRICKY_MMA_store_16x16_f16_global_INTRIN,
+            TRICKY_MMA_f16f16f32_TRANS_INTRIN,
+            TRICKY_MMA_bf16bf16f32_TRANS_INTRIN,
             TRICKY_MMA_store_16x16_f16_shared_INTRIN,
+            TRICKY_MMA_store_16x16_f32_shared_INTRIN,
             A_global_16x16_to_shared_load_16x16_layout,
             B_global_16x16_to_shared_load_16x16_layout,
             C_shared_16x16_to_ldmatrix_32x8_layout,
@@ -415,7 +419,6 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         block_j, j, jj = sch.split(j, factors=[None, block_col_warps, warp_col_tiles])
         ko, ki = sch.split(k, factors=[None, chunk])
         sch.reorder(block_i, block_j, i, j, ko, ki, ii, jj, kernel_i, kernel_j, kernel_k)
-
 
         write_sch(sch, log_path, "BlockTile")
 
@@ -507,14 +510,48 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             if use_pragma_unroll:
                 self.sche.annotate(shared_inner, "pragma_unroll_explicit", False)
 
-        cooperative_fetch(AS, dims=4, vec=vecA, use_pragma_unroll=True, force_async_copy=(propagate_inter_a and not propagate_inter_b))
+        if is_a_consistent:
+            cooperative_fetch(AS, dims=4, vec=vecA, use_pragma_unroll=True, force_async_copy=(propagate_inter_a and not propagate_inter_b))
+        if is_b_consistent:
+            cooperative_fetch(BS, dims=4, vec=vecB, use_pragma_unroll=True, force_async_copy=(propagate_inter_b and not propagate_inter_a))
+        A_decode_block = None
+        B_decode_block = None
+        other_blocks = []
+        for op in reversed(self.ops):
+            if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
+                if op.name == 'A_decode':
+                    A_decode_block = self.sche.get_block(op.name)
+                elif op.name == 'B_decode':
+                    B_decode_block = self.sche.get_block(op.name)
+                elif op.name == 'mediate0' and is_a_consistent and not is_b_consistent:
+                    B_decode_block = self.sche.get_block(op.name)
+                else:
+                    block = self.sche.get_block(op.name)
+                    other_blocks.append(block)
+            
+        if not is_a_consistent:
+            # cache_decompress
+            A_shared_jj = sch.get_loops(AS)[-1]
+            A_shared_jj, A_shared_vi, A_shared_vj = sch.split(A_shared_jj, factors=[None, 1, 8])
+            block_local_A_decompress = sch.cache_read(AS, 0, "local")
+            sch.compute_inline(A_decode_block)
+            block_local_A = sch.cache_read(block_local_A_decompress, 0, "local")
+            sch.compute_at(block_local_A_decompress, A_shared_vi)
+            sch.compute_at(block_local_A, A_shared_vi)
+            A_shared_fused = sch.fuse(*sch.get_loops(AS)[-6:-2])
+            A_shared_inner, A_shared_ty, A_shared_tz, A_shared_tx = sch.split(
+                A_shared_fused, factors=[None, block_row_warps, block_col_warps, warp_size])
+            sch.vectorize(sch.get_loops(AS)[-1])
+            sch.vectorize(sch.get_loops(block_local_A)[-1]) 
+            sch.bind(A_shared_tx, "threadIdx.x")
+            sch.bind(A_shared_ty, "threadIdx.y")
+            sch.bind(A_shared_tz, "threadIdx.z")
         if not is_b_consistent:
             # cache_decompress
             B_shared_jj = sch.get_loops(BS)[-1]
             B_shared_jj, B_shared_vi, B_shared_vj = sch.split(B_shared_jj, factors=[None, 1, 8])
             block_local_B_decompress = sch.cache_read(BS, 0, "local")
-            write_sch(sch, log_path, "schedule_compute_inline")
-            self.schedule_compute_inline()
+            sch.compute_inline(B_decode_block)
             if is_lut:
                 block_local_B = sch.cache_read(block_local_B_decompress, 1, "local")
             else:
@@ -535,9 +572,14 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                 _, B_shared_tx = sch.split(
                     sch.get_loops(block_shared_lut)[-1], factors=[None, warp_size])
                 sch.bind(B_shared_tx, "threadIdx.x")
-        else:
-            cooperative_fetch(BS, dims=4, vec=vecB, use_pragma_unroll=True, force_async_copy=(propagate_inter_b and not propagate_inter_a))
- 
+
+        for op in reversed(other_blocks):
+            if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
+                block = self.sche.get_block(op.name)
+                self.sche.compute_inline(block)
+        if self.reduce_op != None and self.reduce_op != self.output_op:
+            block = self.sche.get_block(self.output_op.name)
+            self.sche.reverse_compute_inline(block)
         write_sch(sch, log_path, "schedule_shared")
         # ------------------------ Warp memory layout for multiplicand A and B ------------------------
         AW = sch.cache_read(C, 0, "warp")
@@ -567,13 +609,14 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         sch.transform_layout(C_warp, ("read", 0), index_map_C)
         
         # ------------------------ Tensorize and Pipelining -------------------------
-        init_intrin = TRICKY_MMA_fill_16x16_i32_INTRIN if compute_dtype == "int32" else TRICKY_MMA_fill_16x16_f16_INTRIN
+        init_intrin = TRICKY_MMA_fill_16x16_i32_INTRIN if compute_dtype == "int32" else TRICKY_MMA_fill_16x16_f16_INTRIN if compute_dtype == "float16" else TRICKY_MMA_fill_16x16_f32_INTRIN
         load_a_intrin = TRICKY_LDMATRIX_16x32_A_INTRIN if compute_dtype == "int32" else TRICKY_LDMATRIX_16x16_A_INTRIN
         load_b_intrin = TRICKY_LDMATRIX_32x16_B_INTRIN if compute_dtype == "int32" else TRICKY_LDMATRIX_16x16_B_INTRIN
         load_b_intrin_trans = TRICKY_LDMATRIX_16x32_B_TRANS_INTRIN if compute_dtype == "int32" else TRICKY_LDMATRIX_16x16_B_TRANS_INTRIN
         compute_intrin = TRICKY_MMA_i8i8i32_INTRIN if compute_dtype == "int32" else TRICKY_MMA_f16f16f16_INTRIN
-        compute_trans_intrin = TRICKY_MMA_i8i8i32_TRANS_INTRIN if compute_dtype == "int32" else TRICKY_MMA_f16f16f16_TRANS_INTRIN
-        store_intrin = TRICKY_MMA_store_16x16_i32_shared_INTRIN if compute_dtype == "int32" else TRICKY_MMA_store_16x16_f16_shared_INTRIN
+        compute_trans_intrin = TRICKY_MMA_i8i8i32_TRANS_INTRIN if compute_dtype == "int32" else TRICKY_MMA_f16f16f16_TRANS_INTRIN if compute_dtype == "float16" else TRICKY_MMA_f16f16f32_TRANS_INTRIN
+        store_intrin = TRICKY_MMA_store_16x16_i32_shared_INTRIN if compute_dtype == "int32" else TRICKY_MMA_store_16x16_f16_shared_INTRIN if compute_dtype == "float16" else TRICKY_MMA_store_16x16_f32_shared_INTRIN
+
         init_block_b = sch.decompose_reduction(C, ko)
         write_sch(sch, log_path, "decompose_reduction")
         init_block_b_loops = sch.get_loops(init_block_b)
@@ -1433,9 +1476,12 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
     
     def schedule(self) -> tir.Schedule:
         wmma_k = 32 if self.reduce_op.output(0).dtype == "int32" else 16
-        
-        is_a_consistent = self.args[0].shape[-1] == wmma_k
-        is_b_consistent = self.args[1].shape[-1] == wmma_k
+        if self.config.consistent_config:
+            is_a_consistent = self.config.consistent_config.is_a_consistent
+            is_b_consistent = self.config.consistent_config.is_b_consistent
+        else:
+            is_a_consistent = self.args[0].shape[-1] == wmma_k
+            is_b_consistent = self.args[1].shape[-1] == wmma_k
         is_consistent = is_a_consistent and is_b_consistent
         if self.config.arch.platform == "CUDA":
             if is_consistent:

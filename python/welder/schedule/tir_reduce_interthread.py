@@ -80,7 +80,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         self.grid_size = [sch.get_sref(bx).stmt.extent, 1, 1]
         
         write_sch(sch, log_path, "do_split")
-
+        
         sch.compute_at(block_shared_local_A, tx, preserve_unit_loops=True)
         sch.compute_at(block_shared_local_B, tx, preserve_unit_loops=True)
         sch.reverse_compute_at(block_local_C, j, preserve_unit_loops=True)
@@ -100,6 +100,8 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         tx = np.prod(config.thread) * np.prod(config.reduce_thread)
         try:
             vec = list(config.vectorize.values())[-1]
+            vec *= (self.reduce_op.input_tensors[1].shape[-1] // self.args[1].shape[-1])
+            print(f"vec: {vec}")
         except IndexError:
             vec = 8
         num_warps = int(np.prod(self.config.thread))
@@ -110,15 +112,19 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         # print(f"tx: {tx}, vec: {vec}, num_warps: {num_warps}, warp_size: {warp_size}")
         block_b = sch.get_block(self.reduce_op.name)
         
+        i, j, k = sch.get_loops(block_b)    
+        
+        block_decode_A = sch.cache_read(block_b, 0, "local")
+        block_decode_B = sch.cache_read(block_b, 1, "local")
         # compute inline
         for op in reversed(self.ops):
             if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
                 block = self.sche.get_block(op.name)
                 self.sche.compute_inline(block)
-    
-        i, j, k = sch.get_loops(block_b)    
-        block_shared_local_A = sch.cache_read(block_b, 0, "local")
-        block_shared_local_B = sch.cache_read(block_b, 1, "local")
+        write_sch(sch, log_path, "compute inline")
+
+        block_shared_local_A = sch.cache_read(block_decode_A, 0, "local")
+        block_shared_local_B = sch.cache_read(block_decode_B, 0, "local")
         block_local_C = sch.cache_write(block_b, 0, "local")
         write_sch(sch, log_path, "cache_related")
         # reverse inline
@@ -138,8 +144,12 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         
         write_sch(sch, log_path, "do_split")
 
+
+        sch.compute_at(block_decode_A, tx, preserve_unit_loops=True)
+        sch.compute_at(block_decode_B, tx, preserve_unit_loops=True)
+        
         sch.compute_at(block_shared_local_A, tx, preserve_unit_loops=True)
-        sch.compute_at(block_shared_local_B, tx, preserve_unit_loops=True)
+        sch.compute_at(block_shared_local_B, tx, preserve_unit_loops=True)        
         sch.reverse_compute_at(block_local_C, j, preserve_unit_loops=True)
         write_sch(sch, log_path, "compute_at_related")
 
@@ -149,6 +159,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         sch.vectorize(block_local_b_v)
         if use_dp4a:
             vo, vi = sch.split(vk, [None, 4])
+
         write_sch(sch, log_path, "decompose_reduction")
         
         return sch.mod["main"]
@@ -270,12 +281,16 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         if len(self.reduce_op.input_tensors) > 1:
             input0_dtype = self.args[0].dtype
             input1_dtype = self.args[1].dtype
-            is_consistent = input0_dtype == input1_dtype
             reduce_op = self.reduce_op
-            reduce_input0_dtype = reduce_op.input_tensors[0].dtype
-            reduce_input1_dtype = reduce_op.input_tensors[1].dtype
-            is_a_consistent = reduce_input0_dtype == input0_dtype
-            is_b_consistent = reduce_input1_dtype == input1_dtype
+            if self.config.consistent_config:
+                is_a_consistent = self.config.consistent_config.is_a_consistent
+                is_b_consistent = self.config.consistent_config.is_b_consistent
+            else:
+                reduce_input0_dtype = reduce_op.input_tensors[0].dtype
+                reduce_input1_dtype = reduce_op.input_tensors[1].dtype
+                is_a_consistent = reduce_input0_dtype == input0_dtype
+                is_b_consistent = reduce_input1_dtype == input1_dtype
+            is_consistent = is_a_consistent and is_b_consistent
             use_dp4a = input0_dtype == 'int8' and self.reduce_op.output(0).dtype == "int32"
             if use_dp4a:
                 if self.config.compute_capability == "80":

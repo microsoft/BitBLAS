@@ -29,8 +29,8 @@ class WelderTunePass(relay.ExprMutator):
 
         ordered_nodes = extractor.ordered_nodes
         node_map = extractor.node_map
-        # print("ordered_nodes:",ordered_nodes)
-        # print(tune_node(ordered_nodes, ['layout_transform_nn_batch_flatten_37']))
+        # print("candidate nodes:",ordered_nodes)
+        # print(tune_node(ordered_nodes, ['cast_argmax_cast_add_less_add_where_378']))
         # raise NotImplementedError()
         tunner = MultiProcTunner(ordered_nodes, arch=self.arch, device="cuda:0", topk=self.topk)
         engine = Engine(tunner)
@@ -104,7 +104,7 @@ class WelderTunePass(relay.ExprMutator):
                     else:
                         self.memo_map[original_call] = relay.TupleGetItem(call, i)
         mod.update_func(mod.get_global_var("main"), self.visit(mod["main"]))
-        mod = relay.transform.InferType()(mod)
+        # mod = relay.transform.InferType()(mod)
         return mod
 
 class TileGraphExtractor(relay.ExprVisitor):

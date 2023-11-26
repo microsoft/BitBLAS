@@ -102,6 +102,24 @@ class PowerRewriter(DFPatternCallback):
         else:
             return post
 
+class ArgMaxRewriter(DFPatternCallback):
+    '''
+        Fake argmax rewriter For encoder network, just to make sure that the argmax can be passed
+    '''
+    def __init__(self, require_type=False, rewrite_once=False):
+        super().__init__(require_type, rewrite_once)
+        self.pattern = is_op("argmax")(wildcard())
+
+    def callback(self, pre: relay.Expr, post: relay.Expr, node_map: ir.container.Map) -> relay.Expr:
+        x = post.args[0]
+        axis = post.attrs.axis
+        keepdims = post.attrs.keepdims
+        dtype = post.checked_type.dtype
+        max = relay.max(x, axis=axis, keepdims=keepdims)
+        return max
+        # max_clipped = relay.op.clip(max, 0, int(x.checked_type.shape[int(axis[-1])]) - 1)
+        # return relay.cast(max_clipped, dtype=dtype)
+
 @relay.transform.function_pass(opt_level=0)
 class WelderExprRewrite(relay.ExprMutator):
     def __init__(self, enable_softmax=True):
@@ -113,6 +131,7 @@ class WelderExprRewrite(relay.ExprMutator):
         if self.enable_softmax:
             func = SoftmaxRewriter().rewrite(func)
         func = PowerRewriter().rewrite(func)
+        func = ArgMaxRewriter().rewrite(func)
         return self.visit(func)
 
     def visit_tuple_getitem(self, op):

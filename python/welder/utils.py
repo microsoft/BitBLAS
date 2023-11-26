@@ -133,9 +133,12 @@ extern "C" int {symbol}({def_args}) {{
         try:
             ret = subprocess.run(command, timeout=timeout)
         except subprocess.TimeoutExpired:
+            print("Timeout")
             return None
         if ret.returncode != 0:
+            print("Compile error")
             return None
+        
         self.lib_name = lib_name
 
     def load_lib(self):

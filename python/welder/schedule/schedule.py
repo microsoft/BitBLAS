@@ -54,12 +54,12 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
         template = TEWarpMMAScheduler
     elif any([t > 1 for t in config.reduce_thread]):
         if schedule_on_inner_stage: raise NotImplementedError("Schedule not implemented")
-        template = TIRReduceInterThreadScheduler
+        template = TIRReduceInterThreadScheduler if len(output_args) == 1 else TEReduceInterThreadScheduler
     else:
-        template = TIRSIMTScheduler
+        template = TIRSIMTScheduler if len(output_args) == 1 else TEReduceScheduler
 
-    logger.debug(f"Using template: {template} config: {config}")
-
+    logger.info(f"Using template: {template} config: {config}")
+    
     def initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides):
         scheduler = template(args, config)
         scheduler.shared_inputs = shared_inputs
@@ -74,18 +74,20 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
         try:
             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
         except Exception as e:
-            logger.info(f"Tir template failed because {e}, fallback to te")
+            logger.debug(f"Tir template failed because {e}, fallback to te")
             template = TEElementWiseScheduler
             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
     elif template == TIRReduceInterThreadScheduler or template == TIRSIMTScheduler:
         try:
             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
         except Exception as e:
+            logger.debug(f"Tir template failed because {e}, fallback to te")
             if any([t > 1 for t in config.reduce_thread]) and not schedule_on_inner_stage:
-                logger.debug(f"Tir template failed because {e}, fallback to te")
+                logger.debug(f"Using template: {template} config: {config}")
                 template = TEReduceInterThreadScheduler
                 scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
             else:
+                logger.debug(f"Using template: {template} config: {config}")
                 template = TEReduceScheduler
                 scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)   
     else:
