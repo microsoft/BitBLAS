@@ -3,7 +3,7 @@ from typing import Dict, List, Tuple
 import numpy as np
 
 from ..arch import Arch
-from ..config import Config, Stride, TileDict, LadderConfig
+from ..config import Config, Stride, TileDict, LadderConfig, ConsistentConfig
 from ..graph import IRNode, Node
 from .common import factorize, get_all_factors
 from .default import DefaultPolicy
@@ -298,4 +298,7 @@ class LadderPolicy(DefaultPolicy):
         codegen_dict.complete_config(node)
         codegen_dict.pipeline_stage = pipeline_stage
         codegen_dict.ladder_config = LadderConfig(propagate_inter_a, propagate_inter_b, pipeline_stage)
+        consistent_configs = node.get_tag("consistent_config")
+        if consistent_configs:
+            codegen_dict.consistent_config = ConsistentConfig(consistent_configs[0], consistent_configs[1])
         return codegen_dict

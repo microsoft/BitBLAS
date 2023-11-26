@@ -6,10 +6,10 @@ import tvm
 from .schedule.scheduler_base import SchedulerBase
 from .rasterization import Rasterization
 
-_type_map = {"float32": "float", "float16": "half", "float64": "double", "int64": "int64_t",
-             "int32": "int", "bool": "int8_t", "int8": "int8_t", "int16": "int16_t"}
-_type_bytes = {"float": 4, "double": 8, "half": 2, "int16": 2,
-               "int": 4, "int64_t": 8, "bool": 1, "int8_t": 1, "signed char": 1}
+_type_map = {"float32": "float", "float16": "half", "bfloat16": "__nv_bfloat162", "float64": "double", "int64": "int64_t",
+             "int32": "int", "bool": "int8_t", "int8": "int8_t", "uint8": "uint8_t", "int16": "int16_t"}
+_type_bytes = {"float": 4, "double": 8, "half": 2, "int16": 2, "bfloat16": 2,
+               "int": 4, "int64_t": 8, "bool": 1, "int8_t": 1, "uint8_t": 1, "signed char": 1}
 def get_valid_name(var):
     if var.name.find(".") >= 0:
         name = var.name[:var.name.index(".")]
@@ -63,6 +63,19 @@ def tensor_replace_dp4a(source: str) -> str:
     import re
     pattern = r"""for\s*\(int\s*(?P<k_var>\w+)\s*=\s*0;\s*\1\s*<\s*4;\s*\+\+\1\)\s*\{\s*(?P<c_var>\w+)\[0\]\s*=\s*\(\2\[0\]\s*\+\s*\(\(\(int\)(?P<a_var>\w+)\[\(\((?P<idx_a_var>\w+)\s*\*\s*4\)\s*\+\s*\1\)\]\)\s*\*\s*\(\(int\)(?P<b_var>\w+)\[\(\((?P<idx_b_var>\w+)\s*\*\s*4\)\s*\+\s*\1\)\]\)\)\);\s*\}"""
     replacement = r"""\2[0] = __dp4a(*(int *)&\3[((\4 * 4))],*(int *)&\5[((\6 * 4))], \2[0]);"""
+    source = re.sub(pattern, replacement, source)
+    return source
+
+def tensor_replace_hfma2(source: str) -> str:
+    # as under some senario, like block reduction, the dp4a tensorize will fail. but we still need it.
+    import re
+    '''
+    for (int k_2_1 = 0; k_2_1 < 2; ++k_2_1) {
+        in_thread_C_local[0] = (in_thread_C_local[0] + (A_local[((k_2_0 * 2) + k_2_1)] * B_decode_local[((k_2_0 * 2) + k_2_1)]));
+      }
+    '''
+    pattern = r"""for\s*\(int\s*(?P<k_var>\w+)\s*=\s*0;\s*\1\s*<\s*2;\s*\+\+\1\)\s*\{\s*(?P<c_var>\w+)\[0\]\s*=\s*\(\2\[0\]\s*\+\s*\((?P<a_var>\w+)\[\(\((?P<idx_a_var>\w+)\s*\*\s*2\)\s*\+\s*\1\)\]\s*\*\s*(?P<b_var>\w+)\[\(\((?P<idx_b_var>\w+)\s*\*\s*2\)\s*\+\s*\1\)\]\)\);\s*\}"""
+    replacement = r"""\2[0] = __hfma2(*(__half2 *)&\3[((\4 * 2))],*(__half2 *)&\5[((\6 * 2))], \2[0]);"""
     source = re.sub(pattern, replacement, source)
     return source
 

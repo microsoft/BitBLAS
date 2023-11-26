@@ -8,7 +8,7 @@ import tvm
 
 from ..arch import Arch
 from ..bestfit import BestFit
-from ..config import Config, Stride, TileDict
+from ..config import Config, Stride, TileDict, ConsistentConfig
 from ..graph import IRNode, Node, find_topo_sort
 from .common import (coalesced_factor, coalesced_tensor_shape, factorize,
                      get_all_factors)
@@ -481,6 +481,10 @@ class DefaultPolicy:
         codegen_dict.reduce_thread = [reduce_thread[ax] for ax in node.raxis]
         codegen_dict.cached_tensors = td.cached_tensors_map[node]
         codegen_dict.schedule_stages = [stage.name for stage in node._schedule_compute_stages]
+        consistent_configs = node.get_tag("consistent_config")
+        if consistent_configs:
+            codegen_dict.consistent_config = ConsistentConfig(consistent_configs[0], consistent_configs[1])
+        
         if node.get_dtype().bits == 16: # set step=2 for fp16 case
             codegen_dict._step = [1 for _ in range(ndim)]
             for i in reversed(range(ndim)):

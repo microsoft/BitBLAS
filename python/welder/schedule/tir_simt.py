@@ -161,15 +161,18 @@ class TIRSIMTScheduler(TIRSchedulerBase):
         # print(f"tx: {tx}, vec: {vec}, num_warps: {num_warps}, warp_size: {warp_size}")
         block_b = sch.get_block(self.reduce_op.name)
         
+        i, j, k = sch.get_loops(block_b)   
+        block_decode_A = sch.cache_read(block_b, 0, "local")
+        block_decode_B = sch.cache_read(block_b, 1, "local")
         # compute inline
         for op in reversed(self.ops):
             if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
                 block = self.sche.get_block(op.name)
                 self.sche.compute_inline(block)
-    
-        i, j, k = sch.get_loops(block_b)    
-        block_shared_local_A = sch.cache_read(block_b, 0, "local")
-        block_shared_local_B = sch.cache_read(block_b, 1, "local")
+        write_sch(sch, log_path, "compute inline") 
+        block_shared_local_A = sch.cache_read(block_decode_A, 0, "local")
+        block_shared_local_B = sch.cache_read(block_decode_B, 0, "local")
+        
         block_local_C = sch.cache_write(block_b, 0, "local")
         write_sch(sch, log_path, "cache_related")
         # reverse inline
@@ -189,6 +192,9 @@ class TIRSIMTScheduler(TIRSchedulerBase):
         
         write_sch(sch, log_path, "do_split")
 
+        sch.compute_at(block_decode_A, tx, preserve_unit_loops=True)
+        sch.compute_at(block_decode_B, tx, preserve_unit_loops=True)
+        
         sch.compute_at(block_shared_local_A, tx, preserve_unit_loops=True)
         sch.compute_at(block_shared_local_B, tx, preserve_unit_loops=True)
         sch.reverse_compute_at(block_local_C, j, preserve_unit_loops=True)
@@ -200,6 +206,8 @@ class TIRSIMTScheduler(TIRSchedulerBase):
         sch.vectorize(block_local_b_v)
         if use_dp4a:
             vo, vi = sch.split(vk, [None, 4])
+        else:
+            vo, vi = sch.split(vk, [None, 2])
         write_sch(sch, log_path, "decompose_reduction")
         
         return sch.mod["main"]
@@ -235,31 +243,46 @@ class TIRSIMTScheduler(TIRSchedulerBase):
         write_sch(sch, log_path, "origin")
         
         block_b = sch.get_block(self.reduce_op.name)
-        decode_block = None
+        A_decode_block = None
+        B_decode_block = None
         other_blocks = []
-
+        
         for op in reversed(self.ops):
             if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
-                if 'decode' in op.name or 'decompress' in op.name:
-                    decode_block = self.sche.get_block(op.name)
+                if not is_b_consistent and is_a_consistent:
+                    if 'decode' in op.name or 'decompress' in op.name:
+                        B_decode_block = self.sche.get_block(op.name)
+                    else:
+                        other_blocks.append(self.sche.get_block(op.name))
                 else:
-                    other_blocks.append(self.sche.get_block(op.name))
-    
+                    if op.name == 'A_decode':
+                        A_decode_block = self.sche.get_block(op.name)
+                    elif op.name == 'B_decode':
+                        B_decode_block = self.sche.get_block(op.name)
+                    elif op.name == 'mediate0' and is_a_consistent and not is_b_consistent:
+                        B_decode_block = self.sche.get_block(op.name)
+                    else:
+                        block = self.sche.get_block(op.name)
+                        other_blocks.append(block)
+
         i, j, k = sch.get_loops(block_b)    
         block_shared_local_A = sch.cache_read(block_b, 0, "local")
         block_shared_local_B_rescale = sch.cache_read(block_b, 1, "local")
         for block in other_blocks:
             self.sche.compute_inline(block)
         block_shared_local_B_decompress= sch.cache_read(block_shared_local_B_rescale, 0, "local")
-        if decode_block != None:
-            read_shape = sch.get_sref(decode_block).stmt.reads[0].buffer.shape
-            write_shape = sch.get_sref(decode_block).stmt.writes[0].buffer.shape
+        if not is_a_consistent:
+            sch.compute_inline(A_decode_block)
+        if not is_b_consistent:
+            assert B_decode_block
+            read_shape = sch.get_sref(B_decode_block).stmt.reads[0].buffer.shape
+            write_shape = sch.get_sref(B_decode_block).stmt.writes[0].buffer.shape
             compress_rate = np.prod(write_shape) // np.prod(read_shape) 
             if self.args[0].dtype == 'float16':
                 bits = 16 // compress_rate
             elif self.args[0].dtype == 'int8':
                 bits = 8 // compress_rate
-            sch.compute_inline(decode_block)        
+            sch.compute_inline(B_decode_block)        
         block_shared_local_B_prefetch = sch.cache_read(block_shared_local_B_decompress, 0, "local")
         block_local_C = sch.cache_write(block_b, 0, "local")
         write_sch(sch, log_path, "cache_related")
@@ -295,7 +318,7 @@ class TIRSIMTScheduler(TIRSchedulerBase):
         if use_dp4a:
             vo, vi = sch.split(vk, [None, 4])
         write_sch(sch, log_path, "decompose_reduction")
-        if decode_block:
+        if B_decode_block:
             try:
                 if self.args[0].dtype == 'float16':
                     sch.tensorize(sch.get_loops(block_shared_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN)
@@ -321,18 +344,22 @@ class TIRSIMTScheduler(TIRSchedulerBase):
         if len(self.reduce_op.input_tensors) > 1:
             input0_dtype = self.args[0].dtype
             input1_dtype = self.args[1].dtype
-            is_consistent = input0_dtype == input1_dtype
             reduce_op = self.reduce_op
-            reduce_input0_dtype = reduce_op.input_tensors[0].dtype
-            reduce_input1_dtype = reduce_op.input_tensors[1].dtype
-            is_a_consistent = reduce_input0_dtype == input0_dtype
-            is_b_consistent = reduce_input1_dtype == input1_dtype
+            if self.config.consistent_config:
+                is_a_consistent = self.config.consistent_config.is_a_consistent
+                is_b_consistent = self.config.consistent_config.is_b_consistent
+            else:
+                reduce_input0_dtype = reduce_op.input_tensors[0].dtype
+                reduce_input1_dtype = reduce_op.input_tensors[1].dtype
+                is_a_consistent = reduce_input0_dtype == input0_dtype
+                is_b_consistent = reduce_input1_dtype == input1_dtype
+            is_consitent = is_a_consistent and is_b_consistent
             use_dp4a = input0_dtype == 'int8' and self.reduce_op.output(0).dtype == "int32"
             if use_dp4a:
                 if self.config.compute_capability == "80":
                     return self.schedule_inconsistent_shared_decode(is_a_consistent, is_b_consistent, use_dp4a=True)
                 return self.schedule_inconsistent(is_a_consistent, is_b_consistent, use_dp4a=True)
-            if is_consistent:
+            if is_consitent:
                 return self.schedule_consistent()
             else:
                 print(

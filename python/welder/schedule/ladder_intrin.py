@@ -228,7 +228,8 @@ def get_ldmatrix_intrin(k_dim, dtype, is_b, transposed, shared_scope="shared"):
     return ldmatrix_desc, ldmatrix_impl
 
 
-def get_mma_intrin(k_dim, out_dtype, b_transposed):
+
+def get_mma_intrin(k_dim, out_dtype, b_transposed, enable_bf16=False):
     local_size = (M_DIM * k_dim) // WARP_SIZE
     local_size_out = (M_DIM * N_DIM) // 32
 
@@ -253,7 +254,7 @@ def get_mma_intrin(k_dim, out_dtype, b_transposed):
 
     if out_dtype in ["float16", "float32"]:
         in_dtype = "float16"
-        in_dtype_abbrv = "fp16"
+        in_dtype_abbrv = "bf16" if enable_bf16 else "fp16"
     else:
         in_dtype = "int8"
         in_dtype_abbrv = "int8"
@@ -361,11 +362,9 @@ def get_mma_intrin(k_dim, out_dtype, b_transposed):
                     A.data,
                     A.elem_offset + tx * lift(local_size),
                     B.data,
-                    B.elem_offset + tx *
-                    lift(local_size) + lift(local_size) // 2,
+                    B.elem_offset + tx * lift(local_size) + lift(local_size) // 2,
                     C.data,
-                    C.elem_offset + tx *
-                    lift(local_size_out) + lift(local_size_out) // 2,
+                    C.elem_offset + tx * lift(local_size_out) + lift(local_size_out) // 2,
                     False,
                     dtype=out_dtype,
                 )
@@ -528,6 +527,32 @@ TRICKY_MMA_store_16x16_f16_shared_INTRIN_DYN = "TRICKY_mma_store_16x16_f16_share
 TensorIntrin.register(
     TRICKY_MMA_store_16x16_f16_shared_INTRIN_DYN, *
     get_mma_store_intrin("float16", 8, "shared.dyn")
+)
+
+
+TRICKY_MMA_f16f16f32_TRANS_INTRIN = "TRICKY_mma_f16f16f32_trans"
+TensorIntrin.register(TRICKY_MMA_f16f16f32_TRANS_INTRIN, *
+                      get_mma_intrin(16, "float32", True))
+
+TRICKY_MMA_bf16bf16f32_TRANS_INTRIN = "TRICKY_mma_bf16bf16f32_trans"
+TensorIntrin.register(TRICKY_MMA_bf16bf16f32_TRANS_INTRIN, *
+                      get_mma_intrin(16, "float32", True, True))
+
+TRICKY_MMA_fill_16x16_f32_INTRIN = "TRICKY_mma_fill_16x16_f32"
+TensorIntrin.register(TRICKY_MMA_fill_16x16_f32_INTRIN, *
+                      get_mma_fill_intrin("float32", 8))
+
+
+TRICKY_MMA_store_16x16_f32_global_INTRIN = "TRICKY_mma_store_16x16_f32_global_"
+TensorIntrin.register(
+    TRICKY_MMA_store_16x16_f32_global_INTRIN, *
+    get_mma_store_intrin("float32", 8, "global")
+)
+
+TRICKY_MMA_store_16x16_f32_shared_INTRIN = "TRICKY_mma_store_16x16_f32_shared_"
+TensorIntrin.register(
+    TRICKY_MMA_store_16x16_f32_shared_INTRIN, *
+    get_mma_store_intrin("float32", 8, "shared")
 )
 
 
@@ -1100,6 +1125,7 @@ TensorIntrin.register(
     TRICKY_MMA_store_16x16_i32_shared_INTRIN, *
     get_mma_store_intrin("int32", 8, "shared")
 )
+
 
 
 WARP_SIZE = 64
