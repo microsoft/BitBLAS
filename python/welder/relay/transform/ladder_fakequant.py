@@ -25,6 +25,12 @@ class LadderFakeQuant(relay.ExprMutator):
             0: qweight
             1: qweight + scales
             2: qweight + scales + zeros
+        quant_config:
+            {
+                'format':'nf',
+                'bits': args.bits,
+                'group_size': -1,
+            }
         """
         self.quant_weight_candidate = quant_weight_candidate
         self.quant_type = quant_type
@@ -106,6 +112,14 @@ class LadderFakeQuant(relay.ExprMutator):
 
             quant_kernel = relay.const(quant_kernel_data)
             other_inputs = []
+            if self.quant_config['format'] == 'nf':
+                lut_size = 1 << self.quant_config['bits']
+                lut_data = tvm.nd.array(
+                    np.random.random(lut_size).astype(np.float16)
+                )
+                lut = relay.const(lut_data)
+                other_inputs.append(lut)
+
             if self.quant_type == 1:
                 quant_scale_data = tvm.nd.array(
                     np.random.rand(1, int(N)).astype(np.float16)

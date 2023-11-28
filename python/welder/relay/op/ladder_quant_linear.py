@@ -119,15 +119,103 @@ def compute_ladder_quant_linear(attrs, inputs, output_type):
     C = te.compute(out_shape, fcompute=fcompute, name="T_quant_linear")
     return [C]
 
+def compute_ladder_quant_linear_nf(attrs, inputs, output_type):
+    transpose_a = attrs["transpose_a"]
+    transpose_b = attrs["transpose_b"]
+    out_shape = output_type.shape
+    out_dtype = output_type.dtype
+    A, B = inputs[:2]
+    LUT = inputs[2]
+    Scales = None
+    Zeros = None
+    if len(inputs) == 4:
+        Scales = inputs[3]
+    elif len(inputs) == 5:
+        Scales = inputs[3]
+        Zeros = inputs[4]
+
+    group_size = int(attrs["group_size"])
+    bits = int(attrs["bits"])
+    format = str(attrs["format"])
+    assert format == "nf"
+    n_float_per_i8 = 8 // bits
+    K_size = A.shape[-2] if transpose_a else A.shape[-1]
+    k = te.reduce_axis((0, K_size), name="k")
+    if transpose_b:
+        dequant_b_shape = [B.shape[0], K_size]
+    else:
+        dequant_b_shape = [K_size, B.shape[1]]
+
+    if group_size == -1:
+        group_size = K_size
+
+    def _tir_u8_to_int(nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr):
+        assert val.dtype == "int8"
+        mask = tir.const((1 << nbit) - 1, "int8")
+        return (val >> (pos * nbit).astype("int8")) & mask
+
+    def fcompute(*args):
+        m, n = args[-2], args[-1]
+        A_args = [k, m] if transpose_a else [m, k]
+        B_args = [n, k] if transpose_b else [k, n]
+        assert bits == 4, "Only support 4 bits currently"
+
+        for arg in reversed(args[:-2]):
+            if len(A_args) < len(A.shape):
+                if A.shape[len(A.shape) - len(A_args) - 1] == 1:
+                    A_args = [0] + A_args
+                else:
+                    A_args = [arg] + A_args
+            if len(B_args) < len(B.shape):
+                if B.shape[len(B.shape) - len(B_args) - 1] == 1:
+                    B_args = [0] + B_args
+                else:
+                    B_args = [arg] + B_args
+
+        def decode_func(n, k):
+            if transpose_b:
+                w = _tir_u8_to_int(
+                    bits,
+                    B[n, k // n_float_per_i8],
+                    k % n_float_per_i8,
+                )
+            else:
+                w = _tir_u8_to_int(
+                    bits, B[n // n_float_per_i8, k], n % n_float_per_i8
+                )
+            if Scales is None:
+                return LUT(w)
+            elif Zeros is None:
+                return LUT(w) * Scales[0, n]
+            else:
+                return LUT(w) * Scales[0, n] + Zeros[0, n]
+
+        B_decode = te.compute(dequant_b_shape, decode_func, name="B_decode")
+
+        return te.sum(
+            A.__getitem__(tuple(A_args)).astype(out_dtype)
+            * B_decode.__getitem__(tuple(B_args)).astype(out_dtype),
+            axis=[k],
+        )
+
+    C = te.compute(out_shape, fcompute=fcompute, name="T_quant_linear")
+    return [C]
 
 @target.override_native_generic_func("strategy_ladder_quant_linear")
 def strategy_ladder_quant_linear(attrs, inputs, out_type, target):
     strategy = relay.op.OpStrategy()
-    strategy.add_implementation(
-        compute_ladder_quant_linear,
-        wrap_topi_schedule(topi.generic.schedule_extern),
-        name="ladder.quant_linear.generic",
-    )
+    if attrs["format"] == "nf":
+        strategy.add_implementation(
+            compute_ladder_quant_linear_nf,
+            wrap_topi_schedule(topi.generic.schedule_extern),
+            name="ladder.quant_linear.generic",
+        )
+    else:
+        strategy.add_implementation(
+            compute_ladder_quant_linear,
+            wrap_topi_schedule(topi.generic.schedule_extern),
+            name="ladder.quant_linear.generic",
+        )
     return strategy
 
 
