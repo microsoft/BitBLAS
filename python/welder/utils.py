@@ -251,12 +251,6 @@ extern "C" float profile({}) {{
     def __del__(self):
         self.close_lib()
 
-# def compile_and_load_parallel(cpresults, arch, timeout : float = None):
-#     libs = []
-#     for cpresult in cpresults:
-#         lib = cpresult.compile_and_load(arch, timeout)
-#         libs.append(lib)
-#     return list(libs)
 
 def compile_and_load_parallel(cpresults, arch, timeout : float = None):
     with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:

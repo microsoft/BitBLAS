@@ -41,9 +41,7 @@ class Engine:
         self.node2group = {} # map node to fused group
         self.node_topo_id = {ordered_nodes[i] : i for i in range(len(ordered_nodes))}
         fusion_groups = []
-        for node in tqdm(ordered_nodes,
-                        desc="Processing", 
-                        ascii=False,
+        for node in tqdm(ordered_nodes, desc="Processing", ascii=False,
                         bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}{postfix}]"):
             if node in self.node2group or node.is_output() or node.is_placeholder():
                 continue
