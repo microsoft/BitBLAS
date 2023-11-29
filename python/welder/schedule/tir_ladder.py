@@ -1231,7 +1231,10 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                     sch.bind(A_shared_tx, "threadIdx.x")
 
             if not is_b_consistent:
-                if compute_dtype == "int32":
+                # todo(leiwang): bugs of tvm that consider int8 as int32 in some cases should be investigated.
+                if self.config.ladder_compute_type == "int4":
+                    b_smem_store_vec = 16
+                elif compute_dtype == "int32":
                     b_smem_store_vec = 16
                 elif compute_dtype == "float16" or compute_dtype == "float32":
                     b_smem_store_vec = 8
@@ -1324,10 +1327,14 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                 
                 _extent_for_bcache = sch.get_sref(block_local_B_shared_cache_fused).stmt.extent
                 if _extent_for_bcache // (vecB * warp_size) == 0:
+                    # block_local_B_shared_cache_fused, B_shared_vi = sch.split(
+                    #   block_local_B_shared_cache_fused, factors=[None, vecB],
+                    # )
+                    # sch.vectorize(B_shared_vi)
                     block_local_B_shared_cache_fused, B_shared_tx, B_shared_vi = sch.split(
                         block_local_B_shared_cache_fused, factors=[1, warp_size, None])
                     sch.bind(B_shared_tx, "threadIdx.x")
-                    if sch.get_sref(B_shared_vi).stmt.extent in [1, 2, 4, 8, 16]:
+                    if sch.get_sref(B_shared_vi).stmt.extent in [1, 2, 4, 8, 16] and self.config.ladder_compute_type != "int4":
                         sch.vectorize(B_shared_vi)
                     _extent_for_bcache = sch.get_sref(block_local_B_shared_cache_fused).stmt.extent
 
