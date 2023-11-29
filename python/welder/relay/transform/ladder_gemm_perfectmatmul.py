@@ -222,7 +222,7 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
             _compressed_rate = 0
             if out_dtype == "int32":
                 _compressed_rate = 32 // (8 // bits)
-            elif out_dtype == "float16":
+            elif out_dtype == "float16" or out_dtype == "float32":
                 _compressed_rate = 16 // (8 // bits)
             # TODO(v-leiwang3): fake kernel for performance
             perfect_kernel = relay.layout_transform(kernel, "HW", f"HW16h{_compressed_rate}w")
