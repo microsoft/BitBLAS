@@ -159,6 +159,7 @@ class LadderFakeQuant(relay.ExprMutator):
                 )
                 q_matmul = relay.cast(q_matmul, out_dtype)
                 return q_matmul
+
             if self.convert_int:
                 quant_data = relay.cast(data, "float32")
                 quant_data = relay.cast(quant_data, "int8")

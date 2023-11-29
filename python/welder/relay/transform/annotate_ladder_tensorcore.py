@@ -15,6 +15,8 @@ class AnnotateLadderTensorCore(relay.ExprMutator):
         if visitor.axis is not None:
             func = func.with_attr("tensorCoreConfig", visitor.axis)
             func = func.with_attr("ladder_config", visitor.ladder_config)
+            if visitor.ladder_compute_type is not None:
+                func = func.with_attr("ladder_compute_type", visitor.ladder_compute_type)
         return super().visit_function(func)
 
 class OpVisitor(relay.ExprVisitor):
@@ -23,6 +25,7 @@ class OpVisitor(relay.ExprVisitor):
         self.arch = arch
         self.axis = None
         self.ladder_config = None
+        self.ladder_compute_type = None
 
     def visit_call(self, call):
         if call.op.name in ["ladder.perfect_im2col_conv", "ladder.C2DImplicitGemm", "ladder.perfect_matmul", "ladder.perfect_quant_linear"]:
@@ -84,8 +87,9 @@ class OpVisitor(relay.ExprVisitor):
         elif call.op.name in ["ladder.perfect_im2col_quant_conv"]:
             A_shape = call.args[0].checked_type.shape
             B_shape = call.args[1].checked_type.shape
-
             num_axis = int(len(call.checked_type.shape))
+            if call.attrs.format == "int4b":
+                self.ladder_compute_type = "int4"
             self.axis = (num_axis - 2, num_axis - 1)
             self.ladder_config = (True, True, 2)
         
