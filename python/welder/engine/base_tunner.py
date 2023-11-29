@@ -217,19 +217,22 @@ class Tunner(object):
     def tune(self, nodes, local_connections=[], kernel_name="Fused"):
         if any([node.get_tag("skip") for node in nodes]):
             return None
-        def _check_dims_is_the_same(shapes):
-            # check if all shapes are with the same dims
-            # for relay check in type_solver.cc:236
-            for shape in shapes:
-                if len(shape) != len(shapes[0]):
-                    return False
-            return True
-        if not _check_dims_is_the_same([node.get_shape() for node in nodes]):
-            return None
+
         self.current_nodes = nodes
         self.local_connections = local_connections
         logger.info(f"Tuning {[node.name for node in self.current_nodes]}")
         output_nodes, input_desc, output_desc = _extract_subgraph(self.current_nodes, self.local_connections)
+        if len(output_nodes) > 1:
+            def _check_dims_is_the_same(shapes):
+                # the check should be put under multiple output case.
+                # check if all shapes are with the same dims
+                # for relay check in type_solver.cc:236
+                for shape in shapes:
+                    if len(shape) != len(shapes[0]):
+                        return False
+                return True
+            if not _check_dims_is_the_same([node.get_shape() for node in output_nodes]):
+                return None
         eliminate_memcpy(output_nodes)
         signature = subgraph_hash(output_nodes)
         if self.count_cache(signature):

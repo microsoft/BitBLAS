@@ -119,6 +119,12 @@ class LadderFakeQuant(relay.ExprMutator):
                 )
                 lut = relay.const(lut_data)
                 other_inputs.append(lut)
+            elif self.quant_config['format'] == 'mxfp':
+                block_scale_data = tvm.nd.array(
+                    np.random.randint(0, 127, (int(K) // 32, int(N))).astype(np.uint8)
+                )
+                block_scale = relay.const(block_scale_data)
+                other_inputs.append(block_scale)
 
             if self.quant_type == 1:
                 quant_scale_data = tvm.nd.array(
@@ -138,6 +144,21 @@ class LadderFakeQuant(relay.ExprMutator):
                 quant_zero = relay.const(quant_zero_data)
                 other_inputs.append(quant_zero)
 
+            if self.quant_config['format'] == 'mxfp':
+                attrs = ir.make_node(
+                    "DictAttrs",
+                    out_dtype='float32',
+                    transpose_a=transpose_a,
+                    transpose_b=transpose_b,
+                    **self.quant_config
+                )
+                q_matmul = relay.Call(
+                    relay.op.get("ladder.quant_linear"),
+                    [data, quant_kernel, *other_inputs],
+                    attrs,
+                )
+                q_matmul = relay.cast(q_matmul, out_dtype)
+                return q_matmul
             if self.convert_int:
                 quant_data = relay.cast(data, "float32")
                 quant_data = relay.cast(quant_data, "int8")
@@ -155,6 +176,7 @@ class LadderFakeQuant(relay.ExprMutator):
                     attrs,
                 )
                 q_matmul = relay.cast(q_matmul, out_dtype)
+            
             else:
                 attrs = ir.make_node(
                     "DictAttrs",
@@ -169,5 +191,5 @@ class LadderFakeQuant(relay.ExprMutator):
                     attrs,
                 )
             return q_matmul
-
+    
         return super().visit_call(call)

@@ -5,6 +5,7 @@ from .welder_tune_pass import WelderTunePass
 from .welder_conv_implicitgemm import WelderConvImplicitGemm
 from .ladder_conv_implicitgemm import LadderConvImplicitGemm
 from .ladder_fakequant import LadderFakeQuant
+from .ladder_fakequant_conv import LadderFakeQuantConv
 from .ladder_inception_layout import LadderRewriteInceptionLayout
 from .ladder_gemm_perfectmatmul import LadderPerfectGemmTransform
 from .annotate_tensorcore import *
