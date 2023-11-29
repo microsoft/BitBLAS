@@ -838,7 +838,8 @@ def get_ldmatrix_intrin(k_dim, dtype, is_b, transposed, shared_scope="shared"):
     return ldmatrix_desc, ldmatrix_impl
 
 
-def get_mma_intrin(k_dim, out_dtype, b_transposed):
+
+def get_mma_intrin(k_dim, out_dtype, b_transposed, is_4b=False):
     local_size = (M_DIM * k_dim) // WARP_SIZE
     local_size_out = (M_DIM * N_DIM) // 32
 
@@ -981,7 +982,108 @@ def get_mma_intrin(k_dim, out_dtype, b_transposed):
                 )
             )
 
-    return mma_sync_desc, mma_sync_impl
+    @T.prim_func
+    def mma_sync_impl_4b(a: T.handle, b: T.handle, c: T.handle) -> None:
+        A = T.match_buffer(
+            a, (WARP_SIZE, local_size), in_dtype, align=64, offset_factor=16, scope="warp"
+        )
+        B = T.match_buffer(
+            b, (WARP_SIZE, local_size), in_dtype, align=64, offset_factor=16, scope="warp"
+        )
+        C = T.match_buffer(
+            c, (WARP_SIZE, local_size_out), out_dtype, align=64, offset_factor=16, scope="warp"
+        )
+
+        with T.block("root"):
+            T.reads(
+                C[0:WARP_SIZE, 0:local_size_out],
+                A[0:WARP_SIZE, 0:local_size],
+                B[0:WARP_SIZE, 0:local_size],
+            )
+            T.writes(C[0:WARP_SIZE, 0:local_size_out])
+            tx = T.env_thread("threadIdx.x")
+            T.launch_thread(tx, WARP_SIZE)
+
+            T.evaluate(
+                T.ptx_mma(
+                    "m16n8k32",
+                    "row",
+                    "col",
+                    'int4',
+                    'int4',
+                    out_dtype_abbrv,
+                    A.data,
+                    A.elem_offset + tx * lift(local_size),
+                    B.data,
+                    B.elem_offset + tx * lift(local_size),
+                    C.data,
+                    C.elem_offset + tx * lift(local_size_out),
+                    False,
+                    dtype=out_dtype,
+                )
+            )
+
+            T.evaluate(
+                T.ptx_mma(
+                    "m16n8k32",
+                    "row",
+                    "col",
+                    'int4',
+                    'int4',
+                    out_dtype_abbrv,
+                    A.data,
+                    A.elem_offset + tx * lift(local_size) + lift(local_size) // 2,
+                    B.data,
+                    B.elem_offset + tx *
+                    lift(local_size) + lift(local_size) // 2,
+                    C.data,
+                    C.elem_offset + tx * lift(local_size_out),
+                    False,
+                    dtype=out_dtype,
+                )
+            )
+            
+            T.evaluate(
+                T.ptx_mma(
+                    "m16n8k32",
+                    "row",
+                    "col",
+                    'int4',
+                    'int4',
+                    out_dtype_abbrv,
+                    A.data,
+                    A.elem_offset + tx * lift(local_size),
+                    B.data,
+                    B.elem_offset + tx * lift(local_size),
+                    C.data,
+                    C.elem_offset + tx *
+                    lift(local_size_out) + lift(local_size_out) // 2,
+                    False,
+                    dtype=out_dtype,
+                )
+            )
+            T.evaluate(
+                T.ptx_mma(
+                    "m16n8k32",
+                    "row",
+                    "col",
+                    'int4',
+                    'int4',
+                    out_dtype_abbrv,
+                    A.data,
+                    A.elem_offset + tx * lift(local_size) + lift(local_size) // 2,
+                    B.data,
+                    B.elem_offset + tx *
+                    lift(local_size) + lift(local_size) // 2,
+                    C.data,
+                    C.elem_offset + tx *
+                    lift(local_size_out) + lift(local_size_out) // 2,
+                    False,
+                    dtype=out_dtype,
+                )
+            )
+
+    return mma_sync_desc, mma_sync_impl if not is_4b else mma_sync_impl_4b
 
 
 def get_mma_fill_intrin(dtype, local_size):
@@ -1113,6 +1215,10 @@ TensorIntrin.register(TRICKY_MMA_i8i8i32_INTRIN, *
 TRICKY_MMA_i8i8i32_TRANS_INTRIN = "TRICKY_mma_i8i8i32_trans"
 TensorIntrin.register(TRICKY_MMA_i8i8i32_TRANS_INTRIN, *
                       get_mma_intrin(32, "int32", True))
+
+TRICKY_MMA_i4i4i32_TRANS_INTRIN = "TRICKY_mma_i4i4i32_trans"
+TensorIntrin.register(TRICKY_MMA_i4i4i32_TRANS_INTRIN, *
+                      get_mma_intrin(32, "int32", True, True))
 
 TRICKY_MMA_store_16x16_i32_global_INTRIN = "TRICKY_mma_store_16x16_i32_global_"
 TensorIntrin.register(
