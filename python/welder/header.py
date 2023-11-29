@@ -22,6 +22,8 @@ cuda_default_header = """
 #define TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST 0
 #endif
 
+#define uchar unsigned char
+
 template <typename T1, typename T2>
 __device__ void decode_i1s_to_i8s(T1 *_i1s, T2 *_i8s, const int N = 32)
 {
@@ -127,6 +129,7 @@ CUDA_UNSUPPORTED_HALF_MATH_UNARY(herf, erf)
 #undef CUDA_UNSUPPORTED_HALF_MATH_BINARY
 #undef CUDA_UNSUPPORTED_HALF_MATH_UNARY
 
+  
 // Pack two half values.
 inline __device__ __host__ unsigned
 __pack_half2(const half x, const half y) {

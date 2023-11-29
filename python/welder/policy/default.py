@@ -14,6 +14,10 @@ from .common import (coalesced_factor, coalesced_tensor_shape, factorize,
                      get_all_factors)
 from ..rasterization import NoRasterization
 
+import logging 
+
+logger = logging.getLogger(__name__)
+
 class DefaultPolicy:
     def __init__(self, output_nodes: List[Node], arch:Arch) -> None:
         self.arch = arch

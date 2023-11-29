@@ -97,6 +97,7 @@ class Config:
         self.arch = None
         self.use_tc = None
         self.fast_decoding = False
+        self.ladder_compute_type = None
         self.compute_capability = None
         self.use_ladder = None
         # spacial axes tiling info
@@ -116,7 +117,7 @@ class Config:
         self.schedule_stages = None
         # Ladder
         self.ladder_config: Optional[LadderConfig] = None
-        self.consistant_config = None
+        self.consistent_config = None
         # Experimental
         self._raxis_order = []
         self._step = []

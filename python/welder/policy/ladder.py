@@ -110,8 +110,6 @@ class LadderPolicy(DefaultPolicy):
                 AK = input_shape[3] * input_shape[-1]
             else:
                 AK = input_shape[1] * input_shape[-1]
-        print(input_shape)
-        print(f"Considering a gemm problem M N K CHANNEL", M, N, K)
 
         if len(node.raxis) == 1:
             for k in node.raxis:
@@ -301,4 +299,7 @@ class LadderPolicy(DefaultPolicy):
         consistent_configs = node.get_tag("consistent_config")
         if consistent_configs:
             codegen_dict.consistent_config = ConsistentConfig(consistent_configs[0], consistent_configs[1])
+        ladder_compute_type = node.get_tag("ladder_compute_type")
+        if ladder_compute_type:
+            codegen_dict.ladder_compute_type = ladder_compute_type
         return codegen_dict

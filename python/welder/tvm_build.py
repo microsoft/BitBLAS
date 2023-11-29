@@ -7,9 +7,9 @@ from .schedule.scheduler_base import SchedulerBase
 from .rasterization import Rasterization
 
 _type_map = {"float32": "float", "float16": "half", "bfloat16": "__nv_bfloat162", "float64": "double", "int64": "int64_t",
-             "int32": "int", "bool": "int8_t", "int8": "int8_t", "uint8": "uint8_t", "int16": "int16_t"}
+             "int32": "int", "bool": "int8_t", "int8": "int8_t", "uint8": "uint8_t", "int16": "int16_t", "uchar": 'uint8_t'}
 _type_bytes = {"float": 4, "double": 8, "half": 2, "int16": 2, "bfloat16": 2,
-               "int": 4, "int64_t": 8, "bool": 1, "int8_t": 1, "uint8_t": 1, "signed char": 1}
+               "int": 4, "int64_t": 8, "bool": 1, "int8_t": 1, "uint8_t": 1, "signed char": 1, "uchar": 1}
 def get_valid_name(var):
     if var.name.find(".") >= 0:
         name = var.name[:var.name.index(".")]
@@ -58,6 +58,9 @@ def match_global_kernel(source: str) -> int:
     assert len(matched) == 1
     return source.index(matched[0])
 
+def tensor_remove_make_int4(source: str) -> str:
+    source = source.replace("make_int4((signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0)", "make_int4(0, 0, 0, 0)")
+    return source
 def tensor_replace_dp4a(source: str) -> str:
     # as under some senario, like block reduction, the dp4a tensorize will fail. but we still need it.
     import re
@@ -162,4 +165,5 @@ def tvm_build(sch: SchedulerBase, target: tvm.target.Target, name: str = "defaul
             buffer_len = (buffer_len + 31) // 32 * 32
             src = re.sub(r"__shared__ ((?:signed |unsigned )?\w+) {}\[\d+\];".format(var), r"__shared__ \1 {}[{}];".format(var, buffer_len // _type_bytes[dtype]), src, 1)
     src = tensor_replace_dp4a(src)
+    src = tensor_remove_make_int4(src)
     return src, exteral_shared_memroy_size, total_internal_shared_memory
