@@ -123,7 +123,8 @@ class LadderPolicy(DefaultPolicy):
             for i, k in enumerate(node.raxis):
                 if i == 0:
                     if output_dtype == 'int32' or output_dtype == 'int8':
-                        result[k] = 64
+                        # the minumum k is 32
+                        result[k] = 64 if AK > 64 else 32
                         continue
                     if AK % 32 != 0 and AK % 16 == 0:
                         result[k] = 16
