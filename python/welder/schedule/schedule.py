@@ -57,7 +57,6 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
         template = TIRReduceInterThreadScheduler if len(output_args) == 1 else TEReduceInterThreadScheduler
     else:
         template = TIRSIMTScheduler if len(output_args) == 1 else TEReduceScheduler
-
     logger.debug(f"Using template: {template} config: {config}")
     
     def initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides):

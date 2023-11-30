@@ -594,10 +594,8 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                     sch.get_loops(block_shared_lut)[-1], factors=[None, warp_size])
                 sch.bind(B_shared_tx, "threadIdx.x")
 
-        for op in reversed(other_blocks):
-            if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
-                block = self.sche.get_block(op.name)
-                self.sche.compute_inline(block)
+        for block in other_blocks:
+            self.sche.compute_inline(block)
         if self.reduce_op != None and self.reduce_op != self.output_op:
             block = self.sche.get_block(self.output_op.name)
             self.sche.reverse_compute_inline(block)
@@ -723,7 +721,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         compute_dtype = self.reduce_op.output(0).dtype
         wmma_k = 32 if compute_dtype == "int32" else 16
         shared_cache_c = (compute_dtype != "float32")
-        shared_cache_scale = (num_args >= 4) and not is_lut
+        shared_cache_scale = self.config.ladder_compute_type == "mxfp"
         sch, config = self.sche, self.config
         write_sch(sch, log_path, "original")
         C = sch.get_block(self.reduce_op.name)
@@ -897,7 +895,6 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                         other_blocks.append(self.sche.get_block(op.name))
             for block in other_blocks:
                 self.sche.compute_inline(block)
-
             if self.reduce_op != None and self.reduce_op != self.output_op:
                 block = self.sche.get_block(self.output_op.name)
                 self.sche.reverse_compute_inline(block)
