@@ -117,8 +117,7 @@ class ArgMaxRewriter(DFPatternCallback):
         dtype = post.checked_type.dtype
         max = relay.max(x, axis=axis, keepdims=keepdims)
         return max
-        # max_clipped = relay.op.clip(max, 0, int(x.checked_type.shape[int(axis[-1])]) - 1)
-        # return relay.cast(max_clipped, dtype=dtype)
+
 
 @relay.transform.function_pass(opt_level=0)
 class WelderExprRewrite(relay.ExprMutator):
