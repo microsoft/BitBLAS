@@ -135,7 +135,7 @@ class DefaultPolicy:
         compute = 0
         num_item = int(np.prod(output_tile))
         for node in reversed(self.ordered_nodes):
-            tile = op_tile_map[node]
+            tile = op_tile_map[node]    
             dep = node.propogate_inputs(tile)
             compute += int(np.prod(tile))
             for i, edge in enumerate(node.inputs):

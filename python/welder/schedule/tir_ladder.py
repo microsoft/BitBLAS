@@ -550,7 +550,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                     block = self.sche.get_block(op.name)
                     other_blocks.append(block)
             
-        if not is_a_consistent:
+        if not is_a_consistent and A_decode_block != None:
             # cache_decompress
             A_shared_jj = sch.get_loops(AS)[-1]
             A_shared_jj, A_shared_vi, A_shared_vj = sch.split(A_shared_jj, factors=[None, 1, 8])
@@ -567,7 +567,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             sch.bind(A_shared_tx, "threadIdx.x")
             sch.bind(A_shared_ty, "threadIdx.y")
             sch.bind(A_shared_tz, "threadIdx.z")
-        if not is_b_consistent:
+        if not is_b_consistent and B_decode_block != None:
             # cache_decompress
             B_shared_jj = sch.get_loops(BS)[-1]
             B_shared_jj, B_shared_vi, B_shared_vj = sch.split(B_shared_jj, factors=[None, 1, 8])
@@ -701,6 +701,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             TRICKY_MMA_store_16x16_i32_shared_INTRIN,
             TRICKY_MMA_store_16x16_i32_global_INTRIN,
             TRICKY_MMA_store_16x16_f32_global_INTRIN,
+            TRICKY_MMA_store_16x16_f16_global_INTRIN,
             shared_16x16_to_ldmatrix_32x8_layout,
             shared_32x16_to_ldmatrix_32x16_layout,
             shared_16x32_to_ldmatrix_32x16_layout,
@@ -708,7 +709,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             A_global_16x32_to_shared_load_16x32_layout,
             B_global_16x32_to_shared_load_16x32_layout,
         )
-         # const val for testing
+        # const val for testing
         # assert is_a_consistent, "currently A should be consistent"
         num_args = len(self.args)
         is_lut = False
@@ -720,7 +721,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         warp_size = self.config.arch.warp_size
         compute_dtype = self.reduce_op.output(0).dtype
         wmma_k = 32 if compute_dtype == "int32" else 16
-        shared_cache_c = (compute_dtype != "float32")
+        shared_cache_c = self.reduce_op != self.output_op
         shared_cache_scale = self.config.ladder_compute_type == "mxfp"
         sch, config = self.sche, self.config
         write_sch(sch, log_path, "original")
@@ -758,7 +759,15 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         stage = config.pipeline_stage
         use_async = (propagate_inter_a and propagate_inter_b) and stage > 1
 
-        
+        # block_row_warps = 1
+        # block_col_warps = 1
+        # warp_row_tiles = 2
+        # warp_col_tiles = 7
+        # chunk = 4
+        # stage = 2
+        # use_async = 1
+        # raster = 0
+
         block_i, i, ii = sch.split(i, factors=[None, block_row_warps, warp_row_tiles])
         block_j, j, jj = sch.split(j, factors=[None, block_col_warps, warp_col_tiles])
         ko, ki = sch.split(k, factors=[None, chunk])

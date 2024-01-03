@@ -116,7 +116,7 @@ extern "C" int {symbol}({def_args}) {{
             lib_name = src.name.replace(".cu", ".so")
             compute_version = arch.compute_capability
             cutlass_dir = os.path.expanduser("~/cutlass/include")
-            command = ["nvcc", "-lineinfo", "-std=c++17", "-Xcudafe", "--diag_suppress=177", "--compiler-options", "'-fPIC'", "-lineinfo", "--shared", src.name, "-lcuda",
+            command = ["nvcc", "-std=c++17", "-Xcudafe", "--diag_suppress=177", "--compiler-options", "'-fPIC'", "-lineinfo","--shared", src.name, "-lcuda",
                 f"-gencode=arch=compute_{compute_version},code=compute_{compute_version}",
                 f"-I{cutlass_dir}", "-o", lib_name]
         elif "ROCm" in arch.platform:
@@ -138,7 +138,6 @@ extern "C" int {symbol}({def_args}) {{
         if ret.returncode != 0:
             print("Compile error")
             return None
-        
         self.lib_name = lib_name
 
     def load_lib(self):
