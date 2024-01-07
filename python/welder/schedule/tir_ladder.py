@@ -144,21 +144,12 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
         # block_row_warps = 2
         # block_col_warps = 2
-        # warp_row_tiles = 8
-        # warp_col_tiles = 2
+        # warp_row_tiles = 4
+        # warp_col_tiles = 4
         # chunk = 2
         # stage = 2
         # use_async = 1
         # raster = 10
-
-        # block_row_warps = 1
-        # block_col_warps = 4
-        # warp_row_tiles = 8
-        # warp_col_tiles = 2
-        # chunk = 2
-        # stage = 1
-        # use_async = 0
-        # raster = 8
        
         block_i, i, ii = sch.split(i, factors=[None, block_row_warps, warp_row_tiles])
         block_j, j, jj = sch.split(j, factors=[None, block_col_warps, warp_col_tiles])
@@ -200,10 +191,17 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                 preserve_unit_loops=True,
             )
         
+                
+        self.schedule_compute_inline()
+
         def schedule_shared_output(block):
             o_shared_fused = sch.fuse(*sch.get_loops(block)[-4:])
+            if sch.get_sref(o_shared_fused).stmt.extent // warp_size < vecC:
+                vec = sch.get_sref(o_shared_fused).stmt.extent // warp_size
+            else:
+                vec = vecC
             oo, o_shared_tx, o_shared_vi = sch.split(
-                o_shared_fused, factors=[None, warp_size, vecC]
+                o_shared_fused, factors=[None, warp_size, vec]
             )     
             sch.vectorize(o_shared_vi)
             sch.bind(o_shared_tx, "threadIdx.x")
@@ -213,8 +211,6 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             schedule_shared_output(C_shared)
         
         write_sch(sch, log_path, "schedule_warp")
-        
-        self.schedule_compute_inline()
 
         write_sch(sch, log_path, "schedule_compute_inline")
 
@@ -467,19 +463,6 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                 preserve_unit_loops=True,
             )
         
-        def schedule_shared_output(block):
-            o_shared_fused = sch.fuse(*sch.get_loops(block)[-4:])
-            oo, o_shared_tx, o_shared_vi = sch.split(
-                o_shared_fused, factors=[None, warp_size, vecC]
-            )     
-            sch.vectorize(o_shared_vi)
-            sch.bind(o_shared_tx, "threadIdx.x")
-            sch.unroll(oo)
-            sch.annotate(oo, "pragma_unroll_explicit", False)
-        
-        if shared_cache_c:
-            schedule_shared_output(C_shared)
-        
         write_sch(sch, log_path, "schedule_warp")
         
         a_prmt_func = A_global_16x32_to_shared_load_16x32_layout if compute_dtype == "int32" else A_global_16x16_to_shared_load_16x16_layout
@@ -593,12 +576,26 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                 _, B_shared_tx = sch.split(
                     sch.get_loops(block_shared_lut)[-1], factors=[None, warp_size])
                 sch.bind(B_shared_tx, "threadIdx.x")
-
+        
         for block in other_blocks:
             self.sche.compute_inline(block)
         if self.reduce_op != None and self.reduce_op != self.output_op:
             block = self.sche.get_block(self.output_op.name)
             self.sche.reverse_compute_inline(block)
+
+        def schedule_shared_output(block):
+            o_shared_fused = sch.fuse(*sch.get_loops(block)[-4:])
+            oo, o_shared_tx, o_shared_vi = sch.split(
+                o_shared_fused, factors=[None, warp_size, vecC]
+            )     
+            sch.vectorize(o_shared_vi)
+            sch.bind(o_shared_tx, "threadIdx.x")
+            sch.unroll(oo)
+            sch.annotate(oo, "pragma_unroll_explicit", False)
+        
+        if shared_cache_c:
+            schedule_shared_output(C_shared)
+        
         write_sch(sch, log_path, "schedule_shared")
         # ------------------------ Warp memory layout for multiplicand A and B ------------------------
         AW = sch.cache_read(C, 0, "warp")
@@ -759,11 +756,11 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         stage = config.pipeline_stage
         use_async = (propagate_inter_a and propagate_inter_b) and stage > 1
 
-        # block_row_warps = 1
-        # block_col_warps = 1
-        # warp_row_tiles = 2
-        # warp_col_tiles = 7
-        # chunk = 4
+        # block_row_warps = 2
+        # block_col_warps = 2
+        # warp_row_tiles = 4
+        # warp_col_tiles = 4
+        # chunk = 2
         # stage = 2
         # use_async = 1
         # raster = 0
@@ -799,28 +796,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         C_warp = sch.cache_write(C, 0, "warp")
         
         sch.reverse_compute_at(C_warp, j, preserve_unit_loops=True)
-        if shared_cache_c:
-            sch.reverse_compute_at(
-                C_shared,
-                sch.get_loops(C_warp)[-3],
-                preserve_unit_loops=True,
-            )
-        
-        def schedule_shared_output(block):
-            o_shared_fused = sch.fuse(*sch.get_loops(block)[-4:])
-            oo, o_shared_tx, o_shared_vi = sch.split(
-                o_shared_fused, factors=[None, warp_size, vecC]
-            )     
-            sch.vectorize(o_shared_vi)
-            sch.bind(o_shared_tx, "threadIdx.x")
-            sch.unroll(oo)
-            sch.annotate(oo, "pragma_unroll_explicit", False)
 
-        if shared_cache_c:
-            schedule_shared_output(C_shared)
-        
-        write_sch(sch, log_path, "schedule_warp")
-        
         a_prmt_func = A_global_16x32_to_shared_load_16x32_layout if compute_dtype == "int32" else A_global_16x16_to_shared_load_16x16_layout
         b_prmt_func = B_global_16x32_to_shared_load_16x32_layout if compute_dtype == "int32" else B_global_16x16_to_shared_load_16x16_layout
 
@@ -1376,6 +1352,33 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                         sch.get_loops(block_shared_lut)[-1], factors=[None, warp_size])
                     sch.bind(B_shared_tx, "threadIdx.x")
 
+        if shared_cache_c:
+            sch.reverse_compute_at(
+                C_shared,
+                sch.get_loops(C_warp)[-3],
+                preserve_unit_loops=True,
+            )
+        
+        def schedule_shared_output(block):
+            o_shared_fused = sch.fuse(*sch.get_loops(block)[-4:])
+            if sch.get_sref(o_shared_fused).stmt.extent // warp_size < vecC:
+                vec = sch.get_sref(o_shared_fused).stmt.extent // warp_size
+            else:
+                vec = vecC
+            oo, o_shared_tx, o_shared_vi = sch.split(
+                o_shared_fused, factors=[None, warp_size, vec]
+            )     
+            sch.vectorize(o_shared_vi)
+            sch.bind(o_shared_tx, "threadIdx.x")
+            sch.unroll(oo)
+            sch.annotate(oo, "pragma_unroll_explicit", False)
+
+        if shared_cache_c:
+            schedule_shared_output(C_shared)
+        
+        write_sch(sch, log_path, "schedule_warp")
+        
+        
         write_sch(sch, log_path, "schedule_shared")
         # ------------------------ Warp memory layout for multiplicand A and B ------------------------
         AW = sch.cache_read(C, 0, "warp")
@@ -1577,6 +1580,8 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                 preserve_unit_loops=True,
             )
         
+        self.schedule_compute_inline()
+
         def schedule_shared_output(block, _vec):
             o_shared_fused = sch.fuse(*sch.get_loops(block)[-4:])
             _loop_extent = sch.get_sref(o_shared_fused).stmt.extent
@@ -1594,9 +1599,6 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
             schedule_shared_output(C_shared, vecC)
         
         write_sch(sch, log_path, "schedule_warp")
-        
-        self.schedule_compute_inline()
-
         write_sch(sch, log_path, "schedule_compute_inline")
 
         a_prmt_func = thread_id_shared_access_64x4_to_16x16_layout_A

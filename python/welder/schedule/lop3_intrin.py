@@ -13,6 +13,8 @@ def get_fast_decode_intrin(storage_nbit=4, storage_dtype="int8", target_dtype="f
     else:
         raise ValueError("Unsupported target dtype: {}".format(target_dtype))
     func_name = "decode_i{}s_to_{}".format(storage_nbit, d4f)
+    if d4f == "i8s" and storage_nbit == 1 and loops_extent == 16:
+        func_name = "decode_i1s_to_i8s_l16"
     def _tir_u8_to_int_to_float(nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, dtype: str):
         assert val.dtype == "int8"
         mask = tvm.tir.const((1 << nbit) - 1, "int8")

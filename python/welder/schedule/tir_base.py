@@ -56,7 +56,7 @@ class TIRSchedulerBase(SchedulerBase):
             self.sche.annotate(ax, "pragma_unroll_explicit", False)
 
     def build(self, target) -> str:
-        with tvm.transform.PassContext(config={"tir.add_lower_pass": self.passes, "tir.disable_cse_tir": True, "tir.use_async_copy": 1, "tir.merge_static_smem": True}):
+        with tvm.transform.PassContext(config={"tir.add_lower_pass": self.passes, "tir.disable_cse_tir": True, "tir.use_async_copy": 1, "tir.merge_static_smem": False}):
             mod = tvm.build(self.sche.mod["main"], self.args, target=target)
         return mod.imported_modules[0].get_source()
 

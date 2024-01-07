@@ -22,6 +22,7 @@ class CompileResult:
         self.args = args
         self.name = name
         self.lib = None
+        self.profiling_code:str = ""
         self.lib_name = None
         self.latency = None
         self.origin = self
@@ -128,6 +129,7 @@ extern "C" int {symbol}({def_args}) {{
             src.name, "-o", lib_name]
         else:
             raise NotImplementedError(arch.platform)
+        self.profiling_code = profiling_code
         src.write(profiling_code)
         src.flush()
         try:

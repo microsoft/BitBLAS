@@ -318,7 +318,7 @@ class TIRSIMTScheduler(TIRSchedulerBase):
         if use_dp4a:
             vo, vi = sch.split(vk, [None, 4])
         write_sch(sch, log_path, "decompose_reduction")
-        if B_decode_block:
+        if B_decode_block and self.config.fast_decoding:
             try:
                 if self.args[0].dtype == 'float16':
                     sch.tensorize(sch.get_loops(block_shared_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN)

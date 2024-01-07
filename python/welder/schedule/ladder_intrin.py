@@ -692,21 +692,14 @@ def A_global_16x32_to_shared_load_16x32_layout(i, j):
 
 
 def B_global_16x32_to_shared_load_16x32_layout(i, j):
-    # 0, 0-16 -> 0, 0-16
-    # 1, 0-16 -> 1, 0-16
-    # 2, 0-16 -> 2, 0-16
-    # 3, 0-16 -> 3, 0-16
-    # 8, 0-16 -> 0, 16-31
     """
-        re-orgnize the global memory to shared memory access pattern
-        key context : 
-            j % 16 -> index
-            j // 16 
-            i % 16 -> index
+         stride * 8 * (tx // HALF_WARP_expr)
+                + (tx % 8) * stride
+                + 16 * ((tx % HALF_WARP_expr) // 8)
     """
     thread_id = i * 2 + j // 16
-    row = (i // 8) * 8 + (thread_id % 8)
-    col = (j % 16) + 16 * ((thread_id // 8) % 2)
+    row = (thread_id // 16) * 8 + (thread_id % 8)
+    col = (j % 16) + 16 * ((thread_id % 16) // 8)
     return row, col
 
 
