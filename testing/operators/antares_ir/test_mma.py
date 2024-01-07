@@ -19,11 +19,11 @@ def test_policy(ir, input_dict, name="test", check=True):
     configs = policy.emit_config(20)
 
     compile_results = []
-    cgen = welder.CodeGenerator()
+    cgen = ladder.CodeGenerator()
     for config in configs:
         cpresult = cgen.compile(output_nodes, config, "cuda", kernel_name="Fused")
         compile_results.append(cpresult)
-    welder.utils.compile_and_load_parallel(compile_results, arch)
+    ladder.utils.compile_and_load_parallel(compile_results, arch)
     best_latency = 10000
     best = None
     values = []
