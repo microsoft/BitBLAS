@@ -1,13 +1,13 @@
 import tvm
-import welder
+import ladder
 from tvm import te
 from tvm.tir.tensor_intrin.cuda import (WMMA_FILL_16x16x16_F16_INTRIN,
                                         WMMA_STORE_16x16x16_F16_GLOBAL_INTRIN,
                                         WMMA_STORE_16x16x16_F16_SHARED_INTRIN,
                                         WMMA_SYNC_16x16x16_f16f16f16_INTRIN)
-from welder.utils import CompileResult
+from ladder.utils import CompileResult
 
-from welder.tvm_build import unset_tvm_cuda_compile
+from ladder.tvm_build import unset_tvm_cuda_compile
 unset_tvm_cuda_compile()
 
 def gemm(n, m, k):
@@ -224,11 +224,11 @@ kernel_code = mod.imported_modules[0].get_source()
 kernel_code = kernel_code[kernel_code.index('extern "C" __global__ void'):]
 print(kernel_code)
 cp = CompileResult(None, kernel_code, [32, 4, 1], [64, 1, 1], "default_function_kernel", args)
-cp.compile_and_load(welder.arch.cuda())
+cp.compile_and_load(ladder.arch.cuda())
 a = cp.get_example_outputs()
 print(cp.profile())
 print(a)
 
-# from welder.reference import get_reference_output
+# from ladder.reference import get_reference_output
 # oo = get_reference_output(args)
 # print(oo[-1])

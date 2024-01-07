@@ -1,7 +1,7 @@
 import tvm
-import welder
-from welder.graph import IRNode, OutputNode
-from welder.policy import *
+import ladder
+from ladder.graph import IRNode, OutputNode
+from ladder.policy import *
 from tvm import relay
 import os.path as osp
 from tvm.contrib.target.onnx import to_onnx
@@ -11,7 +11,7 @@ import os
 from tvm.script import tir as T
 from tvm import te
 import logging
-welder.set_log_level(logging.DEBUG)
+ladder.set_log_level(logging.DEBUG)
 
 # get file name and remove the suffix
 fname = os.path.basename(__file__)
@@ -20,7 +20,7 @@ fname = os.path.splitext(fname)[0]
 log_path = "progress/" + fname
 
 arch = "cuda"
-arch = welder.arch.__getattribute__(arch)()
+arch = ladder.arch.__getattribute__(arch)()
 
 M = N = 16384
 # shapes = ft_kernel

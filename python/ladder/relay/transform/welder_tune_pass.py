@@ -1,8 +1,8 @@
 import tvm
 from tvm import relay, ir
-from welder.graph import IRNode, OutputNode, Node
-from welder.te_utils import normalize_tensor_names
-from welder.engine import Engine, MultiProcTunner
+from ladder.graph import IRNode, OutputNode, Node
+from ladder.te_utils import normalize_tensor_names
+from ladder.engine import Engine, MultiProcTunner
 from ..integration import add_source
 
 def tune_node(ordered_nodes, names):
@@ -10,7 +10,7 @@ def tune_node(ordered_nodes, names):
     for node in ordered_nodes:
         if node.name in names:
             nodes.append(node)
-    from welder.arch import cuda
+    from ladder.arch import cuda
     tunner = MultiProcTunner(ordered_nodes, cuda(), device=0, topk=20)
     best = tunner.tune(nodes)
     return best

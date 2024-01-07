@@ -1,7 +1,7 @@
 import tvm
-import welder
-from welder.graph import IRNode, OutputNode
-from welder.policy import *
+import ladder
+from ladder.graph import IRNode, OutputNode
+from ladder.policy import *
 from tvm import relay
 import os.path as osp
 from tvm.contrib.target.onnx import to_onnx
@@ -18,7 +18,7 @@ fname = os.path.splitext(fname)[0]
 log_path = "progress/" + fname
 
 arch = "cuda"
-arch = welder.arch.__getattribute__(arch)()
+arch = ladder.arch.__getattribute__(arch)()
 dtype="float16"
 
 shapes = [

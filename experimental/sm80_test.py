@@ -1,12 +1,12 @@
 import numpy as np
-import welder
+import ladder
 import tvm
 from tvm import te
-from welder.layout import *
-from welder.schedule.cutlass_intrin import *
-from welder.utils import CompileResult
+from ladder.layout import *
+from ladder.schedule.cutlass_intrin import *
+from ladder.utils import CompileResult
 
-from welder.tvm_build import unset_tvm_cuda_compile
+from ladder.tvm_build import unset_tvm_cuda_compile
 unset_tvm_cuda_compile()
 
 def gemm(n, m, k):
@@ -104,7 +104,7 @@ args = gemm(8192, 8192, 8192)
 workload = te.create_prim_func(args)
 ir_module = tvm.IRModule({"main": workload})
 sch = tvm.tir.Schedule(ir_module)
-from welder.IRpass import *
+from ladder.IRpass import *
 
 grid, block, passes = sche_gemm(sch)
 with tvm.transform.PassContext(config={"tir.add_lower_pass": passes}):
@@ -114,13 +114,7 @@ kernel_code = kernel_code[kernel_code.index('extern "C" __global__ void'):]
 
 print(kernel_code)
 cp = CompileResult(None, kernel_code, block, grid, "default_function_kernel", args)
-cp.compile_and_load(welder.arch.cuda())
+cp.compile_and_load(ladder.arch.cuda())
 a = cp.get_example_outputs()[0]
 print(a)
 print(cp.profile())
-
-# from welder.reference import get_reference_output
-
-# oo = get_reference_output(args)[-1].numpy()
-# print(oo)
-# print(abs(oo - a).max())

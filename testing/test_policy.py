@@ -1,11 +1,11 @@
 import numpy as np
-import welder
+import ladder
 from ops import *
-from welder.graph import IRNode, OutputNode
-from welder.policy import DefaultPolicy
-from welder.reference import get_subgraph_reference_outputs
+from ladder.graph import IRNode, OutputNode
+from ladder.policy import DefaultPolicy
+from ladder.reference import get_subgraph_reference_outputs
 
-arch = welder.arch.cuda()
+arch = ladder.arch.cuda()
 
 def test_policy(ir, input_dict, name="test", check=False):
     expr = "- einstein_v2('{}', {})".format(ir, str(input_dict))

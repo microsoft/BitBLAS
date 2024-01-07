@@ -295,7 +295,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         # ------------------------ Tensorize and Pipelining -------------------------
         print("config.fast_decoding: ", config.fast_decoding)
         if decode_block and self.config.fast_decoding:
-            from welder.schedule.lop3_intrin import (
+            from ladder.schedule.lop3_intrin import (
                 LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
                 LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN_L4,
                 LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN,

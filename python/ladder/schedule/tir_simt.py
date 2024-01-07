@@ -213,7 +213,7 @@ class TIRSIMTScheduler(TIRSchedulerBase):
         return sch.mod["main"]
     
     def schedule_inconsistent_shared_decode(self, is_a_consistent: bool, is_b_consistent: bool, use_dp4a=False) -> tir.Schedule:
-        from welder.schedule.lop3_intrin import (
+        from ladder.schedule.lop3_intrin import (
             LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
             LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN,
             LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L8,

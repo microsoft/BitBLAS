@@ -2,7 +2,7 @@ import argparse
 import os.path as osp
 
 import onnx
-import welder
+import ladder
 import tvm
 from tvm import relay
 from tvm.contrib.debugger import debug_executor
@@ -66,5 +66,5 @@ if __name__ == "__main__":
     parser.add_argument('--cudnn', action="store_true")
     parser.add_argument('--nhwc', action="store_true")
     args = parser.parse_args()
-    arch = welder.arch.__getattribute__(args.arch)()
+    arch = ladder.arch.__getattribute__(args.arch)()
     run(args.prefix, arch)
