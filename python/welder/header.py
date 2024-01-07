@@ -28,22 +28,29 @@ __device__ int make_int(signed char a, signed char b, signed char c, signed char
 #define uchar unsigned char
 
 template <typename T1, typename T2>
-__device__ void decode_i1s_to_i8s(T1 *_i1s, T2 *_i8s, const int N = 32)
+__device__ void decode_i1s_to_i8s_l16(T1 *_i1s, T2 *_i8s, const int N = 16)
 {
-  uint *i8s = reinterpret_cast<uint *>(_i8s);
-  uint const i1s = *reinterpret_cast<uint *>(_i1s);
+  int *i8s = reinterpret_cast<int *>(_i8s);
+  int16_t i1s_i16 = *reinterpret_cast<int16_t *>(_i1s);
+  // permutate: {e0,e4,e8,e12,e2,e6,e10,e14,e1,e5,e9,e13,e3,e7,e11,e15}
+  // into: {e0,e4,e8,e12,x,x,x,x,e1,e5,e9,x,x,x,x,e13,e2,e6,e10,e14,e1,e5,e9,e13,e3,e7,e11,e15,x,x,x,x}
+  int i1s = (i1s_i16 & 0x0f0f);
+  i1s |= ((i1s_i16 & 0xf0f0) << 12); 
+  // i1s        {0..,e15,e14,e13,e12,e11,e10,e9,e8,e7,e6,e5,e4,e3,e2,e1,e0}
+  // interleave {0..,e15,e13,e11,e9,e7,e5,e3,e1,e14,e12,e10,e8,e6,e4,e2,e0}
+  // First, we extract the i1s and construct an intermediate fp16 number.
+  static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa; // 0b11101010
+  static constexpr uint BOTTOM_MASK = 0x01010101;      // 0x1 -> 0b01 select 0,1
+  static constexpr uint I8s_MAGIC_NUM = 0x00000000;
 
-  // First, we extract the i4s and construct an intermediate fp16 number.
-  static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;      // 0b11101010
-  static constexpr uint BOTTOM_MASK = 0x01010101;           // 0xf -> 0b01 select 0,1
-  static constexpr uint I4s_TO_I8s_MAGIC_NUM = 0x00000000; // 1024
-
-  for (int i = 0; i < N; i++){
-  asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
-                : "=r"(i8s[i])
-                : "r"(i1s >> i), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
+  for (int i = 0; i < N / 4; i++)
+  {
+    asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                 : "=r"(i8s[i])
+                 : "r"(i1s >> i), "n"(BOTTOM_MASK), "n"(I8s_MAGIC_NUM), "n"(immLut));
   }
 }
+
 
 template <typename T1, typename T2>
 __device__ void decode_i2s_to_i8s(T1 *_i2s, T2 *_i8s, const int N = 16)
@@ -56,11 +63,11 @@ __device__ void decode_i2s_to_i8s(T1 *_i2s, T2 *_i8s, const int N = 16)
   uint const i2s = *_i2s;
 
   // First, we extract the i4s and construct an intermediate fp16 number.
-  static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;      // 0b11101010
-  static constexpr uint BOTTOM_MASK = 0x03030303;           // 0xf -> 0b11 select 0,3
+  static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;     // 0b11101010
+  static constexpr uint BOTTOM_MASK = 0x03030303;          // 0xf -> 0b11 select 0,3
   static constexpr uint I4s_TO_I8s_MAGIC_NUM = 0x00000000; // 1024
-  
-  #pragma unroll
+
+#pragma unroll
   for (int i = 0; i < (N / 2); i++)
   {
     asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
@@ -69,26 +76,26 @@ __device__ void decode_i2s_to_i8s(T1 *_i2s, T2 *_i8s, const int N = 16)
   }
 }
 
+
 template <typename T1, typename T2>
 __device__ void decode_i4s_to_i8s(T1 *_i4s, T2 *_i8s, const int N = 8)
 {
   uint *i8s = reinterpret_cast<uint *>(_i8s);
   uint i4s = *_i4s;
   // First, we extract the i4s and construct an intermediate fp16 number.
-  static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;      // 0b11101010
-  static constexpr uint BOTTOM_MASK = 0x0f0f0f0f;           // 0xf -> 0b1111 select 0,4
+  static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;     // 0b11101010
+  static constexpr uint BOTTOM_MASK = 0x0f0f0f0f;          // 0xf -> 0b1111 select 0,4
   static constexpr uint I4s_TO_I8s_MAGIC_NUM = 0x00000000; // 1024
-  
-  #pragma unroll
+
+#pragma unroll
   for (int i = 0; i < (N / 4); i++)
   {
     // Extract elt_01 - (i4s & 0x000f000f) | 0x64006400
-  asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
-               : "=r"(i8s[i])
-               : "r"(i4s >> (4 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
+    asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                 : "=r"(i8s[i])
+                 : "r"(i4s >> (4 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
   }
 }
-  
 
 """
 
@@ -185,30 +192,68 @@ __device__ int rasterization2DColumn(int idx) {
 }
 
 template <typename T1, typename T2>
-__device__ void decode_i4s_to_f16(T1 *_i4s, T2* B_local_decode, const int N = 8) {
-  uint* h = reinterpret_cast<uint*>(B_local_decode);
-  
+__device__ void decode_i1s_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 32)
+{
+  uint *h = reinterpret_cast<uint *>(B_local_decode);
+
   static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
-  static constexpr uint BOTTOM_MASK = 0x000f000f;
-  static constexpr uint TOP_MASK = 0x00f000f0;
-  static constexpr uint I4s_TO_F16s_MAGIC_NUM = 0x64006400;
-  static constexpr uint FP16_TOP_MAGIC_NUM = 0x64086408;
-  static constexpr uint ONE_SIXTEENTH = 0x2c002c00;
-  static constexpr uint NEG_72 = 0xd480d480;
-  uint const i4s = *reinterpret_cast<uint *>(_i4s);
+  static constexpr uint BOTTOM_MASK = 0x00010001;
+  static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+  uint const i1s = *reinterpret_cast<uint *>(_i1s);
 #pragma unroll
-  for (int i = 0; i < (N / 4); i++)
+  // decode 2 elems at one time.
+  for (int i = 0; i < (N / 2); i++)
   {
+
     asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
-                 : "=r"(h[i * 2 + 0])
-                 : "r"(i4s >> (8 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_F16s_MAGIC_NUM), "n"(immLut));
-    asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
-                 : "=r"(h[i * 2 + 1])
-                 : "r"(i4s >> (8 * i)), "n"(TOP_MASK), "n"(I4s_TO_F16s_MAGIC_NUM), "n"(immLut));
-    asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i * 2 + 0]) : "r"(h[i * 2 + 0]), "r"(FP16_TOP_MAGIC_NUM));
-    asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\\n" : "=r"(h[i * 2 + 1]) : "r"(h[i * 2 + 1]), "r"(ONE_SIXTEENTH), "r"(NEG_72));
+                 : "=r"(h[i])
+                 : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+    asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(FP16_TOP_MAGIC_NUM));
   }
 }
+
+template <typename T1, typename T2>
+__device__ void decode_i2s_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 16)
+{
+ uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+  static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+  static constexpr uint BOTTOM_MASK = 0x00030003;
+  static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+  uint const i2s = *reinterpret_cast<uint *>(_i2s);
+#pragma unroll
+  // decode 2 elems at one time.
+  for (int i = 0; i < (N / 2); i++)
+  {
+
+    asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                 : "=r"(h[i])
+                 : "r"(i2s >> (2 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+    asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(FP16_TOP_MAGIC_NUM));
+  }
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i4s_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8)
+{
+  uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+  static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+  static constexpr uint BOTTOM_MASK = 0x000f000f;
+  static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+  uint const i4s = *reinterpret_cast<uint *>(_i4s);
+#pragma unroll
+  // decode 2 elems at one time.
+  for (int i = 0; i < (N / 2); i++)
+  {
+
+    asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                 : "=r"(h[i])
+                 : "r"(i4s >> (4 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+    asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(FP16_TOP_MAGIC_NUM));
+  }
+}
+
 
 }
 """
