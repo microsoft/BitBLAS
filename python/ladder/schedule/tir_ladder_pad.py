@@ -3,35 +3,7 @@ from tvm import tir
 import os
 from ..layout import *
 from .tir_base import TIRSchedulerBase
-
-# for debugging.
-
-# get file name and remove the suffix
-fname = os.path.basename(__file__)
-fname = os.path.splitext(fname)[0]
-# create log path
-log_path = "progress/" + fname
-count = 0
-
-
-def write_code(code, path, fname):
-    global count
-    # if path not exist, create it
-    fname = str(count) + "." + fname
-    count += 1
-    if not os.path.exists(path):
-        os.makedirs(path)
-    # join path and fname
-    fname = os.path.join(path, fname)
-    with open(fname, "w") as f:
-        f.write(code)
-
-
-def write_sch(sch, path, fname):
-    py_fname = fname + ".py"
-    write_code(sch.mod["main"].script(), path, py_fname)
-    cu_fname = fname + ".cu"
-    write_code(sch.mod.astext(), path, cu_fname)
+from .utils import write_sch
 
 class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
     def schedule(self) -> tir.Schedule:
@@ -49,7 +21,7 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         warp_size = 32
         wmma_m, wmma_n, wmma_k = 16, 16, 16
         sch, config = self.sche, self.config
-        write_sch(sch, log_path, "original")
+        write_sch(sch, "original")
         C = sch.get_block(self.reduce_op.name)
         A_ax_m, A_ax_k, B_ax_k, B_ax_n, C_ax_m, C_ax_n = config.tc_extra_conf.tc_axis
         transpose_A = A_ax_k < A_ax_m
@@ -126,7 +98,7 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         
         self.schedule_compute_inline()
         sch.pad_einsum(C, [MPAD - M, NPAD - N, KPAD - K])
-        write_sch(sch, log_path, "pad_einsum")
+        write_sch(sch, "pad_einsum")
         
         (i, j, k) = sch.get_loops(C)
         i, kernel_i = sch.split(i, factors=[None, wmma_m])
@@ -137,7 +109,7 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         ko, ki = sch.split(k, factors=[None, chunk])
         sch.reorder(block_i, block_j, i, j, ko, ki, ii, jj, kernel_i, kernel_j, kernel_k)
 
-        write_sch(sch, log_path, "BlockTile")
+        write_sch(sch, "BlockTile")
 
         sch.bind(block_i, "blockIdx.y")
         sch.bind(block_j, "blockIdx.x")
@@ -145,13 +117,13 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         sch.bind(j, "threadIdx.z")
         self.block_size = (self.config.arch.warp_size, sch.get_sref(i).stmt.extent, sch.get_sref(j).stmt.extent)
         self.grid_size = (sch.get_sref(block_j).stmt.extent, sch.get_sref(block_i).stmt.extent, 1)
-        write_sch(sch, log_path, "thread_bind")
+        write_sch(sch, "thread_bind")
 
         # ------------------------ Shared memory layout for multiplicand A and B ------------------------
         
         sch.compute_at(AS, ko, preserve_unit_loops=True)
         sch.compute_at(BS, ko, preserve_unit_loops=True)
-        write_sch(sch, log_path, "cached_shared")
+        write_sch(sch, "cached_shared")
         
         # ------------------------ Schedule output fragment layout ------------------------
         
@@ -184,7 +156,7 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
 
         schedule_shared_output(C_shared)
         
-        write_sch(sch, log_path, "schedule_warp")        
+        write_sch(sch, "schedule_warp")        
         
         def cooperative_fetch(block, dims=4, vec=vec):
             read_dtype = sch.get_sref(block).stmt.reads[-1].buffer.dtype
@@ -203,7 +175,7 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         cooperative_fetch(AS, dims=2, vec=1)
         cooperative_fetch(BS, dims=2, vec=1 if transpose_B else vec)
         
-        write_sch(sch, log_path, "schedule_shared")
+        write_sch(sch, "schedule_shared")
         # ------------------------ Warp memory layout for multiplicand A and B ------------------------
         AW = sch.cache_read(C, 0, "wmma.matrix_a")
         BW = sch.cache_read(C, 1, "wmma.matrix_b")
@@ -227,7 +199,7 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
 
         # ------------------------ Tensorize and Pipelining -------------------------
         init_block_b = sch.decompose_reduction(C, ko)
-        write_sch(sch, log_path, "decompose_reduction")
+        write_sch(sch, "decompose_reduction")
         init_block_b_loops = sch.get_loops(init_block_b)
         init_block_b_i, init_block_b_j = sch.get_loops(init_block_b)[-4:-2]
         sch.tensorize(sch.get_loops(init_block_b)[-2], WMMA_FILL_16x16x16_F16_INTRIN)
@@ -243,7 +215,7 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
             sch.get_loops(C_warp)[-2],
             WMMA_STORE_16x16x16_F16_SHARED_INTRIN,
         )
-        write_sch(sch, log_path, "tensorize_store")
+        write_sch(sch, "tensorize_store")
         if raster > 0:
             sch.annotate(init_block_b_loops[-4], ann_key="thread_rasterization", ann_val=raster)
         if stage > 1:
@@ -268,6 +240,6 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         #     sch.compute_at(tensor_shared, sch.get_loops(C_shared)[-1])
         #     self.cooperative_fetch(tensor_shared, dim_offset=2, vector_load=vec)
 
-        write_sch(sch, log_path, "cache_small_tensor")
+        write_sch(sch, "cache_small_tensor")
 
         return sch.mod["main"]

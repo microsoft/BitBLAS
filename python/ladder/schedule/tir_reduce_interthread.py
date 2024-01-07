@@ -5,34 +5,7 @@ import os
 from ..config import Config, Stride
 from .tir_base import TIRSchedulerBase
 from tvm import te
-# get file name and remove the suffix
-fname = os.path.basename(__file__)
-fname = os.path.splitext(fname)[0]
-# create log path
-log_path = "progress/" + fname
-count = 0
-
-
-def write_code(code, path, fname):
-    global count
-    # if path not exist, create it
-    fname = str(count) + "." + fname
-    count += 1
-    if not os.path.exists(path):
-        os.makedirs(path)
-    # join path and fname
-    fname = os.path.join(path, fname)
-    with open(fname, "w") as f:
-        f.write(code)
-
-
-def write_sch(sch, path, fname):
-    py_fname = fname + ".py"
-    write_code(sch.mod["main"].script(), path, py_fname)
-    cu_fname = fname + ".cu"
-    write_code(sch.mod.astext(), path, cu_fname)
-
-
+from .utils import write_sch
 
 class TIRReduceInterThreadScheduler(TIRSchedulerBase):
     def create_schedule(self) -> tir.Schedule:
@@ -50,7 +23,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
             vec = 8
         num_warps = int(np.prod(self.config.thread))
         warp_size = int(np.prod(self.config.reduce_thread))
-        write_sch(sch, log_path, "origin")
+        write_sch(sch, "origin")
         block_b = sch.get_block(self.reduce_op.name)
         
         # compute inline
@@ -63,7 +36,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         block_shared_local_A = sch.cache_read(block_b, 0, "local")
         block_shared_local_B = sch.cache_read(block_b, 1, "local")
         block_local_C = sch.cache_write(block_b, 0, "local")
-        write_sch(sch, log_path, "cache_related")
+        write_sch(sch, "cache_related")
         # reverse inline
         if self.reduce_op != None and self.reduce_op != self.output_op:
             block = self.sche.get_block(self.output_op.name)
@@ -79,18 +52,18 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         self.block_size = [sch.get_sref(tx).stmt.extent, sch.get_sref(j).stmt.extent, 1]
         self.grid_size = [sch.get_sref(bx).stmt.extent, 1, 1]
         
-        write_sch(sch, log_path, "do_split")
+        write_sch(sch, "do_split")
         
         sch.compute_at(block_shared_local_A, tx, preserve_unit_loops=True)
         sch.compute_at(block_shared_local_B, tx, preserve_unit_loops=True)
         sch.reverse_compute_at(block_local_C, j, preserve_unit_loops=True)
-        write_sch(sch, log_path, "compute_at_related")
+        write_sch(sch, "compute_at_related")
 
         block_local_a_v = sch.get_loops(block_shared_local_A)[-1]
         sch.vectorize(block_local_a_v)
         block_local_b_v = sch.get_loops(block_shared_local_B)[-1]
         sch.vectorize(block_local_b_v)
-        write_sch(sch, log_path, "decompose_reduction")
+        write_sch(sch, "decompose_reduction")
 
         return sch.mod["main"]
 
@@ -126,7 +99,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
                 vec = get_vec(self.args[0].dtype)
         num_warps = int(np.prod(self.config.thread))
         warp_size = int(np.prod(self.config.reduce_thread))
-        write_sch(sch, log_path, "origin")
+        write_sch(sch, "origin")
         # num_warps = 1
         # warp_size = 32
         # print(f"tx: {tx}, vec: {vec}, num_warps: {num_warps}, warp_size: {warp_size}")
@@ -153,7 +126,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
             block_decode_A = sch.cache_read(block_b, 0, "local")
         block_decode_B = sch.cache_read(block_b, 1, "local")
         
-        write_sch(sch, log_path, "cache_read_decode")
+        write_sch(sch, "cache_read_decode")
         
         if A_decode_block:
             sch.compute_inline(A_decode_block)
@@ -167,17 +140,17 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
                 bits = 8 // compress_rate
             sch.compute_inline(B_decode_block)
 
-        write_sch(sch, log_path, "inline_decode")
+        write_sch(sch, "inline_decode")
         if not is_a_consistent:
             block_shared_local_A = sch.cache_read(block_decode_A, 0, "local")
         else:
             block_shared_local_A = sch.cache_read(block_b, 0, "local")
 
        
-        write_sch(sch, log_path, "compute inline")
+        write_sch(sch, "compute inline")
         block_shared_local_B = sch.cache_read(block_decode_B, 0, "local")
         block_local_C = sch.cache_write(block_b, 0, "local")
-        write_sch(sch, log_path, "cache_related")
+        write_sch(sch, "cache_related")
         
         # compute inline
         for block in other_blocks:
@@ -197,7 +170,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         self.block_size = [sch.get_sref(tx).stmt.extent, sch.get_sref(j).stmt.extent, 1]
         self.grid_size = [sch.get_sref(bx).stmt.extent, 1, 1]
         
-        write_sch(sch, log_path, "do_split")
+        write_sch(sch, "do_split")
 
         if not is_a_consistent:
             sch.compute_at(block_decode_A, tx, preserve_unit_loops=True)
@@ -206,7 +179,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         sch.compute_at(block_shared_local_A, tx, preserve_unit_loops=True)
         sch.compute_at(block_shared_local_B, tx, preserve_unit_loops=True)        
         sch.reverse_compute_at(block_local_C, j, preserve_unit_loops=True)
-        write_sch(sch, log_path, "compute_at_related")
+        write_sch(sch, "compute_at_related")
 
         block_local_a_v = sch.get_loops(block_shared_local_A)[-1]
         sch.vectorize(block_local_a_v)
@@ -232,7 +205,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
                         sch.tensorize(sch.get_loops(block_decode_B)[-1], LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16)
             except Exception as e:
                 print(e)
-        write_sch(sch, log_path, "decompose_reduction")
+        write_sch(sch, "decompose_reduction")
         
         return sch.mod["main"]
     
@@ -244,7 +217,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         vec = 8
         num_warps = int(np.prod(self.config.thread))
         warp_size = int(np.prod(self.config.reduce_thread))
-        write_sch(sch, log_path, "origin")
+        write_sch(sch, "origin")
         # num_warps = 1
         # warp_size = 32
         # print(f"tx: {tx}, vec: {vec}, num_warps: {num_warps}, warp_size: {warp_size}")
@@ -261,7 +234,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
                     block = self.sche.get_block(op.name)
                     other_blocks.append(block)
         
-        write_sch(sch, log_path, "cache_read_decode")
+        write_sch(sch, "cache_read_decode")
         
         sch.compute_inline(B_decode_block)
 
@@ -272,7 +245,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         block_shared_local_A = sch.cache_read(block_b, 0, "local")
         block_shared_local_B = sch.cache_read(block_b, 2, "local")
         block_local_C = sch.cache_write(block_b, 0, "local")
-        write_sch(sch, log_path, "cache_related")
+        write_sch(sch, "cache_related")
         
 
         if self.reduce_op != None and self.reduce_op != self.output_op:
@@ -290,19 +263,19 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         self.block_size = [sch.get_sref(tx).stmt.extent, sch.get_sref(j).stmt.extent, 1]
         self.grid_size = [sch.get_sref(bx).stmt.extent, 1, 1]
         
-        write_sch(sch, log_path, "do_split")
+        write_sch(sch, "do_split")
 
         sch.compute_at(block_shared_local_A, tx, preserve_unit_loops=True)
         sch.compute_at(block_shared_local_B, tx, preserve_unit_loops=True)        
         sch.reverse_compute_at(block_local_C, j, preserve_unit_loops=True)
-        write_sch(sch, log_path, "compute_at_related")
+        write_sch(sch, "compute_at_related")
 
         block_local_a_v = sch.get_loops(block_shared_local_A)[-1]
         sch.vectorize(block_local_a_v)
         block_local_b_v = sch.get_loops(block_shared_local_B)[-1]
         sch.vectorize(block_local_b_v)
 
-        write_sch(sch, log_path, "decompose_reduction")
+        write_sch(sch, "decompose_reduction")
         
         return sch.mod["main"]
     
@@ -334,7 +307,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
 
         num_warps = int(np.prod(self.config.thread))
         warp_size = int(np.prod(self.config.reduce_thread))
-        write_sch(sch, log_path, "origin")
+        write_sch(sch, "origin")
         
         block_b = sch.get_block(self.reduce_op.name)
         decode_block = None
@@ -364,7 +337,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
             sch.compute_inline(decode_block)        
         block_shared_local_B_prefetch = sch.cache_read(block_shared_local_B_decompress, 0, "local")
         block_local_C = sch.cache_write(block_b, 0, "local")
-        write_sch(sch, log_path, "cache_related")
+        write_sch(sch, "cache_related")
         # reverse inline
         if self.reduce_op != None and self.reduce_op != self.output_op:
             block = self.sche.get_block(self.output_op.name)
@@ -380,14 +353,14 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         self.block_size = [sch.get_sref(tx).stmt.extent, sch.get_sref(j).stmt.extent, 1]
         self.grid_size = [sch.get_sref(bx).stmt.extent, 1, 1]
         
-        write_sch(sch, log_path, "do_split")
+        write_sch(sch, "do_split")
 
         sch.compute_at(block_shared_local_A, tx, preserve_unit_loops=True)
         sch.compute_at(block_shared_local_B_rescale, tx, preserve_unit_loops=True)
         sch.compute_at(block_shared_local_B_decompress, tx, preserve_unit_loops=True)
         sch.compute_at(block_shared_local_B_prefetch, tx, preserve_unit_loops=True)
         sch.reverse_compute_at(block_local_C, j, preserve_unit_loops=True)
-        write_sch(sch, log_path, "compute_at_related")
+        write_sch(sch, "compute_at_related")
 
         block_local_a_v = sch.get_loops(block_shared_local_A)[-1]
         sch.vectorize(block_local_a_v)
@@ -396,7 +369,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         sch.vectorize(block_local_b_v)
         if use_dp4a:
             vo, vi = sch.split(vk, [None, 4])
-        write_sch(sch, log_path, "decompose_reduction")
+        write_sch(sch, "decompose_reduction")
         if decode_block and self.config.fast_decoding:
             try:
                 if self.args[0].dtype == 'float16':
@@ -416,7 +389,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
             except Exception as e:
                 print(e)
         
-        write_sch(sch, log_path, "tensorize_lop3")
+        write_sch(sch, "tensorize_lop3")
         return sch.mod["main"]
        
     def schedule(self) -> tir.Schedule:

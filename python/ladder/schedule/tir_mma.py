@@ -6,33 +6,8 @@ from ..IRpass import ApplyLayoutPass
 from ..layout import *
 from .cutlass_intrin import *
 from .tir_base import TIRSchedulerBase
+from .utils import write_sch
 
-import os
-# get file name and remove the suffix
-fname = os.path.basename(__file__)
-fname = os.path.splitext(fname)[0]
-log_path = "progress/" + fname
-# create log path
-count = 0
-
-
-def write_code(code, path, fname):
-    global count
-    # if path not exist, create it
-    fname = str(count) + "." + fname
-    count += 1
-    if not os.path.exists(path):
-        os.makedirs(path)
-    # join path and fname
-    fname = os.path.join(path, fname)
-    with open(fname, "w") as f:
-        f.write(code)
-
-def write_sch(sch, path, fname):
-    py_fname = fname + ".py"
-    write_code(sch.mod["main"].script(), path, py_fname)
-    cu_fname = fname + ".cu"
-    write_code(sch.mod.astext(), path, cu_fname)
 
 class TIRCutlassMMAScheduler(TIRSchedulerBase):
     def schedule(self) -> tir.Schedule:
@@ -58,7 +33,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             BK = self.args[1].shape[-1] if transpose_B else self.args[1].shape[-2]
             is_fpa_intb = (AK != BK)
         
-        write_sch(sch, log_path, "original")
+        write_sch(sch, "original")
         
         num_args = len(self.args)
         is_lut = False
@@ -148,7 +123,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
         BS = sch.cache_read(C, 1, "shared")
         sch.compute_at(AS, K_outer)
         sch.compute_at(BS, K_outer)
-        write_sch(sch, log_path, "compute_at")
+        write_sch(sch, "compute_at")
 
         A_stride, B_stride = Stride(), Stride()
         if layoutA.requires_padding():
@@ -206,12 +181,12 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                         other_blocks.append(self.sche.get_block(op.name))
             for block in other_blocks:
                 self.sche.compute_inline(block)
-            write_sch(sch, log_path, "compute_inline_other_blocks")
+            write_sch(sch, "compute_inline_other_blocks")
             if self.reduce_op != None and self.reduce_op != self.output_op:
                 block = self.sche.get_block(self.output_op.name)
                 self.sche.reverse_compute_inline(block)
             decode_block_local = sch.cache_read(BL0, 0, "local")
-            write_sch(sch, log_path, "cache_decode_block_local")
+            write_sch(sch, "cache_decode_block_local")
             if decode_block != None:
                 read_shape = sch.get_sref(decode_block).stmt.reads[0].buffer.shape
                 write_shape = sch.get_sref(decode_block).stmt.writes[0].buffer.shape
@@ -226,9 +201,9 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 block_prefecth = sch.cache_read(decode_block_local, 1, "local")
             else:
                 block_prefecth = sch.cache_read(decode_block_local, 0, "local")
-            write_sch(sch, log_path, "cache_read_prefetch")
+            write_sch(sch, "cache_read_prefetch")
             BSS = sch.cache_read(block_prefecth, 0, "shared")
-            write_sch(sch, log_path, "cache_read_BSS")
+            write_sch(sch, "cache_read_BSS")
 
             # uninlined stage: block_prefecth, decode_block, BL0
             sch.compute_at(decode_block_local, K_outer)
@@ -266,12 +241,12 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             
             cooperative_fetch(BSS, 3, strides=B_stride, vector_load=outer_vec_fetch, use_pragma_unroll=False)
             cooperative_fetch(BS, 3, strides=B_stride, vector_load=vecB, use_pragma_unroll=False)
-            write_sch(sch, log_path, "cooperative_fetch_BSS")
+            write_sch(sch, "cooperative_fetch_BSS")
             
             sch.compute_at(BL0, self.sche.get_loops(BS)[-3])
             sch.compute_at(decode_block_local, self.sche.get_loops(BS)[-3])
             sch.compute_at(block_prefecth, self.sche.get_loops(BS)[-3])
-            write_sch(sch, log_path, "compute_at_bs_loop")
+            write_sch(sch, "compute_at_bs_loop")
 
             if is_lut:
                 block_shared_lut = sch.cache_read(BL0, 0, "shared")
@@ -281,7 +256,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                 sch.bind(B_shared_tx, "threadIdx.x")
             if B_stride.is_valid(): 
                 self.sche.storage_align(BS, 0, B_stride.ax, B_stride.stride - 1, B_stride.stride)
-            write_sch(sch, log_path, "reverse_compute_at")
+            write_sch(sch, "reverse_compute_at")
             bv = sch.get_loops(BL0)[-1]
             # _, bv = sch.split(bv, factors=[None, 4])
             # sch.vectorize(bv)
@@ -289,7 +264,7 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             sch.vectorize(bv)
             bv = sch.get_loops(BS)[-1]
             sch.vectorize(bv)
-            write_sch(sch, log_path, "schedule bs")
+            write_sch(sch, "schedule bs")
 
 
         # ------------------------ Tensorize and Pipelining -------------------------
@@ -369,5 +344,5 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             sch.compute_at(tensor_shared, warp_fused)
             dim_offset = 2 # outer loops are: blck_fused thrd_fused
             self.cooperative_fetch(tensor_shared, dim_offset)
-        write_sch(sch, log_path, "cache_small_tensor")
+        write_sch(sch, "cache_small_tensor")
         return sch.mod["main"]

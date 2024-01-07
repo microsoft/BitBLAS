@@ -5,37 +5,7 @@ import os
 from ..config import Config, Stride
 from .tir_base import TIRSchedulerBase
 from tvm import te
-# get file name and remove the suffix
-fname = os.path.basename(__file__)
-fname = os.path.splitext(fname)[0]
-# create log path
-log_path = "progress/" + fname
-count = 0
-import logging 
-
-logger = logging.getLogger(__name__)
-
-
-
-def write_code(code, path, fname):
-    global count
-    # if path not exist, create it
-    fname = str(count) + "." + fname
-    count += 1
-    if not os.path.exists(path):
-        os.makedirs(path)
-    # join path and fname
-    fname = os.path.join(path, fname)
-    with open(fname, "w") as f:
-        f.write(code)
-
-
-def write_sch(sch, path, fname):
-    py_fname = fname + ".py"
-    write_code(sch.mod["main"].script(), path, py_fname)
-    cu_fname = fname + ".cu"
-    write_code(sch.mod.astext(), path, cu_fname)
-
+from .utils import write_sch
 
 
 class TIRElementWiseScheduler(TIRSchedulerBase):
@@ -48,7 +18,7 @@ class TIRElementWiseScheduler(TIRSchedulerBase):
         
         sch, config = self.sche, self.config
         self.block_size[0] = int(np.prod(config.thread))
-        write_sch(sch, log_path, "origin")
+        write_sch(sch, "origin")
 
         output_block_name = self.output_op.name
         
@@ -84,12 +54,12 @@ class TIRElementWiseScheduler(TIRSchedulerBase):
         for ax in tile_axis:
             sch.unroll(ax)
 
-        write_sch(sch, log_path, "unroll")
+        write_sch(sch, "unroll")
 
         if len(self.shared_inputs):
             raise NotImplementedError("Shared memory is not implemented yet.")
                 
-        write_sch(sch, log_path, "cache_input")
+        write_sch(sch, "cache_input")
         
         self.schedule_compute_inline()
 
@@ -120,6 +90,6 @@ class TIRElementWiseScheduler(TIRSchedulerBase):
         #         strides = Stride()
         #     dim_offset = len(vthd_axis) + 2 # outer loops are: blck_fused vthd_axis thrd_fused
         #     self.cooperative_fetch(tensor_shared, dim_offset, strides)
-        write_sch(sch, log_path, "cache_small_tensor")
+        write_sch(sch, "cache_small_tensor")
 
         return sch.mod["main"]
