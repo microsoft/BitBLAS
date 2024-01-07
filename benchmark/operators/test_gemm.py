@@ -22,7 +22,7 @@ arch = ladder.arch.__getattribute__(arch)()
 dtype="float16"
 
 shapes = [
-    [1, 16384, 16384], 
+    [8192, 8192, 8192], 
 ]
 
 for M, N, K in shapes:
@@ -32,25 +32,27 @@ for M, N, K in shapes:
     # Describe the matrix multiplication in TE
     k = te.reduce_axis((0, K), name='k')
     C = te.compute(
-        (N,),
-        lambda j: te.sum(A[0, k] * B[j, k], axis=k),
+        (M, N),
+        lambda i, j: te.sum(A[i, k] * B[j, k], axis=k),
         name='C'
     )
 
     input_args = [A, B]
     output_args = [C]
     node = IRNode([None for _ in input_args], input_args+output_args, "ladder_matmul")
+    node.add_tag("tensorCoreConfig", (0, 1))
     output_nodes = [OutputNode(node)]
+    # policy = TCPolicy(output_nodes, arch)
     policy = DefaultPolicy(output_nodes, arch)
     configs = policy.emit_config(20)
 
     compile_results = []
-    cgen = welder.CodeGenerator()
+    cgen = ladder.CodeGenerator()
     for config in configs:
         print(config)
         cpresult = cgen.compile(output_nodes, config, "cuda", kernel_name="Fused")
         compile_results.append(cpresult)
-    welder.utils.compile_and_load_parallel(compile_results, arch)
+    ladder.utils.compile_and_load_parallel(compile_results, arch)
     best_latency = 10000
     best = None
     values = []

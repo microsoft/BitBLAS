@@ -45,16 +45,16 @@ def run(prefix, arch):
         mod = relay.transform.ConvertLayout({"nn.conv2d": ["NHWC", "default"]})(mod)
         mod = relay.transform.FoldConstant()(mod)
 
-    mod = welder.relay.transform.WelderExprRewrite()(mod)
-    mod = welder.relay.transform.WelderConvImplicitGemm()(mod)
-    mod = welder.relay.transform.WelderDotSplitK()(mod)
+    mod = ladder.relay.transform.WelderExprRewrite()(mod)
+    mod = ladder.relay.transform.WelderConvImplicitGemm()(mod)
+    mod = ladder.relay.transform.WelderDotSplitK()(mod)
     mod = relay.transform.FoldConstant()(mod)
-    mod = welder.relay.transform.WelderFuseOps()(mod)
-    mod = welder.relay.transform.AnnotateTensorCore()(mod)
-    mod = welder.relay.transform.WelderTunePass(arch, osp.join(prefix, "welder_tuned.json"))(mod)
+    mod = ladder.relay.transform.WelderFuseOps()(mod)
+    mod = ladder.relay.transform.AnnotateTensorCore()(mod)
+    mod = ladder.relay.transform.WelderTunePass(arch, osp.join(prefix, "welder_tuned.json"))(mod)
 
     factory = relay.build(mod, arch.target, params=params)
-    lib = welder.relay.update_lib(factory, arch, osp.join(prefix, "model.so"))
+    lib = ladder.relay.update_lib(factory, arch, osp.join(prefix, "model.so"))
     rt_mod = graph_executor.GraphModule(lib["default"](tvm.cuda()))
     print(rt_mod.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
 

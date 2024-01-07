@@ -2,6 +2,13 @@
 *.csv
 *.tar.gz*
 *.pkl.gz
+**/__pycache__/
+**/.ipynb_checkpoints/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.hypothesis/
+**/.pkl_memoize_py3/
+**/progress/
 .dataset
 build/
 .vscode/

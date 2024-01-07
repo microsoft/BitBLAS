@@ -1,6 +1,6 @@
 import torch
 import sys
-
+from . import testing
 from . import arch, relay
 from .code_generator import CodeGenerator
 from .IRpass import *
