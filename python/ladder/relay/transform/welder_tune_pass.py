@@ -4,6 +4,9 @@ from ladder.graph import IRNode, OutputNode, Node
 from ladder.te_utils import normalize_tensor_names
 from ladder.engine import Engine, MultiProcTunner
 from ..integration import add_source
+import logging 
+
+logger = logging.getLogger(__name__)
 
 def tune_node(ordered_nodes, names):
     nodes = []
@@ -29,7 +32,13 @@ class WelderTunePass(relay.ExprMutator):
 
         ordered_nodes = extractor.ordered_nodes
         node_map = extractor.node_map
-        print("candidate nodes:",ordered_nodes)
+        logger.debug("candidate nodes:",ordered_nodes)
+        '''
+            for debug purpose, we can set:
+                ordered_nodes = self.set_debug_nodes(ordered_nodes, ['ladder_perfect_matmul_29', 'layout_transform_reshape_reshape_add_30'])
+                print(tune_node(ordered_nodes, ['welder_matmul_39']))
+                raise NotImplementedError()
+        '''
         # ordered_nodes = self.set_debug_nodes(ordered_nodes, ['ladder_perfect_matmul_29', 'layout_transform_reshape_reshape_add_30'])
         # print(tune_node(ordered_nodes, ['welder_matmul_39']))
         # raise NotImplementedError()

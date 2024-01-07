@@ -144,7 +144,7 @@ class Tunner(object):
 
     def write_error_log(self, config, msg):
         if self.error_log is None:
-            self.error_log = open("welder_error.log", "w")
+            self.error_log = open("ladder_error.log", "w")
         print([node.name for node in self.current_nodes], file=self.error_log)
         print(config, file=self.error_log)
         print(msg, file=self.error_log, flush=True)

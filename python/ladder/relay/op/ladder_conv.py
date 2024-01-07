@@ -1,6 +1,9 @@
 from tvm import relay, tir, ir, target, te, topi
 from tvm.relay.op.strategy import wrap_topi_schedule
 from tvm.relay import reg
+import logging 
+
+logger = logging.getLogger(__name__)
 
 def get_pad(pad):
     pad = list(pad)
@@ -16,7 +19,6 @@ def get_pad(pad):
 def op_relation(arg_types, attrs):
     assert len(arg_types) == 2, "type relation arg number mismatch!"
     assert attrs.data_layout in ["NCHW", "NHWC"]
-    print("arg_types: ", arg_types)
     a_shape = arg_types[0].shape
     if attrs.data_layout == "NCHW":
         batch, _, in_h, in_w = a_shape
@@ -34,7 +36,6 @@ def op_relation(arg_types, attrs):
         out_shape = [out_c, batch * out_h * out_w]
     elif attrs.data_layout == "NHWC":
         out_shape = [batch * out_h * out_w, out_c]
-    print("ladder conv out_shape: ", out_shape)
     return relay.TensorType(out_shape, out_dtype)
 
 def op_compute(attrs, inputs, output_type):

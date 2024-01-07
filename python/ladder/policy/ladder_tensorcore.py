@@ -7,7 +7,9 @@ from ..config import Config, Stride, TileDict, LadderConfig, ConsistentConfig
 from ..graph import IRNode, Node
 from .common import factorize, get_all_factors
 from .default import DefaultPolicy
+import logging 
 
+logger = logging.getLogger(__name__)
 
 class LadderPolicy(DefaultPolicy):
     def __init__(self, output_nodes: List[Node], arch: Arch) -> None:
@@ -75,7 +77,7 @@ class LadderPolicy(DefaultPolicy):
             M = output_shape[0] * output_shape[1] * output_shape[2] * output_shape[-2]
             N = output_shape[3] * output_shape[-1]
         else:
-            print(output_shape)
+            
             raise NotImplementedError
 
         A_ax_m, A_ax_k, B_ax_k, B_ax_n, C_ax_m, C_ax_n = node.infer_tensorcore_axis()
@@ -232,7 +234,7 @@ class LadderPolicy(DefaultPolicy):
                 K = kernel_shape[1] * kernel_shape[3]
         total_size = (M * N  + M * K + N * K) * size_per_element
         if total_size < 6 * 1024 * 1024 and total_size > 0:
-            print(f"total size {total_size} is too small")
+            logger.debug(f"Skip Thread Rasteration: Total size {total_size}.")
             return raster_factor
         raster_factor = int(self.arch.compute_max_core ** 0.5)
         return raster_factor

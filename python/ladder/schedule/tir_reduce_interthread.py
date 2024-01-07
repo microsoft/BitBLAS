@@ -6,7 +6,9 @@ from ..config import Config, Stride
 from .tir_base import TIRSchedulerBase
 from tvm import te
 from .utils import write_sch
+import logging 
 
+logger = logging.getLogger(__name__)
 class TIRReduceInterThreadScheduler(TIRSchedulerBase):
     def create_schedule(self) -> tir.Schedule:
         workload = te.create_prim_func(self.args)
@@ -102,7 +104,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         write_sch(sch, "origin")
         # num_warps = 1
         # warp_size = 32
-        # print(f"tx: {tx}, vec: {vec}, num_warps: {num_warps}, warp_size: {warp_size}")
+        
         block_b = sch.get_block(self.reduce_op.name)
         
         i, j, k = sch.get_loops(block_b)    
@@ -204,7 +206,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
                     elif bits == 1:
                         sch.tensorize(sch.get_loops(block_decode_B)[-1], LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16)
             except Exception as e:
-                print(e)
+                logger.debug(f"tensorize decode block failed: {e}")
         write_sch(sch, "decompose_reduction")
         
         return sch.mod["main"]
@@ -220,7 +222,6 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         write_sch(sch, "origin")
         # num_warps = 1
         # warp_size = 32
-        # print(f"tx: {tx}, vec: {vec}, num_warps: {num_warps}, warp_size: {warp_size}")
         block_b = sch.get_block(self.reduce_op.name)
         i, j, k = sch.get_loops(block_b)    
         
@@ -387,7 +388,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
                     elif bits == 1:
                         sch.tensorize(sch.get_loops(block_shared_local_B_decompress)[-1], LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16)
             except Exception as e:
-                print(e)
+                logger.debug(f"tensorize decode block failed: {e}")
         
         write_sch(sch, "tensorize_lop3")
         return sch.mod["main"]
@@ -419,9 +420,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
             if is_consistent:
                 return self.schedule_consistent()
             else:
-                print(
-                    f"the computation is inconsistent, is_a_consistent: {is_a_consistent}, is_b_consistent: {is_b_consistent}")
-                print(f"self.config.compute_capability {self.config.compute_capability}")
+                logger.debug(f"the computation is inconsistent, is_a_consistent: {is_a_consistent}, is_b_consistent: {is_b_consistent}")
                 if self.config.compute_capability == "80":
                     return self.schedule_inconsistent_shared_decode(is_a_consistent, is_b_consistent)
                 return self.schedule_inconsistent(is_a_consistent, is_b_consistent)

@@ -9,7 +9,9 @@ from .graph import Node, find_topo_sort
 from .schedule import schedule
 from .tvm_build import _type_map, tvm_build
 from .utils import CompileResult
+import logging 
 
+logger = logging.getLogger(__name__)
 
 class CodeGenerator():
     def __init__(self) -> None:
@@ -171,7 +173,7 @@ class CodeGenerator():
         try:
             sch = schedule(node.args, config)
         except Exception as e:
-            print("fail to create schedule for single node, the error is ", e)
+            logger.error(f"Fail to create schedule for {node}, the error is {e}")
             return None
         self.block_size, self.grid_size = sch.block_size, sch.grid_size
         code, _, _ = tvm_build(sch, self.target, name=self.kernel_name, global_kernel=True, flatten_block=False)

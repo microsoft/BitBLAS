@@ -7,7 +7,9 @@ from ..layout import *
 from .cutlass_intrin import *
 from .tir_base import TIRSchedulerBase
 from .utils import write_sch
+import logging 
 
+logger = logging.getLogger(__name__)
 
 class TIRCutlassMMAScheduler(TIRSchedulerBase):
     def schedule(self) -> tir.Schedule:
@@ -268,7 +270,6 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
 
 
         # ------------------------ Tensorize and Pipelining -------------------------
-        print("config.fast_decoding: ", config.fast_decoding)
         if decode_block and self.config.fast_decoding:
             from ladder.schedule.lop3_intrin import (
                 LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
@@ -286,9 +287,8 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
                         sch.tensorize(loop, LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN)
                     elif loop_extent == 4:
                         sch.tensorize(loop, LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN_L4)
-
             except Exception as e:
-                print(e)
+                logger.debug(f"tensorize decode block failed: {e}")
         sch.tensorize(sch.get_loops(block_init_c)[-2],
             register_cutlass_warp_init_intrin(warp_tile_M, warp_tile_N, out_dtype,
             cls_code, block_tile_M // warp_tile_M, block_tile_N // warp_tile_N)

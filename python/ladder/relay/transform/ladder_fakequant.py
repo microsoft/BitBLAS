@@ -1,8 +1,9 @@
 import tvm
 from tvm import relay, ir
 import numpy as np
+import logging 
 
-
+logger = logging.getLogger(__name__)
 """
     Weight Only Fake Quant.
 """
@@ -56,7 +57,7 @@ class LadderFakeQuant(relay.ExprMutator):
             kernel_shape = call.args[1].checked_type.shape
 
             if len(kernel_shape) != 2:
-                print("currently do not suppory kernel shape > 2")
+                logger.debug("currently do not suppory kernel shape > 2")
                 return super().visit_call(call)
             warp_compute_tile_m = 16
             warp_compute_tile_n = 16
@@ -88,7 +89,7 @@ class LadderFakeQuant(relay.ExprMutator):
                 if (N, K, transpose_b) not in self.quant_weight_candidate:
                     return super().visit_call(call)
                 else:
-                    print("quantize weight for {}".format((N, K, transpose_b)))
+                    logger.debug("quantize weight for {}".format((N, K, transpose_b)))
 
             out_dtype = call.checked_type.dtype
             # if the data's node has only one output, we can propagate the layout

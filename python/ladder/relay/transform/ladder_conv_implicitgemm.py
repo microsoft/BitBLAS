@@ -1,6 +1,8 @@
 from tvm import relay, ir
 import numpy as np
+import logging 
 
+logger = logging.getLogger(__name__)
 
 class UsageTracer(relay.ExprVisitor):
     def __init__(self):
@@ -103,7 +105,6 @@ class LadderConvImplicitGemm(relay.ExprMutator):
                 return True
 
             if check_not_fusbile(previous_fusible_node):
-                # print("previous_fusible_node: ", previous_fusible_node.op.name)
                 return super().visit_call(call)
             
             warp_compute_tile_m = 16
@@ -127,17 +128,12 @@ class LadderConvImplicitGemm(relay.ExprMutator):
             data = self.visit(call.args[0])
             kernel = self.visit(call.args[1])
             out_shape = call.checked_type.shape
-            # print("input_shape: ", input_shape)
-            # print("kernel_shape: ", kernel_shape)
-            # print("out_shape: ", out_shape)
-            # print("out_channel, in_channel, batch_size: ", out_channel, in_channel, batch_size)
 
             # if the data's node has only one output, we can propagate the layout
             if batch_size % warp_compute_tile_m != 0 or in_channel % warp_compute_tile_n != 0 or out_channel % warp_compute_tile_k != 0:
                 if batch_size % warp_compute_tile_m != 0 or out_channel % warp_compute_tile_n != 0:
-                    print("currently do not suppory m pad or n pad")
+                    logger.debug("currently do not suppory m pad or n pad")
                     return super().visit_call(call)
-                # print("using implicit gemm")
                 if call.attrs.kernel_layout == "OIHW":
                     reshape_kernel = relay.reshape(kernel, [kernel_shape[0], -1])
                 elif call.attrs.kernel_layout == "HWIO":
@@ -152,28 +148,8 @@ class LadderConvImplicitGemm(relay.ExprMutator):
             can_propagate = False
 
             if self.use_async_propagation:
-                data_outputs = self.node_output_map[call.args[0]]
-                if len(data_outputs) == 1:
-                    can_propagate = True
-                else:
-                    can_propagate = True
-                    # print("args[0].op: ", call.args[0].op.name)
-                    # for output in self.node_output_map[call.args[0]]:
-                    #     print("output: ", output.op.name)
-                    #     if output.op.name != "nn.conv2d":
-                    #         can_propagate = False
-                # if not (M < 128 or N < 128):
-                #     can_propagate = False
-                # print(
-                #     "data.op.num_outputs: ",
-                #     len(self.node_output_map[call.args[0]]),
-                #     "data.name: ",
-                #     call.args[0].op.name,
-                #     "call.name: ",
-                #     call.op.name,
-                #     "can_propagate: ",
-                #     can_propagate,
-                # )
+                can_propagate = True
+                    
 
             perfect_data = relay.layout_transform(data, "NHWC", "NHWC16n16c")
             perfect_kernel = relay.layout_transform(kernel, "HWIO", "HWIO16i16o")
@@ -227,8 +203,6 @@ class LadderConvImplicitGemm(relay.ExprMutator):
                     16,
                 ]
                 out = relay.reshape(gemm, out_shape)
-                # print("out_shape: ", out_shape)
                 return relay.layout_transform(out, "NHWC16n16c", "NHWC")
-            print("can not cover gemm layout")
 
         return super().visit_call(call)

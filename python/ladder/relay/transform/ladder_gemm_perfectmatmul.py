@@ -1,6 +1,8 @@
 from tvm import relay, ir
 import numpy as np
+import logging 
 
+logger = logging.getLogger(__name__)
 
 class UsageTracer(relay.ExprVisitor):
     def __init__(self):
@@ -79,7 +81,7 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
             kernel_shape = call.args[1].checked_type.shape
 
             if len(kernel_shape) != 2:
-                print("currently do not suppory kernel shape > 2")
+                logger.debug("currently do not suppory kernel shape > 2")
                 return super().visit_call(call)
             warp_compute_tile_m = 16
             warp_compute_tile_n = 16
@@ -110,7 +112,7 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
             # if the data's node has only one output, we can propagate the layout
             if M % warp_compute_tile_m != 0 or K % warp_compute_tile_n != 0 or N % warp_compute_tile_k != 0:
                 if M % warp_compute_tile_m != 0 or N % warp_compute_tile_n != 0:
-                    print("currently do not suppory m pad or n pad")
+                    logger.debug("currently do not suppory m pad or n pad")
                     return super().visit_call(call)
                 gemm = relay.Call(
                     relay.op.get("ladder.C2DImplicitGemm"),
@@ -197,15 +199,13 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
                 return super().visit_call(call)
             
             if len(kernel_shape) != 2:
-                print(f"find call.op {call.op.name} currently do not support kernel shape > 2")
+                logger.debug(f"find call.op {call.op.name} currently do not support kernel shape > 2")
                 return super().visit_call(call)
 
 
             if len(input_shape) > 2:
                 data = relay.reshape(
                     data, (K, M)) if transpose_a else relay.reshape(data, (M, K))
-            print("input_shape", input_shape)
-            print("kernel_shape", kernel_shape)
             perfect_data = relay.layout_transform(data, "HW", f"HW16h{warp_compute_tile_k}w")
             attrs = ir.make_node(
                 "DictAttrs",

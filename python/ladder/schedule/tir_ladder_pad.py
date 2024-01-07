@@ -89,9 +89,7 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
             * warp_col_tiles
             * wmma_k
         )
-        print("MPAD: ", MPAD)
-        print("NPAD: ", NPAD)
-        print("KPAD: ", KPAD)
+
         AS = sch.cache_read(C, 0, "shared")
         BS = sch.cache_read(C, 1, "shared")
         C_shared = sch.cache_write(C, 0, "shared")

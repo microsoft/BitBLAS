@@ -1,5 +1,8 @@
 from tvm import relay, ir
 import numpy as np
+import logging 
+
+logger = logging.getLogger(__name__)
 
 class UsageTracer(relay.ExprVisitor):
     def __init__(self):
@@ -38,7 +41,7 @@ class LadderRewriteInceptionLayout(relay.ExprMutator):
             lhs_is_constant = isinstance(lhs, relay.expr.Constant)
             rhs_is_constant = isinstance(rhs, relay.expr.Constant)
             if lhs_is_constant or rhs_is_constant:
-                print('lhs or rhs is constant')
+                logger.debug('lhs or rhs is constant')
             else:
                 # if one is relu or maxpool
                 lhs_is_relu = hasattr(lhs,'op') and isinstance(lhs.op, ir.Op) and lhs.op.name == "nn.relu"
@@ -59,7 +62,6 @@ class LadderRewriteInceptionLayout(relay.ExprMutator):
                     
                     layout_transform = detect_layout_transform(the_relu_or_maxpool)
                     if layout_transform:
-                        print("layout_transform is detected")
                         the_other = lhs if rhs_is_relu or rhs_is_maxpool else rhs
                         the_relu_or_maxpool_transform = relay.layout_transform(the_relu_or_maxpool, "NHWC", "NHWC16n16c")
                         the_other_transform = relay.layout_transform(the_other, "NHWC", "NHWC16n16c")
@@ -67,7 +69,6 @@ class LadderRewriteInceptionLayout(relay.ExprMutator):
                         assert len(layout_transform_outputs) == 1, "layout_transform should only have one output for now"
                         layout_transform_output = layout_transform_outputs[0]
                         if isinstance(layout_transform_output.op, ir.Op) and layout_transform_output.op.name == "ladder.layout_transform":
-                            print("layout_transform_output is ladder.layout_transform")
                             # insert a same layout_transform and an inversed layout_transform
                             attrs = ir.make_node(
                                 "DictAttrs",

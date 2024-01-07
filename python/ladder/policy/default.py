@@ -39,7 +39,7 @@ class DefaultPolicy:
         try:
             base_tile = self.get_base_tile()
         except Exception as e:
-            print(e)
+            logger.error("Failed to get base tile: %s", e)
             return []
         if base_tile is None:
             return []
