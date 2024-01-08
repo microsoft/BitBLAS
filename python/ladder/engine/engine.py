@@ -59,7 +59,6 @@ class Engine:
                 continue
             fg = self._build_fusion_group(node)
             fusion_groups.append(fg)
-            logger = logging.getLogger(__name__)
             logger.info(f"Fusion group created: {fg.group_id} {[node.name for node in fg.nodes]}")
         return fusion_groups
 

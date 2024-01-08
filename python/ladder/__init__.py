@@ -4,7 +4,7 @@ from . import testing
 from . import arch, relay
 from .code_generator import CodeGenerator
 from .IRpass import *
-
+from .schedule import enable_schedule_dump
 import logging
 from tqdm import tqdm
 
