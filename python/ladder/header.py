@@ -9,10 +9,6 @@ cuda_default_header = """
 #include <math.h>
 #include <mma.h>
 
-__device__ int make_int(signed char a, signed char b, signed char c, signed char d){
-  return (int)(((unsigned char)a) | (((unsigned char)b) << 8) | (((unsigned char)c) << 16) | (((unsigned char)d) << 24));
-}
-
 #if (((__CUDACC_VER_MAJOR__ == 11) && (__CUDACC_VER_MINOR__ >= 4)) || (__CUDACC_VER_MAJOR__ > 11))
 #define TVM_ENABLE_L2_PREFETCH 1
 #else
