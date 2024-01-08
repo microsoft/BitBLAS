@@ -32,7 +32,7 @@ class WelderTunePass(relay.ExprMutator):
 
         ordered_nodes = extractor.ordered_nodes
         node_map = extractor.node_map
-        logger.debug("candidate nodes:",ordered_nodes)
+        logger.debug(f"candidate nodes: {ordered_nodes}")
         '''
             for debug purpose, we can set:
                 ordered_nodes = self.set_debug_nodes(ordered_nodes, ['ladder_perfect_matmul_29', 'layout_transform_reshape_reshape_add_30'])
