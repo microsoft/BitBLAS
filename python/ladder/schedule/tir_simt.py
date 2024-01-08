@@ -328,16 +328,16 @@ class TIRSIMTScheduler(TIRSchedulerBase):
                 is_a_consistent = reduce_input0_dtype == input0_dtype
                 is_b_consistent = reduce_input1_dtype == input1_dtype
             is_consitent = is_a_consistent and is_b_consistent
-            use_dp4a = input0_dtype == 'int8' and self.reduce_op.output(0).dtype == "int32"
-            if use_dp4a:
-                if self.config.compute_capability == "80":
-                    return self.schedule_inconsistent_shared_decode(is_a_consistent, is_b_consistent, use_dp4a=True)
-                return self.schedule_inconsistent(is_a_consistent, is_b_consistent, use_dp4a=True)
             if is_consitent:
                 return self.schedule_consistent()
             else:
                 logger.debug(
                     f"the computation is inconsistent, is_a_consistent: {is_a_consistent}, is_b_consistent: {is_b_consistent}")
+                use_dp4a = input0_dtype == 'int8' and self.reduce_op.output(0).dtype == "int32"
+                if use_dp4a:
+                    if self.config.compute_capability == "80":
+                        return self.schedule_inconsistent_shared_decode(is_a_consistent, is_b_consistent, use_dp4a=True)
+                    return self.schedule_inconsistent(is_a_consistent, is_b_consistent, use_dp4a=True)
                 if self.config.compute_capability == "80":
                     return self.schedule_inconsistent_shared_decode(is_a_consistent, is_b_consistent)
                 return self.schedule_inconsistent(is_a_consistent, is_b_consistent)

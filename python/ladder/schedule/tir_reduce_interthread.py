@@ -19,7 +19,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
 
     def schedule_consistent(self) -> tir.Schedule:
         sch, config = self.sche, self.config
-        assert config.block[0] == 1, "inconsistent computation only support gemv case"
+        assert config.block[0] == 1, "tir computation only support gemv case"
         tx = np.prod(config.thread) * np.prod(config.reduce_thread)
         try:
             vec = list(config.vectorize.values())[-1]

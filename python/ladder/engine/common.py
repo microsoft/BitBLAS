@@ -1,6 +1,6 @@
 import json
 from typing import List
-
+import os
 from ..graph import Node
 from ..utils import CompileResult
 
@@ -8,12 +8,20 @@ from ..utils import CompileResult
 def get_id_by_name(name):
     return int(name.split("_")[-1])
 
-class FusionGroup():
-    def __init__(self, node_list: List[Node], group_id: int, cpresult: "CompileResult", gain: float) -> None:
+
+class FusionGroup:
+    def __init__(
+        self,
+        node_list: List[Node],
+        group_id: int,
+        cpresult: "CompileResult",
+        gain: float,
+    ) -> None:
         self.nodes = node_list
         self.group_id = group_id
         self.cpresult = cpresult
         self.gain = gain
+
 
 def dump(fusion_groups: List[FusionGroup]):
     obj = []
@@ -26,8 +34,12 @@ def dump(fusion_groups: List[FusionGroup]):
         group_desc["group_id"] = group.group_id
         if group.cpresult is not None:
             cpresult = group.cpresult
-            group_desc["input_desc"] = [[get_id_by_name(name), id] for name, id in cpresult.input_desc]
-            group_desc["output_desc"] = [[get_id_by_name(name), id] for name, id in cpresult.output_desc]
+            group_desc["input_desc"] = [
+                [get_id_by_name(name), id] for name, id in cpresult.input_desc
+            ]
+            group_desc["output_desc"] = [
+                [get_id_by_name(name), id] for name, id in cpresult.output_desc
+            ]
 
             if cpresult.origin in result_reuse_map:
                 cpresult = result_reuse_map[cpresult.origin]
@@ -42,10 +54,51 @@ def dump(fusion_groups: List[FusionGroup]):
         obj.append(group_desc)
     return obj
 
+
 def save_results(fusion_groups: List[FusionGroup], fname: str):
     obj = dump(fusion_groups)
     with open(fname, "w") as f:
         json.dump(obj, f, indent=2)
     return None
 
-__all__ = ['save_results', 'FusionGroup']
+
+def export_groups(fusion_groups: List[FusionGroup], directory: str):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    obj = dump(fusion_groups)
+
+    for i, fgroup in enumerate(fusion_groups):
+        _group_desc = obj[i]
+        group_name = (
+            f"group_{_group_desc['group_id']}_{'_'.join(_group_desc['node_names'])}"
+        )
+        # create a directory for each group
+        group_dir = os.path.join(directory, group_name)
+        if not os.path.exists(group_dir):
+            os.makedirs(group_dir)
+        # save kernel code
+        fname = f"{group_name}.cu"
+
+        with open(os.path.join(group_dir, fname), "w") as f:
+            code = _group_desc["code"]
+            comments = f"""
+// group_id: {_group_desc['group_id']}
+// node_names: {_group_desc['node_names']}
+// gain: {_group_desc['gain']}
+// latency: {_group_desc['latency']}
+// grid_size: dim3({_group_desc['grid_size'][0]}, {_group_desc['grid_size'][1]}, {_group_desc['grid_size'][2]})
+// block_size: dim3({_group_desc['block_size'][0]}, {_group_desc['block_size'][1]}, {_group_desc['block_size'][2]})
+"""
+            code = comments + code
+            f.write(code)
+
+        # save schedule_mods
+        for op_name, mod_script in fgroup.cpresult.scheduled_mods.items():
+            fname = f"{op_name}.py"
+            with open(os.path.join(group_dir, fname), "w") as f:
+                f.write(mod_script)
+
+    return None
+
+
+__all__ = ["save_results", "FusionGroup", "export_groups"]

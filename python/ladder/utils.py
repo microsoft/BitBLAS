@@ -3,10 +3,11 @@ import os
 import subprocess
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
-from typing import List
+from typing import List, Dict
 
 import tvm
 
+from .schedule import SchedulerBase
 from .config import Config
 from .header import *
 from .reference import get_ref_tensor
@@ -25,6 +26,7 @@ class CompileResult:
         grid_size: List[int],
         name: str,
         args: List[tvm.te.Tensor],
+        scheduled_mods: Dict[str, str] = None,
     ):
         self.config = config
         self.code = code
@@ -38,6 +40,7 @@ class CompileResult:
         self.latency = None
         self.origin = self
         self.use_fp16 = any([x.dtype == "float16" for x in self.args])
+        self.scheduled_mods = scheduled_mods
 
     def set_io_desc(self, input_desc, output_desc):
         self.input_desc = input_desc
@@ -346,10 +349,12 @@ def compile_parallel(cpresults, arch, timeout: float = None):
 
 count = 0
 
+
 def init_count():
     global count
     count = 0
     return count
+
 
 def write_code(code, path, fname):
     global count
@@ -362,6 +367,7 @@ def write_code(code, path, fname):
     fname = os.path.join(path, fname)
     with open(fname, "w") as f:
         f.write(code)
+
 
 def write_mod(mod, path, fname):
     py_fname = fname + ".py"

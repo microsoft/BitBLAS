@@ -8,11 +8,15 @@ from ..config import Stride
 from ..IRpass import *
 from .scheduler_base import SchedulerBase
 
+
 class TIRSchedulerBase(SchedulerBase):
     def create_schedule(self) -> tir.Schedule:
         workload = te.create_prim_func(self.args)
         ir_module = tvm.IRModule({"main": workload})
         return tir.Schedule(ir_module)
+
+    def get_mod_script(self) -> str:
+        return self.sche.mod["main"].script()
 
     def debug_schedule(self):
         print(self.sche.mod["main"].script())
@@ -25,9 +29,15 @@ class TIRSchedulerBase(SchedulerBase):
         if self.reduce_op != None and self.reduce_op != self.output_op:
             block = self.sche.get_block(self.output_op.name)
             self.sche.reverse_compute_inline(block)
-            
 
-    def cooperative_fetch(self, SS: tir.Block, dim_offset: int, strides: Stride=Stride(), vector_load: int=1, use_pragma_unroll: bool=False):
+    def cooperative_fetch(
+        self,
+        SS: tir.Block,
+        dim_offset: int,
+        strides: Stride = Stride(),
+        vector_load: int = 1,
+        use_pragma_unroll: bool = False,
+    ):
         loops = self.sche.get_loops(SS)
         if len(loops) == dim_offset:
             # handle fetching only one element
@@ -35,7 +45,9 @@ class TIRSchedulerBase(SchedulerBase):
         assert len(loops) > dim_offset
         axes = loops[dim_offset:]
         if strides.is_valid():
-            self.sche.storage_align(SS, 0, strides.ax, strides.stride - 1, strides.stride)
+            self.sche.storage_align(
+                SS, 0, strides.ax, strides.stride - 1, strides.stride
+            )
         ax = self.sche.fuse(*axes)
         if vector_load > 1:
             ax, tv = self.sche.split(ax, factors=[None, vector_load])
@@ -56,20 +68,33 @@ class TIRSchedulerBase(SchedulerBase):
             self.sche.annotate(ax, "pragma_unroll_explicit", False)
 
     def build(self, target) -> str:
-        with tvm.transform.PassContext(config={"tir.add_lower_pass": self.passes, "tir.disable_cse_tir": True, "tir.use_async_copy": True, "tir.merge_static_smem": False}):
+        with tvm.transform.PassContext(
+            config={
+                "tir.add_lower_pass": self.passes,
+                "tir.disable_cse_tir": True,
+                "tir.use_async_copy": True,
+                "tir.merge_static_smem": False,
+            }
+        ):
             mod = tvm.build(self.sche.mod["main"], self.args, target=target)
         return mod.imported_modules[0].get_source()
 
     def make_passes(self) -> None:
-        self.passes.append(RewriteOutputPass(self.shared_outputs, self.config.output_strides,
-                                             (self.config.block, self.output_op.output(0).shape), False).get_pass())
+        self.passes.append(
+            RewriteOutputPass(
+                self.shared_outputs,
+                self.config.output_strides,
+                (self.config.block, self.output_op.output(0).shape),
+                False,
+            ).get_pass()
+        )
         self.passes.append(RewriteInputPass(self.shared_inputs, False).get_pass())
         self.passes.append(FixCudaCastPass().get_pass())
         self.passes.append(CheckVectorLoadPass().get_pass())
         self.passes.append(RemoveConditionInVectorizePass().get_pass())
 
     def detect_op_inputs(self, consumer_ops):
-        op_input_map = {op : set() for op in consumer_ops}
+        op_input_map = {op: set() for op in consumer_ops}
         for op in reversed(self.ops):
             op_inputs = [t.op for t in op.input_tensors]
             if op in consumer_ops:
@@ -91,7 +116,8 @@ class TIRSchedulerBase(SchedulerBase):
         already_cached = self.reduce_op.input_tensors if self.reduce_op else []
         for op in self.none_reduce_ops:
             for tensor in op.input_tensors:
-                if tensor in already_cached: continue
+                if tensor in already_cached:
+                    continue
                 if self.requires_cache(tensor, op):
                     if tensor not in cache_plan:
                         cache_plan[tensor] = []
