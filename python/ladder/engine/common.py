@@ -46,8 +46,8 @@ def dump(fusion_groups: List[FusionGroup]):
             else:
                 result_reuse_map[cpresult.origin] = cpresult
             group_desc["code"] = cpresult.code
-            group_desc["block_size"] = cpresult.block_size
-            group_desc["grid_size"] = cpresult.grid_size
+            group_desc["block_size"] = [int(it) for it in cpresult.block_size]
+            group_desc["grid_size"] = [int(it) for it in cpresult.grid_size]
             group_desc["latency"] = cpresult.latency
             group_desc["name"] = cpresult.name
             group_desc["gain"] = group.gain
@@ -80,6 +80,8 @@ def export_groups(fusion_groups: List[FusionGroup], directory: str):
         fname = f"{group_name}.cu"
 
         with open(os.path.join(group_dir, fname), "w") as f:
+            if not hasattr(_group_desc, "code"):
+                continue
             code = _group_desc["code"]
             comments = f"""
 // group_id: {_group_desc['group_id']}
