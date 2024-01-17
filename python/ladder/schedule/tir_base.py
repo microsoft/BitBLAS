@@ -73,7 +73,7 @@ class TIRSchedulerBase(SchedulerBase):
                 "tir.add_lower_pass": self.passes,
                 "tir.disable_cse_tir": True,
                 "tir.use_async_copy": True,
-                "tir.merge_static_smem": False,
+                "tir.merge_static_smem": True,
             }
         ):
             mod = tvm.build(self.sche.mod["main"], self.args, target=target)
