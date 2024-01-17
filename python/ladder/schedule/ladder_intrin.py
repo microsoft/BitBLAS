@@ -66,11 +66,15 @@ def shared_load_16x16_to_B_global_16x16_layout(i, j):
 
 
 def B_global_16x16_to_shared_load_16x16_layout(i, j):
+    """
+    lambda tx, stride: stride * 8 * (tx // HALF_WARP_expr)
+                + stride * (tx % 8)
+                + 8 * ((tx % HALF_WARP_expr) // 8)
+    """
     thread_id = i * 2 + j // 8
-    row = (i // 8) * 8 + (thread_id % 8)
-    col = (j % 8) + 8 * ((thread_id // 8) % 2)
+    row = 8 * (thread_id // 16) + (thread_id % 8)
+    col = (j % 8) + 8 * ((thread_id % 16) // 8)
     return row, col
-
 
 def global_16x32_to_shared_load_16x32_layout(i, j):
     # 0, 0-16 -> 0, 0-16

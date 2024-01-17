@@ -671,7 +671,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         compute_dtype = self.reduce_op.output(0).dtype
         wmma_k = 32 if compute_dtype == "int32" else 16
         shared_cache_c = self.reduce_op != self.output_op
-        shared_cache_scale = self.config.ladder_compute_type == "mxfp"
+        shared_cache_scale = self.config.ladder_compute_type == "mxfp" or self.config.ladder_compute_type == "scale"
         sch, config = self.sche, self.config
         write_sch(sch, "original")
         C = sch.get_block(self.reduce_op.name)
@@ -1175,14 +1175,17 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                 # cache_decompress
                 B_shared_jj = sch.get_loops(BS)[-1]
                 B_shared_jj, B_shared_vi, B_shared_vj = sch.split(B_shared_jj, factors=[None, 1, b_smem_store_vec])
-                block_local_B_decompress = sch.cache_read(BS, 0, "local")
-                write_sch(sch, "schedule_compute_inline")
+
                 decode_block = None
+                rescale_block = None
                 other_blocks = []
+                block_intermediate_name = 'mediate0'
                 for op in reversed(self.ops):
                     if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
-                        if 'B_decode' in op.name or 'decompress' in op.name or 'mediate0' in op.name:
+                        if 'B_decode' in op.name or 'decompress' in op.name or block_intermediate_name in op.name:
                             decode_block = self.sche.get_block(op.name)
+                        elif shared_cache_scale and 'mediate1' in op.name:                            
+                            rescale_block = self.sche.get_block(op.name)
                         else:
                             other_blocks.append(self.sche.get_block(op.name))
                 for block in other_blocks:
@@ -1190,8 +1193,15 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                 if self.reduce_op != None and self.reduce_op != self.output_op:
                     block = self.sche.get_block(self.output_op.name)
                     self.sche.reverse_compute_inline(block)
+                if rescale_block:
+                    block_local_B_decompress = sch.cache_read(rescale_block, 0, "local")
+                    block_local_B_rescale = sch.cache_read(BS, 0, "local")
+                else:
+                    block_local_B_decompress = sch.cache_read(BS, 0, "local")
+                write_sch(sch, "schedule_compute_inline")
+                
                 if decode_block != None:
-                    if shared_cache_scale:
+                    if config.ladder_compute_type == "mxfp":
                         SS = sch.cache_read(decode_block, 1, "shared")
                     read_shape = sch.get_sref(decode_block).stmt.reads[0].buffer.shape
                     write_shape = sch.get_sref(decode_block).stmt.writes[0].buffer.shape
@@ -1207,6 +1217,12 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                 else:
                     block_local_B_shared_cache = sch.cache_read(block_local_B_decompress, 0, "shared")
                     block_local_B_shared_cache_local = sch.cache_read(block_local_B_decompress, 0, "local")
+                    if rescale_block:
+                        sch.compute_inline(rescale_block) 
+
+
+                if rescale_block:
+                    sch.compute_at(block_local_B_rescale, B_shared_vi)
 
                 sch.compute_at(block_local_B_decompress, B_shared_vi)
                 sch.compute_at(block_local_B_shared_cache_local, B_shared_vi)
@@ -1242,14 +1258,14 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                 B_shared_inner, B_shared_ty, B_shared_tz, B_shared_tx = sch.split(
                     B_shared_fused, factors=[None, block_row_warps, block_col_warps, warp_size])
                 sch.compute_at(block_local_B_shared_cache, ko, preserve_unit_loops=True)
-                if shared_cache_scale:
+                if config.ladder_compute_type == "mxfp":
                     sch.compute_at(SS, ko, preserve_unit_loops=True)
                 sch.bind(B_shared_tx, "threadIdx.x")
                 sch.bind(B_shared_ty, "threadIdx.y")
                 sch.bind(B_shared_tz, "threadIdx.z")
                 sch.vectorize(sch.get_loops(BS)[-1])
                 sch.vectorize(sch.get_loops(block_local_B_shared_cache_local)[-1])
-                if shared_cache_scale:
+                if config.ladder_compute_type == "mxfp":
                     SS_tx, SS_v = sch.split(sch.get_loops(SS)[-1], factors=[warp_size, None])
                     sch.bind(SS_tx, "threadIdx.x")
                     extent = sch.get_sref(SS_v).stmt.extent
@@ -1393,7 +1409,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         if raster > 0:
             sch.annotate(init_block_b_loops[-4], ann_key="thread_rasterization", ann_val=raster)
         if stage > 1:
-            if shared_cache_scale:
+            if config.ladder_compute_type == "mxfp":
                 if is_a_consistent:
                     sch.annotate(ko, ann_key="software_pipeline_stage", ann_val=[0, 0, 0, stage - 1, stage - 1])
                     sch.annotate(ko, ann_key="software_pipeline_order", ann_val=[0, 1, 2, 3, 4])

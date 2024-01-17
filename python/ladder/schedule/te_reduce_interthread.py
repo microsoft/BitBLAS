@@ -1,6 +1,5 @@
 import numpy as np
 from tvm import te
-
 from ..config import Config, Stride
 from .te_base import TESchedulerBase
 
@@ -87,5 +86,4 @@ class TEReduceInterThreadScheduler(TESchedulerBase):
             if len(consumers) == 0 or len(self.shared_outputs) == 0: continue
             tensor_local = sch.cache_read(tensor_shared, "local", consumers)
             sch[tensor_local].compute_at(sch[out], thrd_fused)
-
         return sch
