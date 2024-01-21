@@ -76,10 +76,8 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
     ) -> tir.Schedule:
         from ladder.schedule.lop3_intrin import (
             LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
-            LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN,
-            LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L8,
             LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L16,
-            LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16,
+            LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16
         )
 
         sch, config = self.sche, self.config
@@ -400,6 +398,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         if use_dp4a:
             vo, vi = sch.split(vk, [None, 4])
         write_sch(sch, "decompose_reduction")
+        print("bits: ", bits)
         if decode_block and self.config.fast_decoding:
             try:
                 if self.args[0].dtype == "float16":

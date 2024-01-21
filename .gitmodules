@@ -1,0 +1,6 @@
+[submodule "3rdparty/tvm"]
+	path = 3rdparty/tvm
+	url = https://github.com/LeiWang1999/tvm
+[submodule "3rdparty/cutlass"]
+	path = 3rdparty/cutlass
+	url = https://github.com/LeiWang1999/cutlass
