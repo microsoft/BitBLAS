@@ -73,7 +73,10 @@ def export_groups(fusion_groups: List[FusionGroup], directory: str):
             f"group_{_group_desc['group_id']}_{'_'.join(_group_desc['node_names'])}"
         )
         # create a directory for each group
+        group_name = group_name[:32]
+        # clip the group name
         group_dir = os.path.join(directory, group_name)
+        
         if not os.path.exists(group_dir):
             os.makedirs(group_dir)
         # save kernel code

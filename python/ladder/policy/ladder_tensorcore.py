@@ -1,5 +1,6 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Iterable
 
+from queue import PriorityQueue
 import numpy as np
 
 from ..arch import Arch
@@ -238,7 +239,42 @@ class LadderPolicy(DefaultPolicy):
             return raster_factor
         raster_factor = int(self.arch.compute_max_core ** 0.5)
         return raster_factor
-    
+
+    def DFS_smem_tile(self, init_tile, topk, rstep_map) -> Iterable[TileDict]:
+        _steps = [get_all_factors(n) for n in self.output_nodes[0].get_space_dim()]
+        steps = [step[step.index(t):] for step, t in zip(_steps, init_tile)]
+        for i in range(len(steps)):
+            added = list(filter(lambda s:s < steps[i][-1] and s > steps[i][0] and s not in steps[i], [2, 4, 8, 16, 32]))
+            steps[i].extend(added)
+            steps[i] = sorted(steps[i])
+        visited_tiles = {}
+        queue = PriorityQueue()
+        def prio(td: TileDict):
+            return (td.traffic + 1) * td.num_wave # * (td.block_per_SM ** 0.5)
+        def add_to_queue(tile):
+            tile[-1] = self.wmma_n
+            tile[-2] = self.wmma_m
+            if tuple(tile) in visited_tiles:
+                return
+            td = self.compute_tile_dict(tile, rstep_map)
+            visited_tiles[tuple(tile)] = td
+            if td.valid:
+                queue.put([prio(td), tile])
+
+        add_to_queue(init_tile)
+        while not (queue.empty() or len(visited_tiles) > 2000):
+            _, tile = queue.get()
+            dim_ids = [step.index(t) for step, t in zip(steps, tile)]
+            for i in reversed(range(len(dim_ids))):
+                if dim_ids[i] + 1 < len(steps[i]):
+                    new_tile = tile.copy()
+                    new_tile[i] = steps[i][dim_ids[i] + 1]
+                    add_to_queue(new_tile)
+
+        visited_tiles = filter(lambda td: td.valid, visited_tiles.values())
+        sorted_tiles = sorted(visited_tiles, key=lambda td:prio(td))
+        return sorted_tiles
+
     def _assign_block_size(self, node: Node, td: TileDict, block_size: int):
         if not node.get_tag("tensorCoreConfig"):
             return super()._assign_block_size(node, td, block_size)
