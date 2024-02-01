@@ -302,8 +302,9 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
     ) -> tir.Schedule:
         from ladder.schedule.lop3_intrin import (
             LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
+            LOP3_FAST_DECODE_INT2_TO_FP16_INTRIN_L8,
+            LOP3_FAST_DECODE_INT1_TO_FP16_INTRIN_L8,
             LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN,
-            LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L8,
             LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L16,
             LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16,
         )
@@ -351,13 +352,10 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
             block_shared_local_B_rescale, 0, "local"
         )
         if decode_block != None:
-            read_shape = sch.get_sref(decode_block).stmt.reads[0].buffer.shape
-            write_shape = sch.get_sref(decode_block).stmt.writes[0].buffer.shape
+            read_shape = sch.get(decode_block).reads[0].buffer.shape
+            write_shape = sch.get(decode_block).writes[0].buffer.shape
             compress_rate = np.prod(write_shape) // np.prod(read_shape)
-            if self.args[0].dtype == "float16":
-                bits = 16 // compress_rate
-            elif self.args[0].dtype == "int8":
-                bits = 8 // compress_rate
+            bits = 8 // compress_rate
             sch.compute_inline(decode_block)
         block_shared_local_B_prefetch = sch.cache_read(
             block_shared_local_B_decompress, 0, "local"
@@ -398,19 +396,28 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         if use_dp4a:
             vo, vi = sch.split(vk, [None, 4])
         write_sch(sch, "decompose_reduction")
-        print("bits: ", bits)
         if decode_block and self.config.fast_decoding:
             try:
                 if self.args[0].dtype == "float16":
-                    sch.tensorize(
-                        sch.get_loops(block_shared_local_B_decompress)[-1],
-                        LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
-                    )
+                    if bits == 4:
+                        sch.tensorize(
+                            sch.get_loops(block_shared_local_B_decompress)[-1],
+                            LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
+                        )
+                    elif bits == 2:
+                        sch.tensorize(
+                            sch.get_loops(block_shared_local_B_decompress)[-1],
+                            LOP3_FAST_DECODE_INT2_TO_FP16_INTRIN_L8,
+                        )
+                    elif bits == 1:
+                        sch.tensorize(
+                            sch.get_loops(block_shared_local_B_decompress)[-1],
+                            LOP3_FAST_DECODE_INT1_TO_FP16_INTRIN_L8,
+                        )
                 elif self.args[0].dtype == "int8":
                     # compute the decode bits.
                     if bits == 4:
-                        pass
-                        # sch.tensorize(sch.get_loops(block_shared_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN)
+                        sch.tensorize(sch.get_loops(block_shared_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN)
                     elif bits == 2:
                         loop = sch.get_loops(block_shared_local_B_decompress)[-1]
                         loop_extent = sch.get_sref(loop).stmt.extent

@@ -190,13 +190,6 @@ class TIRCutlassMMAScheduler(TIRSchedulerBase):
             decode_block_local = sch.cache_read(BL0, 0, "local")
             write_sch(sch, "cache_decode_block_local")
             if decode_block != None:
-                read_shape = sch.get_sref(decode_block).stmt.reads[0].buffer.shape
-                write_shape = sch.get_sref(decode_block).stmt.writes[0].buffer.shape
-                compress_rate = np.prod(write_shape) // np.prod(read_shape) 
-                if self.args[0].dtype == 'float16':
-                    bits = 16 // compress_rate
-                elif self.args[0].dtype == 'int8':
-                    bits = 8 // compress_rate
                 sch.compute_inline(decode_block)
             sch.compute_at(BL0, K_outer)
             if is_lut:

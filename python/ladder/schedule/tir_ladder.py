@@ -886,7 +886,6 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
                     LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
                     LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN,
                     LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN_L16,
-                    LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L8,
                     LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L16,
                     LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16,
                 )
