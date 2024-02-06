@@ -23,7 +23,7 @@ from typing import List, Tuple, Optional, Dict
 from tvm import tir, IRModule
 from tvm.runtime import Module
 from tvm.tir import Schedule
-from tvm import dlight as dl
+import bitblas
 from .analysis import get_root_block, get_reduction_blocks, find_var_from_func
 from .roller.arch import Arch
 from bitblas.base.roller.arch import CUDA
@@ -93,34 +93,34 @@ def _apply_config(
     root_block = get_root_block(sch)
     blocks = sch.get_child_blocks(root_block)
     reduction_blocks = get_reduction_blocks(sch, blocks)
-    try:
-        if not reduction_blocks:
-            return dl.gpu.ElementWise().apply_config(func, config)
-        elif config.use_tc:
-            if config.arch.sm_version >= 80:
-                # For A100(sm_80) or more advanced gpu, use MMA tensorization.
-                return dl.gpu.MatmulTensorizationMMA().apply_config(func, config)
-            else:
-                # For other GPUs, use WMMA tensorization.
-                return dl.gpu.MatmulTensorizationWMMA().apply_config(func, config)
+    # try:
+    if not reduction_blocks:
+        return bitblas.gpu.ElementWise().apply_config(func, config)
+    elif config.use_tc:
+        if config.arch.sm_version >= 80:
+            # For A100(sm_80) or more advanced gpu, use MMA tensorization.
+            return bitblas.gpu.MatmulTensorizationMMA().apply_config(func, config)
         else:
-            _reduction_rules = []
+            # For other GPUs, use WMMA tensorization.
+            return bitblas.gpu.MatmulTensorizationWMMA().apply_config(func, config)
+    else:
+        _reduction_rules = []
 
-            _reduction_rules.append(dl.gpu.GEMV())
-            if not any([t > 1 for t in config.reduce_thread]):
-                # Matrix multiplication template doesn't support inner thread reduction
-                _reduction_rules.append(dl.gpu.Matmul())
-            _reduction_rules.append(dl.gpu.GeneralReduction())
+        _reduction_rules.append(bitblas.gpu.GEMV())
+        if not any([t > 1 for t in config.reduce_thread]):
+            # Matrix multiplication template doesn't support inner thread reduction
+            _reduction_rules.append(bitblas.gpu.Matmul())
+        _reduction_rules.append(bitblas.gpu.GeneralReduction())
 
-            for rule in _reduction_rules:
-                try:
-                    sch = rule.apply_config(func, config)
-                except:
-                    continue
-                if sch is not None:
-                    return sch
-    except Exception as e_msg:
-        print("[FastDlight] Apply config failed: ", e_msg)
+        for rule in _reduction_rules:
+            try:
+                sch = rule.apply_config(func, config)
+            except:
+                continue
+            if sch is not None:
+                return sch
+    # except Exception as e_msg:
+    #     print("[FastDlight] Apply config failed: ", e_msg)
     return None
 
 
