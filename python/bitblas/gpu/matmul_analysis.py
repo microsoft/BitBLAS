@@ -19,8 +19,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Set, Union, Tuple, Dict
-
-from tvm import tir
+from tvm import tir, DataType
 from tvm.ir import Range
 from tvm.tir import IterVar, PrimExpr, Var
 from tvm.tir.analysis import undefined_vars
@@ -418,6 +417,22 @@ def is_identity_or_transpose_block(block_stmt: tir.Block) -> bool:
         lhs_access_vars
     ) == set(rhs_access_vars)
     return is_identity, is_transpose
+
+
+def get_coalesced_veclen(block_stmt: tir.Block, target_bits: int = 128) -> int:
+    # gpu memory prefer 128 bits coalesced access (e.g. four banks)
+    # 128 bits
+    block_stmt
+    buffers: List[tir.Buffer] = []
+    for read in block_stmt.reads:
+        buffers.append(read.buffer)
+    for write in block_stmt.writes:
+        buffers.append(write.buffer)
+    # pick the dtype with the largest bits
+    max_dtype_bits: int = 0
+    for buffer in buffers:
+        max_dtype_bits = max(max_dtype_bits, DataType(buffer.dtype).bits)
+    return target_bits // max_dtype_bits
 
 
 def is_identity_block(block_stmt: tir.Block) -> bool:

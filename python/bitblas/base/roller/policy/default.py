@@ -692,7 +692,6 @@ class DefaultPolicy:
                 reduce_thread[target_ax] *= factor
 
         codegen_dict = Config()
-        codegen_dict.compute_capability = self.arch.compute_capability
         codegen_dict.block = tile
         codegen_dict.thread = cur_threads
         codegen_dict.rstep = [rsteps[ax.var.name] for ax in node.raxis]

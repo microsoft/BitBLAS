@@ -82,22 +82,25 @@ __device__ void decode_i2s_to_i8s(T1 *_i2s, T2 *_i8s, const int N = 16)
 """
 
 decode_i4s_to_i8s = """template <typename T1, typename T2>
-__device__ void decode_i4s_to_i8s(T1 *_i4s, T2 *_i8s, const int N = 8)
+__device__ void decode_i4s_to_i8s(T1 *_i4s, T2 *_i8s, const int N = 16)
 {
   uint *i8s = reinterpret_cast<uint *>(_i8s);
-  uint i4s = *_i4s;
+  uint *i4s = reinterpret_cast<uint *>(_i4s);
   // First, we extract the i4s and construct an intermediate fp16 number.
   static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;     // 0b11101010
   static constexpr uint BOTTOM_MASK = 0x0f0f0f0f;          // 0xf -> 0b1111 select 0,4
   static constexpr uint I4s_TO_I8s_MAGIC_NUM = 0x00000000; // 1024
-
 #pragma unroll
-  for (int i = 0; i < (N / 4); i++)
+  for (int i = 0; i < (N / 8); i++)
   {
     // Extract elt_01 - (i4s & 0x000f000f) | 0x64006400
     asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
                  : "=r"(i8s[i])
-                 : "r"(i4s >> (4 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
+                 : "r"(i4s[0] >> (4 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
+
+    asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+              : "=r"(i8s[i + 2])
+              : "r"(i4s[1] >> (4 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
   }
 }
 """
@@ -207,6 +210,14 @@ TensorIntrin.register(
     ),
 )
 
+LOP3_FAST_DECODE_INT4_TO_INT8_L16_INTRIN = "lop3_fast_decode_i4_to_i8_l16_"
+TensorIntrin.register(
+    LOP3_FAST_DECODE_INT4_TO_INT8_L16_INTRIN,
+    *get_fast_decode_intrin(
+        storage_nbit=4, storage_dtype="int8", target_dtype="int8", loops_extent=16
+    ),
+)
+
 
 LOP3_FAST_DECODE_INT2_TO_INT8_L16_INTRIN = "lop3_fast_decode_i2_to_i8_l16_"
 TensorIntrin.register(
@@ -260,7 +271,7 @@ def get_lop3_intrin_group(
     dtype_mapping = {"float16": "f16", "int8": "i8", "int32": "i32"}
     target_dtype = dtype_mapping[out_dtype]
     target_bits = tvm.DataType(out_dtype).bits
-    loop_extent = min(128 // target_bits, 32 // storage_nbit)
+    loop_extent = 128 // target_bits
     _intrin = f"lop3_fast_decode_i{storage_nbit}_to_{target_dtype}_l{loop_extent}_"
     import_c_map = {
         "i4_to_f16": decode_i4_to_f16,

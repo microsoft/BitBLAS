@@ -124,7 +124,9 @@ def _apply_config(
     return None
 
 
-def apply_and_build_parallel(func, configs, arch, num_repeats=5, max_workers=10) -> CompileResult:
+def apply_and_build_parallel(
+    func, configs, arch, num_repeats=5, max_workers=10
+) -> CompileResult:
     cpresults = []
 
     def var_warpper(v):
@@ -146,16 +148,18 @@ def apply_and_build_parallel(func, configs, arch, num_repeats=5, max_workers=10)
         if arg.dtype == "int8":
             profile_tensors.append(
                 tvm.nd.array(
-                    np.random.randint(-127, 128, [var_warpper(i) for i in arg.shape]).astype(
-                        arg.dtype
-                    ),
+                    np.random.randint(
+                        -127, 128, [var_warpper(i) for i in arg.shape]
+                    ).astype(arg.dtype),
                     device=arch.device,
                 )
             )
         else:
             profile_tensors.append(
                 tvm.nd.array(
-                    np.random.uniform(0, 1, [var_warpper(i) for i in arg.shape]).astype(arg.dtype),
+                    np.random.uniform(0, 1, [var_warpper(i) for i in arg.shape]).astype(
+                        arg.dtype
+                    ),
                     device=arch.device,
                 )
             )
@@ -166,7 +170,8 @@ def apply_and_build_parallel(func, configs, arch, num_repeats=5, max_workers=10)
     _sched: List[Schedule] = []
     with ThreadPoolExecutor(max_workers=4) as schduler:
         futures = {
-            schduler.submit(lambda f, c: _apply_config(f, c), func, config) for config in configs
+            schduler.submit(lambda f, c: _apply_config(f, c), func, config)
+            for config in configs
         }
         for future in as_completed(futures):
             _sched.append(future.result())
@@ -180,6 +185,7 @@ def apply_and_build_parallel(func, configs, arch, num_repeats=5, max_workers=10)
         # TODO(lei):
         # this is a trick to implement rasteration, will be removed in the future
         config = configs[idx]
+
         @tvm.register_func(func_name="tvm_callback_cuda_postproc", override=True)
         def tvm_callback_cuda_postproc(code, _):
             index = code.index("{", match_global_kernel(code))
@@ -189,12 +195,16 @@ def apply_and_build_parallel(func, configs, arch, num_repeats=5, max_workers=10)
                 code = code[: index + 2] + rasterization_code + code[index + 2 :]
             return code
 
-        with tvm.transform.PassContext(config={"tir.use_async_copy": True}):
+        with tvm.transform.PassContext(
+            config={"tir.use_async_copy": True, **config.pass_context}
+        ):
             rt_mod = tvm.build(mod["main"], target=arch.target)
 
         from tvm.contrib.tar import tar  # pylint: disable=import-outside-toplevel
 
-        artifact_path = os.path.join(tempfile.mkdtemp(), "tvm_tmp_mod." + tar.output_format)
+        artifact_path = os.path.join(
+            tempfile.mkdtemp(), "tvm_tmp_mod." + tar.output_format
+        )
         code = rt_mod.imported_modules[0].get_source()
         rt_mod.export_library(artifact_path, fcompile=tar)
         return idx, code, artifact_path
@@ -292,15 +302,17 @@ def fast_tune(
         if opt_shapes:
             for name, shape in opt_shapes.items():
                 var = find_var_from_func(func, name)
-                specilized_func = func.specialize({var: shape.astype(var.dtype)}).with_attr(
-                    "is_specialized"
-                )
+                specilized_func = func.specialize(
+                    {var: shape.astype(var.dtype)}
+                ).with_attr("is_specialized")
 
     arch = CUDA(target)
 
     policy = DefaultPolicy(func=func, arch=arch)
     try:
-        specilized_func, tags = get_tensorized_func_and_tags(specilized_func, arch.target)
+        specilized_func, tags = get_tensorized_func_and_tags(
+            specilized_func, arch.target
+        )
     except Exception as e_msg:
         print("[FastDlight] Get tensorized func and tags failed: ", e_msg)
         tags = None
@@ -308,7 +320,9 @@ def fast_tune(
         policy = TensorCorePolicy(func=specilized_func, arch=arch, tags=tags)
 
     configs = policy.emit_config(topk)
-    cpresults, best = apply_and_build(func, configs, arch, parallel_build=parallel_build)
+    cpresults, best = apply_and_build(
+        func, configs, arch, parallel_build=parallel_build
+    )
 
     return cpresults, best
 
@@ -401,9 +415,9 @@ def create_dispatch_func(g_var: str, func: tir.PrimFunc, refactored_funcs: List[
     with ib.if_scope(syb > last_range):
         ib.emit(tvm.tir.Call(None, g_var, _invoke_params))
     stmt = ib.get()
-    dispatch_func = tvm.tir.PrimFunc(params, stmt, ret_type, buffer_map, attrs).with_attrs(
-        {"tir.is_global_func": True, "global_symbol": global_symbol}
-    )
+    dispatch_func = tvm.tir.PrimFunc(
+        params, stmt, ret_type, buffer_map, attrs
+    ).with_attrs({"tir.is_global_func": True, "global_symbol": global_symbol})
     return dispatch_func
 
 
@@ -421,7 +435,9 @@ def create_dispatch_mod(
         global_symbol = g_var_supply.fresh_global(global_symbol, add_prefix=False)
         dispatch_mod[global_symbol] = device_func
         refactored_funcs.append((global_symbol, device_func))
-    dispatch_func = create_dispatch_func(g_var, original_func, refactored_funcs=refactored_funcs)
+    dispatch_func = create_dispatch_func(
+        g_var, original_func, refactored_funcs=refactored_funcs
+    )
     dispatch_mod.update(tvm.IRModule.from_expr(dispatch_func))
     return dispatch_mod
 
@@ -448,15 +464,21 @@ def fast_tune_with_dynamic_range(
                 if axis.name in dynamic_range:
                     opt_shapes[axis.name] = dynamic_range[axis.name]
                 else:
-                    raise ValueError(f"[FastDlight] The axis {axis.name} is not in dynamic_range")
+                    raise ValueError(
+                        f"[FastDlight] The axis {axis.name} is not in dynamic_range"
+                    )
     func = func.with_attr("opt_shapes", opt_shapes)
 
     if "opt_shapes" not in func.attrs:
-        print("[FastDlight] The primfunc has no opt_shapes, please set opt_shapes for the primfunc")
+        print(
+            "[FastDlight] The primfunc has no opt_shapes, please set opt_shapes for the primfunc"
+        )
         return None
     else:
         # should be list value
-        if not all([isinstance(v, tvm.ir.Array) for v in func.attrs["opt_shapes"].values()]):
+        if not all(
+            [isinstance(v, tvm.ir.Array) for v in func.attrs["opt_shapes"].values()]
+        ):
             print("[FastDlight] The opt_shapes should be list value")
             return None
 
@@ -467,7 +489,9 @@ def fast_tune_with_dynamic_range(
     product_list = list(itertools.product(*(opt_shapes[key] for key in opt_shapes)))
 
     # Convert the Cartesian product to a list of dictionaries
-    specialize_items: List[Dict] = [dict(zip(opt_shapes.keys(), values)) for values in product_list]
+    specialize_items: List[Dict] = [
+        dict(zip(opt_shapes.keys(), values)) for values in product_list
+    ]
 
     specilized_tuned_funcs: List[tir.PrimFunc] = []
     for item in specialize_items:

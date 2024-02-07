@@ -299,7 +299,6 @@ class TensorCorePolicy(DefaultPolicy):
         codegen_dict.rstep = [int(rsteps[ax.var.name]) for ax in node.raxis]
         codegen_dict.cached_tensors = td.cached_tensors_map[node]
         codegen_dict.rasterization_plan = self.plan_rasterization(td)
-        codegen_dict.wmma = wmma + [self.wmma_k]
 
         intrin_info = node.get_tag("intrin_info")
         if intrin_info:

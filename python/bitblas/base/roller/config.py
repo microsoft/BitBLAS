@@ -139,9 +139,7 @@ class IntrinInfo:
         self.smooth_b = smooth_b
 
     def __repr__(self) -> str:
-        return (
-            f"<IntrinInfo, {self.in_dtype}, {self.out_dtype}, {self.trans_b}, {self.propagate_b}>"
-        )
+        return f"<IntrinInfo, {self.in_dtype}, {self.out_dtype}, {self.trans_b}, {self.propagate_b}>"
 
 
 class Config(object):
@@ -152,15 +150,12 @@ class Config(object):
     def __init__(self) -> None:
         self.arch = None
         self.use_tc = None  # todo(lei): this should be renamed.
-        self.compute_capability = None
 
         # spacial axes tiling info
         self.block = []
         self.thread = []
         # special axes for tensorCore
         self.warp = []
-        self.wmma = []
-        self.tc_extra_conf: Optional[TensorCoreExtraConfig] = None
         # reduce axes tiling info
         self.rstep = []
         self.reduce_thread = []
@@ -177,13 +172,14 @@ class Config(object):
         self.use_async = False
         self.opt_shapes: Dict[str, int] = {}
         self.intrin_info = IntrinInfo("float16", "float16", True)
+        self.shared_scope: str = "shared"
+        self.pass_context: Dict = {}
 
     def to_dict(self) -> Dict:
         dic = {}
         dic["block"] = self.block
         if self.use_tc:
             dic["warp"] = self.warp
-            dic["wmma"] = self.wmma
         else:
             dic["thread"] = self.thread
         dic["rstep"] = self.rstep
@@ -213,7 +209,6 @@ class Config(object):
         self.block = dic["block"]
         if self.use_tc:
             self.warp = dic["warp"]
-            self.wmma = dic["wmma"]
         else:
             self.thread = dic["thread"]
         self.rstep = dic["rstep"]
@@ -247,17 +242,10 @@ class Config(object):
         return str(self.to_dict())
 
     def complete_config(self, node):
-        if not self.use_tc:
-            return self
-        _, _, wmma_k = self.wmma
 
-        tc_axis = node.infer_tensorcore_axis()
-
-        shapes = node.propogate_reduction_inputs(self.block, {x: self.rstep[0] for x in node.raxis})
-        AS_shape, BS_shape = shapes.values()
-
-        shapes = node.propogate_reduction_inputs(self.warp, {x: wmma_k for x in node.raxis})
-        AF_shape, BF_shape = shapes.values()
-
-        self.tc_extra_conf = TensorCoreExtraConfig(AS_shape, BS_shape, AF_shape, BF_shape, tc_axis)
+        # analysis pass context, for int8 mma, we should merge static shared memory
+        merge_static_smem = False
+        if self.use_tc and self.intrin_info.in_dtype == "int8":
+            merge_static_smem = True
+        self.pass_context = {"tir.merge_static_smem": merge_static_smem}
         return self

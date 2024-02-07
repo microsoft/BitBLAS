@@ -37,6 +37,7 @@ from .matmul_analysis import (
     get_dequantize_block,
     normalize_to_matmul,
     get_propagate_map,
+    get_coalesced_veclen
 )
 
 
@@ -394,7 +395,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
         cache_write_required = check_require_cache(func)
 
-        shared_scope = "shared"
+        shared_scope = config.shared_scope
 
         intrin_info = config.intrin_info
         intrin_group = get_mma_intrin_group(
@@ -621,19 +622,19 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
         # split the store loop to match hardware intrinsic pattern
         i, j = sch.get_loops(store)[-2:]
-        i0, i1 = sch.split(i, factors=[None, micro_size_x])
-        j0, j1 = sch.split(j, factors=[None, micro_size_y])
+        i0, i1 = sch.split(i, factors=[None, micro_size_x], preserve_unit_iters=False)
+        j0, j1 = sch.split(j, factors=[None, micro_size_y], preserve_unit_iters=False)
         sch.reorder(i0, j0, i1, j1)
 
         if cache_write_required:
             auto_inline_consumer_chain(sch, accumulator_shared_to_global)
             sch.reverse_compute_at(
-                accumulator_shared_to_global, sch.get_loops(store)[-3], preserve_unit_loops=True
+                accumulator_shared_to_global, sch.get_loops(store)[-5], preserve_unit_loops=True
             )
-
+            vec_len = get_coalesced_veclen(sch.get(accumulator_shared_to_global))
             fused = sch.fuse(*sch.get_loops(accumulator_shared_to_global)[-5:])
             f0, f1, f2 = sch.split(
-                fused, factors=[None, warp_size, max(list(config.vectorize.values()))]
+                fused, factors=[None, warp_size, vec_len]
             )
             sch.bind(f1, "threadIdx.x")
             sch.vectorize(f2)
