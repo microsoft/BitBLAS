@@ -232,6 +232,7 @@ def apply_and_build_parallel(func, configs, arch, num_repeats=5, max_workers=10)
     best = None
     best_latency = 1e9
     for cpresult in cpresults:
+        # print(cpresult.code)
         config = cpresult.config
         try:
             latency = cpresult.profile()

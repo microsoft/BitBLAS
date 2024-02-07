@@ -92,7 +92,45 @@ def matmul_nt(M, N, K, in_dtype="float16", out_dtype="float16"):
 
     return MatmulNT
 
-def matmul_nt_propagate_b_f16_f16_mma(M, N, K, in_dtype="float16", out_dtype="float16"):
+def matmul_nt_propagate_b_s8_s8_s32_mma(M, N, K, in_dtype="int8", out_dtype="int32"):
+    wm, wn, wk = 16, 16, 16
+    if in_dtype == "int8":
+        wm, wn, wk = 16, 16, 32
+
+    @tvm.script.ir_module
+    class MyModule:
+        @T.prim_func
+        def main(a: T.handle, b: T.handle, c: T.handle):
+            T.func_attr(
+                {"global_symbol": "main", "tir.noalias": True, "smooth_b": True}
+            )
+            A = T.match_buffer(a, [M, K], dtype=in_dtype)
+            B = T.match_buffer(b, [N // wn, K // wk, wn, wk], dtype=in_dtype)
+            C = T.match_buffer(c, [M, N], dtype=out_dtype)
+            B_reindex = T.alloc_buffer([N, K], dtype=in_dtype)
+
+            for j, k in T.grid(N, K):
+                with T.block("B_reindex"):
+                    vj, vk = T.axis.remap("SS", [j, k])
+                    B_reindex[vj, vk] = B[
+                        vj // wn,
+                        vk // wk,
+                        vj % wn // 8 * 8 + vj % 4 * 2 + vk % wk // 16, 
+                        vj % 8 // 4 * 16 + vk % 16
+                    ]
+
+            for i, j, k in T.grid(M, N, K):
+                with T.block("B"):
+                    vi, vj, vk = T.axis.remap("SSR", [i, j, k])
+                    with T.init():
+                        C[vi, vj] = tvm.tir.const(0, out_dtype)
+                    C[vi, vj] = C[vi, vj] + A[vi, vk].astype(out_dtype) * B_reindex[
+                        vj, vk
+                    ].astype(out_dtype)
+
+    return MyModule
+
+def matmul_nt_propagate_b_f16_f16_f16_mma(M, N, K, in_dtype="float16", out_dtype="float16"):
     wm, wn, wk = 16, 16, 16
     if in_dtype == "int8":
         wm, wn, wk = 16, 16, 32
@@ -432,7 +470,7 @@ matmul_impl_factory = {
     'matmul_nt_dyn_m': matmul_nt_dyn_m,
     'matmul_nn': matmul_nn,
     'matmul_nn_dyn_m': matmul_nn_dyn_m,
-    'matmul_nt_propagate_b_f16_f16_mma': matmul_nt_propagate_b_f16_f16_mma,
+    'matmul_nt_propagate_b_f16_f16_mma': matmul_nt_propagate_b_f16_f16_f16_mma,
     'matmul_nt_propagate_a_b': matmul_nt_propagate_a_b,
     'matmul_nt_propagate_a_b_f16_f16_mma': matmul_nt_propagate_a_b,
 }

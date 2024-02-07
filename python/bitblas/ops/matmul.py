@@ -61,9 +61,9 @@ class Matmul(Operator):
         if self.propagate_b:
             _impl_key += "_pb"
         if isinstance(self.M, int):
-            args = (self.M, self.N, self.K, self.a_dtype, self.b_dtype)
+            args = (self.M, self.N, self.K, self.a_dtype, self.c_dtype)
         else:
-            args = (self.N, self.K, self.a_dtype, self.b_dtype)
+            args = (self.N, self.K, self.a_dtype, self.c_dtype)
         impl_handler = matmul_impl_factory[_impl_key]
         return impl_handler(*args)
 

@@ -433,7 +433,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
         def can_enable_swizzle(dtype: str, smooth: bool):
             # inject_permuted_layout only support float16 currently
-            if dtype == "float16":
+            if dtype == "float16" or dtype == "int8":
                 # if we use smooth layout, we don't need to do swizzling
                 return not smooth
             return False
@@ -582,7 +582,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         )
 
         # rewrite global smooth layout
-        def smooth_gmem_layout_rewrite(sch, block, enable=True, trans=False):
+        def smooth_gmem_layout_rewrite(sch, block, enable=True, trans=False, matrix_name="A"):
             if not enable:
                 return
             # step1: find the first producer block
@@ -594,15 +594,15 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             propagate_block: tir.Block = producers[-1]
 
             # step2: transform the layout with inverse permutation
-            _, inverse_indexmap = get_propagate_map(trans=trans, dtype=intrin_info.in_dtype)
+            _, inverse_indexmap = get_propagate_map(trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name)
 
             def inverse_permutation(i, j, ii, jj):
                 return (i, j, *inverse_indexmap.map_indices([ii, jj]))
 
             sch.transform_layout(propagate_block, ("read", 0), inverse_permutation)
 
-        smooth_gmem_layout_rewrite(sch, a_g2s, intrin_info.smooth_a, intrin_info.trans_a)
-        smooth_gmem_layout_rewrite(sch, b_g2s, intrin_info.smooth_b, intrin_info.trans_b)
+        smooth_gmem_layout_rewrite(sch, a_g2s, intrin_info.smooth_a, intrin_info.trans_a, matrix_name="A")
+        smooth_gmem_layout_rewrite(sch, b_g2s, intrin_info.smooth_b, intrin_info.trans_b, matrix_name="B")
         auto_inline_producers(sch, a_g2s)
         auto_inline_producers(sch, b_g2s)
 
