@@ -1,4 +1,14 @@
 #include <cuda_runtime.h>
+#include <cuda_fp16.h>
+
+// Pack two half values.
+static inline __device__ __host__ unsigned
+__pack_half2(const half x, const half y)
+{
+    unsigned v0 = *((unsigned short *)&x);
+    unsigned v1 = *((unsigned short *)&y);
+    return (v1 << 16) | v0;
+}
 
 void general_compress(const int8_t *lowbit, int8_t *compressed, const int nbit, const int N, bool isSigned = false)
 {
@@ -82,8 +92,8 @@ void general_interleave_fp16(int8_t *origin_arr, int8_t *interleaved, const int 
     memcpy(interleaved, int32_interleaved, size * sizeof(int32_t));
 }
 
-template <typename T1, typename T2, bool isSigned>
-__device__ void decode_i4b_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8)
+template <typename T1, typename T2, bool isSigned = false, bool withScaling = false>
+__device__ void decode_i4b_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8, const half *scale = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -102,6 +112,10 @@ __device__ void decode_i4b_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8)
                      : "=r"(h[i])
                      : "r"(i4s >> (4 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
         asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        if constexpr (withScaling)
+        {
+            asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*scale, *scale)), "r"(0));
+        }
     }
 }
 
@@ -117,8 +131,20 @@ __device__ void decode_i4u_to_f16(T1 *_i4u, T2 *B_local_decode, const int N = 8)
     decode_i4b_to_f16<T1, T2, false>(_i4u, B_local_decode, N);
 }
 
-template <typename T1, typename T2, bool isSigned>
-__device__ void decode_i2b_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8)
+template <typename T1, typename T2>
+__device__ void decode_i4s_to_f16_scale(T1 *_i4s, T2 *B_local_decode, half *scale = nullptr, const int N = 8)
+{
+    decode_i4b_to_f16<T1, T2, true, true>(_i4s, B_local_decode, N, scale);
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i4u_to_f16_scale(T1 *_i4u, T2 *B_local_decode, half *scale = nullptr, const int N = 8)
+{
+    decode_i4b_to_f16<T1, T2, false, true>(_i4u, B_local_decode, N, scale);
+}
+
+template <typename T1, typename T2, bool isSigned = false, bool withScaling = false>
+__device__ void decode_i2b_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8, half *scale = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -141,6 +167,10 @@ __device__ void decode_i2b_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8)
                      : "=r"(h[i])
                      : "r"(i2s >> (2 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
         asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        if constexpr (withScaling)
+        {
+            asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*scale, *scale)), "r"(0));
+        }
     }
 }
 
@@ -156,8 +186,20 @@ __device__ void decode_i2u_to_f16(T1 *_i2u, T2 *B_local_decode, const int N = 8)
     decode_i2b_to_f16<T1, T2, false>(_i2u, B_local_decode, N);
 }
 
-template <typename T1, typename T2, bool isSigned>
-__device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8)
+template <typename T1, typename T2>
+__device__ void decode_i2s_to_f16_scale(T1 *_i2s, T2 *B_local_decode, half *scale = nullptr, const int N = 8)
+{
+    decode_i2b_to_f16<T1, T2, true, true>(_i2s, B_local_decode, N, scale);
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i2u_to_f16_scale(T1 *_i2u, T2 *B_local_decode, half *scale = nullptr, const int N = 8)
+{
+    decode_i2b_to_f16<T1, T2, false, true>(_i2u, B_local_decode, N, scale);
+}
+
+template <typename T1, typename T2, bool isSigned = false, bool withScaling = false>
+__device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8, half *scale = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -179,6 +221,10 @@ __device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8)
                      : "=r"(h[i])
                      : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
         asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        if constexpr (withScaling)
+        {
+            asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*scale, *scale)), "r"(0));
+        }
     }
 }
 
@@ -192,6 +238,18 @@ template <typename T1, typename T2>
 __device__ void decode_i1u_to_f16(T1 *_i1u, T2 *B_local_decode, const int N = 8)
 {
     decode_i1b_to_f16<T1, T2, false>(_i1u, B_local_decode, N);
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i1s_to_f16_scale(T1 *_i1s, T2 *B_local_decode, half *scale = nullptr, const int N = 8)
+{
+    decode_i1b_to_f16<T1, T2, true, true>(_i1s, B_local_decode, N, scale);
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i1u_to_f16_scale(T1 *_i1u, T2 *B_local_decode, half *scale = nullptr, const int N = 8)
+{
+    decode_i1b_to_f16<T1, T2, false, true>(_i1u, B_local_decode, N, scale);
 }
 
 void general_interleave_int8(int8_t *origin_arr, int8_t *interleaved, const int nbit, size_t size_in_bytes, bool verbose = false)
@@ -360,11 +418,11 @@ __device__ void decode_i1b_to_i8s(T1 *_i1b, T2 *_i8s, const int N = 16)
         asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
                      : "=r"(i8s[i])
                      : "r"(i1b >> i), "n"(BOTTOM_MASK), "n"(I8s_MAGIC_NUM), "n"(immLut));
-    
-    if constexpr (isSigned)
-    {
-        i8s[i] = __vsubss4(i8s[i], MEDIAN_NUM);
-    }
+
+        if constexpr (isSigned)
+        {
+            i8s[i] = __vsubss4(i8s[i], MEDIAN_NUM);
+        }
     }
 }
 
