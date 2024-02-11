@@ -397,12 +397,12 @@ __device__ void decode_i2s_to_i8s(T1 *_i2s, T2 *_i8s, const int N = 16)
   static constexpr uint I4s_TO_I8s_MAGIC_NUM = 0x00000000; // 1024
 
 #pragma unroll
-  for (int i = 0; i < (N / 2); i++)
+  for (int i = 0; i < (N / 4); i++)
   {
     asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
                  : "=r"(i8s[i])
                  : "r"(i2s >> (2 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
-    i8s[i] = __vsubss4(i8s[i], 0x02020202);
+    // i8s[i] = __vsubss4(i8s[i], 0x02020202);
   }
 }
 
@@ -515,29 +515,20 @@ int main()
 {
   const int N = 16;
   // create four int8_t values
-  int8_t *i2s = new int8_t[16];
-  i2s[0] = 3;
-  i2s[1] = 3;
-  i2s[2] = 2;
-  i2s[3] = 1;
-  i2s[4] = 1;
-  i2s[5] = 1;
-  i2s[6] = 0;
-  i2s[7] = 2;
-  i2s[8] = 1;
-  i2s[9] = 2;
-  i2s[10] = 1;
-  i2s[11] = 1;
-  i2s[12] = 1;
-  i2s[13] = 2;
-  i2s[14] = 1;
-  i2s[15] = 1;
+  int8_t i2s[16] = {3, 2, 1, 3, 1, 3,2, 0, 1, 1, 2, 3, 2, 3, 3, 2};
   // compressed_int8: cmpress 8 i4s to 4 i8s
   int8_t *i8s = new int8_t[4];
   general_compress(i2s, i8s, 2, 16);
+  for (int i = 0; i < 4; i++)
+  {
+    printf("i8s[%d] = %d\n", i, (int)i8s[i]);
+  }
   int8_t *interleaved = new int8_t[4];
   general_interleave_int8(i8s, interleaved, 2, 4 * sizeof(int8_t), true);
-
+  for (int i = 0; i < 4; i++)
+  {
+    printf("i8s[%d] = %d\n", i, (int)interleaved[i]);
+  }
   printf("before interleave: ");
   printf("int-B = %x\n", reinterpret_cast<int *>(i8s)[0]);
   printf("after interleave: ");

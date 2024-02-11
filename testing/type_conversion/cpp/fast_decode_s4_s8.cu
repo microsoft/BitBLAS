@@ -163,8 +163,8 @@ private:
     Bits v;
     v.f = value;
     uint sign = v.si & signN; // grab sign bit
-    v.si ^= sign;                 // clear sign bit from v
-    sign >>= shiftSign;           // logical shift sign to fp16 position
+    v.si ^= sign;             // clear sign bit from v
+    sign >>= shiftSign;       // logical shift sign to fp16 position
 
     if (v.si <= maxZ)
     {
@@ -210,8 +210,8 @@ private:
     Bits v;
     v.f = value;
     uint sign = v.si & signN; // grab sign bit
-    v.si ^= sign;                 // clear sign bit from v
-    sign >>= shiftSign;           // logical shift sign to fp16 position
+    v.si ^= sign;             // clear sign bit from v
+    sign >>= shiftSign;       // logical shift sign to fp16 position
 
     if (v.si <= maxZ)
     {
@@ -394,66 +394,69 @@ __device__ void decode_i4s_to_i8s(T1 *_i4s, T2 *_i8s, const int N = 16)
 #pragma unroll
   for (int i = 0; i < (N / 8); i++)
   {
-    // Extract elt_01 - (i4s & 0x000f000f) | 0x64006400
+    // Extract elt_01 - (i4s & 0x000f000f) | 0x00000000
     asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
                  : "=r"(i8s[i])
                  : "r"(i4s[0] >> (4 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
 
     asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
-              : "=r"(i8s[i + 2])
-              : "r"(i4s[1] >> (4 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
+                 : "=r"(i8s[i + 2])
+                 : "r"(i4s[1] >> (4 * i)), "n"(BOTTOM_MASK), "n"(I4s_TO_I8s_MAGIC_NUM), "n"(immLut));
   }
 }
 
+void general_interleave_int8(int8_t *origin_arr, int8_t *interleaved, const int nbit, size_t size_in_bytes, bool verbose = false)
+{
+  // For fp16 example
+  // i4s        {e7,e6,e5,e4,e3,e2,e1,e0}
+  //            |-8b-||-8b-||-8b-||-8b-|
+  // interleave {e7,e3,e6,e2,e5,e1,e4,e0}
+  /*
+    BOTTOM_MASK        0    0    0    f    0    0    0    f
+    i4s                e7   e3   e6   e2   e5   e1   e4   e0
+    selectedVal       0000  e3 0000  e2  0000   e1 0000   e0  // selectedVal = i4s & BOTTOM_MASK
+    s[0]              0     e3   0    e2    0   e1   0    e0
+  */
 
-void general_interleave_int8(int8_t* origin_arr, int8_t * interleaved, const int nbit, size_t size_in_bytes, bool verbose=false){
-    // For fp16 example
-    // i4s        {e7,e6,e5,e4,e3,e2,e1,e0}
-    //            |-8b-||-8b-||-8b-||-8b-|
-    // interleave {e7,e3,e6,e2,e5,e1,e4,e0}
-    /*
-      BOTTOM_MASK        0    0    0    f    0    0    0    f
-      i4s                e7   e3   e6   e2   e5   e1   e4   e0
-      selectedVal       0000  e3 0000  e2  0000   e1 0000   e0  // selectedVal = i4s & BOTTOM_MASK
-      s[0]              0     e3   0    e2    0   e1   0    e0 
-    */
+  //            |-----8b-------||-------8b----||----8b---||-----8b----|
+  // i2s        {e15,e14,e13,e12,e11,e10,e9,e8,e7,e6,e5,e4,e3,e2,e1,e0}
+  // interleave {e15,e11,e7,e3,e14,e10,e6,e2,e13,e9,e5,e1,e12,e8,e4,e0}
 
-    //            |-----8b-------||-------8b----||----8b---||-----8b----|
-    // i2s        {e15,e14,e13,e12,e11,e10,e9,e8,e7,e6,e5,e4,e3,e2,e1,e0}
-    // interleave {e15,e11,e7,e3,e14,e10,e6,e2,e13,e9,e5,e1,e12,e8,e4,e0}
+  //            |-------------8b----------------||--------------8b--------------||------------8b--------------||--------8b-----------|
+  // i1s        {e31,e30,e29,e28,e27,e26,e25,e24,e23,e22,e21,e20,e19,e18,e17,e16,e15,e14,e13,e12,e11,e10,e9,e8,e7,e6,e5,e4,e3,e2,e1,e0}
+  // interleave {e31,e27,e23,e19,e15,e11,e7,e3,e30,e26,e22,e18,e14,e10,e6,e2,e29,e25,e21,e17,e13,e9,e5,e1,e28,e24,e20,e16,e12,e8,e4,e0}
+  // Assuming size is the number of int32 elements in origin_arr
+  size_t size = size_in_bytes / sizeof(int32_t);
+  int32_t *int32_origin = (int32_t *)origin_arr;
+  int32_t *int32_interleaved = (int32_t *)interleaved;
 
-    //            |-------------8b----------------||--------------8b--------------||------------8b--------------||--------8b-----------|
-    // i1s        {e31,e30,e29,e28,e27,e26,e25,e24,e23,e22,e21,e20,e19,e18,e17,e16,e15,e14,e13,e12,e11,e10,e9,e8,e7,e6,e5,e4,e3,e2,e1,e0}
-    // interleave {e31,e27,e23,e19,e15,e11,e7,e3,e30,e26,e22,e18,e14,e10,e6,e2,e29,e25,e21,e17,e13,e9,e5,e1,e28,e24,e20,e16,e12,e8,e4,e0}
-    // Assuming size is the number of int32 elements in origin_arr
-    size_t size = size_in_bytes / sizeof(int32_t);
-    int32_t* int32_origin = (int32_t*) origin_arr;
-    int32_t* int32_interleaved = (int32_t*) interleaved;
+  constexpr int bits_stride = 8;
+  int elems_per_group = bits_stride / nbit;
+  int mask = (1 << nbit) - 1;
+  int num_groups = 32 / bits_stride;
 
-    constexpr int bits_stride = 8;
-    int elems_per_group = bits_stride / nbit;
-    int mask = (1 << nbit) - 1;
-    int num_groups = 32 / bits_stride;
-    
-    for (int idx = 0; idx < size; ++idx) {
-        int32_t current_value = int32_origin[idx];
-        int32_t new_value = 0;
-        for (int i = 0; i < num_groups; ++i) {
-            for (int j = 0; j < elems_per_group; ++j){
-              int offset = i * elems_per_group + j;
-              int shift = (offset % num_groups) * bits_stride + (offset / num_groups) * nbit;
-              int group_value = (current_value >> (nbit * (i * elems_per_group + j))) & mask;
-              new_value |= group_value << shift;
-              if (verbose)
-                printf("put %d to %d\n", offset, shift);
-            }
-        }
-
-        int32_interleaved[idx] = new_value;
+  for (int idx = 0; idx < size; ++idx)
+  {
+    int32_t current_value = int32_origin[idx];
+    int32_t new_value = 0;
+    for (int i = 0; i < num_groups; ++i)
+    {
+      for (int j = 0; j < elems_per_group; ++j)
+      {
+        int offset = i * elems_per_group + j;
+        int shift = (offset % num_groups) * bits_stride + (offset / num_groups) * nbit;
+        int group_value = (current_value >> (nbit * (i * elems_per_group + j))) & mask;
+        new_value |= group_value << shift;
+        if (verbose)
+          printf("put %d to %d\n", offset, shift);
+      }
     }
 
-    // Convert back to int8_t if needed
-    memcpy(interleaved, int32_interleaved, size * sizeof(int32_t));
+    int32_interleaved[idx] = new_value;
+  }
+
+  // Convert back to int8_t if needed
+  memcpy(interleaved, int32_interleaved, size * sizeof(int32_t));
 }
 
 extern "C" __global__ void main_kernel0(int8_t *__restrict__ B, int8_t *__restrict__ B_1)
@@ -516,15 +519,15 @@ int main()
   }
   int8_t *interleaved = new int8_t[8];
   general_interleave_int8(i8s, interleaved, 4, 8 * sizeof(int8_t));
-  
+
   printf("before interleave: ");
   printf("int-B = %x\n", reinterpret_cast<int *>(i8s)[0]);
   printf("after interleave: ");
   printf("int-B = %x\n", reinterpret_cast<int *>(interleaved)[0]);
 
   int8_t *B_local_decode = new int8_t[8];
-  int8_t * i8s_gpu;
-  int8_t * B_local_decode_gpu;
+  int8_t *i8s_gpu;
+  int8_t *B_local_decode_gpu;
 
   cudaMalloc((void **)&i8s_gpu, 8 * sizeof(int8_t));
   cudaMalloc((void **)&B_local_decode_gpu, 8 * sizeof(half));
@@ -535,7 +538,7 @@ int main()
   if (cudaerr != cudaSuccess)
     printf("kernel launch failed with error \"%s\".\n",
            cudaGetErrorString(cudaerr));
-  main_kernel0<<<dim3(1,1,1), dim3(1,1,1)>>>(i8s_gpu, B_local_decode_gpu);
+  main_kernel0<<<dim3(1, 1, 1), dim3(1, 1, 1)>>>(i8s_gpu, B_local_decode_gpu);
   // print error
   cudaerr = cudaDeviceSynchronize();
   if (cudaerr != cudaSuccess)

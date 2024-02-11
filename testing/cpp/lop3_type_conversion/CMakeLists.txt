@@ -7,3 +7,4 @@ function (ADD_CUDA_TEST_EXECUTABLE name)
 endfunction(ADD_CUDA_TEST_EXECUTABLE)
 
 ADD_CUDA_TEST_EXECUTABLE(lowprecision_to_float16)
+ADD_CUDA_TEST_EXECUTABLE(lowprecision_to_int8)
