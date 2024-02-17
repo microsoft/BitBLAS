@@ -93,7 +93,7 @@ def _apply_config(
     root_block = get_root_block(sch)
     blocks = sch.get_child_blocks(root_block)
     reduction_blocks = get_reduction_blocks(sch, blocks)
-    # try:
+
     if not reduction_blocks:
         return bitblas.gpu.ElementWise().apply_config(func, config)
     elif config.use_tc:
@@ -115,12 +115,11 @@ def _apply_config(
         for rule in _reduction_rules:
             try:
                 sch = rule.apply_config(func, config)
-            except:
+            except Exception as e_msg:
+                print("[FastDlight] Apply config failed: ", e_msg)
                 continue
             if sch is not None:
                 return sch
-    # except Exception as e_msg:
-    #     print("[FastDlight] Apply config failed: ", e_msg)
     return None
 
 

@@ -16,7 +16,7 @@
 # under the License.
 """Config definition for schedule"""
 from typing import Dict, List, Optional, Tuple
-
+from ..roller import PrimFuncNode
 import numpy as np
 
 
@@ -241,8 +241,7 @@ class Config(object):
     def __repr__(self) -> str:
         return str(self.to_dict())
 
-    def complete_config(self, node):
-
+    def complete_config(self, node:PrimFuncNode):
         # analysis pass context, for int8 mma, we should merge static shared memory
         merge_static_smem = False
         if self.use_tc and self.intrin_info.in_dtype == "int8":

@@ -17,7 +17,7 @@
 """A rule for GEMV and DecodeGEMV."""
 import re
 from functools import reduce
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 
 from tvm.tir.function import PrimFunc
 from tvm import DataType, arith, ir, tir
@@ -104,7 +104,17 @@ def is_gemv(sch: tir.Schedule, block_info: BlockInfo) -> Optional[List[tir.Buffe
         if len(collect_block_iter_vars_used_in_access_region(block_stmt, read.region)) < iter_num
         and len(collect_block_iter_vars_used_in_access_region(block_stmt, read.region)) > 0
     ]
-    return ret if 0 < len(ret) < len(block_stmt.reads) else None
+    if len(ret) == len(block_stmt.reads):    
+        func = sch.mod["main"]
+        opt_shapes: Dict = {}
+        if "opt_shapes" in func.attrs:
+            opt_shapes = func.attrs["opt_shapes"]
+        # check with dynamic symbolic and at least one is unit
+        if not all([opt_shapes.get(buf.name, (1,))[0] == 1 for buf in ret]):
+            return None
+    elif len(ret) == 0:
+        return None
+    return ret
 
 
 def normalize(
@@ -277,7 +287,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         sch.vectorize(block_local_b_v)
         if "fast_decoding" in B_decode_info and B_decode_info["fast_decoding"]:
             intrin_info = get_lop3_intrin_group(
-                in_dtype="int8", out_dtype="float16", storage_nbit=4, with_scale=False
+                out_dtype="float16", storage_dtype=B_decode_info["storage_dtype"], source_format="uint", source_bit=4, with_scaling=B_decode_info["with_scaling"]
             )
             sch.tensorize(sch.get_loops(block_decode_B)[-1], intrin_info["compute"])
             sch.annotate(block_b, ann_key="pragma_import_c", ann_val=intrin_info["c_source"])

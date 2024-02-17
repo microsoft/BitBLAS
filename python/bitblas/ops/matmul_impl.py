@@ -1,8 +1,11 @@
 # pre-transformed tir expression of matmul
 import tvm
 from tvm.script import tir as T
-from tvm import te
-
+from tvm import te, tir
+from .quantization import (
+    _tir_packed_int_to_int_to_float,
+    _tir_packed_uint_to_uint_to_float
+)
 
 def matmul_nt_dyn_m(N, K, in_dtype="float16", out_dtype="float16"):
     @tvm.script.ir_module
@@ -386,23 +389,43 @@ def matmul_nt_propagate_a_b(M, N, K, in_dtype="float16", out_dtype="float16"):
     return MyModule
 
 
-def matmul_nt_dequantize_b(M, N, K, in_dtype="float16", out_dtype="float16", bit=4):
-    n_float_per_i8 = 8 // bit
+def matmul_nt_dequantize_b(
+    M,
+    N,
+    K,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+    bit=4,
+    storage_dtype="int8",
+    source_format="uint",
+    with_scaling=False,
+    group_size=-1,
+    fast_decoding=False,
+):
+    storage_nbit = int(''.join(c for c in storage_dtype if c.isdigit()))
 
-    def _tir_u8_to_int_to_float(
-        nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, dtype: str
-    ):
-        assert val.dtype == "int8"
-        mask = tvm.tir.const((1 << nbit) - 1, "int8")
-        return ((val >> (pos * nbit).astype("int8")) & mask).astype(dtype)
-
+    n_float_per_elem = storage_nbit // bit
+    if group_size == -1:
+        group_size = K
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
-    B = te.placeholder((N, K // 8 * bit), name="B", dtype="int8")
-
+    B = te.placeholder((N, K // storage_nbit * bit), name="B", dtype=storage_dtype)
+    Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
+    
     def decode_func(n, k):
-        w = _tir_u8_to_int_to_float(
-            bit, B[n, k // n_float_per_i8], k % n_float_per_i8, dtype=in_dtype
-        )
+        if storage_dtype[:3] == "int":            
+            w = _tir_packed_int_to_int_to_float(storage_nbit)(
+                bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype
+            )
+        elif storage_dtype[:4] == "uint":
+            w = _tir_packed_uint_to_uint_to_float(storage_nbit)(
+                bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype
+            )
+        else:
+            raise ValueError("Unsupported storage dtype: {}".format(storage_dtype))
+
+        if with_scaling:
+            w = w * Scale[n, k // group_size]
         return w
 
     B_decode = te.compute((N, K), decode_func, name="B_decode")
@@ -412,28 +435,43 @@ def matmul_nt_dequantize_b(M, N, K, in_dtype="float16", out_dtype="float16", bit
     C = te.compute(
         (M, N),
         lambda i, j: te.sum(
-            A[i, k].astype(out_dtype) * B_decode[j, k].astype(out_dtype), axis=k
+            A[i, k].astype(accum_dtype) * B_decode[j, k].astype(accum_dtype), axis=k
         ),
         name="C",
     )
-    func = te.create_prim_func([A, B, C]).with_attr(
+    D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+    args = [A, B, D]
+    if with_scaling:
+        args = [A, B, Scale, D]
+    func = te.create_prim_func(args).with_attr(
         "dequantize_info",
         {
-            "B": {
+            "B_decode": {
                 "decode_block": "B_decode",
-                "fast_decoding": True,
+                "fast_decoding": fast_decoding,
                 "source_format": {
                     "bits": bit,
-                    "format": "int",
+                    "format": source_format,
                 },
+                "storage_dtype": storage_dtype,
                 "target_format": in_dtype,
+                "with_scaling": with_scaling,
+                "group_size": group_size,
             }
         },
     )
     return tvm.IRModule.from_expr(func)
 
-
-def matmul_nt_dequantize_b_propagate_b(M, N, K, in_dtype="float16", out_dtype="float16", cast_dtype="float16", bit=4, fast_decoding=False):
+def matmul_nt_dequantize_b_propagate_b(
+    M,
+    N,
+    K,
+    in_dtype="float16",
+    out_dtype="float16",
+    cast_dtype="float16",
+    bit=4,
+    fast_decoding=False,
+):
     wm, wn, wk = 16, 16, 16
     if in_dtype == "int8":
         wm, wn, wk = 16, 16, 32
@@ -473,9 +511,7 @@ def matmul_nt_dequantize_b_propagate_b(M, N, K, in_dtype="float16", out_dtype="f
         ),
         name="C",
     )
-    D = te.compute(
-        (M, N), lambda i, j: C[i, j].astype(cast_dtype), name="D"
-    )
+    D = te.compute((M, N), lambda i, j: C[i, j].astype(cast_dtype), name="D")
     func = te.create_prim_func([A, B, D]).with_attr(
         "dequantize_info",
         {
@@ -494,7 +530,17 @@ def matmul_nt_dequantize_b_propagate_b(M, N, K, in_dtype="float16", out_dtype="f
 
     return tvm.IRModule.from_expr(func)
 
-def matmul_nt_dequantize_b_propagate_a_b(M, N, K, in_dtype="float16", out_dtype="float16", cast_dtype="float16", bit=4, fast_decoding=False):
+
+def matmul_nt_dequantize_b_propagate_a_b(
+    M,
+    N,
+    K,
+    in_dtype="float16",
+    out_dtype="float16",
+    cast_dtype="float16",
+    bit=4,
+    fast_decoding=False,
+):
     wm, wn, wk = 16, 16, 16
     if in_dtype == "int8":
         wm, wn, wk = 16, 16, 32
@@ -531,11 +577,14 @@ def matmul_nt_dequantize_b_propagate_a_b(M, N, K, in_dtype="float16", out_dtype=
     # Describe the matrix multiplication in TE
     k = te.reduce_axis((0, K), name="k")
     C = te.compute(
-        (M, N), lambda i, j: te.sum(A_reindex[i, k].astype(out_dtype) * B_reindex[j, k].astype(out_dtype), axis=k), name="C"
+        (M, N),
+        lambda i, j: te.sum(
+            A_reindex[i, k].astype(out_dtype) * B_reindex[j, k].astype(out_dtype),
+            axis=k,
+        ),
+        name="C",
     )
-    D = te.compute(
-        (M, N), lambda i, j: C[i, j].astype(cast_dtype), name="D"
-    )
+    D = te.compute((M, N), lambda i, j: C[i, j].astype(cast_dtype), name="D")
     func = te.create_prim_func([A, B, D]).with_attr(
         "dequantize_info",
         {

@@ -353,7 +353,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         )
 
         auto_inline_producers(sch, a_g2s)
-
+        dequantize_block = sch.get_block(B_decode_info["decode_block"])
         def decode_fetch_to_shared(block, idx):
             # step1. create memory hierarchy
             # global -> local -> shared
@@ -361,7 +361,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(block_shared, k0, preserve_unit_loops=True)
 
             # TODO(lei): the factor shoule be analyzed more deeper.
-            decode_factor = 8 if B_decode_info["target_format"] == "float16" else 16
+            decode_factor = get_coalesced_veclen(sch.get(block_shared))
             _, B_shared_vi, _ = sch.split(
                 sch.get_loops(block_shared)[-1], factors=[None, 1, decode_factor]
             )
@@ -393,7 +393,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 block_shared_local_local, B_shared_vi, preserve_unit_loops=True
             )
 
-            dequantize_block = block_shared_local
+            dequantize_block_local = block_shared_local
             # fast type conversion
             if "fast_decoding" in B_decode_info and B_decode_info["fast_decoding"]:
                 storage_nbits = B_decode_info["source_format"]["bits"]
@@ -402,7 +402,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     in_dtype="int8", out_dtype=out_dtype, storage_nbit=storage_nbits
                 )
                 sch.tensorize(
-                    sch.get_loops(dequantize_block)[-1], intrin_group["compute"]
+                    sch.get_loops(dequantize_block_local)[-1], intrin_group["compute"]
                 )
                 sch.annotate(
                     thread_idz,
@@ -435,7 +435,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
             f_0, f_1, f_2, f_3, f_4 = sch.split(
                 fused,
-                factors=[None, num_tz, num_ty, warp_size, 16],  # int8x16 = 128bits
+                factors=[None, num_tz, num_ty, warp_size, get_coalesced_veclen(sch.get(block_shared_local_local_shared))]
             )
 
             sch.bind(f_3, "threadIdx.x")
@@ -447,7 +447,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
             # cache small tensors, e.g. LUT
             if b_idx:
-                block_shared_lut = sch.cache_read(dequantize_block, 0, shared_scope)
+                block_shared_lut = sch.cache_read(dequantize_block_local, 0, shared_scope)
                 sch.reverse_compute_at(block_shared_lut, j2)
                 _, B_shared_tx = sch.split(
                     sch.get_loops(block_shared_lut)[-1], factors=[None, warp_size]
@@ -455,7 +455,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 sch.bind(B_shared_tx, "threadIdx.x")
             return block_shared_local
 
-        dequantize_block = decode_fetch_to_shared(block_outer, 1)
+        _ = decode_fetch_to_shared(block_outer, 1)
 
         # create read cache to load matrix from shared memory to wmma fragments
         A_mat = sch.cache_read(block_outer, 0, "warp")

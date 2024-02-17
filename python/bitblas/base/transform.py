@@ -90,6 +90,7 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
         target: Optional[Target] = None,
         parallel_build: bool = True,
         meta_database_dir: str = None,
+        whitelist: List[str] = [],
         dynamic_range: Dict[str, List[int]] = {},
     ):
         """Construct a new ApplyFastTuning pass.
@@ -105,6 +106,7 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
         self.target = Target.current() if target is None else target
         self.parallel_build = parallel_build
         self.meta_database_dir = meta_database_dir
+        self.whitelist = whitelist
         self.dynamic_range = dynamic_range
         self.temp_dir = tempfile.TemporaryDirectory()
         print(f"[FastDlight] Using meta database dir {self.temp_dir}")
@@ -113,6 +115,14 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
         self.cache_meta_database = ms.database.JSONDatabase(
             path_workload, path_tuning_record, module_equality="structural"
         )
+    
+    def _in_white_list(self, func_name: str) -> bool:
+        if len(self.whitelist) == 0:
+            return True
+        for name in self.whitelist:
+            if name in func_name:
+                return True
+        return False
 
     def transform_module(  # pylint: disable=missing-function-docstring
         self,
@@ -124,8 +134,8 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
 
         for g_var, func in mod.functions_items():
             if isinstance(func, tir.PrimFunc) and not _is_scheduled(func):
-                # if g_var.name_hint not in ["extend_te"]:
-                #     continue
+                if not self._in_white_list(g_var.name_hint):
+                    continue
                 print(f"[FastDlight] Start to apply fast tuning for {g_var}")
                 normalize_mod_func_ = tvm._ffi.get_global_func("tvm.meta_schedule.normalize_mod")
                 _normalized_func_mod = normalize_mod_func_(func)
@@ -145,17 +155,18 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
                         continue
                 
                 if check_func_with_dynamic(func):
-                    try:
-                        dispatch_mod = fast_tune_with_dynamic_range(
-                            func,
-                            target=target,
-                            topk=self.topk,
-                            parallel_build=self.parallel_build,
-                            global_symbol=g_var.name_hint,
-                            dynamic_range=self.dynamic_range,
-                        )
-                    except:
-                        continue
+                    # try:
+                    dispatch_mod = fast_tune_with_dynamic_range(
+                        func,
+                        target=target,
+                        topk=self.topk,
+                        parallel_build=self.parallel_build,
+                        global_symbol=g_var.name_hint,
+                        dynamic_range=self.dynamic_range,
+                    )
+                    # except Exception as e:
+                        
+                    #     continue
                     if dispatch_mod:
                         for g, f in dispatch_mod.functions_items():
                             if g.name_hint == g_var.name_hint:

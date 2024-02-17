@@ -643,7 +643,6 @@ def get_propagate_map(trans: bool = True, dtype="float16", matrix_name="A"):
         elif matrix_name == "B" and trans == True:
             ldmatrix_layout = ldmatrix_32x16_to_shared_16x32_layout_b
         else:
-            print("trans", trans)
             raise ValueError("Unknown matrix name ", matrix_name)
 
     # IntraWarp memory layout was occurred by ldmatrix, we should lift the ld_matrix out
