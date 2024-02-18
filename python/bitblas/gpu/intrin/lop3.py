@@ -6,10 +6,9 @@ import numpy as np
 from typing import Dict, Literal
 from ...ops.quantization import (
     _tir_packed_int_to_int_to_float,
-    _tir_packed_uint_to_uint_to_float
+    _tir_packed_uint_to_uint_to_float,
 )
 
-lift = convert
 
 decode_i4_to_f16 = """
 template <typename T1, typename T2, bool isSigned = false>
@@ -86,7 +85,6 @@ __device__ void decode_i4u_to_f16_scale(T1 *_i4u, T2 *B_local_decode,  T2 *scale
 }
 """
 
-
 decode_i1s_to_i8s_l16 = """template <typename T1, typename T2>
 __device__ void decode_i1s_to_i8s_l16(T1 *_i1s, T2 *_i8s, const int N = 16)
 {
@@ -162,15 +160,6 @@ __device__ void decode_i4s_to_i8s(T1 *_i4s, T2 *_i8s, const int N = 16)
 """
 
 
-def _tir_s8_to_int_to_float(
-    nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, dtype: str
-):
-    assert val.dtype == "int8"
-    mask = tvm.tir.const((1 << nbit) - 1, "int8")
-    zero_point = tvm.tir.const((1 << (nbit - 1)) - 1, dtype)
-    return ((val >> (pos * nbit).astype("int8")) & mask).astype(dtype) - zero_point
-
-
 def get_fast_decode_intrin(
     source_bit=4,
     storage_dtype="int8",
@@ -196,17 +185,16 @@ def get_fast_decode_intrin(
         func_name += "_scale"
 
     assert storage_dtype in ["int8", "int32", "uint32"]
-    storage_nbit = int(''.join(c for c in storage_dtype if c.isdigit()))
+    storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
     elem_per_unit = storage_nbit // source_bit
     n_storage_elems = loops_extent // elem_per_unit
 
-    if storage_dtype[:3] == "int":            
+    if storage_dtype[:3] == "int":
         decode_func = _tir_packed_int_to_int_to_float(storage_nbit)
     elif storage_dtype[:4] == "uint":
         decode_func = _tir_packed_uint_to_uint_to_float(storage_nbit)
     else:
         raise ValueError("Unsupported storage dtype: {}".format(storage_dtype))
-
 
     if with_scale is False:
 
@@ -363,7 +351,9 @@ def get_fast_decode_intrin(
     return fast_decode_desc, fast_decode_impl
 
 
-LOP3_FAST_DECODE_UINT4_TO_INT8_TO_FP16_L8_INTRIN = "lop3_fast_decode_u4_to_int8_to_f16_l8_"
+LOP3_FAST_DECODE_UINT4_TO_INT8_TO_FP16_L8_INTRIN = (
+    "lop3_fast_decode_u4_to_int8_to_f16_l8_"
+)
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT4_TO_INT8_TO_FP16_L8_INTRIN,
     *get_fast_decode_intrin(
@@ -372,7 +362,9 @@ TensorIntrin.register(
 )
 
 
-LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_INTRIN = "lop3_fast_decode_u4_to_int32_to_f16_l8_"
+LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_INTRIN = (
+    "lop3_fast_decode_u4_to_int32_to_f16_l8_"
+)
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_INTRIN,
     *get_fast_decode_intrin(
@@ -381,15 +373,23 @@ TensorIntrin.register(
 )
 
 
-LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_SCALE_INTRIN = "lop3_fast_decode_u4_to_int32_to_f16_l8_scale_"
+LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_SCALE_INTRIN = (
+    "lop3_fast_decode_u4_to_int32_to_f16_l8_scale_"
+)
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_SCALE_INTRIN,
     *get_fast_decode_intrin(
-        source_bit=4, storage_dtype="int32", target_dtype="float16", loops_extent=8, with_scale=True
+        source_bit=4,
+        storage_dtype="int32",
+        target_dtype="float16",
+        loops_extent=8,
+        with_scale=True,
     ),
 )
 
-LOP3_FAST_DECODE_UINT4_TO_UINT32_TO_FP16_L8_INTRIN = "lop3_fast_decode_u4_to_uint32_to_f16_l8_"
+LOP3_FAST_DECODE_UINT4_TO_UINT32_TO_FP16_L8_INTRIN = (
+    "lop3_fast_decode_u4_to_uint32_to_f16_l8_"
+)
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT4_TO_UINT32_TO_FP16_L8_INTRIN,
     *get_fast_decode_intrin(
@@ -398,11 +398,17 @@ TensorIntrin.register(
 )
 
 
-LOP3_FAST_DECODE_UINT4_TO_UINT32_TO_FP16_L8_SCALE_INTRIN = "lop3_fast_decode_u4_to_uint32_to_f16_l8_scale_"
+LOP3_FAST_DECODE_UINT4_TO_UINT32_TO_FP16_L8_SCALE_INTRIN = (
+    "lop3_fast_decode_u4_to_uint32_to_f16_l8_scale_"
+)
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT4_TO_UINT32_TO_FP16_L8_SCALE_INTRIN,
     *get_fast_decode_intrin(
-        source_bit=4, storage_dtype="uint32", target_dtype="float16", loops_extent=8, with_scale=True
+        source_bit=4,
+        storage_dtype="uint32",
+        target_dtype="float16",
+        loops_extent=8,
+        with_scale=True,
     ),
 )
 
@@ -496,7 +502,7 @@ def get_lop3_intrin_group(
     out_dtype: Literal["float16", "int8"],
     source_format: Literal["int", "uint"] = "uint",
     source_bit: int = 4,
-    storage_dtype:Literal["int32", "int8"] = "int8",
+    storage_dtype: Literal["int32", "int8"] = "int8",
     with_scaling: bool = False,
 ) -> Dict[str, str]:
     """
@@ -593,3 +599,140 @@ def interleave_weight(qweight, nbits=4, target_dtype="float16"):
         n8_weight |= ((new_qweight & 0x0F000000) >> 24) << 20
 
     return new_qweight.view(np.int8)
+
+
+# TIR interleave weight impl-> 2D implementation
+def tir_interleave_weight(
+    N: int = 2, K: int = 16, bits: int = 4, target_dtype: str = "float16"
+):
+    QK = K * bits // 32
+    bits_stride = 16
+    mask = (1 << bits) - 1  # for 4bit the val is 0x0000000f
+    num_groups = 32 // bits_stride
+    elems_per_group = bits_stride // bits
+
+    @T.prim_func
+    def interleave_weight(A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")):
+        for ax0, ax1, ax2, ax3 in T.grid(N, QK, num_groups, elems_per_group):
+            with T.block("B"):
+                v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])
+                offset = v2 * elems_per_group + v3
+                shift = (offset % num_groups) * bits_stride + (
+                    offset // num_groups
+                ) * bits
+                B[v0, v1] = B[v0, v1] | (
+                    ((A[v0, v1] >> (bits * offset)) & mask) << shift
+                )
+
+    @T.prim_func
+    def interleave_weight_f16_2b(
+        A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")
+    ):
+        B_tmp_1 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_2 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_3 = T.alloc_buffer((N, QK), "int32", scope="local")
+        for ax0, ax1, ax2, ax3 in T.grid(N, QK, num_groups, elems_per_group):
+            with T.block("B_tmp"):
+                v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])
+                offset = v2 * elems_per_group + v3
+                shift = (offset % num_groups) * bits_stride + (
+                    offset // num_groups
+                ) * bits
+                B[v0, v1] = B[v0, v1] | (
+                    ((A[v0, v1] >> (bits * offset)) & mask) << shift
+                )
+
+        for ax0, ax1 in T.grid(N, QK):
+            with T.block("B"):
+                v0, v1 = T.axis.remap("SS", [ax0, ax1])
+                B_tmp_1[v0, v1] = B[v0, v1] & T.uint32(0xFF0000FF)
+                B_tmp_2[v0, v1] = ((B[v0, v1] & T.uint32(0x00FF0000)) << 8) >> 16
+                B_tmp_3[v0, v1] = ((B[v0, v1] & T.uint32(0x0000FF00)) << 16) >> 8
+                B[v0, v1] = B_tmp_1[v0, v1] | B_tmp_2[v0, v1] | B_tmp_3[v0, v1]
+
+    @T.prim_func
+    def interleave_weight_f16_1b(
+        A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")
+    ):
+        B_tmp_1 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_2 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_3 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_4 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_5 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_6 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_7 = T.alloc_buffer((N, QK), "int32", scope="local")
+        for ax0, ax1, ax2, ax3 in T.grid(N, QK, num_groups, elems_per_group):
+            with T.block("B_tmp"):
+                v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])
+                offset = v2 * elems_per_group + v3
+                shift = (offset % num_groups) * bits_stride + (
+                    offset // num_groups
+                ) * bits
+                B[v0, v1] = B[v0, v1] | (
+                    ((A[v0, v1] >> (bits * offset)) & mask) << shift
+                )
+
+        for ax0, ax1 in T.grid(N, QK):
+            with T.block("B"):
+                v0, v1 = T.axis.remap("SS", [ax0, ax1])
+                B_tmp_1[v0, v1] = B[v0, v1] & T.uint32(0xF000000F)
+                B_tmp_2[v0, v1] = ((B[v0, v1] & T.uint32(0x000000F0)) >> 4) << 8
+                B_tmp_3[v0, v1] = ((B[v0, v1] & T.uint32(0x00000F00)) >> 8) << 16
+                B_tmp_4[v0, v1] = ((B[v0, v1] & T.uint32(0x0000F000)) >> 12) << 24
+                B_tmp_5[v0, v1] = ((B[v0, v1] & T.uint32(0x000F0000)) >> 16) << 8
+                B_tmp_6[v0, v1] = ((B[v0, v1] & T.uint32(0x00F00000)) >> 20) << 12
+                B_tmp_7[v0, v1] = ((B[v0, v1] & T.uint32(0x00F00000)) >> 24) << 20
+                B[v0, v1] = (
+                    B_tmp_1[v0, v1]
+                    | B_tmp_2[v0, v1]
+                    | B_tmp_3[v0, v1]
+                    | B_tmp_4[v0, v1]
+                    | B_tmp_5[v0, v1]
+                    | B_tmp_6[v0, v1]
+                    | B_tmp_7[v0, v1]
+                )
+
+    @T.prim_func
+    def interleave_weight_int8_1b(
+        A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")
+    ):
+        B_tmp_1 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_2 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_3 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_4 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_5 = T.alloc_buffer((N, QK), "int32", scope="local")
+        for ax0, ax1, ax2, ax3 in T.grid(N, QK, num_groups, elems_per_group):
+            with T.block("B_tmp"):
+                v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])
+                offset = v2 * elems_per_group + v3
+                shift = (offset % num_groups) * bits_stride + (
+                    offset // num_groups
+                ) * bits
+                B[v0, v1] = B[v0, v1] | (
+                    ((A[v0, v1] >> (bits * offset)) & mask) << shift
+                )
+
+        for ax0, ax1 in T.grid(N, QK):
+            with T.block("B"):
+                v0, v1 = T.axis.remap("SS", [ax0, ax1])
+                B_tmp_1[v0, v1] = B[v0, v1] & T.uint32(0xF0F00F0F)
+                B_tmp_2[v0, v1] = ((B[v0, v1] & T.uint32(0x000000F0)) >> 4) << 16
+                B_tmp_3[v0, v1] = ((B[v0, v1] & T.uint32(0x0000F000)) >> 12) << 24
+                B_tmp_4[v0, v1] = ((B[v0, v1] & T.uint32(0x000F0000)) >> 16) << 4
+                B_tmp_5[v0, v1] = ((B[v0, v1] & T.uint32(0x0F000000)) >> 24) << 12
+                B[v0, v1] = (
+                    B_tmp_1[v0, v1]
+                    | B_tmp_2[v0, v1]
+                    | B_tmp_3[v0, v1]
+                    | B_tmp_4[v0, v1]
+                    | B_tmp_5[v0, v1]
+                )
+
+    if target_dtype == "float16" and bits == 2:
+        return interleave_weight_f16_2b
+    elif target_dtype == "float16" and bits == 1:
+        return interleave_weight_f16_1b
+    elif target_dtype == "int8" and bits == 1:
+        return interleave_weight_int8_1b
+
+    return interleave_weight
