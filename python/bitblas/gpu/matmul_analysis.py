@@ -118,6 +118,33 @@ def auto_inline_consumer_chain(
         auto_inline_consumers(sch, block)
 
 
+def find_arg_idx_from_buffer_chain(
+    sch: tir.Schedule, main_block: tir.schedule.BlockRV, buffer: tir.Buffer
+) -> int:
+    """traverse to find the arg index from the buffer"""
+    producers = sch.get_producers(main_block)
+
+    # a head buffer has no producer blocks
+    def find_args_index(sch: tir.Schedule, buffer: tir.Buffer):
+        for i, param in enumerate(sch.mod["main"].params):
+            if sch.mod["main"].buffer_map[param] == buffer:
+                return i
+        return None
+
+    is_head_buffer = len(producers) == 0
+    if is_head_buffer:
+        return find_args_index(sch, buffer)
+    for block in sch.get_producers(main_block):
+        if len(sch.get(block).reads) != 1 or len(sch.get(block).writes) != 1:
+            continue
+        for write in sch.get(block).writes:
+            if write.buffer == buffer:
+                return find_arg_idx_from_buffer_chain(sch, block, buffer)
+
+    # if no buffer producer block found, it means the buffer is an input buffer
+    return find_args_index(sch, buffer)
+
+
 class IterKind(Enum):
     """Iter kinds for GEMM-liked programs.
     We can simplify the computation to C[S, I, J] += A[S, I, K] * B[S, J, K],
@@ -487,6 +514,8 @@ def normalize_to_matmul(
 def get_tensorized_func_and_tags(
     func: tir.PrimFunc,
     target: Target,
+    skip_normalize: bool = False,
+    allow_gemv: bool = False,
 ) -> Tuple[tir.PrimFunc, Dict[str, Union[List[int], int]]]:
     from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
         get_wmma_intrin_group,
@@ -576,9 +605,9 @@ def get_tensorized_func_and_tags(
         intrin_info["out_dtype"] = out_dtype
         # if the last dimension is reduce axis, the B is transposed
         intrin_info["trans_b"] = check_last_trait(block_stmt.reads[1].region)
-        if "smooth_a" in func.attrs:
+        if func.attrs is not None and "smooth_a" in func.attrs:
             intrin_info["smooth_a"] = func.attrs["smooth_a"]
-        if "smooth_b" in func.attrs:
+        if func.attrs is not None and "smooth_b" in func.attrs:
             intrin_info["smooth_b"] = func.attrs["smooth_b"]
         tags["intrin_info"] = intrin_info
 
@@ -588,7 +617,6 @@ def get_tensorized_func_and_tags(
     if _can_be_tensorized(sch, main_block) is None:
         return func, None
 
-    minimal_tensorize_threshold = 16
     block_stmt = sch.get(main_block)
     if target.kind.name == "cuda" and check_sm_version(target.arch) >= 70:
         in_dtype, out_dtype = get_in_out_dtypes(block_stmt)
@@ -606,14 +634,21 @@ def get_tensorized_func_and_tags(
         # reindex and transform functions
         # Normalize tensor functions to C[S, I, J] += A[S, I, K] * B[S, J, K]
         # or C[S, I, J] += A[S, I, K] * B[S, K, J]
-        sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
-        if sch is None:
-            return func, None
+        # skip normalize when we want to detect tags only.
+        if not skip_normalize:
+            sch = normalize_to_matmul(sch, main_block, ["n", "t", "n"])
+            if sch is None:
+                return func, None
 
         block_stmt = sch.get(main_block)
 
+        minimal_tensorize_threshold = 16
         # the batch dimension is not taken into consideration.
-        for item_var in block_stmt.iter_vars[1:]:
+        extent = block_stmt.iter_vars[1].dom.extent
+        if isinstance(extent, tir.expr.IntImm):
+            if extent.value < (1 if allow_gemv else minimal_tensorize_threshold):
+                return func, None
+        for item_var in block_stmt.iter_vars[2:]:
             extent = item_var.dom.extent
             if isinstance(extent, tir.expr.IntImm):
                 if extent.value < minimal_tensorize_threshold:
@@ -624,7 +659,9 @@ def get_tensorized_func_and_tags(
     return func, None
 
 
-def get_propagate_map(trans: bool = True, dtype="float16", matrix_name="A"):
+def get_propagate_map(
+    trans: bool = True, dtype="float16", matrix_name="A", index_dtype="int32"
+):
     from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
         ldmatrix_32x8_to_shared_16x16_layout,
         ldmatrix_trans_32x8_to_shared_16x16_layout,
@@ -670,16 +707,62 @@ def get_propagate_map(trans: bool = True, dtype="float16", matrix_name="A"):
     else:
         ldmatrix_index_map = ldmatrix_permutation_16x32_32x16_32x16
 
-    def permutation(i, j, kernel_i, kernel_j):
-        return (
-            i,
-            j,
-            *ldmatrix_index_map(kernel_i, kernel_j),
-        )
-
+    ldmatrix_index_map = IndexMap.from_func(ldmatrix_index_map, index_dtype=index_dtype)
     # TODO(lei): index_dtype should be analyzed from the schedule
     row, col = [16, 16] if dtype == "float16" else [16, 32]
-    inversed_index_map = IndexMap.from_func(
-        ldmatrix_index_map, index_dtype="int32"
-    ).inverse([row, col])
-    return permutation, inversed_index_map
+    inversed_index_map = ldmatrix_index_map.inverse([row, col])
+    return ldmatrix_index_map, inversed_index_map
+
+
+def layout_propagate_chain(
+    sch: tir.Schedule,
+    start_block: BlockRV,
+    start_buffer: tir.Buffer,
+    end_block: BlockRV,
+    index_map: IndexMap,
+):
+    # some layout transformation may only apply to the last n dimensions
+    # propagate the layout transformation to the chain of blocks
+    block = start_block
+    buffer = start_buffer
+    index_map = index_map
+    while True:
+        last_buffer = buffer
+        producers = sch.get_producers(block)
+        if len(producers) == 0:
+            break
+        for producer in producers:
+            if len(sch.get(producer).writes) != 1:
+                return index_map
+            if sch.get(producer) == sch.get(end_block):
+                return index_map
+            (write,) = sch.get(producer).writes
+            read = sch.get(producer).reads[0]
+            if write.buffer == buffer:
+                block = producer
+                buffer = sch.get(producer).reads[0].buffer
+                write_indices = [r.min for r in write.region]
+                read_indices = [r.min for r in read.region]
+                # reverse index map from [vi // x] -> [vi * x] to match the inconsistent layout
+                tmp_index_map = IndexMap(write_indices, read_indices, None)
+                tmp_index_map = tmp_index_map.non_surjective_inverse(
+                    write.buffer.shape
+                )[0]
+
+                # if dequantize like ops are used, the scaling factor should be considered
+                # to be applied to the final indices
+                scaling_factor = 1
+                for i, j in zip(write.buffer.shape, read.buffer.shape):
+                    scaling_factor *= i // j
+                final_indices = list(
+                    index_map.map_indices(tmp_index_map.map_indices(write_indices))
+                )
+                final_indices[-1] = final_indices[-1] // scaling_factor
+                index_map = IndexMap(
+                    write_indices,
+                    final_indices,
+                    None,
+                )
+        if buffer == last_buffer:
+            break
+    return index_map

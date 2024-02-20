@@ -603,16 +603,24 @@ def interleave_weight(qweight, nbits=4, target_dtype="float16"):
 
 # TIR interleave weight impl-> 2D implementation
 def tir_interleave_weight(
-    N: int = 2, K: int = 16, bits: int = 4, target_dtype: str = "float16"
+    N: int = 2,
+    K: int = 16,
+    bits: int = 4,
+    QK: int = -1,
+    target_dtype: str = "float16",
+    storage_dtype: str = "int32",
 ):
-    QK = K * bits // 32
+    if QK == -1:
+        QK = K * bits // 32
     bits_stride = 16
     mask = (1 << bits) - 1  # for 4bit the val is 0x0000000f
     num_groups = 32 // bits_stride
     elems_per_group = bits_stride // bits
 
     @T.prim_func
-    def interleave_weight(A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")):
+    def interleave_weight(
+        A: T.Buffer((N, QK), storage_dtype), B: T.Buffer((N, QK), storage_dtype)
+    ):
         for ax0, ax1, ax2, ax3 in T.grid(N, QK, num_groups, elems_per_group):
             with T.block("B"):
                 v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])
@@ -626,11 +634,11 @@ def tir_interleave_weight(
 
     @T.prim_func
     def interleave_weight_f16_2b(
-        A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")
+        A: T.Buffer((N, QK), storage_dtype), B: T.Buffer((N, QK), storage_dtype)
     ):
-        B_tmp_1 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_2 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_3 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_1 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_2 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_3 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
         for ax0, ax1, ax2, ax3 in T.grid(N, QK, num_groups, elems_per_group):
             with T.block("B_tmp"):
                 v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])
@@ -652,15 +660,15 @@ def tir_interleave_weight(
 
     @T.prim_func
     def interleave_weight_f16_1b(
-        A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")
+        A: T.Buffer((N, QK), storage_dtype), B: T.Buffer((N, QK), storage_dtype)
     ):
-        B_tmp_1 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_2 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_3 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_4 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_5 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_6 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_7 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_1 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_2 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_3 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_4 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_5 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_6 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_7 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
         for ax0, ax1, ax2, ax3 in T.grid(N, QK, num_groups, elems_per_group):
             with T.block("B_tmp"):
                 v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])
@@ -694,13 +702,13 @@ def tir_interleave_weight(
 
     @T.prim_func
     def interleave_weight_int8_1b(
-        A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")
+        A: T.Buffer((N, QK), storage_dtype), B: T.Buffer((N, QK), storage_dtype)
     ):
-        B_tmp_1 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_2 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_3 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_4 = T.alloc_buffer((N, QK), "int32", scope="local")
-        B_tmp_5 = T.alloc_buffer((N, QK), "int32", scope="local")
+        B_tmp_1 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_2 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_3 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_4 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
+        B_tmp_5 = T.alloc_buffer((N, QK), storage_dtype, scope="local")
         for ax0, ax1, ax2, ax3 in T.grid(N, QK, num_groups, elems_per_group):
             with T.block("B_tmp"):
                 v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])

@@ -4,11 +4,16 @@ from tvm.ir.transform import PassContext, module_pass
 from tvm import tir
 from tvm.tir.schedule import BlockRV
 from mlc_llm.quantization import quantization_schemes, GroupQuantizationSpec
+from bitblas.gpu.gemv import is_gemv
 from bitblas.gpu.matmul_analysis import (
     get_reduction_blocks,
     get_index_map,
     get_root_block,
     get_dequantize_block,
+)
+from bitblas.base import (
+    normalize_prim_func,
+    try_inline_contiguous_spatial,
 )
 
 
@@ -36,7 +41,19 @@ class AnnotateDecodeInformation:
         main_block = reduction_blocks[0]
         main_block_stmt = sch.get(main_block)
         index_maps = get_index_map(main_block_stmt)
-        return index_maps is not None
+        _is_matmul = index_maps is not None
+
+        block_infos = normalize_prim_func(sch)
+        block_infos = try_inline_contiguous_spatial(sch, block_infos)
+        block_info = block_infos[0]
+        _is_gemv = True
+        if len(block_info.iters) not in [2, 3]:
+            # either [B, S, R] = [B, S, R] * [B, R]
+            # or [S, R] = [S, R] * [R]
+            _is_gemv = False
+        if _is_gemv:
+            _is_gemv = is_gemv(sch, block_info)
+        return _is_matmul or _is_gemv
 
     def transform_module(self, mod: IRModule, _: PassContext) -> IRModule:
         """Annotate dequantize information for all applicable functions in the module."""
