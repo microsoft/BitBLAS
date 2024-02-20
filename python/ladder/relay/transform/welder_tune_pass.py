@@ -1,7 +1,7 @@
 import os
 import tvm
 from tvm import relay, ir
-from ladder.graph import IRNode, OutputNode, Node
+from ladder.graph import IRNode, OutputNode, Node, PlaceHolderNode
 from ladder.te_utils import normalize_tensor_names
 from ladder.engine import Engine, MultiProcTunner
 from ..integration import add_source
@@ -45,7 +45,7 @@ class WelderTunePass(relay.ExprMutator):
                 raise NotImplementedError()
         """
         # ordered_nodes = self.set_debug_nodes(ordered_nodes, ['ladder_perfect_matmul_29', 'layout_transform_reshape_reshape_add_30'])
-        # print(tune_node(ordered_nodes, ['welder_matmul_39']))
+        # print(tune_node(ordered_nodes, ["multiply_reshape_add_multiply_17", "cast_multiply_18", "mean_sqrt_divide_19", "multiply_cast_multiply_20", "reshape_21", "nn_dense_cast_divide_erf_add_multiply_22", "multiply_cast_nn_dense_multiply_23", "nn_dense_24", "reshape_add_25"]))
         # raise NotImplementedError()
 
         tunner = MultiProcTunner(
@@ -59,11 +59,14 @@ class WelderTunePass(relay.ExprMutator):
         """
         fusion_groups = engine.run(ordered_nodes)
         if self.save_perf_log_:
-            from ...engine import save_results, export_groups
+            from ...engine import save_models, save_results, export_groups
 
             # save_perf_log_ is a directory name
             if not os.path.exists(self.save_perf_log_):
                 os.makedirs(self.save_perf_log_)
+            
+            model_log_path = os.path.join(self.save_perf_log_, "model.json")
+            save_models(ordered_nodes, model_log_path)
             # tuned.json path
             tuned_log_path = os.path.join(self.save_perf_log_, "tuned.json")
             save_results(fusion_groups, tuned_log_path)

@@ -1,7 +1,7 @@
 import json
 from typing import List
 import os
-from ..graph import Node
+from ..graph import Node, PlaceHolderNode
 from ..utils import CompileResult
 
 
@@ -35,10 +35,10 @@ def dump(fusion_groups: List[FusionGroup]):
         if group.cpresult is not None:
             cpresult = group.cpresult
             group_desc["input_desc"] = [
-                [get_id_by_name(name), id] for name, id in cpresult.input_desc
+                [name, get_id_by_name(name), id] for name, id in cpresult.input_desc
             ]
             group_desc["output_desc"] = [
-                [get_id_by_name(name), id] for name, id in cpresult.output_desc
+                [name, get_id_by_name(name), id] for name, id in cpresult.output_desc
             ]
 
             if cpresult.origin in result_reuse_map:
@@ -53,6 +53,46 @@ def dump(fusion_groups: List[FusionGroup]):
             group_desc["gain"] = group.gain
         obj.append(group_desc)
     return obj
+
+
+def save_models(ordered_nodes, fname: str):
+    model_infos = []
+    def filter_dtypes(dtypes):
+        return [str(dtype) for dtype in dtypes]
+    
+    for idx, node in enumerate(ordered_nodes):
+        model_info = {
+            "idx": idx,
+            "name": node.name,
+        }
+        # include input_names, input_shapes, input_dtypes, and input_id?
+        inputs = []
+        for edge in node._in_edges:
+            src = edge.src_node
+            if isinstance(src, PlaceHolderNode):
+                # it's input node
+                _input_info = {
+                    "name": src.name,
+                    "shapes": src._shapes,
+                    "dtypes": filter_dtypes(src._dtypes),
+                }
+                inputs.append(_input_info)
+        model_info["inputs"] = inputs
+        # outputs
+        outputs = []
+        for edge in node._out_edges:
+            dst = edge.dst_node
+            _output_info = {
+                "name": dst.name,
+                "shapes": dst._shapes,
+                "dtypes": filter_dtypes(dst._dtypes),
+            }
+            outputs.append(_output_info)
+        model_info["outputs"] = outputs
+        model_infos.append(model_info)
+    with open(fname, "w") as f:
+        json.dump(model_infos, f, indent=2)
+    return None
 
 
 def save_results(fusion_groups: List[FusionGroup], fname: str):
@@ -76,7 +116,7 @@ def export_groups(fusion_groups: List[FusionGroup], directory: str):
         group_name = group_name[:32]
         # clip the group name
         group_dir = os.path.join(directory, group_name)
-        
+
         if not os.path.exists(group_dir):
             os.makedirs(group_dir)
         # save kernel code
