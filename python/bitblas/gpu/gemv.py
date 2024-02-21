@@ -91,7 +91,11 @@ def is_gemv(sch: tir.Schedule, block_info: BlockInfo) -> Optional[List[tir.Buffe
     conditions.append(len(block_stmt.writes) == 1)
     conditions.append(_get_reduction_expr(block_stmt) is not None)
     conditions.append(
-        len(collect_block_iter_vars_used_in_access_region(block_stmt, block_stmt.writes[0].region))
+        len(
+            collect_block_iter_vars_used_in_access_region(
+                block_stmt, block_stmt.writes[0].region
+            )
+        )
         > 0
     )
     if not all(conditions):
@@ -101,10 +105,12 @@ def is_gemv(sch: tir.Schedule, block_info: BlockInfo) -> Optional[List[tir.Buffe
     ret = [
         read.buffer
         for read in block_stmt.reads
-        if len(collect_block_iter_vars_used_in_access_region(block_stmt, read.region)) < iter_num
-        and len(collect_block_iter_vars_used_in_access_region(block_stmt, read.region)) > 0
+        if len(collect_block_iter_vars_used_in_access_region(block_stmt, read.region))
+        < iter_num
+        and len(collect_block_iter_vars_used_in_access_region(block_stmt, read.region))
+        > 0
     ]
-    if len(ret) == len(block_stmt.reads):    
+    if len(ret) == len(block_stmt.reads):
         func = sch.mod["main"]
         opt_shapes: Dict = {}
         if "opt_shapes" in func.attrs:
@@ -289,10 +295,16 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             source_bit = B_decode_info["source_format"]["bits"]
             out_dtype = B_decode_info["target_format"]
             intrin_info = get_lop3_intrin_group(
-                out_dtype=out_dtype, storage_dtype=B_decode_info["storage_dtype"], source_format="uint", source_bit=source_bit, with_scaling=B_decode_info["with_scaling"]
+                out_dtype=out_dtype,
+                storage_dtype=B_decode_info["storage_dtype"],
+                source_format="uint",
+                source_bit=source_bit,
+                with_scaling=B_decode_info["with_scaling"],
             )
             sch.tensorize(sch.get_loops(block_decode_B)[-1], intrin_info["compute"])
-            sch.annotate(block_b, ann_key="pragma_import_c", ann_val=intrin_info["c_source"])
+            sch.annotate(
+                block_b, ann_key="pragma_import_c", ann_val=intrin_info["c_source"]
+            )
         return sch
 
     def apply_config(self, func: PrimFunc, config):
@@ -345,7 +357,9 @@ class GEMV(GPUScheduleRule):
             self.sch_inner_reduction(sch, target, block, vector_input_buffers, epilogue)
             return sch
         else:
-            return self.sch_outer_reduction(sch, target, block, vector_input_buffers, epilogue)
+            return self.sch_outer_reduction(
+                sch, target, block, vector_input_buffers, epilogue
+            )
 
     def sch_inner_reduction(  # pylint: disable=too-many-arguments, invalid-name, unused-argument
         self,
@@ -383,7 +397,9 @@ class GEMV(GPUScheduleRule):
             _, s, r, c = sch.get_loops(block=gemv)
             s = sch.fuse(_, s)
             r = sch.fuse(r, c)
-            bx, ts, tile_s = sch.split(s, factors=[None, TS, TILE_S], preserve_unit_iters=True)
+            bx, ts, tile_s = sch.split(
+                s, factors=[None, TS, TILE_S], preserve_unit_iters=True
+            )
             r, tr, tile_r_vec_n, vec_c = sch.split(
                 r, factors=[None, TR, TILE_R // VEC_C, VEC_C], preserve_unit_iters=True
             )
@@ -393,12 +409,16 @@ class GEMV(GPUScheduleRule):
 
             # rfactor: reduce to tx
             bx, ts, tile_s, tr_vec_c = sch.get_loops(block=gemv)
-            tr, vec_c = sch.split(tr_vec_c, factors=[TR, None], preserve_unit_iters=True)
+            tr, vec_c = sch.split(
+                tr_vec_c, factors=[TR, None], preserve_unit_iters=True
+            )
             rf2 = sch.rfactor(tr, 0)
 
             # bind, vectorize compute
             bx, ts, tile_s, r, tile_r_vec_n, tr_vec_c = sch.get_loops(block=rf)
-            tr, vec_c = sch.split(tr_vec_c, factors=[TR, None], preserve_unit_iters=True)
+            tr, vec_c = sch.split(
+                tr_vec_c, factors=[TR, None], preserve_unit_iters=True
+            )
             sch.reorder(bx, ts, tr, r, tile_s, tile_r_vec_n, vec_c)
             sch.bind(bx, "blockIdx.x")
             sch.bind(ts, TAG_S)
@@ -426,13 +446,17 @@ class GEMV(GPUScheduleRule):
             s_local, vec_load = sch.split(
                 s_local, factors=[None, VEC_LOAD], preserve_unit_iters=True
             )
-            sch.reorder(s_local, r_local, vec_load)  # either s_local or r_local should be 1
+            sch.reorder(
+                s_local, r_local, vec_load
+            )  # either s_local or r_local should be 1
             sch.vectorize(vec_load)
 
             # load vector into shared memory, shape should be the whole vector
             if LOAD_V_SHARED:
                 assert len(vector_input_buffers) == 1
-                V_shared = sch.cache_read(rf, read_buffer_index=0, storage_scope="shared")
+                V_shared = sch.cache_read(
+                    rf, read_buffer_index=0, storage_scope="shared"
+                )
                 sch.compute_at(V_shared, tr, preserve_unit_loops=True)
                 l = sch.get_loops(block=V_shared)[-1]
                 loop: tir.For = sch.get(l)
@@ -468,7 +492,9 @@ class GEMV(GPUScheduleRule):
             sch.reverse_compute_at(rf2, loop=bx, preserve_unit_loops=True)
             tr, vec_c, *ts_tile_s = sch.get_loops(block=rf2)[1:]
             ts_tile_s = sch.fuse(*ts_tile_s)
-            ts, tile_s = sch.split(ts_tile_s, factors=[TS, None], preserve_unit_iters=True)
+            ts, tile_s = sch.split(
+                ts_tile_s, factors=[TS, None], preserve_unit_iters=True
+            )
             tile_s, vec_s = sch.split(
                 tile_s,
                 factors=[None, get_max_factor(TILE_S, [1, 2, 4, 8])],
@@ -483,7 +509,9 @@ class GEMV(GPUScheduleRule):
             sch.reverse_compute_at(gemv, loop=bx, preserve_unit_loops=True)
             tr, *ts_tile_s = sch.get_loops(block=gemv)[1:]
             ts_tile_s = sch.fuse(*ts_tile_s)
-            ts, tile_s = sch.split(ts_tile_s, factors=[TS, None], preserve_unit_iters=True)
+            ts, tile_s = sch.split(
+                ts_tile_s, factors=[TS, None], preserve_unit_iters=True
+            )
             sch.reorder(tile_s, ts, tr)
             sch.bind(ts, TAG_S)
             sch.bind(tr, TAG_R)
@@ -502,7 +530,9 @@ class GEMV(GPUScheduleRule):
                 ann_val=unroll_factor,
             )
             sch.annotate(
-                block_or_loop=sch.get_loops(rf)[3], ann_key="pragma_unroll_explicit", ann_val=1
+                block_or_loop=sch.get_loops(rf)[3],
+                ann_key="pragma_unroll_explicit",
+                ann_val=1,
             )
 
             sch.annotate(
@@ -511,7 +541,9 @@ class GEMV(GPUScheduleRule):
                 ann_val=unroll_factor,
             )
             sch.annotate(
-                block_or_loop=sch.get_loops(rf2)[3], ann_key="pragma_unroll_explicit", ann_val=1
+                block_or_loop=sch.get_loops(rf2)[3],
+                ann_key="pragma_unroll_explicit",
+                ann_val=1,
             )
 
             if LOAD_V_SHARED:
@@ -521,7 +553,9 @@ class GEMV(GPUScheduleRule):
                     ann_val=unroll_factor,
                 )
                 sch.annotate(
-                    block_or_loop=sch.get_loops(V_shared)[-4], ann_key="pragma_vectorize", ann_val=1
+                    block_or_loop=sch.get_loops(V_shared)[-4],
+                    ann_key="pragma_vectorize",
+                    ann_val=1,
                 )
 
             # Schedule epilogue
@@ -537,7 +571,9 @@ class GEMV(GPUScheduleRule):
                     sch.reverse_compute_at(epilogue, bx, preserve_unit_loops=True)
                     ts_tile_s = sch.fuse(*sch.get_loops(epilogue)[1:])
                     ts_tile_s = sch.get_loops(epilogue)[-1]
-                    ts, tile_s = sch.split(ts_tile_s, factors=[TS, None], preserve_unit_iters=True)
+                    ts, tile_s = sch.split(
+                        ts_tile_s, factors=[TS, None], preserve_unit_iters=True
+                    )
                     sch.bind(ts, TAG_S)
                     sch.set_scope(block, 0, "local")
             # pylint: enable=invalid-name
@@ -628,9 +664,13 @@ class GEMV(GPUScheduleRule):
 
         TILE_S, TILE_R = (
             1,
-            len_c
-            if len_c > 1
-            else max(get_max_factor(len_r, [TR * 1, TR * 2, TR * 4, TR * 8]) // TR, 1),
+            (
+                len_c
+                if len_c > 1
+                else max(
+                    get_max_factor(len_r, [TR * 1, TR * 2, TR * 4, TR * 8]) // TR, 1
+                )
+            ),
         )
         VEC_C = min(get_max_factor(TILE_R, [1, 2, 4, 8]), VEC_C)
         VEC_LOAD = 1
@@ -829,9 +869,18 @@ class GEMV(GPUScheduleRule):
         vthd_axis = []
         thrd_axis = []
         tile_axis = []
+        # for gemv, we should skip dynamic symbolic in s_loops
+        s_loops = [
+            loop for loop in s_loops if isinstance(sch.get(loop).extent, tir.IntImm)
+        ]
+        assert len(s_loops) == len(
+            config.block
+        ), f"{len(s_loops)} != {len(config.block)}"
         for i, loop in enumerate(s_loops):
             if sch.get(loop).extent % config.block[i]:
-                raise NotImplementedError("Undivisible block in TIR schedule is still buggy.")
+                raise NotImplementedError(
+                    "Undivisible block in TIR schedule is still buggy."
+                )
             bx, _t = sch.split(loop, factors=[None, config.block[i]])
             blck_axis.append(bx)
             if config.step[i] > 1:
@@ -853,7 +902,12 @@ class GEMV(GPUScheduleRule):
 
         vthd_axis = list(reversed(vthd_axis))  # inner virtual thread first
         axis_order = (
-            blck_axis + vthd_axis + thrd_axis + reduce_outer_axis + reduce_inner_axis + tile_axis
+            blck_axis
+            + vthd_axis
+            + thrd_axis
+            + reduce_outer_axis
+            + reduce_inner_axis
+            + tile_axis
         )
 
         sch.reorder(*axis_order)
