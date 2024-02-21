@@ -58,3 +58,6 @@ doc/doxygen/html/*
 
 nnfusion_rt/
 models/frozenmodels/
+
+# log
+*.log

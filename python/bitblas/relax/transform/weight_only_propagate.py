@@ -13,6 +13,7 @@ from tvm.relax.expr import Call
 from bitblas.gpu.matmul_analysis import (
     get_tensorized_func_and_tags,
     get_propagate_map,
+    find_last_producer_from_buffer,
     find_arg_idx_from_buffer_chain,
     layout_propagate_chain,
 )
@@ -141,31 +142,9 @@ class WeightOnlyLayoutPropagation:
 
         _, inter_j, inter_k = intrin_group["micro_kernel"]
 
-        # find the block that required to be reindex and scope.
-        def get_transformed_block(buffer: tir.Buffer) -> Optional[BlockRV]:
-            # block that most near to the arguments
-            block = main_block
-            buffer = buffer
-            while True:
-                last_buffer = buffer
-                producers = sch.get_producers(block)
-
-                if len(producers) == 0:
-                    # do not have any producer means it is the first block
-                    break
-
-                for producer in producers:
-                    for write in sch.get(producer).writes:
-                        if write.buffer == buffer:
-                            block = producer
-                            buffer = sch.get(producer).reads[0].buffer
-                if buffer == last_buffer:
-                    break
-            return block
-
         # weight only propagation
         target_scope = ("read", 1)
-        transformed_block = get_transformed_block(sch.get(main_block).reads[1].buffer)
+        transformed_block = find_last_producer_from_buffer(sch, main_block, sch.get(main_block).reads[1].buffer)
         if transformed_block is None:
             return False
         if transformed_block != main_block:

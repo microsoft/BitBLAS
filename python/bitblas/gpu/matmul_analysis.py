@@ -118,6 +118,31 @@ def auto_inline_consumer_chain(
         auto_inline_consumers(sch, block)
 
 
+# find the block that required to be reindex and scope.
+def find_last_producer_from_buffer(
+    sch, main_block, buffer: tir.Buffer
+) -> Optional[BlockRV]:
+    # block that most near to the arguments
+    block = main_block
+    buffer = buffer
+    while True:
+        last_buffer = buffer
+        producers = sch.get_producers(block)
+
+        if len(producers) == 0:
+            # do not have any producer means it is the first block
+            break
+
+        for producer in producers:
+            for write in sch.get(producer).writes:
+                if write.buffer == buffer:
+                    block = producer
+                    buffer = sch.get(producer).reads[0].buffer
+        if buffer == last_buffer:
+            break
+    return block
+
+
 def find_arg_idx_from_buffer_chain(
     sch: tir.Schedule, main_block: tir.schedule.BlockRV, buffer: tir.Buffer
 ) -> int:

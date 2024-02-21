@@ -286,8 +286,10 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         block_local_b_v = sch.get_loops(block_shared_local_B)[-1]
         sch.vectorize(block_local_b_v)
         if "fast_decoding" in B_decode_info and B_decode_info["fast_decoding"]:
+            source_bit = B_decode_info["source_format"]["bits"]
+            out_dtype = B_decode_info["target_format"]
             intrin_info = get_lop3_intrin_group(
-                out_dtype="float16", storage_dtype=B_decode_info["storage_dtype"], source_format="uint", source_bit=4, with_scaling=B_decode_info["with_scaling"]
+                out_dtype=out_dtype, storage_dtype=B_decode_info["storage_dtype"], source_format="uint", source_bit=source_bit, with_scaling=B_decode_info["with_scaling"]
             )
             sch.tensorize(sch.get_loops(block_decode_B)[-1], intrin_info["compute"])
             sch.annotate(block_b, ann_key="pragma_import_c", ann_val=intrin_info["c_source"])

@@ -28,5 +28,7 @@ from .matmul import (
     MatmulTensorizationWMMA,
     MatmulTensorizationLegacy,
 )
+from .matmul_mma_dequantize import MatmulTensorizationMMAWithDequantizeInfo
+
 from .reduction import Reduction
 from .transpose import Transpose

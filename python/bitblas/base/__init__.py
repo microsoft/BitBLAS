@@ -28,3 +28,4 @@ from .common_schedules import get_block, get_output_blocks, try_inline, try_inli
 from .schedule_rule import ScheduleRule
 from .transform import ApplyDefaultSchedule, ApplyFastTuning
 from .utils import fast_tune, fast_tune_with_dynamic_range
+from .roller import *

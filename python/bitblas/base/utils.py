@@ -19,10 +19,11 @@ import os
 from tvm.contrib.popen_pool import PopenPoolExecutor, StatusKind, MapResult
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import numpy as np
-from typing import List, Tuple, Optional, Dict
+from typing import List, Tuple, Optional, Dict, Union
 from tvm import tir, IRModule
 from tvm.runtime import Module
 from tvm.tir import Schedule
+from tvm.relax.expr import Function
 import bitblas
 from .analysis import get_root_block, get_reduction_blocks, find_var_from_func
 from .roller.arch import Arch
@@ -123,6 +124,42 @@ def _apply_config(
     return None
 
 
+def get_dummy_input_arrays(
+    func: Union[tir.PrimFunc, Function], device: tvm.runtime.Device
+):
+    def var_wrapper(v):
+        if isinstance(v, tvm.tir.Var):
+            assert "opt_shapes" in func.attrs
+            assert v.name in func.attrs["opt_shapes"]
+            return func.attrs["opt_shapes"][v.name].value
+        elif isinstance(v, tvm.tir.IntImm):
+            return v.value
+        else:
+            raise RuntimeError("Not supported type: ", type(v))
+
+    profile_tensors = []
+    for param in func.params:
+        if isinstance(func, tir.PrimFunc):
+            if param not in func.buffer_map:
+                # in case of dynamic symbolic may in params
+                continue
+            arg = func.buffer_map[param]
+        elif isinstance(func, Function):
+            arg = param.struct_info
+        else:
+            raise ValueError("Not supported type: ", type(func))
+
+        profile_tensors.append(
+            tvm.nd.array(
+                np.random.uniform(0, 1, [var_wrapper(i) for i in arg.shape]).astype(
+                    arg.dtype
+                ),
+                device=device,
+            )
+        )
+    return profile_tensors
+
+
 def apply_and_build_parallel(
     func, configs, arch, num_repeats=5, max_workers=10
 ) -> CompileResult:
@@ -138,31 +175,7 @@ def apply_and_build_parallel(
         else:
             raise RuntimeError("Not supported type: ", type(v))
 
-    profile_tensors = []
-    for param in func.params:
-        if param not in func.buffer_map:
-            # in case of dynamic symbolic may in params
-            continue
-        arg = func.buffer_map[param]
-        if arg.dtype == "int8":
-            profile_tensors.append(
-                tvm.nd.array(
-                    np.random.randint(
-                        -127, 128, [var_warpper(i) for i in arg.shape]
-                    ).astype(arg.dtype),
-                    device=arch.device,
-                )
-            )
-        else:
-            profile_tensors.append(
-                tvm.nd.array(
-                    np.random.uniform(0, 1, [var_warpper(i) for i in arg.shape]).astype(
-                        arg.dtype
-                    ),
-                    device=arch.device,
-                )
-            )
-
+    profile_tensors = get_dummy_input_arrays(func, arch.device)
     max_workers = min(len(configs), os.cpu_count(), max_workers)
 
     # apply config in thread parallel
@@ -241,7 +254,6 @@ def apply_and_build_parallel(
     best = None
     best_latency = 1e9
     for cpresult in cpresults:
-        # print(cpresult.code)
         config = cpresult.config
         try:
             latency = cpresult.profile()

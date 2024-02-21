@@ -46,8 +46,8 @@ __device__ void decode_i4u_to_f16(T1 *_i4u, T2 *B_local_decode, const int N = 8)
 """
 
 decode_i4_to_f16_scale = """
-template <typename T1, typename T2, bool isSigned = false>
-__device__ void decode_i4b_to_f16_scale(T1 *_i4s, T2 *B_local_decode, T2 *scale, const int N = 8)
+template <typename T1, typename T2, typename T3, bool isSigned = false>
+__device__ void decode_i4b_to_f16_scale(T1 *_i4s, T2 *B_local_decode, T3 *scale, const int N = 8)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -72,16 +72,16 @@ __device__ void decode_i4b_to_f16_scale(T1 *_i4s, T2 *B_local_decode, T2 *scale,
     
 }
 
-template <typename T1, typename T2>
-__device__ void decode_i4s_to_f16_scale(T1 *_i4s, T2 *B_local_decode, T2 *scale, const int N = 8)
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i4s_to_f16_scale(T1 *_i4s, T2 *B_local_decode, T3 *scale, const int N = 8)
 {
-    decode_i4b_to_f16_scale<T1, T2, true>(_i4s, B_local_decode, scale, N);
+    decode_i4b_to_f16_scale<T1, T2, T3, true>(_i4s, B_local_decode, scale, N);
 }
 
-template <typename T1, typename T2>
-__device__ void decode_i4u_to_f16_scale(T1 *_i4u, T2 *B_local_decode,  T2 *scale, const int N = 8)
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i4u_to_f16_scale(T1 *_i4u, T2 *B_local_decode,  T3 *scale, const int N = 8)
 {
-    decode_i4b_to_f16_scale<T1, T2, false>(_i4u, B_local_decode, scale, N);
+    decode_i4b_to_f16_scale<T1, T2, T3, false>(_i4u, B_local_decode, scale, N);
 }
 """
 
@@ -447,12 +447,21 @@ TensorIntrin.register(
     ),
 )
 
-
 LOP3_FAST_DECODE_UINT2_TO_INT8_TO_INT8_L16_INTRIN = (
-    "lop3_fast_decode_i2_to_int8_to_i8_l16_"
+    "lop3_fast_decode_u2_to_int8_to_i8_l16_"
 )
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT2_TO_INT8_TO_INT8_L16_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=2, storage_dtype="int8", target_dtype="int8", loops_extent=16
+    ),
+)
+
+LOP3_FAST_DECODE_INT2_TO_INT8_TO_INT8_L16_INTRIN = (
+    "lop3_fast_decode_i2_to_int8_to_i8_l16_"
+)
+TensorIntrin.register(
+    LOP3_FAST_DECODE_INT2_TO_INT8_TO_INT8_L16_INTRIN,
     *get_fast_decode_intrin(
         source_bit=2, storage_dtype="int8", target_dtype="int8", loops_extent=16
     ),

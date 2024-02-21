@@ -1,6 +1,6 @@
 import tvm
+import bitblas
 import numpy as np
-from tvm.script import tir as T
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.arch import CUDA
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
@@ -41,7 +41,8 @@ def test_i8_i8_gemm():
     print(
         "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
-
+    with open("debug/after_memory_rewrite.cu", "+w") as f:
+        f.write(best.code)
 
 def test_i8_i8_gemm_correctness():
     ir_module = matmul_nt(1024, 1024, 1024, "int8", "int32")
@@ -301,7 +302,7 @@ def test_i8_i2_gemm():
     print(best.code)
 
 def test_i8_i2_propagate_b_gemm():
-    ir_module = matmul_nt_dequantize_b_propagate_b(16384, 16384, 16384, "int8", "int32", 'int8', bit=2, fast_decoding=True)
+    ir_module = matmul_nt_dequantize_b_propagate_b(16384, 16384, 16384, "int8", 'int8',accum_dtype="int32", bit=2, fast_decoding=True)
     func = ir_module["main"]
     target = tvm.target.Target("nvidia/nvidia-a100")
     arch = CUDA(target)
@@ -314,7 +315,6 @@ def test_i8_i2_propagate_b_gemm():
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
 
     configs = policy.emit_config(20)
-
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
         "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
@@ -324,6 +324,8 @@ def test_i8_i2_propagate_b_gemm():
     print(
         "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
+    with open("debug/after_memory_rewrite.cu", "+w") as f:
+        f.write(best.code)
 
 def test_i8_i2_propagate_a_propagate_b_gemm():
     ir_module = matmul_nt_dequantize_b_propagate_a_b(16384, 16384, 16384, "int8", "int32", "int8", bit=2, fast_decoding=False)
@@ -339,7 +341,6 @@ def test_i8_i2_propagate_a_propagate_b_gemm():
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
 
     configs = policy.emit_config(20)
-
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
         "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
@@ -349,11 +350,11 @@ def test_i8_i2_propagate_a_propagate_b_gemm():
     print(
         "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
-    with open("after_memory_rewrite.cu", "+w") as f:
+    with open("debug/after_memory_rewrite.cu", "+w") as f:
         f.write(best.code)
 
 
-# test_i8_i8_gemm()
+test_i8_i8_gemm()
 # test_i8_i8_gemm_correctness()
 # test_i8_i8_i32_gemm_propagate_b()
 # test_i8_i8_i32_cast_i8_gemm_propagate_b()
@@ -364,5 +365,5 @@ def test_i8_i2_propagate_a_propagate_b_gemm():
 # test_i8_i4_propagate_a_propagate_b_gemm()
 
 # test_i8_i2_gemm()
-test_i8_i2_propagate_b_gemm()
+# test_i8_i2_propagate_b_gemm()
 # test_i8_i2_propagate_a_propagate_b_gemm()
