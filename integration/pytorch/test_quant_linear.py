@@ -8,12 +8,16 @@ from auto_gptq.nn_modules.qlinear.qlinear_cuda_old import (
     QuantLinear as CudaOldQuantLinear,
 )
 
+torch.manual_seed(0)
+
 
 def gen_quant4(k, n, groupsize=-1):
     maxq = 2**4 - 1
     w = torch.randn((k, n), dtype=torch.half, device="cpu")
 
     original_w = w.clone()
+    print("original weight is: ")
+    print(original_w)
     if group_size == -1:
         groupsize = k
 
@@ -29,12 +33,12 @@ def gen_quant4(k, n, groupsize=-1):
     w = torch.round(w / s).int()
 
     # Unsigned storage.
-    w += (maxq + 1) // 2
+    w += (maxq) // 2
     w = torch.clamp(w, 0, maxq)
     print("quantize weight is: ")
-    print((w - (maxq + 1) // 2))
+    print((w - (maxq) // 2))
     # Dequantize.
-    ref = (w - (maxq + 1) // 2).half() * s
+    ref = (w - (maxq) // 2).half() * s
 
     if groupsize != -1:
 
@@ -51,17 +55,17 @@ def gen_quant4(k, n, groupsize=-1):
     linear = nn.Linear(k, n, bias=False)
     linear.weight.data = ref.t()
 
-    return original_w, linear, s
+    return original_w, linear, s, (w - (maxq) // 2)
 
 
 bits = 4
 m = 1
-group_size = 1024
+group_size = -1
 infeatures = 1024  # this is k of weight (n, k)
 outfeatures = 4096  # this is n of weight (n, k)
 bias = False
 
-_, linear, s = gen_quant4(infeatures, outfeatures, group_size)
+original_w, linear, s, qw = gen_quant4(infeatures, outfeatures, group_size)
 
 cuda_old_linear = CudaOldQuantLinear(
     bits=4,
@@ -70,7 +74,10 @@ cuda_old_linear = CudaOldQuantLinear(
     outfeatures=outfeatures,
     bias=False,
 )
-zeros = torch.full((infeatures // group_size, outfeatures), 8, dtype=torch.int32)
+
+if group_size == -1:
+    group_size = infeatures
+zeros = torch.full((infeatures // group_size, outfeatures), 7, dtype=torch.int32)
 
 cuda_old_linear.pack(linear, s.T, zeros.T, g_idx=None)
 linear_module = torch.nn.Linear(
@@ -97,7 +104,10 @@ inp = torch.rand(m, infeatures, dtype=torch.float16, device="cuda")
 cuda_old_linear = cuda_old_linear.to("cuda")
 bitblas_qlinear = bitblas_qlinear.to("cuda")
 with torch.no_grad():
+    res_original = linear_module(inp)
     res_cuda_old = cuda_old_linear(inp)
     res_bitblas = bitblas_qlinear(inp)
+
+print(res_original)
 print(res_cuda_old)
 print(res_bitblas)

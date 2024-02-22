@@ -64,11 +64,11 @@ class QuantLinear(nn.Module):
             "qweight",
             torch.empty(
                 (self.outfeatures, self.infeatures // storage_nbit * n_float_per_elem),
-                dtype=torch.int8,
+                dtype=torch.uint8,
             ),
         )
         self.register_buffer(
-            "scale",
+            "scales",
             torch.empty(
                 (self.outfeatures, self.infeatures // self.group_size), dtype=torch.half
             ),
@@ -99,6 +99,7 @@ class QuantLinear(nn.Module):
             fast_decoding=self.fast_type_conversion,
             with_bias=bias,
         )
+        # self.bitblas_matmul.optimize(topk=20)
 
     def post_init(self):
         pass
@@ -113,7 +114,7 @@ class QuantLinear(nn.Module):
 
         # do permutation with (n, k) layout
         w = linear.weight.data
-        # scale shape should be (n, k) as well.
+        # scales shape should be (n, k) as well.
         s = scales
         # do permutation on weight
         intweight = []
@@ -126,6 +127,9 @@ class QuantLinear(nn.Module):
         intweight = intweight.contiguous()
         intweight = intweight.cpu().numpy().astype(np.int8)
         print("bitblas dequantize weight is ")
+        print(intweight)
+        intweight = intweight + 7
+        print("bitblas dequantize weight +7 is ")
         print(intweight)
         # quantize to 4bit
         qw_np = general_compress(
@@ -140,7 +144,7 @@ class QuantLinear(nn.Module):
 
         q = torch.from_numpy(qw_np).to(w.device)
         self.qweight = q.to(self.qweight.device).contiguous()
-        self.scale = s.to(self.scale.device).contiguous()
+        self.scales = s.to(self.scales.device).contiguous()
 
         if self.bias is not None:
             self.bias[:] = linear.bias.data.to(self.bias.device).contiguous()
@@ -150,7 +154,7 @@ class QuantLinear(nn.Module):
         C = torch.empty(
             A.shape[:-1] + (self.qweight.shape[0],), dtype=A.dtype, device=A.device
         )
-        args = [A, self.qweight, self.scale]
+        args = [A, self.qweight, self.scales]
         if self.bias is not None:
             args.append(self.bias)
         args.append(C)
