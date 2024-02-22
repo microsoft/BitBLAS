@@ -34,12 +34,12 @@ def test_i8_i8_gemm():
 
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
     with open("debug/after_memory_rewrite.cu", "+w") as f:
         f.write(best.code)
@@ -61,12 +61,12 @@ def test_i8_i8_gemm_correctness():
 
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
 
     numpy_a = np.random.randint(-4, 3, (1024, 1024)).astype("int8")
@@ -106,12 +106,12 @@ def test_i8_i8_i32_gemm_propagate_b():
 
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
 
 
@@ -134,12 +134,12 @@ def test_i8_i8_i32_cast_i8_gemm_propagate_b():
 
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
 
 
@@ -162,12 +162,12 @@ def test_i8_i8_i32_gemm_propagate_a_propagate_b():
 
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
 
 def test_i8_i8_i32_gemm_propagate_a_propagate_b_cast_s8():
@@ -189,12 +189,12 @@ def test_i8_i8_i32_gemm_propagate_a_propagate_b_cast_s8():
 
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
 
 def test_i8_i4_gemm():
@@ -214,12 +214,12 @@ def test_i8_i4_gemm():
 
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
 
 def test_i8_i4_propagate_b_gemm():
@@ -239,12 +239,12 @@ def test_i8_i4_propagate_b_gemm():
 
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
     # print(best.sch.mod)
     print(best.code)
@@ -266,12 +266,12 @@ def test_i8_i4_propagate_a_propagate_b_gemm():
 
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
     print(best.config)
 
@@ -292,12 +292,12 @@ def test_i8_i2_gemm():
 
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
     print(best.code)
 
@@ -317,12 +317,12 @@ def test_i8_i2_propagate_b_gemm():
     configs = policy.emit_config(20)
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
     with open("debug/after_memory_rewrite.cu", "+w") as f:
         f.write(best.code)
@@ -343,12 +343,12 @@ def test_i8_i2_propagate_a_propagate_b_gemm():
     configs = policy.emit_config(20)
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
     )
     with open("debug/after_memory_rewrite.cu", "+w") as f:
         f.write(best.code)

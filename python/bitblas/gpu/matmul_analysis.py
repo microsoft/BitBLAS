@@ -652,7 +652,7 @@ def get_tensorized_func_and_tags(
             )
         except:
             print(
-                "[FastDlight][WARNING] Cannot find the corresponding wmma intrin group"
+                "[BitBLAS][WARNING] Cannot find the corresponding wmma intrin group"
             )
             return func, None
 

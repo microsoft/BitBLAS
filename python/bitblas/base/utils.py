@@ -88,7 +88,7 @@ def _apply_config(
     case 3. if any([t > 1 for t in config.reduce_thread]), we should use the InnerThread Reduction Rule.
     case 4. else we should use general reduction rule.
     """
-    print("[FastDlight] Apply config ", config)
+    print("[BitBLAS] Apply config ", config)
 
     sch = tir.Schedule(func)
     root_block = get_root_block(sch)
@@ -114,10 +114,11 @@ def _apply_config(
         _reduction_rules.append(bitblas.gpu.GeneralReduction())
 
         for rule in _reduction_rules:
+            sch = rule.apply_config(func, config)
             try:
                 sch = rule.apply_config(func, config)
             except Exception as e_msg:
-                print("[FastDlight] Apply config failed: ", e_msg)
+                print("[BitBLAS] Apply config failed: ", e_msg)
                 continue
             if sch is not None:
                 return sch
@@ -193,7 +194,8 @@ def apply_and_build_parallel(
     # build in process parallel
     def _build(context) -> str:
         idx, mod, arch = context
-
+        if mod is None:
+            return idx, None, None
         # TODO(lei):
         # this is a trick to implement rasteration, will be removed in the future
         config = configs[idx]
@@ -226,10 +228,10 @@ def apply_and_build_parallel(
         [(i, sch.mod, arch) for i, sch in enumerate(_sched)],
     ):
         if map_result.status == StatusKind.TIMEOUT:
-            print("[FastDlight] LocalBuilder: Timeout")
+            print("[BitBLAS] LocalBuilder: Timeout")
         elif map_result.status == StatusKind.EXCEPTION:
             # TODO(lei): redirect the exception to file if needed
-            print("[FastDlight] LocalBuilder: An exception occurred ", map_result.value)
+            print("[BitBLAS] LocalBuilder: An exception occurred ", map_result.value)
             continue
         elif map_result.status == StatusKind.COMPLETE:
             idx, code, artifact_path = map_result.value
@@ -258,10 +260,10 @@ def apply_and_build_parallel(
         try:
             latency = cpresult.profile()
         except Exception as e_mesg:
-            print("[FastDlight] Evaluation with config failed: ", e_mesg)
+            print("[BitBLAS] Evaluation with config failed: ", e_mesg)
             continue
-        print("[FastDlight] Evaluation with config ", config)
-        print("[FastDlight] Time cost of this config: {:.3f} ms".format(latency * 1e3))
+        print("[BitBLAS] Evaluation with config ", config)
+        print("[BitBLAS] Time cost of this config: {:.3f} ms".format(latency * 1e3))
 
         cpresult.latency = latency
         if latency < best_latency:
@@ -288,7 +290,7 @@ def fast_tune(
     parallel_build: bool = True,
 ):
     if target.kind.name != "cuda":
-        print("[FastDlight] Only support CUDA target")
+        print("[BitBLAS] Only support CUDA target")
         return None, None
 
     specilized_func = func
@@ -296,11 +298,11 @@ def fast_tune(
         opt_shapes = func.attrs["opt_shapes"]
         # should be int value
         if not all([isinstance(v.value, int) for v in opt_shapes.values()]):
-            print("[FastDlight] The opt_shapes should be int value")
+            print("[BitBLAS] The opt_shapes should be int value")
             return None, None
         # currently only support one dynmaic range
         if len(opt_shapes) > 1:
-            print("[FastDlight] Currently only support one dynamic range")
+            print("[BitBLAS] Currently only support one dynamic range")
             return None, None
 
         for buffer in func.buffer_map.values():
@@ -325,7 +327,7 @@ def fast_tune(
             specilized_func, arch.target
         )
     except Exception as e_msg:
-        print("[FastDlight] Get tensorized func and tags failed: ", e_msg)
+        print("[BitBLAS] Get tensorized func and tags failed: ", e_msg)
         tags = None
     if tags:
         policy = TensorCorePolicy(func=specilized_func, arch=arch, tags=tags)
@@ -462,7 +464,7 @@ def fast_tune_with_dynamic_range(
     dynamic_range: Dict[str, List[int]] = {},
 ) -> IRModule:
     if target.kind.name != "cuda":
-        print("[FastDlight] Only support CUDA target")
+        print("[BitBLAS] Only support CUDA target")
         return None
     if not global_symbol:
         global_symbol = func.attrs["global_symbol"]
@@ -476,13 +478,13 @@ def fast_tune_with_dynamic_range(
                     opt_shapes[axis.name] = dynamic_range[axis.name]
                 else:
                     raise ValueError(
-                        f"[FastDlight] The axis {axis.name} is not in dynamic_range"
+                        f"[BitBLAS] The axis {axis.name} is not in dynamic_range"
                     )
     func = func.with_attr("opt_shapes", opt_shapes)
 
     if "opt_shapes" not in func.attrs:
         print(
-            "[FastDlight] The primfunc has no opt_shapes, please set opt_shapes for the primfunc"
+            "[BitBLAS] The primfunc has no opt_shapes, please set opt_shapes for the primfunc"
         )
         return None
     else:
@@ -490,10 +492,10 @@ def fast_tune_with_dynamic_range(
         if not all(
             [isinstance(v, tvm.ir.Array) for v in func.attrs["opt_shapes"].values()]
         ):
-            print("[FastDlight] The opt_shapes should be list value")
+            print("[BitBLAS] The opt_shapes should be list value")
             return None
 
-    print("[FastDlight] Start fast tuning with dynamic range")
+    print("[BitBLAS] Start fast tuning with dynamic range")
     opt_shapes = func.attrs["opt_shapes"]
 
     # Step 1.Calculate the Cartesian product using itertools.product

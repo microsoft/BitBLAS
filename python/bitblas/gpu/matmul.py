@@ -260,7 +260,9 @@ class Matmul(GPUScheduleRule):
 
         # in some case conv template will use this rule, but the tile config is not
         # analyzed by matmul expr.
-        assert len(config.block) == 2, "Matmul Only support 2D block"
+        if len(config.block) != 2:
+            print(f"Warning: block config {config.block} is not valid for matmul, skip.")
+            return None
 
         main_block = reduction_blocks[0]
 

@@ -569,47 +569,6 @@ def get_lop3_intrin_group(
     }
 
 
-# interleave weight numpy code
-def interleave_weight(qweight, nbits=4, target_dtype="float16"):
-    assert target_dtype in ["float16", "int8"]
-    # reinterpret the data type of qweight to int32
-    qweight = qweight.view(np.int32)
-    new_qweight = np.zeros_like(qweight)
-    bits_stride = 8 if target_dtype == "int8" else 16
-    mask = (1 << nbits) - 1  # for 4bit the val is 0x0000000f
-    num_groups = 32 // bits_stride
-    elems_per_group = bits_stride // nbits
-    for i in range(num_groups):
-        for j in range(elems_per_group):
-            offset = i * elems_per_group + j
-            shift = (offset % num_groups) * bits_stride + (offset // num_groups) * nbits
-            new_qweight |= ((qweight >> (nbits * offset)) & mask) << shift
-
-    if nbits == 1 and target_dtype == "int8":
-        # special handling for 1b interleave
-        n16_weight = new_qweight & np.int32(0xF0F00F0F)
-        n16_weight |= ((new_qweight & np.int32(0x000000F0)) >> 4) << 16
-        n16_weight |= ((new_qweight & np.int32(0x0000F000)) >> 12) << 24
-        n16_weight |= ((new_qweight & np.int32(0x000F0000)) >> 16) << 4
-        n16_weight |= ((new_qweight & np.int32(0x0F000000)) >> 24) << 12
-        return n16_weight.view(np.int8)
-    elif nbits == 2 and target_dtype == "float16":
-        n8_weight = new_qweight & np.int32(0xFF0000FF)
-        n8_weight |= ((new_qweight & np.int32(0x0000FF00)) >> 8) << 16
-        n8_weight |= ((new_qweight & np.int32(0x00FF0000)) >> 16) << 8
-        return n8_weight.view(np.int8)
-    elif nbits == 1 and target_dtype == "float16":
-        n8_weight = new_qweight & 0xF000000F
-        n8_weight |= ((new_qweight & 0x000000F0) >> 4) << 8
-        n8_weight |= ((new_qweight & 0x00000F00) >> 8) << 16
-        n8_weight |= ((new_qweight & 0x0000F000) >> 12) << 24
-        n8_weight |= ((new_qweight & 0x000F0000) >> 16) << 4
-        n8_weight |= ((new_qweight & 0x00F00000) >> 20) << 12
-        n8_weight |= ((new_qweight & 0x0F000000) >> 24) << 20
-
-    return new_qweight.view(np.int8)
-
-
 # TIR interleave weight impl-> 2D implementation
 def tir_interleave_weight(
     N: int = 2,

@@ -8,7 +8,14 @@ from .quantization import (
 )
 
 
-def matmul_nt_dyn_m(N, K, in_dtype="float16", out_dtype="float16"):
+def matmul_nt_dyn_m(
+    N,
+    K,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+    with_bias=False,
+):
     @tvm.script.ir_module
     class MatmulNT:
         @T.prim_func
@@ -28,7 +35,68 @@ def matmul_nt_dyn_m(N, K, in_dtype="float16", out_dtype="float16"):
                         vj, vk
                     ].astype(out_dtype)
 
-    return MatmulNT
+    @tvm.script.ir_module
+    class MatmulNTWithAccum:
+        @T.prim_func
+        def main(a: T.handle, b: T.handle, c: T.handle):
+            T.func_attr({"global_symbol": "main", "tir.noalias": True})
+            m = T.int32()
+            A = T.match_buffer(a, [m, K], dtype=in_dtype)
+            B = T.match_buffer(b, [N, K], dtype=in_dtype)
+            C = T.match_buffer(c, [m, N], dtype=out_dtype)
+            accum = T.alloc_buffer([m, N], dtype=accum_dtype)
+            for i, j, k in T.grid(m, N, K):
+                with T.block("B"):
+                    vi, vj, vk = T.axis.remap("SSR", [i, j, k])
+                    with T.init():
+                        accum[vi, vj] = tvm.tir.const(0, accum_dtype)
+                    accum[vi, vj] = accum[vi, vj] + A[vi, vk].astype(accum_dtype) * B[
+                        vj, vk
+                    ].astype(accum_dtype)
+
+            for i, j in T.grid(m, N):
+                with T.block("C"):
+                    vi, vj = T.axis.remap("SS", [i, j])
+                    C[vi, vj] = accum[vi, vj].astype(out_dtype)
+
+    @tvm.script.ir_module
+    class MatmulNTWithAccumBias:
+        @T.prim_func
+        def main(a: T.handle, b: T.handle, bias: T.handle, c: T.handle):
+            T.func_attr({"global_symbol": "main", "tir.noalias": True})
+            m = T.int32()
+            A = T.match_buffer(a, [m, K], dtype=in_dtype)
+            B = T.match_buffer(b, [N, K], dtype=in_dtype)
+            Bias = T.match_buffer(bias, [N], dtype=out_dtype)
+            C = T.match_buffer(c, [m, N], dtype=out_dtype)
+            accum = T.alloc_buffer([m, N], dtype=accum_dtype)
+            accum_bias = T.alloc_buffer([m, N], dtype=out_dtype)
+            for i, j, k in T.grid(m, N, K):
+                with T.block("B"):
+                    vi, vj, vk = T.axis.remap("SSR", [i, j, k])
+                    with T.init():
+                        accum[vi, vj] = tvm.tir.const(0, accum_dtype)
+                    accum[vi, vj] = accum[vi, vj] + A[vi, vk].astype(accum_dtype) * B[
+                        vj, vk
+                    ].astype(accum_dtype)
+
+            for i, j in T.grid(m, N):
+                with T.block("C"):
+                    vi, vj = T.axis.remap("SS", [i, j])
+                    accum_bias[vi, vj] = accum[vi, vj].astype(out_dtype)
+
+            for i, j in T.grid(m, N):
+                with T.block("Bias"):
+                    vi, vj = T.axis.remap("SS", [i, j])
+                    C[vi, vj] = accum_bias[vi, vj] + Bias[vj]
+
+    final_module = MatmulNT
+    if with_bias:
+        final_module = MatmulNTWithAccumBias
+    elif accum_dtype != out_dtype:
+        final_module = MatmulNTWithAccum
+
+    return final_module
 
 
 def matmul_nn_dyn_m(N, K, in_dtype="float16", out_dtype="float16"):
@@ -54,48 +122,86 @@ def matmul_nn_dyn_m(N, K, in_dtype="float16", out_dtype="float16"):
     return MatmulNN
 
 
-def matmul_nn(M, N, K, in_dtype="float16", out_dtype="float16"):
-    @tvm.script.ir_module
-    class MatmulNN:
-        @T.prim_func
-        def main(a: T.handle, b: T.handle, c: T.handle):
-            T.func_attr({"global_symbol": "main", "tir.noalias": True})
-            A = T.match_buffer(a, [M, K], dtype=in_dtype)
-            B = T.match_buffer(b, [K, N], dtype=in_dtype)
-            C = T.match_buffer(c, [M, N], dtype=out_dtype)
+def matmul_nn(
+    M,
+    N,
+    K,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+    with_bias=False,
+):
+    A = te.placeholder((M, K), name="A", dtype=in_dtype)
+    B = te.placeholder((K, N), name="B", dtype=in_dtype)
+    Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
 
-            for i, j, k in T.grid(M, N, K):
-                with T.block("B"):
-                    vi, vj, vk = T.axis.remap("SSR", [i, j, k])
-                    with T.init():
-                        C[vi, vj] = tvm.tir.const(0, out_dtype)
-                    C[vi, vj] = C[vi, vj] + A[vi, vk].astype(out_dtype) * B[
-                        vk, vj
-                    ].astype(out_dtype)
+    # Describe the matrix multiplication in TE
+    k = te.reduce_axis((0, K), name="k")
+    C = te.compute(
+        (M, N),
+        lambda i, j: te.sum(
+            A[i, k].astype(accum_dtype) * B[k, j].astype(accum_dtype), axis=k
+        ),
+        name="C",
+    )
+    last_output = C
+    if accum_dtype != out_dtype:
+        D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+        last_output = D
 
-    return MatmulNN
+    if with_bias:
+        E = te.compute((M, N), lambda i, j: last_output[i, j] + Bias[j], name="E")
+        last_output = E
+
+    if with_bias:
+        args = [A, B, Bias, last_output]
+    else:
+        args = [A, B, last_output]
+
+    func = te.create_prim_func(args)
+
+    return tvm.IRModule.from_expr(func)
 
 
-def matmul_nt(M, N, K, in_dtype="float16", out_dtype="float16"):
-    @tvm.script.ir_module
-    class MatmulNT:
-        @T.prim_func
-        def main(a: T.handle, b: T.handle, c: T.handle):
-            T.func_attr({"global_symbol": "main", "tir.noalias": True})
-            A = T.match_buffer(a, [M, K], dtype=in_dtype)
-            B = T.match_buffer(b, [N, K], dtype=in_dtype)
-            C = T.match_buffer(c, [M, N], dtype=out_dtype)
+def matmul_nt(
+    M,
+    N,
+    K,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+    with_bias=False,
+):
+    A = te.placeholder((M, K), name="A", dtype=in_dtype)
+    B = te.placeholder((N, K), name="B", dtype=in_dtype)
+    Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
 
-            for i, j, k in T.grid(M, N, K):
-                with T.block("B"):
-                    vi, vj, vk = T.axis.remap("SSR", [i, j, k])
-                    with T.init():
-                        C[vi, vj] = tvm.tir.const(0, out_dtype)
-                    C[vi, vj] = C[vi, vj] + A[vi, vk].astype(out_dtype) * B[
-                        vj, vk
-                    ].astype(out_dtype)
+    # Describe the matrix multiplication in TE
+    k = te.reduce_axis((0, K), name="k")
+    C = te.compute(
+        (M, N),
+        lambda i, j: te.sum(
+            A[i, k].astype(accum_dtype) * B[j, k].astype(accum_dtype), axis=k
+        ),
+        name="C",
+    )
+    last_output = C
+    if accum_dtype != out_dtype:
+        D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+        last_output = D
 
-    return MatmulNT
+    if with_bias:
+        E = te.compute((M, N), lambda i, j: last_output[i, j] + Bias[j], name="E")
+        last_output = E
+
+    if with_bias:
+        args = [A, B, Bias, last_output]
+    else:
+        args = [A, B, last_output]
+
+    func = te.create_prim_func(args)
+
+    return tvm.IRModule.from_expr(func)
 
 
 def matmul_nt_propagate_a_propagate_b_s8_s8_s32_mma(
@@ -403,6 +509,7 @@ def matmul_nt_dequantize_b(
     with_scaling=False,
     group_size=-1,
     fast_decoding=False,
+    with_bias=False,
 ):
     storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
 
@@ -412,6 +519,7 @@ def matmul_nt_dequantize_b(
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder((N, K // storage_nbit * bit), name="B", dtype=storage_dtype)
     Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
+    Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
 
     def decode_func(n, k):
         if storage_dtype[:3] == "int":
@@ -441,9 +549,16 @@ def matmul_nt_dequantize_b(
         name="C",
     )
     D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
-    args = [A, B, D]
+    args = [A, B]
+    last_output = D
     if with_scaling:
-        args = [A, B, Scale, D]
+        args.append(Scale)
+    if with_bias:
+        E = te.compute((M, N), lambda i, j: D[i, j] + Bias[j], name="E")
+        last_output = E
+        args.append(Bias)
+    args.append(last_output)
+
     func = te.create_prim_func(args).with_attr(
         "dequantize_info",
         {
@@ -477,6 +592,7 @@ def matmul_nt_dequantize_b_propagate_b(
     with_scaling=False,
     group_size=-1,
     fast_decoding=False,
+    with_bias=False,
 ):
     wm, wn, wk = 16, 16, 16
     if in_dtype == "int8":
@@ -491,6 +607,7 @@ def matmul_nt_dequantize_b_propagate_b(
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder((N // wn, K // wk, wn, wk // 8 * bit), name="B", dtype="int8")
     Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
+    Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
 
     def decode_func(n, k, nn, kk):
         if storage_dtype[:3] == "int":
@@ -532,6 +649,16 @@ def matmul_nt_dequantize_b_propagate_b(
         name="C",
     )
     D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+    args = [A, B]
+    last_output = D
+    if with_scaling:
+        args.append(Scale)
+    if with_bias:
+        E = te.compute((M, N), lambda i, j: D[i, j] + Bias[j], name="E")
+        last_output = E
+        args.append(Bias)
+    args.append(last_output)
+
     func = te.create_prim_func([A, B, D]).with_attr(
         "dequantize_info",
         {
@@ -747,6 +874,8 @@ matmul_impl_factory = {
     "matmul_nn": matmul_nn,
     "matmul_nn_dyn_m": matmul_nn_dyn_m,
     "matmul_nt_propagate_b_f16_f16_mma": matmul_nt_propagate_b_f16_f16_f16_mma,
-    "matmul_nt_propagate_a_b": matmul_nt_propagate_a_b,
-    "matmul_nt_propagate_a_b_f16_f16_mma": matmul_nt_propagate_a_b,
+    "matmul_nt_pa_pb": matmul_nt_propagate_a_b,
+    "matmul_nt_pa_pb_f16_f16_mma": matmul_nt_propagate_a_b,
+    "matmul_nt_dequantize_b": matmul_nt_dequantize_b,
+    "matmul_nt_dequantize_b_pb": matmul_nt_dequantize_b_propagate_b,
 }

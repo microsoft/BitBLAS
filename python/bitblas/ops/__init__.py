@@ -1,1 +1,1 @@
-from .matmul import Matmul
+from .matmul import Matmul, MatmulWeightOnlyDequantize

@@ -26,12 +26,12 @@ def test_f16_f16_gemm():
 
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 20 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 20 is {:.3f} ms".format(
             best.latency * 1e3
         )
     )
@@ -64,12 +64,12 @@ def test_f16_i4_gemm(M=1, N=16384, K=16384, bit=4, fast_decoding=True):
     # sch = bitblas.gpu.gemv.GEMVWithDequantizeInfo().apply_config(func, configs[0])
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 20 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 20 is {:.3f} ms".format(
             best.latency * 1e3
         )
     )

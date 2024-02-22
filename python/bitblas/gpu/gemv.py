@@ -431,10 +431,14 @@ class GEMV(GPUScheduleRule):
                     lambda x, y: x * y, buf.shape, tir.IntImm(buf.shape[0].dtype, 1)
                 ) * get_bytes(buf.dtype)
                 shared_mem_usage += buf_size
+            try:
+                max_shared_memory_per_block = target.max_shared_memory_per_block
+            except:
+                max_shared_memory_per_block = 49152
             LOAD_V_SHARED = (
                 LOAD_V_SHARED
                 and isinstance(shared_mem_usage, tir.IntImm)
-                and shared_mem_usage.value <= target.max_shared_memory_per_block
+                and shared_mem_usage.value <= max_shared_memory_per_block
             )
 
             # vectorize load A

@@ -206,12 +206,12 @@ sch = bitblas.gpu.MatmulTensorizationMMAWithDequantizeInfo().apply_config(
 )
 # cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
 # print(
-#     "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+#     "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
 #         cpresults[0].latency * 1e3
 #     )
 # )
 # print(
-#     "[FastDlight] The best latency of top 20 is {:.3f} ms".format(
+#     "[BitBLAS] The best latency of top 20 is {:.3f} ms".format(
 #         best.latency * 1e3
 #     )
 # )

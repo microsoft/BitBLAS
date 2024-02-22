@@ -29,7 +29,7 @@ def test_matmul_codegen_static_shape_default():
 
 
 def test_matmul_codegen_static_shape_optimize():
-    M = 16384
+    M = 1
     N = 16384
     K = 16384
 
@@ -177,9 +177,9 @@ def test_matmul_invoke_static_shape_default():
 
 if __name__ == "__main__":
     # test_matmul_codegen_static_shape_default() # passed
-    # test_matmul_codegen_static_shape_optimize() # passed
+    test_matmul_codegen_static_shape_optimize() # passed
     # test_matmul_codegen_static_shape_optimize_s8()
-    test_matmul_codegen_dynamic_range_optimize() # passed
+    # test_matmul_codegen_dynamic_range_optimize() # passed
     # test_matmul_profile_static_shape_default() # passed
     # test_matmul_profile_dynamic_shape_default() # passed
     # test_matmul_invoke_static_shape_default()

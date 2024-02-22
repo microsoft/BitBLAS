@@ -2,7 +2,6 @@ import tvm
 import bitblas
 from bitblas.ops import Matmul
 import numpy as np
-import torch
 
 
 def test_matmul_codegen_static_shape_optimize_s8():
@@ -26,6 +25,8 @@ def test_matmul_codegen_static_shape_optimize_s8():
     )
     matmul.optimize()
     code = matmul.codegen(target=target)
+    latency = matmul.profile_latency()
+    print(latency)
     assert code
 
 
