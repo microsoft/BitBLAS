@@ -1,5 +1,3 @@
-# Copyright (c) Microsoft Corporation.
-# Licensed under the MIT License.
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -23,6 +21,7 @@ from tvm import tir
 
 from .analysis import BlockInfo
 
+
 def get_block(
     sch: tir.Schedule,
     blocks: List[BlockInfo],
@@ -43,12 +42,13 @@ def get_block(
         The target block.
     """
 
-    target_block : tir.BlockRV = None
+    target_block: tir.BlockRV = None
     for block_info in blocks:
         block = block_info.block_rv
         if sch.get(block).name_hint == name:
             target_block = block
     return target_block
+
 
 def get_output_blocks(
     sch: tir.Schedule,
@@ -79,7 +79,7 @@ def get_output_blocks(
         for write in sch.get(block).writes:
             if write.buffer in args:
                 output_blocks.append(block)
-    
+
     return output_blocks
 
 
