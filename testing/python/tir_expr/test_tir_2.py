@@ -1,7 +1,10 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from tvm.script import ir as I
 from tvm.script import tir as T
 from tvm.script import relax as R
 import bitblas
+
 
 @T.prim_func
 def fused_fused_decode3_fused_NT_matmul8_add1(
@@ -56,9 +59,7 @@ def fused_fused_decode3_fused_NT_matmul8_add1(
     for i, j in T.grid(T.int64(4096), T.int64(4096)):
         with T.block("decode"):
             v_i, v_j = T.axis.remap("SS", [i, j])
-            T.reads(
-                lv47_global[v_i, v_j // T.int64(8)], lv48[v_i, v_j // T.int64(32)]
-            )
+            T.reads(lv47_global[v_i, v_j // T.int64(8)], lv48[v_i, v_j // T.int64(32)])
             T.writes(decode_intermediate_intermediate[v_i, v_j])
             decode_intermediate_intermediate[v_i, v_j] = (
                 T.Cast(
@@ -76,19 +77,19 @@ def fused_fused_decode3_fused_NT_matmul8_add1(
     for i0, i1, i2, k in T.grid(T.int64(1), 1, T.int64(4096), T.int64(4096)):
         with T.block("NT_matmul"):
             v_i0, v_i1, v_i2, v_k = T.axis.remap("SSSR", [i0, i1, i2, k])
-            T.reads(
-                lv41[v_i0, v_i1, v_k], decode_intermediate_intermediate[v_i2, v_k]
-            )
+            T.reads(lv41[v_i0, v_i1, v_k], decode_intermediate_intermediate[v_i2, v_k])
             T.writes(NT_matmul_intermediate[v_i0, v_i1, v_i2])
             with T.init():
                 NT_matmul_intermediate[v_i0, v_i1, v_i2] = T.float16(0)
             NT_matmul_intermediate[v_i0, v_i1, v_i2] = (
                 NT_matmul_intermediate[v_i0, v_i1, v_i2]
-                + lv41[v_i0, v_i1, v_k]
-                * decode_intermediate_intermediate[v_i2, v_k]
+                + lv41[v_i0, v_i1, v_k] * decode_intermediate_intermediate[v_i2, v_k]
             )
 
+
 import tvm
+
 sch = bitblas.gpu.GEMV().apply(
-    fused_fused_decode3_fused_NT_matmul8_add1, tvm.target.Target("cuda"), False)
-print(sch)  
+    fused_fused_decode3_fused_NT_matmul8_add1, tvm.target.Target("cuda"), False
+)
+print(sch)

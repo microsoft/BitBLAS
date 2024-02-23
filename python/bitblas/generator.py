@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
 class BitBLASGenerator:
     def __init__(self, input_size, data_type='float', optimization_level=1):

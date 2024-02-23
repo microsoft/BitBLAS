@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 import tvm
 from tvm.target import Target
 from bitblas.base.roller.arch.arch_base import Arch

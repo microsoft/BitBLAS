@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 function (ADD_CUDA_TEST_EXECUTABLE name)
     add_executable(${name} ${name}.cu)
     set_target_properties(${name} PROPERTIES CUDA_ARCHITECTURES 60)

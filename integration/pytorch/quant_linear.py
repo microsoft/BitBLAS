@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 # Copyright (C) Bitblas.2024 Elias Frantar (elias.frantar@ist.ac.at)
 #
 # Licensed under the Apache License, Version 2.0 (the "License");

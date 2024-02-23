@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 # from mlc_llm/quantization/tir_utils.py
 """TIR computation utilities for quantization."""
 

@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 import tvm
 from tvm.script import tir as T
 import bitblas
@@ -31,9 +33,7 @@ def test_f16_f16_gemm():
         )
     )
     print(
-        "[BitBLAS] The best latency of top 20 is {:.3f} ms".format(
-            best.latency * 1e3
-        )
+        "[BitBLAS] The best latency of top 20 is {:.3f} ms".format(best.latency * 1e3)
     )
 
 
@@ -69,9 +69,7 @@ def test_f16_i4_gemm(M=1, N=16384, K=16384, bit=4, fast_decoding=True):
         )
     )
     print(
-        "[BitBLAS] The best latency of top 20 is {:.3f} ms".format(
-            best.latency * 1e3
-        )
+        "[BitBLAS] The best latency of top 20 is {:.3f} ms".format(best.latency * 1e3)
     )
     with open("debug/tmp.cu", "w") as f:
         f.write(str(best.code))

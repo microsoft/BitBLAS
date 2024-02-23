@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 import tvm
 from tvm.runtime import convert
 from tvm.tir.function import TensorIntrin

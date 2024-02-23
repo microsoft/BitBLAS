@@ -1,7 +1,10 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from tvm.script import ir as I
 from tvm.script import tir as T
 from tvm.script import relax as R
 import bitblas
+
 
 @T.prim_func
 def fused_fused_decode3_fused_NT_matmul8_add1(
@@ -28,9 +31,7 @@ def fused_fused_decode3_fused_NT_matmul8_add1(
         }
     )
     n = T.int64()
-    lv41 = T.match_buffer(
-        p_lv41, (T.int64(1), T.int64(1), T.int64(4096)), "float16"
-    )
+    lv41 = T.match_buffer(p_lv41, (T.int64(1), T.int64(1), T.int64(4096)), "float16")
     NT_matmul_intermediate = T.match_buffer(
         p_output0, (T.int64(1), T.int64(1), T.int64(4096)), "float16"
     )
@@ -68,9 +69,10 @@ def fused_fused_decode3_fused_NT_matmul8_add1(
                 NT_matmul_intermediate[v_i0, v_i1, v_i2] = T.float16(0)
             NT_matmul_intermediate[v_i0, v_i1, v_i2] = (
                 NT_matmul_intermediate[v_i0, v_i1, v_i2]
-                + lv41[v_i0, v_i1, v_k]
-                * decode_intermediate_intermediate[v_i2, v_k]
+                + lv41[v_i0, v_i1, v_k] * decode_intermediate_intermediate[v_i2, v_k]
             )
+
+
 import tvm
 from bitblas.base.roller.policy import DefaultPolicy
 from bitblas.base.roller.arch import CUDA

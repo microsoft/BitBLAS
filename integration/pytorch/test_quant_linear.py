@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from quant_linear import QuantLinear
 import copy
 import torch

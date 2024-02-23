@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 #include <gtest/gtest.h>
 #include <stdio.h>
 #include <cuda_runtime.h>

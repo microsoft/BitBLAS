@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 import tvm
 from tvm.script import ir as I
 from tvm.script import tir as T

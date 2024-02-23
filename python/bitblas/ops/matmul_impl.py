@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 # pre-transformed tir expression of matmul
 import tvm
 from tvm.script import tir as T

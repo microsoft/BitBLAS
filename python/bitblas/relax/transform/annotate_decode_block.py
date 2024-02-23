@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from typing import Dict, Tuple
 from tvm.ir import IRModule
 from tvm.ir.transform import PassContext, module_pass
