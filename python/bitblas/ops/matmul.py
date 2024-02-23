@@ -107,6 +107,7 @@ class Matmul(Operator):
             self.optimized_func = self._optimize_fast_tune(
                 self.prim_func_mod["main"], self.target, topk
             )
+        self._build_runtime_module(self.target)
 
     def post_process(self, code: str) -> str:
         index = code.index("{", match_global_kernel(code))

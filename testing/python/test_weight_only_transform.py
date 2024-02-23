@@ -14,6 +14,47 @@ from copy import deepcopy
 import bitblas
 from bitblas.relax.transform.annotate_decode_block import AnnotateDecodeInformation
 from bitblas.relax.transform.weight_only_propagate import WeightOnlyLayoutPropagation
+import numpy as np
+
+np.random.seed(0)
+
+
+def get_ref_result(ref_mod, input_tensors):
+    # input_tensors to cpu
+    device = tvm.cpu(0)
+    target = tvm.target.Target("llvm")
+    input_tensors = [tvm.nd.array(x, device) for x in input_tensors]
+    ref_mod = tvm.tir.transform.MakePackedAPI()(ref_mod)
+    ex = relax.build(ref_mod, target)
+    vm = relax.VirtualMachine(ex, device)
+    res = vm["main"](*input_tensors)
+    return res
+
+
+def get_default_result(ref_mod, input_tensors, target, device):
+    with target:
+        ref_mod = bitblas.ApplyDefaultSchedule(  # pylint: disable=not-callable
+            bitblas.gpu.GEMV(),
+            # bitblas.gpu.Matmul(),
+            # bitblas.gpu.Reduction(),
+            # bitblas.gpu.GeneralReduction(),
+            # bitblas.gpu.Fallback(),
+        )(ref_mod)
+    ref_mod = tvm.tir.transform.MakePackedAPI()(ref_mod)
+    ex = relax.build(ref_mod, target)
+    vm = relax.VirtualMachine(ex, device)
+    res = vm["main"](*input_tensors)
+    return res
+
+
+def get_fast_tune_result(ref_mod, input_tensors, target, device):
+    ref_mod = bitblas.ApplyFastTuning(target=target)(ref_mod)
+    ref_mod = tvm.tir.transform.MakePackedAPI()(ref_mod)
+    print(ref_mod)
+    ex = relax.build(ref_mod, target)
+    vm = relax.VirtualMachine(ex, device)
+    res = vm["main"](*input_tensors)
+    return res
 
 
 def test_lop3_transform():
@@ -199,7 +240,8 @@ def test_matmul_transform():
 
 
 def test_dequantize_matmul_transform():
-    transform_level = 2
+    transform_level = 1
+
     @I.ir_module
     class Before:
         @T.prim_func(private=True)
@@ -211,9 +253,11 @@ def test_dequantize_matmul_transform():
         ):
             T.func_attr({"tir.noalias": T.bool(True)})
             n = T.int64()
-            lv41 = T.match_buffer(p_lv41, (T.int64(1), 1, T.int64(4096)), "float16")
+            lv41 = T.match_buffer(
+                p_lv41, (T.int64(1), T.int64(1), T.int64(4096)), "float16"
+            )
             NT_matmul_intermediate = T.match_buffer(
-                p_output0, (T.int64(1), 1, T.int64(4096)), "float16"
+                p_output0, (T.int64(1), T.int64(1), T.int64(4096)), "float16"
             )
             # with T.block("root"):
             decode_intermediate_intermediate = T.alloc_buffer(
@@ -257,7 +301,7 @@ def test_dequantize_matmul_transform():
         def main(
             lv47: R.Tensor((T.int64(4096), T.int64(512)), dtype="uint32"),
             lv48: R.Tensor((T.int64(4096), T.int64(128)), dtype="float16"),  # type: ignore
-            p_lv41: R.Tensor((T.int64(1), 1, T.int64(4096)), dtype="float16"),
+            p_lv41: R.Tensor((T.int64(1), T.int64(1), T.int64(4096)), dtype="float16"),
         ) -> R.Tensor((1, 4096), dtype="float16"):
             R.func_attr({"Primitive": 1})
             # n = T.int64()
@@ -275,6 +319,9 @@ def test_dequantize_matmul_transform():
     ref_mod = deepcopy(relax_mod)
     dispatch_target = tvm.target.Target("cuda")
     # input_arrays = get_dummy_input_arrays(relax_mod)
+    device = tvm.cpu(0)
+    if dispatch_target.kind.name == "cuda":
+        device = tvm.cuda(0)
 
     relax_mod = AnnotateDecodeInformation()(relax_mod)
     with dispatch_target:
@@ -282,24 +329,26 @@ def test_dequantize_matmul_transform():
             transform_level=transform_level, faster_conversion=False
         )(relax_mod)
 
-    input_tensors = get_dummy_input_arrays(ref_mod["main"], tvm.cpu())
+    input_tensors = get_dummy_input_arrays(ref_mod["main"], device)
 
-    ref_mod = tvm.tir.transform.MakePackedAPI()(ref_mod)
-    ex = relax.build(ref_mod, "llvm")
-
-    device = tvm.cpu(0)
-    vm = relax.VirtualMachine(ex, device)
-    res = vm["main"](*input_tensors)
-    print("ref ", res)
-
-    print(relax_mod)
-    relax_mod = tvm.tir.transform.MakePackedAPI()(relax_mod)
-    ex = relax.build(relax_mod, "llvm")
-
-    device = tvm.cpu(0)
-    vm = relax.VirtualMachine(ex, device)
-    res = vm["main"](*input_tensors)
-    print("relax ", res)
+    print("=======================ref llvm result=======================")
+    ref_res = get_ref_result(ref_mod, input_tensors)
+    print("ref_mod", ref_res)
+    bitblas_res = get_ref_result(relax_mod, input_tensors)
+    print("bitblas_res", bitblas_res)
+    # print("=======================default gpu result=======================")
+    # ref_res = get_default_result(ref_mod, input_tensors, dispatch_target, device)
+    # print("ref_mod", ref_res)
+    # bitblas_res = get_default_result(relax_mod, input_tensors, dispatch_target, device)
+    # print("bitblas_res", bitblas_res)
+    # print("=======================fast tune gpu result=======================")
+    # ref_res = get_fast_tune_result(ref_mod, input_tensors, dispatch_target, device)
+    # print("ref_mod", ref_res)
+    # print(relax_mod)
+    # bitblas_res = get_fast_tune_result(
+    #     relax_mod, input_tensors, dispatch_target, device
+    # )
+    # print("bitblas_res", bitblas_res)
 
 
 # test_lop3_transform()

@@ -457,7 +457,6 @@ class GEMV(GPUScheduleRule):
 
             # load vector into shared memory, shape should be the whole vector
             if LOAD_V_SHARED:
-                assert len(vector_input_buffers) == 1
                 V_shared = sch.cache_read(
                     rf, read_buffer_index=0, storage_scope="shared"
                 )
