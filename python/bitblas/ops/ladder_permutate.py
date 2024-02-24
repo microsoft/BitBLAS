@@ -10,13 +10,14 @@ from dataclasses import dataclass
 
 @dataclass
 class LadderPermutateConfig:
-    M: Union[int, List]
+    M: int
     N: int
     datatype: Literal["float16", "int8"] = "float16"
     dequantize_bits: int = -1
+    storage_dtype: Literal["float16", "int8", "uint8", "int32", "uint32"] = "float16"
     propagate_kind: Literal["A", "B"] = "B"  # "A" or "B"
     transpose_matrix: bool = False
-    transform_kind: int = 0  # 0: none, 1: inter_warp 2: intra_warp
+    transform_kind: int = 2  # 0: none, 1: inter_warp 2: intra_warp
     target_instruction: Literal["nvidia-mma"] = (
         "nvidia-mma"  # maybe extend to "cdna-mfma" in future.
     )
@@ -69,6 +70,10 @@ class LadderPermutate(Operator):
     @property
     def dequantize_bits(self):
         return self.config.dequantize_bits
+
+    @property
+    def storage_dtype(self):
+        return self.config.storage_dtype
 
     @property
     def propagate_kind(self):

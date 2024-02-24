@@ -9,7 +9,11 @@ target = tvm.target.Target("llvm")
 
 # fmt: off
 @pytest.mark.parametrize("M,N,datatype,dequantize_bits,propagate_kind,transpose_matrix,transform_kind,target_instruction", [
-    (16384, 16384, "float16", -1, "B", False, 0, "nvidia-mma"),
+    (1024, 1024, "float16", -1, "B", True, 0, "nvidia-mma"),
+    (1024, 1024, "float16", -1, "B", True, 1, "nvidia-mma"),
+    (1024, 1024, "float16", -1, "B", True, 2, "nvidia-mma"),
+    # dequantize propagation
+    (1024, 1024, "float16", 4, "B", True, 2, "nvidia-mma"),
 ])
 def test_ladder_permutate_profile_latency(
     M,
@@ -37,13 +41,9 @@ def test_ladder_permutate_profile_latency(
         target=target,
     )
     latency = ladder_permutate.profile_latency()
-    print(latency)
     assert latency
 
 # fmt: on
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_ladder_permutate_profile_latency(
-        16384, 16384, "float16", -1, "B", False, 0, "nvidia-mma"
-    )
+    bitblas.testing.main()
