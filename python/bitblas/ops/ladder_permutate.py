@@ -1,0 +1,90 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+import tvm
+from tvm.target import Target
+from typing import List, Union, Literal
+from .operator import Operator
+from .impl.ladder_permutate_impl import select_implementation
+from dataclasses import dataclass
+
+
+@dataclass
+class LadderPermutateConfig:
+    M: Union[int, List]
+    N: int
+    datatype: Literal["float16", "int8"] = "float16"
+    dequantize_bits: int = -1
+    propagate_kind: Literal["A", "B"] = "B"  # "A" or "B"
+    transpose_matrix: bool = False
+    transform_kind: int = 0  # 0: none, 1: inter_warp 2: intra_warp
+    target_instruction: Literal["nvidia-mma"] = (
+        "nvidia-mma"  # maybe extend to "cdna-mfma" in future.
+    )
+
+
+class LadderPermutate(Operator):
+    def __init__(
+        self,
+        config: LadderPermutateConfig,
+        name: str = "permutate",
+        target: Target = tvm.target.Target("llvm"),  # assume to do permutation on gpu.
+    ):
+        # consider to warp the arguments to MatmulConfig
+        super().__init__(name, target)
+        self.config = config
+
+        if target.kind.name != "llvm":
+            raise ValueError("Currently only support llvm target for Permutation")
+
+        prim_func_mod = self._select_implementation()
+        self.prim_func_mod = prim_func_mod
+        self.target = target
+        self._build_runtime_module(target)
+
+    # select implementation based on the Operator config
+    def _select_implementation(self):
+        return select_implementation(
+            M=self.M,
+            N=self.N,
+            datatype=self.datatype,
+            dequantize_bits=self.dequantize_bits,
+            propagate_kind=self.propagate_kind,
+            transpose_matrix=self.transpose_matrix,
+            transform_kind=self.transform_kind,
+            target_instruction=self.target_instruction,
+        )
+
+    @property
+    def M(self):
+        return self.config.M
+
+    @property
+    def N(self):
+        return self.config.N
+
+    @property
+    def datatype(self):
+        return self.config.datatype
+
+    @property
+    def dequantize_bits(self):
+        return self.config.dequantize_bits
+
+    @property
+    def propagate_kind(self):
+        return self.config.propagate_kind
+
+    @property
+    def transpose_matrix(self):
+        return self.config.transpose_matrix
+
+    @property
+    def transform_kind(self):
+        return self.config.transform_kind
+
+    @property
+    def target_instruction(self):
+        return self.config.target_instruction
+
+
+__all__ = ["LadderPermutate", "LadderPermutateConfig"]
