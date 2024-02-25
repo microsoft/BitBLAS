@@ -1,13 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-from typing import Union
-import tvm
-from tvm import te, tir
-from ...block_builder import BlockBuilder
-from ...expr import Call, Expr
-from .common import register_legalize, _try_convert_to_scalar_const
+from tvm.relax.block_builder import BlockBuilder
+from tvm.relax.expr import Call, Expr
+from tvm.relax.transform.legalize_ops.common import register_legalize
 
-from bitblas.gpu.intrin.lop3 import tir_interleave_weight
+from bitblas.ops.impl import tir_interleave_weight
+
 
 @register_legalize("bitblas.interleave_weight")
 def _interleave_weight(bb: BlockBuilder, call: Call) -> Expr:
@@ -20,3 +18,6 @@ def _interleave_weight(bb: BlockBuilder, call: Call) -> Expr:
         call.args[0],
         primfunc_name_hint="interleave_weight",
     )
+
+
+__all__ = ["_interleave_weight"]
