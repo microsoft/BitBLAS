@@ -1,11 +1,12 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-from typing import Optional, Tuple, Union, List
+from typing import Optional, Tuple, Union, List, Dict
 from tvm.ir import IRModule
 from tvm.ir.transform import PassContext, module_pass
 from tvm import relax
 from tvm import tir
 from enum import Enum
+from tvm.ir import GlobalVar
 from tvm.tir import IndexMap
 from tvm.target import Target
 from tvm.tir import IterVar
@@ -22,7 +23,6 @@ from bitblas.gpu.matmul_analysis import (
 from tvm.dlight.base import (
     analysis,
 )
-from bitblas.gpu.intrin.lop3 import tir_interleave_weight
 from dataclasses import dataclass
 
 
@@ -91,7 +91,6 @@ class WeightOnlyLayoutPropagation:
         transform_level: Union[int, TransformKind] = TransformKind.InterWarpTransform,
         target: Optional[Target] = None,
         faster_conversion: bool = False,
-        target_bits: Optional[int] = None,
     ) -> None:
         if isinstance(transform_level, int):
             transform_level = TransformKind(transform_level)
@@ -106,10 +105,8 @@ class WeightOnlyLayoutPropagation:
         self.target = Target.current() if target is None else target
         # fast type conversion on nvidia gpu also requires weight permutation
         self.faster_conversion = faster_conversion
-        # target bits may used to determine the compressed layout transformation
-        self.target_bits = target_bits
-        # log layout transform info to sync the layout in both graph and tir
-        self.layout_transform_hints: List[LayoutTransformHint] = []
+        # layout transform info to sync the layout in both graph and tir
+        self.layout_transform_hints: Dict[str, List[LayoutTransformHint]] = {}
 
     def detect_propagate_matmul(self, func: tir.PrimFunc, target: Target):
         _, tags = get_tensorized_func_and_tags(
@@ -119,7 +116,7 @@ class WeightOnlyLayoutPropagation:
             return False, None
         return True, tags["intrin_info"]
 
-    def transform_matmul(self, func: tir.PrimFunc, intrin_info):
+    def transform_matmul(self, g_var: GlobalVar, func: tir.PrimFunc, intrin_info):
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
             get_mma_intrin_group,
         )
@@ -146,7 +143,24 @@ class WeightOnlyLayoutPropagation:
 
         # weight only propagation
         target_scope = ("read", 1)
-        transformed_block = find_last_producer_from_buffer(sch, main_block, sch.get(main_block).reads[1].buffer)
+        weight_buffer = sch.get(main_block).reads[1].buffer
+
+        # checkout whether the weight buffer has dynamic symbol
+        def check_dynamic_symbol(buffer):
+            for axis in buffer.shape:
+                if isinstance(axis, tir.Var):
+                    return True
+            return False
+
+        if check_dynamic_symbol(weight_buffer):
+            print(
+                "[BitBLAS] Weight buffer has dynamic symbol, skip weight propagation."
+            )
+            return False
+
+        transformed_block = find_last_producer_from_buffer(
+            sch, main_block, weight_buffer
+        )
         if transformed_block is None:
             return False
         if transformed_block != main_block:
@@ -196,14 +210,15 @@ class WeightOnlyLayoutPropagation:
                 ),
             )
 
-        self.layout_transform_hints.append(
+        self.layout_transform_hints[g_var] = [
             LayoutTransformHint(
                 transform_level=self.transform_level,
                 inter_warp_layout=inter_warp_layout,
                 intra_warp_layout=intra_warp_layout,
                 apply_arg_idx=arg_idx,
             )
-        )
+        ]
+
         return sch.mod["main"]
 
     def transform_module(  # pylint: disable=missing-function-docstring
@@ -239,15 +254,14 @@ class WeightOnlyLayoutPropagation:
                     if "dequantize_info" in func.attrs:
                         decoded_funcs[g_var] = func
                     if self.transform_level != TransformKind.NonTransform:
-                        if intrin_info["in_dtype"] != "float16":
-                            # currently we only support float16 mma.
-                            continue
                         # lift tags to the function as it has intrinsic information that can be reused.
                         propogate_candidates[g_var] = func
                         candidates_intrin_info[g_var] = intrin_info
 
         for g_var, func in propogate_candidates.items():
-            updated_func = self.transform_matmul(func, candidates_intrin_info[g_var])
+            updated_func = self.transform_matmul(
+                g_var, func, candidates_intrin_info[g_var]
+            )
             if updated_func:
                 updated_func = updated_func.with_attrs(
                     {
@@ -265,7 +279,7 @@ class WeightOnlyLayoutPropagation:
             def __init__(
                 self,
                 transform_level: TransformKind = TransformKind.NonTransform,
-                layout_transform_hints: List[LayoutTransformHint] = [],
+                layout_transform_hints: Dict[str, List[LayoutTransformHint]] = {},
             ):
                 super().__init__()
                 self.transform_level = transform_level
@@ -279,7 +293,7 @@ class WeightOnlyLayoutPropagation:
                     return super().visit_call_(call_node)
                 args = list(call_node.args[1])
                 # assume we only have weight propagation currently
-                (weight_layout_hint,) = self.layout_transform_hints
+                (weight_layout_hint,) = self.layout_transform_hints[g_var]
                 weight = args[weight_layout_hint.apply_arg_idx]
                 weight = self.builder_.emit(
                     relax.op.layout_transform(
@@ -347,6 +361,9 @@ class WeightOnlyLayoutPropagation:
             def lop3_layout_transform(self, call_node: Call) -> Call:
                 if not self.faster_conversion:
                     return super().visit_call_(call_node)
+
+                from bitblas.ops.impl import tir_interleave_weight
+
                 g_var = call_node.args[0]
                 if g_var not in decoded_funcs.keys():
                     return super().visit_call_(call_node)

@@ -5,8 +5,8 @@ from tvm.tir.function import TensorIntrin
 from tvm.script import tir as T
 from typing import Dict, Literal
 from bitblas.quantization import (
-    _tir_packed_int_to_int_to_float,
-    _tir_packed_uint_to_uint_to_float,
+    _tir_packed_to_signed_float,
+    _tir_packed_to_unsigned_float,
 )
 
 
@@ -82,6 +82,89 @@ template <typename T1, typename T2, typename T3>
 __device__ void decode_i4u_to_f16_scale(T1 *_i4u, T2 *B_local_decode,  T3 *scale, const int N = 8)
 {
     decode_i4b_to_f16_scale<T1, T2, T3, false>(_i4u, B_local_decode, scale, N);
+}
+"""
+
+decode_i2_to_f16 = """
+template <typename T1, typename T2, bool isSigned = false>
+__device__ void decode_i2b_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8)
+{
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x00030003;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64016401 : 0x64006400;
+    int16_t const i2s_i16 = *reinterpret_cast<int16_t *>(_i2s);
+    // decode 2 elems at one time.
+    // interleave {e15,e13,e11,e9,e7,e5,e3,e1,e14,e12,e10,e8,e6,e4,e2,e0}
+    // only decode for {x,x,x,x,e7,e5,e3,e1,x,x,x,x,e6,e4,e2,e0}
+    // otherwise the pointer of _i2s should be moved to
+    int i2s = (i2s_i16 & 0x00ff);
+    i2s |= ((i2s_i16 & 0xff00) << 8);
+
+#pragma unroll
+    for (int i = 0; i < (N / 2); i++)
+    {
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                     : "=r"(h[i])
+                     : "r"(i2s >> (2 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+        asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+    }
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i2s_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8)
+{
+    decode_i2b_to_f16<T1, T2, true>(_i2s, B_local_decode, N);
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i2u_to_f16(T1 *_i2u, T2 *B_local_decode, const int N = 8)
+{
+    decode_i2b_to_f16<T1, T2, false>(_i2u, B_local_decode, N);
+}
+"""
+
+decode_i2_to_f16_scale = """
+template <typename T1, typename T2, typename T3, bool isSigned = false>
+__device__ void decode_i2b_to_f16_scale(T1 *_i2s, T2 *B_local_decode, T3 *scale = nullptr, const int N = 8)
+{
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x00030003;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64016401 : 0x64006400;
+    int16_t const i2s_i16 = *reinterpret_cast<int16_t *>(_i2s);
+    // decode 2 elems at one time.
+    // interleave {e15,e13,e11,e9,e7,e5,e3,e1,e14,e12,e10,e8,e6,e4,e2,e0}
+    // only decode for {x,x,x,x,e7,e5,e3,e1,x,x,x,x,e6,e4,e2,e0}
+    // otherwise the pointer of _i2s should be moved to
+    int i2s = (i2s_i16 & 0x00ff);
+    i2s |= ((i2s_i16 & 0xff00) << 8);
+
+#pragma unroll
+    for (int i = 0; i < (N / 2); i++)
+    {
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                     : "=r"(h[i])
+                     : "r"(i2s >> (2 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+        asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*scale, *scale)), "r"(0));
+    }
+}
+
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i2s_to_f16_scale(T1 *_i2s, T2 *B_local_decode, T3 *scale, const int N = 8)
+{
+    decode_i2b_to_f16_scale<T1, T2, T3, true>(_i2s, B_local_decode, scale, N);
+}
+
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i2u_to_f16_scale(T1 *_i2u, T2 *B_local_decode,  T3 *scale, const int N = 8)
+{
+    decode_i2b_to_f16_scale<T1, T2, T3, false>(_i2u, B_local_decode, scale, N);
 }
 """
 
@@ -163,7 +246,7 @@ __device__ void decode_i4s_to_i8s(T1 *_i4s, T2 *_i8s, const int N = 16)
 def get_fast_decode_intrin(
     source_bit=4,
     storage_dtype="int8",
-    source_format="int",
+    source_format="uint",
     target_dtype="float16",
     loops_extent=8,
     with_scale=False,
@@ -179,22 +262,23 @@ def get_fast_decode_intrin(
         d4f = "i8s"
     else:
         raise ValueError("Unsupported target dtype: {}".format(target_dtype))
-    source_symbol = "u" if source_format == "uint" else "i"
-    func_name = "decode_{}{}s_to_{}".format(source_symbol, source_bit, d4f)
+    source_symbol = "u" if source_format == "uint" else "s"
+    func_name = "decode_i{}{}_to_{}".format(source_bit, source_symbol, d4f)
     if with_scale:
         func_name += "_scale"
 
     assert storage_dtype in ["int8", "int32", "uint32"]
     storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
+    storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
     elem_per_unit = storage_nbit // source_bit
     n_storage_elems = loops_extent // elem_per_unit
 
-    if storage_dtype[:3] == "int":
-        decode_func = _tir_packed_int_to_int_to_float(storage_nbit)
-    elif storage_dtype[:4] == "uint":
-        decode_func = _tir_packed_uint_to_uint_to_float(storage_nbit)
+    if source_format == "int":
+        decode_func = _tir_packed_to_signed_float(storage_type, storage_nbit)
+    elif source_format == "uint":
+        decode_func = _tir_packed_to_unsigned_float(storage_type, storage_nbit)
     else:
-        raise ValueError("Unsupported storage dtype: {}".format(storage_dtype))
+        raise ValueError("Unsupported source_format: {}".format(source_format))
 
     if with_scale is False:
 
@@ -362,6 +446,16 @@ TensorIntrin.register(
 )
 
 
+LOP3_FAST_DECODE_UINT2_TO_INT8_TO_FP16_L8_INTRIN = (
+    "lop3_fast_decode_u2_to_int8_to_f16_l8_"
+)
+TensorIntrin.register(
+    LOP3_FAST_DECODE_UINT2_TO_INT8_TO_FP16_L8_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=2, storage_dtype="int8", target_dtype="float16", loops_extent=8
+    ),
+)
+
 LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_INTRIN = (
     "lop3_fast_decode_u4_to_int32_to_f16_l8_"
 )
@@ -426,6 +520,21 @@ TensorIntrin.register(
         with_scale=True,
     ),
 )
+
+LOP3_FAST_DECODE_UINT2_TO_INT8_TO_FP16_L8_SCALE_INTRIN = (
+    "lop3_fast_decode_u2_to_int8_to_f16_l8_scale_"
+)
+TensorIntrin.register(
+    LOP3_FAST_DECODE_UINT2_TO_INT8_TO_FP16_L8_SCALE_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=2,
+        storage_dtype="int8",
+        target_dtype="float16",
+        loops_extent=8,
+        with_scale=True,
+    ),
+)
+
 
 LOP3_FAST_DECODE_UINT4_TO_INT8_TO_INT8_L8_INTRIN = (
     "lop3_fast_decode_u4_to_int8_to_i8_l8_"
@@ -506,6 +615,34 @@ TensorIntrin.register(
     ),
 )
 
+LOP3_FAST_DECODE_INT2_TO_INT8_TO_FP16_L8_INTRIN = (
+    "lop3_fast_decode_i2_to_int8_to_f16_l8_"
+)
+TensorIntrin.register(
+    LOP3_FAST_DECODE_INT2_TO_INT8_TO_FP16_L8_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=2,
+        storage_dtype="int8",
+        source_format="int",
+        target_dtype="float16",
+        loops_extent=8,
+    ),
+)
+
+LOP3_FAST_DECODE_INT2_TO_INT8_TO_FP16_L8_SCALE_INTRIN = (
+    "lop3_fast_decode_i2_to_int8_to_f16_l8_scale_"
+)
+TensorIntrin.register(
+    LOP3_FAST_DECODE_INT2_TO_INT8_TO_FP16_L8_SCALE_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=2,
+        storage_dtype="int8",
+        source_format="int",
+        target_dtype="float16",
+        loops_extent=8,
+        with_scale=True,
+    ),
+)
 
 def get_lop3_intrin_group(
     out_dtype: Literal["float16", "int8"],
@@ -554,7 +691,9 @@ def get_lop3_intrin_group(
 
     import_c_map = {
         "i4_to_f16": decode_i4_to_f16,
+        "i2_to_f16": decode_i2_to_f16,
         "i4_to_f16_scale": decode_i4_to_f16_scale,
+        "i2_to_f16_scale": decode_i2_to_f16_scale,
         "i1_to_i8": decode_i1s_to_i8s_l16,
         "i2_to_i8": decode_i2s_to_i8s,
         "i4_to_i8": decode_i4s_to_i8s,

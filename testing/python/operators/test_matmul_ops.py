@@ -201,12 +201,11 @@ def test_matmul_torch_forward(
     else:
         permuted_inputs.append(inputs[1])
     permuted_inputs.append(inputs[2])
-
     matmul(*permuted_inputs)
-    print(permuted_inputs[-1])
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
 
 # fmt: on
 
 if __name__ == "__main__":
     bitblas.testing.main()
+
