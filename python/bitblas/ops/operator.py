@@ -10,16 +10,20 @@ from typing import List, Dict, Any
 import numpy as np
 from ..base import fast_tune, fast_tune_with_dynamic_range
 from copy import deepcopy
+from bitblas.base.roller.arch import get_arch
+from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
+
 
 class Operator(ABC):
-    def __init__(self, name):
+    def __init__(self, name, target: Target = None):
         self.name = name
         self.prim_func_mod = None
         self.optimized_func = None
         self.rt_mod = None
         self.time_evaluator = None
         self.profile_tensors = None
-        self.arch = None
+        self.arch = get_arch(target) if target else None
+        self.dynamic_range = None
 
     def codegen(self, target: Target) -> str:
         if self.rt_mod is None:
@@ -31,20 +35,49 @@ class Operator(ABC):
         )
 
     def _build_runtime_module(self, target: Target):
-        if self.optimized_func:
+        """
+        Builds the runtime module based on the architecture platform.
+
+        This function attempts to build a runtime module (rt_mod) for the specified target.
+        If the platform is CUDA and an optimized function is available, it tries to build
+        using the optimized function with a specific pass context. Otherwise, it falls back
+        to building with the primary function. After successful build, it initializes a
+        time evaluator for performance measurement.
+
+        Args:
+            target (Target): The compilation target specification.
+
+        Returns:
+            The compiled runtime module or None if the build was unsuccessful.
+        """
+
+        # Initialize rt_mod as None to handle cases where build fails or is skipped
+        rt_mod = None
+
+        # Check if the platform is CUDA and we have an optimized function
+        if self.arch.platform == "CUDA" and self.optimized_func:
             try:
+                # Use a specific TVM pass context for CUDA platforms
                 with tvm.transform.PassContext(config={"tir.use_async_copy": True}):
                     rt_mod = tvm.build(self.optimized_func, target=target)
-            except:
-                rt_mod = None
+            except Exception as e:
+                # Log the exception for debugging purposes. Replace 'print' with logging if necessary.
+                print(f"Failed to build optimized function for CUDA target due to: {e}")
+        else:
+            # For non-CUDA platforms or when no optimized function is available, build with the primary function
+            rt_mod = tvm.build(self.prim_func, target=target)
+
+        # If the runtime module was successfully built, set up for evaluation
         if rt_mod:
             self.rt_mod = rt_mod
+            # Initialize a time evaluator with the built module, specifying the device and the number of runs
             self.time_evaluator = rt_mod.time_evaluator(
                 rt_mod.entry_name, self.arch.device, number=10
             )
+
         return rt_mod
 
-    def _optimize_default(self, func_mod: IRModule, target: Target) -> IRModule:
+    def apply_default_schedule(self, func_mod: IRModule, target: Target) -> IRModule:
         mod_for_opt = deepcopy(func_mod)
         with target:
             optimized_mod = (
@@ -64,7 +97,7 @@ class Operator(ABC):
     def post_process(self, code: str) -> str:
         return code
 
-    def _optimize_fast_tune(
+    def apply_fast_tuning(
         self, func: PrimFunc, target: Target, topk: int = 20
     ) -> IRModule:
         _, best = fast_tune(func, target, topk=topk, parallel_build=True)
@@ -72,7 +105,7 @@ class Operator(ABC):
             return best.sch.mod
         return None
 
-    def _optimize_fast_tune_with_dynamic_range(
+    def apply_fast_tuning_with_dynamic_range(
         self,
         func: PrimFunc,
         target: Target,
@@ -86,10 +119,21 @@ class Operator(ABC):
             return optimized_mod
         return None
 
-    def profile_latency(self) -> str:
-        if self.dynamic_range is not None:
-            return self._profile_latency_with_dynamic_range()
-        func = self.prim_func_mod["main"]
+    def hardware_aware_finetune(self, topk: int = 20, target: tvm.target.Target = None):
+        if target is None:
+            target = self.target
+        dynamic_range = self.dynamic_range
+        func = self.prim_func
+        if dynamic_range is not None:
+            self.optimized_func = self.apply_fast_tuning_with_dynamic_range(
+                func, target, topk, dynamic_range
+            )
+        else:
+            self.optimized_func = self.apply_fast_tuning(func, target, topk)
+        self._build_runtime_module(self.target)
+
+    def get_profile_tensors(self):
+        func = self.prim_func
         device = self.arch.device
 
         def var_warpper(v):
@@ -110,61 +154,25 @@ class Operator(ABC):
             arg = func.buffer_map[param]
             profile_tensors.append(
                 tvm.nd.array(
-                    np.random.uniform(
-                        0, 1, [var_warpper(i) for i in arg.shape]
-                    ).astype(arg.dtype),
+                    np.random.uniform(0, 1, [var_warpper(i) for i in arg.shape]).astype(
+                        arg.dtype
+                    ),
                     device=device,
                 )
             )
         self.profile_tensors = profile_tensors
+        return profile_tensors
+
+    def profile_latency(self) -> str:
+        if self.dynamic_range is not None:
+            return self._profile_latency_with_dynamic_range()
+
+        profile_tensors = self.get_profile_tensors()
         latency = self.time_evaluator(*profile_tensors).mean * 1e3
         return latency
 
     def _profile_latency_with_dynamic_range(self) -> List:
-        func = self.prim_func_mod["main"]
-        device = self.arch.device
-
-        def var_warpper(v, m):
-            if isinstance(v, tvm.tir.Var):
-                assert "opt_shapes" in func.attrs
-                assert v.name in func.attrs["opt_shapes"]
-                return m
-            elif isinstance(v, tvm.tir.IntImm):
-                return v.value
-            else:
-                raise RuntimeError("Not supported type: ", type(v))
-
-        benchmark_latencies = []
-        for m in self.dynamic_range["m"]:
-            profile_tensors = []
-            for param in func.params:
-                if param not in func.buffer_map:
-                    # in case of dynamic symbolic may in params
-                    continue
-                arg = func.buffer_map[param]
-                if arg.dtype == "int8":
-                    profile_tensors.append(
-                        tvm.nd.array(
-                            np.random.randint(
-                                -127, 128, [var_warpper(i, m) for i in arg.shape]
-                            ).astype(arg.dtype),
-                            device=device,
-                        )
-                    )
-                else:
-                    profile_tensors.append(
-                        tvm.nd.array(
-                            np.random.uniform(
-                                0, 1, [var_warpper(i, m) for i in arg.shape]
-                            ).astype(arg.dtype),
-                            device=device,
-                        )
-                    )
-            self.profile_tensors = profile_tensors
-            latency = self.time_evaluator(*profile_tensors).mean * 1e3
-            benchmark_latencies.append({"m": m, "latency": latency})
-        # ms
-        return benchmark_latencies
+        raise NotImplementedError
 
     def _tensor_adapter(self, tensor, device):
         import torch
@@ -179,30 +187,26 @@ class Operator(ABC):
         else:
             raise RuntimeError("Not supported type: ", type(tensor))
 
-    def _tensor_to_torch(self, tensor):
-        import torch
-        from torch.utils.dlpack import from_dlpack
-
-        if isinstance(tensor, tvm.te.Tensor):
-            return torch.from_numpy(tensor.numpy())
-        elif isinstance(tensor, tvm.nd.NDArray):
-            return from_dlpack(tensor)
-        else:
-            raise RuntimeError("Not supported type: ", type(tensor))
-
     def forward_from_torch(self, *args):
         # convert tensor from torch to tvm
         _tvm_args = [self._tensor_adapter(arg, self.arch.device) for arg in args]
         self.rt_mod(*_tvm_args)
-        return self._tensor_to_torch(_tvm_args[-1])
+        return tvm_tensor_to_torch(_tvm_args[-1])
 
     def forward(self, *args):
+        # "Currently only support forward from torch tensor"
         return self.forward_from_torch(*args)
-        # inp = args[0]
-        # if isinstance(inp, torch.Tensor):
-        #     return self.forward_from_torch(*args)
-        # else:
-        #     raise ValueError("Currently only support forward from torch tensor")
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         return self.forward(*args, **kwds)
+
+    def update_func(self, func: PrimFunc):
+        self.prim_func_mod["main"] = func
+
+    @abstractmethod
+    def _select_implementation(self) -> IRModule:
+        pass
+
+    @property
+    def prim_func(self):
+        return self.prim_func_mod["main"]

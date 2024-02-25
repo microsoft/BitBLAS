@@ -1,115 +1,107 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import tvm
+import numpy as np
 from tvm.target import Target
-from bitblas.base.roller.arch.arch_base import Arch
 from bitblas.base.roller.arch.cuda import CUDA
-from bitblas.base.utils import fast_tune, fast_tune_with_dynamic_range
-from typing import List, Dict
+from typing import List, Union
 from .operator import Operator
-from .matmul_impl import matmul_impl_factory
+from .impl.matmul_impl import select_implementation
 from ..base.utils import match_global_kernel, get_rasterization_code
+from dataclasses import dataclass
+from .ladder_permutate import LadderPermutate, LadderPermutateConfig
+
+
+@dataclass
+class MatmulConfig:
+    M: Union[int, List]
+    N: int
+    K: int
+    in_dtype: str = "float16"
+    out_dtype: str = "float16"
+    accum_dtype: str = "float16"
+    with_bias: bool = False
+    layout: str = "nt"
+    propagate_a: bool = False
+    propagate_b: bool = False
 
 
 class Matmul(Operator):
     def __init__(
         self,
-        M,
-        N,
-        K,
-        a_dtype="float16",
-        b_dtype="float16",
-        c_dtype="float16",
-        accum_dtype="float16",
-        with_bias=False,
-        propagate_a=False,
-        propagate_b=False,
-        layout="nt",
-        name="matmul",
+        config: MatmulConfig,
+        name: str = "matmul",
         target: Target = tvm.target.Target("cuda"),
     ):
-        # consider to warp the arguments to MatmulConfig
         super().__init__(name)
+        self.config = config
 
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
         self.arch = CUDA(target)
-        assert propagate_a is False, "Currently only support propagate_a=False"
+        assert self.propagate_a is False, "Currently only support propagate_a=False"
 
-        self.M = M
-        self.N = N
-        self.K = K
-        self.a_dtype = a_dtype
-        self.b_dtype = b_dtype
-        self.c_dtype = c_dtype
-        self.accum_dtype = accum_dtype
-        self.with_bias = with_bias
-        self.propagate_a = propagate_a
-        self.propagate_b = propagate_b
-        self.layout = layout
-        self.prim_func_mod = self._select_impl()
+        prim_func_mod = self._select_implementation()
+        self.prim_func_mod = prim_func_mod
+        self.optimized_func = self.apply_default_schedule(prim_func_mod, target)
 
-        self.optimized_func = self._optimize_default(self.prim_func_mod, target)
-        if isinstance(M, List):
-            self.dynamic_range = {"m": M}
-            self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
-                {"opt_shapes": self.dynamic_range}
+        if isinstance(self.M, List):
+            self.dynamic_range = {"m": self.M}
+            self.update_func(
+                self.prim_func.with_attrs({"opt_shapes": self.dynamic_range})
             )
         else:
             self.dynamic_range = None
         self.target = target
         self._build_runtime_module(target)
 
-    def _select_impl(self):
-        impl_key = self.construct_impl_key()
-        args = self.get_args_based_on_M()
-        impl_handler = matmul_impl_factory[impl_key]
-        return impl_handler(*args)
-
-    def construct_impl_key(self):
-        is_dequantize = self.a_dtype != self.b_dtype
-        _impl_key = f"matmul_{self.layout}"
-        if is_dequantize:
-            _impl_key += "_dequantize_b"
-        if isinstance(self.M, list):
-            _impl_key += "_dyn_m"
         if self.propagate_a:
-            _impl_key += "_pa"
-        if self.propagate_b:
-            _impl_key += "_pb"
-        return _impl_key
-
-    def get_args_based_on_M(self):
-        if isinstance(self.M, int):
-            return (
-                self.M,
-                self.N,
-                self.K,
-                self.a_dtype,
-                self.c_dtype,
-                self.accum_dtype,
-                self.with_bias,
+            ladder_permutate_config = LadderPermutateConfig(
+                M=self.M,
+                N=self.K,
+                datatype=self.in_dtype,
+                storage_dtype=self.in_dtype,
+                propagate_kind="A",
+                transpose_matrix=False,
+                transform_kind=2,
             )
-        return (
-            self.N,
-            self.K,
-            self.a_dtype,
-            self.c_dtype,
-            self.accum_dtype,
-            self.with_bias,
-        )
-
-    def optimize(self, topk: int = 20):
-        dynamic_range = self.dynamic_range
-        if dynamic_range is not None:
-            self.optimized_func = self._optimize_fast_tune_with_dynamic_range(
-                self.prim_func_mod["main"], self.target, topk, dynamic_range
+            self.ladder_permutate_a = LadderPermutate(
+                config=ladder_permutate_config,
+                target=tvm.target.Target("llvm"),
             )
         else:
-            self.optimized_func = self._optimize_fast_tune(
-                self.prim_func_mod["main"], self.target, topk
+            self.ladder_permutate_a = None
+
+        if self.propagate_b:
+            ladder_permutate_config = LadderPermutateConfig(
+                M=self.N,
+                N=self.K,
+                datatype=self.in_dtype,
+                storage_dtype=self.in_dtype,
+                propagate_kind="B",
+                transpose_matrix=True if self.layout == "nt" else False,
+                transform_kind=2,
             )
-        self._build_runtime_module(self.target)
+            self.ladder_permutate_b = LadderPermutate(
+                config=ladder_permutate_config,
+                target=tvm.target.Target("llvm"),
+            )
+        else:
+            self.ladder_permutate_b = None
+
+    def _select_implementation(self):
+        return select_implementation(
+            M=self.M,
+            N=self.N,
+            K=self.K,
+            in_dtype=self.in_dtype,
+            out_dtype=self.out_dtype,
+            accum_dtype=self.accum_dtype,
+            with_bias=self.with_bias,
+            layout=self.layout,
+            propagate_a=self.propagate_a,
+            propagate_b=self.propagate_b,
+        )
 
     def post_process(self, code: str) -> str:
         index = code.index("{", match_global_kernel(code))
@@ -119,136 +111,93 @@ class Matmul(Operator):
             code = code[: index + 2] + rasterization_code + code[index + 2 :]
         return code
 
-    def forward(self, a, b, c):
-        adapater_a = self._tensor_adapter(a, self.arch.device)
-        adapater_b = self._tensor_adapter(b, self.arch.device)
-        adapater_c = self._tensor_adapter(c, self.arch.device)
-        self.rt_mod(adapater_a, adapater_b, adapater_c)
-        return adapater_c
+    def _profile_latency_with_dynamic_range(self) -> List:
+        func = self.prim_func_mod["main"]
+        device = self.arch.device
+
+        def var_warpper(v, m):
+            if isinstance(v, tvm.tir.Var):
+                assert "opt_shapes" in func.attrs
+                assert v.name in func.attrs["opt_shapes"]
+                return m
+            elif isinstance(v, tvm.tir.IntImm):
+                return v.value
+            else:
+                raise RuntimeError("Not supported type: ", type(v))
+
+        benchmark_latencies = []
+        for m in self.dynamic_range["m"]:
+            profile_tensors = []
+            for param in func.params:
+                if param not in func.buffer_map:
+                    # in case of dynamic symbolic may in params
+                    continue
+                arg = func.buffer_map[param]
+                profile_tensors.append(
+                    tvm.nd.array(
+                        np.random.uniform(
+                            0, 1, [var_warpper(i, m) for i in arg.shape]
+                        ).astype(arg.dtype),
+                        device=device,
+                    )
+                )
+            self.profile_tensors = profile_tensors
+            latency = self.time_evaluator(*profile_tensors).mean * 1e3
+            benchmark_latencies.append({"m": m, "latency": latency})
+        # ms
+        return benchmark_latencies
+
+    @property
+    def M(self):
+        return self.config.M
+
+    @property
+    def N(self):
+        return self.config.N
+
+    @property
+    def K(self):
+        return self.config.K
+
+    @property
+    def in_dtype(self):
+        return self.config.in_dtype
+
+    @property
+    def out_dtype(self):
+        return self.config.out_dtype
+
+    @property
+    def accum_dtype(self):
+        return self.config.accum_dtype
+
+    @property
+    def layout(self):
+        return self.config.layout
+
+    @property
+    def with_bias(self):
+        return self.config.with_bias
+
+    @property
+    def propagate_a(self):
+        return self.config.propagate_a
+
+    @property
+    def propagate_b(self):
+        return self.config.propagate_b
+
+    @property
+    def input_transform(self):
+        if self.ladder_permutate_a is not None:
+            return self.ladder_permutate_a
+        return None
+
+    @property
+    def weight_transform(self):
+        if self.ladder_permutate_b is not None:
+            return self.ladder_permutate_b
+        return None
 
 
-class MatmulWeightOnlyDequantize(Operator):
-    def __init__(
-        self,
-        M,
-        N,
-        K,
-        in_dtype="float16",
-        out_dtype="float16",
-        accum_dtype="float16",
-        bit=4,
-        storage_dtype="int8",
-        source_format="int",
-        with_scaling=False,
-        group_size=-1,
-        fast_decoding=False,
-        with_bias=False,
-        propagate_a=False,
-        propagate_b=False,
-        layout="nt",
-        name="matmul",
-        target: Target = tvm.target.Target("cuda"),
-    ):
-        # consider to warp the arguments to MatmulConfig
-        super().__init__(name)
-
-        if target.kind.name != "cuda":
-            raise ValueError("Currently only support cuda target")
-        self.arch = CUDA(target)
-        assert propagate_a is False, "Currently only support propagate_a=False"
-
-        self.M = M
-        self.N = N
-        self.K = K
-        self.in_dtype = in_dtype
-        self.out_dtype = out_dtype
-        self.bit = bit
-        self.storage_dtype = storage_dtype
-        self.source_format = source_format
-        self.with_scaling = with_scaling
-        self.group_size = group_size
-        self.fast_decoding = fast_decoding
-        self.accum_dtype = accum_dtype
-        self.with_bias = with_bias
-        self.propagate_a = propagate_a
-        self.propagate_b = propagate_b
-        self.layout = layout
-        self.prim_func_mod = self._select_impl()
-
-        self.optimized_func = self._optimize_default(self.prim_func_mod, target)
-        if isinstance(M, List):
-            self.dynamic_range = {"m": M}
-            self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
-                {"opt_shapes": self.dynamic_range}
-            )
-        else:
-            self.dynamic_range = None
-        self.target = target
-        self._build_runtime_module(target)
-
-    def _select_impl(self):
-        impl_key = self.construct_impl_key()
-        args = self.get_args_based_on_M()
-        impl_handler = matmul_impl_factory[impl_key]
-        return impl_handler(*args)
-
-    def construct_impl_key(self):
-        _impl_key = f"matmul_{self.layout}_dequantize_b"
-        if isinstance(self.M, list):
-            _impl_key += "_dyn_m"
-        if self.propagate_a:
-            _impl_key += "_pa"
-        if self.propagate_b:
-            _impl_key += "_pb"
-        return _impl_key
-
-    def get_args_based_on_M(self):
-        if isinstance(self.M, int):
-            return (
-                self.M,
-                self.N,
-                self.K,
-                self.in_dtype,
-                self.out_dtype,
-                self.accum_dtype,
-                self.bit,
-                self.storage_dtype,
-                self.source_format,
-                self.with_scaling,
-                self.group_size,
-                self.fast_decoding,
-                self.with_bias,
-            )
-        return (
-            self.N,
-            self.K,
-            self.in_dtype,
-            self.out_dtype,
-            self.accum_dtype,
-            self.bit,
-            self.storage_dtype,
-            self.source_format,
-            self.with_scaling,
-            self.group_size,
-            self.fast_decoding,
-            self.with_bias,
-        )
-
-    def optimize(self, topk: int = 20):
-        dynamic_range = self.dynamic_range
-        if dynamic_range is not None:
-            self.optimized_func = self._optimize_fast_tune_with_dynamic_range(
-                self.prim_func_mod["main"], self.target, topk, dynamic_range
-            )
-        else:
-            self.optimized_func = self._optimize_fast_tune(
-                self.prim_func_mod["main"], self.target, topk
-            )
-
-    def post_process(self, code: str) -> str:
-        index = code.index("{", match_global_kernel(code))
-        # some tricky judge to decide whether to insert rasterization code
-        if self.N * self.K > 10**6:
-            rasterization_code = get_rasterization_code(10)
-            code = code[: index + 2] + rasterization_code + code[index + 2 :]
-        return code
+__all__ = ["Matmul", "MatmulConfig"]
