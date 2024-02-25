@@ -7,7 +7,8 @@ from bitblas.base.roller.arch.cuda import CUDA
 from typing import List, Union
 from .operator import Operator
 from .impl.matmul_impl import select_implementation
-from ..base.utils import match_global_kernel, get_rasterization_code
+from ..base.utils import get_rasterization_code
+from bitblas.utils import match_global_kernel
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 

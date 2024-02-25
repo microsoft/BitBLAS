@@ -1,3 +1,4 @@
+# Copyright 2018 The apache/tvm Authors. All Rights Reserved.
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -14,6 +15,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+# 
+# Modifications Copyright (c) Microsoft.
+# The code below is mostly copied from apache/tvm schedule_rule.py in dlight.
 """A lightweight wrapper on an arbitrary function that can be used to schedule a TIR PrimFunc."""
 from typing import Callable, List, Union
 
@@ -70,8 +74,8 @@ class ScheduleRule:  # pylint: disable=too-few-public-methods
             The PrimFunc to apply the ScheduleRule to.
         target : Target
             The compilation target the schedule is supposed to be built for.
-        configs : 
-            # todo: Discribe the configs 
+        configs :
+            # todo: Discribe the configs
         Returns
         -------
         results : Union[None, tir.Schedule, List[tir.Schedule]]
@@ -79,7 +83,7 @@ class ScheduleRule:  # pylint: disable=too-few-public-methods
             is not applicable to the given PrimFunc.
         """
         raise NotImplementedError
-        
+
     @staticmethod
     def from_callable(
         name,
@@ -127,7 +131,9 @@ class ScheduleRule:  # pylint: disable=too-few-public-methods
 
         return decorator
 
-    def is_target_available(self, target: Target) -> bool:  # pylint: disable=unused-argument
+    def is_target_available(
+        self, target: Target
+    ) -> bool:  # pylint: disable=unused-argument
         """Check whether the rule is available for the given target.
 
         Parameters

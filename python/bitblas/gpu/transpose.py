@@ -1,3 +1,4 @@
+# Copyright 2018 The apache/tvm Authors. All Rights Reserved.
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -14,6 +15,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+# 
+# Modifications Copyright (c) Microsoft.
+# The code below is mostly copied from apache/tvm transpose.py in dlight.
 """Reduction rule for operators including softmax, layer norm, RMS norm, etc"""
 from typing import List, Union
 

@@ -1,3 +1,4 @@
+# Copyright 2018 The apache/tvm Authors. All Rights Reserved.
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -14,8 +15,10 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+# 
+# Modifications Copyright (c) Microsoft.
+# The code below is mostly copied from apache/tvm reduction.py in dlight.
 """A rule for reduction. """
-# TODO: combine reduction rule and general reduction rule into one file.
 from typing import List, Optional, Tuple, Union
 
 from tvm import arith, ir, tir
