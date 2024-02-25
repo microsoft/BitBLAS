@@ -49,6 +49,7 @@ class LadderPermutate(Operator):
             N=self.N,
             datatype=self.datatype,
             dequantize_bits=self.dequantize_bits,
+            storage_dtype=self.storage_dtype,
             propagate_kind=self.propagate_kind,
             transpose_matrix=self.transpose_matrix,
             transform_kind=self.transform_kind,

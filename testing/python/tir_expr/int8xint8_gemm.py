@@ -15,7 +15,7 @@ from bitblas.ops.matmul_impl import (
     matmul_nt_propagate_b_s8_s8_s32_mma,
     matmul_nt_propagate_b_s8_s8_s32_cast_s8_mma,
     matmul_nt_propagate_a_propagate_b_s8_s8_s32_mma,
-    matmul_nt_propagate_a_propagate_b_s8_s8_s32_mma_cast_s8
+    matmul_nt_propagate_a_propagate_b_s8_s8_s32_mma_cast_s8,
 )
 
 
@@ -40,11 +40,10 @@ def test_i8_i8_gemm():
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
     with open("debug/after_memory_rewrite.cu", "+w") as f:
         f.write(best.code)
+
 
 def test_i8_i8_gemm_correctness():
     ir_module = matmul_nt(1024, 1024, 1024, "int8", "int32")
@@ -67,9 +66,7 @@ def test_i8_i8_gemm_correctness():
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
 
     numpy_a = np.random.randint(-4, 3, (1024, 1024)).astype("int8")
     numpy_b = np.random.randint(-4, 3, (1024, 1024)).astype("int8")
@@ -112,9 +109,7 @@ def test_i8_i8_i32_gemm_propagate_b():
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
 
 
 def test_i8_i8_i32_cast_i8_gemm_propagate_b():
@@ -140,9 +135,7 @@ def test_i8_i8_i32_cast_i8_gemm_propagate_b():
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
 
 
 def test_i8_i8_i32_gemm_propagate_a_propagate_b():
@@ -168,9 +161,8 @@ def test_i8_i8_i32_gemm_propagate_a_propagate_b():
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
+
 
 def test_i8_i8_i32_gemm_propagate_a_propagate_b_cast_s8():
     ir_module = matmul_nt_propagate_a_propagate_b_s8_s8_s32_mma_cast_s8(
@@ -195,9 +187,8 @@ def test_i8_i8_i32_gemm_propagate_a_propagate_b_cast_s8():
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
+
 
 def test_i8_i4_gemm():
     ir_module = matmul_nt_dequantize_b(16384, 16384, 16384, "int8", "int32")
@@ -220,9 +211,8 @@ def test_i8_i4_gemm():
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
+
 
 def test_i8_i4_propagate_b_gemm():
     ir_module = matmul_nt_dequantize_b_propagate_b(16384, 16384, 16384, "int8", "int32")
@@ -245,14 +235,15 @@ def test_i8_i4_propagate_b_gemm():
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
     # print(best.sch.mod)
     print(best.code)
 
+
 def test_i8_i4_propagate_a_propagate_b_gemm():
-    ir_module = matmul_nt_dequantize_b_propagate_a_b(16384, 16384, 16384, "int8", "int32")
+    ir_module = matmul_nt_dequantize_b_propagate_a_b(
+        16384, 16384, 16384, "int8", "int32"
+    )
     func = ir_module["main"]
     target = tvm.target.Target("nvidia/nvidia-a100")
     arch = CUDA(target)
@@ -272,13 +263,12 @@ def test_i8_i4_propagate_a_propagate_b_gemm():
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
     print(best.config)
 
+
 def test_i8_i2_gemm():
-    ir_module = matmul_nt_dequantize_b(16384, 16384, 16384, "int8", "int32", bit=2)
+    ir_module = matmul_nt_dequantize_b(1, 16384, 16384, "int8", "int32", bit=2)
     func = ir_module["main"]
     target = tvm.target.Target("nvidia/nvidia-a100")
     arch = CUDA(target)
@@ -291,20 +281,28 @@ def test_i8_i2_gemm():
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
 
     configs = policy.emit_config(20)
-
+    print(configs)
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(
         "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
     print(best.code)
 
+
 def test_i8_i2_propagate_b_gemm():
-    ir_module = matmul_nt_dequantize_b_propagate_b(16384, 16384, 16384, "int8", 'int8',accum_dtype="int32", bit=2, fast_decoding=True)
+    ir_module = matmul_nt_dequantize_b_propagate_b(
+        16384,
+        16384,
+        16384,
+        "int8",
+        "int8",
+        accum_dtype="int32",
+        bit=2,
+        fast_decoding=True,
+    )
     func = ir_module["main"]
     target = tvm.target.Target("nvidia/nvidia-a100")
     arch = CUDA(target)
@@ -323,14 +321,15 @@ def test_i8_i2_propagate_b_gemm():
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
     with open("debug/after_memory_rewrite.cu", "+w") as f:
         f.write(best.code)
+
 
 def test_i8_i2_propagate_a_propagate_b_gemm():
-    ir_module = matmul_nt_dequantize_b_propagate_a_b(16384, 16384, 16384, "int8", "int32", "int8", bit=2, fast_decoding=False)
+    ir_module = matmul_nt_dequantize_b_propagate_a_b(
+        16384, 16384, 16384, "int8", "int32", "int8", bit=2, fast_decoding=False
+    )
     func = ir_module["main"]
     target = tvm.target.Target("nvidia/nvidia-a100")
     arch = CUDA(target)
@@ -349,14 +348,12 @@ def test_i8_i2_propagate_a_propagate_b_gemm():
             cpresults[0].latency * 1e3
         )
     )
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(best.latency * 1e3))
     with open("debug/after_memory_rewrite.cu", "+w") as f:
         f.write(best.code)
 
 
-test_i8_i8_gemm()
+# test_i8_i8_gemm()
 # test_i8_i8_gemm_correctness()
 # test_i8_i8_i32_gemm_propagate_b()
 # test_i8_i8_i32_cast_i8_gemm_propagate_b()
@@ -366,6 +363,6 @@ test_i8_i8_gemm()
 # test_i8_i4_propagate_b_gemm()
 # test_i8_i4_propagate_a_propagate_b_gemm()
 
-# test_i8_i2_gemm()
+test_i8_i2_gemm()
 # test_i8_i2_propagate_b_gemm()
 # test_i8_i2_propagate_a_propagate_b_gemm()

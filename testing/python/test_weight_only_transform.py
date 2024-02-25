@@ -242,7 +242,7 @@ def test_matmul_transform():
 
 
 def test_dequantize_matmul_transform():
-    transform_level = 1
+    transform_level = 2
 
     @I.ir_module
     class Before:
@@ -330,7 +330,6 @@ def test_dequantize_matmul_transform():
         relax_mod = WeightOnlyLayoutPropagation(
             transform_level=transform_level, faster_conversion=False
         )(relax_mod)
-
     input_tensors = get_dummy_input_arrays(ref_mod["main"], device)
 
     print("=======================ref llvm result=======================")

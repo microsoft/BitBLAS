@@ -166,7 +166,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
         # tensor core intrinsic size
         intrin_info = config.intrin_info
-        shared_scope = "shared"
+        shared_scope = config.shared_scope
 
         intrin_info = config.intrin_info
         intrin_group = get_mma_intrin_group(

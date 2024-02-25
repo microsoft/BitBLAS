@@ -13,22 +13,14 @@ from tvm.tir import Schedule
 from tvm.relax.expr import Function
 import bitblas
 from .analysis import get_root_block, get_reduction_blocks, find_var_from_func
-from .roller.arch import Arch
 from bitblas.base.roller.arch import CUDA
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.base.roller.rasterization import NoRasterization
 import tempfile
-import re
 import itertools
 from tvm.ir.supply import GlobalVarSupply
-
-
-def match_global_kernel(source: str) -> int:
-    pattern = r"__global__\s+void\s+[__launch_bounds__\(\d+\)\s+]\w+"
-    matched = re.findall(pattern, source)
-    assert len(matched) > 1  # may have statement before kernel
-    return source.index(matched[0])
+from bitblas.utils import match_global_kernel
 
 
 def get_rasterization_code(pannel_width: int = 8) -> str:

@@ -6,7 +6,8 @@ from typing import Literal
 from .operator import Operator
 from .impl.lop3_permutate_impl import select_implementation
 from dataclasses import dataclass
-
+from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
+import torch
 
 @dataclass
 class LOP3PermutateConfig:
@@ -32,7 +33,6 @@ class LOP3Permutate(Operator):
             raise ValueError("Currently only support llvm target for Permutation")
 
         prim_func_mod = self._select_implementation()
-        print(prim_func_mod)
         self.prim_func_mod = prim_func_mod
         self.target = target
         self._build_runtime_module(target)
@@ -44,6 +44,12 @@ class LOP3Permutate(Operator):
             datatype=self.datatype,
             dequantize_bits=self.dequantize_bits,
         )
+
+    def forward_from_torch(self, weight, res):
+        # reintepret the input tensor to int32 format
+        _tvm_args = [self._tensor_adapter(arg.view(torch.int32), self.arch.device) for arg in [weight, res]]
+        self.rt_mod(*_tvm_args)
+        return tvm_tensor_to_torch(_tvm_args[-1]).view(weight.dtype)
 
     @property
     def M(self):

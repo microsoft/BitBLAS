@@ -103,29 +103,30 @@ if tags:
     policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
 
 configs = policy.emit_config(20)
+print(configs[0])
+sch = bitblas.gpu.gemv.GEMVWithDequantizeInfo().apply_config(func, configs[0])
 
-# sch = bitblas.gpu.gemv.GEMVWithDequantizeInfo().apply_config(func, configs[0])
 # print(sch.mod)
-with dispatch_target:
-    mod_deploy = dl.ApplyDefaultSchedule(  # pylint: disable=not-callable
-        dl.gpu.Matmul(),
-        dl.gpu.GEMV(),
-        dl.gpu.Reduction(),
-        dl.gpu.GeneralReduction(),
-        dl.gpu.Fallback(),
-    )(mod_deploy)
-dynamic_range = {
-    "n": [64],
-}
-mod_deploy = bitblas.ApplyFastTuning(
-    topk=20,
-    target=dispatch_target,
-    meta_database_dir="vicuna_tune",
-    whitelist=["matmul"],
-)(mod_deploy)
+# with dispatch_target:
+#     mod_deploy = dl.ApplyDefaultSchedule(  # pylint: disable=not-callable
+#         dl.gpu.Matmul(),
+#         dl.gpu.GEMV(),
+#         dl.gpu.Reduction(),
+#         dl.gpu.GeneralReduction(),
+#         dl.gpu.Fallback(),
+#     )(mod_deploy)
+# dynamic_range = {
+#     "n": [64],
+# }
+# mod_deploy = bitblas.ApplyFastTuning(
+#     topk=20,
+#     target=dispatch_target,
+#     meta_database_dir="vicuna_tune",
+#     whitelist=["matmul"],
+# )(mod_deploy)
 
-with tvm.transform.PassContext(config={"tir.use_async_copy": False}):
-    mod = tvm.build(mod_deploy, target=dispatch_target)
+# with tvm.transform.PassContext(config={"tir.use_async_copy": False}):
+#     mod = tvm.build(mod_deploy, target=dispatch_target)
 
-with open("debug/test_dl_fused_decode_matmul.cu", "+w") as f:
-    f.write(mod.imported_modules[0].get_source())
+# with open("debug/test_dl_fused_decode_matmul.cu", "+w") as f:
+#     f.write(mod.imported_modules[0].get_source())

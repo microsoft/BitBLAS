@@ -18,8 +18,6 @@ def select_implementation(
     if target_instruction != "nvidia-mma":
         raise ValueError("Currently only support nvidia-mma instruction")
 
-    inp = te.placeholder((M, N), name="inp", dtype=storage_dtype)
-    args = [inp]
     # This is trick to get the basic tile size for the current datatype
     # as for nvidia tensorcore instruction, the basic tile size is 16x16/16x32 for float16/int8
     l = r = 16
@@ -29,26 +27,37 @@ def select_implementation(
     intra_index_map, _ = get_propagate_map(
         transpose_matrix, dtype=datatype, matrix_name=propagate_kind
     )
-    cur_dtype = DataType(datatype)
+
+    target_dtype = DataType(datatype)
     scaling_factor = 1
-    if dequantize_bits > 0 and dequantize_bits < cur_dtype.bits:
-        datatype_scaling = DataType(storage_dtype).bits // DataType(datatype).bits
-        scaling_factor = datatype_scaling * (DataType(datatype).bits // dequantize_bits)
+    if dequantize_bits > 0 and dequantize_bits < target_dtype.bits:
+        scaling_factor = (
+            (target_dtype.bits // dequantize_bits)
+            * DataType(storage_dtype).bits
+            // target_dtype.bits
+        )
+        r = r // scaling_factor
         initial_indices = intra_index_map.initial_indices
         scaling_final_indices = intra_index_map.map_indices(
             initial_indices[:-1] + [initial_indices[-1] * scaling_factor]
         )
+        scaling_final_indices = scaling_final_indices[:-1] + [
+            scaling_final_indices[-1] // scaling_factor
+        ]
         intra_index_map = IndexMap(
             initial_indices,
             scaling_final_indices,
             None,
         )
 
+    inp = te.placeholder((M, N // scaling_factor), name="inp", dtype=storage_dtype)
+    args = [inp]
+
     if transform_kind >= 1:
         arg = args[-1]
 
         inter_warp = te.compute(
-            (M // l, N // r, l, r),
+            (M // l, (N // scaling_factor) // r, l, r),
             lambda i, j, ii, jj: arg[i * l + ii, j * r + jj],
             name="inter_warp_permutate",
         )
@@ -56,7 +65,7 @@ def select_implementation(
     if transform_kind >= 2:
         # tir required inverse layout transform.
         arg = args[-1]
-        intra_index_map = intra_index_map.inverse([l, r // scaling_factor])
+        intra_index_map = intra_index_map.inverse([l, r])
 
         def fcompute(*args):
             warp_i, warp_j = args[-2:]
@@ -66,7 +75,9 @@ def select_implementation(
             return arg[new_index]
 
         intra_warp = te.compute(
-            (M // l, N // r, l, r), fcompute, name="intra_warp_permutate"
+            (M // l, (N // scaling_factor) // r, l, r),
+            fcompute,
+            name="intra_warp_permutate",
         )
         args.append(intra_warp)
     args = [args[0], args[-1]]
