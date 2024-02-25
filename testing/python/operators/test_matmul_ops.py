@@ -14,22 +14,11 @@ def get_codegen_result(ops, target):
     return code
 
 
-# # fmt: off
+# fmt: off
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout",
     [
-        (
-            16384,
-            16384,
-            16384,
-            "float16",
-            "float16",
-            "float16",
-            False,
-            False,
-            False,
-            "nt",
-        ),
+        (16384, 16384, 16384, "float16", "float16", "float16", False, False, False, "nt"),
         # dynamic shape
         ([1], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt"),
     ],
@@ -69,18 +58,7 @@ def test_matmul_codegen_default(
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout",
     [
-        (
-            16384,
-            16384,
-            16384,
-            "float16",
-            "float16",
-            "float16",
-            False,
-            False,
-            False,
-            "nt",
-        ),
+        (16384, 16384, 16384, "float16", "float16", "float16", False, False, False, "nt"),
         # dynamic shape
         ([1], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt"),
     ],
@@ -227,7 +205,6 @@ def test_matmul_torch_forward(
     matmul(*permuted_inputs)
     print(permuted_inputs[-1])
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
-
 
 # fmt: on
 
