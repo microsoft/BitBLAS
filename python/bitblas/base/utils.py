@@ -153,16 +153,6 @@ def apply_and_build_parallel(
 ) -> CompileResult:
     cpresults = []
 
-    def var_warpper(v):
-        if isinstance(v, tvm.tir.Var):
-            assert "opt_shapes" in func.attrs
-            assert v.name in func.attrs["opt_shapes"]
-            return func.attrs["opt_shapes"][v.name].value
-        elif isinstance(v, tvm.tir.IntImm):
-            return v.value
-        else:
-            raise RuntimeError("Not supported type: ", type(v))
-
     profile_tensors = get_dummy_input_arrays(func, arch.device)
     max_workers = min(len(configs), os.cpu_count(), max_workers)
 
