@@ -30,8 +30,8 @@ def select_implementation(
         transpose_matrix, dtype=datatype, matrix_name=propagate_kind
     )
     cur_dtype = DataType(datatype)
+    scaling_factor = 1
     if dequantize_bits > 0 and dequantize_bits < cur_dtype.bits:
-        # TODO(lei): should do layout scaling here
         datatype_scaling = DataType(storage_dtype).bits // DataType(datatype).bits
         scaling_factor = datatype_scaling * (DataType(datatype).bits // dequantize_bits)
         initial_indices = intra_index_map.initial_indices
@@ -54,7 +54,9 @@ def select_implementation(
         )
         args.append(inter_warp)
     if transform_kind >= 2:
+        # tir required inverse layout transform.
         arg = args[-1]
+        intra_index_map = intra_index_map.inverse([l, r // scaling_factor])
 
         def fcompute(*args):
             warp_i, warp_j = args[-2:]
@@ -67,6 +69,7 @@ def select_implementation(
             (M // l, N // r, l, r), fcompute, name="intra_warp_permutate"
         )
         args.append(intra_warp)
+    args = [args[0], args[-1]]
 
     func = te.create_prim_func(args)
 
