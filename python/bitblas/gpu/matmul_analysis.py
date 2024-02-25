@@ -638,9 +638,7 @@ def get_tensorized_func_and_tags(
                 out_dtype=out_dtype,
             )
         except:
-            print(
-                "[BitBLAS][WARNING] Cannot find the corresponding wmma intrin group"
-            )
+            print("[BitBLAS][WARNING] Cannot find the corresponding wmma intrin group")
             return func, None
 
         # reindex and transform functions
