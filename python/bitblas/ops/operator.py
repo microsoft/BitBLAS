@@ -25,7 +25,9 @@ class Operator(ABC):
         self.arch = get_arch(target) if target else None
         self.dynamic_range = None
 
-    def codegen(self, target: Target) -> str:
+    def codegen(self, target: Target = None) -> str:
+        if target is None:
+            target = self.target
         if self.rt_mod is None:
             self._build_runtime_module(target)
         return (
@@ -59,13 +61,13 @@ class Operator(ABC):
             try:
                 # Use a specific TVM pass context for CUDA platforms
                 with tvm.transform.PassContext(config={"tir.use_async_copy": True}):
-                    rt_mod = tvm.build(self.optimized_func, target=target)
+                    rt_mod = tvm.build(self.optimized_func, target=target, name=self.name)
             except Exception as e:
                 # Log the exception for debugging purposes. Replace 'print' with logging if necessary.
                 print(f"Failed to build optimized function for CUDA target due to: {e}")
         else:
             # For non-CUDA platforms or when no optimized function is available, build with the primary function
-            rt_mod = tvm.build(self.prim_func, target=target)
+            rt_mod = tvm.build(self.prim_func, target=target, name=self.name)
 
         # If the runtime module was successfully built, set up for evaluation
         if rt_mod:

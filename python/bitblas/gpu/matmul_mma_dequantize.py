@@ -458,7 +458,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 lop3_intrin_info = get_lop3_intrin_group(
                     out_dtype=out_dtype,
                     storage_dtype=weight_decode_info["storage_dtype"],
-                    source_format="uint",
+                    source_format=weight_decode_info["source_format"]["format"],
                     source_bit=source_bit,
                     with_scaling=weight_decode_info["with_scaling"],
                 )
