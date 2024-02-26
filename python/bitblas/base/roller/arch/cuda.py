@@ -46,14 +46,15 @@ class CUDA(Arch):
         # However, the ratio of bandwidth between different devices can
         # be similar. The bandwidth can work for another devices as well.
         self.bandwidth: List[int] = [750, 12080]
-        # the tensor instruction informations
-        
+        # get the available tensor instructions during runtime to avoid
+        # the dependency of the tensor intrinsics registration
+        self.available_tensor_instructions: List[TensorInstruction] = None
+
+    def get_avaliable_tensorintrin_shapes(self):
         from tvm.tir.tensor_intrin.cuda import get_wmma_intrin_group, get_mma_intrin_group
 
         self.available_tensor_instructions = (
             TensorInstruction("mma", get_mma_intrin_group, [16, 16]),
             TensorInstruction("wmma", get_wmma_intrin_group, [16, 16]),
         )
-
-    def get_avaliable_tensorintrin_shapes(self):
         return [t.shape for t in self.available_tensor_instructions]

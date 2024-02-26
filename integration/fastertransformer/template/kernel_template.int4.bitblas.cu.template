@@ -1,0 +1,15 @@
+
+#include <cuda_runtime.h>
+#include <assert.h>
+#include "ladder_kernel.h"
+#include "mma.h"
+// nvcc ladder_kernel.cu  -gencode arch=compute_80,code=sm_80
+
+${kernel_body}
+
+int ladder_gemm_fp16xint4_fp16(half *input_0, half *input_1, half *output, const int M, const int N, const int K, const int trans_a, const int trans_b, half *workspace_ptr)
+{
+    assert(trans_a == 0 && trans_b == 1);
+    ${kernel_call}
+    return -1;
+}

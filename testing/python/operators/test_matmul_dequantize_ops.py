@@ -2,6 +2,7 @@
 # Licensed under the MIT License.
 import pytest
 import tvm
+import bitblas
 from bitblas.ops.matmul_dequantize import (
     MatmulWeightOnlyDequantize,
     MatmulWeightOnlyDequantizeConfig,
@@ -180,6 +181,7 @@ def test_matmul_dequantize_profile_latency(
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", False, -1, True, False, False, False, "nt",),
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, -1, True, False, False, False, "nt",),
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, True, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, False, False, False, False, "nt",),
     ],
 )
 def test_matmul_dequantize_torch_forward(
@@ -271,22 +273,4 @@ def test_matmul_dequantize_torch_forward(
 # fmt: on
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_matmul_dequantize_torch_forward(
-        1,
-        1024,
-        1024,
-        "float16",
-        "float16",
-        "float16",
-        2,
-        "int8",
-        "int",
-        True,
-        128,
-        False,
-        False,
-        False,
-        False,
-        "nt",
-    )
+    bitblas.testing.main()
