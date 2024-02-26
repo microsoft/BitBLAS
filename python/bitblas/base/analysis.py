@@ -7,7 +7,7 @@ from typing_extensions import Literal
 from dataclasses import dataclass
 from enum import Enum
 
-from tvm import ir, tir
+from tvm import ir, tir, DataType
 from tvm.ir import Range
 from tvm.tir.analysis import undefined_vars
 from tvm._ffi import get_global_func
@@ -123,7 +123,9 @@ class BlockInfo:
         if len(r_region) != len(w_region):
             return False
         for var, r_dom, w_dom in zip(block.iter_vars, r_region, w_region):
-            if not _check_unit_var_range(var, r_dom) or not _check_unit_var_range(var, w_dom):
+            if not _check_unit_var_range(var, r_dom) or not _check_unit_var_range(
+                var, w_dom
+            ):
                 return False
         return True
 
@@ -193,12 +195,14 @@ def find_var_from_func(func, var: str):
                 return i
     return None
 
+
 def check_func_with_dynamic(func):
     for buffer in func.buffer_map.values():
         for i in buffer.shape:
             if isinstance(i, tir.Var):
                 return True
     return False
+
 
 def _assert_gpu_target(target: Target):
     if "gpu" not in target.keys:
@@ -266,7 +270,9 @@ def detect_dominant_read(block: tir.Block) -> tir.PrimExpr:
     dominant_read = None
     num_read_iters = -1
     for buffer_region in block.reads:
-        tir_vars = collect_block_iter_vars_used_in_access_region(block, buffer_region.region)
+        tir_vars = collect_block_iter_vars_used_in_access_region(
+            block, buffer_region.region
+        )
         if num_read_iters < len(tir_vars):
             num_read_iters = len(tir_vars)
             dominant_read = buffer_region
@@ -318,3 +324,19 @@ def get_reduction_blocks(
     if len(reduction_blocks) == 0:
         return None
     return reduction_blocks
+
+
+def get_coalesced_veclen(block_stmt: tir.Block, target_bits: int = 128) -> int:
+    # gpu memory prefer 128 bits coalesced access (e.g. four banks)
+    # 128 bits
+    block_stmt
+    buffers: List[tir.Buffer] = []
+    for read in block_stmt.reads:
+        buffers.append(read.buffer)
+    for write in block_stmt.writes:
+        buffers.append(write.buffer)
+    # pick the dtype with the largest bits
+    max_dtype_bits: int = 0
+    for buffer in buffers:
+        max_dtype_bits = max(max_dtype_bits, DataType(buffer.dtype).bits)
+    return target_bits // max_dtype_bits

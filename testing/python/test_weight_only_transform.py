@@ -162,10 +162,8 @@ def test_lop3_transform():
     print("relax ", res)
 
 
-def test_matmul_transform():
-    target = tvm.target.Target("llvm")
+def test_matmul_transform(transform_level = 2):
 
-    # target = tvm.target.Target("nvidia/nvidia-a100")
     @I.ir_module
     class Before:
         @T.prim_func(private=True)
@@ -213,12 +211,11 @@ def test_matmul_transform():
     relax_mod = Before
     ref_mod = deepcopy(relax_mod)
     dispatch_target = tvm.target.Target("cuda")
-    # input_arrays = get_dummy_input_arrays(relax_mod)
 
     relax_mod = AnnotateDecodeInformation()(relax_mod)
     with dispatch_target:
         relax_mod = WeightOnlyLayoutPropagation(
-            transform_level=1, faster_conversion=False
+            transform_level=transform_level, faster_conversion=False
         )(relax_mod)
 
     input_tensors = get_dummy_input_arrays(ref_mod["main"], tvm.cpu())
@@ -241,8 +238,7 @@ def test_matmul_transform():
     print("relax ", res)
 
 
-def test_dequantize_matmul_transform():
-    transform_level = 2
+def test_dequantize_matmul_transform(transform_level=1):
 
     @I.ir_module
     class Before:
@@ -333,25 +329,25 @@ def test_dequantize_matmul_transform():
     input_tensors = get_dummy_input_arrays(ref_mod["main"], device)
 
     print("=======================ref llvm result=======================")
-    ref_res = get_ref_result(ref_mod, input_tensors)
-    print("ref_mod", ref_res)
-    bitblas_res = get_ref_result(relax_mod, input_tensors)
-    print("bitblas_res", bitblas_res)
-    # print("=======================default gpu result=======================")
+    # ref_res = get_ref_result(ref_mod, input_tensors)
+    # print("ref_mod", ref_res)
+    # bitblas_res = get_ref_result(relax_mod, input_tensors)
+    # print("bitblas_res", bitblas_res)
+    print("=======================default gpu result=======================")
     # ref_res = get_default_result(ref_mod, input_tensors, dispatch_target, device)
     # print("ref_mod", ref_res)
     # bitblas_res = get_default_result(relax_mod, input_tensors, dispatch_target, device)
     # print("bitblas_res", bitblas_res)
     # print("=======================fast tune gpu result=======================")
-    # ref_res = get_fast_tune_result(ref_mod, input_tensors, dispatch_target, device)
-    # print("ref_mod", ref_res)
-    # print(relax_mod)
-    # bitblas_res = get_fast_tune_result(
-    #     relax_mod, input_tensors, dispatch_target, device
-    # )
-    # print("bitblas_res", bitblas_res)
+    ref_res = get_fast_tune_result(ref_mod, input_tensors, dispatch_target, device)
+    print("ref_mod", ref_res)
+    print(relax_mod)
+    bitblas_res = get_fast_tune_result(
+        relax_mod, input_tensors, dispatch_target, device
+    )
+    print("bitblas_res", bitblas_res)
 
 
 # test_lop3_transform()
 # test_matmul_transform()
-test_dequantize_matmul_transform()
+# test_dequantize_matmul_transform()

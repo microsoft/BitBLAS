@@ -142,7 +142,7 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
                         continue
                 
                 if check_func_with_dynamic(func):
-                    # try:
+
                     dispatch_mod = fast_tune_with_dynamic_range(
                         func,
                         target=target,
@@ -151,9 +151,7 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
                         global_symbol=g_var.name_hint,
                         dynamic_range=self.dynamic_range,
                     )
-                    # except Exception as e:
-                        
-                    #     continue
+  
                     if dispatch_mod:
                         for g, f in dispatch_mod.functions_items():
                             if g.name_hint == g_var.name_hint:
@@ -165,12 +163,10 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
                         workload = self.cache_meta_database.commit_workload(_normalized_func_mod)
                 else:
                     # otherwise is static shape analysis
-                    try:
-                        _, best = fast_tune(
-                            func, target=target, topk=self.topk, parallel_build=self.parallel_build
-                        )
-                    except:
-                        continue
+                    _, best = fast_tune(
+                        func, target=target, topk=self.topk, parallel_build=self.parallel_build
+                    )
+
                     if best is not None:
                         updated_functions[g_var] = best.sch.mod["main"].with_attr("tir.is_scheduled", 1)
                         workload = self.cache_meta_database.commit_workload(_normalized_func_mod)

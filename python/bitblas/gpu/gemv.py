@@ -38,11 +38,12 @@ from ..base import (
     normalize_prim_func,
     try_inline_contiguous_spatial,
     get_output_blocks,
-    get_block,
 )
 from .base import GPUScheduleRule
 from .gemv_dequantize import GEMVWithDequantizeInfo
-
+from ..base.analysis import (
+    get_coalesced_veclen
+)
 
 def _get_reduction_expr(block: tir.Block) -> Optional[tir.PrimExpr]:
     # Detect and return `Y` in `X[...] = X[...] + Y`
@@ -656,11 +657,15 @@ class GEMV(GPUScheduleRule):
                 s_loops.append(sch.add_unit_loop(block))
             if len(r_loops) > 0:
                 reduction_block = block
+                # skip analysis for following blocks
+                break
 
         def prod(iterable):
             return reduce(lambda x, y: x * y, iterable, 1)
 
-        vec = list(config.vectorize.values())[-1]
+        vec = 1
+        if len(config.vectorize):
+            vec = list(config.vectorize.values())[-1]            
 
         num_warps = int(prod(config.thread))
         warp_size = int(prod(config.reduce_thread))
@@ -676,8 +681,8 @@ class GEMV(GPUScheduleRule):
             i, j, k = sch.get_loops(block_b)
         except:
             j, k = sch.get_loops(block_b)
-        block_shared_local_A = sch.cache_read(block_b, 0, "local")
-        block_shared_local_B = sch.cache_read(block_b, 1, "local")
+        block_local_A = sch.cache_read(block_b, 0, "local")
+        block_local_B = sch.cache_read(block_b, 1, "local")
         block_local_C = sch.cache_write(block_b, 0, "local")
         # reverse inline
         if reduction_block != None and reduction_block != output_blocks[0]:
@@ -694,13 +699,13 @@ class GEMV(GPUScheduleRule):
         self.block_size = [sch.get(tx).extent, sch.get(j).extent, 1]
         self.grid_size = [sch.get(bx).extent, 1, 1]
 
-        sch.compute_at(block_shared_local_A, tx, preserve_unit_loops=True)
-        sch.compute_at(block_shared_local_B, tx, preserve_unit_loops=True)
+        sch.compute_at(block_local_A, tx, preserve_unit_loops=True)
+        sch.compute_at(block_local_B, tx, preserve_unit_loops=True)
         sch.reverse_compute_at(block_local_C, j, preserve_unit_loops=True)
 
-        block_local_a_v = sch.get_loops(block_shared_local_A)[-1]
+        block_local_a_v = sch.get_loops(block_local_A)[-1]
         sch.vectorize(block_local_a_v)
-        block_local_b_v = sch.get_loops(block_shared_local_B)[-1]
+        block_local_b_v = sch.get_loops(block_local_B)[-1]
         sch.vectorize(block_local_b_v)
 
         return sch
@@ -742,6 +747,8 @@ class GEMV(GPUScheduleRule):
                 s_loops.append(sch.add_unit_loop(block))
             if len(r_loops) > 0:
                 reduction_block = block
+                # skip analysis for following blocks
+                break
 
         C = reduction_block
         CL = sch.cache_write(reduction_block, 0, "local")
@@ -775,6 +782,7 @@ class GEMV(GPUScheduleRule):
             thrd_axis.append(tx)
 
         reduce_outer_axis, reduce_inner_axis = [], []
+
         for i in config.raxis_order:
             loop = r_loops[i]
             ro, ri = sch.split(loop, factors=[None, config.rstep[i]])

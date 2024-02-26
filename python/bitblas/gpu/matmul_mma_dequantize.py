@@ -11,13 +11,12 @@ from tvm.target import Target
 from ..base.roller.rasterization import NoRasterization
 from ..base import analysis
 from .base import GPUScheduleRule
+from ..base.analysis import get_coalesced_veclen
 from .matmul_analysis import (
     auto_inline_consumer_chain,
     auto_inline_producers,
     get_reduction_blocks,
-    get_coalesced_veclen,
     normalize_to_matmul,
-    _collect_producers,
     get_propagate_map,
     layout_propagate_chain,
     find_last_producer_from_buffer,

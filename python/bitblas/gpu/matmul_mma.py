@@ -12,6 +12,7 @@ from ..base.roller.rasterization import NoRasterization
 from ..base import analysis
 from .base import GPUScheduleRule
 from .matmul_mma_dequantize import MatmulTensorizationMMAWithDequantizeInfo
+from ..base.analysis import get_coalesced_veclen
 from .matmul_analysis import (
     auto_inline_consumer_chain,
     is_transpose_block,
@@ -23,8 +24,7 @@ from .matmul_analysis import (
     get_reduction_blocks,
     get_dequantize_block,
     normalize_to_matmul,
-    get_propagate_map,
-    get_coalesced_veclen
+    get_propagate_map
 )
 
 
@@ -551,6 +551,9 @@ class MatmulTensorizationMMA(GPUScheduleRule):
                 sch.storage_align(block_read, 0, axis=-2, factor=16, offset=pad_offset)
             sch.annotate(f_2, "pragma_unroll_explicit", False)
             return block_read
+
+        if len(config.vectorize.values()) < 2:
+            return None
 
         a_g2s = fetch_to_shared(
             block_outer,

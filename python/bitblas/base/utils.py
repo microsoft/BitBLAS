@@ -131,7 +131,7 @@ def get_dummy_input_arrays(
 
         profile_tensors.append(
             tvm.nd.array(
-                np.random.uniform(0, 1, [var_wrapper(i) for i in arg.shape]).astype(
+                np.random.uniform(-1, 1, [var_wrapper(i) for i in arg.shape]).astype(
                     arg.dtype
                 ),
                 device=device,
