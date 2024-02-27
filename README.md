@@ -44,11 +44,15 @@ class MatmulNT:
                     vj, vk
                 ].astype(out_dtype)
 
-ir_module = get_prim_func(*input_args)
+ir_module = MatmulNT
 func = ir_module["main"]
 target = tvm.target.Target("nvidia/nvidia-a100")
 arch = CUDA(target)
+```
 
+Get tuning policy and candidates:
+
+```python
 # Tune with SIMT Cuda Core
 policy = DefaultPolicy(func=func, arch=arch)
 try:
@@ -102,6 +106,10 @@ configs = policy.emit_config(topk=20)
 [BitBLAS] Evaluation with config  {'block': [16, 256], 'warp': [16, 64], 'rstep': [64], 'use_tc': True, 'vectorize': {'A_reindex': 8, 'B_reindex': 8}}
 [BitBLAS] Time cost of this config: 0.047 ms
 '''
+```
+
+Apply and build and get best code generation result:
+```python
 cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
 # get the best code generation result.
 print(best.code)
@@ -112,7 +120,7 @@ extern "C" __global__ void __launch_bounds__(128) default_function_kernel(half* 
 '''
 ```
 
-You cal also do something interest with DSL Tuning, and we provide something interesting with DSL.
+we also provide something interesting with DSL.
 
 #### Auto Tensorization
 
@@ -126,6 +134,7 @@ tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
 ```
 
 #### Tune with dynamic symbolic
+
 As in LLM Serving, the input shape is dynamic, we can use the dynamic symbolic to generate high performance kernel with dynamic shape.
 
 ```python
@@ -182,6 +191,7 @@ class MatmulNT:
 
 
 ### Using BitBLAS from packed Operators
+
 We packed some operators in `bitblas/ops/impl` with configs, you can use them directly. Please see more examples in `testing/python/operators`
 
 ```python
@@ -206,7 +216,7 @@ matmul = Matmul(
 
 By default, we will apply a default schedule into the operator, you can also get code generation result by calling matmul.codegen().
 
-```
+```python
 print(matmul.codegen())
 '''
 extern "C" __global__ void __launch_bounds__(128) default_function_kernel(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
