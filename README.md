@@ -5,11 +5,11 @@ BitBLAS is a light weight framework to generate high performance CUDA/HIP code f
 ## Feature
 
 - Auto Tensorization.
+- High Performance (FP16xFP16, FP16xINT4/2/1, INT8xINT8, INT8xINT4/2/1).
 - Dynamic symbolic support, generate kernel with dynamic shape.
-- Auto Layout Propagation.
-- Aanalysis based on the DSL TensorIR, can be easily extended.
 
 ## Requirements
+
 To manually install BitBLAS, please checkout `maint/scripts/installation.sh`.
 
 Also Make sure you already have the cuda toolkit (version >= 11) installed in the system.
@@ -166,7 +166,7 @@ optimized_mod = fast_tune_with_dynamic_range(
     }
 )
 
-# fianlly, we will generate a dispatch func to dispatch the kernel with dynamic shape.
+# fianlly, we will generate a dispatch func to dispatch the kernel with dynamic symbolic.
 '''
 @IRModule
 class MatmulNT:
