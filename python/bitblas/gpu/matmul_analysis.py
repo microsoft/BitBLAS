@@ -510,6 +510,7 @@ def normalize_to_matmul(
 def get_tensorized_func_and_tags(
     func: tir.PrimFunc,
     target: Target,
+    layout: List[str] = ["a", "a", "a"],
     skip_normalize: bool = False,
     allow_gemv: bool = False,
 ) -> Tuple[tir.PrimFunc, Dict[str, Union[List[int], int]]]:
@@ -630,7 +631,7 @@ def get_tensorized_func_and_tags(
         # or C[S, I, J] += A[S, I, K] * B[S, K, J]
         # skip normalize when we want to detect tags only.
         if not skip_normalize:
-            sch = normalize_to_matmul(sch, main_block, ["n", "t", "n"])
+            sch = normalize_to_matmul(sch, main_block, layout)
             if sch is None:
                 return func, None
 
