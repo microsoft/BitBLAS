@@ -141,7 +141,7 @@ def matmul_nt_dequantize_b_propagate_b(
     n_float_per_elem = storage_nbit // bit
     if group_size == -1:
         group_size = K
-    qr = r // storage_nbit * bit
+    qr = r * bit // storage_nbit
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder(
         (N // l, (K // scaling_factor) // qr, l, qr), name="B", dtype=storage_dtype
