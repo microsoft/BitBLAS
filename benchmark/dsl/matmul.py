@@ -175,7 +175,6 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
 
     tune_start = time.time()
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
-    print(tensorized_func)
     fast_tune_time = time.time() - tune_start
     print(
         "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
