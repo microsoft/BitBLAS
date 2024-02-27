@@ -6,13 +6,15 @@ from tvm.script import tir as T
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.arch import CUDA
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
-from bitblas.gpu import Matmul
+from bitblas.gpu import Matmul, matmul_mma
 from bitblas.base.utils import apply_and_build
 import time
 from tvm import te, tir
 
 
-def conv2d_nhwc_hwio(n, f, h, w, c, kh, kw, s, d, p, in_dtype="float16", out_dtype="float16"):
+def conv2d_nhwc_hwio(
+    n, f, h, w, c, kh, kw, s, d, p, in_dtype="float16", out_dtype="float16"
+):
     A = te.placeholder((n, h, w, c), name="input", dtype=in_dtype)
     B = te.placeholder((kh, kw, c, f), name="weight", dtype=in_dtype)
 
@@ -58,13 +60,14 @@ def conv2d_nhwc_hwio(n, f, h, w, c, kh, kw, s, d, p, in_dtype="float16", out_dty
     return tvm.ir.IRModule({"main": te.create_prim_func([A, B, C])})
 
 
+# fmt:off
 benchmark_sets = [
     # (prim_func, input_args, BitBLAS_default_schedule),
-    # (conv2d_nhwc_hwio, (128, 64, 224, 224, 3, 7, 7, 2, 1, 3, "float16", "float16"), Matmul),
     (conv2d_nhwc_hwio, (128, 64, 224, 224, 64, 1, 1, 2, 1, 3, "float16", "float16"), Matmul),
     # (conv2d_nhwc_hwio, (128, 64, 224, 224, 3, 7, 7, 2, 1, 3, "float32", "float32"), Matmul),
     # (conv2d_nhwc_hwio, (128, 64, 224, 224, 3, 7, 7, 2, 1, 3, "float16", "float16"), Matmul),
 ]
+# fmt:on
 benchmark_results = {}
 for get_prim_func, input_args, d_schedule in benchmark_sets:
     ir_module = get_prim_func(*input_args)
@@ -78,14 +81,19 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
         tags = None
     if tags:
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
-    print(tensorized_func)
     configs = policy.emit_config(20)
 
     tune_start = time.time()
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     fast_tune_time = time.time() - tune_start
-    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(cpresults[0].latency * 1e3))
-    print("[BitBLAS] The best latency of top 20 is {:.3f} ms".format(best.latency * 1e3))
+    print(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
+            cpresults[0].latency * 1e3
+        )
+    )
+    print(
+        "[BitBLAS] The best latency of top 20 is {:.3f} ms".format(best.latency * 1e3)
+    )
 
     # evaluate the performance of the default schedule
 
@@ -107,7 +115,9 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
             )
         )
 
-    timer_cuda_mod = mod_default.time_evaluator(mod_default.entry_name, arch.device, number=5)
+    timer_cuda_mod = mod_default.time_evaluator(
+        mod_default.entry_name, arch.device, number=5
+    )
     t = timer_cuda_mod(*profile_tensors).mean
 
     print("Time cost of Dlight default schedule: {:.3f} ms".format(t * 1e3))
@@ -134,7 +144,8 @@ headers = [
 ]
 
 col_width = (
-    max(len(word) for row in [headers] + list(profile_config.values()) for word in row) + 2
+    max(len(word) for row in [headers] + list(profile_config.values()) for word in row)
+    + 2
 )  # padding
 
 print("".join(word.ljust(col_width) for word in headers))

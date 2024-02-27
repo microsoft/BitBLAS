@@ -10,6 +10,7 @@ from bitblas.gpu import Matmul
 from bitblas.base.utils import apply_and_build
 import time
 
+
 def matmul_nt(M, N, K, in_dtype="float16", out_dtype="float16"):
     @tvm.script.ir_module
     class MatmulNT:
@@ -138,25 +139,24 @@ def matmul_nt_propagate_a_b(M, N, K, in_dtype="float16", out_dtype="float16"):
     return MyModule
 
 
+# fmt:off
 benchmark_sets = [
     # (prim_func, input_args, default_dlight_schedule),
-    # (matmul_nt, (1024, 1024, 1024, "float16", "float16"), Matmul),
-    # (matmul_nt, (16, 8192, 8192, "float16", "float16"), Matmul),
-    # (matmul_nt, (32, 8192, 8192, "float16", "float16"), Matmul),
-    # (matmul_nt, (16384, 16384, 16384, "float16", "float16"), Matmul),
-    # (matmul_nt, (16384, 16384, 16384, "int8", "int32"), Matmul),
-    # (matmul_nn, (1024, 1024, 1024, "float16", "float16"), Matmul),
-    # (matmul_nn, (8192, 8192, 8192, "float16", "float16"), Matmul),
-    # (matmul_nn, (16384, 16384, 16384, "float16", "float16"), Matmul),
-    # (matmul_nt, (1024, 1024, 1024, "float32", "float32"), Matmul),
-    (matmul_nt, (8192, 8192, 8192, "float32", "float32"), Matmul),
-    # (matmul_nn, (1024, 1024, 1024, "float32", "float32"), Matmul),
-    # (matmul_nn, (8192, 8192, 8192, "float32", "float32"), Matmul),
-    # (matmul_nt_propagate_b, (16384, 16384, 16384, "int8", "int32"), Matmul),
-    # (matmul_nt_propagate_b_f16_f16_mma, (16384, 16384, 16384), Matmul),
-    # (matmul_nt_propagate_a_b, (16384, 16384, 16384, "int8", "int32"), Matmul),
-    # (matmul_nt_propagate_a_b, (16384, 16384, 16384, "float16", "float16"), Matmul),
+    (matmul_nt, (1024, 1024, 1024, "float16", "float16"), Matmul),
+    (matmul_nt, (16, 8192, 8192, "float16", "float16"), Matmul),
+    (matmul_nt, (32, 8192, 8192, "float16", "float16"), Matmul),
+    (matmul_nt, (16384, 16384, 16384, "float16", "float16"), Matmul),
+    (matmul_nt, (16384, 16384, 16384, "int8", "int32"), Matmul),
+    (matmul_nn, (1024, 1024, 1024, "float16", "float16"), Matmul),
+    (matmul_nn, (8192, 8192, 8192, "float16", "float16"), Matmul),
+    (matmul_nn, (16384, 16384, 16384, "float16", "float16"), Matmul),
+    (matmul_nt, (1024, 1024, 1024, "float32", "float32"), Matmul),
+    (matmul_nt_propagate_b_f16_f16_mma, (16384, 16384, 16384), Matmul),
+    (matmul_nt_propagate_a_b, (16384, 16384, 16384, "int8", "int32"), Matmul),
+    (matmul_nt_propagate_a_b, (16384, 16384, 16384, "float16", "float16"), Matmul),
 ]
+# fmt:on
+
 benchmark_results = {}
 for get_prim_func, input_args, d_schedule in benchmark_sets:
     ir_module = get_prim_func(*input_args)
@@ -175,18 +175,15 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
 
     tune_start = time.time()
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
-    # print(best.sch.mod)
-    print(best.code)
+    print(tensorized_func)
     fast_tune_time = time.time() - tune_start
     print(
-        "[FastDlight] The best latency of top 1 is {:.3f} ms".format(
+        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
             cpresults[0].latency * 1e3
         )
     )
     print(
-        "[FastDlight] The best latency of top 20 is {:.3f} ms".format(
-            best.latency * 1e3
-        )
+        "[BitBLAS] The best latency of top 20 is {:.3f} ms".format(best.latency * 1e3)
     )
 
     # evaluate the performance of the default schedule
@@ -218,15 +215,15 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
             "default_dlight_latency": t * 1e3,
         }
     }
-        
+
     benchmark_results.update(profile_config)
 
 headers = [
     "PrimFunc",
     "Input Arguments",
-    "FastDLight Top20 Tune Time",
-    "FastDLight Top1 Latency",
-    "FastDLight Top20 Latency",
+    "BitBLAS Top20 Tune Time",
+    "BitBLAS Top1 Latency",
+    "BitBLAS Top20 Latency",
     "DefaultDLight Tune Time",
     "DefaultDLight Latency",
 ]
