@@ -37,10 +37,10 @@ def get_default_result(ref_mod, input_tensors, target, device):
     with target:
         ref_mod = bitblas.ApplyDefaultSchedule(  # pylint: disable=not-callable
             bitblas.gpu.GEMV(),
-            # bitblas.gpu.Matmul(),
-            # bitblas.gpu.Reduction(),
-            # bitblas.gpu.GeneralReduction(),
-            # bitblas.gpu.Fallback(),
+            bitblas.gpu.Matmul(),
+            bitblas.gpu.Reduction(),
+            bitblas.gpu.GeneralReduction(),
+            bitblas.gpu.Fallback(),
         )(ref_mod)
     ref_mod = tvm.tir.transform.MakePackedAPI()(ref_mod)
     ex = relax.build(ref_mod, target)
