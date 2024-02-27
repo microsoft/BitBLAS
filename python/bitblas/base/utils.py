@@ -192,9 +192,11 @@ def apply_and_build_parallel(
         rt_mod.export_library(artifact_path, fcompile=tar)
         return idx, code, artifact_path
 
+    _mods = [sch.mod if sch is not None else None for sch in _sched]
+
     for map_result in builder.map_with_error_catching(
         _build,
-        [(i, sch.mod, arch) for i, sch in enumerate(_sched)],
+        [(i, mod, arch) for i, mod in enumerate(_mods)],
     ):
         if map_result.status == StatusKind.TIMEOUT:
             print("[BitBLAS] LocalBuilder: Timeout")
@@ -204,8 +206,9 @@ def apply_and_build_parallel(
             continue
         elif map_result.status == StatusKind.COMPLETE:
             idx, code, artifact_path = map_result.value
-            assert artifact_path is not None, "artifact_path is None"
-
+            if artifact_path is None:
+                print("[BitBLAS] Artifact path is None")
+                continue
             sch = _sched[idx]
             config = configs[idx]
             rt_mod = tvm.runtime.load_module(artifact_path)
