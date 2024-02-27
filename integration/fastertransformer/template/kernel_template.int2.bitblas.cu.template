@@ -1,4 +1,5 @@
-
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 #include <cuda_runtime.h>
 #include <assert.h>
 #include "ladder_kernel.h"

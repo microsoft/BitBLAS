@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from typing import Literal
 from tvm import IRModule
 from tvm.ir import GlobalVar

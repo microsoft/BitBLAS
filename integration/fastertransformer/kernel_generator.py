@@ -173,7 +173,9 @@ __pack_half2(const half x, const half y) {
 with open(
     ladder_header_path, mode="w", encoding="utf8"
 ) as w_f:
-    headers = f"""#ifndef __LADDER_KERNEL_H__
+    headers = f"""// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
+#ifndef __LADDER_KERNEL_H__
 #define __LADDER_KERNEL_H__
 #include <cuda_fp16.h>
 #if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ == 800) 

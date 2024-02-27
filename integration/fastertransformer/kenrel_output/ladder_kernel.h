@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 #ifndef __LADDER_KERNEL_H__
 #define __LADDER_KERNEL_H__
 #include <cuda_fp16.h>

@@ -359,6 +359,11 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             return None
 
         main_block = reduction_blocks[0]
+        
+        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
+        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
+            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
+
         output_blocks = [sch.get(block) for block in sch.get_output_blocks(root_block)]
 
         def check_require_cache(func: tir.PrimFunc):
@@ -442,10 +447,6 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         x_pad_factor = i_factors[2] * i_factors[3]
         y_pad_factor = j_factors[2] * j_factors[3]
         k_pad_factor = k_factors[1]
-
-        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
-        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
-            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
 
         # Step 2. Padding for dynamic shape kernels
         sch.pad_einsum(
