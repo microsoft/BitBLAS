@@ -28,4 +28,4 @@ BitBLAS is expected to perform reliably within the operational factors and setti
 
 ## Plugins and Extensibility
 
-BitBLAS doesn't allow for plug ins or extensibility.
+BitBLAS doesn't allow for plugins or extensibility.
