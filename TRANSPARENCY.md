@@ -1,31 +1,54 @@
-# Transparency Responsible FAQ for BitBLAS
+# Transparency FAQ for BitBLAS
 
 ## What is BitBLAS?
 
-BitBLAS is a software framework designed to generate high-performance CUDA/HIP code for BLAS operators with optimizing swizzling and layout propagation. BitBLAS makes it easier and more efficient to perform complex mathematical operations, especially in the fields of machine learning and high-performance computing.
+BitBLAS is a lightweight framework designed for generating high-performance CUDA/HIP code for BLAS (Basic Linear Algebra Subprograms) operators, emphasizing swizzling and layout propagation. It leverages a Domain-Specific Language (DSL), specifically TIR Script, to offer flexibility and efficiency in mathematical computations. BitBLAS aims to provide performance comparable to cuBLAS while introducing more flexibility and efficiency through its unique features.
 
 ## What can BitBLAS do?
 
-BitBLAS offers several functionalities aimed at improving the performance and flexibility of linear algebra computations. It supports auto tensorization to optimize operations across different data types and compute patterns and dynamic symbolic support for generating kernels that can handle dyanmic input shape. Its design targets high-performance computing needs.
+BitBLAS enhances the performance and flexibility of linear algebra computations with features like:
+
+- Auto Tensorization: Automatically optimizes code for various data types and operators, supporting FP16, INT8, and mixed precision operations.
+- Dynamic Symbolic Support: Facilitates kernel generation with dynamic shapes, enabling efficient computation for variable data sizes.
+- High-Performance Computing: Offers optimized performance for different data operations, including FP16xFP16, FP16xINT4/2/1, INT8xINT8, and INT8xINT4/2/1, among others.
 
 ## What are BitBLAS's intended uses?
 
-The primary intended uses of BitBLAS are in the domains of machine learning, deep learning, scientific computing, and any other field that requires efficient linear algebra computations. It is designed to accelerate training and inference processes, and improve computational efficiency in high-performance computing applications.
+BitBLAS is intended for developers and researchers who require high-performance linear algebra computations in their CUDA/HIP-based applications. It is particularly beneficial for:
 
-## How was BitBLAS evaluated?
+- Machine Learning and Deep Learning: Accelerating training and inference computations.
+- Scientific Computing: Handling large-scale linear algebra operations efficiently.
+- High-Performance Computing (HPC): Enhancing performance in computationally intensive applications.
 
-BitBLAS was evaluated based on its performance and correctness in generating and executing optimized code for various linear algebra operations. Performance metrics include the speed of execution, computational efficiency. The evaluation involved comparing BitBLAS's performance with other existing frameworks, such as cuBLAS/CUTLASS/rocBLAS/AMOS/TensorIR and manual implementation of some operators, across a range of computational tasks and hardware configurations. The accuracy verification through simulations with PyTorch operators/
+## Data Handling and Privacy
 
-## What are the limitations of BitBLAS?
+This project is committed to protecting privacy and ensuring a secure environment for all users. It is designed with the following principles in mind:
 
-While BitBLAS is designed to be highly efficient, there are limitations to its applicability and performance. It is optimized for CUDA/HIP environments, which means its use is restricted to systems with compatible GPUs.
+- No User Data Collection: The project does not collect, process, or store any personal or privacy-sensitive data from users. Users can utilize the project's features without the concern of their data being recorded or misused.
 
-Moreover, due to the complexity of dynamic shape support, we currently only support only one dim is dynamic.
+- Transparency: We believe in complete transparency with our community. As such, we clearly state that no user data is collected or processed at any stage of the project's usage.
 
-## Operational factors and settings for effective and responsible use
+- User Control and Privacy: Since the project does not involve user data, individuals retain full control over their information. Users can interact with the project knowing their privacy is safeguarded.
 
-BitBLAS is expected to perform reliably within the operational factors and settings of CUDA/HIP-enabled hardware architectures. Users can influence the system's behavior through customization of the DSL scripts, selection of data types and precision and operator configurations, and tuning of performance parameters to suit their specific computational needs. These choices impact the efficiency and accuracy of the computations, making it essential for users to understand the trade-offs involved.
+## Security Considerations
 
-## Plugins and Extensibility
+The security of the project and its users is paramount. Despite not handling user data, we adhere to best practices in software development to ensure the project's integrity and safety:
 
-BitBLAS doesn't allow for plugins or extensibility.
+- Regular Security Audits: The project undergoes regular security reviews and audits to identify and remediate any potential vulnerabilities, ensuring the highest level of security.
+
+- Open Source Security: As an open-source project, our code is available for review, allowing the community to examine and contribute to the project's security.
+
+- Security Incident Response: In the unlikely event of a security issue, we have established procedures for prompt and effective response to investigate and address the concern.
+
+- Community Involvement: We encourage the community to report any security concerns or suggestions for improvement. Our project's success and security are enhanced by active community participation and feedback.
+
+## Compliance and Licensing
+
+As a project initiated and released by Microsoft, we adhere strictly to legal and regulatory standards to ensure our contributions meet the highest compliance criteria. Here are key points regarding our compliance and licensing practices:
+
+- Microsoft's Commitment: This project is part of Microsoft's commitment to supporting and contributing to the open-source community. We ensure that all contributions are compliant with current legal standards and practices.
+
+- MIT License: The project is licensed under the MIT License, one of the most permissive and open licenses available. This license allows for almost unrestricted freedom to use, modify, and distribute the project, providing that the license and copyright notice are included with any substantial portion of the software.
+
+- License Clarity: We have clearly indicated the licensing terms within the project repository to ensure that all users and contributors are informed of their rights and obligations when using or contributing to the project.
+
