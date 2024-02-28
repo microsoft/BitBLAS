@@ -1,5 +1,14 @@
 # Basic dependabot.yml configuration for updating Python dependencies
 version: 2
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '36 11 * * 5'
+
 updates:
   # Enable version updates for Python packages listed in requirements.txt
   - package-ecosystem: "pip"
