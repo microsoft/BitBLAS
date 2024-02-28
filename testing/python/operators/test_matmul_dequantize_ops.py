@@ -7,7 +7,6 @@ from bitblas.ops.matmul_dequantize import (
     MatmulWeightOnlyDequantize,
     MatmulWeightOnlyDequantizeConfig,
 )
-from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 
 target = tvm.target.Target("nvidia/nvidia-a100")
 
