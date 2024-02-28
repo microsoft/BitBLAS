@@ -1,20 +1,34 @@
+# Basic dependabot.yml configuration for updating Python dependencies
 version: 2
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: '36 11 * * 5'
-
 updates:
-  - package-ecosystem: github-actions
-    directory: /
+  # Enable version updates for Python packages listed in requirements.txt
+  - package-ecosystem: "pip"
+    # Directory where requirements.txt is located
+    directory: "/"
+    # Check the Python package index for updates every day (Monday to Friday)
     schedule:
-      interval: daily
+      interval: "daily"
+    # Assign labels to the pull request for easier categorization
+    labels:
+      - "dependency"
+      - "python"
 
-  - package-ecosystem: npm
-    directory: /
+  # Enable version updates for Python projects using poetry
+  - package-ecosystem: "poetry"
+    # Directory where pyproject.toml is located
+    directory: "/"
+    # Check for updates every week
     schedule:
-      interval: daily
+      interval: "weekly"
+    # Specify a time (in UTC) to check for updates, for less disruption
+    schedule:
+      interval: "weekly"
+      time: "04:00"
+    # Assign labels to the pull request for easier categorization
+    labels:
+      - "dependency"
+      - "python"
+    # Allow Dependabot to check for pre-release versions
+    allow:
+      - dependency-type: "all"
+        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
