@@ -1,4 +1,13 @@
 version: 2
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '36 11 * * 5'
+
 updates:
   - package-ecosystem: github-actions
     directory: /
