@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 import tvm
 import bitblas
-from bitblas.ops import Matmul
+from bitblas.ops import MatmulConfig, Matmul
 import numpy as np
 
 
@@ -13,19 +13,20 @@ def test_matmul_codegen_static_shape_optimize_s8():
 
     target = tvm.target.Target("nvidia/nvidia-a100")
 
-    matmul = Matmul(
+    matmul_config = MatmulConfig(
         M=M,
         N=N,
         K=K,
-        a_dtype="int8",
-        b_dtype="int8",
-        c_dtype="int32",
+        in_dtype="int8",
+        out_dtype="int8",
+        accum_dtype="int32",
         propagate_a=False,
         propagate_b=False,
         layout="nt",
-        target=target,
     )
-    matmul.optimize()
+    matmul = Matmul(matmul_config, target=target)
+
+    matmul.hardware_aware_finetune()
     code = matmul.codegen(target=target)
     latency = matmul.profile_latency()
     print(latency)
