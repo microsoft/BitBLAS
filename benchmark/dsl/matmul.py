@@ -20,15 +20,15 @@ import time
 # fmt:off
 benchmark_sets = [
     # (prim_func, input_args, default_dlight_schedule),
-    # (matmul_nt, (1024, 1024, 1024, "float16", "float16"), Matmul),
-    # (matmul_nt, (16, 8192, 8192, "float16", "float16"), Matmul),
-    # (matmul_nt, (32, 8192, 8192, "float16", "float16"), Matmul),
-    # (matmul_nt, (16384, 16384, 16384, "float16", "float16"), Matmul),
-    # (matmul_nt, (16384, 16384, 16384, "int8", "int32"), Matmul),
-    # (matmul_nn, (1024, 1024, 1024, "float16", "float16"), Matmul),
-    # (matmul_nn, (8192, 8192, 8192, "float16", "float16"), Matmul),
-    # (matmul_nn, (16384, 16384, 16384, "float16", "float16"), Matmul),
-    # (matmul_nt, (1024, 1024, 1024, "float32", "float32"), Matmul),
+    (matmul_nt, (1024, 1024, 1024, "float16", "float16"), Matmul),
+    (matmul_nt, (16, 8192, 8192, "float16", "float16"), Matmul),
+    (matmul_nt, (32, 8192, 8192, "float16", "float16"), Matmul),
+    (matmul_nt, (16384, 16384, 16384, "float16", "float16"), Matmul),
+    (matmul_nt, (16384, 16384, 16384, "int8", "int32"), Matmul),
+    (matmul_nn, (1024, 1024, 1024, "float16", "float16"), Matmul),
+    (matmul_nn, (8192, 8192, 8192, "float16", "float16"), Matmul),
+    (matmul_nn, (16384, 16384, 16384, "float16", "float16"), Matmul),
+    (matmul_nt, (1024, 1024, 1024, "float32", "float32"), Matmul),
     (matmul_nt_propagate_a_propagate_b, (16384, 16384, 16384, "float16", "float16", "float16"), Matmul),
 ]
 # fmt:on
