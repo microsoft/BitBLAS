@@ -20,15 +20,15 @@ import time
 # fmt:off
 benchmark_sets = [
     # (prim_func, input_args, default_dlight_schedule),
-    (matmul_nt, (1024, 1024, 1024, "float16", "float16"), Matmul),
-    (matmul_nt, (16, 8192, 8192, "float16", "float16"), Matmul),
-    (matmul_nt, (32, 8192, 8192, "float16", "float16"), Matmul),
-    (matmul_nt, (16384, 16384, 16384, "float16", "float16"), Matmul),
-    (matmul_nt, (16384, 16384, 16384, "int8", "int32"), Matmul),
-    (matmul_nn, (1024, 1024, 1024, "float16", "float16"), Matmul),
-    (matmul_nn, (8192, 8192, 8192, "float16", "float16"), Matmul),
-    (matmul_nn, (16384, 16384, 16384, "float16", "float16"), Matmul),
-    (matmul_nt, (1024, 1024, 1024, "float32", "float32"), Matmul),
+    # (matmul_nt, (1024, 1024, 1024, "float16", "float16"), Matmul),
+    # (matmul_nt, (16, 8192, 8192, "float16", "float16"), Matmul),
+    # (matmul_nt, (32, 8192, 8192, "float16", "float16"), Matmul),
+    # (matmul_nt, (16384, 16384, 16384, "float16", "float16"), Matmul),
+    # (matmul_nt, (16384, 16384, 16384, "int8", "int32"), Matmul),
+    # (matmul_nn, (1024, 1024, 1024, "float16", "float16"), Matmul),
+    # (matmul_nn, (8192, 8192, 8192, "float16", "float16"), Matmul),
+    # (matmul_nn, (16384, 16384, 16384, "float16", "float16"), Matmul),
+    # (matmul_nt, (1024, 1024, 1024, "float32", "float32"), Matmul),
     (matmul_nt_propagate_a_propagate_b, (16384, 16384, 16384, "float16", "float16", "float16"), Matmul),
 ]
 # fmt:on
@@ -48,10 +48,10 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     if tags:
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
 
-    configs = policy.emit_config(1)
+    configs = policy.emit_config(20)
 
     tune_start = time.time()
-    cpresults, best = apply_and_build(func, configs, arch, parallel_build=False)
+    cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     print(best.code)
     fast_tune_time = time.time() - tune_start
     print(

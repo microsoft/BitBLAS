@@ -405,22 +405,15 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         # Step 0. Get schedule config.
         # NOTE: we can analyze the config by the hardware spec in the future
 
-        # tensor core intrinsic size
-        # warp_row_tiles = config.warp[0]
-        # warp_col_tiles = config.warp[1]
-        # block_row_warps = config.block[0] // warp_row_tiles
-        # block_col_warps = config.block[1] // warp_col_tiles
-        # stage = config.pipeline_stage
-        # use_async = config.use_async
-        # chunk = config.rstep[0]
+        warp_row_tiles = config.warp[0]
+        warp_col_tiles = config.warp[1]
+        block_row_warps = config.block[0] // warp_row_tiles
+        block_col_warps = config.block[1] // warp_col_tiles
+        stage = config.pipeline_stage
+        use_async = config.use_async
+        chunk = config.rstep[0]
 
-        warp_row_tiles = 64
-        warp_col_tiles = 128
-        block_row_warps = 2
-        block_col_warps = 2
-        stage = 1
-        use_async = 1
-        chunk = 32
+        # tensor core intrinsic size
         micro_size_x, micro_size_y, micro_size_k = intrin_group["micro_kernel"]
 
         # get the axis for layout transform

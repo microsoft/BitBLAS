@@ -106,7 +106,8 @@ def _apply_config(
 
 
 def get_dummy_input_arrays(
-    func: Union[tir.PrimFunc, Function], device: tvm.runtime.Device, 
+    func: Union[tir.PrimFunc, Function],
+    device: tvm.runtime.Device,
     distribution: Literal["uniform", "onefill"] = "uniform",
 ):
     def var_wrapper(v):
@@ -153,11 +154,13 @@ def get_dummy_input_arrays(
 
 
 def apply_and_build_parallel(
-    func, configs, arch, num_repeats=5, max_workers=10
+    func, configs, arch, num_repeats=3, max_workers=10, data_distribution="uniform"
 ) -> CompileResult:
     cpresults = []
 
-    profile_tensors = get_dummy_input_arrays(func, arch.device)
+    profile_tensors = get_dummy_input_arrays(
+        func, arch.device, distribution=data_distribution
+    )
     max_workers = min(len(configs), os.cpu_count(), max_workers)
 
     # apply config in thread parallel
@@ -263,9 +266,10 @@ def apply_and_build(
     configs,
     arch,
     parallel_build=False,
+    data_distribution="uniform",
 ) -> Tuple[List[CompileResult], CompileResult]:
     max_workers = 10 if parallel_build else 1
-    return apply_and_build_parallel(func, configs, arch, max_workers)
+    return apply_and_build_parallel(func, configs, arch, max_workers=max_workers, data_distribution=data_distribution)
 
 
 def fast_tune(
@@ -273,6 +277,7 @@ def fast_tune(
     target: tvm.target.Target,
     topk: int = 10,
     parallel_build: bool = True,
+    data_distribution: Literal["uniform", "onefill"] = "uniform",
 ):
     if target.kind.name != "cuda":
         print("[BitBLAS] Only support CUDA target")
@@ -319,7 +324,11 @@ def fast_tune(
 
     configs = policy.emit_config(topk)
     cpresults, best = apply_and_build(
-        func, configs, arch, parallel_build=parallel_build
+        func,
+        configs,
+        arch,
+        parallel_build=parallel_build,
+        data_distribution=data_distribution,
     )
 
     return cpresults, best
