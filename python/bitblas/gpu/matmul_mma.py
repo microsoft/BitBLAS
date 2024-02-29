@@ -359,11 +359,6 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             return None
 
         main_block = reduction_blocks[0]
-        
-        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
-        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
-            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
-
         output_blocks = [sch.get(block) for block in sch.get_output_blocks(root_block)]
 
         def check_require_cache(func: tir.PrimFunc):
@@ -387,6 +382,10 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
         cache_write_required = check_require_cache(func)
 
+        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
+        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
+            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
+
         shared_scope = config.shared_scope
 
         intrin_info = config.intrin_info
@@ -407,14 +406,21 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         # NOTE: we can analyze the config by the hardware spec in the future
 
         # tensor core intrinsic size
-        warp_row_tiles = config.warp[0]
-        warp_col_tiles = config.warp[1]
-        block_row_warps = config.block[0] // warp_row_tiles
-        block_col_warps = config.block[1] // warp_col_tiles
-        stage = config.pipeline_stage
-        use_async = config.use_async
-        chunk = config.rstep[0]
+        # warp_row_tiles = config.warp[0]
+        # warp_col_tiles = config.warp[1]
+        # block_row_warps = config.block[0] // warp_row_tiles
+        # block_col_warps = config.block[1] // warp_col_tiles
+        # stage = config.pipeline_stage
+        # use_async = config.use_async
+        # chunk = config.rstep[0]
 
+        warp_row_tiles = 64
+        warp_col_tiles = 128
+        block_row_warps = 2
+        block_col_warps = 2
+        stage = 1
+        use_async = 1
+        chunk = 32
         micro_size_x, micro_size_y, micro_size_k = intrin_group["micro_kernel"]
 
         # get the axis for layout transform

@@ -6,7 +6,7 @@ import os
 from tvm.contrib.popen_pool import PopenPoolExecutor, StatusKind, MapResult
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import numpy as np
-from typing import List, Tuple, Optional, Dict, Union
+from typing import List, Tuple, Optional, Dict, Union, Literal
 from tvm import tir, IRModule
 from tvm.runtime import Module
 from tvm.tir import Schedule
@@ -53,7 +53,8 @@ class CompileResult:
         self.time_evaluator = None
 
     def profile(self):
-        return self.time_evaluator(*self.profile_tensors).mean
+        profile_tensors = self.profile_tensors
+        return self.time_evaluator(*profile_tensors).mean
 
 
 def _apply_config(
@@ -105,7 +106,8 @@ def _apply_config(
 
 
 def get_dummy_input_arrays(
-    func: Union[tir.PrimFunc, Function], device: tvm.runtime.Device
+    func: Union[tir.PrimFunc, Function], device: tvm.runtime.Device, 
+    distribution: Literal["uniform", "onefill"] = "uniform",
 ):
     def var_wrapper(v):
         if isinstance(v, tvm.tir.Var):
@@ -129,14 +131,24 @@ def get_dummy_input_arrays(
         else:
             raise ValueError("Not supported type: ", type(func))
 
-        profile_tensors.append(
-            tvm.nd.array(
-                np.random.uniform(-1, 1, [var_wrapper(i) for i in arg.shape]).astype(
-                    arg.dtype
-                ),
-                device=device,
+        if distribution == "uniform":
+            profile_tensors.append(
+                tvm.nd.array(
+                    np.random.rand(*[var_wrapper(i) for i in arg.shape]).astype(
+                        arg.dtype
+                    ),
+                    device=device,
+                )
             )
-        )
+        elif distribution == "onefill":
+            profile_tensors.append(
+                tvm.nd.array(
+                    np.ones([var_wrapper(i) for i in arg.shape]).astype(arg.dtype),
+                    device=device,
+                )
+            )
+        else:
+            raise ValueError("Not supported distribution: ", distribution)
     return profile_tensors
 
 
@@ -173,7 +185,8 @@ def apply_and_build_parallel(
         def tvm_callback_cuda_postproc(code, _):
             index = code.index("{", match_global_kernel(code))
             if not isinstance(config.rasterization_plan, NoRasterization):
-                factor = config.rasterization_plan.panel_width_
+                # factor = config.rasterization_plan.panel_width_
+                factor = 10
                 rasterization_code = get_rasterization_code(factor)
                 code = code[: index + 2] + rasterization_code + code[index + 2 :]
             return code
