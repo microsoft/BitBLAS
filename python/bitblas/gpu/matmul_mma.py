@@ -361,7 +361,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         main_block = reduction_blocks[0]
         output_blocks = [sch.get(block) for block in sch.get_output_blocks(root_block)]
 
-        def check_require_cache(func: tir.PrimFunc):
+        def check_require_cache(func: tir.PrimFunc, config):
             conditions: List[bool] = []
 
             # check if has dynamic symbolic
@@ -378,9 +378,12 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             conditions.append(check_has_dynamic(func))
             # check if has post process
             conditions.append(sch.get(main_block) not in output_blocks)
+            # check if not use async copy
+            print(config.use_async)
+            conditions.append(config.use_async is False)
             return any(conditions)
 
-        cache_write_required = check_require_cache(func)
+        cache_write_required = check_require_cache(func, config=config)
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
         if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):

@@ -572,10 +572,10 @@ def get_tensorized_func_and_tags(
 
         # analysis async copy
         # todo(lei): maybe we can integrate this into policy in the future
-        tags["use_async_copy"] = 0
+        tags["use_async_copy"] = False
         if tags["pipeline_stage"] == 2 and check_sm_version(target.arch) >= 80:
             # async copy only works in software pipeline.
-            tags["use_async_copy"] = 1
+            tags["use_async_copy"] = True
 
         # analysis intrin infomation
         def get_ordered_axes(region: List[Range]) -> Set[Var]:
