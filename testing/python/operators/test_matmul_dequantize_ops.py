@@ -160,6 +160,7 @@ def test_matmul_dequantize_profile_latency(
         bit=bit,
         storage_dtype=storage_dtype,
         source_format=source_format,
+        with_zeros=True,
         with_scaling=with_scaling,
         group_size=group_size,
         fast_decoding=fast_decoding,
@@ -174,8 +175,11 @@ def test_matmul_dequantize_profile_latency(
     )
     matmul.hardware_aware_finetune(topk=20)
     latency = matmul.profile_latency()
+    print(matmul.codegen())
     assert latency
-
+    print(latency)
+    # func = matmul.prim_func
+    # print(func)
 
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
@@ -281,4 +285,22 @@ def test_matmul_dequantize_torch_forward(
 # fmt: on
 
 if __name__ == "__main__":
-    bitblas.testing.main()
+    # bitblas.testing.main()
+    test_matmul_dequantize_profile_latency(
+        16384,
+        16384,
+        16384,
+        "float16",
+        "float16",
+        "float16",
+        2,
+        "int8",
+        "uint",
+        True,
+        128,
+        False,
+        False,
+        False,
+        False,
+        "nt",
+    )

@@ -50,6 +50,7 @@ class MatmulWeightOnlyDequantizeConfig:
     bit: int = 4
     storage_dtype: str = "int8"
     source_format: str = "int"
+    with_zeros: bool = False,
     with_scaling: bool = False
     group_size: int = -1
     fast_decoding: bool = False
@@ -166,6 +167,7 @@ class MatmulWeightOnlyDequantize(Operator):
             bit=self.bit,
             storage_dtype=self.storage_dtype,
             source_format=self.source_format,
+            with_zeros=self.with_zeros,
             with_scaling=self.with_scaling,
             group_size=self.group_size,
             fast_decoding=self.fast_decoding,
@@ -220,6 +222,10 @@ class MatmulWeightOnlyDequantize(Operator):
     @property
     def source_format(self):
         return self.config.source_format
+
+    @property
+    def with_zeros(self):
+        return self.config.with_zeros
 
     @property
     def with_scaling(self):

@@ -22,6 +22,7 @@ def matmul_nt_dequantize_b(
     bit=4,
     storage_dtype="int8",
     source_format="uint",
+    with_zeros=False,
     with_scaling=False,
     group_size=-1,
     fast_decoding=False,
@@ -36,6 +37,7 @@ def matmul_nt_dequantize_b(
     B = te.placeholder((N, K // storage_nbit * bit), name="B", dtype=storage_dtype)
     LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
     Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
+    Zeros = te.placeholder((N, K // group_size), name="Zeros", dtype=in_dtype)
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
 
     def decode_func(n, k):
@@ -64,7 +66,12 @@ def matmul_nt_dequantize_b(
         return w
 
     B_decode = te.compute((N, K), decode_func, name="B_decode")
-
+    if with_zeros:
+        B_decode = te.compute(
+            (N, K),
+            lambda i, j: B_decode[i, j] - Zeros[i, j // group_size],
+            name="B_zeros",
+        )
     # Describe the matrix multiplication in TE
     k = te.reduce_axis((0, K), name="k")
     C = te.compute(
@@ -81,6 +88,8 @@ def matmul_nt_dequantize_b(
         args.append(LUT)
     if with_scaling:
         args.append(Scale)
+    if with_zeros:
+        args.append(Zeros)
     if with_bias:
         E = te.compute((M, N), lambda i, j: D[i, j] + Bias[j], name="E")
         last_output = E
@@ -100,6 +109,7 @@ def matmul_nt_dequantize_b(
                 "storage_dtype": storage_dtype,
                 "target_format": in_dtype,
                 "with_scaling": with_scaling,
+                "with_zeros": with_zeros,
                 "group_size": group_size,
             }
         },
@@ -117,6 +127,7 @@ def matmul_nt_dequantize_b_propagate_b(
     bit=4,
     storage_dtype="int8",
     source_format="uint",
+    with_zeros=False,
     with_scaling=False,
     group_size=-1,
     fast_decoding=False,
@@ -261,6 +272,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     bit=4,
     storage_dtype="int8",
     source_format="uint",
+    with_zeros=False,
     with_scaling=False,
     group_size=-1,
     fast_decoding=False,
@@ -422,6 +434,7 @@ def select_implementation(
     bit=4,
     storage_dtype="int8",
     source_format="uint",
+    with_zeros=False,
     with_scaling=False,
     group_size=-1,
     fast_decoding=False,
@@ -448,6 +461,7 @@ def select_implementation(
                 bit,
                 storage_dtype,
                 source_format,
+                with_zeros,
                 with_scaling,
                 group_size,
                 fast_decoding,
@@ -466,6 +480,7 @@ def select_implementation(
                 bit,
                 storage_dtype,
                 source_format,
+                with_zeros,
                 with_scaling,
                 group_size,
                 fast_decoding,
@@ -482,6 +497,7 @@ def select_implementation(
                 bit,
                 storage_dtype,
                 source_format,
+                with_zeros,
                 with_scaling,
                 group_size,
                 fast_decoding,
