@@ -5,8 +5,8 @@ from tvm.tir.function import TensorIntrin
 from tvm.script import tir as T
 from typing import Dict, Literal
 from bitblas.quantization import (
-    _tir_packed_to_signed_float,
-    _tir_packed_to_unsigned_float,
+    _tir_packed_to_signed_convert,
+    _tir_packed_to_unsigned_convert,
 )
 
 
@@ -274,9 +274,9 @@ def get_fast_decode_intrin(
     n_storage_elems = loops_extent // elem_per_unit
 
     if source_format == "int":
-        decode_func = _tir_packed_to_signed_float(storage_type, storage_nbit)
+        decode_func = _tir_packed_to_signed_convert(storage_type, storage_nbit)
     elif source_format == "uint":
-        decode_func = _tir_packed_to_unsigned_float(storage_type, storage_nbit)
+        decode_func = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)
     else:
         raise ValueError("Unsupported source_format: {}".format(source_format))
 

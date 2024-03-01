@@ -379,7 +379,6 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             # check if has post process
             conditions.append(sch.get(main_block) not in output_blocks)
             # check if not use async copy
-            print(config.use_async)
             conditions.append(config.use_async is False)
             return any(conditions)
 

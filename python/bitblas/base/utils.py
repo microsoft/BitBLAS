@@ -60,7 +60,7 @@ class CompileResult:
 def _apply_config(
     func: tir.PrimFunc,
     config=None,  # todo(lei): update typing
-) -> Optional[List[tir.Schedule]]:
+) -> Optional[tir.Schedule]:
     """
     find rules:
     case 1. if the main block has no reduce op, then use the Elementwise rule.
@@ -165,9 +165,15 @@ def apply_and_build_parallel(
 
     # apply config in thread parallel
     _sched: List[Schedule] = []
+    def _apply_schedule(f, c):
+        try:
+            sch = _apply_config(f, c)
+        except Exception:
+            sch = None
+        return sch
     with ThreadPoolExecutor(max_workers=4) as schduler:
         futures = {
-            schduler.submit(lambda f, c: _apply_config(f, c), func, config)
+            schduler.submit(_apply_schedule, func, config)
             for config in configs
         }
         for future in as_completed(futures):

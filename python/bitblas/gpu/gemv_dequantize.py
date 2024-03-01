@@ -32,14 +32,41 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
 
         def check_dequantize_info(dequantize_info):
             conditions = []
+            # currently only support weight only dequantization
             conditions.append(len(dequantize_info) == 1)
-            # more conditions, e.g. check the format is in [fp, nf, int]
-            # check if the dequantize value name is weight
+            # TODO(@lei) check if the dequantize value name is weight
             return all(conditions)
 
-        assert check_dequantize_info(dequantize_info)
+        if not check_dequantize_info(dequantize_info):
+            print("[BitBlas] Dequantize info is not valid")
+            return None
 
-        (B_decode_info,) = list(dequantize_info.values())
+        (weight_decode_info,) = list(dequantize_info.values())
+
+        def check_weight_decode_info(weight_decode_info):
+            conditions = []
+            # check source format in ["int", "fp", "af"]
+            conditions.append("source_format" in weight_decode_info)
+            conditions.append(
+                weight_decode_info["source_format"]["format"]
+                in ["uint", "int", "fp", "af"]
+            )
+            # check source bits in [1, 2, 4, 8]
+            conditions.append(
+                weight_decode_info["source_format"]["bits"] in [1, 2, 4, 8]
+            )
+            # check target format in ["float16", "int8"]
+            conditions.append("target_format" in weight_decode_info)
+            conditions.append(
+                weight_decode_info["target_format"] in ["float16", "int8"]
+            )
+            return all(conditions)
+
+
+        if not check_weight_decode_info(weight_decode_info):
+            print("[BitBlas] Weight Dequantize info is not valid")
+            return None
+
         block_infos = normalize_prim_func(sch)
 
         if block_infos is None:
@@ -79,13 +106,13 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             # coalseced access requires the vectorize factor to be the same as the transaction size
             return config.arch.transaction_size[-1] // DataType(target_format).bits
 
-        vec = get_vectorize_factor(B_decode_info["target_format"])
+        vec = get_vectorize_factor(weight_decode_info["target_format"])
         num_warps = int(prod(config.thread))
         warp_size = int(prod(config.reduce_thread))
 
         block_b = reduction_block
         output_blocks = get_output_blocks(sch, block_infos)
-        B_decode_block = get_block(sch, block_infos, B_decode_info["decode_block"])
+        B_decode_block = get_block(sch, block_infos, weight_decode_info["decode_block"])
 
         # compute inline
         for block_info in reversed(block_infos):
@@ -98,8 +125,17 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
 
         j, k = sch.get_loops(block_b)[-2:]
 
+        # get target dequantize buffer's idx
+        def get_idx(weight_decode_info:Dict):
+            # for LUT dequantize, the expr is LUT(w), the idx is 1
+            # maybe we can use a more general and structual based way
+            # to analysis the idx
+            if weight_decode_info["source_format"]["format"] == "af":
+                return 1
+            return 0
+
         block_shared_local_A = sch.cache_read(block_b, 0, "local")
-        block_shared_local_B = sch.cache_read(block_decode_B, 0, "local")
+        block_shared_local_B = sch.cache_read(block_decode_B, get_idx(weight_decode_info), "local")
         block_local_C = sch.cache_write(block_b, 0, "local")
         # reverse inline
         if reduction_block != None and reduction_block != output_blocks[0]:
@@ -125,15 +161,15 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         sch.vectorize(block_local_a_v)
         block_local_b_v = sch.get_loops(block_shared_local_B)[-1]
         sch.vectorize(block_local_b_v)
-        if "fast_decoding" in B_decode_info and B_decode_info["fast_decoding"]:
-            source_bit = B_decode_info["source_format"]["bits"]
-            out_dtype = B_decode_info["target_format"]
+        if "fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]:
+            source_bit = weight_decode_info["source_format"]["bits"]
+            out_dtype = weight_decode_info["target_format"]
             intrin_info = get_lop3_intrin_group(
                 out_dtype=out_dtype,
-                storage_dtype=B_decode_info["storage_dtype"],
-                source_format=B_decode_info["source_format"]["format"],
+                storage_dtype=weight_decode_info["storage_dtype"],
+                source_format=weight_decode_info["source_format"]["format"],
                 source_bit=source_bit,
-                with_scaling=B_decode_info["with_scaling"],
+                with_scaling=weight_decode_info["with_scaling"],
             )
             sch.tensorize(sch.get_loops(block_decode_B)[-1], intrin_info["compute"])
             sch.annotate(

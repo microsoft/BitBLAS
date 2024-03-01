@@ -52,6 +52,8 @@ class Operator(ABC):
         Returns:
             The compiled runtime module or None if the build was unsuccessful.
         """
+        if self.optimized_func is None:
+            return None
 
         # Initialize rt_mod as None to handle cases where build fails or is skipped
         rt_mod = None

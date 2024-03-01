@@ -102,7 +102,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         cache_write_required = True
 
         # Check Dequantize Info
-        # TODO(leiwang): this is a hack to get the configuaration, can be improved by writing a pass to analysis the dequantize block.
         dequantize_info = func.attrs["dequantize_info"]
 
         def check_dequantize_info(dequantize_info):
@@ -116,7 +115,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
         (weight_decode_info,) = list(dequantize_info.values())
 
-        def check_b_decode_info(weight_decode_info):
+        def check_weight_decode_info(weight_decode_info):
             conditions = []
             # check source format in ["int", "fp", "af"]
             conditions.append("source_format" in weight_decode_info)
@@ -135,7 +134,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             )
             return all(conditions)
 
-        assert check_b_decode_info(weight_decode_info), "Invalid B_decode_info"
+        assert check_weight_decode_info(weight_decode_info), "Invalid Weight Decode Info"
 
         # Start Schedule
         # Step 0. Get schedule config.
@@ -216,6 +215,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 == weight_dequantize_info["decode_block"]
             ):
                 return
+
             # step2: transform the layout with inverse permutation
             _, inverse_indexmap = get_propagate_map(
                 trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name
@@ -235,6 +235,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 return (i, j, *inverse_indexmap.map_indices([ii, jj]))
 
             sch.transform_layout(propagate_block, ("read", 0), inverse_permutation)
+        print("before recover", sch.mod)
 
         smooth_gmem_layout_rewrite(
             sch, main_block, intrin_info.smooth_a, intrin_info.trans_a, matrix_name="A"
@@ -243,7 +244,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         smooth_gmem_layout_rewrite(
             sch, main_block, intrin_info.smooth_b, intrin_info.trans_b, matrix_name="B"
         )
-
+        print("after recover", sch.mod)
         warp_size = 32
 
         i_factors, j_factors, k_factors = (
@@ -620,7 +621,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
         (weight_decode_info,) = list(dequantize_info.values())
 
-        def check_b_decode_info(weight_decode_info):
+        def check_weight_decode_info(weight_decode_info):
             conditions = []
             # check source format in ["int", "fp", "af"]
             conditions.append("source_format" in weight_decode_info)
@@ -639,7 +640,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             )
             return all(conditions)
 
-        assert check_b_decode_info(weight_decode_info), "Invalid B_decode_info"
+        assert check_weight_decode_info(weight_decode_info), "Invalid B_decode_info"
 
         # Start Schedule
         # Step 0. Get schedule config.

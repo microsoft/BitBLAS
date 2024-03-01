@@ -247,7 +247,8 @@ def collect_block_iter_vars_used_in_access_region(
     """Collect the block iter variables used in the access region of a buffer region."""
     tir_vars = set()
     for expr in region:
-        assert expr.extent == 1
+        if expr.extent != 1:
+            continue
         tir_vars |= collect_vars_used_in_prim_expr(expr.min)
     tir_vars &= set(iter_var.var for iter_var in block.iter_vars)
     return tir_vars

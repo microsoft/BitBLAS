@@ -3,12 +3,12 @@
 # pre-transformed tir expression of matmul
 import tvm
 from tvm.script import tir as T
-from tvm import te, tir, DataType
+from tvm import te, DataType
 from tvm.tir import IndexMap
 from bitblas.gpu.matmul_analysis import get_propagate_map
 from bitblas.quantization import (
-    _tir_packed_to_signed_float,
-    _tir_packed_to_unsigned_float,
+    _tir_packed_to_signed_convert,
+    _tir_packed_to_unsigned_convert,
 )
 
 
@@ -34,18 +34,28 @@ def matmul_nt_dequantize_b(
         group_size = K
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder((N, K // storage_nbit * bit), name="B", dtype=storage_dtype)
+    LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
     Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
 
     def decode_func(n, k):
         if source_format == "uint":
-            w = _tir_packed_to_unsigned_float(storage_type, storage_nbit)(
+            w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype
             )
         elif source_format == "int":
-            w = _tir_packed_to_signed_float(storage_type, storage_nbit)(
+            w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
                 bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype
             )
+        elif source_format == "af":
+            w = LUT[
+                _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    bit,
+                    B[n, k // n_float_per_elem],
+                    k % n_float_per_elem,
+                    dtype="int32",  # assume the index data type is int32
+                )
+            ]
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
 
@@ -67,6 +77,8 @@ def matmul_nt_dequantize_b(
     D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
     args = [A, B]
     last_output = D
+    if source_format == "af":
+        args.append(LUT)
     if with_scaling:
         args.append(Scale)
     if with_bias:
@@ -146,6 +158,7 @@ def matmul_nt_dequantize_b_propagate_b(
     B = te.placeholder(
         (N // l, (K // scaling_factor) // qr, l, qr), name="B", dtype=storage_dtype
     )
+    LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
     Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
 
@@ -164,19 +177,28 @@ def matmul_nt_dequantize_b_propagate_b(
 
     def decode_func(n, k):
         if source_format == "uint":
-            w = _tir_packed_to_unsigned_float(storage_type, storage_nbit)(
+            w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit,
                 B_reindex[n, k // n_float_per_elem],
                 k % n_float_per_elem,
                 dtype=in_dtype,
             )
         elif source_format == "int":
-            w = _tir_packed_to_signed_float(storage_type, storage_nbit)(
+            w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
                 bit,
                 B_reindex[n, k // n_float_per_elem],
                 k % n_float_per_elem,
                 dtype=in_dtype,
             )
+        elif source_format == "af":
+            w = LUT[
+                _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    bit,
+                    B_reindex[n, k // n_float_per_elem],
+                    k % n_float_per_elem,
+                    dtype="int32",  # assume the index data type is int32
+                )
+            ]
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
 
@@ -198,6 +220,8 @@ def matmul_nt_dequantize_b_propagate_b(
     D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
     args = [A, B]
     last_output = D
+    if source_format == "af":
+        args.append(LUT)
     if with_scaling:
         args.append(Scale)
     if with_bias:
@@ -223,6 +247,7 @@ def matmul_nt_dequantize_b_propagate_b(
             }
         },
     )
+    func = func.with_attr("smooth_b", True)
     return tvm.IRModule.from_expr(func)
 
 
