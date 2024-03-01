@@ -38,9 +38,9 @@ class TensorCorePolicy(DefaultPolicy):
             self.use_async_copy = use_async_copy
         else:
             if self.arch.compute_capability == "sm_80":
-                self.use_async_copy = 1
+                self.use_async_copy = True
             else:
-                self.use_async_copy = 0
+                self.use_async_copy = False
 
     def _compute_tc_strides(
         self, node: PrimFuncNode, tile: List[int], rstep: Dict[str, int] = {}

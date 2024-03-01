@@ -15,7 +15,6 @@ from .base import (
     try_inline_contiguous_spatial,
 )
 
-from .relax import transform
 from . import testing
 
 import logging

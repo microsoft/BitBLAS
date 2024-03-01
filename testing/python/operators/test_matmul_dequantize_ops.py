@@ -3,13 +3,13 @@
 import pytest
 import tvm
 import bitblas
+from bitblas.utils import get_target_from_env
 from bitblas.ops.matmul_dequantize import (
     MatmulWeightOnlyDequantize,
     MatmulWeightOnlyDequantizeConfig,
 )
-from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 
-target = tvm.target.Target("nvidia/nvidia-a100")
+target = tvm.target.Target(get_target_from_env())
 
 
 def get_codegen_result(ops, target):
@@ -123,6 +123,12 @@ def test_matmul_dequantize_codegen_finetune(
     "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
     [
         (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, -1, False, False, False, False, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, True, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", True, -1, False, False, True, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", True, 128, False, False, True, True, "nt",),
     ],
 )
 def test_matmul_dequantize_profile_latency(
@@ -182,6 +188,8 @@ def test_matmul_dequantize_profile_latency(
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, -1, True, False, False, False, "nt",),
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, True, False, False, False, "nt",),
         (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, False, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, False, False, False, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, False, False, True, True, "nt",),
     ],
 )
 def test_matmul_dequantize_torch_forward(

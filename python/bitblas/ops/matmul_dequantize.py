@@ -72,12 +72,21 @@ class MatmulWeightOnlyDequantize(Operator):
 
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
+
+        self.target = target
         self.arch = CUDA(target)
-        assert self.propagate_a is False, "Currently only support propagate_a=False"
 
         self.prim_func_mod = self._select_implementation()
+        try:
+            self.optimized_func = self.apply_default_schedule(
+                self.prim_func_mod, target
+            )
+        except Exception:
+            self.optimized_func = None
+            print(
+                f"[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
+            )
 
-        self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
         if isinstance(self.M, List):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
@@ -85,7 +94,7 @@ class MatmulWeightOnlyDequantize(Operator):
             )
         else:
             self.dynamic_range = None
-        self.target = target
+
         self._build_runtime_module(target)
 
         if self.propagate_a:

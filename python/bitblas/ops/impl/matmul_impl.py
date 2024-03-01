@@ -487,7 +487,7 @@ def matmul_nt_propagate_a_propagate_b(
         name="A_reindex",
     )
 
-    intra_index_map, _ = get_propagate_map(trans=False, dtype=in_dtype, matrix_name="B")
+    intra_index_map, _ = get_propagate_map(trans=True, dtype=in_dtype, matrix_name="B")
 
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r

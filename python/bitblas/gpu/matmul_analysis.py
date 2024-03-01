@@ -8,7 +8,7 @@ from enum import Enum
 from typing import List, Optional, Set, Union, Tuple, Dict
 from tvm import tir, DataType
 from tvm.ir import Range
-from tvm.tir import IterVar, PrimExpr, Var
+from tvm.tir import IterVar, PrimExpr, Var, BufferRegion
 from tvm.tir.analysis import undefined_vars
 from tvm.tir.schedule.schedule import BlockRV
 from ..base.analysis import (
@@ -104,6 +104,19 @@ def auto_inline_consumer_chain(
         # Try inlining into the cache-write stage again, this time it should succeed.
         auto_inline_consumers(sch, block)
 
+# used to match the similar region with dequantize op.
+def find_first_similar_region(regions:List[BufferRegion], buffer: tir.Buffer):
+    for region in regions:
+        if len(region.buffer.shape) == len(buffer.shape):
+            return region
+    return None
+
+# used to match the similar buffer with dequantize op.
+def find_first_similar_buffer(regions:List[BufferRegion], buffer: tir.Buffer):
+    for region in regions:
+        if len(region.buffer.shape) == len(buffer.shape):
+            return region.buffer
+    return None
 
 # find the block that required to be reindex and scope.
 def find_last_producer_from_buffer(
@@ -112,6 +125,7 @@ def find_last_producer_from_buffer(
     # block that most near to the arguments
     block = main_block
     buffer = buffer
+
     while True:
         last_buffer = buffer
         producers = sch.get_producers(block)
@@ -124,7 +138,7 @@ def find_last_producer_from_buffer(
             for write in sch.get(producer).writes:
                 if write.buffer == buffer:
                     block = producer
-                    buffer = sch.get(producer).reads[0].buffer
+                    buffer = find_first_similar_buffer(sch.get(producer).reads, last_buffer)
         if buffer == last_buffer:
             break
     return block
@@ -566,16 +580,16 @@ def get_tensorized_func_and_tags(
         # analysis pipeline stage
         # todo(lei): maybe we can integrate this into policy in the future
         tags["pipeline_stage"] = 1
-        if target.kind.name == "cuda" and check_sm_version(target.arch) >= 80:
+        if target.kind.name == "cuda" and check_sm_version(target.arch) == 80:
             # enable pipleline stage only for sm_80 devices
             tags["pipeline_stage"] = 2
 
         # analysis async copy
         # todo(lei): maybe we can integrate this into policy in the future
-        tags["use_async_copy"] = 0
+        tags["use_async_copy"] = False
         if tags["pipeline_stage"] == 2 and check_sm_version(target.arch) >= 80:
             # async copy only works in software pipeline.
-            tags["use_async_copy"] = 1
+            tags["use_async_copy"] = True
 
         # analysis intrin infomation
         def get_ordered_axes(region: List[Range]) -> Set[Var]:
@@ -732,10 +746,11 @@ def layout_propagate_chain(
             if sch.get(producer) == sch.get(end_block):
                 return index_map
             (write,) = sch.get(producer).writes
-            read = sch.get(producer).reads[0]
+
+            read = find_first_similar_region(sch.get(producer).reads, last_buffer)
             if write.buffer == buffer:
                 block = producer
-                buffer = sch.get(producer).reads[0].buffer
+                buffer = read.buffer
                 write_indices = [r.min for r in write.region]
                 read_indices = [r.min for r in read.region]
                 # reverse index map from [vi // x] -> [vi * x] to match the inconsistent layout

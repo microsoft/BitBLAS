@@ -129,7 +129,7 @@ Say we currently have two policies, one is for SIMT Cuda Core, another is for Te
 ![Auto Tensorization](./images/auto_tensorize.png)
 
 ```python
-# Assume func is conv2d, after this api, the tensorized_func is the tensorized version of the conv2d, otherwise, the tags is None.
+# Assume func is conv2d, after this invocation, the tensorized_func is the tensorized version of the conv2d, otherwise, the tags is None.
 tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
 ```
 
