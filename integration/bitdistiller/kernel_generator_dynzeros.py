@@ -16,8 +16,10 @@ from bitblas.ops.matmul_dequantize import (
 from bitblas.gpu.intrin.lop3 import (
     decode_i2_to_f16,
     decode_i2_to_f16_scale,
+    decode_i2_to_f16_scale_zeros,
     decode_i4_to_f16,
     decode_i4_to_f16_scale,
+    decode_i4_to_f16_scale_zeros
 )
 bit = 2
 mask = (1 << bit) - 1
@@ -88,13 +90,13 @@ for M, N, K in ft_shapes:
         in_dtype="float16",
         out_dtype="float16",
         accum_dtype="float16",
-        bit=4,
+        bit=bit,
         storage_dtype="int8",
-        source_format="int",
+        source_format="uint",
         with_scaling=True,
         with_zeros=True,
         group_size=group_size,
-        fast_decoding=False,
+        fast_decoding=True,
         with_bias=False,
         propagate_a=False,
         propagate_b=False,
@@ -104,7 +106,7 @@ for M, N, K in ft_shapes:
         config=matmul_config,
         target=target,
     )
-    matmul.hardware_aware_finetune(topk=10)
+    matmul.hardware_aware_finetune(topk=20)
     code = get_codegen_result(matmul, target)
     index = match_global_kernel(code)
     headers = code[:index]
@@ -206,13 +208,18 @@ with open(
 #define TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST 0
 #endif
 
-{decode_i4_to_f16},
+{decode_i4_to_f16}
 
-{decode_i4_to_f16_scale},
+{decode_i4_to_f16_scale}
 
-{decode_i2_to_f16},
 
-{decode_i2_to_f16_scale},
+{decode_i4_to_f16_scale_zeros}
+
+{decode_i2_to_f16}
+
+{decode_i2_to_f16_scale}
+
+{decode_i2_to_f16_scale_zeros}
 
 {pack_half2}
 

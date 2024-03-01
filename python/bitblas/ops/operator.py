@@ -68,7 +68,7 @@ class Operator(ABC):
                     )
             except Exception as e:
                 # Log the exception for debugging purposes. Replace 'print' with logging if necessary.
-                print(f"Failed to build optimized function for CUDA target due to: {e}")
+                print(f"Failed to build optimized function for CUDA target")
         else:
             # For non-CUDA platforms or when no optimized function is available, build with the primary function
             rt_mod = tvm.build(self.prim_func, target=target, name=self.name)
