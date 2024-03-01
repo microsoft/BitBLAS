@@ -52,18 +52,20 @@ class Operator(ABC):
         Returns:
             The compiled runtime module or None if the build was unsuccessful.
         """
-        if self.optimized_func is None:
-            return None
 
         # Initialize rt_mod as None to handle cases where build fails or is skipped
         rt_mod = None
 
         # Check if the platform is CUDA and we have an optimized function
-        if self.arch.platform == "CUDA" and self.optimized_func:
+        if self.arch.platform == "CUDA":
+            if self.optimized_func is None:
+                return None
             try:
                 # Use a specific TVM pass context for CUDA platforms
                 with tvm.transform.PassContext(config={"tir.use_async_copy": True}):
-                    rt_mod = tvm.build(self.optimized_func, target=target, name=self.name)
+                    rt_mod = tvm.build(
+                        self.optimized_func, target=target, name=self.name
+                    )
             except Exception as e:
                 # Log the exception for debugging purposes. Replace 'print' with logging if necessary.
                 print(f"Failed to build optimized function for CUDA target due to: {e}")
@@ -102,9 +104,9 @@ class Operator(ABC):
         return code
 
     def apply_fast_tuning(
-        self, func: PrimFunc, target: Target, topk: int = 20
+        self, func: PrimFunc, target: Target, topk: int = 20, parallel_build=True
     ) -> IRModule:
-        _, best = fast_tune(func, target, topk=topk, parallel_build=True)
+        _, best = fast_tune(func, target, topk=topk, parallel_build=parallel_build)
         if best is not None:
             return best.sch.mod
         return None
@@ -123,7 +125,9 @@ class Operator(ABC):
             return optimized_mod
         return None
 
-    def hardware_aware_finetune(self, topk: int = 20, target: tvm.target.Target = None):
+    def hardware_aware_finetune(
+        self, topk: int = 20, target: tvm.target.Target = None, parallel_build=True
+    ):
         if target is None:
             target = self.target
         dynamic_range = self.dynamic_range
@@ -133,7 +137,9 @@ class Operator(ABC):
                 func, target, topk, dynamic_range
             )
         else:
-            self.optimized_func = self.apply_fast_tuning(func, target, topk)
+            self.optimized_func = self.apply_fast_tuning(
+                func, target, topk, parallel_build=parallel_build
+            )
         self._build_runtime_module(self.target)
 
     def get_profile_tensors(self):

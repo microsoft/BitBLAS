@@ -436,6 +436,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     source_format=weight_decode_info["source_format"]["format"],
                     source_bit=source_bit,
                     with_scaling=weight_decode_info["with_scaling"],
+                    with_zeros=weight_decode_info["with_zeros"],
                 )
                 sch.tensorize(
                     sch.get_loops(dequantize_block_local)[-1],
@@ -944,6 +945,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     source_format=weight_decode_info["source_format"]["format"],
                     source_bit=source_bit,
                     with_scaling=weight_decode_info["with_scaling"],
+                    with_zeros=weight_decode_info["with_zeros"]
                 )
                 sch.tensorize(
                     sch.get_loops(dequantize_block_local)[-1],
