@@ -134,7 +134,9 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             )
             return all(conditions)
 
-        assert check_weight_decode_info(weight_decode_info), "Invalid Weight Decode Info"
+        assert check_weight_decode_info(
+            weight_decode_info
+        ), "Invalid Weight Decode Info"
 
         # Start Schedule
         # Step 0. Get schedule config.
@@ -235,7 +237,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 return (i, j, *inverse_indexmap.map_indices([ii, jj]))
 
             sch.transform_layout(propagate_block, ("read", 0), inverse_permutation)
-        print("before recover", sch.mod)
 
         smooth_gmem_layout_rewrite(
             sch, main_block, intrin_info.smooth_a, intrin_info.trans_a, matrix_name="A"
@@ -244,7 +245,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         smooth_gmem_layout_rewrite(
             sch, main_block, intrin_info.smooth_b, intrin_info.trans_b, matrix_name="B"
         )
-        print("after recover", sch.mod)
+
         warp_size = 32
 
         i_factors, j_factors, k_factors = (

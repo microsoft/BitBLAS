@@ -168,48 +168,48 @@ def test_matmul_dequantize_profile_latency(
         config=matmul_config,
         target=target,
     )
-    prim_func = matmul.prim_func
-    print(prim_func)
-    func = prim_func
-    arch = matmul.arch
-    from bitblas.base.roller import DefaultPolicy, TensorCorePolicy
-    from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
+    # prim_func = matmul.prim_func
+    # print(prim_func)
+    # func = prim_func
+    # arch = matmul.arch
+    # from bitblas.base.roller import DefaultPolicy, TensorCorePolicy
+    # from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 
-    policy = DefaultPolicy(func=func, arch=arch)
-    try:
-        tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
-    except:
-        tags = None
-    # Tune with Tensor Core if possible
-    if tags:
-        policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
+    # policy = DefaultPolicy(func=func, arch=arch)
+    # try:
+    #     tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
+    # except:
+    #     tags = None
+    # # Tune with Tensor Core if possible
+    # if tags:
+    #     policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
 
-    configs = policy.emit_config(20)
-    # sch = bitblas.gpu.gemv.GEMV().apply_config(prim_func, configs[0])
-    sch = bitblas.gpu.matmul_mma_dequantize.MatmulTensorizationMMAWithDequantizeInfo().apply_config(prim_func, configs[0])
-    with open("debug/matmul_dequantize.py", "w") as f:
-        f.write(str(sch.mod))
+    # configs = policy.emit_config(20)
+    # # sch = bitblas.gpu.gemv.GEMV().apply_config(prim_func, configs[0])
+    # sch = bitblas.gpu.matmul_mma_dequantize.MatmulTensorizationMMAWithDequantizeInfo().apply_config(prim_func, configs[0])
+    # with open("debug/matmul_dequantize.py", "w") as f:
+    #     f.write(str(sch.mod))
 
-    with tvm.transform.PassContext(
-        config={"tir.use_async_copy": True}
-    ):
-        rt_mod = tvm.build(sch.mod["main"], target=matmul.arch.target)
-    print(sch.mod)
+    # with tvm.transform.PassContext(
+    #     config={"tir.use_async_copy": True}
+    # ):
+    #     rt_mod = tvm.build(sch.mod["main"], target=matmul.arch.target)
+    # print(sch.mod)
 
-    with open("debug/matmul_dequantize.cu", "w") as f:
-        f.write(rt_mod.imported_modules[0].get_source())
+    # with open("debug/matmul_dequantize.cu", "w") as f:
+    #     f.write(rt_mod.imported_modules[0].get_source())
 
-    time_evaluator = rt_mod.time_evaluator(
-                rt_mod.entry_name, matmul.arch.device, number=3
-        )
-    profile_tensors = matmul.get_profile_tensors()
-    print(time_evaluator(*profile_tensors))
+    # time_evaluator = rt_mod.time_evaluator(
+    #             rt_mod.entry_name, matmul.arch.device, number=3
+    #     )
+    # profile_tensors = matmul.get_profile_tensors()
+    # print(time_evaluator(*profile_tensors))
     
-    # matmul.hardware_aware_finetune(topk=20)
-    # latency = matmul.profile_latency()
-    # # print(matmul.codegen())
-    # print(latency)
-    # # assert latency
+    matmul.hardware_aware_finetune(topk=20)
+    latency = matmul.profile_latency()
+    print(matmul.codegen())
+    print(latency)
+    # assert latency
 
 
 @pytest.mark.parametrize(
@@ -223,6 +223,8 @@ def test_matmul_dequantize_profile_latency(
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, -1, True, False, False, False, "nt",),
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, True, False, False, False, "nt",),
         (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, False, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, False, False, False, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, False, False, True, True, "nt",),
     ],
 )
 def test_matmul_dequantize_torch_forward(
@@ -329,7 +331,7 @@ if __name__ == "__main__":
         -1,
         False,
         False,
-        False,
+        True,
         True,
         "nt",
     )

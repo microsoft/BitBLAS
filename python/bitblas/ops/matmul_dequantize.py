@@ -75,7 +75,6 @@ class MatmulWeightOnlyDequantize(Operator):
 
         self.target = target
         self.arch = CUDA(target)
-        assert self.propagate_a is False, "Currently only support propagate_a=False"
 
         self.prim_func_mod = self._select_implementation()
         try:
