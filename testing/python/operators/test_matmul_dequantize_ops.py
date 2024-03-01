@@ -125,6 +125,10 @@ def test_matmul_dequantize_codegen_finetune(
         (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, -1, False, False, False, False, "nt",),
         (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, False, "nt",),
         (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, True, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", True, -1, False, False, True, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", True, 128, False, False, True, True, "nt",),
     ],
 )
 def test_matmul_dequantize_profile_latency(
@@ -316,22 +320,5 @@ def test_matmul_dequantize_torch_forward(
 # fmt: on
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_matmul_dequantize_profile_latency(
-        16384,
-        16384,
-        16384,
-        "float16",
-        "float16",
-        "float16",
-        4,
-        "int8",
-        "af",
-        False,
-        -1,
-        False,
-        False,
-        True,
-        True,
-        "nt",
-    )
+    bitblas.testing.main()
+
