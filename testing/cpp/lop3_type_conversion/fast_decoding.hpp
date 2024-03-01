@@ -94,8 +94,8 @@ void general_interleave_fp16(int8_t *origin_arr, int8_t *interleaved, const int 
     memcpy(interleaved, int32_interleaved, size * sizeof(int32_t));
 }
 
-template <typename T1, typename T2, bool isSigned = false, bool withScaling = false>
-__device__ void decode_i4b_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8, const half *scale = nullptr)
+template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false>
+__device__ void decode_i4b_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8, const half *scale = nullptr, const half *zeros = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -117,6 +117,9 @@ __device__ void decode_i4b_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8,
         if constexpr (withScaling)
         {
             asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*scale, *scale)), "r"(0));
+        }
+        if constexpr (withZeros){
+            asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*zeros, *zeros)));
         }
     }
 }
@@ -145,8 +148,14 @@ __device__ void decode_i4u_to_f16_scale(T1 *_i4u, T2 *B_local_decode, half *scal
     decode_i4b_to_f16<T1, T2, false, true>(_i4u, B_local_decode, N, scale);
 }
 
-template <typename T1, typename T2, bool isSigned = false, bool withScaling = false>
-__device__ void decode_i2b_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8, half *scale = nullptr)
+template <typename T1, typename T2>
+__device__ void decode_i4u_to_f16_scale_zeros(T1 *_i4u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
+{
+    decode_i4b_to_f16<T1, T2, false, true, true>(_i4u, B_local_decode, N, scale, zeros);
+}
+
+template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false>
+__device__ void decode_i2b_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8, half *scale = nullptr, half *zeros = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -172,6 +181,9 @@ __device__ void decode_i2b_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8,
         if constexpr (withScaling)
         {
             asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*scale, *scale)), "r"(0));
+        }
+        if constexpr (withZeros){
+            asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*zeros, *zeros)));
         }
     }
 }
@@ -200,8 +212,14 @@ __device__ void decode_i2u_to_f16_scale(T1 *_i2u, T2 *B_local_decode, half *scal
     decode_i2b_to_f16<T1, T2, false, true>(_i2u, B_local_decode, N, scale);
 }
 
-template <typename T1, typename T2, bool isSigned = false, bool withScaling = false>
-__device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8, half *scale = nullptr)
+template <typename T1, typename T2>
+__device__ void decode_i2u_to_f16_scale_zeros(T1 *_i2u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
+{
+    decode_i2b_to_f16<T1, T2, false, true, true>(_i2u, B_local_decode, N, scale, zeros);
+}
+
+template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false>
+__device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8, half *scale = nullptr, half *zeros = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -226,6 +244,10 @@ __device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8,
         if constexpr (withScaling)
         {
             asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*scale, *scale)), "r"(0));
+        }
+        if constexpr (withZeros)
+        {
+            asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*zeros, *zeros)));
         }
     }
 }
@@ -252,6 +274,12 @@ template <typename T1, typename T2>
 __device__ void decode_i1u_to_f16_scale(T1 *_i1u, T2 *B_local_decode, half *scale = nullptr, const int N = 8)
 {
     decode_i1b_to_f16<T1, T2, false, true>(_i1u, B_local_decode, N, scale);
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i1u_to_f16_scale_zeros(T1 *_i1u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
+{
+    decode_i1b_to_f16<T1, T2, false, true, true>(_i1u, B_local_decode, N, scale, zeros);
 }
 
 void general_interleave_int8(int8_t *origin_arr, int8_t *interleaved, const int nbit, size_t size_in_bytes, bool verbose = false)
