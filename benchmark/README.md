@@ -35,6 +35,8 @@ This part presents a benchmark comparison between our custom library, BitBLAS, a
 
 The benchmark configurations for each test scenario are detailed below:
 
+<div style="text-align:center">
+
 |config|Provider|M|N|K|
 |:---:|:---:|:---:|:---:|:---:|
 |V0|None|1|16384|16384|
@@ -64,8 +66,7 @@ The benchmark configurations for each test scenario are detailed below:
 |M11|LLAMA-2|8192|28672|8192|
 |M12|LLAMA-2|8192|8192|28672|
 
-
-*Note: "Varied" indicates different configurations used to test specific aspects of performance across the providers mentioned.*
+</div>
 
 ## Reproducing Benchmarks
 
