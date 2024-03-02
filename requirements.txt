@@ -72,7 +72,7 @@ torchdynamo==1.13.0
 torchvision==0.15.2
 tornado==6.2
 tqdm==4.64.1
-transformers==4.29.2
+transformers==4.36.0
 treelib==1.7.0
 typeguard==2.13.3
 typing_extensions==4.10.0
