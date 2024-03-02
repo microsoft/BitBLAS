@@ -1,0 +1,1 @@
+To reproduce the 3rdparty benchmark results, please checkout [mlc-benchmark](https://github.com/LeiWang1999/mlc-benchmark).

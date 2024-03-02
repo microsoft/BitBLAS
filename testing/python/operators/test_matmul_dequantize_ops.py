@@ -176,23 +176,7 @@ def test_matmul_dequantize_profile_latency(
     )
     matmul.hardware_aware_finetune(topk=20)
     latency = matmul.profile_latency()
-    print(matmul.codegen())
     assert latency
-    print(latency)
-    # func = matmul.prim_func
-    # arch = matmul.arch
-    # from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
-    # policy = DefaultPolicy(func, arch)
-    # configs = policy.emit_config(20)
-    # sch = bitblas.gpu.gemv.GEMVWithDequantizeInfo().apply_config(
-    #     func,
-    #     configs[0]
-    # )
-    # with tvm.transform.PassContext(
-    #     config={"tir.use_async_copy": True}
-    # ):
-    #     rt_mod = tvm.build(sch.mod, target=arch.target)
-    # print(rt_mod.imported_modules[0].get_source())
 
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zerosgroup_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",

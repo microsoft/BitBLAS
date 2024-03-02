@@ -17,6 +17,7 @@ Also Make sure you already have the cuda toolkit (version >= 11) installed in th
 Finally, add ./python and tvm/python to PYTHONPATH.
 
 ## Quick Start
+
 We provide two primary ways to do the code generation: using a high-level DSL (TensorIR Script), or using packed Operators.
 
 You can find some example dsl implementation in `python/bitblas/ops/impl` and `benchmark/dsl`, see more examples and tutorials in [apache/tvm](https://github.com/apache/tvm)
