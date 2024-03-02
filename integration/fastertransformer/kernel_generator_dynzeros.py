@@ -115,6 +115,8 @@ for M, N, K in ft_shapes:
     function_body = declarations + code[index:]
     # get block infomation from mod
     block_size, grid_size = get_thread_block_infomation(matmul.optimized_func)
+    if M != 1 and block_size[0] == 1:
+        block_size[0] = 32
 
     new_kernel_name = (
         f"bitblas_kernel_fp16_int{bit}_fp16_m{M}n{N}k{K}_nt"

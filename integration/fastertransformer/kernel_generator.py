@@ -53,31 +53,29 @@ def get_thread_block_infomation(mod: IRModule):
     sch = tvm.tir.Schedule(mod)
     root_block = sch.get_block("root")
     child_blocks = sch.get_child_blocks(root_block)
-    reduction_blocks = get_reduction_blocks(sch, child_blocks)
-    assert len(reduction_blocks) == 1
-    (main_block,) = reduction_blocks
-    loops = sch.get_loops(main_block)
-    block_info = [1, 1, 1]
-    grid_info = [1, 1, 1]
-    for loop in loops:
-        stmt = sch.get(loop)
-        thread_binding = stmt.thread_binding
-        extent = int(stmt.extent)
-        if thread_binding is None:
-            continue
-        if thread_binding.thread_tag == "threadIdx.x":
-            block_info[0] = extent
-        elif thread_binding.thread_tag == "threadIdx.y":
-            block_info[1] = extent
-        elif thread_binding.thread_tag == "threadIdx.z":
-            block_info[2] = extent
-        elif thread_binding.thread_tag == "blockIdx.x":
-            grid_info[0] = extent
-        elif thread_binding.thread_tag == "blockIdx.y":
-            grid_info[1] = extent
-        elif thread_binding.thread_tag == "blockIdx.z":
-            grid_info[2] = extent
-    return block_info, grid_info
+    for block in child_blocks:
+        loops = sch.get_loops(block)
+        block_info = [1, 1, 1]
+        grid_info = [1, 1, 1]
+        for loop in loops:
+            stmt = sch.get(loop)
+            thread_binding = stmt.thread_binding
+            extent = int(stmt.extent)
+            if thread_binding is None:
+                continue
+            if thread_binding.thread_tag == "threadIdx.x":
+                block_info[0] = extent
+            elif thread_binding.thread_tag == "threadIdx.y":
+                block_info[1] = extent
+            elif thread_binding.thread_tag == "threadIdx.z":
+                block_info[2] = extent
+            elif thread_binding.thread_tag == "blockIdx.x":
+                grid_info[0] = extent
+            elif thread_binding.thread_tag == "blockIdx.y":
+                grid_info[1] = extent
+            elif thread_binding.thread_tag == "blockIdx.z":
+                grid_info[2] = extent
+        return block_info, grid_info
 
 kernel_body = ""
 kernel_call = ""
@@ -115,7 +113,8 @@ for M, N, K in ft_shapes:
     function_body = declarations + code[index:]
     # get block infomation from mod
     block_size, grid_size = get_thread_block_infomation(matmul.optimized_func)
-
+    if M != 1 and block_size[0] == 1:
+        block_size[0] = 32
     new_kernel_name = (
         f"bitblas_kernel_fp16_int{bit}_fp16_m{M}n{N}k{K}_nt"
     )
