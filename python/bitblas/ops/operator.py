@@ -30,11 +30,7 @@ class Operator(ABC):
             target = self.target
         if self.rt_mod is None:
             self._build_runtime_module(target)
-        return (
-            self.post_process(self.rt_mod.imported_modules[0].get_source())
-            if self.rt_mod
-            else None
-        )
+        return self.rt_mod.imported_modules[0].get_source() if self.rt_mod else None
 
     def _build_runtime_module(self, target: Target):
         """
@@ -60,6 +56,11 @@ class Operator(ABC):
         if self.arch.platform == "CUDA":
             if self.optimized_func is None:
                 return None
+
+            @tvm.register_func(func_name="tvm_callback_cuda_postproc", override=True)
+            def tvm_callback_cuda_postproc(code, _):
+                return self.post_process(code)
+
             try:
                 # Use a specific TVM pass context for CUDA platforms
                 with tvm.transform.PassContext(config={"tir.use_async_copy": True}):

@@ -8,7 +8,7 @@ from typing import List, Union
 from .operator import Operator
 from .impl.matmul_impl import select_implementation
 from ..base.utils import get_rasterization_code
-from bitblas.utils import match_global_kernel
+from bitblas.utils import match_global_kernel, tensor_replace_dp4a
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 
@@ -110,6 +110,7 @@ class Matmul(Operator):
         if self.N * self.K > 10**6:
             rasterization_code = get_rasterization_code(10)
             code = code[: index + 2] + rasterization_code + code[index + 2 :]
+        code = tensor_replace_dp4a(code)
         return code
 
     def _profile_latency_with_dynamic_range(self) -> List:

@@ -62,7 +62,6 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             )
             return all(conditions)
 
-
         if not check_weight_decode_info(weight_decode_info):
             print("[BitBlas] Weight Dequantize info is not valid")
             return None
@@ -143,6 +142,9 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
 
         bx, j = sch.split(j, factors=[None, num_warps])
         k, tx, vk = sch.split(k, factors=[None, warp_size, vec])
+        # for dp4a/hfma2
+        inst_factor = 2 if weight_decode_info["target_format"] == "float16" else 4
+        _, vk = sch.split(vk, factors=[None, inst_factor])
         sch.reorder(bx, j, k, tx)
 
         sch.bind(bx, "blockIdx.x")

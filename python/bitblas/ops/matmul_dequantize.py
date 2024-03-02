@@ -6,7 +6,7 @@ from bitblas.base.roller.arch.cuda import CUDA
 from typing import Any, List
 from .operator import Operator
 from .impl.matmul_dequantize_impl import select_implementation
-from ..base.utils import get_rasterization_code
+from ..base.utils import get_rasterization_code, tensor_replace_dp4a
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from dataclasses import dataclass
 from bitblas.utils import match_global_kernel
@@ -179,6 +179,7 @@ class MatmulWeightOnlyDequantize(Operator):
 
     def post_process(self, code: str) -> str:
         index = code.index("{", match_global_kernel(code))
+        code = tensor_replace_dp4a(code)
         # some tricky judge to decide whether to insert rasterization code
         if self.M == 1:
             return code

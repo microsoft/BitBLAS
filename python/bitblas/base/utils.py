@@ -20,7 +20,7 @@ from bitblas.base.roller.rasterization import NoRasterization
 import tempfile
 import itertools
 from tvm.ir.supply import GlobalVarSupply
-from bitblas.utils import match_global_kernel
+from bitblas.utils import match_global_kernel, tensor_replace_dp4a
 
 
 def get_rasterization_code(pannel_width: int = 8) -> str:
@@ -194,16 +194,16 @@ def apply_and_build_parallel(
         def tvm_callback_cuda_postproc(code, _):
             index = code.index("{", match_global_kernel(code))
             if not isinstance(config.rasterization_plan, NoRasterization):
-                # factor = config.rasterization_plan.panel_width_
-                factor = 10
+                factor = config.rasterization_plan.panel_width_
                 rasterization_code = get_rasterization_code(factor)
                 code = code[: index + 2] + rasterization_code + code[index + 2 :]
+            code = tensor_replace_dp4a(code)
             return code
 
         with tvm.transform.PassContext(
             config={"tir.use_async_copy": True, **config.pass_context}
         ):
-            rt_mod = tvm.build(mod["main"], target=arch.target)
+            rt_mod = tvm.build(mod, target=arch.target)
 
         from tvm.contrib.tar import tar  # pylint: disable=import-outside-toplevel
 
