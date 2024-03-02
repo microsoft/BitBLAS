@@ -64,3 +64,6 @@ models/frozenmodels/
 
 # pkl
 *.pkl_*
+
+# .pytest_cache
+.pytest_cache
