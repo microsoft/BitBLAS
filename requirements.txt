@@ -25,7 +25,7 @@ ipython==8.12.3
 iris==1.0.7
 jax==0.4.11
 jaxlib==0.4.25
-Jinja2==3.1.2
+Jinja2==3.1.3
 junitparser==3.1.2
 matplotlib==3.6.3
 ml_dtypes==0.1.0
