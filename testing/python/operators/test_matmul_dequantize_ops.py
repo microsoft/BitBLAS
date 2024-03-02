@@ -19,9 +19,9 @@ def get_codegen_result(ops, target):
 
 # fmt: off
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
     [
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, -1, False, False, False, False, "nt"),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False, False, False, False, "nt"),
     ],
 )
 def test_matmul_dequantize_codegen_default(
@@ -69,9 +69,9 @@ def test_matmul_dequantize_codegen_default(
 
 
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
     [
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, -1, False, False, False, False, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False, False, False, False, "nt",),
     ],
 )
 def test_matmul_dequantize_codegen_finetune(
@@ -120,15 +120,15 @@ def test_matmul_dequantize_codegen_finetune(
 
 
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
     [
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, -1, False, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, False, "nt",),
-        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, False, "nt",),
-        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, True, "nt",),
-        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, True, True, "nt",),
-        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", True, -1, False, False, True, True, "nt",),
-        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", True, 128, False, False, True, True, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, -1, False, False, False, False, False, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, False, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, -1, False, False, False, True, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", True, -1, False, False, False, True, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", True, 128, False, False, False, True, True, "nt",),
     ],
 )
 def test_matmul_dequantize_profile_latency(
@@ -142,6 +142,7 @@ def test_matmul_dequantize_profile_latency(
     storage_dtype,
     source_format,
     with_scaling,
+    with_zeros,
     group_size,
     fast_decoding,
     with_bias,
@@ -161,6 +162,7 @@ def test_matmul_dequantize_profile_latency(
         storage_dtype=storage_dtype,
         source_format=source_format,
         with_scaling=with_scaling,
+        with_zeros=with_zeros,
         group_size=group_size,
         fast_decoding=fast_decoding,
         with_bias=with_bias,
@@ -172,24 +174,39 @@ def test_matmul_dequantize_profile_latency(
         config=matmul_config,
         target=target,
     )
-    matmul.hardware_aware_finetune(topk=20)
-    latency = matmul.profile_latency()
-    assert latency
-
+    # matmul.hardware_aware_finetune(topk=20)
+    # latency = matmul.profile_latency()
+    # print(matmul.codegen())
+    # assert latency
+    # print(latency)
+    func = matmul.prim_func
+    arch = matmul.arch
+    from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
+    policy = DefaultPolicy(func, arch)
+    configs = policy.emit_config(20)
+    sch = bitblas.gpu.gemv.GEMVWithDequantizeInfo().apply_config(
+        func,
+        configs[0]
+    )
+    with tvm.transform.PassContext(
+        config={"tir.use_async_copy": True}
+    ):
+        rt_mod = tvm.build(sch.mod, target=arch.target)
+    print(rt_mod.imported_modules[0].get_source())
 
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zerosgroup_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
     [
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, -1, False, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, -1, True, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "int", False, -1, False, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "int", False, -1, True, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", False, -1, True, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, -1, True, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, True, False, False, False, "nt",),
-        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, False, False, False, False, "nt",),
-        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, False, False, False, True, "nt",),
-        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, 128, False, False, True, True, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False, False, False, False, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True, False, False, False, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "int", False, False, -1, False, False, False, False, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "int", False, False, -1, True, False, False, False, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", False, False, -1, True, False, False, False, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, -1, True, False, False, False, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, True, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, False, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, True, True, "nt",),
     ],
 )
 def test_matmul_dequantize_torch_forward(
@@ -203,6 +220,7 @@ def test_matmul_dequantize_torch_forward(
     storage_dtype,
     source_format,
     with_scaling,
+    with_zeros,
     group_size,
     fast_decoding,
     with_bias,
@@ -225,6 +243,7 @@ def test_matmul_dequantize_torch_forward(
         storage_dtype=storage_dtype,
         source_format=source_format,
         with_scaling=with_scaling,
+        with_zeros=with_zeros,
         group_size=group_size,
         fast_decoding=fast_decoding,
         with_bias=with_bias,
@@ -251,12 +270,16 @@ def test_matmul_dequantize_torch_forward(
         raise NotImplementedError
 
     inputs.append(torch.rand(output_shape, dtype=torch.float16).cuda())
-    ref_result = torch.matmul(inputs[0], (inputs[1].t() if layout == "nt" else inputs[1]).to(torch.float16))
     
     intweight = inputs[1]
     intweight = intweight.cpu().numpy().astype(np.int8)
     if source_format == "int":
         intweight = intweight + maxq
+    if with_zeros:
+        inputs[1] = inputs[1] - maxq
+
+    ref_result = torch.matmul(inputs[0], (inputs[1].t() if layout == "nt" else inputs[1]).to(torch.float16))
+
     # quantize to 4bit
     qw_np = general_compress(
         intweight, source_bits=bit, storage_dtype=np.int8
@@ -264,6 +287,7 @@ def test_matmul_dequantize_torch_forward(
     qw_torch = torch.from_numpy(qw_np).cuda()
     permuted_inputs = []
     permuted_inputs.append(inputs[0])
+
     if matmul.weight_transform is not None:
         permuted_inputs.append(
             matmul.weight_transform(qw_torch.cpu()).cuda()
@@ -274,11 +298,33 @@ def test_matmul_dequantize_torch_forward(
         if group_size == -1:
             group_size = K
         permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda())
+    if with_zeros:
+        permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda() * maxq)
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
+    print(matmul.codegen())
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
 
 # fmt: on
 
 if __name__ == "__main__":
-    bitblas.testing.main()
+    # bitblas.testing.main()
+    test_matmul_dequantize_torch_forward(
+        1,
+        1024,
+        1024,
+        "float16",
+        "float16",
+        "float16",
+        2,
+        "int8",
+        "uint",
+        True,
+        True,
+        128,
+        True,
+        False,
+        False,
+        False,
+        "nt",
+    )
