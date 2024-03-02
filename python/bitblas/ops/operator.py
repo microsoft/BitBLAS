@@ -24,6 +24,7 @@ class Operator(ABC):
         self.profile_tensors = None
         self.arch = get_arch(target) if target else None
         self.dynamic_range = None
+        self.pass_context: Dict = {}
 
     def codegen(self, target: Target = None) -> str:
         if target is None:
@@ -63,11 +64,11 @@ class Operator(ABC):
 
             try:
                 # Use a specific TVM pass context for CUDA platforms
-                with tvm.transform.PassContext(config={"tir.use_async_copy": True}):
+                with tvm.transform.PassContext(config={"tir.use_async_copy": True, **self.pass_context}):
                     rt_mod = tvm.build(
                         self.optimized_func, target=target, name=self.name
                     )
-            except Exception as e:
+            except Exception:
                 # Log the exception for debugging purposes. Replace 'print' with logging if necessary.
                 print(f"Failed to build optimized function for CUDA target")
         else:
@@ -110,6 +111,7 @@ class Operator(ABC):
         _, best = fast_tune(func, target, topk=topk, parallel_build=parallel_build)
         if best is not None:
             return best.sch.mod
+        self.pass_context = best.config.pass_context
         return None
 
     def apply_fast_tuning_with_dynamic_range(
