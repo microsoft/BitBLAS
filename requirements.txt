@@ -60,7 +60,7 @@ redis==5.0.2
 Requests==2.31.0
 rmm==0.0.1
 rsa==4.9
-scipy==1.5.3
+scipy==1.11.1
 seaborn==0.13.2
 sets==0.3.2
 setuptools==65.6.3
