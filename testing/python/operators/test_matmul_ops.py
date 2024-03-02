@@ -202,10 +202,15 @@ def test_matmul_torch_forward(
         permuted_inputs.append(inputs[1])
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
+    with open("debug/matmul.cu", "w") as f:
+        f.write(str(matmul.codegen()))
+    print(ref_result)
+    print(permuted_inputs[-1])
+    
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
 
 # fmt: on
 
 if __name__ == "__main__":
-    bitblas.testing.main()
-
+    # bitblas.testing.main()
+    test_matmul_torch_forward(256, 256, 256, "float16", "float16", "float16", False, False, False, "nt")

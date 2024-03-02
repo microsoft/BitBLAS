@@ -34,12 +34,12 @@ class Matmul(Operator):
         name: str = "matmul",
         target: Target = tvm.target.Target("cuda"),
     ):
-        super().__init__(name)
+        super().__init__(name, target)
         self.config = config
-
+        target = self.target
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
-        self.arch = CUDA(target)
+
         assert self.propagate_a is False, "Currently only support propagate_a=False"
 
         prim_func_mod = self._select_implementation()
@@ -53,7 +53,7 @@ class Matmul(Operator):
             )
         else:
             self.dynamic_range = None
-        self.target = target
+
         self._build_runtime_module(target)
 
         if self.propagate_a:

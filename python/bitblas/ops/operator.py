@@ -16,7 +16,10 @@ from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 
 class Operator(ABC):
     def __init__(self, name, target: Target = None):
+        if isinstance(target, str):
+            target = Target(target)
         self.name = name
+        self.target = target
         self.prim_func_mod = None
         self.optimized_func = None
         self.rt_mod = None

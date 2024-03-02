@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-from quant_linear import QuantLinear
+from bitblas_quant_linear import QuantLinear
 import copy
 import torch
 import torch.nn as nn

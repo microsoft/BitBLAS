@@ -68,13 +68,13 @@ class MatmulWeightOnlyDequantize(Operator):
         name: str = "matmul_weight_only_dequantize",
         target: Target = tvm.target.Target("cuda"),
     ):
-        super().__init__(name)
+        super().__init__(name, target)
         self.config = config
 
+        target = self.target
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
 
-        self.target = target
         self.arch = CUDA(target)
 
         self.prim_func_mod = self._select_implementation()
