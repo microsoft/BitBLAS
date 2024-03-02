@@ -43,7 +43,7 @@ protobuf==3.20.3
 psutil==5.9.4
 pybind11==2.11.1
 pydot==2.0.0
-Pygments==2.13.0
+Pygments==2.15.0
 Pygments==2.15.0
 pylint==3.1.0
 pymesos==0.3.15
