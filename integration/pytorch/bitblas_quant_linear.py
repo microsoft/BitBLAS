@@ -51,6 +51,8 @@ class QuantLinear(nn.Module):
         **kwargs,
     ):
         super().__init__()
+        if group_size == -1:
+            group_size = infeatures
         if infeatures % 128 != 0 or outfeatures % 256 != 0:
             raise ValueError(
                 "`infeatures` must be divisible by 128 and `outfeatures` by 256."

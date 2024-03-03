@@ -29,6 +29,10 @@ def matmul_nt_dequantize_b(
     with_bias=False,
     zeros_type="original",
 ):
+    if not isinstance(M, int):
+        assert isinstance(M, list)
+        M = tvm.te.var("m")
+
     storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
     storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
     n_float_per_elem = storage_nbit // bit
@@ -139,7 +143,12 @@ def matmul_nt_dequantize_b_propagate_b(
     group_size=-1,
     fast_decoding=False,
     with_bias=False,
+    zeros_type="original",
 ):
+    if not isinstance(M, int):
+        assert isinstance(M, list)
+        M = tvm.te.var("m")
+
     l = r = 16
     if in_dtype == "int8":
         l, r = 16, 32
@@ -178,6 +187,7 @@ def matmul_nt_dequantize_b_propagate_b(
     )
     LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
     Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
+    Zeros = te.placeholder((N, K // group_size), name="Zeros", dtype=in_dtype)
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
 
     def fcompute(i, j):
@@ -220,8 +230,19 @@ def matmul_nt_dequantize_b_propagate_b(
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
 
-        if with_scaling:
-            w = w * Scale[n, k // group_size]
+        if not with_scaling:
+            return w
+
+        if not with_zeros:
+            return w * Scale[n, k // group_size]
+
+        if zeros_type == "original":
+            w = (w - Zeros[n, k // group_size]) * Scale[n, k // group_size]
+        elif zeros_type == "rescale":
+            w = w * Scale[n, k // group_size] - Zeros[n, k // group_size]
+        else:
+            raise ValueError("Unsupported zeros_type: {}".format(zeros_type))
+
         return w
 
     B_decode = te.compute((N, K), decode_func, name="B_decode")
@@ -288,10 +309,13 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     with_bias=False,
     zeros_type="original",
 ):
+    if not isinstance(M, int):
+        assert isinstance(M, list)
+        M = tvm.te.var("m")
+
     l = r = 16
     if in_dtype == "int8":
         l, r = 16, 32
-
     intra_index_map, _ = get_propagate_map(trans=False, dtype=in_dtype, matrix_name="A")
     A = te.placeholder((M // l, K // r, l, r), name="A", dtype=in_dtype)
 
@@ -456,8 +480,6 @@ def select_implementation(
     propagate_a=False,
     propagate_b=False,
 ):
-    if not isinstance(M, int):
-        raise ValueError("Currently do not implement with dynamic symbolic")
     if layout == "nn":
         raise ValueError(
             "Currently only support propagate_a=False and propagate_b=False for layout=nn in Dequantize Implementation"
@@ -479,7 +501,7 @@ def select_implementation(
                 group_size,
                 fast_decoding,
                 with_bias,
-                zeros_type
+                zeros_type,
             )
         elif propagate_a:
             raise NotImplementedError
@@ -499,7 +521,7 @@ def select_implementation(
                 group_size,
                 fast_decoding,
                 with_bias,
-                zeros_type
+                zeros_type,
             )
         else:
             return matmul_nt_dequantize_b(

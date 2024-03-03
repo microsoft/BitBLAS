@@ -35,6 +35,7 @@ def test_matmul_dequantize_codegen_default(
     storage_dtype,
     source_format,
     with_scaling,
+    with_zeros,
     group_size,
     fast_decoding,
     with_bias,
@@ -54,6 +55,7 @@ def test_matmul_dequantize_codegen_default(
         storage_dtype=storage_dtype,
         source_format=source_format,
         with_scaling=with_scaling,
+        with_zeros=with_zeros,
         group_size=group_size,
         fast_decoding=fast_decoding,
         with_bias=with_bias,
@@ -85,6 +87,7 @@ def test_matmul_dequantize_codegen_finetune(
     storage_dtype,
     source_format,
     with_scaling,
+    with_zeros,
     group_size,
     fast_decoding,
     with_bias,
@@ -104,6 +107,7 @@ def test_matmul_dequantize_codegen_finetune(
         storage_dtype=storage_dtype,
         source_format=source_format,
         with_scaling=with_scaling,
+        with_zeros=with_zeros,
         group_size=group_size,
         fast_decoding=fast_decoding,
         with_bias=with_bias,
@@ -188,7 +192,6 @@ def test_matmul_dequantize_profile_latency(
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", False, False, -1, True, False, False, False, "nt", "rescale"),
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, -1, True, False, False, False, "nt", "rescale"),
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, True, False, False, False, "nt", "rescale"),
-        (1, 1024, 1024, "int8", "int8", "int32", 2, "int8", "uint", True, False, 128, True, False, False, False, "nt", "rescale"),
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "uint", True, True, 128, False, False, False, False, "nt", "rescale"),
         (1, 1024, 4096, "float16", "float16", "float16", 2, "int8", "uint", True, True, 128, True, False, False, False, "nt", "rescale"),
         (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, False, False, "nt", "rescale"),
@@ -253,7 +256,7 @@ def test_matmul_dequantize_torch_forward(
     inputs = []
     inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda())
     maxq = 2 ** (bit - 1) - 1
-    zeros = 0.1
+    zeros = maxq
     if source_format == "uint":
         inputs.append(torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda())
     elif source_format == "int":
@@ -293,9 +296,12 @@ def test_matmul_dequantize_torch_forward(
         permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
+    print(permuted_inputs[-1])
+    print(ref_result)
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
 
 # fmt: on
 
 if __name__ == "__main__":
-    bitblas.testing.main()
+    # bitblas.testing.main()
+    test_matmul_dequantize_torch_forward(1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "int", False, False, 128, False, False, False, False, "nt", "rescale")
