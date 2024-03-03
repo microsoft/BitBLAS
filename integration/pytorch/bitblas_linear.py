@@ -95,21 +95,31 @@ class Linear(nn.Module):
         if enable_tuning:
             self.bitblas_matmul.hardware_aware_finetune(topk=20)
 
-    def forward(self, A):
-        C = torch.empty(
-            A.shape[:-1] + (self.outfeatures,), dtype=A.dtype, device=A.device
-        )
+        self.reset_parameters()
+
+    def reset_parameters(self):
+        with torch.no_grad():
+            stdv = 1.0 / np.sqrt(self.weight.shape[1])
+            self.weight.uniform_(-stdv, stdv)
+            if self.bias is not None:
+                self.bias.uniform_(-stdv, stdv)
+
+    def forward(self, A, Output=None):
         args = [
             A,
             self.weight,
         ]
         if self.bias is not None:
             args.append(self.bias)
-        args.append(C)
+        if Output is None:
+            Output = torch.empty(
+                A.shape[:-1] + (self.outfeatures,), dtype=A.dtype, device=A.device
+            )
+        args.append(Output)
 
         self.bitblas_matmul(*args)
 
-        return C
+        return Output
 
 
 __all__ = ["Linear"]

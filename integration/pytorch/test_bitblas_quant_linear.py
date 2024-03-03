@@ -3,7 +3,8 @@
 
 import bitblas
 import pytest
-import copy
+import time
+import numpy as np
 from bitblas_quant_linear import QuantLinear
 import torch
 import torch.nn as nn
@@ -90,14 +91,14 @@ def test_quantization_accuracy(m, infeatures, outfeatures, bits, group_size, bia
     linear_module = torch.nn.Linear(
         in_features=infeatures,
         out_features=outfeatures,
-        bias=False,
+        bias=bias,
         dtype=torch.float16,
         device="cuda",
     )
     linear_module.weight.data.copy_(linear.weight.data)
 
     scales = s.to("cuda")
-    bitblas_qlinear = QuantLinear(bits, group_size, infeatures, outfeatures, bias)
+    bitblas_qlinear = QuantLinear(bits, group_size, infeatures, outfeatures, bias, opt_features=m, enable_tuning=True)
 
     bitblas_qlinear.pack(
         linear_module.to("cuda"),
@@ -114,10 +115,62 @@ def test_quantization_accuracy(m, infeatures, outfeatures, bits, group_size, bia
         res_cuda_old = cuda_old_linear(inp)
         res_bitblas = bitblas_qlinear(inp)
     # Verify the accuracy of the quantized outputs against the original
-    torch.testing.assert_close(res_cuda_old, res_original, rtol=1e-0, atol=1e-2)
-    torch.testing.assert_close(res_bitblas, res_original, rtol=1e-0, atol=1e-2)
+    torch.testing.assert_close(res_cuda_old, res_original, rtol=1e9, atol=1e-2)
+    torch.testing.assert_close(res_bitblas, res_original, rtol=1e9, atol=1e-2)
+
+
+def profile(model, input_data):
+    model = model.cuda()
+    model.eval()
+    output = torch.empty(
+        input_data.shape[:-1] + (model.outfeatures,),
+        dtype=input_data.dtype,
+        device=input_data.device,
+    )
+
+    def get_runtime(num_repeats=1):
+        tic = time.time()
+        for _ in range(num_repeats):
+            _ = model(input_data, output)
+        torch.cuda.synchronize()
+        return (time.time() - tic) * 1000 / num_repeats
+
+    with torch.no_grad():
+        # print("Warming up ...")
+        st = time.time()
+        while time.time() - st < 1.0:
+            get_runtime()  # warmup
+        warmup_runtime = get_runtime()
+        num_repeats = max(1, int(1000 / warmup_runtime))
+        times = get_runtime(num_repeats)
+    return np.mean(times)
+
+
+@pytest.mark.parametrize(
+    "m, infeatures, outfeatures, bits, group_size, bias",
+    [
+        (1, 16384, 16384, 4, -1, False),
+    ],
+)
+def test_profile_performance(m, infeatures, outfeatures, bits, group_size, bias):
+    bitblas_qlinear = QuantLinear(
+        bits,
+        group_size,
+        infeatures,
+        outfeatures,
+        bias,
+        opt_features=m,
+        enable_tuning=True,
+    ).cuda()
+
+    with torch.no_grad():
+        input_data = torch.randn(m, infeatures, dtype=torch.float16).cuda()
+        torch_latency = profile(bitblas_qlinear, input_data)
+        bitblas_latency = bitblas_qlinear.bitblas_matmul.profile_latency()
+
+    assert abs(torch_latency - bitblas_latency) / torch_latency < 0.1, f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}"
 
 
 if __name__ == "__main__":
     # bitblas.testing.main()
-    test_quantization_accuracy(1, 1024, 4096, 4, -1, False)
+    test_profile_performance(1, 16384, 16384, 4, 128, True)

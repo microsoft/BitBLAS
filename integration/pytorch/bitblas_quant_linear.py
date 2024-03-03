@@ -45,7 +45,7 @@ class QuantLinear(nn.Module):
         fast_decoding: bool = False,
         propagate_a: bool = False,
         propagate_b: bool = False,
-        opt_features: Union[int, List[int]] = 1,
+        opt_features: Union[int, List[int]] = [1, 16, 32],
         layout: Literal["nt"] = "nt",
         trainable=False,
         **kwargs,
@@ -73,8 +73,8 @@ class QuantLinear(nn.Module):
         self.register_buffer(
             "qweight",
             torch.empty(
-                (self.outfeatures, self.infeatures // storage_nbit * n_float_per_elem),
-                dtype=torch.uint8,
+                (self.outfeatures, self.infeatures // n_float_per_elem),
+                dtype=torch.int8,
             ),
         )
         self.register_buffer(
@@ -134,7 +134,23 @@ class QuantLinear(nn.Module):
             matmul_config, target=self.target
         )
         if enable_tuning:
-            self.bitblas_matmul.optimize(topk=20)
+            self.bitblas_matmul.hardware_aware_finetune(topk=20)
+
+        self.reset_parameters()
+
+    def reset_parameters(self):
+        # init for char
+        self.qweight = torch.randint_like(
+            self.qweight,
+            0,
+            2 ** (self.bits - 1) - 1,
+            dtype=torch.int8,
+            device=self.qweight.device,
+        )
+        nn.init.normal_(self.scales)
+        nn.init.zeros_(self.zeros)
+        if self.bias is not None:
+            nn.init.zeros_(self.bias)
 
     def post_init(self):
         pass
@@ -169,8 +185,6 @@ class QuantLinear(nn.Module):
         intweight = torch.cat(intweight, dim=1)
         intweight = intweight.contiguous()
         intweight = intweight.cpu().numpy().astype(np.int8)
-        print("bitblas dequantize weight is ")
-        print(intweight)
         # quantize to 4bit
         qw_np = general_compress(
             intweight, source_bits=self.bits, storage_dtype=np.int8
@@ -189,19 +203,19 @@ class QuantLinear(nn.Module):
         if self.bias is not None:
             self.bias[:] = linear.bias.data.to(self.bias.device).contiguous()
 
-    def forward(self, A):
-        A = A.half()
-        C = torch.empty(
-            A.shape[:-1] + (self.qweight.shape[0],), dtype=A.dtype, device=A.device
-        )
+    def forward(self, A, Output=None):
         args = [A, self.qweight, self.scales, self.zeros]
         if self.bias is not None:
             args.append(self.bias)
-        args.append(C)
+        if Output is None:
+            Output = torch.empty(
+                A.shape[:-1] + (self.qweight.shape[0],), dtype=A.dtype, device=A.device
+            )
+        args.append(Output)
 
         self.bitblas_matmul(*args)
 
-        return C
+        return Output
 
 
 __all__ = ["QuantLinear"]

@@ -190,6 +190,7 @@ def test_matmul_dequantize_profile_latency(
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, True, False, False, False, "nt", "rescale"),
         (1, 1024, 1024, "int8", "int8", "int32", 2, "int8", "uint", True, False, 128, True, False, False, False, "nt", "rescale"),
         (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "uint", True, True, 128, False, False, False, False, "nt", "rescale"),
+        (1, 1024, 4096, "float16", "float16", "float16", 2, "int8", "uint", True, True, 128, True, False, False, False, "nt", "rescale"),
         (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, False, False, "nt", "rescale"),
         (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, False, True, "nt", "rescale"),
         (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, True, True, "nt", "rescale"),
