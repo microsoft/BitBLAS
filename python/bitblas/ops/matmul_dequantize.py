@@ -15,7 +15,9 @@ from .lop3_permutate import LOP3Permutate, LOP3PermutateConfig
 
 
 class WeightExecutorCPU:
-    def __init__(self, operators: List[Operator] = []):
+    def __init__(self, operators: List[Operator] = None):
+        if operators is None:
+            operators = []
         self.operators = operators
 
     def append(self, op):
