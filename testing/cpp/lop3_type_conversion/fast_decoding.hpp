@@ -94,7 +94,18 @@ void general_interleave_fp16(int8_t *origin_arr, int8_t *interleaved, const int 
     memcpy(interleaved, int32_interleaved, size * sizeof(int32_t));
 }
 
-template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false>
+/*
+Kind 0: original
+Kind 1: rescale
+Kind 2: quantzied
+# documents for zeros_type:
+# original: target = (dequantize_weight - zero_point) * scale
+# rescale: target = dequantize_weight * scale - zero_point
+# quantzied: target = (dequantize_weight - dequantize_zeros) * scale
+# Notice: only support "original" and "rescale" now
+zeros_type: Literal["original", "rescale", "quantzied"] = "original"
+*/
+template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false, int ZerosKind=1>
 __device__ void decode_i4b_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8, const half *scale = nullptr, const half *zeros = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
@@ -114,11 +125,15 @@ __device__ void decode_i4b_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8,
                      : "=r"(h[i])
                      : "r"(i4s >> (4 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
         asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        if constexpr (withZeros && ZerosKind == 0)
+        {
+            asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*zeros, *zeros)));
+        }
         if constexpr (withScaling)
         {
             asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*scale, *scale)), "r"(0));
         }
-        if constexpr (withZeros){
+        if constexpr (withZeros && ZerosKind == 1){
             asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*zeros, *zeros)));
         }
     }
@@ -149,12 +164,29 @@ __device__ void decode_i4u_to_f16_scale(T1 *_i4u, T2 *B_local_decode, half *scal
 }
 
 template <typename T1, typename T2>
-__device__ void decode_i4u_to_f16_scale_zeros(T1 *_i4u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
+__device__ void decode_i4u_to_f16_scale_zeros_original(T1 *_i4u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
 {
-    decode_i4b_to_f16<T1, T2, false, true, true>(_i4u, B_local_decode, N, scale, zeros);
+    decode_i4b_to_f16<T1, T2, false, true, true, 0>(_i4u, B_local_decode, N, scale, zeros);
 }
 
-template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false>
+template <typename T1, typename T2>
+__device__ void decode_i4u_to_f16_scale_zeros_rescale(T1 *_i4u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
+{
+    decode_i4b_to_f16<T1, T2, false, true, true, 1>(_i4u, B_local_decode, N, scale, zeros);
+}
+
+/*
+Kind 0: original
+Kind 1: rescale
+Kind 2: quantzied
+# documents for zeros_type:
+# original: target = (dequantize_weight - zero_point) * scale
+# rescale: target = dequantize_weight * scale - zero_point
+# quantzied: target = (dequantize_weight - dequantize_zeros) * scale
+# Notice: only support "original" and "rescale" now
+zeros_type: Literal["original", "rescale", "quantzied"] = "original"
+*/
+template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false, int ZerosKind = 1>
 __device__ void decode_i2b_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8, half *scale = nullptr, half *zeros = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
@@ -178,11 +210,16 @@ __device__ void decode_i2b_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8,
                      : "=r"(h[i])
                      : "r"(i2s >> (2 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
         asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        if constexpr (withZeros && ZerosKind == 0)
+        {
+            asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*zeros, *zeros)));
+        }
         if constexpr (withScaling)
         {
             asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*scale, *scale)), "r"(0));
         }
-        if constexpr (withZeros){
+        if constexpr (withZeros && ZerosKind == 1)
+        {
             asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*zeros, *zeros)));
         }
     }
@@ -213,12 +250,30 @@ __device__ void decode_i2u_to_f16_scale(T1 *_i2u, T2 *B_local_decode, half *scal
 }
 
 template <typename T1, typename T2>
-__device__ void decode_i2u_to_f16_scale_zeros(T1 *_i2u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
+__device__ void decode_i2u_to_f16_scale_zeros_original(T1 *_i2u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
 {
-    decode_i2b_to_f16<T1, T2, false, true, true>(_i2u, B_local_decode, N, scale, zeros);
+    decode_i2b_to_f16<T1, T2, false, true, true, 0>(_i2u, B_local_decode, N, scale, zeros);
 }
 
-template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false>
+template <typename T1, typename T2>
+__device__ void decode_i2u_to_f16_scale_zeros_rescale(T1 *_i2u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
+{
+    decode_i2b_to_f16<T1, T2, false, true, true, 1>(_i2u, B_local_decode, N, scale, zeros);
+}
+
+
+/*
+Kind 0: original
+Kind 1: rescale
+Kind 2: quantzied
+# documents for zeros_type:
+# original: target = (dequantize_weight - zero_point) * scale
+# rescale: target = dequantize_weight * scale - zero_point
+# quantzied: target = (dequantize_weight - dequantize_zeros) * scale
+# Notice: only support "original" and "rescale" now
+zeros_type: Literal["original", "rescale", "quantzied"] = "original"
+*/
+template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false, int ZerosKind = 1>
 __device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8, half *scale = nullptr, half *zeros = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
@@ -241,11 +296,15 @@ __device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8,
                      : "=r"(h[i])
                      : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
         asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        if constexpr (withZeros && ZerosKind == 0)
+        {
+            asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*zeros, *zeros)));
+        }
         if constexpr (withScaling)
         {
             asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*scale, *scale)), "r"(0));
         }
-        if constexpr (withZeros)
+        if constexpr (withZeros && ZerosKind == 1)
         {
             asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*zeros, *zeros)));
         }
@@ -277,10 +336,17 @@ __device__ void decode_i1u_to_f16_scale(T1 *_i1u, T2 *B_local_decode, half *scal
 }
 
 template <typename T1, typename T2>
-__device__ void decode_i1u_to_f16_scale_zeros(T1 *_i1u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
+__device__ void decode_i1u_to_f16_scale_zeros_original(T1 *_i1u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
 {
-    decode_i1b_to_f16<T1, T2, false, true, true>(_i1u, B_local_decode, N, scale, zeros);
+    decode_i1b_to_f16<T1, T2, false, true, true, 0>(_i1u, B_local_decode, N, scale, zeros);
 }
+
+template <typename T1, typename T2>
+__device__ void decode_i1u_to_f16_scale_zeros_rescale(T1 *_i1u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
+{
+    decode_i1b_to_f16<T1, T2, false, true, true, 1>(_i1u, B_local_decode, N, scale, zeros);
+}
+
 
 void general_interleave_int8(int8_t *origin_arr, int8_t *interleaved, const int nbit, size_t size_in_bytes, bool verbose = false)
 {
