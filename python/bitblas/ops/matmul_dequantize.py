@@ -3,7 +3,7 @@
 import tvm
 from tvm.target import Target
 from bitblas.base.roller.arch.cuda import CUDA
-from typing import Any, List, Literal
+from typing import Any, List, Literal, Optional
 from .operator import Operator
 from .impl.matmul_dequantize_impl import select_implementation
 from ..base.utils import get_rasterization_code, tensor_replace_dp4a
@@ -15,7 +15,7 @@ from .lop3_permutate import LOP3Permutate, LOP3PermutateConfig
 
 
 class WeightExecutorCPU:
-    def __init__(self, operators: List[Operator] = None):
+    def __init__(self, operators: Optional[List[Operator]] = None):
         if operators is None:
             operators = []
         self.operators = operators
