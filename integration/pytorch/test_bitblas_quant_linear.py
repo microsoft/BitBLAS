@@ -1,7 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-from bitblas_quant_linear import QuantLinear
+
+import bitblas
+import pytest
 import copy
+from bitblas_quant_linear import QuantLinear
 import torch
 import torch.nn as nn
 
@@ -18,9 +21,8 @@ def gen_quant4(k, n, groupsize=-1):
     w = torch.randn((k, n), dtype=torch.half, device="cpu")
 
     original_w = w.clone()
-    print("original weight is: ")
-    print(original_w)
-    if group_size == -1:
+
+    if groupsize == -1:
         groupsize = k
 
     if groupsize != -1:
@@ -36,9 +38,9 @@ def gen_quant4(k, n, groupsize=-1):
 
     # Unsigned storage.
     w += (maxq) // 2
+
     w = torch.clamp(w, 0, maxq)
-    print("quantize weight is: ")
-    print((w - (maxq) // 2))
+
     # Dequantize.
     ref = (w - (maxq) // 2).half() * s
 
@@ -60,56 +62,62 @@ def gen_quant4(k, n, groupsize=-1):
     return original_w, linear, s, (w - (maxq) // 2)
 
 
-bits = 4
-m = 1
-group_size = -1
-infeatures = 1024  # this is k of weight (n, k)
-outfeatures = 4096  # this is n of weight (n, k)
-bias = False
-
-original_w, linear, s, qw = gen_quant4(infeatures, outfeatures, group_size)
-
-cuda_old_linear = CudaOldQuantLinear(
-    bits=4,
-    group_size=group_size,
-    infeatures=infeatures,
-    outfeatures=outfeatures,
-    bias=False,
+@pytest.mark.parametrize(
+    "m, infeatures, outfeatures, bits, group_size, bias",
+    [
+        (1, 1024, 4096, 4, -1, False),
+        (1, 1024, 4096, 4, 128, False),
+        (1, 1024, 4096, 4, 128, True),
+    ],
 )
+def test_quantization_accuracy(m, infeatures, outfeatures, bits, group_size, bias):
+    original_w, linear, s, qw = gen_quant4(infeatures, outfeatures, group_size)
 
-if group_size == -1:
-    group_size = infeatures
-zeros = torch.full((infeatures // group_size, outfeatures), 7, dtype=torch.int32)
+    if group_size == -1:
+        group_size = infeatures
+    zeros = torch.full((infeatures // group_size, outfeatures), 7, dtype=torch.int32)
 
-cuda_old_linear.pack(linear, s.T, zeros.T, g_idx=None)
-linear_module = torch.nn.Linear(
-    in_features=infeatures,
-    out_features=outfeatures,
-    bias=False,
-    dtype=torch.float16,
-    device="cuda",
-)
-linear_module.weight.data.copy_(
-    linear.weight.data
-)  # Not using dequantized_weight to avoid approx
+    bitblas_zeros = zeros.clone().T
+    cuda_old_linear = CudaOldQuantLinear(
+        bits=bits,
+        group_size=group_size,
+        infeatures=infeatures,
+        outfeatures=outfeatures,
+        bias=bias,
+    )
+    cuda_old_linear.pack(linear, s.T, zeros.T, g_idx=None)
 
-scales = s.to("cuda")
-bitblas_qlinear = QuantLinear(bits, group_size, infeatures, outfeatures, bias)
+    linear_module = torch.nn.Linear(
+        in_features=infeatures,
+        out_features=outfeatures,
+        bias=False,
+        dtype=torch.float16,
+        device="cuda",
+    )
+    linear_module.weight.data.copy_(linear.weight.data)
 
-bitblas_qlinear.pack(
-    linear_module.to("cuda"),
-    scales=scales.T.contiguous().to("cuda"),
-)
+    scales = s.to("cuda")
+    bitblas_qlinear = QuantLinear(bits, group_size, infeatures, outfeatures, bias)
 
-inp = torch.rand(m, infeatures, dtype=torch.float16, device="cuda")
+    bitblas_qlinear.pack(
+        linear_module.to("cuda"),
+        scales=scales.T.contiguous().to("cuda"),
+        zeros=bitblas_zeros.contiguous().to("cuda"),
+    )
 
-cuda_old_linear = cuda_old_linear.to("cuda")
-bitblas_qlinear = bitblas_qlinear.to("cuda")
-with torch.no_grad():
-    res_original = linear_module(inp)
-    res_cuda_old = cuda_old_linear(inp)
-    res_bitblas = bitblas_qlinear(inp)
+    inp = torch.rand(m, infeatures, dtype=torch.float16, device="cuda")
 
-print(res_original)
-print(res_cuda_old)
-print(res_bitblas)
+    cuda_old_linear = cuda_old_linear.to("cuda")
+    bitblas_qlinear = bitblas_qlinear.to("cuda")
+    with torch.no_grad():
+        res_original = linear_module(inp)
+        res_cuda_old = cuda_old_linear(inp)
+        res_bitblas = bitblas_qlinear(inp)
+    # Verify the accuracy of the quantized outputs against the original
+    torch.testing.assert_close(res_cuda_old, res_original, rtol=1e-0, atol=1e-2)
+    torch.testing.assert_close(res_bitblas, res_original, rtol=1e-0, atol=1e-2)
+
+
+if __name__ == "__main__":
+    # bitblas.testing.main()
+    test_quantization_accuracy(1, 1024, 4096, 4, -1, False)

@@ -22,7 +22,7 @@ __global__ void __launch_bounds__(128) bitblas_kernel_fp16_int2_fp16_m1n15360k51
   in_thread_C_local[0] = __float2half_rn(0.000000e+00f);
   for (int ax1_0 = 0; ax1_0 < 5; ++ax1_0) {
     B_local[0] = *(char2*)(B + (((((int)blockIdx.x) * 1280) + (ax1_0 * 256)) + (((int)threadIdx.x) * 2)));
-    decode_i2u_to_f16_scale_zeros(B_local, B_decode_local, (&(Scale[(((((int)blockIdx.x) * 40) + (ax1_0 * 8)) + (((int)threadIdx.x) >> 4))])), (&(Zeros[(((((int)blockIdx.x) * 40) + (ax1_0 * 8)) + (((int)threadIdx.x) >> 4))])), 8);
+    decode_i2u_to_f16_scale_zeros_original(B_local, B_decode_local, (&(Scale[(((((int)blockIdx.x) * 40) + (ax1_0 * 8)) + (((int)threadIdx.x) >> 4))])), (&(Zeros[(((((int)blockIdx.x) * 40) + (ax1_0 * 8)) + (((int)threadIdx.x) >> 4))])), 8);
     *(uint4*)(A_local + 0) = *(uint4*)(A + ((ax1_0 * 1024) + (((int)threadIdx.x) * 8)));
     for (int ax1_2_0 = 0; ax1_2_0 < 4; ++ax1_2_0) {
       for (int ax1_2_1 = 0; ax1_2_1 < 2; ++ax1_2_1) {
@@ -222,7 +222,7 @@ __asm__ __volatile__("cp.async.wait_group 1;");
       __syncthreads();
       for (int ax1_ax2_0_fused_0 = 0; ax1_ax2_0_fused_0 < 2; ++ax1_ax2_0_fused_0) {
         B_local[0] = *(char2*)(B_shared + (((((ax3_0_0 & 1) * 512) + (ax1_ax2_0_fused_0 * 256)) + (((int)threadIdx.y) * 64)) + (((int)threadIdx.x) * 2)));
-        decode_i2u_to_f16_scale_zeros(B_local, B_decode_reindex_local, (&(Scale[(((((((int)blockIdx.x) * 1280) + (ax1_ax2_0_fused_0 * 640)) + (((int)threadIdx.y) * 160)) + ((((int)threadIdx.x) >> 3) * 40)) + (ax3_0_0 >> 1))])), (&(Zeros[(((((((int)blockIdx.x) * 1280) + (ax1_ax2_0_fused_0 * 640)) + (((int)threadIdx.y) * 160)) + ((((int)threadIdx.x) >> 3) * 40)) + (ax3_0_0 >> 1))])), 8);
+        decode_i2u_to_f16_scale_zeros_original(B_local, B_decode_reindex_local, (&(Scale[(((((((int)blockIdx.x) * 1280) + (ax1_ax2_0_fused_0 * 640)) + (((int)threadIdx.y) * 160)) + ((((int)threadIdx.x) >> 3) * 40)) + (ax3_0_0 >> 1))])), (&(Zeros[(((((((int)blockIdx.x) * 1280) + (ax1_ax2_0_fused_0 * 640)) + (((int)threadIdx.y) * 160)) + ((((int)threadIdx.x) >> 3) * 40)) + (ax3_0_0 >> 1))])), 8);
         *(uint4*)(B_decode_reindex_shared + ((((ax1_ax2_0_fused_0 * 1024) + (((int)threadIdx.y) * 256)) + ((((int)threadIdx.x) >> 3) * 64)) + (((((int)threadIdx.x) & 7) ^ (((((int)threadIdx.y) & 1) * 4) + (((int)threadIdx.x) >> 3))) * 8))) = B_decode_reindex_local[0];
       }
       __syncthreads();
@@ -296,7 +296,7 @@ __asm__ __volatile__("cp.async.wait_group 0;");
     __syncthreads();
     for (int ax1_ax2_0_fused_0_1 = 0; ax1_ax2_0_fused_0_1 < 2; ++ax1_ax2_0_fused_0_1) {
       B_local_1[0] = *(char2*)(B_shared + ((((ax1_ax2_0_fused_0_1 * 256) + (((int)threadIdx.y) * 64)) + (((int)threadIdx.x) * 2)) + 512));
-      decode_i2u_to_f16_scale_zeros(B_local_1, B_decode_reindex_local_1, (&(Scale[(((((((int)blockIdx.x) * 1280) + (ax1_ax2_0_fused_0_1 * 640)) + (((int)threadIdx.y) * 160)) + ((((int)threadIdx.x) >> 3) * 40)) + 39)])), (&(Zeros[(((((((int)blockIdx.x) * 1280) + (ax1_ax2_0_fused_0_1 * 640)) + (((int)threadIdx.y) * 160)) + ((((int)threadIdx.x) >> 3) * 40)) + 39)])), 8);
+      decode_i2u_to_f16_scale_zeros_original(B_local_1, B_decode_reindex_local_1, (&(Scale[(((((((int)blockIdx.x) * 1280) + (ax1_ax2_0_fused_0_1 * 640)) + (((int)threadIdx.y) * 160)) + ((((int)threadIdx.x) >> 3) * 40)) + 39)])), (&(Zeros[(((((((int)blockIdx.x) * 1280) + (ax1_ax2_0_fused_0_1 * 640)) + (((int)threadIdx.y) * 160)) + ((((int)threadIdx.x) >> 3) * 40)) + 39)])), 8);
       *(uint4*)(B_decode_reindex_shared + ((((ax1_ax2_0_fused_0_1 * 1024) + (((int)threadIdx.y) * 256)) + ((((int)threadIdx.x) >> 3) * 64)) + (((((int)threadIdx.x) & 7) ^ (((((int)threadIdx.y) & 1) * 4) + (((int)threadIdx.x) >> 3))) * 8))) = B_decode_reindex_local_1[0];
     }
     __syncthreads();
