@@ -27,6 +27,7 @@ def matmul_nt_dequantize_b(
     group_size=-1,
     fast_decoding=False,
     with_bias=False,
+    zeros_type="original",
 ):
     storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
     storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
@@ -61,10 +62,19 @@ def matmul_nt_dequantize_b(
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
 
-        if with_scaling:
-            w = w * Scale[n, k // group_size]
-        if with_zeros:
-            w = w - Zeros[n, k // group_size]
+        if not with_scaling:
+            return w
+
+        if not with_zeros:
+            return w * Scale[n, k // group_size]
+
+        if zeros_type == "original":
+            w = (w - Zeros[n, k // group_size]) * Scale[n, k // group_size]
+        elif zeros_type == "rescale":
+            w = w * Scale[n, k // group_size] - Zeros[n, k // group_size]
+        else:
+            raise ValueError("Unsupported zeros_type: {}".format(zeros_type))
+
         return w
 
     B_decode = te.compute((N, K), decode_func, name="B_decode")
@@ -106,6 +116,7 @@ def matmul_nt_dequantize_b(
                 "target_format": in_dtype,
                 "with_scaling": with_scaling,
                 "with_zeros": with_zeros,
+                "zeros_type": zeros_type,
                 "group_size": group_size,
             }
         },
@@ -250,6 +261,7 @@ def matmul_nt_dequantize_b_propagate_b(
                 "storage_dtype": storage_dtype,
                 "target_format": in_dtype,
                 "with_zeros": with_zeros,
+                "zeros_type": zeros_type,
                 "with_scaling": with_scaling,
                 "group_size": group_size,
             }
@@ -274,6 +286,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     group_size=-1,
     fast_decoding=False,
     with_bias=False,
+    zeros_type="original",
 ):
     l = r = 16
     if in_dtype == "int8":
@@ -412,6 +425,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
                 "storage_dtype": storage_dtype,
                 "target_format": in_dtype,
                 "with_zeros": with_zeros,
+                "zeros_type": zeros_type,
                 "with_scaling": with_scaling,
                 "group_size": group_size,
             }
@@ -438,6 +452,7 @@ def select_implementation(
     fast_decoding=False,
     with_bias=False,
     layout="nt",
+    zeros_type="original",
     propagate_a=False,
     propagate_b=False,
 ):
@@ -464,6 +479,7 @@ def select_implementation(
                 group_size,
                 fast_decoding,
                 with_bias,
+                zeros_type
             )
         elif propagate_a:
             raise NotImplementedError
@@ -483,6 +499,7 @@ def select_implementation(
                 group_size,
                 fast_decoding,
                 with_bias,
+                zeros_type
             )
         else:
             return matmul_nt_dequantize_b(
@@ -500,6 +517,7 @@ def select_implementation(
                 group_size,
                 fast_decoding,
                 with_bias,
+                zeros_type,
             )
     else:
         raise ValueError(f"Unsupported layout: {layout}")

@@ -3,7 +3,7 @@
 import tvm
 from tvm.target import Target
 from bitblas.base.roller.arch.cuda import CUDA
-from typing import Any, List
+from typing import Any, List, Literal
 from .operator import Operator
 from .impl.matmul_dequantize_impl import select_implementation
 from ..base.utils import get_rasterization_code, tensor_replace_dp4a
@@ -51,13 +51,20 @@ class MatmulWeightOnlyDequantizeConfig:
     storage_dtype: str = "int8"
     source_format: str = "int"
     with_scaling: bool = False
-    with_zeros: bool = False,
+    with_zeros: bool = False
     group_size: int = -1
     fast_decoding: bool = False
     with_bias: bool = False
     propagate_a: bool = False
     propagate_b: bool = False
     layout: str = "nt"
+    # documents for zeros_type:
+    # original: target = (dequantize_weight - zero_point) * scale
+    # rescale: target = dequantize_weight * scale - zero_point
+    # quantzied: target = (dequantize_weight - dequantize_zeros) * scale
+    # Notice: only support "original" and "rescale" now
+    # The auto-gptq framework prefer "original" for alignment with cuda.
+    zeros_type: Literal["original", "rescale", "quantzied"] = "original"
 
 
 class MatmulWeightOnlyDequantize(Operator):
@@ -173,6 +180,7 @@ class MatmulWeightOnlyDequantize(Operator):
             fast_decoding=self.fast_decoding,
             with_bias=self.with_bias,
             layout=self.layout,
+            zeros_type=self.zeros_type,
             propagate_a=self.propagate_a,
             propagate_b=self.propagate_b,
         )
@@ -255,6 +263,10 @@ class MatmulWeightOnlyDequantize(Operator):
     @property
     def layout(self):
         return self.config.layout
+
+    @property
+    def zeros_type(self):
+        return self.config.zeros_type
 
     @property
     def input_transform(self):

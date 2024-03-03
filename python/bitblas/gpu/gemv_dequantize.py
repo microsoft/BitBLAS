@@ -173,6 +173,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
                 source_bit=source_bit,
                 with_scaling=weight_decode_info["with_scaling"],
                 with_zeros=weight_decode_info["with_zeros"],
+                zeros_type=weight_decode_info["zeros_type"],
             )
             sch.tensorize(sch.get_loops(block_decode_B)[-1], intrin_info["compute"])
             sch.annotate(

@@ -179,19 +179,21 @@ def test_matmul_dequantize_profile_latency(
     assert latency
 
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zerosgroup_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout,zeros_type",
     [
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "int", False, False, -1, False, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "int", False, False, -1, True, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", False, False, -1, True, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, -1, True, False, False, False, "nt",),
-        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, True, False, False, False, "nt",),
-        (1, 1024, 1024, "int8", "int8", "int32", 2, "int8", "uint", True, False, 128, True, False, False, False, "nt",),
-        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, False, False, "nt",),
-        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, False, True, "nt",),
-        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, True, True, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False, False, False, False, "nt", "rescale"),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True, False, False, False, "nt", "rescale"),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "int", False, False, -1, False, False, False, False, "nt", "rescale"),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "int", False, False, -1, True, False, False, False, "nt", "rescale"),
+        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", False, False, -1, True, False, False, False, "nt", "rescale"),
+        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, -1, True, False, False, False, "nt", "rescale"),
+        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, True, False, False, False, "nt", "rescale"),
+        (1, 1024, 1024, "int8", "int8", "int32", 2, "int8", "uint", True, False, 128, True, False, False, False, "nt", "rescale"),
+        (1, 1024, 1024, "float16", "float16", "float16", 2, "int8", "uint", True, True, 128, False, False, False, False, "nt", "rescale"),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, False, False, "nt", "rescale"),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, False, True, "nt", "rescale"),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, True, True, "nt", "rescale"),
+        (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, True, True, "nt", "original"),
     ],
 )
 def test_matmul_dequantize_torch_forward(
@@ -212,6 +214,7 @@ def test_matmul_dequantize_torch_forward(
     propagate_a,
     propagate_b,
     layout,
+    zeros_type
 ):
     import torch
     import numpy as np
@@ -235,11 +238,13 @@ def test_matmul_dequantize_torch_forward(
         propagate_a=propagate_a,
         propagate_b=propagate_b,
         layout=layout,
+        zeros_type=zeros_type
     )
     matmul = MatmulWeightOnlyDequantize(
         config=matmul_config,
         target=target,
     )
+
     matmul.hardware_aware_finetune(topk=20)
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
@@ -247,6 +252,7 @@ def test_matmul_dequantize_torch_forward(
     inputs = []
     inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda())
     maxq = 2 ** (bit - 1) - 1
+    zeros = 0.1
     if source_format == "uint":
         inputs.append(torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda())
     elif source_format == "int":
@@ -261,11 +267,10 @@ def test_matmul_dequantize_torch_forward(
     if source_format == "int":
         intweight = intweight + maxq
     if with_zeros:
-        inputs[1] = inputs[1] - maxq
+        inputs[1] = inputs[1] - zeros
 
     ref_result = torch.matmul(inputs[0], (inputs[1].t() if layout == "nt" else inputs[1]).to(torch.float16))
 
-    # quantize to 4bit
     qw_np = general_compress(
         intweight, source_bits=bit, storage_dtype=np.int8
     )
@@ -284,10 +289,9 @@ def test_matmul_dequantize_torch_forward(
             group_size = K
         permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda())
     if with_zeros:
-        permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda() * maxq)
+        permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
-    print(matmul.codegen())
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
 
 # fmt: on
