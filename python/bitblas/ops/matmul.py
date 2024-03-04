@@ -3,14 +3,41 @@
 import tvm
 import numpy as np
 from tvm.target import Target
-from bitblas.base.roller.arch.cuda import CUDA
-from typing import List, Union
+from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
+from typing import List, Union, Optional, Any
 from .operator import Operator
 from .impl.matmul_impl import select_implementation
 from ..base.utils import get_rasterization_code
 from bitblas.utils import match_global_kernel, tensor_replace_dp4a
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
+
+
+class TransformExecutorCPU:
+    def __init__(self, operators: Optional[List[Operator]] = None):
+        if operators is None:
+            operators = []
+        self.operators = operators
+
+    def append(self, op):
+        self.operators.append(op)
+
+    def is_none(self):
+        return len(self.operators) == 0
+
+    def forward(self, weight):
+        inputs = [weight]
+        for op in self.operators:
+            inputs.append(tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
+            inputs = [op.forward(*inputs)]
+        return inputs[-1]
+
+    def __call__(self, *args: Any, **kwds: Any) -> Any:
+        return self.forward(*args, **kwds)
+    
+    @property
+    def size(self):
+        return len(self.operators)
 
 
 @dataclass
@@ -39,8 +66,6 @@ class Matmul(Operator):
         target = self.target
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
-
-        assert self.propagate_a is False, "Currently only support propagate_a=False"
 
         prim_func_mod = self._select_implementation()
         self.prim_func_mod = prim_func_mod
@@ -89,6 +114,18 @@ class Matmul(Operator):
             )
         else:
             self.ladder_permutate_b = None
+
+        input_executors = TransformExecutorCPU()
+        if self.ladder_permutate_a is not None:
+            input_executors.append(self.ladder_permutate_b)
+
+        self.input_executors = input_executors
+
+        weight_executors = TransformExecutorCPU()
+        if self.ladder_permutate_b is not None:
+            weight_executors.append(self.ladder_permutate_b)
+
+        self.weight_executors = weight_executors
 
     def _select_implementation(self):
         return select_implementation(
@@ -191,15 +228,11 @@ class Matmul(Operator):
 
     @property
     def input_transform(self):
-        if self.ladder_permutate_a is not None:
-            return self.ladder_permutate_a
-        return None
+        return self.input_executors if self.input_executors.size else None
 
     @property
     def weight_transform(self):
-        if self.ladder_permutate_b is not None:
-            return self.ladder_permutate_b
-        return None
+        return self.weight_executors if self.weight_executors.size else None
 
 
 __all__ = ["Matmul", "MatmulConfig"]

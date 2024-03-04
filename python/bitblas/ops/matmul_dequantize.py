@@ -160,6 +160,7 @@ class MatmulWeightOnlyDequantize(Operator):
         weight_executors = WeightExecutorCPU()
         if self.lop3_permutate is not None:
             weight_executors.append(self.lop3_permutate)
+
         if self.ladder_permutate_b is not None:
             weight_executors.append(self.ladder_permutate_b)
 

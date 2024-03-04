@@ -184,20 +184,14 @@ def test_matmul_torch_forward(
 
     permuted_inputs = []
     if matmul.input_transform is not None:
-        permuted_input = tvm_tensor_to_torch(
-            matmul.input_transform.get_profile_tensors()[-1]
-        )
         permuted_inputs.append(
-            matmul.input_transform(inputs[0].cpu(), permuted_input.cpu())
+            matmul.input_transform(inputs[0].cpu())
         ).cuda()
     else:
         permuted_inputs.append(inputs[0])
     if matmul.weight_transform is not None:
-        permuted_input = tvm_tensor_to_torch(
-            matmul.weight_transform.get_profile_tensors()[-1]
-        )
         permuted_inputs.append(
-            matmul.weight_transform(inputs[1].cpu(), permuted_input.cpu()).cuda()
+            matmul.weight_transform(inputs[1].cpu()).cuda()
         )
     else:
         permuted_inputs.append(inputs[1])
