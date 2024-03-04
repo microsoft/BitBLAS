@@ -8,13 +8,15 @@ from typing import List, Optional, Union, Dict
 from tvm.tir.function import PrimFunc
 from tvm import DataType, arith, ir, tir
 from tvm.target import Target
-
+import logging
 from ..base import (
     normalize_prim_func,
     get_output_blocks,
     get_block,
 )
 from .base import GPUScheduleRule
+
+logger = logging.getLogger(__name__)
 
 
 class GEMVWithDequantizeInfo(GPUScheduleRule):
@@ -38,7 +40,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             return all(conditions)
 
         if not check_dequantize_info(dequantize_info):
-            print("[BitBlas] Dequantize info is not valid")
+            logger.debug("Dequantize info is not valid")
             return None
 
         (weight_decode_info,) = list(dequantize_info.values())
@@ -63,7 +65,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             return all(conditions)
 
         if not check_weight_decode_info(weight_decode_info):
-            print("[BitBlas] Weight Dequantize info is not valid")
+            logger.debug("Weight Dequantize info is not valid")
             return None
 
         block_infos = normalize_prim_func(sch)
@@ -125,7 +127,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         j, k = sch.get_loops(block_b)[-2:]
 
         # get target dequantize buffer's idx
-        def get_idx(weight_decode_info:Dict):
+        def get_idx(weight_decode_info: Dict):
             # for LUT dequantize, the expr is LUT(w), the idx is 1
             # maybe we can use a more general and structual based way
             # to analysis the idx
@@ -134,7 +136,9 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             return 0
 
         block_shared_local_A = sch.cache_read(block_b, 0, "local")
-        block_shared_local_B = sch.cache_read(block_decode_B, get_idx(weight_decode_info), "local")
+        block_shared_local_B = sch.cache_read(
+            block_decode_B, get_idx(weight_decode_info), "local"
+        )
         block_local_C = sch.cache_write(block_b, 0, "local")
         # reverse inline
         if reduction_block != None and reduction_block != output_blocks[0]:
@@ -163,7 +167,10 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         sch.vectorize(block_local_a_v)
         block_local_b_v = sch.get_loops(block_shared_local_B)[-1]
         sch.vectorize(block_local_b_v)
-        if "fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]:
+        if (
+            "fast_decoding" in weight_decode_info
+            and weight_decode_info["fast_decoding"]
+        ):
             source_bit = weight_decode_info["source_format"]["bits"]
             out_dtype = weight_decode_info["target_format"]
             intrin_info = get_lop3_intrin_group(

@@ -18,7 +18,9 @@ from ..base.analysis import (
 )
 from tvm.target.target import Target
 from tvm.tir import IndexMap
+import logging
 
+logger = logging.getLogger(__name__)
 
 def _is_one(x: PrimExpr) -> bool:
     return isinstance(x, tir.IntImm) and x.value == 1
@@ -637,7 +639,7 @@ def get_tensorized_func_and_tags(
                 out_dtype=out_dtype,
             )
         except:
-            print("[BitBLAS][WARNING] Cannot find the corresponding wmma intrin group")
+            logger.debug("Cannot find the corresponding wmma intrin group")
             return func, None
 
         # reindex and transform functions
