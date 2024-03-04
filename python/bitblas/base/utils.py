@@ -258,7 +258,7 @@ def apply_and_build_parallel(
         except Exception as e_mesg:
             logger.debug("Evaluation with config failed: ", e_mesg)
             continue
-        logger.info("Evaluation with config ", config)
+        logger.info("Evaluation with config {}".format(config))
         logger.info("Time cost of this config: {:.3f} ms".format(latency * 1e3))
 
         cpresult.latency = latency

@@ -14,6 +14,15 @@ from .base import (
     try_inline,
     try_inline_contiguous_spatial,
 )
+import sys
+import os
+
+# tvm path is under the root of the project
+tvm_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "..", "..", "3rdparty", "tvm", "python"
+)
+if tvm_path not in sys.path:
+    sys.path.append(tvm_path)
 
 from . import testing
 
