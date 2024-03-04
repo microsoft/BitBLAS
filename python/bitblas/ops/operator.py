@@ -13,6 +13,10 @@ from copy import deepcopy
 from bitblas.base.roller.arch import get_arch
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 
+class OperatorConfig:
+    """Base class for operator configurations. Used for typing."""
+    pass
+
 
 class Operator(ABC):
     def __init__(self, name, target: Target = None):

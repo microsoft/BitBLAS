@@ -30,7 +30,6 @@ def matmul_nt_dequantize_b(
     zeros_type="original",
 ):
     if not isinstance(M, int):
-        assert isinstance(M, list)
         M = tvm.te.var("m")
 
     storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
@@ -146,7 +145,6 @@ def matmul_nt_dequantize_b_propagate_b(
     zeros_type="original",
 ):
     if not isinstance(M, int):
-        assert isinstance(M, list)
         M = tvm.te.var("m")
 
     l = r = 16
@@ -310,7 +308,6 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     zeros_type="original",
 ):
     if not isinstance(M, int):
-        assert isinstance(M, list)
         M = tvm.te.var("m")
 
     l = r = 16

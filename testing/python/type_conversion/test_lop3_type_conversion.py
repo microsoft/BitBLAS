@@ -61,18 +61,8 @@ def test_f16_i4_gemm(M=1, N=16384, K=16384, bit=4, fast_decoding=True):
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
 
     configs = policy.emit_config(20)
-    # sch = bitblas.gpu.gemv.GEMVWithDequantizeInfo().apply_config(func, configs[0])
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
-            cpresults[0].latency * 1e3
-        )
-    )
-    print(
-        "[BitBLAS] The best latency of top 20 is {:.3f} ms".format(best.latency * 1e3)
-    )
-    with open("debug/tmp.cu", "w") as f:
-        f.write(str(best.code))
+    assert best
 
 
 test_f16_i4_gemm()

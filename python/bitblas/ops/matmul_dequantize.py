@@ -3,7 +3,7 @@
 import tvm
 from tvm.target import Target
 from bitblas.base.roller.arch.cuda import CUDA
-from typing import Any, List, Literal, Optional
+from typing import Any, List, Literal, Optional, Tuple, Union
 from .operator import Operator
 from .impl.matmul_dequantize_impl import select_implementation
 from ..base.utils import get_rasterization_code, tensor_replace_dp4a
@@ -41,9 +41,9 @@ class WeightExecutorCPU:
         return len(self.operators)
 
 
-@dataclass
+@dataclass(frozen=True)
 class MatmulWeightOnlyDequantizeConfig:
-    M: int
+    M: Union[int, Tuple[int]]
     N: int
     K: int
     in_dtype: str = "float16"
@@ -67,6 +67,13 @@ class MatmulWeightOnlyDequantizeConfig:
     # Notice: only support "original" and "rescale" now
     # The auto-gptq framework prefer "original" for alignment with cuda.
     zeros_type: Literal["original", "rescale", "quantzied"] = "original"
+
+    def __post_init__(self):
+        # set M to tuple if it is list
+        # otherwise, M is not hashable
+        object.__setattr__(
+            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
+        )
 
 
 class MatmulWeightOnlyDequantize(Operator):
@@ -97,7 +104,7 @@ class MatmulWeightOnlyDequantize(Operator):
                 f"[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
             )
 
-        if isinstance(self.M, List):
+        if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
                 {"opt_shapes": self.dynamic_range}

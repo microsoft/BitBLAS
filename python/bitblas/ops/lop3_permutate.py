@@ -9,7 +9,8 @@ from dataclasses import dataclass
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 import torch
 
-@dataclass
+
+@dataclass(frozen=True)
 class LOP3PermutateConfig:
     M: int
     N: int

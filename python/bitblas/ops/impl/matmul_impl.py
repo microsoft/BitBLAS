@@ -17,7 +17,6 @@ def matmul_nn(
     with_bias=False,
 ):
     if not isinstance(M, int):
-        assert isinstance(M, list)
         M = tvm.te.var("m")
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder((K, N), name="B", dtype=in_dtype)
@@ -61,7 +60,6 @@ def matmul_nt(
     with_bias=False,
 ):
     if not isinstance(M, int):
-        assert isinstance(M, list)
         M = tvm.te.var("m")
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder((N, K), name="B", dtype=in_dtype)
@@ -155,7 +153,6 @@ def matmul_nt_propagate_a(
     with_bias=False,
 ):
     if not isinstance(M, int):
-        assert isinstance(M, list)
         M = tvm.te.var("m")
     l = r = 16
     if in_dtype == "int8":
@@ -220,7 +217,6 @@ def matmul_nt_propagate_b(
     with_bias=False,
 ):
     if not isinstance(M, int):
-        assert isinstance(M, list)
         M = tvm.te.var("m")
     l = r = 16
     if in_dtype == "int8":
@@ -285,7 +281,6 @@ def matmul_nt_propagate_a_propagate_b(
     with_bias=False,
 ):
     if not isinstance(M, int):
-        assert isinstance(M, list)
         M = tvm.te.var("m")
     l = r = 16
     if in_dtype == "int8":

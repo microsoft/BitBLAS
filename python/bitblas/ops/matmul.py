@@ -4,7 +4,7 @@ import tvm
 import numpy as np
 from tvm.target import Target
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
-from typing import List, Union, Optional, Any
+from typing import List, Union, Optional, Any, Tuple
 from .operator import Operator
 from .impl.matmul_impl import select_implementation
 from ..base.utils import get_rasterization_code
@@ -34,15 +34,15 @@ class TransformExecutorCPU:
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         return self.forward(*args, **kwds)
-    
+
     @property
     def size(self):
         return len(self.operators)
 
 
-@dataclass
+@dataclass(frozen=True)
 class MatmulConfig:
-    M: Union[int, List]
+    M: Union[int, Tuple[int]]
     N: int
     K: int
     in_dtype: str = "float16"
@@ -52,6 +52,13 @@ class MatmulConfig:
     layout: str = "nt"
     propagate_a: bool = False
     propagate_b: bool = False
+
+    def __post_init__(self):
+        # set M to tuple if it is list
+        # otherwise, M is not hashable
+        object.__setattr__(
+            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
+        )
 
 
 class Matmul(Operator):
@@ -71,7 +78,7 @@ class Matmul(Operator):
         self.prim_func_mod = prim_func_mod
         self.optimized_func = self.apply_default_schedule(prim_func_mod, target)
 
-        if isinstance(self.M, List):
+        if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.update_func(
                 self.prim_func.with_attrs({"opt_shapes": self.dynamic_range})
