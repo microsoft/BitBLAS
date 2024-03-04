@@ -7,188 +7,6 @@ from tvm import te, tir
 from bitblas.gpu.matmul_analysis import get_propagate_map
 
 
-def matmul_nt_dyn_m(
-    N,
-    K,
-    in_dtype="float16",
-    out_dtype="float16",
-    accum_dtype="float16",
-    with_bias=False,
-):
-    @tvm.script.ir_module
-    class MatmulNT:
-        @T.prim_func
-        def main(a: T.handle, b: T.handle, c: T.handle):
-            T.func_attr({"global_symbol": "main", "tir.noalias": True})
-            m = T.int32()
-            A = T.match_buffer(a, [m, K], dtype=in_dtype)
-            B = T.match_buffer(b, [N, K], dtype=in_dtype)
-            C = T.match_buffer(c, [m, N], dtype=out_dtype)
-
-            for i, j, k in T.grid(m, N, K):
-                with T.block("B"):
-                    vi, vj, vk = T.axis.remap("SSR", [i, j, k])
-                    with T.init():
-                        C[vi, vj] = tvm.tir.const(0, out_dtype)
-                    C[vi, vj] = C[vi, vj] + A[vi, vk].astype(out_dtype) * B[
-                        vj, vk
-                    ].astype(out_dtype)
-
-    @tvm.script.ir_module
-    class MatmulNTWithAccum:
-        @T.prim_func
-        def main(a: T.handle, b: T.handle, c: T.handle):
-            T.func_attr({"global_symbol": "main", "tir.noalias": True})
-            m = T.int32()
-            A = T.match_buffer(a, [m, K], dtype=in_dtype)
-            B = T.match_buffer(b, [N, K], dtype=in_dtype)
-            C = T.match_buffer(c, [m, N], dtype=out_dtype)
-            accum = T.alloc_buffer([m, N], dtype=accum_dtype)
-            for i, j, k in T.grid(m, N, K):
-                with T.block("B"):
-                    vi, vj, vk = T.axis.remap("SSR", [i, j, k])
-                    with T.init():
-                        accum[vi, vj] = tvm.tir.const(0, accum_dtype)
-                    accum[vi, vj] = accum[vi, vj] + A[vi, vk].astype(accum_dtype) * B[
-                        vj, vk
-                    ].astype(accum_dtype)
-
-            for i, j in T.grid(m, N):
-                with T.block("C"):
-                    vi, vj = T.axis.remap("SS", [i, j])
-                    C[vi, vj] = accum[vi, vj].astype(out_dtype)
-
-    @tvm.script.ir_module
-    class MatmulNTWithAccumBias:
-        @T.prim_func
-        def main(a: T.handle, b: T.handle, bias: T.handle, c: T.handle):
-            T.func_attr({"global_symbol": "main", "tir.noalias": True})
-            m = T.int32()
-            A = T.match_buffer(a, [m, K], dtype=in_dtype)
-            B = T.match_buffer(b, [N, K], dtype=in_dtype)
-            Bias = T.match_buffer(bias, [N], dtype=out_dtype)
-            C = T.match_buffer(c, [m, N], dtype=out_dtype)
-            accum = T.alloc_buffer([m, N], dtype=accum_dtype)
-            accum_bias = T.alloc_buffer([m, N], dtype=out_dtype)
-            for i, j, k in T.grid(m, N, K):
-                with T.block("B"):
-                    vi, vj, vk = T.axis.remap("SSR", [i, j, k])
-                    with T.init():
-                        accum[vi, vj] = tvm.tir.const(0, accum_dtype)
-                    accum[vi, vj] = accum[vi, vj] + A[vi, vk].astype(accum_dtype) * B[
-                        vj, vk
-                    ].astype(accum_dtype)
-
-            for i, j in T.grid(m, N):
-                with T.block("C"):
-                    vi, vj = T.axis.remap("SS", [i, j])
-                    accum_bias[vi, vj] = accum[vi, vj].astype(out_dtype)
-
-            for i, j in T.grid(m, N):
-                with T.block("Bias"):
-                    vi, vj = T.axis.remap("SS", [i, j])
-                    C[vi, vj] = accum_bias[vi, vj] + Bias[vj]
-
-    final_module = MatmulNT
-    if with_bias:
-        final_module = MatmulNTWithAccumBias
-    elif accum_dtype != out_dtype:
-        final_module = MatmulNTWithAccum
-
-    return final_module
-
-
-def matmul_nn_dyn_m(
-    N,
-    K,
-    in_dtype="float16",
-    out_dtype="float16",
-    accum_dtype="float16",
-    with_bias=False,
-):
-    @tvm.script.ir_module
-    class MatmulNN:
-        @T.prim_func
-        def main(a: T.handle, b: T.handle, c: T.handle):
-            T.func_attr({"global_symbol": "main", "tir.noalias": True})
-            m = T.int32()
-            A = T.match_buffer(a, [m, K], dtype=in_dtype)
-            B = T.match_buffer(b, [K, N], dtype=in_dtype)
-            C = T.match_buffer(c, [m, N], dtype=out_dtype)
-
-            for i, j, k in T.grid(m, N, K):
-                with T.block("B"):
-                    vi, vj, vk = T.axis.remap("SSR", [i, j, k])
-                    with T.init():
-                        C[vi, vj] = tvm.tir.const(0, out_dtype)
-                    C[vi, vj] = C[vi, vj] + A[vi, vk].astype(out_dtype) * B[
-                        vk, vj
-                    ].astype(out_dtype)
-
-    @tvm.script.ir_module
-    class MatmulNNWithAccum:
-        @T.prim_func
-        def main(a: T.handle, b: T.handle, c: T.handle):
-            T.func_attr({"global_symbol": "main", "tir.noalias": True})
-            m = T.int32()
-            A = T.match_buffer(a, [m, K], dtype=in_dtype)
-            B = T.match_buffer(b, [K, N], dtype=in_dtype)
-            C = T.match_buffer(c, [m, N], dtype=out_dtype)
-            accum = T.alloc_buffer([m, N], dtype=accum_dtype)
-            for i, j, k in T.grid(m, N, K):
-                with T.block("B"):
-                    vi, vj, vk = T.axis.remap("SSR", [i, j, k])
-                    with T.init():
-                        accum[vi, vj] = tvm.tir.const(0, accum_dtype)
-                    accum[vi, vj] = accum[vi, vj] + A[vi, vk].astype(accum_dtype) * B[
-                        vk, vj
-                    ].astype(accum_dtype)
-
-            for i, j in T.grid(m, N):
-                with T.block("C"):
-                    vi, vj = T.axis.remap("SS", [i, j])
-                    C[vi, vj] = accum[vi, vj].astype(out_dtype)
-
-    @tvm.script.ir_module
-    class MatmulNNWithAccumBias:
-        @T.prim_func
-        def main(a: T.handle, b: T.handle, bias: T.handle, c: T.handle):
-            T.func_attr({"global_symbol": "main", "tir.noalias": True})
-            m = T.int32()
-            A = T.match_buffer(a, [m, K], dtype=in_dtype)
-            B = T.match_buffer(b, [K, N], dtype=in_dtype)
-            Bias = T.match_buffer(bias, [N], dtype=out_dtype)
-            C = T.match_buffer(c, [m, N], dtype=out_dtype)
-            accum = T.alloc_buffer([m, N], dtype=accum_dtype)
-            accum_bias = T.alloc_buffer([m, N], dtype=out_dtype)
-            for i, j, k in T.grid(m, N, K):
-                with T.block("B"):
-                    vi, vj, vk = T.axis.remap("SSR", [i, j, k])
-                    with T.init():
-                        accum[vi, vj] = tvm.tir.const(0, accum_dtype)
-                    accum[vi, vj] = accum[vi, vj] + A[vi, vk].astype(accum_dtype) * B[
-                        vk, vj
-                    ].astype(accum_dtype)
-
-            for i, j in T.grid(m, N):
-                with T.block("C"):
-                    vi, vj = T.axis.remap("SS", [i, j])
-                    accum_bias[vi, vj] = accum[vi, vj].astype(out_dtype)
-
-            for i, j in T.grid(m, N):
-                with T.block("Bias"):
-                    vi, vj = T.axis.remap("SS", [i, j])
-                    C[vi, vj] = accum_bias[vi, vj] + Bias[vj]
-
-    final_module = MatmulNN
-    if with_bias:
-        final_module = MatmulNNWithAccumBias
-    elif accum_dtype != out_dtype:
-        final_module = MatmulNNWithAccum
-
-    return final_module
-
-
 def matmul_nn(
     M,
     N,
@@ -198,6 +16,9 @@ def matmul_nn(
     accum_dtype="float16",
     with_bias=False,
 ):
+    if not isinstance(M, int):
+        assert isinstance(M, list)
+        M = tvm.te.var("m")
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder((K, N), name="B", dtype=in_dtype)
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
@@ -239,6 +60,9 @@ def matmul_nt(
     accum_dtype="float16",
     with_bias=False,
 ):
+    if not isinstance(M, int):
+        assert isinstance(M, list)
+        M = tvm.te.var("m")
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder((N, K), name="B", dtype=in_dtype)
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
@@ -269,20 +93,6 @@ def matmul_nt(
     func = te.create_prim_func(args)
 
     return tvm.IRModule.from_expr(func)
-
-
-def matmul_dyn_m(
-    N,
-    K,
-    in_dtype="float16",
-    out_dtype="float16",
-    accum_dtype="float16",
-    with_bias=False,
-    layout="nt",
-):
-    if layout == "nn":
-        return matmul_nn_dyn_m(N, K, in_dtype, out_dtype, accum_dtype, with_bias)
-    return matmul_nt_dyn_m(N, K, in_dtype, out_dtype, accum_dtype, with_bias)
 
 
 def matmul(
@@ -344,6 +154,9 @@ def matmul_nt_propagate_a(
     accum_dtype="float16",
     with_bias=False,
 ):
+    if not isinstance(M, int):
+        assert isinstance(M, list)
+        M = tvm.te.var("m")
     l = r = 16
     if in_dtype == "int8":
         l, r = 16, 32
@@ -406,6 +219,9 @@ def matmul_nt_propagate_b(
     accum_dtype="float16",
     with_bias=False,
 ):
+    if not isinstance(M, int):
+        assert isinstance(M, list)
+        M = tvm.te.var("m")
     l = r = 16
     if in_dtype == "int8":
         l, r = 16, 32
@@ -468,6 +284,9 @@ def matmul_nt_propagate_a_propagate_b(
     accum_dtype="float16",
     with_bias=False,
 ):
+    if not isinstance(M, int):
+        assert isinstance(M, list)
+        M = tvm.te.var("m")
     l = r = 16
     if in_dtype == "int8":
         l, r = 16, 32
@@ -540,42 +359,6 @@ def matmul_nt_propagate_a_propagate_b(
     return tvm.IRModule.from_expr(func)
 
 
-def _select_implementation_dyn_m(
-    N,
-    K,
-    in_dtype="float16",
-    out_dtype="float16",
-    accum_dtype="float16",
-    with_bias=False,
-    layout="nt",
-    propagate_a=False,
-    propagate_b=False,
-):
-    if layout == "nn":
-        if propagate_a or propagate_b:
-            raise ValueError(
-                "Currently only support propagate_a=False and propagate_b=False for layout=nn"
-            )
-        return matmul_dyn_m(N, K, in_dtype, out_dtype, accum_dtype, with_bias, layout)
-    elif layout == "nt":
-        if propagate_a and propagate_b:
-            return matmul_nt_propagate_a_propagate_b_dyn_m(
-                N, K, in_dtype, out_dtype, accum_dtype, with_bias
-            )
-        elif propagate_a:
-            return matmul_nt_propagate_a_dyn_m(
-                N, K, in_dtype, out_dtype, accum_dtype, with_bias
-            )
-        elif propagate_b:
-            return matmul_nt_propagate_b_dyn_m(
-                N, K, in_dtype, out_dtype, accum_dtype, with_bias
-            )
-        else:
-            return matmul_dyn_m(
-                N, K, in_dtype, out_dtype, accum_dtype, with_bias, layout
-            )
-
-
 def select_implementation(
     M=None,
     N=16384,
@@ -588,18 +371,6 @@ def select_implementation(
     propagate_a=False,
     propagate_b=False,
 ):
-    if not isinstance(M, int):
-        return _select_implementation_dyn_m(
-            N,
-            K,
-            in_dtype,
-            out_dtype,
-            accum_dtype,
-            with_bias,
-            layout,
-            propagate_a,
-            propagate_b,
-        )
     if layout == "nn":
         if propagate_a or propagate_b:
             raise ValueError(
