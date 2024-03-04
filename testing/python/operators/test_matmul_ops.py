@@ -16,11 +16,12 @@ def get_codegen_result(ops, target):
 
 # fmt: off
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout,enable_tuning",
     [
-        (16384, 16384, 16384, "float16", "float16", "float16", False, False, False, "nt"),
+        (16384, 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
         # dynamic shape
-        ([1], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt"),
+        ([1], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
+        ([1, 32], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", True),
     ],
 )
 def test_matmul_codegen_default(
@@ -34,6 +35,7 @@ def test_matmul_codegen_default(
     propagate_a,
     propagate_b,
     layout,
+    enable_tuning,
 ):
 
     matmul_config = MatmulConfig(
@@ -52,6 +54,8 @@ def test_matmul_codegen_default(
         config=matmul_config,
         target=target,
     )
+    if enable_tuning:
+        matmul.hardware_aware_finetune(topk=20)
     assert get_codegen_result(matmul, target)
 
 

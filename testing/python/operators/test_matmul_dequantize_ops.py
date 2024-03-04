@@ -198,6 +198,7 @@ def test_matmul_dequantize_profile_latency(
         (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, False, True, "nt", "rescale"),
         (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, True, True, "nt", "rescale"),
         (1024, 1024, 1024, "float16", "float16", "float16", 2, "int8", "int", True, False, 128, False, False, True, True, "nt", "original"),
+        ([1, 1024], 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False, False, False, False, "nt", "original"),
     ],
 )
 def test_matmul_dequantize_torch_forward(
@@ -248,7 +249,8 @@ def test_matmul_dequantize_torch_forward(
         config=matmul_config,
         target=target,
     )
-
+    if not isinstance(M, int):
+        M = 32
     matmul.hardware_aware_finetune(topk=20)
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)

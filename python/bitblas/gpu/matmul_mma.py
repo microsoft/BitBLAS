@@ -443,8 +443,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         stage = config.pipeline_stage
         use_async = config.use_async
         chunk = config.rstep[0]
-        stage = 1
-        use_async = False
+
         # tensor core intrinsic size
         micro_size_x, micro_size_y, micro_size_k = intrin_group["micro_kernel"]
 
