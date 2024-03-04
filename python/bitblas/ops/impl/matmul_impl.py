@@ -348,7 +348,9 @@ def matmul_nt_propagate_a(
     if in_dtype == "int8":
         l, r = 16, 32
 
-    intra_index_map, _ = get_propagate_map(trans=False, dtype=in_dtype, matrix_name="A")
+    _, inversed_index_map = get_propagate_map(
+        trans=False, dtype=in_dtype, matrix_name="A"
+    )
 
     A = te.placeholder((M // l, K // r, l, r), name="A", dtype=in_dtype)
     B = te.placeholder((N, K), name="B", dtype=in_dtype)
@@ -357,7 +359,7 @@ def matmul_nt_propagate_a(
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
         spatial_args = i // l, j // r
-        permutate_i, permutate_j = intra_index_map.map_indices([warp_i, warp_j])
+        permutate_i, permutate_j = inversed_index_map.map_indices([warp_i, warp_j])
         new_index = (*spatial_args, permutate_i, permutate_j)
         return A[new_index]
 
@@ -408,7 +410,9 @@ def matmul_nt_propagate_b(
     if in_dtype == "int8":
         l, r = 16, 32
 
-    intra_index_map, _ = get_propagate_map(trans=True, dtype=in_dtype, matrix_name="B")
+    _, inversed_index_map = get_propagate_map(
+        trans=True, dtype=in_dtype, matrix_name="B"
+    )
 
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder((N // l, K // r, l, r), name="B", dtype=in_dtype)
@@ -417,7 +421,7 @@ def matmul_nt_propagate_b(
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
         spatial_args = i // l, j // r
-        permutate_i, permutate_j = intra_index_map.map_indices([warp_i, warp_j])
+        permutate_i, permutate_j = inversed_index_map.map_indices([warp_i, warp_j])
         new_index = (*spatial_args, permutate_i, permutate_j)
         return B[new_index]
 
@@ -472,12 +476,14 @@ def matmul_nt_propagate_a_propagate_b(
     B = te.placeholder((N // l, K // r, l, r), name="B", dtype=in_dtype)
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
 
-    intra_index_map, _ = get_propagate_map(trans=False, dtype=in_dtype, matrix_name="A")
+    _, inversed_index_map = get_propagate_map(
+        trans=False, dtype=in_dtype, matrix_name="A"
+    )
 
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
         spatial_args = i // l, j // r
-        permutate_i, permutate_j = intra_index_map.map_indices([warp_i, warp_j])
+        permutate_i, permutate_j = inversed_index_map.map_indices([warp_i, warp_j])
         new_index = (*spatial_args, permutate_i, permutate_j)
         return A[new_index]
 
@@ -487,12 +493,14 @@ def matmul_nt_propagate_a_propagate_b(
         name="A_reindex",
     )
 
-    intra_index_map, _ = get_propagate_map(trans=True, dtype=in_dtype, matrix_name="B")
+    _, inversed_index_map = get_propagate_map(
+        trans=True, dtype=in_dtype, matrix_name="B"
+    )
 
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
         spatial_args = i // l, j // r
-        permutate_i, permutate_j = intra_index_map.map_indices([warp_i, warp_j])
+        permutate_i, permutate_j = inversed_index_map.map_indices([warp_i, warp_j])
         new_index = (*spatial_args, permutate_i, permutate_j)
         return B[new_index]
 

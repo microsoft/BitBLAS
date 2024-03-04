@@ -296,12 +296,9 @@ def test_matmul_dequantize_torch_forward(
         permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
-    print(permuted_inputs[-1])
-    print(ref_result)
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
 
 # fmt: on
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_matmul_dequantize_torch_forward(1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "int", False, False, 128, False, False, False, False, "nt", "rescale")
+    bitblas.testing.main()

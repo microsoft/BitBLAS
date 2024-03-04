@@ -625,12 +625,12 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             propagate_block: tir.Block = producers[-1] if len(producers) > 0 else g2s_block
 
             # step2: transform the layout with inverse permutation
-            _, inverse_indexmap = get_propagate_map(
+            intra_indexmap, _ = get_propagate_map(
                 trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name
             )
 
             def inverse_permutation(i, j, ii, jj):
-                return (i, j, *inverse_indexmap.map_indices([ii, jj]))
+                return (i, j, *intra_indexmap.map_indices([ii, jj]))
 
             sch.transform_layout(propagate_block, ("read", 0), inverse_permutation)
 

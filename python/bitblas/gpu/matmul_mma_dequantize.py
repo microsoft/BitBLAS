@@ -724,22 +724,22 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             ):
                 return
             # step2: transform the layout with inverse permutation
-            _, inverse_indexmap = get_propagate_map(
+            intra_indexmap, _ = get_propagate_map(
                 trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name
             )
 
             # step3: propagate the matmul layout to the first reindex block
 
-            inverse_indexmap = layout_propagate_chain(
+            intra_indexmap = layout_propagate_chain(
                 sch,
                 start_block=main_block,
                 start_buffer=source_buffer,
                 end_block=propagate_block,
-                index_map=inverse_indexmap,
+                index_map=intra_indexmap,
             )
 
             def inverse_permutation(i, j, ii, jj):
-                return (i, j, *inverse_indexmap.map_indices([ii, jj]))
+                return (i, j, *intra_indexmap.map_indices([ii, jj]))
 
             sch.transform_layout(propagate_block, ("read", 0), inverse_permutation)
 

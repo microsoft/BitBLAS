@@ -153,7 +153,7 @@ def matmul_nt_dequantize_b_propagate_b(
     if in_dtype == "int8":
         l, r = 16, 32
 
-    intra_index_map, _ = get_propagate_map(trans=True, dtype=in_dtype, matrix_name="B")
+    _, inverse_indexmap = get_propagate_map(trans=True, dtype=in_dtype, matrix_name="B")
     target_dtype = DataType(in_dtype)
     scaling_factor = 1
     if bit > 0 and bit < target_dtype.bits:
@@ -162,14 +162,14 @@ def matmul_nt_dequantize_b_propagate_b(
             * DataType(storage_dtype).bits
             // target_dtype.bits
         )
-        initial_indices = intra_index_map.initial_indices
-        scaling_final_indices = intra_index_map.map_indices(
+        initial_indices = inverse_indexmap.initial_indices
+        scaling_final_indices = inverse_indexmap.map_indices(
             initial_indices[:-1] + [initial_indices[-1] * scaling_factor]
         )
         scaling_final_indices = scaling_final_indices[:-1] + [
             scaling_final_indices[-1] // scaling_factor
         ]
-        intra_index_map = IndexMap(
+        inverse_indexmap = IndexMap(
             initial_indices,
             scaling_final_indices,
             None,
@@ -193,7 +193,7 @@ def matmul_nt_dequantize_b_propagate_b(
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % qr
         spatial_args = i // l, j // qr
-        permutate_i, permutate_j = intra_index_map.map_indices([warp_i, warp_j])
+        permutate_i, permutate_j = inverse_indexmap.map_indices([warp_i, warp_j])
         new_index = (*spatial_args, permutate_i, permutate_j)
         return B[new_index]
 
