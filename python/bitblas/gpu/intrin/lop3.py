@@ -999,7 +999,7 @@ TensorIntrin.register(
 )
 
 LOP3_FAST_DECODE_UINT1_TO_INT8_TO_INT8_L16_INTRIN = (
-    "LOP3_FAST_DECODE_UINT1_to_int8_to_i8_l16_"
+    "lop3_fast_decode_u1_to_int8_to_i8_l16_"
 )
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT1_TO_INT8_TO_INT8_L16_INTRIN,

@@ -70,7 +70,7 @@ def _apply_config(
     case 3. if any([t > 1 for t in config.reduce_thread]), we should use the InnerThread Reduction Rule.
     case 4. else we should use general reduction rule.
     """
-    logger.debug("Apply config ", config)
+    logger.debug("Apply config {}".format(config))
 
     sch = tir.Schedule(func)
     root_block = get_root_block(sch)
@@ -170,7 +170,8 @@ def apply_and_build_parallel(
     def _apply_schedule(f, c):
         try:
             sch = _apply_config(f, c)
-        except Exception:
+        except Exception as apply_schedule_error:
+            logger.debug("Apply schedule failed: ", apply_schedule_error)
             sch = None
         return sch
     with ThreadPoolExecutor(max_workers=4) as schduler:
