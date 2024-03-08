@@ -2,13 +2,16 @@
 
 BitBLAS is a light weight framework to generate high performance CUDA/HIP code for BLAS operators with swizzling and layout propagation. BitBLAS can achieve comparable performance with vendor libraries across different platforms and hardware and aims to assist algorithm developers, such as those working on BitNET, GPTQ, and similar projects, in quickly implementing accelerate kernels and deploying them efficiently.
 
+Some of the key features of BitBLAS include:
+  - Auto Tensorize compute with TensorCore-like hardware instructions.
+  - High Performance (Not only FP16xFP16, INT8xINT8, but also FP16xINT4/2/1, INT8xINT4/2/1).
+  - With the flexible DSL (TIR Script) to effortlessly craft domain-specific kernels for your situations.
+  - Support with dynamic symbolic throuth tvm unity -> generate source code with dynamic shape.
 
-## Feature
+Latest News 🔥
 
-- Auto Tensorize compute with TensorCore-like hardware instructions.
-- High Performance (Not only FP16xFP16, INT8xINT8, but also FP16xINT4/2/1, INT8xINT4/2/1).
-- With the flexible DSL (TIR Script) to effortlessly craft domain-specific kernels for your situations.
-- Support with dynamic symbolic throuth tvm unity -> generate source code with dynamic shape.
+- 2023-03-03: BitBLAS first proposed int8xint1 gemv/gemm with 10x/2x speedup over float16xfloat16 on A100, please checkout [op_benchmark_a100_int1_scaling](images/figures/op_benchmark_a100_int1_scaling.png) for detailed input scaling benchmark results.
+
 
 ## Benchmark
 BitBLAS can achieve optimal performance across various compute pattern:
@@ -25,21 +28,14 @@ BitBLAS can achieve optimal performance across various compute pattern:
 
 See more details in our [benchmark](./benchmark) directory.
 
-## Requirements
+## Getting Started
 
-To manually install BitBLAS, please checkout `maint/scripts/installation.sh`.
+- Installation:
+  To manually install BitBLAS, please checkout `maint/scripts/installation.sh`. Also Make sure you already have the cuda toolkit (version >= 11) installed in the system. Or you can install from `python setup.py install` or `pip install .` in the root directory. 
 
-Also Make sure you already have the cuda toolkit (version >= 11) installed in the system.
+- [QuickStart](./docs/QuickStart.md): We provide two primary ways to do the code generation: using a high-level DSL (TensorIR Script), or using packed Operators, from the quick start guide, you can learn how to use BitBLAS to generate high performance kernels with both methods.
 
-Finally, add ./python and tvm/python to PYTHONPATH.
-
-## Tutorial
-
-We provide two primary ways to do the code generation: using a high-level DSL (TensorIR Script), or using packed Operators. We provide a QuickStart at [QuickStart](./docs/QuickStart.md).
-
-It introduced how to generate a high performance kernel with BitBLAS.
-
-BitBLAS can also be easily integrated to other frameworks, please checkout [integration](./integration/)
+- [3rd Party Integration](./integration/): BitBLAS can also be easily integrated to other frameworks, the integration provides some examples of integrating BitBLAS with PyTorch, AutoGPTQ or vLLM.
 
 ## Contributing
 
