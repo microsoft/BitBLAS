@@ -67,3 +67,6 @@ models/frozenmodels/
 
 # .pytest_cache
 .pytest_cache
+
+# .hypothesis
+.hypothesis
