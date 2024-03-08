@@ -21,6 +21,6 @@ echo "set(USE_LLVM llvm-config-10)" >> config.cmake && echo "set(USE_CUDA ON)" >
 cmake .. && make -j && cd ../../..
 
 echo "export TVM_HOME=$(pwd)/3rdparty/tvm" >> ~/.bashrc
-echo "export PYTHONPATH=\$TVM_HOME/python:$(pwd)/python" >> ~/.bashrc
+echo "export PYTHONPATH=\$TVM_HOME/python:$(pwd)/python:$PYTHONPATH" >> ~/.bashrc
 
 source ~/.bashrc
