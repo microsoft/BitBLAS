@@ -5,6 +5,7 @@ import tvm
 from tvm import IRModule
 from tvm.target import Target
 from tvm.tir import PrimFunc
+from tvm.contrib.dlpack import to_pytorch_func
 import bitblas
 from typing import List, Dict, Any
 import numpy as np
@@ -12,6 +13,7 @@ from ..base import fast_tune, fast_tune_with_dynamic_range
 from copy import deepcopy
 from bitblas.base.roller.arch import get_arch
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
+import torch
 
 class OperatorConfig:
     """Base class for operator configurations. Used for typing."""
@@ -89,6 +91,7 @@ class Operator(ABC):
             self.time_evaluator = rt_mod.time_evaluator(
                 rt_mod.entry_name, self.arch.device, number=10
             )
+            self.torch_func = to_pytorch_func(rt_mod)
 
         return rt_mod
 
@@ -215,7 +218,7 @@ class Operator(ABC):
 
     def forward(self, *args):
         # "Currently only support forward from torch tensor"
-        return self.forward_from_torch(*args)
+        return self.torch_func(*args)
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         return self.forward(*args, **kwds)

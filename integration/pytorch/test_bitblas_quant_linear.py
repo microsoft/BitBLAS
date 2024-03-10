@@ -172,5 +172,4 @@ def test_profile_performance(m, infeatures, outfeatures, bits, group_size, bias)
 
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_profile_performance(1, 16384, 16384, 4, 128, True)
+    bitblas.testing.main()
