@@ -1,6 +1,6 @@
 # BitBLAS
 
-BitBLAS is a light weight framework to generate high performance CUDA/HIP code for BLAS operators with swizzling and layout propagation. BitBLAS can achieve comparable performance with vendor libraries across different platforms and hardware and aims to assist algorithm developers, such as those working on BitNET, GPTQ, and similar projects, in quickly implementing accelerate kernels and deploying them efficiently.
+BitBLAS is a lightweight framework designed to generate high-performance CUDA/HIP code for BLAS operators, featuring swizzling and layout propagation. It achieves performance comparable to vendor libraries across various platforms and hardware. BitBLAS aims to assist algorithm developers working on projects like BitNet, GPTQ, and similar endeavors by enabling the rapid implementation of accelerated kernels and their efficient deployment.
 
 Some of the key features of BitBLAS include:
   - Auto Tensorize compute with TensorCore-like hardware instructions.
@@ -32,7 +32,7 @@ See more details in our [benchmark](./benchmark) directory.
 
 - [QuickStart](./docs/QuickStart.md): We provide two primary ways to do the code generation: using a high-level DSL (TensorIR Script), or using packed Operators, from the quick start guide, you can learn how to use BitBLAS to generate high performance kernels with both methods.
 
-- [3rd Party Integration](./integration/): BitBLAS can also be easily integrated to other frameworks, the integration provides some examples of integrating BitBLAS with PyTorch, AutoGPTQ or vLLM.
+- [3rd Party Integration](./integration/): BitBLAS can also be easily integrated to other frameworks, the integration provides some examples of integrating BitBLAS with PyTorch, AutoGPTQ and vLLM.
 
 ## Contributing
 
