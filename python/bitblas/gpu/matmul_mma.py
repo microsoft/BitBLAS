@@ -381,6 +381,11 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             return None
 
         main_block = reduction_blocks[0]
+        
+        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
+        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
+            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
+
         output_blocks = [sch.get(block) for block in sch.get_output_blocks(root_block)]
 
         def check_require_cache(func: tir.PrimFunc, config):
@@ -408,6 +413,13 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
         if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
+            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
+
+        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
+        if not (
+            func.attrs is not None
+            and "dlight.tensorcore_prenormlized" in func.attrs.keys()
+        ):
             sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
@@ -624,9 +636,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             propagate_block: tir.Block = producers[-1] if len(producers) > 0 else g2s_block
 
             # step2: transform the layout with inverse permutation
-            intra_indexmap, _ = get_propagate_map(
-                trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name
-            )
+            _, inverse_indexmap = get_propagate_map(trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name)
 
             def inverse_permutation(i, j, ii, jj):
                 return (i, j, *intra_indexmap.map_indices([ii, jj]))
