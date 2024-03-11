@@ -49,5 +49,5 @@ This project may contain trademarks or logos for projects, products, or services
 ## Acknowledgement
 
 We learned a lot from the following projects.
-- [Apache TVM](https://github.com/apache/tvm): We use TensorIR as our DSL currently, and we customized tvm from unity branch to support some features we needed.
-- [Microsoft Roller](https://github.com/microsoft/nnfusion/tree/roller): The design and algo inspiration of hardware aware tuning comes from Roller.
+- [Apache TVM](https://github.com/apache/tvm): BitBLAS havs adopted TensorIR as our DSL. Additionally, we have customized TVM from the unity branch to incorporate specific features that were required for our project.
+- [Microsoft Roller](https://github.com/microsoft/nnfusion/tree/roller): The design and algo inspiration of hardware aware tuning in BitBLAS comes from Roller,.
