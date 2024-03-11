@@ -160,8 +160,8 @@ def select_implementation(
     dequantize_bits: int = 4,
 ):
     func = tir_interleave_weight(
-        N=N,
-        K=M,
+        N=M,
+        K=N,
         bits=dequantize_bits,
         target_dtype=datatype,
         storage_dtype=storage_dtype,

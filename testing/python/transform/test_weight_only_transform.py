@@ -238,7 +238,7 @@ def test_matmul_transform(transform_level = 2):
     print("relax ", res)
 
 
-def test_dequantize_matmul_transform(transform_level=1):
+def test_dequantize_matmul_transform(transform_level=2):
 
     @I.ir_module
     class Before:
@@ -327,7 +327,7 @@ def test_dequantize_matmul_transform(transform_level=1):
             transform_level=transform_level, faster_conversion=False
         )(relax_mod)
     input_tensors = get_dummy_input_arrays(ref_mod["main"], device)
-
+    print(relax_mod)
     print("=======================ref llvm result=======================")
     # ref_res = get_ref_result(ref_mod, input_tensors)
     # print("ref_mod", ref_res)
@@ -350,4 +350,4 @@ def test_dequantize_matmul_transform(transform_level=1):
 
 # test_lop3_transform()
 # test_matmul_transform()
-# test_dequantize_matmul_transform()
+test_dequantize_matmul_transform()

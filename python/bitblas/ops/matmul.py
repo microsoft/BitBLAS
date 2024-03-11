@@ -3,19 +3,46 @@
 import tvm
 import numpy as np
 from tvm.target import Target
-from bitblas.base.roller.arch.cuda import CUDA
-from typing import List, Union
+from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
+from typing import List, Union, Optional, Any, Tuple
 from .operator import Operator
 from .impl.matmul_impl import select_implementation
 from ..base.utils import get_rasterization_code
-from bitblas.utils import match_global_kernel
+from bitblas.utils import match_global_kernel, tensor_replace_dp4a
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 
 
-@dataclass
+class TransformExecutorCPU:
+    def __init__(self, operators: Optional[List[Operator]] = None):
+        if operators is None:
+            operators = []
+        self.operators = operators
+
+    def append(self, op):
+        self.operators.append(op)
+
+    def is_none(self):
+        return len(self.operators) == 0
+
+    def forward(self, weight):
+        inputs = [weight]
+        for op in self.operators:
+            inputs.append(tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
+            inputs = [op.forward(*inputs)]
+        return inputs[-1]
+
+    def __call__(self, *args: Any, **kwds: Any) -> Any:
+        return self.forward(*args, **kwds)
+
+    @property
+    def size(self):
+        return len(self.operators)
+
+
+@dataclass(frozen=True)
 class MatmulConfig:
-    M: Union[int, List]
+    M: Union[int, Tuple[int]]
     N: int
     K: int
     in_dtype: str = "float16"
@@ -26,6 +53,13 @@ class MatmulConfig:
     propagate_a: bool = False
     propagate_b: bool = False
 
+    def __post_init__(self):
+        # set M to tuple if it is list
+        # otherwise, M is not hashable
+        object.__setattr__(
+            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
+        )
+
 
 class Matmul(Operator):
     def __init__(
@@ -34,26 +68,24 @@ class Matmul(Operator):
         name: str = "matmul",
         target: Target = tvm.target.Target("cuda"),
     ):
-        super().__init__(name)
+        super().__init__(name, target)
         self.config = config
-
+        target = self.target
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
-        self.arch = CUDA(target)
-        assert self.propagate_a is False, "Currently only support propagate_a=False"
 
         prim_func_mod = self._select_implementation()
         self.prim_func_mod = prim_func_mod
         self.optimized_func = self.apply_default_schedule(prim_func_mod, target)
 
-        if isinstance(self.M, List):
+        if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.update_func(
                 self.prim_func.with_attrs({"opt_shapes": self.dynamic_range})
             )
         else:
             self.dynamic_range = None
-        self.target = target
+
         self._build_runtime_module(target)
 
         if self.propagate_a:
@@ -90,6 +122,18 @@ class Matmul(Operator):
         else:
             self.ladder_permutate_b = None
 
+        input_executors = TransformExecutorCPU()
+        if self.ladder_permutate_a is not None:
+            input_executors.append(self.ladder_permutate_b)
+
+        self.input_executors = input_executors
+
+        weight_executors = TransformExecutorCPU()
+        if self.ladder_permutate_b is not None:
+            weight_executors.append(self.ladder_permutate_b)
+
+        self.weight_executors = weight_executors
+
     def _select_implementation(self):
         return select_implementation(
             M=self.M,
@@ -110,6 +154,7 @@ class Matmul(Operator):
         if self.N * self.K > 10**6:
             rasterization_code = get_rasterization_code(10)
             code = code[: index + 2] + rasterization_code + code[index + 2 :]
+        code = tensor_replace_dp4a(code)
         return code
 
     def _profile_latency_with_dynamic_range(self) -> List:
@@ -190,15 +235,11 @@ class Matmul(Operator):
 
     @property
     def input_transform(self):
-        if self.ladder_permutate_a is not None:
-            return self.ladder_permutate_a
-        return None
+        return self.input_executors if self.input_executors.size else None
 
     @property
     def weight_transform(self):
-        if self.ladder_permutate_b is not None:
-            return self.ladder_permutate_b
-        return None
+        return self.weight_executors if self.weight_executors.size else None
 
 
 __all__ = ["Matmul", "MatmulConfig"]

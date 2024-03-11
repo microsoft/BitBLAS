@@ -125,7 +125,7 @@ def _tir_u32_to_f4_to_f16(nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr, dtype
     val_f16 = tir.reinterpret("float16", (e_f16 | (s << tir.const(5, "uint32"))) << tir.const(10, "uint32"))
     return tir.Select(e_f4 == tir.const(0, "uint32"), tir.const(0, "float16"), val_f16)
 
-def _tir_packed_to_signed_float(storage_type="uint", storage_nbit=8):
+def _tir_packed_to_signed_convert(storage_type="uint", storage_nbit=8):
     storage_dtype = storage_type + str(storage_nbit)
 
     def f_convert(nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr, dtype: str):
@@ -135,7 +135,7 @@ def _tir_packed_to_signed_float(storage_type="uint", storage_nbit=8):
 
     return f_convert
 
-def _tir_packed_to_unsigned_float(storage_type="uint", storage_nbit=8):
+def _tir_packed_to_unsigned_convert(storage_type="uint", storage_nbit=8):
     storage_dtype = storage_type + str(storage_nbit)
 
     def f_convert(

@@ -381,10 +381,14 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             return None
 
         main_block = reduction_blocks[0]
+        
+        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
+        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
+            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
 
         output_blocks = [sch.get(block) for block in sch.get_output_blocks(root_block)]
 
-        def check_require_cache(func: tir.PrimFunc):
+        def check_require_cache(func: tir.PrimFunc, config):
             conditions: List[bool] = []
 
             # check if has dynamic symbolic
@@ -401,9 +405,22 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             conditions.append(check_has_dynamic(func))
             # check if has post process
             conditions.append(sch.get(main_block) not in output_blocks)
+            # check if not use async copy
+            conditions.append(config.use_async is False)
             return any(conditions)
 
-        cache_write_required = check_require_cache(func)
+        cache_write_required = check_require_cache(func, config=config)
+
+        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
+        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
+            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
+
+        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
+        if not (
+            func.attrs is not None
+            and "dlight.tensorcore_prenormlized" in func.attrs.keys()
+        ):
+            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
         if not (
@@ -431,7 +448,6 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         # Step 0. Get schedule config.
         # NOTE: we can analyze the config by the hardware spec in the future
 
-        # tensor core intrinsic size
         warp_row_tiles = config.warp[0]
         warp_col_tiles = config.warp[1]
         block_row_warps = config.block[0] // warp_row_tiles
@@ -440,6 +456,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         use_async = config.use_async
         chunk = config.rstep[0]
 
+        # tensor core intrinsic size
         micro_size_x, micro_size_y, micro_size_k = intrin_group["micro_kernel"]
 
         # get the axis for layout transform
@@ -619,12 +636,10 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             propagate_block: tir.Block = producers[-1] if len(producers) > 0 else g2s_block
 
             # step2: transform the layout with inverse permutation
-            _, inverse_indexmap = get_propagate_map(
-                trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name
-            )
+            _, inverse_indexmap = get_propagate_map(trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name)
 
             def inverse_permutation(i, j, ii, jj):
-                return (i, j, *inverse_indexmap.map_indices([ii, jj]))
+                return (i, j, *intra_indexmap.map_indices([ii, jj]))
 
             sch.transform_layout(propagate_block, ("read", 0), inverse_permutation)
 

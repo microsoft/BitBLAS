@@ -65,9 +65,7 @@ def select_implementation(
         )
         args.append(inter_warp)
     if transform_kind >= 2:
-        # tir required inverse layout transform.
         arg = args[-1]
-        intra_index_map = intra_index_map.inverse([l, r])
 
         def fcompute(*args):
             warp_i, warp_j = args[-2:]
