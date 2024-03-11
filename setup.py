@@ -1,3 +1,6 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import os
 from setuptools import setup, find_packages
 from setuptools.command.install import install

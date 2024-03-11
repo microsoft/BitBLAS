@@ -10,7 +10,7 @@ pushd "${PWD}/../../" > /dev/null
 
 EXITCODE=0
 
-for SRC_FILE in $(find . -path './thirdparty' -prune -false -o -path './build' -prune -false -o -type f -not -name \
+for SRC_FILE in $(find . -path './3rdparty' -prune -false -o -path './build' -prune -false -o -type f -not -name \
     '*apply_mit_liscense.sh' -not -name '*check_mit_liscense.sh' -and \( -name '*.cpp' -or -name '*.h*' -or -name '*.cu' -or -name '*.in' \) ); do
     sed -i '/\/\/\s*Microsoft\s*(c)/Id' ${SRC_FILE}
     if !(grep -q "Copyright (c) Microsoft Corporation." "${SRC_FILE}"); then
@@ -19,7 +19,7 @@ for SRC_FILE in $(find . -path './thirdparty' -prune -false -o -path './build' -
     fi
 done
 
-for SRC_FILE in $(find . -path './thirdparty' -prune -false -o -path './build' -prune -false -o -type f -not -name \
+for SRC_FILE in $(find . -path './3rdparty' -prune -false -o -path './build' -prune -false -o -type f -not -name \
     '*apply_mit_liscense.sh' -not -name '*check_mit_liscense.sh' -and \( -name 'CMakeLists.txt' -or -name '*.cmake' \
     -or -name '*.py' -or -name '*.dockerfile' -or -name '*.yaml' \) ); do
     sed -i '/\#\s*Microsoft\s*(c)/Id' ${SRC_FILE} 
@@ -29,7 +29,7 @@ for SRC_FILE in $(find . -path './thirdparty' -prune -false -o -path './build' -
     fi
 done
 
-for SRC_FILE in $(find . -path './thirdparty' -prune -false -o -path './build' -prune -false -o -type f -not -name \
+for SRC_FILE in $(find . -path './3rdparty' -prune -false -o -path './build' -prune -false -o -type f -not -name \
     '*apply_mit_liscense.sh' -not -name '*check_mit_liscense.sh' -name '*.sh' ); do
     sed -i '/\#\s*Microsoft\s*(c)/Id' ${SRC_FILE} 
     if !(grep -q "Copyright (c) Microsoft Corporation" "${SRC_FILE}"); then
