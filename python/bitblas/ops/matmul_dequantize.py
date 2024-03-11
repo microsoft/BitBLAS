@@ -3,10 +3,10 @@
 import tvm
 from tvm.target import Target
 from bitblas.base.roller.arch.cuda import CUDA
-from typing import Any, List
+from typing import Any, List, Literal, Optional, Tuple, Union
 from .operator import Operator
 from .impl.matmul_dequantize_impl import select_implementation
-from ..base.utils import get_rasterization_code
+from ..base.utils import get_rasterization_code, tensor_replace_dp4a
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from dataclasses import dataclass
 from bitblas.utils import match_global_kernel
@@ -15,7 +15,9 @@ from .lop3_permutate import LOP3Permutate, LOP3PermutateConfig
 
 
 class WeightExecutorCPU:
-    def __init__(self, operators: List[Operator] = []):
+    def __init__(self, operators: Optional[List[Operator]] = None):
+        if operators is None:
+            operators = []
         self.operators = operators
 
     def append(self, op):
@@ -39,9 +41,9 @@ class WeightExecutorCPU:
         return len(self.operators)
 
 
-@dataclass
+@dataclass(frozen=True)
 class MatmulWeightOnlyDequantizeConfig:
-    M: int
+    M: Union[int, Tuple[int]]
     N: int
     K: int
     in_dtype: str = "float16"
@@ -51,12 +53,27 @@ class MatmulWeightOnlyDequantizeConfig:
     storage_dtype: str = "int8"
     source_format: str = "int"
     with_scaling: bool = False
+    with_zeros: bool = False
     group_size: int = -1
     fast_decoding: bool = False
     with_bias: bool = False
     propagate_a: bool = False
     propagate_b: bool = False
     layout: str = "nt"
+    # documents for zeros_type:
+    # original: target = (dequantize_weight - zero_point) * scale
+    # rescale: target = dequantize_weight * scale - zero_point
+    # quantzied: target = (dequantize_weight - dequantize_zeros) * scale
+    # Notice: only support "original" and "rescale" now
+    # The auto-gptq framework prefer "original" for alignment with cuda.
+    zeros_type: Literal["original", "rescale", "quantzied"] = "original"
+
+    def __post_init__(self):
+        # set M to tuple if it is list
+        # otherwise, M is not hashable
+        object.__setattr__(
+            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
+        )
 
 
 class MatmulWeightOnlyDequantize(Operator):
@@ -67,25 +84,34 @@ class MatmulWeightOnlyDequantize(Operator):
         name: str = "matmul_weight_only_dequantize",
         target: Target = tvm.target.Target("cuda"),
     ):
-        super().__init__(name)
+        super().__init__(name, target)
         self.config = config
 
+        target = self.target
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
+
         self.arch = CUDA(target)
-        assert self.propagate_a is False, "Currently only support propagate_a=False"
 
         self.prim_func_mod = self._select_implementation()
+        try:
+            self.optimized_func = self.apply_default_schedule(
+                self.prim_func_mod, target
+            )
+        except Exception:
+            self.optimized_func = None
+            print(
+                f"[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
+            )
 
-        self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
-        if isinstance(self.M, List):
+        if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
                 {"opt_shapes": self.dynamic_range}
             )
         else:
             self.dynamic_range = None
-        self.target = target
+
         self._build_runtime_module(target)
 
         if self.propagate_a:
@@ -141,6 +167,7 @@ class MatmulWeightOnlyDequantize(Operator):
         weight_executors = WeightExecutorCPU()
         if self.lop3_permutate is not None:
             weight_executors.append(self.lop3_permutate)
+
         if self.ladder_permutate_b is not None:
             weight_executors.append(self.ladder_permutate_b)
 
@@ -158,16 +185,19 @@ class MatmulWeightOnlyDequantize(Operator):
             storage_dtype=self.storage_dtype,
             source_format=self.source_format,
             with_scaling=self.with_scaling,
+            with_zeros=self.with_zeros,
             group_size=self.group_size,
             fast_decoding=self.fast_decoding,
             with_bias=self.with_bias,
             layout=self.layout,
+            zeros_type=self.zeros_type,
             propagate_a=self.propagate_a,
             propagate_b=self.propagate_b,
         )
 
     def post_process(self, code: str) -> str:
         index = code.index("{", match_global_kernel(code))
+        code = tensor_replace_dp4a(code)
         # some tricky judge to decide whether to insert rasterization code
         if self.M == 1:
             return code
@@ -217,6 +247,10 @@ class MatmulWeightOnlyDequantize(Operator):
         return self.config.with_scaling
 
     @property
+    def with_zeros(self):
+        return self.config.with_zeros
+
+    @property
     def group_size(self):
         return self.config.group_size
 
@@ -239,6 +273,10 @@ class MatmulWeightOnlyDequantize(Operator):
     @property
     def layout(self):
         return self.config.layout
+
+    @property
+    def zeros_type(self):
+        return self.config.zeros_type
 
     @property
     def input_transform(self):

@@ -5,6 +5,7 @@ import tvm
 from tvm import IRModule
 from tvm.target import Target
 from tvm.tir import PrimFunc
+from tvm.contrib.dlpack import to_pytorch_func
 import bitblas
 from typing import List, Dict, Any
 import numpy as np
@@ -12,11 +13,19 @@ from ..base import fast_tune, fast_tune_with_dynamic_range
 from copy import deepcopy
 from bitblas.base.roller.arch import get_arch
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
+import torch
+
+class OperatorConfig:
+    """Base class for operator configurations. Used for typing."""
+    pass
 
 
 class Operator(ABC):
     def __init__(self, name, target: Target = None):
+        if isinstance(target, str):
+            target = Target(target)
         self.name = name
+        self.target = target
         self.prim_func_mod = None
         self.optimized_func = None
         self.rt_mod = None
@@ -24,17 +33,14 @@ class Operator(ABC):
         self.profile_tensors = None
         self.arch = get_arch(target) if target else None
         self.dynamic_range = None
+        self.pass_context: Dict = {}
 
     def codegen(self, target: Target = None) -> str:
         if target is None:
             target = self.target
         if self.rt_mod is None:
             self._build_runtime_module(target)
-        return (
-            self.post_process(self.rt_mod.imported_modules[0].get_source())
-            if self.rt_mod
-            else None
-        )
+        return self.rt_mod.imported_modules[0].get_source() if self.rt_mod else None
 
     def _build_runtime_module(self, target: Target):
         """
@@ -57,14 +63,23 @@ class Operator(ABC):
         rt_mod = None
 
         # Check if the platform is CUDA and we have an optimized function
-        if self.arch.platform == "CUDA" and self.optimized_func:
+        if self.arch.platform == "CUDA":
+            if self.optimized_func is None:
+                return None
+
+            @tvm.register_func(func_name="tvm_callback_cuda_postproc", override=True)
+            def tvm_callback_cuda_postproc(code, _):
+                return self.post_process(code)
+
             try:
                 # Use a specific TVM pass context for CUDA platforms
-                with tvm.transform.PassContext(config={"tir.use_async_copy": True}):
-                    rt_mod = tvm.build(self.optimized_func, target=target, name=self.name)
-            except Exception as e:
+                with tvm.transform.PassContext(config={"tir.use_async_copy": True, **self.pass_context}):
+                    rt_mod = tvm.build(
+                        self.optimized_func, target=target, name=self.name
+                    )
+            except Exception:
                 # Log the exception for debugging purposes. Replace 'print' with logging if necessary.
-                print(f"Failed to build optimized function for CUDA target due to: {e}")
+                print(f"Failed to build optimized function for CUDA target")
         else:
             # For non-CUDA platforms or when no optimized function is available, build with the primary function
             rt_mod = tvm.build(self.prim_func, target=target, name=self.name)
@@ -76,6 +91,7 @@ class Operator(ABC):
             self.time_evaluator = rt_mod.time_evaluator(
                 rt_mod.entry_name, self.arch.device, number=10
             )
+            self.torch_func = to_pytorch_func(rt_mod)
 
         return rt_mod
 
@@ -100,11 +116,12 @@ class Operator(ABC):
         return code
 
     def apply_fast_tuning(
-        self, func: PrimFunc, target: Target, topk: int = 20
+        self, func: PrimFunc, target: Target, topk: int = 20, parallel_build=True
     ) -> IRModule:
-        _, best = fast_tune(func, target, topk=topk, parallel_build=True)
+        _, best = fast_tune(func, target, topk=topk, parallel_build=parallel_build)
         if best is not None:
             return best.sch.mod
+        self.pass_context = best.config.pass_context
         return None
 
     def apply_fast_tuning_with_dynamic_range(
@@ -121,7 +138,9 @@ class Operator(ABC):
             return optimized_mod
         return None
 
-    def hardware_aware_finetune(self, topk: int = 20, target: tvm.target.Target = None):
+    def hardware_aware_finetune(
+        self, topk: int = 20, target: tvm.target.Target = None, parallel_build=True
+    ):
         if target is None:
             target = self.target
         dynamic_range = self.dynamic_range
@@ -131,7 +150,9 @@ class Operator(ABC):
                 func, target, topk, dynamic_range
             )
         else:
-            self.optimized_func = self.apply_fast_tuning(func, target, topk)
+            self.optimized_func = self.apply_fast_tuning(
+                func, target, topk, parallel_build=parallel_build
+            )
         self._build_runtime_module(self.target)
 
     def get_profile_tensors(self):
@@ -197,7 +218,7 @@ class Operator(ABC):
 
     def forward(self, *args):
         # "Currently only support forward from torch tensor"
-        return self.forward_from_torch(*args)
+        return self.torch_func(*args)
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         return self.forward(*args, **kwds)

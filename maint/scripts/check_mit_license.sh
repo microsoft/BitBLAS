@@ -10,7 +10,7 @@ pushd "${PWD}/../../" > /dev/null
 
 EXITCODE=0
 
-for SRC_FILE in $(find . -path './thirdparty' -prune -false -o -path './build' -prune -false -o -type f -not -name '*apply_mit_liscense.sh' \
+for SRC_FILE in $(find . -path './3rdparty' -prune -false -o -path './build' -prune -false -o -type f -not -name '*apply_mit_liscense.sh' \
     -not -name '*check_mit_liscense.sh' -and \( -name 'CMakeLists.txt' -or -name '*.cpp' -or -name '*.cu' -or -name '*.h'  -or -name '*.hpp' \
     -or -name '*.in' -or -name '*.py' -or -name '*.sh' -or -name '*.dockerfile' -or -name '*.yaml' \) ); do
     if !(grep -q "Copyright (c) Microsoft Corporation." "${SRC_FILE}") || !(grep -q "Licensed under the MIT License." "${SRC_FILE}") \

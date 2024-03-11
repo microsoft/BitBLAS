@@ -6,7 +6,7 @@ import os
 from tvm.contrib.popen_pool import PopenPoolExecutor, StatusKind, MapResult
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import numpy as np
-from typing import List, Tuple, Optional, Dict, Union
+from typing import List, Tuple, Optional, Dict, Union, Literal
 from tvm import tir, IRModule
 from tvm.runtime import Module
 from tvm.tir import Schedule
@@ -20,8 +20,10 @@ from bitblas.base.roller.rasterization import NoRasterization
 import tempfile
 import itertools
 from tvm.ir.supply import GlobalVarSupply
-from bitblas.utils import match_global_kernel
+from bitblas.utils import match_global_kernel, tensor_replace_dp4a
+import logging
 
+logger = logging.getLogger(__name__)
 
 def get_rasterization_code(pannel_width: int = 8) -> str:
     return f"""
@@ -53,13 +55,14 @@ class CompileResult:
         self.time_evaluator = None
 
     def profile(self):
-        return self.time_evaluator(*self.profile_tensors).mean
+        profile_tensors = self.profile_tensors
+        return self.time_evaluator(*profile_tensors).mean
 
 
 def _apply_config(
     func: tir.PrimFunc,
     config=None,  # todo(lei): update typing
-) -> Optional[List[tir.Schedule]]:
+) -> Optional[tir.Schedule]:
     """
     find rules:
     case 1. if the main block has no reduce op, then use the Elementwise rule.
@@ -67,7 +70,7 @@ def _apply_config(
     case 3. if any([t > 1 for t in config.reduce_thread]), we should use the InnerThread Reduction Rule.
     case 4. else we should use general reduction rule.
     """
-    print("[BitBLAS] Apply config ", config)
+    logger.debug("Apply config {}".format(config))
 
     sch = tir.Schedule(func)
     root_block = get_root_block(sch)
@@ -97,7 +100,7 @@ def _apply_config(
             try:
                 sch = rule.apply_config(func, config)
             except Exception as e_msg:
-                print("[BitBLAS] Apply config failed: ", e_msg)
+                logger.debug("Apply config failed: ", e_msg)
                 continue
             if sch is not None:
                 return sch
@@ -105,7 +108,9 @@ def _apply_config(
 
 
 def get_dummy_input_arrays(
-    func: Union[tir.PrimFunc, Function], device: tvm.runtime.Device
+    func: Union[tir.PrimFunc, Function],
+    device: tvm.runtime.Device,
+    distribution: Literal["uniform", "onefill"] = "uniform",
 ):
     def var_wrapper(v):
         if isinstance(v, tvm.tir.Var):
@@ -129,30 +134,49 @@ def get_dummy_input_arrays(
         else:
             raise ValueError("Not supported type: ", type(func))
 
-        profile_tensors.append(
-            tvm.nd.array(
-                np.random.uniform(-1, 1, [var_wrapper(i) for i in arg.shape]).astype(
-                    arg.dtype
-                ),
-                device=device,
+        if distribution == "uniform":
+            profile_tensors.append(
+                tvm.nd.array(
+                    np.random.rand(*[var_wrapper(i) for i in arg.shape]).astype(
+                        arg.dtype
+                    ),
+                    device=device,
+                )
             )
-        )
+        elif distribution == "onefill":
+            profile_tensors.append(
+                tvm.nd.array(
+                    np.ones([var_wrapper(i) for i in arg.shape]).astype(arg.dtype),
+                    device=device,
+                )
+            )
+        else:
+            raise ValueError("Not supported distribution: ", distribution)
     return profile_tensors
 
 
 def apply_and_build_parallel(
-    func, configs, arch, num_repeats=5, max_workers=10
+    func, configs, arch, num_repeats=3, max_workers=10, data_distribution="uniform"
 ) -> CompileResult:
     cpresults = []
 
-    profile_tensors = get_dummy_input_arrays(func, arch.device)
+    profile_tensors = get_dummy_input_arrays(
+        func, arch.device, distribution=data_distribution
+    )
     max_workers = min(len(configs), os.cpu_count(), max_workers)
 
     # apply config in thread parallel
     _sched: List[Schedule] = []
+    def _apply_schedule(f, c):
+        try:
+            sch = _apply_config(f, c)
+        except Exception as apply_schedule_error:
+            logger.debug("Apply schedule failed: ", apply_schedule_error)
+            sch = None
+        return sch
     with ThreadPoolExecutor(max_workers=4) as schduler:
         futures = {
-            schduler.submit(lambda f, c: _apply_config(f, c), func, config)
+            schduler.submit(_apply_schedule, func, config)
             for config in configs
         }
         for future in as_completed(futures):
@@ -176,12 +200,13 @@ def apply_and_build_parallel(
                 factor = config.rasterization_plan.panel_width_
                 rasterization_code = get_rasterization_code(factor)
                 code = code[: index + 2] + rasterization_code + code[index + 2 :]
+            code = tensor_replace_dp4a(code)
             return code
 
         with tvm.transform.PassContext(
             config={"tir.use_async_copy": True, **config.pass_context}
         ):
-            rt_mod = tvm.build(mod["main"], target=arch.target)
+            rt_mod = tvm.build(mod, target=arch.target)
 
         from tvm.contrib.tar import tar  # pylint: disable=import-outside-toplevel
 
@@ -199,15 +224,15 @@ def apply_and_build_parallel(
         [(i, mod, arch) for i, mod in enumerate(_mods)],
     ):
         if map_result.status == StatusKind.TIMEOUT:
-            print("[BitBLAS] LocalBuilder: Timeout")
+            logger.debug("LocalBuilder: Timeout")
         elif map_result.status == StatusKind.EXCEPTION:
             # TODO(lei): redirect the exception to file if needed
-            print("[BitBLAS] LocalBuilder: An exception occurred ", map_result.value)
+            logger.debug("LocalBuilder: An exception occurred ", map_result.value)
             continue
         elif map_result.status == StatusKind.COMPLETE:
             idx, code, artifact_path = map_result.value
             if artifact_path is None:
-                print("[BitBLAS] Artifact path is None")
+                logger.debug("Artifact path is None")
                 continue
             sch = _sched[idx]
             config = configs[idx]
@@ -232,10 +257,10 @@ def apply_and_build_parallel(
         try:
             latency = cpresult.profile()
         except Exception as e_mesg:
-            print("[BitBLAS] Evaluation with config failed: ", e_mesg)
+            logger.debug("Evaluation with config failed: ", e_mesg)
             continue
-        print("[BitBLAS] Evaluation with config ", config)
-        print("[BitBLAS] Time cost of this config: {:.3f} ms".format(latency * 1e3))
+        logger.info("Evaluation with config {}".format(config))
+        logger.info("Time cost of this config: {:.3f} ms".format(latency * 1e3))
 
         cpresult.latency = latency
         if latency < best_latency:
@@ -250,9 +275,10 @@ def apply_and_build(
     configs,
     arch,
     parallel_build=False,
+    data_distribution="uniform",
 ) -> Tuple[List[CompileResult], CompileResult]:
     max_workers = 10 if parallel_build else 1
-    return apply_and_build_parallel(func, configs, arch, max_workers)
+    return apply_and_build_parallel(func, configs, arch, max_workers=max_workers, data_distribution=data_distribution)
 
 
 def fast_tune(
@@ -260,9 +286,10 @@ def fast_tune(
     target: tvm.target.Target,
     topk: int = 10,
     parallel_build: bool = True,
+    data_distribution: Literal["uniform", "onefill"] = "uniform",
 ):
     if target.kind.name != "cuda":
-        print("[BitBLAS] Only support CUDA target")
+        logger.error("Only support CUDA target")
         return None, None
 
     specilized_func = func
@@ -270,11 +297,11 @@ def fast_tune(
         opt_shapes = func.attrs["opt_shapes"]
         # should be int value
         if not all([isinstance(v.value, int) for v in opt_shapes.values()]):
-            print("[BitBLAS] The opt_shapes should be int value")
+            logger.error("The opt_shapes should be int value")
             return None, None
         # currently only support one dynmaic range
         if len(opt_shapes) > 1:
-            print("[BitBLAS] Currently only support one dynamic range")
+            logger.error("Currently only support one dynamic range")
             return None, None
 
         for buffer in func.buffer_map.values():
@@ -299,14 +326,18 @@ def fast_tune(
             specilized_func, arch.target
         )
     except Exception as e_msg:
-        print("[BitBLAS] Get tensorized func and tags failed: ", e_msg)
+        logger.debug("Get tensorized func and tags failed: ", e_msg)
         tags = None
     if tags:
         policy = TensorCorePolicy(func=specilized_func, arch=arch, tags=tags)
 
     configs = policy.emit_config(topk)
     cpresults, best = apply_and_build(
-        func, configs, arch, parallel_build=parallel_build
+        func,
+        configs,
+        arch,
+        parallel_build=parallel_build,
+        data_distribution=data_distribution,
     )
 
     return cpresults, best
@@ -436,7 +467,7 @@ def fast_tune_with_dynamic_range(
     dynamic_range: Dict[str, List[int]] = {},
 ) -> IRModule:
     if target.kind.name != "cuda":
-        print("[BitBLAS] Only support CUDA target")
+        logger.error("Only support CUDA target")
         return None
     if not global_symbol:
         global_symbol = func.attrs["global_symbol"]
@@ -464,10 +495,10 @@ def fast_tune_with_dynamic_range(
         if not all(
             [isinstance(v, tvm.ir.Array) for v in func.attrs["opt_shapes"].values()]
         ):
-            print("[BitBLAS] The opt_shapes should be list value")
+            logger.error("The opt_shapes should be list value")
             return None
 
-    print("[BitBLAS] Start fast tuning with dynamic range")
+    logger.info("Start fast tuning with dynamic range")
     opt_shapes = func.attrs["opt_shapes"]
 
     # Step 1.Calculate the Cartesian product using itertools.product

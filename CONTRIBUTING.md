@@ -1,0 +1,57 @@
+# Contributing
+
+That would be awesome if you want to contribute something to BitBLAS!
+
+- [Contributing](contributing.md#contributing)
+  - [Reporting Bugs](contributing.md#reporting-bugs)
+  - [Asking Questions](contributing.md#asking-questions)
+  - [Submitting Pull Requests](contributing.md#submitting-pull-requests)
+  - [Repository Setup](contributing.md#repository-setup)
+  - [Running Examples](contributing.md#running-examples)
+  - [Running Tests](contributing.md#running-tests)
+  - [Testing Input Methods](contributing.md#testing-input-methods)
+  - [Publishing Releases](contributing.md#publishing-releases)
+    - [Publishing Normal `@latest` Release](contributing.md#publishing-normal-latest-release)
+    - [Publishing `@next` Release](contributing.md#publishing-next-release)
+    - [Publishing `@experimental` Release](contributing.md#publishing-experimental-release)
+    - [Running Prerelease Script](contributing.md#running-prerelease-script)
+
+## Reporting Bugs
+
+If you run into any weird behavior while using BitBLAS, feel free to open a new issue in this repository! Please run a **search before opening** a new issue, to make sure that someone else hasn't already reported or solved the bug you've found.
+
+Any issue you open must include:
+
+- Code snippet that reproduces the bug with a minimal setup.
+- A clear explanation of what the issue is.
+
+
+## Asking Questions
+
+Please ask questions in issues.
+
+## Submitting Pull Requests
+
+All pull requests are super welcomed and greatly appreciated! Issues in need of a solution are marked with a [`♥ help`](https://github.com/ianstormtaylor/BitBLAS/issues?q=is%3Aissue+is%3Aopen+label%3A%22%E2%99%A5+help%22) label if you're looking for somewhere to start.
+
+Please include tests and docs with every pull request!
+
+## Repository Setup
+
+To run the build, you need to have the BitBLAS repository cloned to your computer. After that, you need to `cd` into the directory where you cloned it, and install the dependencies with `python`:
+
+```bash
+python setup.py install
+```
+
+
+## Running Tests
+
+To run the tests, start by building the project as described in the [Repository Setup](contributing.md#repository-setup) section.
+
+Then you can rerun the tests with:
+
+```text
+python -m pytest testing
+```
+

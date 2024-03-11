@@ -8,7 +8,7 @@ from .impl.ladder_permutate_impl import select_implementation
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class LadderPermutateConfig:
     M: int
     N: int
