@@ -7,14 +7,7 @@ That would be awesome if you want to contribute something to BitBLAS!
   - [Asking Questions](contributing.md#asking-questions)
   - [Submitting Pull Requests](contributing.md#submitting-pull-requests)
   - [Repository Setup](contributing.md#repository-setup)
-  - [Running Examples](contributing.md#running-examples)
   - [Running Tests](contributing.md#running-tests)
-  - [Testing Input Methods](contributing.md#testing-input-methods)
-  - [Publishing Releases](contributing.md#publishing-releases)
-    - [Publishing Normal `@latest` Release](contributing.md#publishing-normal-latest-release)
-    - [Publishing `@next` Release](contributing.md#publishing-next-release)
-    - [Publishing `@experimental` Release](contributing.md#publishing-experimental-release)
-    - [Running Prerelease Script](contributing.md#running-prerelease-script)
 
 ## Reporting Bugs
 
