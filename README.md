@@ -7,14 +7,11 @@ Some of the key features of BitBLAS include:
   - High Performance (Not only FP16xFP16, INT8xINT8, but also FP16xINT4/2/1, INT8xINT4/2/1).
   - With the flexible DSL (TIR Script) to effortlessly craft domain-specific kernels for your situations.
   - Support with dynamic symbolic throuth tvm unity -> generate source code with dynamic shape.
-
-Latest News 🔥
-
-- 2023-03-03: BitBLAS first proposed int8xint1 gemv/gemm with 10x/2x speedup over float16xfloat16 on A100, please checkout [op_benchmark_a100_int1_scaling](images/figures/op_benchmark_a100_int1_scaling.png) for detailed input scaling benchmark results.
+  - BitBLAS first proposed int8xint1 gemv/gemm with 10x/2x speedup over float16xfloat16 on A100, please checkout [op_benchmark_a100_int1_scaling](images/figures/op_benchmark_a100_int1_scaling.png) for detailed input scaling benchmark results.
 
 
 ## Benchmark
-BitBLAS can achieve optimal performance across various compute pattern:
+BitBLAS can achieve optimal performance across various compute patterns:
 
 - GTX 3090
   - FLOAT16xFLOAT16 with TensorCore ![3090-gemm-fp16](./images/figures/op_benchmark_3090_fp16_gemm.png)
