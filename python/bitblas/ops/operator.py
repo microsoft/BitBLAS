@@ -13,8 +13,10 @@ from ..base import fast_tune, fast_tune_with_dynamic_range
 from copy import deepcopy
 from bitblas.base.roller.arch import get_arch
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
-import torch
+from dataclasses import dataclass
 
+
+@dataclass
 class OperatorConfig:
     """Base class for operator configurations. Used for typing."""
     pass
@@ -225,6 +227,9 @@ class Operator(ABC):
 
     def update_func(self, func: PrimFunc):
         self.prim_func_mod["main"] = func
+
+    def update_runtime_module(self, rt_mod):
+        self.rt_mod = rt_mod
 
     @abstractmethod
     def _select_implementation(self) -> IRModule:
