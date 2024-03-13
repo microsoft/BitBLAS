@@ -10,7 +10,7 @@ target = tvm.target.Target("nvidia/nvidia-a100")
 
 
 def get_codegen_result(ops, target):
-    code = ops.codegen(target=target)
+    code = ops.get_source(target=target)
     return code
 
 

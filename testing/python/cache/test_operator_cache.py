@@ -12,7 +12,7 @@ target = bitblas.utils.get_target_from_env()
 
 
 def get_codegen_result(ops, target):
-    code = ops.codegen(target=target)
+    code = ops.get_source(target=target)
     return code
 
 

@@ -197,10 +197,10 @@ matmul = Matmul(
 )
 ```
 
-By default, we will apply a default schedule into the operator, you can also get code generation result by calling matmul.codegen().
+By default, we will apply a default schedule into the operator, you can also get code generation result by calling matmul.get_source().
 
 ```python
-print(matmul.codegen())
+print(matmul.get_source())
 '''
 extern "C" __global__ void __launch_bounds__(128) default_function_kernel(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
   ...

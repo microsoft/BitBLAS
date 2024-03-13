@@ -46,11 +46,11 @@ class LOP3Permutate(Operator):
             dequantize_bits=self.dequantize_bits,
         )
 
-    def forward_from_torch(self, weight, res):
+    def forward(self, weight, res):
         # reintepret the input tensor to int32 format
-        _tvm_args = [self._tensor_adapter(arg.view(torch.int32), self.arch.device) for arg in [weight, res]]
-        self.rt_mod(*_tvm_args)
-        return tvm_tensor_to_torch(_tvm_args[-1]).view(weight.dtype)
+        args = [arg.view(torch.int32) for arg in [weight, res]]
+        self.torch_func(*args)
+        return args[-1].view(weight.dtype)
 
     @property
     def M(self):

@@ -45,7 +45,7 @@ template_path = get_template_path()
 
 
 def get_codegen_result(ops: Operator, target: Target):
-    code = ops.codegen(target=target)
+    code = ops.get_source(target=target)
     return code
 
 

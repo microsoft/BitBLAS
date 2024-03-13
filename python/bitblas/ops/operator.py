@@ -37,7 +37,7 @@ class Operator(ABC):
         self.dynamic_range = None
         self.pass_context: Dict = {}
 
-    def codegen(self, target: Target = None) -> str:
+    def get_source(self, target: Target = None) -> str:
         if target is None:
             target = self.target
         if self.rt_mod is None:
@@ -230,6 +230,7 @@ class Operator(ABC):
 
     def update_runtime_module(self, rt_mod):
         self.rt_mod = rt_mod
+        self.torch_func = to_pytorch_func(rt_mod)
 
     @abstractmethod
     def _select_implementation(self) -> IRModule:
