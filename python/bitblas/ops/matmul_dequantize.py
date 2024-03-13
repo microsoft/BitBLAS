@@ -206,6 +206,11 @@ class MatmulWeightOnlyDequantize(Operator):
             code = code[: index + 2] + rasterization_code + code[index + 2 :]
         return code
 
+    def retrieve_weight_shape(self):
+        return [
+            int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape
+        ]
+
     @property
     def M(self):
         return self.config.M

@@ -79,7 +79,8 @@ class Operator(ABC):
                     rt_mod = tvm.build(
                         self.optimized_func, target=target, name=self.name
                     )
-            except Exception:
+            except Exception as e:
+                rt_build_error = e # pylint: disable=unused-variable
                 # Log the exception for debugging purposes. Replace 'print' with logging if necessary.
                 print(f"Failed to build optimized function for CUDA target")
         else:
