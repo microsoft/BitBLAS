@@ -5,6 +5,7 @@ import tvm
 from tvm.script import tir as T
 from tvm import te, tir
 from bitblas.gpu.matmul_analysis import get_propagate_map
+from bitblas.ops.operator import TransformKind
 
 
 def matmul_nn(
@@ -108,41 +109,6 @@ def matmul(
     return matmul_nt(M, N, K, in_dtype, out_dtype, accum_dtype, with_bias)
 
 
-# always assume propagate both intra and inter layout in BitBLAS
-# as we do not have to do runtime layout transform
-def matmul_nt_propagate_a_dyn_m(
-    M,
-    N,
-    K,
-    in_dtype="float16",
-    out_dtype="float16",
-    accum_dtype="float16",
-    with_bias=False,
-): ...
-
-
-def matmul_nt_propagate_b_dyn_m(
-    M,
-    N,
-    K,
-    in_dtype="float16",
-    out_dtype="float16",
-    accum_dtype="float16",
-    with_bias=False,
-): ...
-
-
-def matmul_nt_propagate_a_propagate_b_dyn_m(
-    M,
-    N,
-    K,
-    in_dtype="float16",
-    out_dtype="float16",
-    accum_dtype="float16",
-    with_bias=False,
-): ...
-
-
 def matmul_nt_propagate_a(
     M,
     N,
@@ -151,6 +117,7 @@ def matmul_nt_propagate_a(
     out_dtype="float16",
     accum_dtype="float16",
     with_bias=False,
+    transform_kind: TransformKind = TransformKind.IntraWarpTransform,
 ):
     if not isinstance(M, int):
         M = tvm.te.var("m")
@@ -169,8 +136,9 @@ def matmul_nt_propagate_a(
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
         spatial_args = i // l, j // r
-        permutate_i, permutate_j = inversed_index_map.map_indices([warp_i, warp_j])
-        new_index = (*spatial_args, permutate_i, permutate_j)
+        if transform_kind >= TransformKind.IntraWarpTransform:
+            warp_i, warp_j = inversed_index_map.map_indices([warp_i, warp_j])
+        new_index = (*spatial_args, warp_i, warp_j)
         return A[new_index]
 
     A_reindex = te.compute(
@@ -202,7 +170,7 @@ def matmul_nt_propagate_a(
         args = [A, B, last_output]
 
     func = te.create_prim_func(args)
-    func = func.with_attr("smooth_a", True)
+    func = func.with_attr("input_transform_kind", transform_kind.value)
 
     return tvm.IRModule.from_expr(func)
 
@@ -215,6 +183,7 @@ def matmul_nt_propagate_b(
     out_dtype="float16",
     accum_dtype="float16",
     with_bias=False,
+    transform_kind: TransformKind = TransformKind.IntraWarpTransform,
 ):
     if not isinstance(M, int):
         M = tvm.te.var("m")
@@ -233,8 +202,9 @@ def matmul_nt_propagate_b(
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
         spatial_args = i // l, j // r
-        permutate_i, permutate_j = inversed_index_map.map_indices([warp_i, warp_j])
-        new_index = (*spatial_args, permutate_i, permutate_j)
+        if transform_kind >= TransformKind.IntraWarpTransform:
+            warp_i, warp_j = inversed_index_map.map_indices([warp_i, warp_j])
+        new_index = (*spatial_args, warp_i, warp_j)
         return B[new_index]
 
     B_reindex = te.compute(
@@ -266,7 +236,7 @@ def matmul_nt_propagate_b(
         args = [A, B, last_output]
 
     func = te.create_prim_func(args)
-    func = func.with_attr("smooth_b", True)
+    func = func.with_attr("weight_transform_kind", transform_kind.value)
 
     return tvm.IRModule.from_expr(func)
 
@@ -279,6 +249,8 @@ def matmul_nt_propagate_a_propagate_b(
     out_dtype="float16",
     accum_dtype="float16",
     with_bias=False,
+    transform_kind_input: TransformKind = TransformKind.IntraWarpTransform,
+    transform_kind_weight: TransformKind = TransformKind.IntraWarpTransform,
 ):
     if not isinstance(M, int):
         M = tvm.te.var("m")
@@ -297,8 +269,9 @@ def matmul_nt_propagate_a_propagate_b(
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
         spatial_args = i // l, j // r
-        permutate_i, permutate_j = inversed_index_map.map_indices([warp_i, warp_j])
-        new_index = (*spatial_args, permutate_i, permutate_j)
+        if transform_kind_input >= TransformKind.IntraWarpTransform:
+            warp_i, warp_j = inversed_index_map.map_indices([warp_i, warp_j])
+        new_index = (*spatial_args, warp_i, warp_j)
         return A[new_index]
 
     A_reindex = te.compute(
@@ -314,8 +287,9 @@ def matmul_nt_propagate_a_propagate_b(
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
         spatial_args = i // l, j // r
-        permutate_i, permutate_j = inversed_index_map.map_indices([warp_i, warp_j])
-        new_index = (*spatial_args, permutate_i, permutate_j)
+        if transform_kind_weight >= TransformKind.IntraWarpTransform:
+            warp_i, warp_j = inversed_index_map.map_indices([warp_i, warp_j])
+        new_index = (*spatial_args, warp_i, warp_j)
         return B[new_index]
 
     B_reindex = te.compute(
@@ -348,8 +322,8 @@ def matmul_nt_propagate_a_propagate_b(
         args = [A, B, last_output]
 
     func = te.create_prim_func(args)
-    func = func.with_attr("smooth_a", True)
-    func = func.with_attr("smooth_b", True)
+    func = func.with_attr("input_transform_kind", transform_kind_input.value)
+    func = func.with_attr("weight_transform_kind", transform_kind_weight.value)
 
     return tvm.IRModule.from_expr(func)
 
@@ -363,8 +337,8 @@ def select_implementation(
     accum_dtype="float16",
     with_bias=False,
     layout="nt",
-    propagate_a=False,
-    propagate_b=False,
+    propagate_a: TransformKind = TransformKind.NonTransform,
+    propagate_b: TransformKind = TransformKind.NonTransform,
 ):
     if layout == "nn":
         if propagate_a or propagate_b:
@@ -375,15 +349,37 @@ def select_implementation(
     elif layout == "nt":
         if propagate_a and propagate_b:
             return matmul_nt_propagate_a_propagate_b(
-                M, N, K, in_dtype, out_dtype, accum_dtype, with_bias
+                M,
+                N,
+                K,
+                in_dtype,
+                out_dtype,
+                accum_dtype,
+                with_bias,
+                transform_kind_input=propagate_a,
+                transform_kind_weight=propagate_b,
             )
         elif propagate_a:
             return matmul_nt_propagate_a(
-                M, N, K, in_dtype, out_dtype, accum_dtype, with_bias
+                M,
+                N,
+                K,
+                in_dtype,
+                out_dtype,
+                accum_dtype,
+                with_bias,
+                transform_kind=propagate_a,
             )
         elif propagate_b:
             return matmul_nt_propagate_b(
-                M, N, K, in_dtype, out_dtype, accum_dtype, with_bias
+                M,
+                N,
+                K,
+                in_dtype,
+                out_dtype,
+                accum_dtype,
+                with_bias,
+                transform_kind=propagate_b,
             )
         else:
             return matmul(M, N, K, in_dtype, out_dtype, accum_dtype, with_bias, layout)

@@ -79,11 +79,19 @@ class OperatorCache:
             asdict(config), open(os.path.join(config_path, f"{config_type}.json"), "w")
         )
         artifact_path = os.path.join(config_path, "tvm_rt_mod." + tar.output_format)
-        op_inst.rt_mod.export_library(artifact_path, fcompile=tar)
+        try:
+            op_inst.rt_mod.export_library(artifact_path, fcompile=tar)
+        except Exception as e:
+            # library does not support export_library
+            export_error = e # pylint: disable=unused-variable
+            pass
         json.dump(
             {"config_type": config_type, "operator_type": operator_type},
             open(os.path.join(config_path, "mapping.json"), "w"),
         )
+        open(os.path.join(config_path, "source.cu"), "w").write(op_inst.get_source())
+        open(os.path.join(config_path, "optimized.py"), "w").write(op_inst.optimized_func.astext())
+        
 
     def _determine_target_arch_str(self, target):
         return (

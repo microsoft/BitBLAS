@@ -9,7 +9,7 @@ from tvm.tir.tensor_intrin.cuda import get_mma_intrin_group
 class Module:
     @T.prim_func
     def main(A: T.Buffer((1024, 512, 16, 32), "int8"), B: T.Buffer((1024, 512, 16, 8), "int8"), C: T.Buffer((16384, 16384), "int32")):
-        T.func_attr({"dequantize_info": {"B": {"decode_block": "B_decode", "fast_decoding": T.bool(False), "source_format": {"bits": 2, "format": "int"}, "target_format": "int8"}}, "dlight.tensorcore_prenormlized": T.bool(True), "smooth_a": T.bool(True), "smooth_b": T.bool(True), "tir.noalias": T.bool(True)})
+        T.func_attr({"dequantize_info": {"B": {"decode_block": "B_decode", "fast_decoding": T.bool(False), "source_format": {"bits": 2, "format": "int"}, "target_format": "int8"}}, "dlight.tensorcore_prenormlized": T.bool(True), "input_transform_kind": T.bool(True), "weight_transform_kind": T.bool(True), "tir.noalias": T.bool(True)})
         # with T.block("root"):
         A_reindex_reindex_shared = T.alloc_buffer((1, 1024, 512, 16, 32), "int8", scope="shared")
         B_reindex_reindex_shared = T.alloc_buffer((1, 1024, 512, 16, 32), "int8", scope="shared")

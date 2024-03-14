@@ -34,7 +34,7 @@ class Module:
                         "with_scaling": T.bool(True),
                     }
                 },
-                "smooth_b": T.bool(True),
+                "weight_transform_kind": T.bool(True),
                 "tir.noalias": T.bool(True),
                 "transform_kind": 2,
             }
@@ -121,7 +121,7 @@ class Module:
                         "with_scaling": T.bool(True),
                     }
                 },
-                "smooth_b": T.bool(True),
+                "weight_transform_kind": T.bool(True),
                 "tir.noalias": T.bool(True),
                 "transform_kind": 2,
             }

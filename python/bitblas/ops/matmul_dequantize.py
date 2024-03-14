@@ -4,7 +4,7 @@ import tvm
 from tvm.target import Target
 from bitblas.base.roller.arch.cuda import CUDA
 from typing import Any, List, Literal, Optional, Tuple, Union
-from .operator import Operator
+from .operator import Operator, TransformKind
 from .impl.matmul_dequantize_impl import select_implementation
 from ..base.utils import get_rasterization_code, tensor_replace_dp4a
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
@@ -57,8 +57,8 @@ class MatmulWeightOnlyDequantizeConfig:
     group_size: int = -1
     fast_decoding: bool = False
     with_bias: bool = False
-    propagate_a: bool = False
-    propagate_b: bool = False
+    propagate_a: TransformKind = TransformKind.NonTransform
+    propagate_b: TransformKind = TransformKind.NonTransform
     layout: str = "nt"
     # documents for zeros_type:
     # original: target = (dequantize_weight - zero_point) * scale
@@ -74,6 +74,31 @@ class MatmulWeightOnlyDequantizeConfig:
         object.__setattr__(
             self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
         )
+        if isinstance(self.propagate_a, bool):
+            object.__setattr__(
+                self,
+                "propagate_a",
+                (
+                    TransformKind.IntraWarpTransform
+                    if self.propagate_a
+                    else TransformKind.NonTransform
+                ),
+            )
+        elif isinstance(self.propagate_a, int):
+            object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
+
+        if isinstance(self.propagate_b, bool):
+            object.__setattr__(
+                self,
+                "propagate_b",
+                (
+                    TransformKind.IntraWarpTransform
+                    if self.propagate_b
+                    else TransformKind.NonTransform
+                ),
+            )
+        elif isinstance(self.propagate_b, int):
+            object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
 
 
 class MatmulWeightOnlyDequantize(Operator):
@@ -122,7 +147,7 @@ class MatmulWeightOnlyDequantize(Operator):
                 storage_dtype=self.in_dtype,
                 propagate_kind="A",
                 transpose_matrix=False,
-                transform_kind=2,
+                transform_kind=self.propagate_a,
             )
             self.ladder_permutate_a = LadderPermutate(
                 config=ladder_permutate_config,
@@ -140,7 +165,7 @@ class MatmulWeightOnlyDequantize(Operator):
                 storage_dtype=self.storage_dtype,
                 propagate_kind="B",
                 transpose_matrix=True if self.layout == "nt" else False,
-                transform_kind=2,
+                transform_kind=self.propagate_b,
             )
             self.ladder_permutate_b = LadderPermutate(
                 config=ladder_permutate_config,

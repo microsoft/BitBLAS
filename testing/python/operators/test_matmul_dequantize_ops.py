@@ -8,8 +8,14 @@ from bitblas.ops.matmul_dequantize import (
     MatmulWeightOnlyDequantize,
     MatmulWeightOnlyDequantizeConfig,
 )
+import logging
+from bitblas import set_log_level
 
+set_log_level(logging.DEBUG)
 target = tvm.target.Target(get_target_from_env())
+
+from tvm.script import ir as I
+from tvm.script import tir as T
 
 
 def get_codegen_result(ops, target):
@@ -303,6 +309,7 @@ def test_matmul_dequantize_torch_forward(
     if not isinstance(M, int):
         M = 32
     matmul.hardware_aware_finetune(topk=20)
+    print(matmul.optimized_func)
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
     output_shape = (M, N)
@@ -325,9 +332,10 @@ def test_matmul_dequantize_torch_forward(
         intweight = intweight + maxq
     if with_zeros:
         inputs[1] = inputs[1] - zeros
-
+    bias = torch.rand((output_shape[-1],), dtype=torch.float16).cuda()
     ref_result = torch.matmul(inputs[0], (inputs[1].t() if layout == "nt" else inputs[1]).to(torch.float16))
-
+    if with_bias:
+        ref_result = ref_result + bias
     qw_np = general_compress(
         intweight, source_bits=bit, storage_dtype=np.int8
     )
@@ -347,12 +355,209 @@ def test_matmul_dequantize_torch_forward(
         permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda())
     if with_zeros:
         permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
+    if with_bias:
+        permuted_inputs.append(bias)
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
+
+
+@pytest.mark.parametrize(
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,layout,zeros_type",
+    [
+        (16, 768, 768, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True, False, "nt", "original"),
+        (16, 768, 768, "float16", "float16", "float16", 4, "int8", "uint", False, True, -1, True, True, "nt", "original"),
+        (16, 3072, 768, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True, False, "nt", "original"),
+        (16, 768, 3072, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True, False, "nt", "original"),
+    ],
+)
+def test_matmul_dequantize_propgate_comparison(
+    M,
+    N,
+    K,
+    in_dtype,
+    out_dtype,
+    accum_dtype,
+    bit,
+    storage_dtype,
+    source_format,
+    with_scaling,
+    with_zeros,
+    group_size,
+    fast_decoding,
+    with_bias,
+    layout,
+    zeros_type
+):
+    import torch
+    torch.random.manual_seed(0)
+    original_matmul_config = MatmulWeightOnlyDequantizeConfig(
+        M=M,
+        N=N,
+        K=K,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        bit=bit,
+        storage_dtype=storage_dtype,
+        source_format=source_format,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        group_size=group_size,
+        fast_decoding=False,
+        with_bias=with_bias,
+        propagate_a=False,
+        propagate_b=False,
+        layout=layout,
+        zeros_type=zeros_type
+    )
+    original_matmul = MatmulWeightOnlyDequantize(
+        config=original_matmul_config,
+        target=target,
+    )
+    if not isinstance(M, int):
+        M = 32
+    # original_matmul.hardware_aware_finetune(topk=20)
+    
+    if group_size == -1:
+        group_size = K
+    input_shape = (M, K)
+    weight_shape = (N, K // 2) if layout == "nt" else (K, N)
+    output_shape = (M, N)
+    scales_shape = (N, K // group_size)
+    zeros_shape = (N, K // group_size)
+    bias_shape = (N,)
+    
+    inputs = []
+    input_tensor = torch.rand(input_shape, dtype=torch.float16).cuda()
+    weight_tensor = torch.randint(0, 3, weight_shape, dtype=torch.int8).cuda()
+    scales_tensor = torch.rand(scales_shape, dtype=torch.float16).cuda() * 0.1314
+    zeros_tensor = torch.rand(zeros_shape, dtype=torch.float16).cuda()
+    bias_tensor = torch.rand(bias_shape, dtype=torch.float16).cuda()
+    output_tensor = torch.zeros(output_shape, dtype=torch.float16).cuda()
+    inputs.append(input_tensor)
+    inputs.append(weight_tensor)
+    if with_scaling:
+        inputs.append(scales_tensor)
+    if with_zeros:
+        inputs.append(zeros_tensor)
+    if with_bias:
+        inputs.append(bias_tensor)
+    inputs.append(output_tensor)
+    ref_result = original_matmul(*inputs)
+
+    propagated_matmul_config = MatmulWeightOnlyDequantizeConfig(
+        M=M,
+        N=N,
+        K=K,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        bit=bit,
+        storage_dtype=storage_dtype,
+        source_format=source_format,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        group_size=group_size,
+        fast_decoding=fast_decoding,
+        with_bias=with_bias,
+        propagate_a=False,
+        propagate_b=True,
+        layout=layout,
+        zeros_type=zeros_type
+    )
+    propagated_matmul = MatmulWeightOnlyDequantize(
+        config=propagated_matmul_config,
+        target=target,
+    )
+    func = propagated_matmul.prim_func
+    arch = propagated_matmul.arch
+    rule = bitblas.gpu.MatmulTensorizationMMAWithDequantizeInfo()
+    sch = bitblas.testing.debug_with_schedule(func, arch, rule)
+    with tvm.transform.PassContext(
+        config={"tir.use_async_copy": True}
+    ):
+        rt_mod = tvm.build(sch.mod, target=arch.target)
+    propagated_inputs = []
+    propagated_inputs.append(input_tensor)
+    if propagated_matmul.weight_transform is not None:
+        propagated_inputs.append(
+            propagated_matmul.weight_transform(weight_tensor.cpu()).cuda()
+        )
+    else:
+        propagated_inputs.append(weight_tensor)
+    if with_scaling:
+        inter_scales_tensor = torch.zeros([N // 16, (K // group_size) // 16, 16, 16], dtype=torch.float16).cuda()
+        for i in range(N // 16):
+            for j in range((K // group_size) // 16):
+                for ii in range(16):
+                    for jj in range(16):
+                        inter_scales_tensor[i, j, ii, jj] = scales_tensor[i * 16 + ii, j * 16 + jj]
+        propagated_inputs.append(inter_scales_tensor)
+    if with_zeros:
+        propagated_inputs.append(zeros_tensor)
+    if with_bias:
+        propagated_inputs.append(bias_tensor)
+    propagated_inputs.append(torch.zeros(output_shape, dtype=torch.float16).cuda())
+    from tvm.contrib.dlpack import to_pytorch_func
+    torch_func = to_pytorch_func(rt_mod)
+    torch_func(*propagated_inputs)
+    print(sch.mod)
+    print(ref_result)
+    print(propagated_inputs[-1])
+    # print(sch)
+    with open("debug/prim_func.py", "w") as f:
+        f.write(propagated_matmul.prim_func.script(show_meta=False))
+    with open("debug/scheduled_func.py", "w") as f:
+        f.write(sch.mod.script(show_meta=False))
+    # propagated_matmul.hardware_aware_finetune(topk=20)
+    # with open("debug/tuned_func.py", "w") as f:
+    #     f.write(propagated_matmul.optimized_func.script(show_meta=False))
+    # with open("debug/tuned_func.cu", "w") as f:
+    #     f.write(propagated_matmul.get_source())
+    # propagated_inputs = []
+    # propagated_inputs.append(input_tensor)
+    # if propagated_matmul.weight_transform is not None:
+    #     propagated_inputs.append(
+    #         propagated_matmul.weight_transform(weight_tensor.cpu()).cuda()
+    #     )
+    # else:
+    #     propagated_inputs.append(weight_tensor)
+    # if with_scaling:
+    #     propagated_inputs.append(scales_tensor)
+    # if with_zeros:
+    #     propagated_inputs.append(zeros_tensor)
+    # if with_bias:
+    #     propagated_inputs.append(bias_tensor)
+    # propagated_inputs.append(torch.zeros(output_shape, dtype=torch.float16).cuda())
+
+    # propagated_result = propagated_matmul(*propagated_inputs)
+    # print(ref_result)
+    # print(propagated_result)
+    # torch.testing.assert_close(ref_result, propagated_result, rtol=1e-2, atol=1e-2)
 
 # fmt: on
 
 if __name__ == "__main__":
     # bitblas.testing.main()
-    test_matmul_dequantize_retrieve_weight_shape(1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False, False, False, True, "nt")
+    # test_matmul_dequantize_propgate_comparison(32, 2048, 2048, "float16", "float16", "float16", 4, "int8", "uint", True, False, 2, False, False, "nt", "original")
+    test_matmul_dequantize_torch_forward(
+        1024,
+        1024,
+        1024,
+        "float16",
+        "float16",
+        "float16",
+        4,
+        "int8",
+        "uint",
+        False,
+        False,
+        128,
+        False,
+        False,
+        False,
+        1,
+        "nt",
+        "original",
+    )

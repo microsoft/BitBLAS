@@ -266,7 +266,7 @@ class WeightOnlyLayoutPropagation:
                 updated_func = updated_func.with_attrs(
                     {
                         "transform_kind": self.transform_level.value,
-                        "smooth_b": True,
+                        "weight_transform_kind": True,
                     }
                 )
                 propogated_funcs[g_var] = updated_func

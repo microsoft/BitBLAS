@@ -143,6 +143,9 @@ def test_matmul_profile_latency(
     [
         (256, 256, 256, "float16", "float16", "float16", False, False, False, "nt"),
         (256, 256, 256, "float16", "float16", "float16", False, False, True, "nt"),
+        (256, 256, 256, "float16", "float16", "float16", False, False, 0, "nt"),
+        (256, 256, 256, "float16", "float16", "float16", False, False, 1, "nt"),
+        (256, 256, 256, "float16", "float16", "float16", False, False, 2, "nt"),
     ],
 )
 def test_matmul_torch_forward(

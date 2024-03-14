@@ -381,9 +381,12 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             return None
 
         main_block = reduction_blocks[0]
-        
+
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
-        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
+        if not (
+            func.attrs is not None
+            and "dlight.tensorcore_prenormlized" in func.attrs.keys()
+        ):
             sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
 
         output_blocks = [sch.get(block) for block in sch.get_output_blocks(root_block)]
@@ -412,7 +415,10 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         cache_write_required = check_require_cache(func, config=config)
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
-        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
+        if not (
+            func.attrs is not None
+            and "dlight.tensorcore_prenormlized" in func.attrs.keys()
+        ):
             sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
@@ -473,8 +479,8 @@ class MatmulTensorizationMMA(GPUScheduleRule):
                 return not smooth
             return False
 
-        can_swizzle_a = can_enable_swizzle(intrin_info.in_dtype, intrin_info.smooth_a)
-        can_swizzle_b = can_enable_swizzle(intrin_info.in_dtype, intrin_info.smooth_b)
+        can_swizzle_a = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_a)
+        can_swizzle_b = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_b)
 
         warp_size = 32
 
@@ -568,10 +574,10 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             )
 
         smooth_smem_layout_rewrite(
-            block_outer, ("read", 0), *a_lr, enable=intrin_info.smooth_a
+            block_outer, ("read", 0), *a_lr, enable=intrin_info.inter_transform_a
         )
         smooth_smem_layout_rewrite(
-            block_outer, ("read", 1), *b_lr, enable=intrin_info.smooth_b
+            block_outer, ("read", 1), *b_lr, enable=intrin_info.inter_transform_b
         )
         smooth_smem_layout_rewrite(block_outer, ("write", 0), enable=True)
 
@@ -633,10 +639,14 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             # read and write buffer
             producers = _collect_producers(sch, block)
             g2s_block = a_g2s if matrix_name == "A" else b_g2s
-            propagate_block: tir.Block = producers[-1] if len(producers) > 0 else g2s_block
+            propagate_block: tir.Block = (
+                producers[-1] if len(producers) > 0 else g2s_block
+            )
 
             # step2: transform the layout with inverse permutation
-            _, inverse_indexmap = get_propagate_map(trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name)
+            intra_indexmap, _ = get_propagate_map(
+                trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name
+            )
 
             def inverse_permutation(i, j, ii, jj):
                 return (i, j, *intra_indexmap.map_indices([ii, jj]))
@@ -697,12 +707,12 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         sch.transform_layout(
             A_mat,
             ("write", 0),
-            get_warp_index_map(index_map_a, *a_lr, intrin_info.smooth_a),
+            get_warp_index_map(index_map_a, *a_lr, intrin_info.inter_transform_a),
         )
         sch.transform_layout(
             B_mat,
             ("write", 0),
-            get_warp_index_map(index_map_b, *b_lr, intrin_info.smooth_b),
+            get_warp_index_map(index_map_b, *b_lr, intrin_info.inter_transform_b),
         )
         sch.transform_layout(
             store,

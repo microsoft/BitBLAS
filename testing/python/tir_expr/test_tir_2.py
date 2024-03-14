@@ -28,7 +28,7 @@ def fused_fused_decode3_fused_NT_matmul8_add1(
                     "with_scaling": T.bool(True),
                 }
             },
-            "smooth_b": T.bool(True),
+            "weight_transform_kind": T.bool(True),
             "tir.noalias": T.bool(True),
             "transform_kind": 1,
         }

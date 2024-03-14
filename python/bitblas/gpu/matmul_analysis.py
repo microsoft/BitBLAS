@@ -618,10 +618,10 @@ def get_tensorized_func_and_tags(
         intrin_info["out_dtype"] = out_dtype
         # if the last dimension is reduce axis, the B is transposed
         intrin_info["trans_b"] = check_last_trait(block_stmt.reads[1].region)
-        if func.attrs is not None and "smooth_a" in func.attrs:
-            intrin_info["smooth_a"] = func.attrs["smooth_a"]
-        if func.attrs is not None and "smooth_b" in func.attrs:
-            intrin_info["smooth_b"] = func.attrs["smooth_b"]
+        if func.attrs is not None and "input_transform_kind" in func.attrs:
+            intrin_info["input_transform_kind"] = func.attrs["input_transform_kind"]
+        if func.attrs is not None and "weight_transform_kind" in func.attrs:
+            intrin_info["weight_transform_kind"] = func.attrs["weight_transform_kind"]
         tags["intrin_info"] = intrin_info
 
         return tags

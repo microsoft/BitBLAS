@@ -19,4 +19,4 @@ def debug_with_schedule(func, arch, sch_rule):
     if tags:
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
     configs = policy.emit_config(1)
-    return sch_rule.apply_config(configs[0])
+    return sch_rule.apply_config(func, configs[0])

@@ -5,7 +5,7 @@ import numpy as np
 from tvm.target import Target
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from typing import List, Union, Optional, Any, Tuple
-from .operator import Operator
+from .operator import Operator, TransformKind
 from .impl.matmul_impl import select_implementation
 from ..base.utils import get_rasterization_code
 from bitblas.utils import match_global_kernel, tensor_replace_dp4a
@@ -50,8 +50,8 @@ class MatmulConfig:
     accum_dtype: str = "float16"
     with_bias: bool = False
     layout: str = "nt"
-    propagate_a: bool = False
-    propagate_b: bool = False
+    propagate_a: TransformKind = TransformKind.NonTransform
+    propagate_b: TransformKind = TransformKind.NonTransform
 
     def __post_init__(self):
         # set M to tuple if it is list
@@ -59,6 +59,31 @@ class MatmulConfig:
         object.__setattr__(
             self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
         )
+        if isinstance(self.propagate_a, bool):
+            object.__setattr__(
+                self,
+                "propagate_a",
+                (
+                    TransformKind.IntraWarpTransform
+                    if self.propagate_a
+                    else TransformKind.NonTransform
+                ),
+            )
+        elif isinstance(self.propagate_a, int):
+            object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
+
+        if isinstance(self.propagate_b, bool):
+            object.__setattr__(
+                self,
+                "propagate_b",
+                (
+                    TransformKind.IntraWarpTransform
+                    if self.propagate_b
+                    else TransformKind.NonTransform
+                ),
+            )
+        elif isinstance(self.propagate_b, int):
+            object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
 
 
 class Matmul(Operator):
@@ -96,7 +121,7 @@ class Matmul(Operator):
                 storage_dtype=self.in_dtype,
                 propagate_kind="A",
                 transpose_matrix=False,
-                transform_kind=2,
+                transform_kind=self.propagate_a,
             )
             self.ladder_permutate_a = LadderPermutate(
                 config=ladder_permutate_config,
@@ -113,7 +138,7 @@ class Matmul(Operator):
                 storage_dtype=self.in_dtype,
                 propagate_kind="B",
                 transpose_matrix=True if self.layout == "nt" else False,
-                transform_kind=2,
+                transform_kind=self.propagate_b,
             )
             self.ladder_permutate_b = LadderPermutate(
                 config=ladder_permutate_config,

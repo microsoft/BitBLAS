@@ -115,19 +115,34 @@ class IntrinInfo:
         in_dtype: str,
         out_dtype: str,
         trans_b: bool,
-        smooth_a: bool = False,
-        smooth_b: bool = False,
+        input_transform_kind: int = 0,
+        weight_transform_kind: int = 0,
     ) -> None:
         self.in_dtype = in_dtype
         self.out_dtype = out_dtype
         self.trans_a = False
         self.trans_b = trans_b
-        self.smooth_a = smooth_a
-        self.smooth_b = smooth_b
+        self.input_transform_kind = input_transform_kind
+        self.weight_transform_kind = weight_transform_kind
 
     def __repr__(self) -> str:
         return f"<IntrinInfo, {self.in_dtype}, {self.out_dtype}, {self.trans_b}, {self.propagate_b}>"
 
+    @property
+    def smooth_a(self) -> bool:
+        return self.input_transform_kind >= 2
+    
+    @property
+    def smooth_b(self) -> bool:
+        return self.weight_transform_kind >= 2
+
+    @property
+    def inter_transform_a(self) -> bool:
+        return self.input_transform_kind >= 1
+    
+    @property
+    def inter_transform_b(self) -> bool:
+        return self.weight_transform_kind >= 1
 
 class Config(object):
     """

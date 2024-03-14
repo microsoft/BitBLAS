@@ -14,7 +14,12 @@ from copy import deepcopy
 from bitblas.base.roller.arch import get_arch
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from dataclasses import dataclass
+from enum import IntEnum
 
+class TransformKind(IntEnum):
+    NonTransform = 0
+    InterWarpTransform = 1
+    IntraWarpTransform = 2
 
 @dataclass
 class OperatorConfig:
@@ -75,12 +80,14 @@ class Operator(ABC):
 
             try:
                 # Use a specific TVM pass context for CUDA platforms
-                with tvm.transform.PassContext(config={"tir.use_async_copy": True, **self.pass_context}):
+                with tvm.transform.PassContext(
+                    config={"tir.use_async_copy": True, **self.pass_context}
+                ):
                     rt_mod = tvm.build(
                         self.optimized_func, target=target, name=self.name
                     )
             except Exception as e:
-                rt_build_error = e # pylint: disable=unused-variable
+                rt_build_error = e  # pylint: disable=unused-variable
                 # Log the exception for debugging purposes. Replace 'print' with logging if necessary.
                 print(f"Failed to build optimized function for CUDA target")
         else:
@@ -221,7 +228,8 @@ class Operator(ABC):
 
     def forward(self, *args):
         # "Currently only support forward from torch tensor"
-        return self.torch_func(*args)
+        self.torch_func(*args)
+        return args[-1]
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         return self.forward(*args, **kwds)

@@ -5,6 +5,7 @@ import tvm
 from tvm.script import tir as T
 from tvm import te, DataType
 from tvm.tir import IndexMap
+from bitblas.ops.operator import TransformKind
 from bitblas.gpu.matmul_analysis import get_propagate_map
 from bitblas.quantization import (
     _tir_packed_to_signed_convert,
@@ -143,6 +144,7 @@ def matmul_nt_dequantize_b_propagate_b(
     fast_decoding=False,
     with_bias=False,
     zeros_type="original",
+    transform_kind: TransformKind = TransformKind.IntraWarpTransform,
 ):
     if not isinstance(M, int):
         M = tvm.te.var("m")
@@ -191,8 +193,9 @@ def matmul_nt_dequantize_b_propagate_b(
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % qr
         spatial_args = i // l, j // qr
-        permutate_i, permutate_j = inverse_indexmap.map_indices([warp_i, warp_j])
-        new_index = (*spatial_args, permutate_i, permutate_j)
+        if transform_kind >= TransformKind.IntraWarpTransform:
+            warp_i, warp_j = inverse_indexmap.map_indices([warp_i, warp_j])
+        new_index = (*spatial_args, warp_i, warp_j)
         return B[new_index]
 
     B_reindex = te.compute(
@@ -261,6 +264,8 @@ def matmul_nt_dequantize_b_propagate_b(
         args.append(LUT)
     if with_scaling:
         args.append(Scale)
+    if with_zeros:
+        args.append(Zeros)
     if with_bias:
         E = te.compute((M, N), lambda i, j: D[i, j] + Bias[j], name="E")
         last_output = E
@@ -286,7 +291,7 @@ def matmul_nt_dequantize_b_propagate_b(
             }
         },
     )
-    func = func.with_attr("smooth_b", True)
+    func = func.with_attr("weight_transform_kind", transform_kind.value)
     return tvm.IRModule.from_expr(func)
 
 
@@ -306,6 +311,8 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     fast_decoding=False,
     with_bias=False,
     zeros_type="original",
+    transform_kind_input: TransformKind = TransformKind.IntraWarpTransform,
+    transform_kind_weight: TransformKind = TransformKind.IntraWarpTransform,
 ):
     if not isinstance(M, int):
         M = tvm.te.var("m")
@@ -319,8 +326,9 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
         spatial_args = i // l, j // r
-        permutate_i, permutate_j = inversed_index_map.map_indices([warp_i, warp_j])
-        new_index = (*spatial_args, permutate_i, permutate_j)
+        if transform_kind_input >= TransformKind.IntraWarpTransform:
+            warp_i, warp_j = inversed_index_map.map_indices([warp_i, warp_j])
+        new_index = (*spatial_args, warp_i, warp_j)
         return A[new_index]
 
     A_reindex = te.compute(
@@ -367,8 +375,9 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % qr
         spatial_args = i // l, j // qr
-        permutate_i, permutate_j = inversed_index_map.map_indices([warp_i, warp_j])
-        new_index = (*spatial_args, permutate_i, permutate_j)
+        if transform_kind_weight >= TransformKind.IntraWarpTransform:
+            warp_i, warp_j = inversed_index_map.map_indices([warp_i, warp_j])
+        new_index = (*spatial_args, warp_i, warp_j)
         return B[new_index]
 
     B_reindex = te.compute(
@@ -452,8 +461,8 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
             }
         },
     )
-    func = func.with_attr("smooth_a", True)
-    func = func.with_attr("smooth_b", True)
+    func = func.with_attr("input_transform_kind", transform_kind_input.value)
+    func = func.with_attr("weight_transform_kind", transform_kind_weight.value)
     return tvm.IRModule.from_expr(func)
 
 
@@ -499,6 +508,8 @@ def select_implementation(
                 fast_decoding,
                 with_bias,
                 zeros_type,
+                transform_kind_input=propagate_a,
+                transform_kind_weight=propagate_b,
             )
         elif propagate_a:
             raise NotImplementedError
@@ -519,6 +530,7 @@ def select_implementation(
                 fast_decoding,
                 with_bias,
                 zeros_type,
+                transform_kind=propagate_b,
             )
         else:
             return matmul_nt_dequantize_b(

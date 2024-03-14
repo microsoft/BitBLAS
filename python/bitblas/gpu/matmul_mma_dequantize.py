@@ -146,7 +146,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         intrin_info = config.intrin_info
         shared_scope = config.shared_scope
 
-        intrin_info = config.intrin_info
         intrin_group = get_mma_intrin_group(
             load_scope=shared_scope,
             store_scope=shared_scope if cache_write_required else "global",
@@ -183,8 +182,8 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 return not smooth
             return False
 
-        can_swizzle_a = can_enable_swizzle(intrin_info.in_dtype, intrin_info.smooth_a)
-        can_swizzle_b = can_enable_swizzle(intrin_info.in_dtype, intrin_info.smooth_b)
+        can_swizzle_a = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_a)
+        can_swizzle_b = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_b)
 
         # rewrite global smooth layout, for dequantize, currently only support weight only recover.
         def smooth_gmem_layout_rewrite(
@@ -343,13 +342,13 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             )
 
         smooth_layout_recover(
-            block_outer, ("read", 0), *a_lr, enable=intrin_info.smooth_a
+            block_outer, ("read", 0), *a_lr, enable=intrin_info.inter_transform_a
         )
         smooth_layout_recover(
             block_outer,
             ("read", 1),
             *b_lr,
-            enable=intrin_info.smooth_b,
+            enable=intrin_info.inter_transform_b,
         )
         smooth_layout_recover(block_outer, ("write", 0), enable=True)
 
@@ -523,10 +522,14 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         index_map_a, index_map_b, index_map_c = intrin_group["index_map"]
 
         sch.transform_layout(
-            A_mat, ("write", 0), get_index_map(index_map_a, *a_lr, intrin_info.smooth_a)
+            A_mat,
+            ("write", 0),
+            get_index_map(index_map_a, *a_lr, intrin_info.inter_transform_a),
         )
         sch.transform_layout(
-            B_mat, ("write", 0), get_index_map(index_map_b, *b_lr, intrin_info.smooth_b)
+            B_mat,
+            ("write", 0),
+            get_index_map(index_map_b, *b_lr, intrin_info.inter_transform_b),
         )
         sch.transform_layout(
             store,
@@ -649,7 +652,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         # NOTE: we can analyze the config by the hardware spec in the future
 
         # tensor core intrinsic size
-        intrin_info = config.intrin_info
         shared_scope = config.shared_scope
 
         intrin_info = config.intrin_info
@@ -689,8 +691,8 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 return not smooth
             return False
 
-        can_swizzle_a = can_enable_swizzle(intrin_info.in_dtype, intrin_info.smooth_a)
-        can_swizzle_b = can_enable_swizzle(intrin_info.in_dtype, intrin_info.smooth_b)
+        can_swizzle_a = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_a)
+        can_swizzle_b = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_b)
 
         # rewrite global smooth layout, for dequantize, currently only support weight only recover.
         def smooth_gmem_layout_rewrite(
@@ -742,6 +744,10 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 return (i, j, *intra_indexmap.map_indices([ii, jj]))
 
             sch.transform_layout(propagate_block, ("read", 0), inverse_permutation)
+
+            intra_indexmap, _ = get_propagate_map(
+                trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name
+            )
 
         smooth_gmem_layout_rewrite(
             sch, main_block, intrin_info.smooth_a, intrin_info.trans_a, matrix_name="A"
@@ -848,13 +854,13 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             )
 
         smooth_layout_recover(
-            block_outer, ("read", 0), *a_lr, enable=intrin_info.smooth_a
+            block_outer, ("read", 0), *a_lr, enable=intrin_info.inter_transform_a
         )
         smooth_layout_recover(
             block_outer,
             ("read", 1),
             *b_lr,
-            enable=intrin_info.smooth_b,
+            enable=intrin_info.inter_transform_b,
         )
         smooth_layout_recover(block_outer, ("write", 0), enable=True)
 
@@ -945,7 +951,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     source_format=weight_decode_info["source_format"]["format"],
                     source_bit=source_bit,
                     with_scaling=weight_decode_info["with_scaling"],
-                    with_zeros=weight_decode_info["with_zeros"]
+                    with_zeros=weight_decode_info["with_zeros"],
                 )
                 sch.tensorize(
                     sch.get_loops(dequantize_block_local)[-1],
@@ -1056,10 +1062,14 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         index_map_a, index_map_b, index_map_c = intrin_group["index_map"]
 
         sch.transform_layout(
-            A_mat, ("write", 0), get_index_map(index_map_a, *a_lr, intrin_info.smooth_a)
+            A_mat,
+            ("write", 0),
+            get_index_map(index_map_a, *a_lr, intrin_info.inter_transform_a),
         )
         sch.transform_layout(
-            B_mat, ("write", 0), get_index_map(index_map_b, *b_lr, intrin_info.smooth_b)
+            B_mat,
+            ("write", 0),
+            get_index_map(index_map_b, *b_lr, intrin_info.inter_transform_b),
         )
         sch.transform_layout(
             store,

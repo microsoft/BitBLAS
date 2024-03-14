@@ -6,6 +6,7 @@ import tvm
 import torch
 import bitblas
 from bitblas.ops.matmul import Matmul, MatmulConfig
+from bitblas.ops.matmul_dequantize import MatmulWeightOnlyDequantize, MatmulWeightOnlyDequantizeConfig
 from bitblas.cache import global_operator_cache
 
 target = bitblas.utils.get_target_from_env()
@@ -285,6 +286,78 @@ def test_global_cache_save_to_database(
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
+
+@pytest.mark.parametrize(
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
+    [
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False, False, False, False, "nt",),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, False, -1, False, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, False, -1, False, False, False, False, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, False, -1, False, False, False, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", False, False, -1, False, False, True, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", True, False, -1, False, False, True, True, "nt",),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "af", True, False, 128, False, False, True, True, "nt",),
+    ],
+)
+def test_matmul_dequantize_save_into_database(
+    M,
+    N,
+    K,
+    in_dtype,
+    out_dtype,
+    accum_dtype,
+    bit,
+    storage_dtype,
+    source_format,
+    with_scaling,
+    with_zeros,
+    group_size,
+    fast_decoding,
+    with_bias,
+    propagate_a,
+    propagate_b,
+    layout,
+):
+
+    matmul_config = MatmulWeightOnlyDequantizeConfig(
+        M=M,
+        N=N,
+        K=K,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        bit=bit,
+        storage_dtype=storage_dtype,
+        source_format=source_format,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        group_size=group_size,
+        fast_decoding=fast_decoding,
+        with_bias=with_bias,
+        propagate_a=propagate_a,
+        propagate_b=propagate_b,
+        layout=layout,
+    )
+    matmul = MatmulWeightOnlyDequantize(
+        config=matmul_config,
+        target=target,
+    )
+    matmul.hardware_aware_finetune(topk=20)
+    database_path = "debug/test_database"
+    success = False
+    
+    try:
+        global_operator_cache.add(matmul.config, matmul)
+        success = True
+    except Exception as hash_error:
+        print(hash_error)
+    assert success
+    global_operator_cache.save_into_database(database_path, target=target)
+    assert os.path.exists(database_path)
+    global_operator_cache.clear()
+    assert global_operator_cache.size() == 0
+    global_operator_cache.load_from_database(database_path, target=target)
+    assert global_operator_cache.size() > 0
 
 
 # fmt: on
