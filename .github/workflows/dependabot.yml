@@ -3,6 +3,7 @@ name: Dependent Bot Action
 on:
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   bot-task:
