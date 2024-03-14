@@ -1,14 +1,6 @@
 # Basic dependabot.yml configuration for updating Python dependencies
 version: 2
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: '36 11 * * 5'
-
 updates:
   # Enable version updates for Python packages listed in requirements.txt
   - package-ecosystem: "pip"
@@ -26,9 +18,6 @@ updates:
   - package-ecosystem: "poetry"
     # Directory where pyproject.toml is located
     directory: "/"
-    # Check for updates every week
-    schedule:
-      interval: "weekly"
     # Specify a time (in UTC) to check for updates, for less disruption
     schedule:
       interval: "weekly"
