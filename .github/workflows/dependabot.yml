@@ -26,7 +26,7 @@ jobs:
       run: python ./scripts/dependent_bot_script.py
 
     - name: Post results back to PR
-      uses: github-actions/github-script@v5
+      uses: actions/github-script@v5
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
@@ -37,3 +37,4 @@ jobs:
             repo: context.repo.repo,
             body: result,
           });
+
