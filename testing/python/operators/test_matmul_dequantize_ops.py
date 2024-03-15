@@ -429,7 +429,7 @@ def test_matmul_dequantize_propgate_comparison(
     inputs = []
     input_tensor = torch.rand(input_shape, dtype=torch.float16).cuda()
     weight_tensor = torch.randint(0, 3, weight_shape, dtype=torch.int8).cuda()
-    scales_tensor = torch.rand(scales_shape, dtype=torch.float16).cuda() * 0.1314
+    scales_tensor = torch.rand(scales_shape, dtype=torch.float16).cuda()
     zeros_tensor = torch.rand(zeros_shape, dtype=torch.float16).cuda()
     bias_tensor = torch.rand(bias_shape, dtype=torch.float16).cuda()
     output_tensor = torch.zeros(output_shape, dtype=torch.float16).cuda()
