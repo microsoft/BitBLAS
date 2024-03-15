@@ -15,6 +15,7 @@ from ..base import (
     get_block,
 )
 from .base import GPUScheduleRule
+from .matmul_analysis import auto_inline_producers
 
 logger = logging.getLogger(__name__)
 
@@ -115,12 +116,6 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         output_blocks = get_output_blocks(sch, block_infos)
         B_decode_block = get_block(sch, block_infos, weight_decode_info["decode_block"])
 
-        # compute inline
-        for block_info in reversed(block_infos):
-            block = block_info.block_rv
-            if block not in (reduction_block, *output_blocks, B_decode_block):
-                sch.compute_inline(block)
-
         block_decode_B = sch.cache_read(block_b, 1, "local")
         sch.compute_inline(B_decode_block)
 
@@ -140,6 +135,8 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             block_decode_B, get_idx(weight_decode_info), "local"
         )
         block_local_C = sch.cache_write(block_b, 0, "local")
+
+        auto_inline_producers(sch, block_shared_local_B)
         # reverse inline
         if reduction_block != None and reduction_block != output_blocks[0]:
             sch.reverse_compute_inline(output_blocks[0])
