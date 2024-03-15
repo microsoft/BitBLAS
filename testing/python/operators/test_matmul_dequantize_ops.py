@@ -279,6 +279,7 @@ def test_matmul_dequantize_torch_forward(
     zeros_type
 ):
     import torch
+    torch.random.manual_seed(0)
     import numpy as np
     from bitblas.quantization.utils import general_compress
 
@@ -313,7 +314,7 @@ def test_matmul_dequantize_torch_forward(
     weight_shape = (N, K) if layout == "nt" else (K, N)
     output_shape = (M, N)
     inputs = []
-    inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda())
+    inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda() - 0.5)
     maxq = 2 ** (bit - 1) - 1
     zeros = maxq
     if source_format == "uint":
@@ -340,8 +341,12 @@ def test_matmul_dequantize_torch_forward(
     )
     qw_torch = torch.from_numpy(qw_np).cuda()
     permuted_inputs = []
-    permuted_inputs.append(inputs[0])
-
+    if matmul.input_transform is not None:
+        permuted_inputs.append(
+            matmul.input_transform(qw_torch.cpu()).cuda()
+        )
+    else:
+        permuted_inputs.append(inputs[0])
     if matmul.weight_transform is not None:
         permuted_inputs.append(
             matmul.weight_transform(qw_torch.cpu()).cuda()
@@ -358,6 +363,8 @@ def test_matmul_dequantize_torch_forward(
         permuted_inputs.append(bias)
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
+    print(permuted_inputs[-1])
+    print(ref_result)
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
 
 
@@ -428,7 +435,7 @@ def test_matmul_dequantize_propgate_comparison(
     
     inputs = []
     input_tensor = torch.rand(input_shape, dtype=torch.float16).cuda()
-    weight_tensor = torch.randint(0, 3, weight_shape, dtype=torch.int8).cuda()
+    weight_tensor = torch.randint(0, 2 ** (bit - 1) - 1, weight_shape, dtype=torch.int8).cuda()
     scales_tensor = torch.rand(scales_shape, dtype=torch.float16).cuda()
     zeros_tensor = torch.rand(zeros_shape, dtype=torch.float16).cuda()
     bias_tensor = torch.rand(bias_shape, dtype=torch.float16).cuda()

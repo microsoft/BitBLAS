@@ -15,15 +15,21 @@ from bitblas.base.roller.arch import get_arch
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from dataclasses import dataclass
 from enum import IntEnum
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class TransformKind(IntEnum):
     NonTransform = 0
     InterWarpTransform = 1
     IntraWarpTransform = 2
 
+
 @dataclass
 class OperatorConfig:
     """Base class for operator configurations. Used for typing."""
+
     pass
 
 
@@ -89,7 +95,9 @@ class Operator(ABC):
             except Exception as e:
                 rt_build_error = e  # pylint: disable=unused-variable
                 # Log the exception for debugging purposes. Replace 'print' with logging if necessary.
-                print(f"Failed to build optimized function for CUDA target")
+                logger.info(
+                    f"Failed to build optimized function for CUDA target with default schedule, Please consider enable hardware aware tuning!"
+                )
         else:
             # For non-CUDA platforms or when no optimized function is available, build with the primary function
             rt_mod = tvm.build(self.prim_func, target=target, name=self.name)

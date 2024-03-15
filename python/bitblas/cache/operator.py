@@ -90,7 +90,7 @@ class OperatorCache:
             open(os.path.join(config_path, "mapping.json"), "w"),
         )
         open(os.path.join(config_path, "source.cu"), "w").write(op_inst.get_source())
-        open(os.path.join(config_path, "optimized.py"), "w").write(op_inst.optimized_func.astext())
+        open(os.path.join(config_path, "optimized.py"), "w").write(op_inst.optimized_func.script(show_meta=False))
         
 
     def _determine_target_arch_str(self, target):
