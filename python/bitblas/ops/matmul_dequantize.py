@@ -12,9 +12,10 @@ from dataclasses import dataclass
 from bitblas.utils import match_global_kernel
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 from .lop3_permutate import LOP3Permutate, LOP3PermutateConfig
+from .param_permutate import ParamPermutate, ParamPermutateConfig
 
 
-class WeightExecutorCPU:
+class OPExecutorCPU:
     def __init__(self, operators: Optional[List[Operator]] = None):
         if operators is None:
             operators = []
@@ -189,7 +190,7 @@ class MatmulWeightOnlyDequantize(Operator):
         else:
             self.lop3_permutate = None
 
-        weight_executors = WeightExecutorCPU()
+        weight_executors = OPExecutorCPU()
         if self.lop3_permutate is not None:
             weight_executors.append(self.lop3_permutate)
 

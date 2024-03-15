@@ -320,7 +320,9 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     l = r = 16
     if in_dtype == "int8":
         l, r = 16, 32
-    _, inversed_index_map = get_propagate_map(trans=False, dtype=in_dtype, matrix_name="A")
+    _, inversed_index_map = get_propagate_map(
+        trans=False, dtype=in_dtype, matrix_name="A"
+    )
     A = te.placeholder((M // l, K // r, l, r), name="A", dtype=in_dtype)
 
     def fcompute(i, j):
@@ -337,7 +339,9 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
         name="A_reindex",
     )
 
-    _, inversed_index_map = get_propagate_map(trans=True, dtype=in_dtype, matrix_name="B")
+    _, inversed_index_map = get_propagate_map(
+        trans=True, dtype=in_dtype, matrix_name="B"
+    )
     target_dtype = DataType(in_dtype)
     scaling_factor = 1
     if bit > 0 and bit < target_dtype.bits:

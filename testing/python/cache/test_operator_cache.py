@@ -6,7 +6,10 @@ import tvm
 import torch
 import bitblas
 from bitblas.ops.matmul import Matmul, MatmulConfig
-from bitblas.ops.matmul_dequantize import MatmulWeightOnlyDequantize, MatmulWeightOnlyDequantizeConfig
+from bitblas.ops.matmul_dequantize import (
+    MatmulWeightOnlyDequantize,
+    MatmulWeightOnlyDequantizeConfig,
+)
 from bitblas.cache import global_operator_cache
 
 target = bitblas.utils.get_target_from_env()

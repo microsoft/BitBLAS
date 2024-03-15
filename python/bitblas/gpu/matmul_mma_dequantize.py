@@ -182,8 +182,12 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 return not smooth
             return False
 
-        can_swizzle_a = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_a)
-        can_swizzle_b = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_b)
+        can_swizzle_a = can_enable_swizzle(
+            intrin_info.in_dtype, intrin_info.inter_transform_a
+        )
+        can_swizzle_b = can_enable_swizzle(
+            intrin_info.in_dtype, intrin_info.inter_transform_b
+        )
 
         # rewrite global smooth layout, for dequantize, currently only support weight only recover.
         def smooth_gmem_layout_rewrite(
@@ -691,12 +695,21 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 return not smooth
             return False
 
-        can_swizzle_a = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_a)
-        can_swizzle_b = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_b)
+        can_swizzle_a = can_enable_swizzle(
+            intrin_info.in_dtype, intrin_info.inter_transform_a
+        )
+        can_swizzle_b = can_enable_swizzle(
+            intrin_info.in_dtype, intrin_info.inter_transform_b
+        )
 
         # rewrite global smooth layout, for dequantize, currently only support weight only recover.
         def smooth_gmem_layout_rewrite(
-            sch, main_block, enable=True, trans=False, matrix_name="A"
+            sch,
+            main_block,
+            enable=True,
+            trans=False,
+            matrix_name="A",
+            intrin_group=intrin_group,
         ):
             if not enable:
                 return
@@ -745,9 +758,50 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
             sch.transform_layout(propagate_block, ("read", 0), inverse_permutation)
 
-            intra_indexmap, _ = get_propagate_map(
+            intra_index_map, _ = get_propagate_map(
                 trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name
             )
+
+            # get target dequantize buffer's offset
+            def get_offset():
+                # for LUT dequantize, the expr is LUT(w), the idx is 1
+                # maybe we can use a more general and structual based way
+                # to analysis the idx
+                if weight_dequantize_info["source_format"]["format"] == "af":
+                    return 1
+                return 0
+
+            offset = get_offset()
+            dequantize_block = sch.get_block(weight_dequantize_info["decode_block"])
+            group_size = weight_dequantize_info["group_size"]
+
+            _, mn, mk = intrin_group["micro_kernel"]
+
+            def get_param_indices(indexmap, l=mn, r=mk, group_size=group_size):
+                # assume the param layout is n, k
+                rl, rr = [x.var for x in sch.get(dequantize_block).iter_vars]
+                warp_i, warp_j = rl % l, rr % r
+                spatial_i, spatial_j = rl // l, rr // r
+                warp_i, warp_j = indexmap.map_indices([warp_i, warp_j])
+                new_indices = (
+                    spatial_i * l + warp_i,
+                    (spatial_j * r + warp_j) // group_size,
+                )
+                return new_indices
+            with_scaling = bool(weight_dequantize_info["with_scaling"])
+            if with_scaling:                
+                sch.unsafe_rewrite_buffer_region(
+                    dequantize_block,
+                    ("read", offset + 1),
+                    get_param_indices(intra_index_map),
+                )
+            with_zeros = bool(weight_dequantize_info["with_zeros"])
+            if with_zeros:
+                sch.unsafe_rewrite_buffer_region(
+                    dequantize_block,
+                    ("read", offset + 2),
+                    get_param_indices(intra_index_map),
+                )
 
         smooth_gmem_layout_rewrite(
             sch, main_block, intrin_info.smooth_a, intrin_info.trans_a, matrix_name="A"

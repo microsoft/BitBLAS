@@ -309,7 +309,6 @@ def test_matmul_dequantize_torch_forward(
     if not isinstance(M, int):
         M = 32
     matmul.hardware_aware_finetune(topk=20)
-    print(matmul.optimized_func)
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
     output_shape = (M, N)
@@ -417,7 +416,6 @@ def test_matmul_dequantize_propgate_comparison(
     )
     if not isinstance(M, int):
         M = 32
-    # original_matmul.hardware_aware_finetune(topk=20)
     
     if group_size == -1:
         group_size = K
@@ -470,14 +468,8 @@ def test_matmul_dequantize_propgate_comparison(
         config=propagated_matmul_config,
         target=target,
     )
-    func = propagated_matmul.prim_func
-    arch = propagated_matmul.arch
-    rule = bitblas.gpu.MatmulTensorizationMMAWithDequantizeInfo()
-    sch = bitblas.testing.debug_with_schedule(func, arch, rule)
-    with tvm.transform.PassContext(
-        config={"tir.use_async_copy": True}
-    ):
-        rt_mod = tvm.build(sch.mod, target=arch.target)
+
+    propagated_matmul.hardware_aware_finetune(topk=20)
     propagated_inputs = []
     propagated_inputs.append(input_tensor)
     if propagated_matmul.weight_transform is not None:
@@ -487,77 +479,17 @@ def test_matmul_dequantize_propgate_comparison(
     else:
         propagated_inputs.append(weight_tensor)
     if with_scaling:
-        inter_scales_tensor = torch.zeros([N // 16, (K // group_size) // 16, 16, 16], dtype=torch.float16).cuda()
-        for i in range(N // 16):
-            for j in range((K // group_size) // 16):
-                for ii in range(16):
-                    for jj in range(16):
-                        inter_scales_tensor[i, j, ii, jj] = scales_tensor[i * 16 + ii, j * 16 + jj]
-        propagated_inputs.append(inter_scales_tensor)
+        propagated_inputs.append(scales_tensor)
     if with_zeros:
         propagated_inputs.append(zeros_tensor)
     if with_bias:
         propagated_inputs.append(bias_tensor)
     propagated_inputs.append(torch.zeros(output_shape, dtype=torch.float16).cuda())
-    from tvm.contrib.dlpack import to_pytorch_func
-    torch_func = to_pytorch_func(rt_mod)
-    torch_func(*propagated_inputs)
-    print(sch.mod)
-    print(ref_result)
-    print(propagated_inputs[-1])
-    # print(sch)
-    with open("debug/prim_func.py", "w") as f:
-        f.write(propagated_matmul.prim_func.script(show_meta=False))
-    with open("debug/scheduled_func.py", "w") as f:
-        f.write(sch.mod.script(show_meta=False))
-    # propagated_matmul.hardware_aware_finetune(topk=20)
-    # with open("debug/tuned_func.py", "w") as f:
-    #     f.write(propagated_matmul.optimized_func.script(show_meta=False))
-    # with open("debug/tuned_func.cu", "w") as f:
-    #     f.write(propagated_matmul.get_source())
-    # propagated_inputs = []
-    # propagated_inputs.append(input_tensor)
-    # if propagated_matmul.weight_transform is not None:
-    #     propagated_inputs.append(
-    #         propagated_matmul.weight_transform(weight_tensor.cpu()).cuda()
-    #     )
-    # else:
-    #     propagated_inputs.append(weight_tensor)
-    # if with_scaling:
-    #     propagated_inputs.append(scales_tensor)
-    # if with_zeros:
-    #     propagated_inputs.append(zeros_tensor)
-    # if with_bias:
-    #     propagated_inputs.append(bias_tensor)
-    # propagated_inputs.append(torch.zeros(output_shape, dtype=torch.float16).cuda())
 
-    # propagated_result = propagated_matmul(*propagated_inputs)
-    # print(ref_result)
-    # print(propagated_result)
-    # torch.testing.assert_close(ref_result, propagated_result, rtol=1e-2, atol=1e-2)
+    propagated_result = propagated_matmul(*propagated_inputs)
+    torch.testing.assert_close(ref_result, propagated_result, rtol=1e-2, atol=1e-2)
 
 # fmt: on
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    # test_matmul_dequantize_propgate_comparison(32, 2048, 2048, "float16", "float16", "float16", 4, "int8", "uint", True, False, 2, False, False, "nt", "original")
-    test_matmul_dequantize_torch_forward(
-        1024,
-        1024,
-        1024,
-        "float16",
-        "float16",
-        "float16",
-        4,
-        "int8",
-        "uint",
-        False,
-        False,
-        128,
-        False,
-        False,
-        False,
-        1,
-        "nt",
-        "original",
-    )
+    bitblas.testing.main()
