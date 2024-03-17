@@ -227,7 +227,7 @@ def apply_and_build_parallel(
             logger.debug("LocalBuilder: Timeout")
         elif map_result.status == StatusKind.EXCEPTION:
             # TODO(lei): redirect the exception to file if needed
-            logger.debug("LocalBuilder: An exception occurred ", map_result.value)
+            logger.debug("LocalBuilder: An exception occurred {}".format(map_result.value))
             continue
         elif map_result.status == StatusKind.COMPLETE:
             idx, code, artifact_path = map_result.value
