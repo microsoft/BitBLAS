@@ -15,7 +15,7 @@ from ..base import (
     get_block,
 )
 from .base import GPUScheduleRule
-from .matmul_analysis import auto_inline_producers
+from .matmul_analysis import auto_inline_producers, auto_inline_consumers
 
 logger = logging.getLogger(__name__)
 
@@ -137,9 +137,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         block_local_C = sch.cache_write(block_b, 0, "local")
 
         auto_inline_producers(sch, block_shared_local_B)
-        # reverse inline
-        if reduction_block != None and reduction_block != output_blocks[0]:
-            sch.reverse_compute_inline(output_blocks[0])
+        auto_inline_consumers(sch, block_local_C)
 
         bx, j = sch.split(j, factors=[None, num_warps])
         k, tx, vk = sch.split(k, factors=[None, warp_size, vec])
