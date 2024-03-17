@@ -31,14 +31,11 @@ class LadderPermutate(Operator):
         target: Target = tvm.target.Target("llvm"),  # assume to do permutation on gpu.
     ):
         # consider to warp the arguments to MatmulConfig
-        super().__init__(name, target)
-        self.config = config
+        super().__init__(name, config, target)
 
         if target.kind.name != "llvm":
             raise ValueError("Currently only support llvm target for Permutation")
 
-        prim_func_mod = self._select_implementation()
-        self.prim_func_mod = prim_func_mod
         self.target = target
         self._build_runtime_module(target)
 

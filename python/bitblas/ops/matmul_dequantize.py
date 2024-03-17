@@ -110,8 +110,7 @@ class MatmulWeightOnlyDequantize(Operator):
         name: str = "matmul_weight_only_dequantize",
         target: Target = tvm.target.Target("cuda"),
     ):
-        super().__init__(name, target)
-        self.config = config
+        super().__init__(name, config, target)
 
         target = self.target
         if target.kind.name != "cuda":
@@ -119,7 +118,6 @@ class MatmulWeightOnlyDequantize(Operator):
 
         self.arch = CUDA(target)
 
-        self.prim_func_mod = self._select_implementation()
         try:
             self.optimized_func = self.apply_default_schedule(
                 self.prim_func_mod, target

@@ -93,15 +93,12 @@ class Matmul(Operator):
         name: str = "matmul",
         target: Target = tvm.target.Target("cuda"),
     ):
-        super().__init__(name, target)
-        self.config = config
+        super().__init__(name, config, target)
         target = self.target
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
 
-        prim_func_mod = self._select_implementation()
-        self.prim_func_mod = prim_func_mod
-        self.optimized_func = self.apply_default_schedule(prim_func_mod, target)
+        self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}

@@ -6,13 +6,19 @@ from tvm import IRModule
 from tvm.target import Target
 from tvm.tir import PrimFunc
 from tvm.contrib.dlpack import to_pytorch_func
+from tvm._ffi.base import _LIB, c_str, raise_last_ffi_error
+from tvm._ffi._ctypes.types import TVMValue, check_call, ArgTypeCode
 import bitblas
+import ctypes
 from typing import List, Dict, Any
 import numpy as np
 from ..base import fast_tune, fast_tune_with_dynamic_range
 from copy import deepcopy
 from bitblas.base.roller.arch import get_arch
-from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
+from bitblas.utils.tensor_adapter import (
+    tvm_tensor_to_torch,
+    get_values_from_torch_tensors,
+)
 from dataclasses import dataclass
 from enum import IntEnum
 import logging
@@ -34,12 +40,13 @@ class OperatorConfig:
 
 
 class Operator(ABC):
-    def __init__(self, name, target: Target = None):
+    def __init__(self, name, config: OperatorConfig, target: Target = None):
         if isinstance(target, str):
             target = Target(target)
         self.name = name
+        self.config = config
         self.target = target
-        self.prim_func_mod = None
+        self.prim_func_mod = self._select_implementation()
         self.optimized_func = None
         self.rt_mod = None
         self.time_evaluator = None
@@ -47,6 +54,14 @@ class Operator(ABC):
         self.arch = get_arch(target) if target else None
         self.dynamic_range = None
         self.pass_context: Dict = {}
+        self.num_args = len(self.prim_func.params)
+        self.function_handle = None
+        tcodes = (ctypes.c_int * self.num_args)()
+        self.ret_val = TVMValue()
+        self.ret_tcode = ctypes.c_int()
+        for i in range(self.num_args):
+            tcodes[i] = ArgTypeCode.NDARRAY_HANDLE
+        self.tcodes = tcodes
 
     def get_source(self, target: Target = None) -> str:
         if target is None:
@@ -94,8 +109,7 @@ class Operator(ABC):
                     )
             except Exception as e:
                 rt_build_error = e  # pylint: disable=unused-variable
-                # Log the exception for debugging purposes. Replace 'print' with logging if necessary.
-                logger.info(
+                logger.debug(
                     f"Failed to build optimized function for CUDA target with default schedule, Please consider enable hardware aware tuning!"
                 )
         else:
@@ -109,6 +123,7 @@ class Operator(ABC):
             self.time_evaluator = rt_mod.time_evaluator(
                 rt_mod.entry_name, self.arch.device, number=10
             )
+            self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
             self.torch_func = to_pytorch_func(rt_mod)
 
         return rt_mod
@@ -173,12 +188,14 @@ class Operator(ABC):
             )
         self._build_runtime_module(self.target)
 
-    def get_profile_tensors(self):
+    def get_profile_tensors(self, dynamic_symbolic_constrains: Dict = {}):
         func = self.prim_func
         device = self.arch.device
 
         def var_warpper(v):
             if isinstance(v, tvm.tir.Var):
+                if v.name in dynamic_symbolic_constrains:
+                    return dynamic_symbolic_constrains[v.name]
                 assert "opt_shapes" in func.attrs
                 assert v.name in func.attrs["opt_shapes"]
                 return func.attrs["opt_shapes"][v.name].value
@@ -204,16 +221,10 @@ class Operator(ABC):
         self.profile_tensors = profile_tensors
         return profile_tensors
 
-    def profile_latency(self) -> str:
-        if self.dynamic_range is not None:
-            return self._profile_latency_with_dynamic_range()
-
-        profile_tensors = self.get_profile_tensors()
+    def profile_latency(self, dynamic_symbolic_constrains: Dict = {}) -> str:
+        profile_tensors = self.get_profile_tensors(dynamic_symbolic_constrains)
         latency = self.time_evaluator(*profile_tensors).mean * 1e3
         return latency
-
-    def _profile_latency_with_dynamic_range(self) -> List:
-        raise NotImplementedError
 
     def _tensor_adapter(self, tensor, device):
         import torch
@@ -239,14 +250,32 @@ class Operator(ABC):
         self.torch_func(*args)
         return args[-1]
 
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
-        return self.forward(*args, **kwds)
+    def _lib_func_call(self, values):
+        if (
+            _LIB.TVMFuncCall(
+                self.function_handle,
+                values,
+                self.tcodes,
+                ctypes.c_int(self.num_args),
+                ctypes.byref(self.ret_val),
+                ctypes.byref(self.ret_tcode),
+            )
+            != 0
+        ):
+            raise_last_ffi_error()
+
+    def __call__(self, *args: Any) -> Any:
+        return self.forward(*args)
 
     def update_func(self, func: PrimFunc):
         self.prim_func_mod["main"] = func
 
     def update_runtime_module(self, rt_mod):
         self.rt_mod = rt_mod
+        self.time_evaluator = rt_mod.time_evaluator(
+            rt_mod.entry_name, self.arch.device, number=10
+        )
+        self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
         self.torch_func = to_pytorch_func(rt_mod)
 
     @abstractmethod
