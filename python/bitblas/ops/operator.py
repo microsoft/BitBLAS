@@ -15,10 +15,8 @@ import numpy as np
 from ..base import fast_tune, fast_tune_with_dynamic_range
 from copy import deepcopy
 from bitblas.base.roller.arch import get_arch
-from bitblas.utils.tensor_adapter import (
-    tvm_tensor_to_torch,
-    get_values_from_torch_tensors,
-)
+from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
+from bitblas.warpper import CUDASourceWrapper, CUDASourceWrapperWithDynamic
 from dataclasses import dataclass
 from enum import IntEnum
 import logging
@@ -56,12 +54,11 @@ class Operator(ABC):
         self.pass_context: Dict = {}
         self.num_args = len(self.prim_func.params)
         self.function_handle = None
-        tcodes = (ctypes.c_int * self.num_args)()
-        self.ret_val = TVMValue()
-        self.ret_tcode = ctypes.c_int()
-        for i in range(self.num_args):
-            tcodes[i] = ArgTypeCode.NDARRAY_HANDLE
-        self.tcodes = tcodes
+        self.num_output_args: int = (
+            1  # todo(lei): should be analyzed from the prim_func.
+        )
+        self.wrapper = None
+        self.lib = None
 
     def get_source(self, target: Target = None) -> str:
         if target is None:
@@ -125,6 +122,25 @@ class Operator(ABC):
             )
             self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
             self.torch_func = to_pytorch_func(rt_mod)
+            if self.arch.platform == "CUDA":
+                try:
+                    if (
+                        self.dynamic_range is not None
+                        and len(self.optimized_func.functions) > 1
+                    ):
+                        wrapper = CUDASourceWrapperWithDynamic(
+                            self.optimized_func, self.get_source(target), self.arch
+                        )
+                    else:
+                        wrapper = CUDASourceWrapper(
+                            self.optimized_func, self.get_source(target), self.arch
+                        )
+                    wrapper.compile_lib()
+                    self.wrapper = wrapper
+                    self.lib = self.wrapper.load_lib()
+                    self.lib.init()
+                except:
+                    logger.debug(f"Failed to build runtime library")
 
         return rt_mod
 
@@ -239,26 +255,38 @@ class Operator(ABC):
         else:
             raise RuntimeError("Not supported type: ", type(tensor))
 
-    def forward_from_torch(self, *args):
-        # convert tensor from torch to tvm
+    def _forward_from_tvm_args(self, *args):
         _tvm_args = [self._tensor_adapter(arg, self.arch.device) for arg in args]
         self.rt_mod(*_tvm_args)
-        return tvm_tensor_to_torch(_tvm_args[-1])
 
-    def forward(self, *args):
-        # "Currently only support forward from torch tensor"
+    def _forward_from_torch_func(self, *args):
         self.torch_func(*args)
         return args[-1]
 
-    def _lib_func_call(self, values):
+    def forward(self, *args):
+        return self._forward_from_torch_func(*args)
+
+    def _forward_from_prebuild_lib(self, *args):
+        ctypes_args = [
+            ctypes.c_void_p(arr.data_ptr()) if not isinstance(arr, int) else arr
+            for arr in args
+        ]
+        self.lib.call(*ctypes_args)
+
+    def _forward_from_tvm_lib_func(self, values):
+        tcodes = (ctypes.c_int * self.num_args)()
+        ret_val = TVMValue()
+        ret_tcode = ctypes.c_int()
+        for i in range(self.num_args):
+            tcodes[i] = ArgTypeCode.NDARRAY_HANDLE
         if (
             _LIB.TVMFuncCall(
                 self.function_handle,
                 values,
-                self.tcodes,
+                tcodes,
                 ctypes.c_int(self.num_args),
-                ctypes.byref(self.ret_val),
-                ctypes.byref(self.ret_tcode),
+                ctypes.byref(ret_val),
+                ctypes.byref(ret_tcode),
             )
             != 0
         ):
@@ -270,13 +298,16 @@ class Operator(ABC):
     def update_func(self, func: PrimFunc):
         self.prim_func_mod["main"] = func
 
-    def update_runtime_module(self, rt_mod):
+    def update_runtime_module(self, rt_mod, lib_name=None):
         self.rt_mod = rt_mod
         self.time_evaluator = rt_mod.time_evaluator(
             rt_mod.entry_name, self.arch.device, number=10
         )
         self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
         self.torch_func = to_pytorch_func(rt_mod)
+        if lib_name is not None:
+            self.lib = ctypes.CDLL(lib_name)
+            self.lib.init()
 
     @abstractmethod
     def _select_implementation(self) -> IRModule:

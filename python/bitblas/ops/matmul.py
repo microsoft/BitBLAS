@@ -215,6 +215,16 @@ class Matmul(Operator):
         # ms
         return benchmark_latencies
 
+    def forward(self, *args) -> Any:
+        if self.lib is None:
+            self._forward_from_torch_func(*args)
+        dynamic_symbolic = []
+        if self.dynamic_range is not None:
+            # assume we only have one dynamic range
+            m = args[0].shape[0]
+            dynamic_symbolic.append(m)
+        self._forward_from_prebuild_lib(*args, *dynamic_symbolic)
+
     @property
     def M(self):
         return self.config.M

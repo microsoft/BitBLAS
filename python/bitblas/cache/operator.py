@@ -5,6 +5,7 @@ import os
 import json
 import tempfile
 from hashlib import sha256
+import shutil
 import tvm
 from tvm.contrib.tar import tar
 import logging
@@ -31,7 +32,7 @@ class OperatorCache:
 
     def clear(self):
         self.cache.clear()
-    
+
     def size(self):
         return len(self.cache)
 
@@ -43,6 +44,9 @@ class OperatorCache:
             self._ensure_directory(arch_path)
             hash_str = sha256(repr(config).encode()).hexdigest()
             config_path = os.path.join(arch_path, hash_str)
+            # if the config already exists, skip saving
+            if os.path.exists(config_path):
+                continue
             self._ensure_directory(config_path)
             self._save_operator_config_and_artifact(config, op_inst, config_path)
 
@@ -83,15 +87,28 @@ class OperatorCache:
             op_inst.rt_mod.export_library(artifact_path, fcompile=tar)
         except Exception as e:
             # library does not support export_library
-            export_error = e # pylint: disable=unused-variable
+            export_error = e  # pylint: disable=unused-variable
             pass
         json.dump(
             {"config_type": config_type, "operator_type": operator_type},
             open(os.path.join(config_path, "mapping.json"), "w"),
         )
         open(os.path.join(config_path, "source.cu"), "w").write(op_inst.get_source())
-        open(os.path.join(config_path, "optimized.py"), "w").write(op_inst.optimized_func.script(show_meta=False))
-        
+        open(os.path.join(config_path, "optimized.py"), "w").write(
+            op_inst.optimized_func.script(show_meta=False)
+        )
+        if op_inst.wrapper.lib_name is not None:
+            # copy lib name to the same directory as the artifact
+            src_name = op_inst.wrapper.src_name
+            shutil.copy(
+                src_name,
+                os.path.join(config_path, os.path.basename("wrapper_source.cu")),
+            )
+            lib_name = op_inst.wrapper.lib_name
+            shutil.copy(
+                lib_name,
+                os.path.join(config_path, os.path.basename("wrapper_compiled.so")),
+            )
 
     def _determine_target_arch_str(self, target):
         return (
