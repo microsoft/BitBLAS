@@ -209,6 +209,7 @@ def test_global_cache_inquery_torch_forward(
     "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout,enable_tuning",
     [
         (1, 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
+        ([1, 32], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
     ],
 )
 def test_global_cache_save_to_database(
