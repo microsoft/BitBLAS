@@ -22,8 +22,16 @@ from .matmul_analysis import (
     get_reduction_blocks,
 )
 from .matmul_mma import MatmulTensorizationMMA
-from .matmul_wmma import MatmulInt8Tensorization, MatmulTensorizationWMMA, MatmulTensorizationLegacy
+from .matmul_wmma import (
+    MatmulInt8Tensorization,
+    MatmulTensorizationWMMA,
+    MatmulTensorizationLegacy,
+)
 from functools import reduce
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class Matmul(GPUScheduleRule):
     """The schedule rule for matmul-like computation"""
@@ -169,7 +177,9 @@ class Matmul(GPUScheduleRule):
             sch.vectorize(v)
 
         if config.unroll > 0:
-            sch.annotate(tx, ann_key="pragma_auto_unroll_max_step", ann_val=config.unroll)
+            sch.annotate(
+                tx, ann_key="pragma_auto_unroll_max_step", ann_val=config.unroll
+            )
             sch.annotate(tx, ann_key="pragma_unroll_explicit", ann_val=1)
 
         l2g = sch.cache_write(main_block, 0, "local")
@@ -248,7 +258,9 @@ class Matmul(GPUScheduleRule):
         # in some case conv template will use this rule, but the tile config is not
         # analyzed by matmul expr.
         if len(config.block) != 2:
-            print(f"Warning: block config {config.block} is not valid for matmul, skip.")
+            logger.debug(
+                f"Warning: block config {config.block} is not valid for matmul, skip."
+            )
             return None
 
         main_block = reduction_blocks[0]
@@ -275,8 +287,12 @@ class Matmul(GPUScheduleRule):
         block_col_warps = config.block[1] // (config.thread[1] * config.step[1])
         thread_row_tiles = config.thread[1] // (config.step[0] * 2)
         thread_col_tiles = config.thread[1] // (config.step[1] * 2)
-        vthread_row_tiles = config.step[0] * 2  # expand vtrhead to avoid load band conflict
-        vthread_col_tiles = config.step[1] * 2  # expand vtrhead to avoid load band conflict
+        vthread_row_tiles = (
+            config.step[0] * 2
+        )  # expand vtrhead to avoid load band conflict
+        vthread_col_tiles = (
+            config.step[1] * 2
+        )  # expand vtrhead to avoid load band conflict
         chunk = config.rstep[0]
 
         # Step 3. Schedule matmul
@@ -289,8 +305,12 @@ class Matmul(GPUScheduleRule):
             [1, BM, BN, BK],
         )
         batch, y, x, k = sch.get_loops(main_block)
-        by, vy, ty, yi = sch.split(y, [None, vthread_row_tiles, block_row_warps, thread_row_tiles])
-        bx, vx, tx, xi = sch.split(x, [None, vthread_col_tiles, block_col_warps, thread_col_tiles])
+        by, vy, ty, yi = sch.split(
+            y, [None, vthread_row_tiles, block_row_warps, thread_row_tiles]
+        )
+        bx, vx, tx, xi = sch.split(
+            x, [None, vthread_col_tiles, block_col_warps, thread_col_tiles]
+        )
         ko, ki = sch.split(k, factors=[None, BK])
         sch.reorder(by, bx, vy, vx, ty, tx, ko, ki, yi, xi)
         by = sch.fuse(batch, by)
@@ -328,7 +348,8 @@ class Matmul(GPUScheduleRule):
                 if len(reads) != 1 or len(writes) != 1:
                     return False
                 return all(
-                    read.region[-1] == write.region[-1] for read, write in zip(reads, writes)
+                    read.region[-1] == write.region[-1]
+                    for read, write in zip(reads, writes)
                 )
 
             if is_trivial_load(block):
@@ -346,7 +367,9 @@ class Matmul(GPUScheduleRule):
             return block
 
         for i, input_region in enumerate(sch.get(main_block).reads):
-            _buffer_name = input_region.buffer.name.replace("_reindex", "").replace("_pad", "")
+            _buffer_name = input_region.buffer.name.replace("_reindex", "").replace(
+                "_pad", ""
+            )
             if _buffer_name not in config.cached_tensors:
                 print(
                     f"Warning: {_buffer_name} is not in cached_tensors {config.cached_tensors}, skip."

@@ -198,6 +198,16 @@ class CUDASourceWrapper(object):
                     elif "blockIdx" in tag:
                         self.block_info["xyz".index(tag[-1])] = extent
 
+    def get_dynamic_symbolic_set(self, prim_func):
+        # Determine the set of dynamic symbols used in the function
+        dynamic_symbolic_set = set()
+        for param in prim_func.params:
+            buffer = prim_func.buffer_map[param]
+            for dim in buffer.shape:
+                if isinstance(dim, tvm.tir.Var):
+                    dynamic_symbolic_set.add(dim.name)
+        return dynamic_symbolic_set
+
     def get_cuda_init_func(self):
         # Initialize an empty string for the CUDA function call
         call_str = """"""
@@ -207,14 +217,16 @@ class CUDASourceWrapper(object):
         cudaFuncSetAttribute({},
                                     cudaFuncAttributeMaxDynamicSharedMemorySize, {});
                 """.format(
-                    self.function_name, self.dynamic_smem_buf
-                )
+                self.function_name, self.dynamic_smem_buf
+            )
         # Format the initialization function using the call_str
         init_funcs = """
     extern "C" void init() {{
         {}
     }}
-            """.format(call_str)
+            """.format(
+            call_str
+        )
         return init_funcs
 
     def update_lib_code(self, code: str):
@@ -242,17 +254,7 @@ class CUDASourceWrapper(object):
                 }
             )
 
-        def get_dynamic_symbolic_set(prim_func):
-            # Determine the set of dynamic symbols used in the function
-            dynamic_symbolic_set = set()
-            for param in prim_func.params:
-                buffer = prim_func.buffer_map[param]
-                for dim in buffer.shape:
-                    if isinstance(dim, tvm.tir.Var):
-                        dynamic_symbolic_set.add(dim.name)
-            return dynamic_symbolic_set
-
-        dynamic_symbolic_set = get_dynamic_symbolic_set(self.prim_func)
+        dynamic_symbolic_set = self.get_dynamic_symbolic_set(self.prim_func)
         # Add dynamic symbolic parameters as integers to the function arguments
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
@@ -285,7 +287,9 @@ class CUDASourceWrapper(object):
 
         # Prepare the block and grid dimensions for the CUDA kernel launch
         block_str = "dim3({}, {}, {})".format(
-            legalize_c(block_info[0]), legalize_c(block_info[1]), legalize_c(block_info[2])
+            legalize_c(block_info[0]),
+            legalize_c(block_info[1]),
+            legalize_c(block_info[2]),
         )
         grid_str = "dim3({}, {}, {})".format(
             legalize_c(grid_info[0]), legalize_c(grid_info[1]), legalize_c(grid_info[2])
@@ -301,7 +305,9 @@ class CUDASourceWrapper(object):
     extern "C" void call({}) {{
         {}
     }}
-        """.format(def_args, call_str)
+        """.format(
+            def_args, call_str
+        )
         # Combine the source, initialization function, and host function to form the complete library code
         lib_code = self.source + init_func + host_func
         return lib_code
@@ -326,18 +332,22 @@ class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
                 call_str += """
         cudaFuncSetAttribute({},
                                     cudaFuncAttributeMaxDynamicSharedMemorySize, {});
-                    """.format(function_name, dynamic_smem_buf)
+                    """.format(
+                    function_name, dynamic_smem_buf
+                )
         # Define the init function that will set the attributes for each kernel
         init_funcs = """
     extern "C" void init() {{
         {}
     }}
-            """.format(call_str)
+            """.format(
+            call_str
+        )
         return init_funcs
 
     def create_dispatch_func(self, code, function_informations):
         # Extract the set of dynamic symbolic names used in the primary function
-        dynamic_symbolic_set = get_dynamic_symbolic_set(self.prim_func)
+        dynamic_symbolic_set = self.get_dynamic_symbolic_set(self.prim_func)
 
         # Find the location of the global kernel function in the code
         index = match_global_kernel(code)
@@ -353,10 +363,12 @@ class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
         # Collect function arguments based on primary function's parameters and buffer mappings
         for param in self.prim_func.params:
             buffer = self.prim_func.buffer_map[param]
-            function_args.append({
-                "name": buffer.name,
-                "type": _TYPE_MAP[buffer.dtype] + "* __restrict__",
-            })
+            function_args.append(
+                {
+                    "name": buffer.name,
+                    "type": _TYPE_MAP[buffer.dtype] + "* __restrict__",
+                }
+            )
         # Add dynamic symbols as integer arguments
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
@@ -371,7 +383,7 @@ class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
             call_args = []
             for match in matches:
                 match = re.sub(r"\d+", "", match)  # Remove numbers
-                match = re.sub(r"_", "", match)    # Remove underscores
+                match = re.sub(r"_", "", match)  # Remove underscores
                 for arg in function_args:
                     if arg["name"] == match:
                         call_args.append(match)
@@ -401,18 +413,34 @@ class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
                 legalize_c(grid_info[2]),
             )
             # Handle dynamic shared memory specification
-            smem_str = 0 if info["dynamic_smem_buf"] is None else info["dynamic_smem_buf"]
+            smem_str = (
+                0 if info["dynamic_smem_buf"] is None else info["dynamic_smem_buf"]
+            )
             opt_shapes = info["opt_shapes"]
             # Generate conditional kernel launch code based on dynamic symbolic ranges
             (symbolic,) = list(dynamic_symbolic_set)
             range_str = opt_shapes[symbolic]
             if last_range == 0:
                 call_str = "if ({} <= {}) {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
-                    symbolic, range_str, function_name, grid_str, block_str, smem_str, call_args
+                    symbolic,
+                    range_str,
+                    function_name,
+                    grid_str,
+                    block_str,
+                    smem_str,
+                    call_args,
                 )
             else:
-                call_str = "else if ({} <= {}) {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
-                    symbolic, range_str, function_name, grid_str, block_str, smem_str, call_args
+                call_str = (
+                    "else if ({} <= {}) {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
+                        symbolic,
+                        range_str,
+                        function_name,
+                        grid_str,
+                        block_str,
+                        smem_str,
+                        call_args,
+                    )
                 )
             if last_range == num_items - 1:
                 call_str += "else {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
@@ -426,7 +454,9 @@ class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
     extern "C" void call({}) {{
         {}
     }}
-        """.format(def_args, _call_str)
+        """.format(
+            def_args, _call_str
+        )
         return host_func
 
     def parse_source_information(self):

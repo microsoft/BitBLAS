@@ -52,12 +52,12 @@ class OperatorCache:
 
     def load_from_database(self, database_path, target=None):
         if not os.path.exists(database_path):
-            logger.error(f"Database path {database_path} does not exist")
+            logger.info(f"Database path {database_path} does not exist, skipping loading operators from the database")
             return
         arch_str = self._determine_target_arch_str(target)
         arch_path = os.path.join(database_path, arch_str)
         if not os.path.exists(arch_path):
-            logger.error(f"Target {arch_str} does not exist in the database")
+            logger.info(f"Target {arch_str} does not exist in the database, skipping loading operators from the database")
             return
         self._load_operators_from_arch_path(arch_path, target)
 
@@ -124,7 +124,7 @@ class OperatorCache:
                 self._load_operator(config_path, target)
 
     def _load_operator(self, config_path, target):
-        mapping, config, rt_mod = None, None, None
+        mapping, config, rt_mod, lib_name = None, None, None, None
         for file in os.listdir(config_path):
             full_path = os.path.join(config_path, file)
             if file == "mapping.json":
@@ -133,15 +133,17 @@ class OperatorCache:
                 config = json.load(open(full_path))
             elif file.endswith(".tar"):
                 rt_mod = tvm.runtime.load_module(full_path)
+            elif file == "wrapper_compiled.so":
+                lib_name = full_path
 
         if mapping and config and rt_mod:
-            self._instantiate_and_add_operator(mapping, config, rt_mod, target)
+            self._instantiate_and_add_operator(mapping, config, rt_mod, lib_name, target)
 
-    def _instantiate_and_add_operator(self, mapping, config, rt_mod, target):
+    def _instantiate_and_add_operator(self, mapping, config, rt_mod, lib_name, target):
         config_cls = getattr(bitblas.ops, mapping["config_type"])
         operator_cls = getattr(bitblas.ops, mapping["operator_type"])
         op_inst = operator_cls(config=config_cls(**config), target=target)
-        op_inst.update_runtime_module(rt_mod)
+        op_inst.update_runtime_module(rt_mod, lib_name=lib_name)
         self.add(config_cls(**config), op_inst)
 
 

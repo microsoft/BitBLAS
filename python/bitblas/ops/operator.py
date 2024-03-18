@@ -58,6 +58,7 @@ class Operator(ABC):
             1  # todo(lei): should be analyzed from the prim_func.
         )
         self.wrapper = None
+        self.lib_name = None
         self.lib = None
 
     def get_source(self, target: Target = None) -> str:
@@ -137,10 +138,12 @@ class Operator(ABC):
                         )
                     wrapper.compile_lib()
                     self.wrapper = wrapper
+                    self.lib_name = self.wrapper.lib_name
                     self.lib = self.wrapper.load_lib()
                     self.lib.init()
-                except:
-                    logger.debug(f"Failed to build runtime library")
+                except Exception as e:
+                    build_runtime_library_error = e
+                    logger.debug("Failed to build runtime library {}".format(build_runtime_library_error))
 
         return rt_mod
 
@@ -306,6 +309,7 @@ class Operator(ABC):
         self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
         self.torch_func = to_pytorch_func(rt_mod)
         if lib_name is not None:
+            self.lib_name = lib_name
             self.lib = ctypes.CDLL(lib_name)
             self.lib.init()
 
