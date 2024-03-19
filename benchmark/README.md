@@ -1,13 +1,13 @@
 # Speedup Benchmark vs Vendor Libraries
 
-This part presents a benchmark comparison between our custom library, BitBLAS, and various vendor libraries (cuBLAS, CUTLASS, bitsandbytes, faster-transformer, tensorrt-llm, vLLM, and Marlin) across different matrix operation types (GEMM, GEMV) and data formats (float16xfloat16, int8xint8, float16xint4/af4). The benchmarks are conducted on NVIDIA GPUs - 24GB GTX 3090 and 80GB A100, with CUDA 12.1 installed.
+This part presents a benchmark comparison between our custom library, BitBLAS, and various vendor libraries (cuBLAS, CUTLASS, bitsandbytes, faster-transformer, tensorrt-llm, vLLM, and Marlin) across different matrix operation types (GEMM, GEMV) and data formats (float16xfloat16, int8xint8, float16xint4/nf4). The benchmarks are conducted on NVIDIA GPUs - 24GB GTX 3090 and 80GB A100, with CUDA 12.1 installed.
 
 ## Benchmark Overview
 
 ### Tested Operations and Formats
 
 - GEMM (General Matrix Multiply) and GEMV (General Matrix-Vector Multiply)
-- Data formats: float16, int8, float16xint4/af4
+- Data formats: float16, int8, float16xint4/nf4
 
 ### Hardware
 
@@ -24,7 +24,7 @@ This part presents a benchmark comparison between our custom library, BitBLAS, a
 ### GTX 3090 Benchmarks
 
 - **Float16 and Int8 GEMM with Tensorcore**: BitBLAS matches the performance of cuBLAS and CUTLASS.
-- **Float16xaf4 GEMV and GEMM**: BitBLAS achieves 2x the speed of bitsandbytes and 4x the base float16 performance.
+- **Float16xnf4 GEMV and GEMM**: BitBLAS achieves 2x the speed of bitsandbytes and 4x the base float16 performance.
 - **Optimal performance** in float16xint4 GEMM.
 
 ### A100 Benchmarks
@@ -73,8 +73,8 @@ The benchmark configurations for each test scenario are detailed below:
 - GTX 3090
   - ![3090-gemm-fp16](../images/figures/op_benchmark_3090_fp16_gemm.png)
   - ![3090-gemm-s8](../images/figures/op_benchmark_3090_s8_gemm.png)
-  - ![3090-af4-gemv](../images/figures/op_benchmark_3090_af4_gemv.png)
-  - ![3090-af4-gemm](../images/figures/op_benchmark_3090_af4_gemm.png)
+  - ![3090-nf4-gemv](../images/figures/op_benchmark_3090_af4_gemv.png)
+  - ![3090-nf4-gemm](../images/figures/op_benchmark_3090_af4_gemm.png)
 
 - A100
   - ![a100-wq-gemv](../images/figures/op_benchmark_a100_wq_gemv.png)

@@ -48,16 +48,21 @@ class OperatorCache:
             if os.path.exists(config_path):
                 continue
             self._ensure_directory(config_path)
-            self._save_operator_config_and_artifact(config, op_inst, config_path)
+            self._save_operator_config_and_artifact(config, op_inst,
+                                                    config_path)
 
     def load_from_database(self, database_path, target=None):
         if not os.path.exists(database_path):
-            logger.info(f"Database path {database_path} does not exist, skipping loading operators from the database")
+            logger.info(
+                f"Database path {database_path} does not exist, skipping loading operators from the database"
+            )
             return
         arch_str = self._determine_target_arch_str(target)
         arch_path = os.path.join(database_path, arch_str)
         if not os.path.exists(arch_path):
-            logger.info(f"Target {arch_str} does not exist in the database, skipping loading operators from the database")
+            logger.info(
+                f"Target {arch_str} does not exist in the database, skipping loading operators from the database"
+            )
             return
         self._load_operators_from_arch_path(arch_path, target)
 
@@ -68,21 +73,19 @@ class OperatorCache:
         return database_path
 
     def _determine_arch_str(self, op_inst, target):
-        return (
-            target
-            if target
-            else "-".join(list(op_inst.target.keys) + [op_inst.target.arch])
-        )
+        return (target if target else
+                "-".join(list(op_inst.target.keys) + [op_inst.target.arch]))
 
     def _ensure_directory(self, path):
         os.makedirs(path, exist_ok=True)
 
     def _save_operator_config_and_artifact(self, config, op_inst, config_path):
-        config_type, operator_type = type(config).__name__, type(op_inst).__name__
-        json.dump(
-            asdict(config), open(os.path.join(config_path, f"{config_type}.json"), "w")
-        )
-        artifact_path = os.path.join(config_path, "tvm_rt_mod." + tar.output_format)
+        config_type, operator_type = type(config).__name__, type(
+            op_inst).__name__
+        json.dump(asdict(config),
+                  open(os.path.join(config_path, f"{config_type}.json"), "w"))
+        artifact_path = os.path.join(config_path,
+                                     "tvm_rt_mod." + tar.output_format)
         try:
             op_inst.rt_mod.export_library(artifact_path, fcompile=tar)
         except Exception as e:
@@ -90,32 +93,34 @@ class OperatorCache:
             export_error = e  # pylint: disable=unused-variable
             pass
         json.dump(
-            {"config_type": config_type, "operator_type": operator_type},
+            {
+                "config_type": config_type,
+                "operator_type": operator_type
+            },
             open(os.path.join(config_path, "mapping.json"), "w"),
         )
-        open(os.path.join(config_path, "source.cu"), "w").write(op_inst.get_source())
-        open(os.path.join(config_path, "optimized.py"), "w").write(
-            op_inst.optimized_func.script(show_meta=False)
-        )
+        open(os.path.join(config_path, "source.cu"),
+             "w").write(op_inst.get_source())
+        open(os.path.join(config_path, "optimized.py"),
+             "w").write(op_inst.optimized_func.script(show_meta=False))
         if op_inst.wrapper.lib_name is not None:
             # copy lib name to the same directory as the artifact
             src_name = op_inst.wrapper.src_name
             shutil.copy(
                 src_name,
-                os.path.join(config_path, os.path.basename("wrapper_source.cu")),
+                os.path.join(config_path,
+                             os.path.basename("wrapper_source.cu")),
             )
             lib_name = op_inst.wrapper.lib_name
             shutil.copy(
                 lib_name,
-                os.path.join(config_path, os.path.basename("wrapper_compiled.so")),
+                os.path.join(config_path,
+                             os.path.basename("wrapper_compiled.so")),
             )
 
     def _determine_target_arch_str(self, target):
-        return (
-            target
-            if isinstance(target, str)
-            else "-".join(list(target.keys) + [target.arch])
-        )
+        return (target if isinstance(target, str) else
+                "-".join(list(target.keys) + [target.arch]))
 
     def _load_operators_from_arch_path(self, arch_path, target):
         for root, dirs, _ in os.walk(arch_path):
@@ -137,9 +142,11 @@ class OperatorCache:
                 lib_name = full_path
 
         if mapping and config and rt_mod:
-            self._instantiate_and_add_operator(mapping, config, rt_mod, lib_name, target)
+            self._instantiate_and_add_operator(mapping, config, rt_mod,
+                                               lib_name, target)
 
-    def _instantiate_and_add_operator(self, mapping, config, rt_mod, lib_name, target):
+    def _instantiate_and_add_operator(self, mapping, config, rt_mod, lib_name,
+                                      target):
         config_cls = getattr(bitblas.ops, mapping["config_type"])
         operator_cls = getattr(bitblas.ops, mapping["operator_type"])
         op_inst = operator_cls(config=config_cls(**config), target=target)

@@ -1,8 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import numpy as np
 import tvm
-from tvm.script import tir as T
 import bitblas
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.arch import CUDA
@@ -13,11 +11,9 @@ from bitblas.base.utils import apply_and_build
 from bitblas.ops.impl.matmul_impl import (
     matmul_nn,
     matmul_nt,
-    matmul_nt,
     matmul_nt_propagate_a_propagate_b,
 )
 import time
-
 
 # fmt:off
 test_shapes = [
@@ -31,9 +27,9 @@ test_shapes = [
     (matmul_nn, (8192, 8192, 8192, "float16", "float16"), Matmul),
     (matmul_nn, (16384, 16384, 16384, "float16", "float16"), Matmul),
     (matmul_nt, (1024, 1024, 1024, "float32", "float32"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (16384, 16384, 16384, "float16", "float16", "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (16384, 16384, 16384, "float16",
+                                         "float16", "float16"), Matmul),
 ]
-
 
 llm_shapes = [
     # square test
@@ -53,42 +49,68 @@ llm_shapes = [
     (matmul_nt, (1, 8192, 8192, "float16", "float16"), Matmul),
     (matmul_nt, (1, 28672, 8192, "float16", "float16"), Matmul),
     (matmul_nt, (1, 8192, 28672, "float16", "float16"), Matmul),
-    
+
     # square test
-    (matmul_nt_propagate_a_propagate_b, (16384, 16384, 16384, "float16", "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (16384, 16384, 16384, "float16",
+                                         "float16"), Matmul),
     # BLOOM-176B
-    (matmul_nt_propagate_a_propagate_b, (8192, 43008, 14336, "float16", "float16"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 14336, 14336, "float16", "float16"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 57344, 14336, "float16", "float16"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 14336, 57344, "float16", "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 43008, 14336, "float16",
+                                         "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 14336, 14336, "float16",
+                                         "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 57344, 14336, "float16",
+                                         "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 14336, 57344, "float16",
+                                         "float16"), Matmul),
     # # OPT-65B
-    (matmul_nt_propagate_a_propagate_b, (8192, 9216, 9216, "float16", "float16"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 36864, 9216, "float16", "float16"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 9216, 36864, "float16", "float16"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 22016, 8192, "float16", "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 9216, 9216, "float16",
+                                         "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 36864, 9216, "float16",
+                                         "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 9216, 36864, "float16",
+                                         "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 22016, 8192, "float16",
+                                         "float16"), Matmul),
     # # LLAMA-70B/65B
-    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 22016, "float16", "float16"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 8192, "float16", "float16"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 28672, 8192, "float16", "float16"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 28672, "float16", "float16"), Matmul),
-    
+    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 22016, "float16",
+                                         "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 8192, "float16",
+                                         "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 28672, 8192, "float16",
+                                         "float16"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 28672, "float16",
+                                         "float16"), Matmul),
+
     # square test
-    (matmul_nt_propagate_a_propagate_b, (16384, 16384, 16384, "int8", "int8", "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (16384, 16384, 16384, "int8", "int8",
+                                         "int32"), Matmul),
     # BLOOM-176B
-    (matmul_nt_propagate_a_propagate_b, (8192, 43008, 14336, "int8", "int8", "int32"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 14336, 14336, "int8", "int8", "int32"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 57344, 14336, "int8", "int8", "int32"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 14336, 57344, "int8", "int8", "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 43008, 14336, "int8", "int8",
+                                         "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 14336, 14336, "int8", "int8",
+                                         "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 57344, 14336, "int8", "int8",
+                                         "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 14336, 57344, "int8", "int8",
+                                         "int32"), Matmul),
     # OPT-65B
-    (matmul_nt_propagate_a_propagate_b, (8192, 9216, 9216, "int8", "int8", "int32"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 36864, 9216, "int8", "int8", "int32"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 9216, 36864, "int8", "int8", "int32"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 22016, 8192, "int8", "int8", "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 9216, 9216, "int8", "int8",
+                                         "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 36864, 9216, "int8", "int8",
+                                         "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 9216, 36864, "int8", "int8",
+                                         "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 22016, 8192, "int8", "int8",
+                                         "int32"), Matmul),
     # LLAMA-70B/65B
-    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 22016, "int8", "int8", "int32"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 8192, "int8", "int8", "int32"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 28672, 8192, "int8", "int8", "int32"), Matmul),
-    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 28672, "int8", "int8", "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 22016, "int8", "int8",
+                                         "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 8192, "int8", "int8",
+                                         "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 28672, 8192, "int8", "int8",
+                                         "int32"), Matmul),
+    (matmul_nt_propagate_a_propagate_b, (8192, 8192, 28672, "int8", "int8",
+                                         "int32"), Matmul),
 ]
 
 benchmark_sets = []
@@ -106,7 +128,7 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     policy = DefaultPolicy(func=func, arch=arch)
     try:
         tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
-    except:
+    except Exception:
         tags = None
     if tags:
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
@@ -114,16 +136,15 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     configs = policy.emit_config(20)
 
     tune_start = time.time()
-    cpresults, best = apply_and_build(func, configs, arch, parallel_build=False)
+    cpresults, best = apply_and_build(func,
+                                      configs,
+                                      arch,
+                                      parallel_build=False)
     fast_tune_time = time.time() - tune_start
-    print(
-        "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
-            cpresults[0].latency * 1e3
-        )
-    )
-    print(
-        "[BitBLAS] The best latency of top 20 is {:.3f} ms".format(best.latency * 1e3)
-    )
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
+        cpresults[0].latency * 1e3))
+    print("[BitBLAS] The best latency of top 20 is {:.3f} ms".format(
+        best.latency * 1e3))
 
     # evaluate the performance of the default schedule
 
@@ -148,9 +169,9 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
 
     profile_tensors = best.profile_tensors
     if mod_default is not None:
-        timer_cuda_mod = mod_default.time_evaluator(
-            mod_default.entry_name, arch.device, number=5
-        )
+        timer_cuda_mod = mod_default.time_evaluator(mod_default.entry_name,
+                                                    arch.device,
+                                                    number=5)
         t = timer_cuda_mod(*profile_tensors).mean
     else:
         t = 1e4 - 1
@@ -179,10 +200,9 @@ headers = [
     "DefaultDLight Latency",
 ]
 
-col_width = (
-    max(len(word) for row in [headers] + list(profile_config.values()) for word in row)
-    + 2
-)  # padding
+col_width = (max(
+    len(word) for row in [headers] + list(profile_config.values())
+    for word in row) + 2)  # padding
 
 print("".join(word.ljust(col_width) for word in headers))
 

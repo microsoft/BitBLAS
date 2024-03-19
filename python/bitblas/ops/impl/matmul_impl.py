@@ -21,24 +21,27 @@ def matmul_nn(
         M = tvm.te.var("m")
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder((K, N), name="B", dtype=in_dtype)
-    Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
+    Bias = te.placeholder((N, ), name="Bias", dtype=in_dtype)
 
     # Describe the matrix multiplication in TE
     k = te.reduce_axis((0, K), name="k")
     C = te.compute(
         (M, N),
         lambda i, j: te.sum(
-            A[i, k].astype(accum_dtype) * B[k, j].astype(accum_dtype), axis=k
-        ),
+            A[i, k].astype(accum_dtype) * B[k, j].astype(accum_dtype), axis=k),
         name="C",
     )
     last_output = C
     if accum_dtype != out_dtype:
-        D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+        D = te.compute((M, N),
+                       lambda i, j: C[i, j].astype(out_dtype),
+                       name="D")
         last_output = D
 
     if with_bias:
-        E = te.compute((M, N), lambda i, j: last_output[i, j] + Bias[j], name="E")
+        E = te.compute((M, N),
+                       lambda i, j: last_output[i, j] + Bias[j],
+                       name="E")
         last_output = E
 
     if with_bias:
@@ -64,24 +67,27 @@ def matmul_nt(
         M = tvm.te.var("m")
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder((N, K), name="B", dtype=in_dtype)
-    Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
+    Bias = te.placeholder((N, ), name="Bias", dtype=in_dtype)
 
     # Describe the matrix multiplication in TE
     k = te.reduce_axis((0, K), name="k")
     C = te.compute(
         (M, N),
         lambda i, j: te.sum(
-            A[i, k].astype(accum_dtype) * B[j, k].astype(accum_dtype), axis=k
-        ),
+            A[i, k].astype(accum_dtype) * B[j, k].astype(accum_dtype), axis=k),
         name="C",
     )
     last_output = C
     if accum_dtype != out_dtype:
-        D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+        D = te.compute((M, N),
+                       lambda i, j: C[i, j].astype(out_dtype),
+                       name="D")
         last_output = D
 
     if with_bias:
-        E = te.compute((M, N), lambda i, j: last_output[i, j] + Bias[j], name="E")
+        E = te.compute((M, N),
+                       lambda i, j: last_output[i, j] + Bias[j],
+                       name="E")
         last_output = E
 
     if with_bias:
@@ -125,13 +131,13 @@ def matmul_nt_propagate_a(
     if in_dtype == "int8":
         l, r = 16, 32
 
-    _, inversed_index_map = get_propagate_map(
-        trans=False, dtype=in_dtype, matrix_name="A"
-    )
+    _, inversed_index_map = get_propagate_map(trans=False,
+                                              dtype=in_dtype,
+                                              matrix_name="A")
 
     A = te.placeholder((M // l, K // r, l, r), name="A", dtype=in_dtype)
     B = te.placeholder((N, K), name="B", dtype=in_dtype)
-    Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
+    Bias = te.placeholder((N, ), name="Bias", dtype=in_dtype)
 
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
@@ -150,18 +156,22 @@ def matmul_nt_propagate_a(
     k = te.reduce_axis((0, K), name="k")
     C = te.compute(
         (M, N),
-        lambda i, j: te.sum(
-            A_reindex[i, k].astype(accum_dtype) * B[j, k].astype(accum_dtype), axis=k
-        ),
+        lambda i, j: te.sum(A_reindex[i, k].astype(accum_dtype) * B[j, k].
+                            astype(accum_dtype),
+                            axis=k),
         name="C",
     )
     last_output = C
     if accum_dtype != out_dtype:
-        D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+        D = te.compute((M, N),
+                       lambda i, j: C[i, j].astype(out_dtype),
+                       name="D")
         last_output = D
 
     if with_bias:
-        E = te.compute((M, N), lambda i, j: last_output[i, j] + Bias[j], name="E")
+        E = te.compute((M, N),
+                       lambda i, j: last_output[i, j] + Bias[j],
+                       name="E")
         last_output = E
 
     if with_bias:
@@ -191,13 +201,13 @@ def matmul_nt_propagate_b(
     if in_dtype == "int8":
         l, r = 16, 32
 
-    _, inversed_index_map = get_propagate_map(
-        trans=True, dtype=in_dtype, matrix_name="B"
-    )
+    _, inversed_index_map = get_propagate_map(trans=True,
+                                              dtype=in_dtype,
+                                              matrix_name="B")
 
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
     B = te.placeholder((N // l, K // r, l, r), name="B", dtype=in_dtype)
-    Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
+    Bias = te.placeholder((N, ), name="Bias", dtype=in_dtype)
 
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
@@ -216,18 +226,22 @@ def matmul_nt_propagate_b(
     k = te.reduce_axis((0, K), name="k")
     C = te.compute(
         (M, N),
-        lambda i, j: te.sum(
-            A[i, k].astype(accum_dtype) * B_reindex[j, k].astype(accum_dtype), axis=k
-        ),
+        lambda i, j: te.sum(A[i, k].astype(accum_dtype) * B_reindex[j, k].
+                            astype(accum_dtype),
+                            axis=k),
         name="C",
     )
     last_output = C
     if accum_dtype != out_dtype:
-        D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+        D = te.compute((M, N),
+                       lambda i, j: C[i, j].astype(out_dtype),
+                       name="D")
         last_output = D
 
     if with_bias:
-        E = te.compute((M, N), lambda i, j: last_output[i, j] + Bias[j], name="E")
+        E = te.compute((M, N),
+                       lambda i, j: last_output[i, j] + Bias[j],
+                       name="E")
         last_output = E
 
     if with_bias:
@@ -260,11 +274,11 @@ def matmul_nt_propagate_a_propagate_b(
 
     A = te.placeholder((M // l, K // r, l, r), name="A", dtype=in_dtype)
     B = te.placeholder((N // l, K // r, l, r), name="B", dtype=in_dtype)
-    Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
+    Bias = te.placeholder((N, ), name="Bias", dtype=in_dtype)
 
-    _, inversed_index_map = get_propagate_map(
-        trans=False, dtype=in_dtype, matrix_name="A"
-    )
+    _, inversed_index_map = get_propagate_map(trans=False,
+                                              dtype=in_dtype,
+                                              matrix_name="A")
 
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
@@ -280,9 +294,9 @@ def matmul_nt_propagate_a_propagate_b(
         name="A_reindex",
     )
 
-    _, inversed_index_map = get_propagate_map(
-        trans=True, dtype=in_dtype, matrix_name="B"
-    )
+    _, inversed_index_map = get_propagate_map(trans=True,
+                                              dtype=in_dtype,
+                                              matrix_name="B")
 
     def fcompute(i, j):
         warp_i, warp_j = i % l, j % r
@@ -302,18 +316,23 @@ def matmul_nt_propagate_a_propagate_b(
     C = te.compute(
         (M, N),
         lambda i, j: te.sum(
-            A_reindex[i, k].astype(accum_dtype) * B_reindex[j, k].astype(accum_dtype),
+            A_reindex[i, k].astype(accum_dtype) * B_reindex[j, k].astype(
+                accum_dtype),
             axis=k,
         ),
         name="C",
     )
     last_output = C
     if accum_dtype != out_dtype:
-        D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+        D = te.compute((M, N),
+                       lambda i, j: C[i, j].astype(out_dtype),
+                       name="D")
         last_output = D
 
     if with_bias:
-        E = te.compute((M, N), lambda i, j: last_output[i, j] + Bias[j], name="E")
+        E = te.compute((M, N),
+                       lambda i, j: last_output[i, j] + Bias[j],
+                       name="E")
         last_output = E
 
     if with_bias:
@@ -345,7 +364,8 @@ def select_implementation(
             raise ValueError(
                 "Currently only support propagate_a=False and propagate_b=False for layout=nn"
             )
-        return matmul(M, N, K, in_dtype, out_dtype, accum_dtype, with_bias, layout)
+        return matmul(M, N, K, in_dtype, out_dtype, accum_dtype, with_bias,
+                      layout)
     elif layout == "nt":
         if propagate_a and propagate_b:
             return matmul_nt_propagate_a_propagate_b(
@@ -382,6 +402,7 @@ def select_implementation(
                 transform_kind=propagate_b,
             )
         else:
-            return matmul(M, N, K, in_dtype, out_dtype, accum_dtype, with_bias, layout)
+            return matmul(M, N, K, in_dtype, out_dtype, accum_dtype, with_bias,
+                          layout)
     else:
         raise ValueError(f"Unsupported layout: {layout}")

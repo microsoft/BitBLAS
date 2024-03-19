@@ -7,11 +7,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-
 logger = getLogger(__name__)
 
 try:
-    import bitblas
+    import bitblas  # pylint: disable=unused-import
 except ImportError as e:
     bitblas_import_exception = e
 
@@ -44,7 +43,7 @@ class Linear(nn.Module):
         target: Optional[str] = None,
     ):
         """
-        @opt_features: optimze range of the input shape for dynamic symbolic
+        @opt_features: optimize range of the input shape for dynamic symbolic
         if the input shape is a range, we will optimize the matmul with dynamic symbolic.
         if the input shape is int, we will optimize the matmul with static symbolic.
         """
@@ -59,7 +58,8 @@ class Linear(nn.Module):
         self.propagate_a = propagate_a
         self.propagate_b = propagate_b
         self.enable_tuning = enable_tuning
-        self.weight = nn.Parameter(torch.empty((outfeatures, infeatures), dtype=dtype))
+        self.weight = nn.Parameter(
+            torch.empty((outfeatures, infeatures), dtype=dtype))
         if bias:
             self.bias = nn.Parameter(torch.empty(outfeatures, dtype=dtype))
         else:
@@ -112,9 +112,9 @@ class Linear(nn.Module):
         if self.bias is not None:
             args.append(self.bias)
         if Output is None:
-            Output = torch.empty(
-                A.shape[:-1] + (self.outfeatures,), dtype=A.dtype, device=A.device
-            )
+            Output = torch.empty(A.shape[:-1] + (self.outfeatures, ),
+                                 dtype=A.dtype,
+                                 device=A.device)
         args.append(Output)
 
         self.bitblas_matmul(*args)

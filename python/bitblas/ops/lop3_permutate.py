@@ -20,17 +20,20 @@ class LOP3PermutateConfig:
 
 
 class LOP3Permutate(Operator):
+
     def __init__(
-        self,
-        config: LOP3PermutateConfig,
-        name: str = "permutate",
-        target: Target = tvm.target.Target("llvm"),  # assume to do permutation on gpu.
+            self,
+            config: LOP3PermutateConfig,
+            name: str = "permutate",
+            target: Target = tvm.target.Target(
+                "llvm"),  # assume to do permutation on gpu.
     ):
         # consider to warp the arguments to MatmulConfig
         super().__init__(name, config, target)
 
         if target.kind.name != "llvm":
-            raise ValueError("Currently only support llvm target for Permutation")
+            raise ValueError(
+                "Currently only support llvm target for Permutation")
 
         self.target = target
         self._build_runtime_module(target)
@@ -44,7 +47,7 @@ class LOP3Permutate(Operator):
         )
 
     def forward(self, weight, res):
-        # reintepret the input tensor to int32 format
+        # reinterpret the input tensor to int32 format
         args = [arg.view(torch.int32) for arg in [weight, res]]
         self.torch_func(*args)
         return args[-1].view(weight.dtype)

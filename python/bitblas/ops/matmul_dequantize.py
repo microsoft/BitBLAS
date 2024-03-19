@@ -16,6 +16,7 @@ from .param_permutate import ParamPermutate, ParamPermutateConfig
 
 
 class OPExecutorCPU:
+
     def __init__(self, operators: Optional[List[Operator]] = None):
         if operators is None:
             operators = []
@@ -30,7 +31,8 @@ class OPExecutorCPU:
     def forward(self, weight):
         inputs = [weight]
         for op in self.operators:
-            inputs.append(tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
+            inputs.append(
+                tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
             inputs = [op.forward(*inputs)]
         return inputs[-1]
 
@@ -73,42 +75,38 @@ class MatmulWeightOnlyDequantizeConfig:
         # set M to tuple if it is list
         # otherwise, M is not hashable
         object.__setattr__(
-            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
-        )
+            self, "M",
+            tuple(self.M) if isinstance(self.M, list) else self.M)
         if isinstance(self.propagate_a, bool):
             object.__setattr__(
                 self,
                 "propagate_a",
-                (
-                    TransformKind.IntraWarpTransform
-                    if self.propagate_a
-                    else TransformKind.NonTransform
-                ),
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_a else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_a, int):
-            object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
+            object.__setattr__(self, "propagate_a",
+                               TransformKind(self.propagate_a))
 
         if isinstance(self.propagate_b, bool):
             object.__setattr__(
                 self,
                 "propagate_b",
-                (
-                    TransformKind.IntraWarpTransform
-                    if self.propagate_b
-                    else TransformKind.NonTransform
-                ),
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_b else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_b, int):
-            object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
+            object.__setattr__(self, "propagate_b",
+                               TransformKind(self.propagate_b))
 
 
 class MatmulWeightOnlyDequantize(Operator):
 
     def __init__(
-        self,
-        config: MatmulWeightOnlyDequantizeConfig,
-        name: str = "matmul_weight_only_dequantize",
-        target: Target = tvm.target.Target("cuda"),
+            self,
+            config: MatmulWeightOnlyDequantizeConfig,
+            name: str = "matmul_weight_only_dequantize",
+            target: Target = tvm.target.Target("cuda"),
     ):
         super().__init__(name, config, target)
 
@@ -120,8 +118,7 @@ class MatmulWeightOnlyDequantize(Operator):
 
         try:
             self.optimized_func = self.apply_default_schedule(
-                self.prim_func_mod, target
-            )
+                self.prim_func_mod, target)
         except Exception:
             self.optimized_func = None
             print(
@@ -131,8 +128,7 @@ class MatmulWeightOnlyDequantize(Operator):
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
-                {"opt_shapes": self.dynamic_range}
-            )
+                {"opt_shapes": self.dynamic_range})
         else:
             self.dynamic_range = None
 
@@ -227,12 +223,13 @@ class MatmulWeightOnlyDequantize(Operator):
             return code
         if self.N * self.K > 10**6:
             rasterization_code = get_rasterization_code(10)
-            code = code[: index + 2] + rasterization_code + code[index + 2 :]
+            code = code[:index + 2] + rasterization_code + code[index + 2:]
         return code
 
     def retrieve_weight_shape(self):
         return [
-            int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape
+            int(i)
+            for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape
         ]
 
     def forward(self, *args) -> Any:

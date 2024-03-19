@@ -25,30 +25,29 @@ class ParamPermutateConfig:
             object.__setattr__(
                 self,
                 "propagate_kind",
-                (
-                    TransformKind.IntraWarpTransform
-                    if self.propagate_kind
-                    else TransformKind.NonTransform
-                ),
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_kind else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_kind, int):
-            object.__setattr__(
-                self, "propagate_kind", TransformKind(self.propagate_kind)
-            )
+            object.__setattr__(self, "propagate_kind",
+                               TransformKind(self.propagate_kind))
 
 
 class ParamPermutate(Operator):
+
     def __init__(
-        self,
-        config: ParamPermutateConfig,
-        name: str = "permutate",
-        target: Target = tvm.target.Target("llvm"),  # assume to do permutation on gpu.
+            self,
+            config: ParamPermutateConfig,
+            name: str = "permutate",
+            target: Target = tvm.target.Target(
+                "llvm"),  # assume to do permutation on gpu.
     ):
         # consider to warp the arguments to MatmulConfig
         super().__init__(name, config, target)
 
         if target.kind.name != "llvm":
-            raise ValueError("Currently only support llvm target for Permutation")
+            raise ValueError(
+                "Currently only support llvm target for Permutation")
 
         self.target = target
         self._build_runtime_module(target)
@@ -88,7 +87,7 @@ class ParamPermutate(Operator):
     @property
     def group_size(self):
         return self.config.group_size
-    
+
     @property
     def target_instruction(self):
         return self.config.target_instruction

@@ -19,7 +19,8 @@ def select_implementation(
     if target_instruction != "nvidia-mma":
         raise ValueError("Currently only support nvidia-mma instruction")
     if propagate_kind < TransformKind.IntraWarpTransform:
-        raise ValueError("Currently only support propagate_kind >= IntraWarpTransform")
+        raise ValueError(
+            "Currently only support propagate_kind >= IntraWarpTransform")
     if transpose_matrix is not True:
         raise ValueError("Currently only support transpose_matrix == True")
     # This is trick to get the basic tile size for the current datatype
@@ -31,8 +32,7 @@ def select_implementation(
         group_size = N
 
     intra_index_map, inverse_indexmap = get_propagate_map(
-        transpose_matrix, dtype=datatype, matrix_name=propagate_kind
-    )
+        transpose_matrix, dtype=datatype, matrix_name=propagate_kind)
 
     inp = te.placeholder((M, N // group_size), name="inp", dtype=datatype)
 
@@ -42,7 +42,8 @@ def select_implementation(
         spatial_i, spatial_j = rl // l, rr // r
         if propagate_kind >= TransformKind.IntraWarpTransform:
             warp_i, warp_j = intra_index_map.map_indices([warp_i, warp_j])
-        new_index = (spatial_i * l + warp_i, (spatial_j * r + warp_j) // group_size)
+        new_index = (spatial_i * l + warp_i,
+                     (spatial_j * r + warp_j) // group_size)
         return inp[new_index]
 
     inp_prmt = te.compute(

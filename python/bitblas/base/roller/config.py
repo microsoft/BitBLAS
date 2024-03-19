@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
 """Config definition for schedule"""
 from typing import Dict, List, Optional, Tuple
 from ..roller import PrimFuncNode
@@ -62,7 +61,7 @@ class Stride:
             strided_elem = original_shape
         else:
             assert self.ax < len(shape)
-            strided_elem = np.prod(shape[0 : self.ax + 1]) * self.stride
+            strided_elem = np.prod(shape[0:self.ax + 1]) * self.stride
             assert strided_elem >= original_shape
         return int(strided_elem)
 
@@ -107,7 +106,7 @@ class TileDict:
 
 class IntrinInfo:
     """
-    The information of tensorcore intrinsic related infomation
+    The information of tensorcore intrinsic related information
     """
 
     def __init__(
@@ -131,7 +130,7 @@ class IntrinInfo:
     @property
     def smooth_a(self) -> bool:
         return self.input_transform_kind >= 2
-    
+
     @property
     def smooth_b(self) -> bool:
         return self.weight_transform_kind >= 2
@@ -139,10 +138,11 @@ class IntrinInfo:
     @property
     def inter_transform_a(self) -> bool:
         return self.input_transform_kind >= 1
-    
+
     @property
     def inter_transform_b(self) -> bool:
         return self.weight_transform_kind >= 1
+
 
 class Config(object):
     """
@@ -153,7 +153,7 @@ class Config(object):
         self.arch = None
         self.use_tc = None  # todo(lei): this should be renamed.
 
-        # spacial axes tiling info
+        # special axes tiling info
         self.block = []
         self.thread = []
         # special axes for tensorCore
@@ -243,7 +243,7 @@ class Config(object):
     def __repr__(self) -> str:
         return str(self.to_dict())
 
-    def complete_config(self, node:PrimFuncNode):
+    def complete_config(self, node: PrimFuncNode):
         # analysis pass context, for int8 mma, we should merge static shared memory
         merge_static_smem = False
         if self.use_tc and self.intrin_info.in_dtype == "int8":

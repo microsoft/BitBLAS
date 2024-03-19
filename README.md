@@ -16,8 +16,8 @@ BitBLAS can achieve optimal performance across various compute patterns:
 - GTX 3090
   - FLOAT16xFLOAT16 with TensorCore ![3090-gemm-fp16](./images/figures/op_benchmark_3090_fp16_gemm.png)
   - INT8xINT8 with TensorCore ![3090-gemm-s8](./images/figures/op_benchmark_3090_s8_gemm.png)
-  - FLOAT16xAF4(LUT4) GEMV ![3090-af4-gemv](./images/figures/op_benchmark_3090_af4_gemv.png)
-  - FLOAT16xAF4(LUT4) with TensorCore ![3090-af4-gemm](./images/figures/op_benchmark_3090_af4_gemm.png)
+  - FLOAT16xNF4(LUT4) GEMV ![3090-af4-gemv](./images/figures/op_benchmark_3090_af4_gemv.png)
+  - FLOAT16xNF4(LUT4) with TensorCore ![3090-af4-gemm](./images/figures/op_benchmark_3090_af4_gemm.png)
 
 - A100
   - WeightOnly GEMV ![a100-wq-gemv](./images/figures/op_benchmark_a100_wq_gemv.png)

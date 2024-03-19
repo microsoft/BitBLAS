@@ -11,8 +11,7 @@ import torch.nn as nn
 
 # !pip install auto-gptq
 from auto_gptq.nn_modules.qlinear.qlinear_cuda_old import (
-    QuantLinear as CudaOldQuantLinear,
-)
+    QuantLinear as CudaOldQuantLinear, )
 
 torch.manual_seed(0)
 
@@ -71,12 +70,15 @@ def gen_quant4(k, n, groupsize=-1):
         (1, 1024, 4096, 4, 128, True),
     ],
 )
-def test_quantization_accuracy(m, infeatures, outfeatures, bits, group_size, bias):
+def test_quantization_accuracy(m, infeatures, outfeatures, bits, group_size,
+                               bias):
     original_w, linear, s, qw = gen_quant4(infeatures, outfeatures, group_size)
 
     if group_size == -1:
         group_size = infeatures
-    zeros = torch.full((infeatures // group_size, outfeatures), 7, dtype=torch.int32)
+    zeros = torch.full((infeatures // group_size, outfeatures),
+                       7,
+                       dtype=torch.int32)
 
     bitblas_zeros = zeros.clone().T
     cuda_old_linear = CudaOldQuantLinear(
@@ -98,7 +100,13 @@ def test_quantization_accuracy(m, infeatures, outfeatures, bits, group_size, bia
     linear_module.weight.data.copy_(linear.weight.data)
 
     scales = s.to("cuda")
-    bitblas_qlinear = QuantLinear(bits, group_size, infeatures, outfeatures, bias, opt_features=m, enable_tuning=True)
+    bitblas_qlinear = QuantLinear(bits,
+                                  group_size,
+                                  infeatures,
+                                  outfeatures,
+                                  bias,
+                                  opt_features=m,
+                                  enable_tuning=True)
 
     bitblas_qlinear.pack(
         linear_module.to("cuda"),
@@ -123,7 +131,7 @@ def profile(model, input_data):
     model = model.cuda()
     model.eval()
     output = torch.empty(
-        input_data.shape[:-1] + (model.outfeatures,),
+        input_data.shape[:-1] + (model.outfeatures, ),
         dtype=input_data.dtype,
         device=input_data.device,
     )
@@ -152,7 +160,8 @@ def profile(model, input_data):
         (1, 16384, 16384, 4, -1, False),
     ],
 )
-def test_profile_performance(m, infeatures, outfeatures, bits, group_size, bias):
+def test_profile_performance(m, infeatures, outfeatures, bits, group_size,
+                             bias):
     bitblas_qlinear = QuantLinear(
         bits,
         group_size,
@@ -168,7 +177,9 @@ def test_profile_performance(m, infeatures, outfeatures, bits, group_size, bias)
         torch_latency = profile(bitblas_qlinear, input_data)
         bitblas_latency = bitblas_qlinear.bitblas_matmul.profile_latency()
 
-    assert abs(torch_latency - bitblas_latency) / torch_latency < 0.1, f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}"
+    assert abs(
+        torch_latency - bitblas_latency
+    ) / torch_latency < 0.1, f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}"
 
 
 if __name__ == "__main__":

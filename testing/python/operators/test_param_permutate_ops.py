@@ -7,10 +7,13 @@ from bitblas.ops.param_permutate import ParamPermutate, ParamPermutateConfig
 
 target = tvm.target.Target("llvm")
 
+
 # fmt: off
-@pytest.mark.parametrize("M,N,datatype,transpose_matrix,group_size,propagate_kind,target_instruction", [
-    (1024, 1024, "float16", True, 1, True, "nvidia-mma"),
-])
+@pytest.mark.parametrize(
+    "M,N,datatype,transpose_matrix,group_size,propagate_kind,target_instruction",
+    [
+        (1024, 1024, "float16", True, 1, True, "nvidia-mma"),
+    ])
 def test_param_permutate_profile_latency(
     M,
     N,
@@ -35,6 +38,7 @@ def test_param_permutate_profile_latency(
     )
     latency = param_permutate.profile_latency()
     assert latency
+
 
 # fmt: on
 

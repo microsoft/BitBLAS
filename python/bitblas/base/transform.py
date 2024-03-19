@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
 """
 Apply ScheduleRules onto an IRModule to generate default schedules without tuning,
 or a space for MetaSchedule tuning
@@ -61,9 +60,8 @@ class ApplyDefaultSchedule:  # pylint: disable=too-few-public-methods
                 sch = _apply_rules(func, target, self.rules, tunable=False)
                 if sch is not None:
                     assert len(sch) == 1
-                    updated_functions[g_var] = (
-                        sch[0].mod["main"].with_attr("tir.is_scheduled", 1)
-                    )
+                    updated_functions[g_var] = (sch[0].mod["main"].with_attr(
+                        "tir.is_scheduled", 1))
         for g_var, func in updated_functions.items():
             mod[g_var] = func
         return mod
@@ -100,10 +98,10 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
         self.temp_dir = tempfile.TemporaryDirectory()
         print(f"[BitBLAS] Using meta database dir {self.temp_dir}")
         path_workload = osp.join(self.temp_dir.name, "database_workload.json")
-        path_tuning_record = osp.join(self.temp_dir.name, "database_tuning_record.json")
+        path_tuning_record = osp.join(self.temp_dir.name,
+                                      "database_tuning_record.json")
         self.cache_meta_database = ms.database.JSONDatabase(
-            path_workload, path_tuning_record, module_equality="structural"
-        )
+            path_workload, path_tuning_record, module_equality="structural")
 
     def _in_white_list(self, func_name: str) -> bool:
         if len(self.whitelist) == 0:
@@ -127,8 +125,7 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
                     continue
                 print(f"[BitBLAS] Start to apply fast tuning for {g_var}")
                 normalize_mod_func_ = tvm._ffi.get_global_func(
-                    "tvm.meta_schedule.normalize_mod"
-                )
+                    "tvm.meta_schedule.normalize_mod")
                 _normalized_func_mod = normalize_mod_func_(func)
 
                 if self.cache_meta_database.has_workload(_normalized_func_mod):
@@ -143,8 +140,7 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
                         trace.apply_to_schedule(sch, remove_postproc=False)
                         print(f"[BitBLAS] Find Cache for {g_var}")
                         updated_functions[g_var] = sch.mod["main"].with_attr(
-                            "tir.is_scheduled", 1
-                        )
+                            "tir.is_scheduled", 1)
                         continue
 
                 if check_func_with_dynamic(func):
@@ -163,16 +159,14 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
                             if g.name_hint == g_var.name_hint:
                                 # avoid duplicated global symbol
                                 updated_functions[g_var] = f.without_attr(
-                                    "global_symbol"
-                                ).with_attr("tir.is_scheduled", 1)
+                                    "global_symbol").with_attr(
+                                        "tir.is_scheduled", 1)
                             else:
                                 updated_functions[g] = f.with_attr(
-                                    "tir.is_scheduled", 1
-                                )
-                        # cannot reuse meta database as it canot be recorvered from the trace
+                                    "tir.is_scheduled", 1)
+                        # cannot reuse meta database as it cannot be recorvered from the trace
                         workload = self.cache_meta_database.commit_workload(
-                            _normalized_func_mod
-                        )
+                            _normalized_func_mod)
                 else:
                     # otherwise is static shape analysis
                     _, best = fast_tune(
@@ -183,12 +177,10 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
                     )
 
                     if best is not None:
-                        updated_functions[g_var] = best.sch.mod["main"].with_attr(
-                            "tir.is_scheduled", 1
-                        )
+                        updated_functions[g_var] = best.sch.mod[
+                            "main"].with_attr("tir.is_scheduled", 1)
                         workload = self.cache_meta_database.commit_workload(
-                            _normalized_func_mod
-                        )
+                            _normalized_func_mod)
                         # only record the best schedule
                         self.cache_meta_database.commit_tuning_record(
                             ms.database.TuningRecord(
@@ -197,10 +189,8 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
                                 [best.latency],
                                 target,
                                 ms.arg_info.ArgInfo.from_prim_func(
-                                    func=best.sch.mod["main"]
-                                ),
-                            )
-                        )
+                                    func=best.sch.mod["main"]),
+                            ))
 
         for g_var, func in updated_functions.items():
             mod[g_var] = func
@@ -210,9 +200,9 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
             if not osp.exists(self.meta_database_dir):
                 os.makedirs(self.meta_database_dir)
             # TODO(lei): maybe another way to copy the database
-            shutil.copytree(
-                self.temp_dir.name, self.meta_database_dir, dirs_exist_ok=True
-            )
+            shutil.copytree(self.temp_dir.name,
+                            self.meta_database_dir,
+                            dirs_exist_ok=True)
 
         return mod
 

@@ -21,8 +21,7 @@ from bitblas.gpu.matmul_analysis import (
     layout_propagate_chain,
 )
 from tvm.dlight.base import (
-    analysis,
-)
+    analysis, )
 from dataclasses import dataclass
 
 
@@ -86,9 +85,11 @@ class LayoutTransformHint:
 
 @module_pass(opt_level=0, name="InsertLayoutTransform")
 class WeightOnlyLayoutPropagation:
+
     def __init__(
         self,
-        transform_level: Union[int, TransformKind] = TransformKind.InterWarpTransform,
+        transform_level: Union[
+            int, TransformKind] = TransformKind.InterWarpTransform,
         target: Optional[Target] = None,
         faster_conversion: bool = False,
     ) -> None:
@@ -109,17 +110,18 @@ class WeightOnlyLayoutPropagation:
         self.layout_transform_hints: Dict[str, List[LayoutTransformHint]] = {}
 
     def detect_propagate_matmul(self, func: tir.PrimFunc, target: Target):
-        _, tags = get_tensorized_func_and_tags(
-            func, target, skip_normalize=True, allow_gemv=True
-        )
+        _, tags = get_tensorized_func_and_tags(func,
+                                               target,
+                                               skip_normalize=True,
+                                               allow_gemv=True)
         if tags is None:
             return False, None
         return True, tags["intrin_info"]
 
-    def transform_matmul(self, g_var: GlobalVar, func: tir.PrimFunc, intrin_info):
+    def transform_matmul(self, g_var: GlobalVar, func: tir.PrimFunc,
+                         intrin_info):
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
-            get_mma_intrin_group,
-        )
+            get_mma_intrin_group, )
 
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
@@ -128,7 +130,7 @@ class WeightOnlyLayoutPropagation:
         reduction_blocks = get_reduction_blocks(sch, blocks)
         if reduction_blocks is None or len(reduction_blocks) != 1:
             return False
-        (main_block,) = reduction_blocks
+        (main_block, ) = reduction_blocks
 
         intrin_group = get_mma_intrin_group(
             load_scope="shared",
@@ -159,19 +161,18 @@ class WeightOnlyLayoutPropagation:
             return False
 
         transformed_block = find_last_producer_from_buffer(
-            sch, main_block, weight_buffer
-        )
+            sch, main_block, weight_buffer)
         if transformed_block is None:
             return False
         if transformed_block != main_block:
             target_scope = ("read", 0)
 
-        reindex_block = sch.cache_read(transformed_block, target_scope[1], "global")
+        reindex_block = sch.cache_read(transformed_block, target_scope[1],
+                                       "global")
 
         # create inter-warp memory layout index map
-        inter_warp_layout = IndexMap.from_func(
-            lambda i, j: (i // inter_j, j // inter_k, i % inter_j, j % inter_k)
-        )
+        inter_warp_layout = IndexMap.from_func(lambda i, j: (
+            i // inter_j, j // inter_k, i % inter_j, j % inter_k))
 
         inter_warp_layout = layout_propagate_chain(
             sch,
@@ -187,8 +188,8 @@ class WeightOnlyLayoutPropagation:
             lambda i, j: inter_warp_layout.map_indices([i, j]),
         )
         arg_idx = find_arg_idx_from_buffer_chain(
-            sch, reindex_block, sch.get(reindex_block).reads[0].buffer
-        )
+            sch, reindex_block,
+            sch.get(reindex_block).reads[0].buffer)
 
         intra_warp_layout = None
         if self.transform_level.value >= TransformKind.IntraWarpTransform.value:
@@ -230,8 +231,8 @@ class WeightOnlyLayoutPropagation:
             # currently weight propagation only support nvidia gpus
             return mod
 
-        propogate_candidates = {}
-        propogated_funcs = {}  # some funcs may not be able to transform
+        propagate_candidates = {}
+        propagated_funcs = {}  # some funcs may not be able to transform
         candidates_intrin_info = {}
         decoded_funcs = {}
         for g_var, func in mod.functions_items():
@@ -241,12 +242,11 @@ class WeightOnlyLayoutPropagation:
                 # Note: this can be applied to any function which can be transformed to matmul (e.g., conv2d)
                 # for mlc we only consider matmul
                 # detect the pattern
-                is_matmul, intrin_info = self.detect_propagate_matmul(func, self.target)
+                is_matmul, intrin_info = self.detect_propagate_matmul(
+                    func, self.target)
 
-                if (
-                    func.attrs is not None
-                    and "dlight.do_not_tensorize" in func.attrs.keys()
-                ):
+                if (func.attrs is not None
+                        and "dlight.do_not_tensorize" in func.attrs.keys()):
                     # currently we only support tensorize propagation
                     continue
 
@@ -255,21 +255,20 @@ class WeightOnlyLayoutPropagation:
                         decoded_funcs[g_var] = func
                     if self.transform_level != TransformKind.NonTransform:
                         # lift tags to the function as it has intrinsic information that can be reused.
-                        propogate_candidates[g_var] = func
+                        propagate_candidates[g_var] = func
                         candidates_intrin_info[g_var] = intrin_info
 
-        for g_var, func in propogate_candidates.items():
-            updated_func = self.transform_matmul(
-                g_var, func, candidates_intrin_info[g_var]
-            )
+        for g_var, func in propagate_candidates.items():
+            updated_func = self.transform_matmul(g_var, func,
+                                                 candidates_intrin_info[g_var])
             if updated_func:
-                updated_func = updated_func.with_attrs(
-                    {
-                        "transform_kind": self.transform_level.value,
-                        "weight_transform_kind": True,
-                    }
-                )
-                propogated_funcs[g_var] = updated_func
+                updated_func = updated_func.with_attrs({
+                    "transform_kind":
+                    self.transform_level.value,
+                    "weight_transform_kind":
+                    True,
+                })
+                propagated_funcs[g_var] = updated_func
                 mod[g_var] = updated_func
 
         @relax.expr_functor.mutator
@@ -279,7 +278,8 @@ class WeightOnlyLayoutPropagation:
             def __init__(
                 self,
                 transform_level: TransformKind = TransformKind.NonTransform,
-                layout_transform_hints: Dict[str, List[LayoutTransformHint]] = {},
+                layout_transform_hints: Dict[str,
+                                             List[LayoutTransformHint]] = {},
             ):
                 super().__init__()
                 self.transform_level = transform_level
@@ -289,20 +289,18 @@ class WeightOnlyLayoutPropagation:
                 if self.transform_level == TransformKind.NonTransform:
                     return super().visit_call_(call_node)
                 g_var = call_node.args[0]
-                if g_var not in propogated_funcs.keys():
+                if g_var not in propagated_funcs.keys():
                     return super().visit_call_(call_node)
                 args = list(call_node.args[1])
                 # assume we only have weight propagation currently
-                (weight_layout_hint,) = self.layout_transform_hints[g_var]
+                (weight_layout_hint, ) = self.layout_transform_hints[g_var]
                 weight = args[weight_layout_hint.apply_arg_idx]
                 weight = self.builder_.emit(
                     relax.op.layout_transform(
                         weight,
-                        index_map=lambda i, j: weight_layout_hint.inter_warp_layout.map_indices(
-                            [i, j]
-                        ),
-                    )
-                )
+                        index_map=lambda i, j: weight_layout_hint.
+                        inter_warp_layout.map_indices([i, j]),
+                    ))
                 if self.transform_level.value >= TransformKind.IntraWarpTransform.value:
                     weight = self.builder_.emit(
                         relax.op.layout_transform(
@@ -310,22 +308,18 @@ class WeightOnlyLayoutPropagation:
                             index_map=lambda i, j, ii, jj: (
                                 i,
                                 j,
-                                *weight_layout_hint.intra_warp_layout.map_indices(
-                                    [ii, jj]
-                                ),
+                                *weight_layout_hint.intra_warp_layout.
+                                map_indices([ii, jj]),
                             ),
-                        )
-                    )
+                        ))
 
                 call_node = self.builder_.emit(
                     relax.call_tir(
                         g_var,
-                        args[: weight_layout_hint.apply_arg_idx]
-                        + [weight]
-                        + args[weight_layout_hint.apply_arg_idx + 1 :],
+                        args[:weight_layout_hint.apply_arg_idx] + [weight] +
+                        args[weight_layout_hint.apply_arg_idx + 1:],
                         out_sinfo=call_node.struct_info,
-                    )
-                )
+                    ))
                 return call_node
 
             def visit_call_(self, call_node: Call):
@@ -340,7 +334,8 @@ class WeightOnlyLayoutPropagation:
                         updated_func = self.visit_expr(func)
                         self.builder_.update_func(gv, updated_func)
                 new_mod = self.builder_.get()
-                new_mod = new_mod.with_attrs(mod.attrs) if mod.attrs else new_mod
+                new_mod = new_mod.with_attrs(
+                    mod.attrs) if mod.attrs else new_mod
                 for gv, func in new_mod.functions_items():
                     mod.update_func(gv, func)
                 return mod
@@ -374,13 +369,15 @@ class WeightOnlyLayoutPropagation:
                     return super().visit_call_(call_node)
                 dequantize_info = dict(func.attrs["dequantize_info"])
                 assert len(dequantize_info) == 1
-                (weight_dequantize_info,) = dequantize_info.values()
+                (weight_dequantize_info, ) = dequantize_info.values()
 
                 sch = tir.Schedule(func)
-                dequantize_block = sch.get_block(weight_dequantize_info["decode_block"])
+                dequantize_block = sch.get_block(
+                    weight_dequantize_info["decode_block"])
 
                 # weight is the first read buffer if format in ["int", "uint"], otherwise the second read buffer, af .etc
-                source_format = weight_dequantize_info["source_format"]["format"]
+                source_format = weight_dequantize_info["source_format"][
+                    "format"]
                 source_bits = weight_dequantize_info["source_format"]["bits"]
                 target_dtype = weight_dequantize_info["target_format"]
 
@@ -389,24 +386,23 @@ class WeightOnlyLayoutPropagation:
                 elif source_format in ["af"]:
                     weight_buffer = sch.get(dequantize_block).reads[1].buffer
                 else:
-                    raise ValueError(f"Unsupported source format {source_format}")
+                    raise ValueError(
+                        f"Unsupported source format {source_format}")
 
                 # update func with dequantize_info
                 dequantize_info["fast_decoding"] = True
                 self.builder_.update_func(
-                    g_var, func.with_attrs({"dequantize_info": dequantize_info})
-                )
+                    g_var,
+                    func.with_attrs({"dequantize_info": dequantize_info}))
 
                 weight_idx = find_arg_idx_from_buffer_chain(
-                    sch, dequantize_block, weight_buffer
-                )
+                    sch, dequantize_block, weight_buffer)
                 weight = args[weight_idx]
 
                 weight_shape = weight_buffer.shape
                 # reshape the weight shape to 2d
                 reshape_weight = self.builder_.emit(
-                    relax.op.reshape(weight, (-1, weight_shape[-1]))
-                )
+                    relax.op.reshape(weight, (-1, weight_shape[-1])))
                 # register g_var to the func
                 lop3_interleave_func = tir_interleave_weight(
                     N=reshape_weight.struct_info.shape[0],
@@ -424,18 +420,16 @@ class WeightOnlyLayoutPropagation:
                         interleave_gvar,
                         [reshape_weight],
                         out_sinfo=reshape_weight.struct_info,
-                    ),
-                )
+                    ), )
                 reshape_weight = self.builder_.emit(
-                    relax.op.reshape(lop3_interleave_weight, weight_shape)
-                )
+                    relax.op.reshape(lop3_interleave_weight, weight_shape))
                 call_node = self.builder_.emit(
                     relax.call_tir(
                         g_var,
-                        args[:weight_idx] + [reshape_weight] + args[weight_idx + 1 :],
+                        args[:weight_idx] + [reshape_weight] +
+                        args[weight_idx + 1:],
                         out_sinfo=call_node.struct_info,
-                    ),
-                )
+                    ), )
 
                 return call_node
 
@@ -451,13 +445,13 @@ class WeightOnlyLayoutPropagation:
                         updated_func = self.visit_expr(func)
                         self.builder_.update_func(gv, updated_func)
                 new_mod = self.builder_.get()
-                new_mod = new_mod.with_attrs(mod.attrs) if mod.attrs else new_mod
+                new_mod = new_mod.with_attrs(
+                    mod.attrs) if mod.attrs else new_mod
                 for gv, func in new_mod.functions_items():
                     mod.update_func(gv, func)
                 return mod
 
         mod = FastTypeConversionLayoutMutator(
-            faster_conversion=self.faster_conversion
-        ).transform(mod)
+            faster_conversion=self.faster_conversion).transform(mod)
         mod = relax.transform.LegalizeOps()(mod)
         return mod

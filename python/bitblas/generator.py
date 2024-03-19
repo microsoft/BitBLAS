@@ -3,6 +3,7 @@
 
 
 class BitBLASGenerator:
+
     def __init__(self):
         # Initialize the generator with configuration
         pass

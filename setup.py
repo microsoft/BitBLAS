@@ -21,7 +21,8 @@ setup(
     install_requires=[],
     author="Microsoft Research",
     author_email="leiwang1999@outlook.com",
-    description="A light weight framework to generate high performance CUDA/HIP code for BLAS operators.",
+    description=
+    "A light weight framework to generate high performance CUDA/HIP code for BLAS operators.",
     license="MIT",
     keywords="BLAS, CUDA, HIP, Code Generation, TVM",
     url="https://github.com/microsoft/BitBLAS",

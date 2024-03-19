@@ -14,6 +14,7 @@ from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 
 
 class TransformExecutorCPU:
+
     def __init__(self, operators: Optional[List[Operator]] = None):
         if operators is None:
             operators = []
@@ -28,7 +29,8 @@ class TransformExecutorCPU:
     def forward(self, weight):
         inputs = [weight]
         for op in self.operators:
-            inputs.append(tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
+            inputs.append(
+                tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
             inputs = [op.forward(*inputs)]
         return inputs[-1]
 
@@ -57,54 +59,51 @@ class MatmulConfig:
         # set M to tuple if it is list
         # otherwise, M is not hashable
         object.__setattr__(
-            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
-        )
+            self, "M",
+            tuple(self.M) if isinstance(self.M, list) else self.M)
         if isinstance(self.propagate_a, bool):
             object.__setattr__(
                 self,
                 "propagate_a",
-                (
-                    TransformKind.IntraWarpTransform
-                    if self.propagate_a
-                    else TransformKind.NonTransform
-                ),
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_a else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_a, int):
-            object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
+            object.__setattr__(self, "propagate_a",
+                               TransformKind(self.propagate_a))
 
         if isinstance(self.propagate_b, bool):
             object.__setattr__(
                 self,
                 "propagate_b",
-                (
-                    TransformKind.IntraWarpTransform
-                    if self.propagate_b
-                    else TransformKind.NonTransform
-                ),
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_b else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_b, int):
-            object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
+            object.__setattr__(self, "propagate_b",
+                               TransformKind(self.propagate_b))
 
 
 class Matmul(Operator):
+
     def __init__(
-        self,
-        config: MatmulConfig,
-        name: str = "matmul",
-        target: Target = tvm.target.Target("cuda"),
+            self,
+            config: MatmulConfig,
+            name: str = "matmul",
+            target: Target = tvm.target.Target("cuda"),
     ):
         super().__init__(name, config, target)
         target = self.target
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
 
-        self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
+        self.optimized_func = self.apply_default_schedule(
+            self.prim_func_mod, target)
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.update_func(
-                self.prim_func.with_attrs({"opt_shapes": self.dynamic_range})
-            )
+                self.prim_func.with_attrs({"opt_shapes": self.dynamic_range}))
         else:
             self.dynamic_range = None
 
@@ -175,7 +174,7 @@ class Matmul(Operator):
         # some tricky judge to decide whether to insert rasterization code
         if self.N * self.K > 10**6:
             rasterization_code = get_rasterization_code(10)
-            code = code[: index + 2] + rasterization_code + code[index + 2 :]
+            code = code[:index + 2] + rasterization_code + code[index + 2:]
         code = tensor_replace_dp4a(code)
         return code
 
@@ -204,11 +203,10 @@ class Matmul(Operator):
                 profile_tensors.append(
                     tvm.nd.array(
                         np.random.uniform(
-                            0, 1, [var_warpper(i, m) for i in arg.shape]
-                        ).astype(arg.dtype),
+                            0, 1, [var_warpper(i, m)
+                                   for i in arg.shape]).astype(arg.dtype),
                         device=device,
-                    )
-                )
+                    ))
             self.profile_tensors = profile_tensors
             latency = self.time_evaluator(*profile_tensors).mean * 1e3
             benchmark_latencies.append({"m": m, "latency": latency})

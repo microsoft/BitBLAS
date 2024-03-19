@@ -50,17 +50,14 @@ def get_annotated_device_mod(mod: IRModule, target: Target):
     target_host = None
     for tgt, mod in target_input_mod.items():
         if not isinstance(tgt, (str, Target)):
-            raise ValueError(
-                "The key of inputs must be str or " "Target when inputs is dict."
-            )
+            raise ValueError("The key of inputs must be str or "
+                             "Target when inputs is dict.")
         if not isinstance(mod, tvm.IRModule):
-            raise ValueError(
-                "inputs must be Schedule, IRModule, " "or dict of str to IRModule."
-            )
+            raise ValueError("inputs must be Schedule, IRModule, "
+                             "or dict of str to IRModule.")
         annotated_mods[tgt] = mod.with_attr("runtime", runtime)
     annotated_mods, target_host = Target.canon_target_map_and_host(
-        annotated_mods, target_host
-    )
+        annotated_mods, target_host)
     if not target_host:
         for tar, mod in annotated_mods.items():
             device_type = ndarray.device(tar.kind.name, 0).device_type
@@ -70,8 +67,7 @@ def get_annotated_device_mod(mod: IRModule, target: Target):
     if not target_host:
         target_host = "llvm" if tvm.runtime.enabled("llvm") else "stackvm"
     annotated_mods, target_host = Target.canon_target_map_and_host(
-        annotated_mods, target_host
-    )
+        annotated_mods, target_host)
     for target, mod in annotated_mods.items():
         mixed_mod_passes = tvm.get_global_func("driver.mixed_mod_passes")
         device_mod_passes = tvm.get_global_func("driver.device_mod_passes")
@@ -116,9 +112,11 @@ def get_thread_block_information(mod: IRModule):
             # Skip loops without thread binding
             if thread_binding:
                 if "threadIdx" in thread_binding.thread_tag:
-                    block_dims["xyz".index(thread_binding.thread_tag[-1])] = extent
+                    block_dims["xyz".index(
+                        thread_binding.thread_tag[-1])] = extent
                 elif "blockIdx" in thread_binding.thread_tag:
-                    grid_dims["xyz".index(thread_binding.thread_tag[-1])] = extent
+                    grid_dims["xyz".index(
+                        thread_binding.thread_tag[-1])] = extent
 
     return block_dims, grid_dims
 
@@ -216,17 +214,13 @@ class CUDASourceWrapper(object):
             call_str = """
         cudaFuncSetAttribute({},
                                     cudaFuncAttributeMaxDynamicSharedMemorySize, {});
-                """.format(
-                self.function_name, self.dynamic_smem_buf
-            )
+                """.format(self.function_name, self.dynamic_smem_buf)
         # Format the initialization function using the call_str
         init_funcs = """
     extern "C" void init() {{
         {}
     }}
-            """.format(
-            call_str
-        )
+            """.format(call_str)
         return init_funcs
 
     def update_lib_code(self, code: str):
@@ -247,12 +241,12 @@ class CUDASourceWrapper(object):
         # Populate the function arguments from the primary function's parameters and buffers
         for param in self.prim_func.params:
             buffer = self.prim_func.buffer_map[param]
-            function_args.append(
-                {
-                    "name": buffer.name,
-                    "type": _TYPE_MAP[buffer.dtype] + "* __restrict__",
-                }
-            )
+            function_args.append({
+                "name":
+                buffer.name,
+                "type":
+                _TYPE_MAP[buffer.dtype] + "* __restrict__",
+            })
 
         dynamic_symbolic_set = self.get_dynamic_symbolic_set(self.prim_func)
         # Add dynamic symbolic parameters as integers to the function arguments
@@ -260,7 +254,8 @@ class CUDASourceWrapper(object):
             function_args.append({"name": dyn_sym, "type": "int"})
 
         # Format the function arguments for declaration
-        def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
+        def_args = ", ".join(
+            [f"{arg['type']} {arg['name']}" for arg in function_args])
 
         def func_call_args(s, function_args):
             # Extract the function call arguments matching the function definition
@@ -291,23 +286,21 @@ class CUDASourceWrapper(object):
             legalize_c(block_info[1]),
             legalize_c(block_info[2]),
         )
-        grid_str = "dim3({}, {}, {})".format(
-            legalize_c(grid_info[0]), legalize_c(grid_info[1]), legalize_c(grid_info[2])
-        )
+        grid_str = "dim3({}, {}, {})".format(legalize_c(grid_info[0]),
+                                             legalize_c(grid_info[1]),
+                                             legalize_c(grid_info[2]))
         # Determine the shared memory size, defaulting to 0 if not specified
         smem_str = 0 if self.dynamic_smem_buf is None else self.dynamic_smem_buf
         # Format the CUDA kernel launch string
-        call_str = "{}<<<{}, {}, {}>>>({});".format(
-            function_name, grid_str, block_str, smem_str, call_args
-        )
+        call_str = "{}<<<{}, {}, {}>>>({});".format(function_name, grid_str,
+                                                    block_str, smem_str,
+                                                    call_args)
         # Create the host function wrapper for the CUDA kernel
         host_func = """
     extern "C" void call({}) {{
         {}
     }}
-        """.format(
-            def_args, call_str
-        )
+        """.format(def_args, call_str)
         # Combine the source, initialization function, and host function to form the complete library code
         lib_code = self.source + init_func + host_func
         return lib_code
@@ -332,17 +325,13 @@ class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
                 call_str += """
         cudaFuncSetAttribute({},
                                     cudaFuncAttributeMaxDynamicSharedMemorySize, {});
-                    """.format(
-                    function_name, dynamic_smem_buf
-                )
+                    """.format(function_name, dynamic_smem_buf)
         # Define the init function that will set the attributes for each kernel
         init_funcs = """
-    extern "C" void init() {{
-        {}
-    }}
-            """.format(
-            call_str
-        )
+extern "C" void init() {{
+    {}
+}}
+            """.format(call_str)
         return init_funcs
 
     def create_dispatch_func(self, code, function_informations):
@@ -363,18 +352,19 @@ class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
         # Collect function arguments based on primary function's parameters and buffer mappings
         for param in self.prim_func.params:
             buffer = self.prim_func.buffer_map[param]
-            function_args.append(
-                {
-                    "name": buffer.name,
-                    "type": _TYPE_MAP[buffer.dtype] + "* __restrict__",
-                }
-            )
+            function_args.append({
+                "name":
+                buffer.name,
+                "type":
+                _TYPE_MAP[buffer.dtype] + "* __restrict__",
+            })
         # Add dynamic symbols as integer arguments
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
 
         # Format the argument definitions for function declaration
-        def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
+        def_args = ", ".join(
+            [f"{arg['type']} {arg['name']}" for arg in function_args])
 
         def func_call_args(s: str, function_args):
             # Extract and clean the function call arguments to match the declaration
@@ -413,12 +403,11 @@ class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
                 legalize_c(grid_info[2]),
             )
             # Handle dynamic shared memory specification
-            smem_str = (
-                0 if info["dynamic_smem_buf"] is None else info["dynamic_smem_buf"]
-            )
+            smem_str = (0 if info["dynamic_smem_buf"] is None else
+                        info["dynamic_smem_buf"])
             opt_shapes = info["opt_shapes"]
             # Generate conditional kernel launch code based on dynamic symbolic ranges
-            (symbolic,) = list(dynamic_symbolic_set)
+            (symbolic, ) = list(dynamic_symbolic_set)
             range_str = opt_shapes[symbolic]
             if last_range == 0:
                 call_str = "if ({} <= {}) {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
@@ -432,7 +421,8 @@ class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
                 )
             else:
                 call_str = (
-                    "else if ({} <= {}) {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
+                    "\t\telse if ({} <= {}) {{\n {}<<<{}, {}, {}>>>({}); \n}}\n"
+                    .format(
                         symbolic,
                         range_str,
                         function_name,
@@ -440,23 +430,19 @@ class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
                         block_str,
                         smem_str,
                         call_args,
-                    )
-                )
+                    ))
             if last_range == num_items - 1:
-                call_str += "else {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
-                    function_name, grid_str, block_str, smem_str, call_args
-                )
+                call_str += "\t\telse {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
+                    function_name, grid_str, block_str, smem_str, call_args)
             last_range += 1
             _call_str += call_str
 
         # Wrap the kernel dispatch logic in an external C function
         host_func = """
-    extern "C" void call({}) {{
-        {}
-    }}
-        """.format(
-            def_args, _call_str
-        )
+extern "C" void call({}) {{
+    {}
+}}
+        """.format(def_args, _call_str)
         return host_func
 
     def parse_source_information(self):
