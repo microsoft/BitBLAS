@@ -1,25 +1,29 @@
-# TODO: The maintainer of this repo has not yet edited this file
-
-**REPO OWNER**: Do you want Customer Service & Support (CSS) support for this product/project?
-
-- **No CSS support:** Fill out this template with information about how to file issues and get help.
-- **Yes CSS support:** Fill out an intake form at [aka.ms/onboardsupport](https://aka.ms/onboardsupport). CSS will work with/help you to determine next steps.
-- **Not sure?** Fill out an intake as though the answer were "Yes". CSS will help you decide.
-
-*Then remove this first heading from this SUPPORT.MD file before publishing your repo.*
-
 # Support
 
-## How to file issues and get help  
+Welcome to the BitBLAS support page! BitBLAS is a cutting-edge framework designed for generating high-performance CUDA/HIP code for BLAS operators. Whether you're working on projects like BitNet, GPTQ, or similar, BitBLAS is here to accelerate your development with its robust features.
 
-This project uses GitHub Issues to track bugs and feature requests. Please search the existing 
-issues before filing new issues to avoid duplicates.  For new issues, file your bug or 
-feature request as a new Issue.
+## How to File Issues and Get Help
 
-For help and questions about using this project, please **REPO MAINTAINER: INSERT INSTRUCTIONS HERE 
-FOR HOW TO ENGAGE REPO OWNERS OR COMMUNITY FOR HELP. COULD BE A STACK OVERFLOW TAG OR OTHER
-CHANNEL. WHERE WILL YOU HELP PEOPLE?**.
+### Reporting Bugs or Requesting Features
 
-## Microsoft Support Policy  
+If you encounter a bug or have a feature request, we encourage you to file an issue through our GitHub Issues page. Please follow these steps:
 
-Support for this **PROJECT or PRODUCT** is limited to the resources listed above.
+1. **Search Existing Issues**: Before creating a new issue, please search the existing ones to avoid duplicates.
+2. **Create a New Issue**: If your issue is new, go ahead and file it as a new issue. Provide as much detail as possible to help us understand and address it efficiently.
+
+### Seeking Help and Questions
+
+For questions and help with using BitBLAS, we offer the following channels:
+
+- **GitHub Discussions**: For community support, sharing ideas, and discussing best practices, please visit our [GitHub Discussions](https://github.com/YOUR_REPO/discussions).
+- **Stack Overflow**: Use the tag `BitBLAS` when posting questions. This is monitored by our team and the community.
+
+## Microsoft Support Policy
+
+Support for BitBLAS is primarily provided through the above-mentioned community channels. We strive to address issues and questions in a timely manner, leveraging the collective knowledge and experience of the BitBLAS community.
+
+## Contributing to BitBLAS
+
+We warmly welcome contributions to the BitBLAS project. Whether it's improving the documentation, adding new features, or fixing bugs, your contributions are invaluable to us. Please refer to our [CONTRIBUTING.md](./CONTRIBUTING.md) file for more details on how to contribute.
+
+Before submitting a pull request, you may need to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. The CLA process is straightforward and only needs to be completed once.
