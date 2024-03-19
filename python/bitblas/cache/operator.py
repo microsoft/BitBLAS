@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 import bitblas
 from bitblas.ops.operator import OperatorConfig, Operator
 from dataclasses import asdict
