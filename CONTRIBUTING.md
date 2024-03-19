@@ -27,6 +27,8 @@ Please ask questions in issues.
 
 All pull requests are super welcomed and greatly appreciated! Issues in need of a solution are marked with a [`♥ help`](https://github.com/ianstormtaylor/BitBLAS/issues?q=is%3Aissue+is%3Aopen+label%3A%22%E2%99%A5+help%22) label if you're looking for somewhere to start.
 
+Please run `./format.sh` before submitting a pull request to make sure that your code is formatted correctly.
+
 Please include tests and docs with every pull request!
 
 ## Repository Setup
