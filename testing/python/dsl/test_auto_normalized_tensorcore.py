@@ -2,7 +2,6 @@
 # Licensed under the MIT License.
 import numpy as np
 import tvm
-from tvm.script import tir as T
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.arch import CUDA
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
@@ -12,7 +11,18 @@ import time
 from tvm import te, tir
 
 
-def conv2d_nhwc_hwio(n, f, h, w, c, kh, kw, s, d, p, in_dtype="float16", out_dtype="float16"):
+def conv2d_nhwc_hwio(n,
+                     f,
+                     h,
+                     w,
+                     c,
+                     kh,
+                     kw,
+                     s,
+                     d,
+                     p,
+                     in_dtype="float16",
+                     out_dtype="float16"):
     A = te.placeholder((n, h, w, c), name="input", dtype=in_dtype)
     B = te.placeholder((kh, kw, c, f), name="weight", dtype=in_dtype)
 
@@ -44,13 +54,8 @@ def conv2d_nhwc_hwio(n, f, h, w, c, kh, kw, s, d, p, in_dtype="float16", out_dty
     C = te.compute(
         out_shape,
         lambda n, h, w, f: te.sum(
-            pad[
-                n,
-                h * stride_h + kh * dilation_h,
-                w * stride_w + kw * dilation_w,
-                c,
-            ]
-            * B[kh, kw, c, f],
+            pad[n, h * stride_h + kh * dilation_h, w * stride_w + kw *
+                dilation_w, c, ] * B[kh, kw, c, f],
             axis=[kh, kw, c],
         ),
         name="C",
@@ -63,7 +68,8 @@ benchmark_sets = [
     # (conv2d_nhwc_hwio, (128, 64, 224, 224, 3, 7, 7, 2, 1, 3, "float16", "float16"), Matmul),
     # (conv2d_nhwc_hwio, (128, 64, 224, 224, 64, 1, 1, 2, 1, 3, "float16", "float16"), Matmul),
     # (conv2d_nhwc_hwio, (128, 64, 224, 224, 3, 7, 7, 2, 1, 3, "float32", "float32"), Matmul),
-    (conv2d_nhwc_hwio, (128, 64, 224, 224, 3, 7, 7, 2, 1, 3, "float16", "float16"), Matmul),
+    (conv2d_nhwc_hwio, (128, 64, 224, 224, 3, 7, 7, 2, 1, 3, "float16",
+                        "float16"), Matmul),
 ]
 benchmark_results = {}
 for get_prim_func, input_args, d_schedule in benchmark_sets:
@@ -74,7 +80,7 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     policy = DefaultPolicy(func=func, arch=arch)
     try:
         func, tags = get_tensorized_func_and_tags(func, arch.target)
-    except:
+    except Exception:
         tags = None
     if tags:
         policy = TensorCorePolicy(func=func, arch=arch, tags=tags)
@@ -84,8 +90,10 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     tune_start = time.time()
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     fast_tune_time = time.time() - tune_start
-    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(cpresults[0].latency * 1e3))
-    print("[BitBLAS] The best latency of top 20 is {:.3f} ms".format(best.latency * 1e3))
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
+        cpresults[0].latency * 1e3))
+    print("[BitBLAS] The best latency of top 20 is {:.3f} ms".format(
+        best.latency * 1e3))
 
     # evaluate the performance of the default schedule
 
@@ -102,12 +110,15 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     for arg in args:
         profile_tensors.append(
             tvm.nd.array(
-                np.random.uniform(0, 1, [int(i) for i in arg.shape]).astype(arg.dtype),
+                np.random.uniform(0, 1,
+                                  [int(i)
+                                   for i in arg.shape]).astype(arg.dtype),
                 device=arch.device,
-            )
-        )
+            ))
 
-    timer_cuda_mod = mod_default.time_evaluator(mod_default.entry_name, arch.device, number=5)
+    timer_cuda_mod = mod_default.time_evaluator(mod_default.entry_name,
+                                                arch.device,
+                                                number=5)
     t = timer_cuda_mod(*profile_tensors).mean
 
     print("Time cost of Dlight default schedule: {:.3f} ms".format(t * 1e3))
@@ -133,9 +144,9 @@ headers = [
     "DefaultDLight Latency",
 ]
 
-col_width = (
-    max(len(word) for row in [headers] + list(profile_config.values()) for word in row) + 2
-)  # padding
+col_width = (max(
+    len(word) for row in [headers] + list(profile_config.values())
+    for word in row) + 2)  # padding
 
 print("".join(word.ljust(col_width) for word in headers))
 
