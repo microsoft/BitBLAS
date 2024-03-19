@@ -15,7 +15,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# 
+#
 # Modifications Copyright (c) Microsoft.
 # The code below is mostly copied from apache/tvm common_schedules.py in dlight.
 """Common schedule strategies for TIR."""
@@ -110,7 +110,7 @@ def try_inline(
         for i, block in enumerate(blocks):
             try:
                 func(block.block_rv)
-            except:  # pylint: disable=bare-except
+            except Exception:  # pylint: disable=bare-except
                 continue
             return i
         return None

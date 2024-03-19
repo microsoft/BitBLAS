@@ -1,13 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 """A rule for GEMV and DecodeGEMV."""
-import re
 from functools import reduce
-from typing import List, Optional, Union, Dict
+from typing import List, Dict
 
 from tvm.tir.function import PrimFunc
-from tvm import DataType, arith, ir, tir
-from tvm.target import Target
+from tvm import DataType, tir
 import logging
 from ..base import (
     normalize_prim_func,
@@ -44,21 +42,19 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             logger.debug("Dequantize info is not valid")
             return None
 
-        (weight_decode_info, ) = list(dequantize_info.values())
+        (weight_decode_info,) = list(dequantize_info.values())
 
         def check_weight_decode_info(weight_decode_info):
             conditions = []
             # check source format in ["int", "fp", "af"]
             conditions.append("source_format" in weight_decode_info)
-            conditions.append(weight_decode_info["source_format"]["format"] in
-                              ["uint", "int", "fp", "af"])
-            # check source bits in [1, 2, 4, 8]
             conditions.append(
-                weight_decode_info["source_format"]["bits"] in [1, 2, 4, 8])
+                weight_decode_info["source_format"]["format"] in ["uint", "int", "fp", "af"])
+            # check source bits in [1, 2, 4, 8]
+            conditions.append(weight_decode_info["source_format"]["bits"] in [1, 2, 4, 8])
             # check target format in ["float16", "int8"]
             conditions.append("target_format" in weight_decode_info)
-            conditions.append(
-                weight_decode_info["target_format"] in ["float16", "int8"])
+            conditions.append(weight_decode_info["target_format"] in ["float16", "int8"])
             return all(conditions)
 
         if not check_weight_decode_info(weight_decode_info):
@@ -79,17 +75,12 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             block = block.block_rv
 
             if (any([
-                    sch.get(loop_rv).thread_binding is not None
-                    for loop_rv in sch.get_loops(block)
+                    sch.get(loop_rv).thread_binding is not None for loop_rv in sch.get_loops(block)
             ]) or len(sch.get_loops(block)) == 0):
                 continue
 
             for loop, iter_type in zip(sch.get_loops(block), dom_kind):
-                {
-                    "S": s_loops,
-                    "R": r_loops,
-                    "O": o_loops
-                }[iter_type].append(loop)
+                {"S": s_loops, "R": r_loops, "O": o_loops}[iter_type].append(loop)
 
             if not s_loops:
                 s_loops.append(sch.add_unit_loop(block))
@@ -101,17 +92,15 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
 
         def get_vectorize_factor(target_format):
             # coalesced access requires the vectorize factor to be the same as the transaction size
-            return config.arch.transaction_size[-1] // DataType(
-                target_format).bits
+            return config.arch.transaction_size[-1] // DataType(target_format).bits
 
         vec = get_vectorize_factor(weight_decode_info["target_format"])
         num_warps = int(prod(config.thread))
         warp_size = int(prod(config.reduce_thread))
 
         block_b = reduction_block
-        output_blocks = get_output_blocks(sch, block_infos)
-        B_decode_block = get_block(sch, block_infos,
-                                   weight_decode_info["decode_block"])
+        output_blocks = get_output_blocks(sch, block_infos)  # noqa: F841
+        B_decode_block = get_block(sch, block_infos, weight_decode_info["decode_block"])
 
         block_decode_B = sch.cache_read(block_b, 1, "local")
         sch.compute_inline(B_decode_block)
@@ -128,9 +117,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             return 0
 
         block_shared_local_A = sch.cache_read(block_b, 0, "local")
-        block_shared_local_B = sch.cache_read(block_decode_B,
-                                              get_idx(weight_decode_info),
-                                              "local")
+        block_shared_local_B = sch.cache_read(block_decode_B, get_idx(weight_decode_info), "local")
         block_local_C = sch.cache_write(block_b, 0, "local")
 
         auto_inline_producers(sch, block_shared_local_B)
@@ -139,8 +126,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         bx, j = sch.split(j, factors=[None, num_warps])
         k, tx, vk = sch.split(k, factors=[None, warp_size, vec])
         # for dp4a/hfma2
-        inst_factor = 2 if weight_decode_info[
-            "target_format"] == "float16" else 4
+        inst_factor = 2 if weight_decode_info["target_format"] == "float16" else 4
         _, vk = sch.split(vk, factors=[None, inst_factor])
         sch.reorder(bx, j, k, tx)
 
@@ -160,8 +146,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         sch.vectorize(block_local_a_v)
         block_local_b_v = sch.get_loops(block_shared_local_B)[-1]
         sch.vectorize(block_local_b_v)
-        if ("fast_decoding" in weight_decode_info
-                and weight_decode_info["fast_decoding"]):
+        if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):
             source_bit = weight_decode_info["source_format"]["bits"]
             out_dtype = weight_decode_info["target_format"]
             intrin_info = get_lop3_intrin_group(
@@ -173,11 +158,8 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
                 with_zeros=weight_decode_info["with_zeros"],
                 zeros_type=weight_decode_info["zeros_type"],
             )
-            sch.tensorize(
-                sch.get_loops(block_decode_B)[-1], intrin_info["compute"])
-            sch.annotate(block_b,
-                         ann_key="pragma_import_c",
-                         ann_val=intrin_info["c_source"])
+            sch.tensorize(sch.get_loops(block_decode_B)[-1], intrin_info["compute"])
+            sch.annotate(block_b, ann_key="pragma_import_c", ann_val=intrin_info["c_source"])
         return sch
 
     def apply_config(self, func: PrimFunc, config):

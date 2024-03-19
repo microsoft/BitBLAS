@@ -1,8 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
 from tvm.target import Target
-from typing import List, Union, Literal
+from typing import Literal, Union
 from .operator import Operator
 from .impl.ladder_permutate_impl import select_implementation
 from dataclasses import dataclass
@@ -14,8 +13,7 @@ class LadderPermutateConfig:
     N: int
     datatype: Literal["float16", "int8"] = "float16"
     dequantize_bits: int = -1
-    storage_dtype: Literal["float16", "int8", "uint8", "int32",
-                           "uint32"] = "float16"
+    storage_dtype: Literal["float16", "int8", "uint8", "int32", "uint32"] = "float16"
     propagate_kind: Literal["A", "B"] = "B"  # "A" or "B"
     transpose_matrix: bool = False
     transform_kind: int = 2  # 0: none, 1: inter_warp 2: intra_warp
@@ -30,15 +28,13 @@ class LadderPermutate(Operator):
             self,
             config: LadderPermutateConfig,
             name: str = "permutate",
-            target: Target = tvm.target.Target(
-                "llvm"),  # assume to do permutation on gpu.
+            target: Union[str, Target] = "llvm",  # assume to do permutation on cpu.
     ):
         # consider to warp the arguments to MatmulConfig
         super().__init__(name, config, target)
 
         if target.kind.name != "llvm":
-            raise ValueError(
-                "Currently only support llvm target for Permutation")
+            raise ValueError("Currently only support llvm target for Permutation")
 
         self.target = target
         self._build_runtime_module(target)

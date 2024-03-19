@@ -495,16 +495,14 @@ def get_fast_decode_intrin(
     if source_format == "int":
         decode_func = _tir_packed_to_signed_convert(storage_type, storage_nbit)
     elif source_format == "uint":
-        decode_func = _tir_packed_to_unsigned_convert(storage_type,
-                                                      storage_nbit)
+        decode_func = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)
     else:
         raise ValueError("Unsupported source_format: {}".format(source_format))
 
     if with_scale is False:
 
         @T.prim_func
-        def fast_decode_desc(compressed: T.handle,
-                             decompressed: T.handle) -> None:
+        def fast_decode_desc(compressed: T.handle, decompressed: T.handle) -> None:
             Compressed = T.match_buffer(
                 compressed,
                 [
@@ -536,8 +534,7 @@ def get_fast_decode_intrin(
                         )
 
         @T.prim_func
-        def fast_decode_impl(compressed: T.handle,
-                             decompressed: T.handle) -> None:
+        def fast_decode_impl(compressed: T.handle, decompressed: T.handle) -> None:
             Compressed = T.match_buffer(
                 compressed,
                 [
@@ -569,8 +566,7 @@ def get_fast_decode_intrin(
     elif with_zeros is False:
 
         @T.prim_func
-        def fast_decode_desc(compressed: T.handle, decompressed: T.handle,
-                             scale: T.handle) -> None:
+        def fast_decode_desc(compressed: T.handle, decompressed: T.handle, scale: T.handle) -> None:
             Compressed = T.match_buffer(
                 compressed,
                 [
@@ -600,16 +596,16 @@ def get_fast_decode_intrin(
                 for i in T.grid(loops_extent):
                     with T.block("decode"):
                         vi = T.axis.remap("S", [i])
-                        Decompressed[vi] = (decode_func(
-                            source_bit,
-                            Compressed[vi // elem_per_unit],
-                            vi % elem_per_unit,
-                            dtype=target_dtype,
-                        ) * Scale[0])
+                        Decompressed[vi] = (
+                            decode_func(
+                                source_bit,
+                                Compressed[vi // elem_per_unit],
+                                vi % elem_per_unit,
+                                dtype=target_dtype,
+                            ) * Scale[0])
 
         @T.prim_func
-        def fast_decode_impl(compressed: T.handle, decompressed: T.handle,
-                             scale: T.handle) -> None:
+        def fast_decode_impl(compressed: T.handle, decompressed: T.handle, scale: T.handle) -> None:
             s0 = T.int32()
 
             Compressed = T.match_buffer(
@@ -651,10 +647,7 @@ def get_fast_decode_intrin(
 
     else:
 
-        def get_dequantize_buffers_list(weight,
-                                        scale,
-                                        zeros,
-                                        zeros_type="original"):
+        def get_dequantize_buffers_list(weight, scale, zeros, zeros_type="original"):
             if zeros_type == "original":
                 return [weight, zeros, scale]
             elif zeros_type == "rescale":
@@ -790,34 +783,25 @@ def get_fast_decode_intrin(
     return fast_decode_desc, fast_decode_impl
 
 
-LOP3_FAST_DECODE_UINT4_TO_INT8_TO_FP16_L8_INTRIN = (
-    "lop3_fast_decode_u4_to_int8_to_f16_l8_")
+LOP3_FAST_DECODE_UINT4_TO_INT8_TO_FP16_L8_INTRIN = ("lop3_fast_decode_u4_to_int8_to_f16_l8_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT4_TO_INT8_TO_FP16_L8_INTRIN,
-    *get_fast_decode_intrin(source_bit=4,
-                            storage_dtype="int8",
-                            target_dtype="float16",
-                            loops_extent=8),
+    *get_fast_decode_intrin(
+        source_bit=4, storage_dtype="int8", target_dtype="float16", loops_extent=8),
 )
 
-LOP3_FAST_DECODE_UINT2_TO_INT8_TO_FP16_L8_INTRIN = (
-    "lop3_fast_decode_u2_to_int8_to_f16_l8_")
+LOP3_FAST_DECODE_UINT2_TO_INT8_TO_FP16_L8_INTRIN = ("lop3_fast_decode_u2_to_int8_to_f16_l8_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT2_TO_INT8_TO_FP16_L8_INTRIN,
-    *get_fast_decode_intrin(source_bit=2,
-                            storage_dtype="int8",
-                            target_dtype="float16",
-                            loops_extent=8),
+    *get_fast_decode_intrin(
+        source_bit=2, storage_dtype="int8", target_dtype="float16", loops_extent=8),
 )
 
-LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_INTRIN = (
-    "lop3_fast_decode_u4_to_int32_to_f16_l8_")
+LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_INTRIN = ("lop3_fast_decode_u4_to_int32_to_f16_l8_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_INTRIN,
-    *get_fast_decode_intrin(source_bit=4,
-                            storage_dtype="int32",
-                            target_dtype="float16",
-                            loops_extent=8),
+    *get_fast_decode_intrin(
+        source_bit=4, storage_dtype="int32", target_dtype="float16", loops_extent=8),
 )
 
 LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_SCALE_INTRIN = (
@@ -833,14 +817,11 @@ TensorIntrin.register(
     ),
 )
 
-LOP3_FAST_DECODE_UINT4_TO_UINT32_TO_FP16_L8_INTRIN = (
-    "lop3_fast_decode_u4_to_uint32_to_f16_l8_")
+LOP3_FAST_DECODE_UINT4_TO_UINT32_TO_FP16_L8_INTRIN = ("lop3_fast_decode_u4_to_uint32_to_f16_l8_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT4_TO_UINT32_TO_FP16_L8_INTRIN,
-    *get_fast_decode_intrin(source_bit=4,
-                            storage_dtype="uint32",
-                            target_dtype="float16",
-                            loops_extent=8),
+    *get_fast_decode_intrin(
+        source_bit=4, storage_dtype="uint32", target_dtype="float16", loops_extent=8),
 )
 
 LOP3_FAST_DECODE_UINT4_TO_UINT32_TO_FP16_L8_SCALE_INTRIN = (
@@ -942,58 +923,42 @@ TensorIntrin.register(
     ),
 )
 
-LOP3_FAST_DECODE_UINT4_TO_INT8_TO_INT8_L8_INTRIN = (
-    "lop3_fast_decode_u4_to_int8_to_i8_l8_")
+LOP3_FAST_DECODE_UINT4_TO_INT8_TO_INT8_L8_INTRIN = ("lop3_fast_decode_u4_to_int8_to_i8_l8_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT4_TO_INT8_TO_INT8_L8_INTRIN,
-    *get_fast_decode_intrin(source_bit=4,
-                            storage_dtype="int8",
-                            target_dtype="int8",
-                            loops_extent=8),
+    *get_fast_decode_intrin(
+        source_bit=4, storage_dtype="int8", target_dtype="int8", loops_extent=8),
 )
 
-LOP3_FAST_DECODE_UINT4_TO_INT8_TO_INT8_L16_INTRIN = (
-    "lop3_fast_decode_u4_to_int8_to_i8_l16_")
+LOP3_FAST_DECODE_UINT4_TO_INT8_TO_INT8_L16_INTRIN = ("lop3_fast_decode_u4_to_int8_to_i8_l16_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT4_TO_INT8_TO_INT8_L16_INTRIN,
-    *get_fast_decode_intrin(source_bit=4,
-                            storage_dtype="int8",
-                            target_dtype="int8",
-                            loops_extent=16),
+    *get_fast_decode_intrin(
+        source_bit=4, storage_dtype="int8", target_dtype="int8", loops_extent=16),
 )
 
-LOP3_FAST_DECODE_UINT2_TO_INT8_TO_INT8_L16_INTRIN = (
-    "lop3_fast_decode_u2_to_int8_to_i8_l16_")
+LOP3_FAST_DECODE_UINT2_TO_INT8_TO_INT8_L16_INTRIN = ("lop3_fast_decode_u2_to_int8_to_i8_l16_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT2_TO_INT8_TO_INT8_L16_INTRIN,
-    *get_fast_decode_intrin(source_bit=2,
-                            storage_dtype="int8",
-                            target_dtype="int8",
-                            loops_extent=16),
+    *get_fast_decode_intrin(
+        source_bit=2, storage_dtype="int8", target_dtype="int8", loops_extent=16),
 )
 
-LOP3_FAST_DECODE_INT2_TO_INT8_TO_INT8_L16_INTRIN = (
-    "lop3_fast_decode_i2_to_int8_to_i8_l16_")
+LOP3_FAST_DECODE_INT2_TO_INT8_TO_INT8_L16_INTRIN = ("lop3_fast_decode_i2_to_int8_to_i8_l16_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_INT2_TO_INT8_TO_INT8_L16_INTRIN,
-    *get_fast_decode_intrin(source_bit=2,
-                            storage_dtype="int8",
-                            target_dtype="int8",
-                            loops_extent=16),
+    *get_fast_decode_intrin(
+        source_bit=2, storage_dtype="int8", target_dtype="int8", loops_extent=16),
 )
 
-LOP3_FAST_DECODE_UINT1_TO_INT8_TO_INT8_L16_INTRIN = (
-    "lop3_fast_decode_u1_to_int8_to_i8_l16_")
+LOP3_FAST_DECODE_UINT1_TO_INT8_TO_INT8_L16_INTRIN = ("lop3_fast_decode_u1_to_int8_to_i8_l16_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT1_TO_INT8_TO_INT8_L16_INTRIN,
-    *get_fast_decode_intrin(source_bit=1,
-                            storage_dtype="int8",
-                            target_dtype="int8",
-                            loops_extent=16),
+    *get_fast_decode_intrin(
+        source_bit=1, storage_dtype="int8", target_dtype="int8", loops_extent=16),
 )
 
-LOP3_FAST_DECODE_INT4_TO_INT8_TO_FP16_L8_INTRIN = (
-    "lop3_fast_decode_i4_to_int8_to_f16_l8_")
+LOP3_FAST_DECODE_INT4_TO_INT8_TO_FP16_L8_INTRIN = ("lop3_fast_decode_i4_to_int8_to_f16_l8_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_INT4_TO_INT8_TO_FP16_L8_INTRIN,
     *get_fast_decode_intrin(
@@ -1019,8 +984,7 @@ TensorIntrin.register(
     ),
 )
 
-LOP3_FAST_DECODE_INT2_TO_INT8_TO_FP16_L8_INTRIN = (
-    "lop3_fast_decode_i2_to_int8_to_f16_l8_")
+LOP3_FAST_DECODE_INT2_TO_INT8_TO_FP16_L8_INTRIN = ("lop3_fast_decode_i2_to_int8_to_f16_l8_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_INT2_TO_INT8_TO_FP16_L8_INTRIN,
     *get_fast_decode_intrin(
@@ -1101,10 +1065,8 @@ def get_lop3_intrin_group(
         "i2_to_f16": decode_i2_to_f16,
         "i4_to_f16_scale": decode_i4_to_f16_scale,
         "i2_to_f16_scale": decode_i2_to_f16_scale,
-        "i4_to_f16_scale_zeros_original":
-        decode_i4_to_f16_scale_zeros_original,
-        "i2_to_f16_scale_zeros_original":
-        decode_i2_to_f16_scale_zeros_original,
+        "i4_to_f16_scale_zeros_original": decode_i4_to_f16_scale_zeros_original,
+        "i2_to_f16_scale_zeros_original": decode_i2_to_f16_scale_zeros_original,
         "i4_to_f16_scale_zeros_rescale": decode_i4_to_f16_scale_zeros_rescale,
         "i2_to_f16_scale_zeros_rescale": decode_i2_to_f16_scale_zeros_rescale,
         "i1_to_i8": decode_i1s_to_i8s_l16,

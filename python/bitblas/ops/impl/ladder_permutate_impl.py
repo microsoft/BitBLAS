@@ -11,8 +11,7 @@ def select_implementation(
     N: int,
     datatype: Literal["float16", "int8"] = "float16",
     dequantize_bits: int = -1,
-    storage_dtype: Literal["float16", "int8", "uint8", "int32",
-                           "uint32"] = "float16",
+    storage_dtype: Literal["float16", "int8", "uint8", "int32", "uint32"] = "float16",
     propagate_kind: Literal["A", "B"] = "B",
     transpose_matrix: bool = False,
     transform_kind: int = 0,
@@ -23,23 +22,22 @@ def select_implementation(
 
     # This is trick to get the basic tile size for the current datatype
     # as for nvidia tensorcore instruction, the basic tile size is 16x16/16x32 for float16/int8
-    l = r = 16
+    l = r = 16  # noqa: E741
     if datatype == "int8":
-        l, r = 16, 32
+        l, r = 16, 32  # noqa: E741
 
-    intra_index_map, _ = get_propagate_map(transpose_matrix,
-                                           dtype=datatype,
-                                           matrix_name=propagate_kind)
+    intra_index_map, _ = get_propagate_map(
+        transpose_matrix, dtype=datatype, matrix_name=propagate_kind)
 
     target_dtype = DataType(datatype)
     scaling_factor = 1
     if dequantize_bits > 0 and dequantize_bits < target_dtype.bits:
-        scaling_factor = ((target_dtype.bits // dequantize_bits) *
-                          DataType(storage_dtype).bits // target_dtype.bits)
+        scaling_factor = ((target_dtype.bits // dequantize_bits) * DataType(storage_dtype).bits //
+                          target_dtype.bits)
         r = r // scaling_factor
         initial_indices = intra_index_map.initial_indices
-        scaling_final_indices = intra_index_map.map_indices(
-            initial_indices[:-1] + [initial_indices[-1] * scaling_factor])
+        scaling_final_indices = intra_index_map.map_indices(initial_indices[:-1] +
+                                                            [initial_indices[-1] * scaling_factor])
         scaling_final_indices = scaling_final_indices[:-1] + [
             scaling_final_indices[-1] // scaling_factor
         ]
@@ -49,9 +47,7 @@ def select_implementation(
             None,
         )
 
-    inp = te.placeholder((M, N // scaling_factor),
-                         name="inp",
-                         dtype=storage_dtype)
+    inp = te.placeholder((M, N // scaling_factor), name="inp", dtype=storage_dtype)
     args = [inp]
 
     if transform_kind >= 1:
@@ -69,8 +65,7 @@ def select_implementation(
         def fcompute(*args):
             warp_i, warp_j = args[-2:]
             spatial_args = args[:-2]
-            permutate_i, permutate_j = intra_index_map.map_indices(
-                [warp_i, warp_j])
+            permutate_i, permutate_j = intra_index_map.map_indices([warp_i, warp_j])
             new_index = (*spatial_args, permutate_i, permutate_j)
             return arg[new_index]
 

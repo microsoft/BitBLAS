@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 """Config definition for schedule"""
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 from ..roller import PrimFuncNode
 import numpy as np
 

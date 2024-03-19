@@ -7,10 +7,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+from typing import List, Union, Literal, Optional
+
 logger = getLogger(__name__)
 
 try:
-    import bitblas  # pylint: disable=unused-import
+    import bitblas  # noqa: F401
 except ImportError as e:
     bitblas_import_exception = e
 
@@ -21,9 +23,8 @@ except ImportError as e:
 
     autogptq_bitblas_cuda = bitblas_import_exception
 
-from bitblas.utils import get_target_from_env
-from bitblas.ops.matmul import MatmulConfig, Matmul
-from typing import List, Union, Literal, Optional
+from bitblas.utils import get_target_from_env  # noqa: E402
+from bitblas.ops.matmul import MatmulConfig, Matmul  # noqa: E402
 
 
 class Linear(nn.Module):
@@ -58,8 +59,7 @@ class Linear(nn.Module):
         self.propagate_a = propagate_a
         self.propagate_b = propagate_b
         self.enable_tuning = enable_tuning
-        self.weight = nn.Parameter(
-            torch.empty((outfeatures, infeatures), dtype=dtype))
+        self.weight = nn.Parameter(torch.empty((outfeatures, infeatures), dtype=dtype))
         if bias:
             self.bias = nn.Parameter(torch.empty(outfeatures, dtype=dtype))
         else:
@@ -112,9 +112,7 @@ class Linear(nn.Module):
         if self.bias is not None:
             args.append(self.bias)
         if Output is None:
-            Output = torch.empty(A.shape[:-1] + (self.outfeatures, ),
-                                 dtype=A.dtype,
-                                 device=A.device)
+            Output = torch.empty(A.shape[:-1] + (self.outfeatures,), dtype=A.dtype, device=A.device)
         args.append(Output)
 
         self.bitblas_matmul(*args)

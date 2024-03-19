@@ -1,8 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
 from tvm.target import Target
-from typing import List, Union, Literal
+from typing import Literal, Union
 from .operator import Operator, TransformKind
 from .impl.param_permutate_impl import select_implementation
 from dataclasses import dataclass
@@ -29,8 +28,7 @@ class ParamPermutateConfig:
                  if self.propagate_kind else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_kind, int):
-            object.__setattr__(self, "propagate_kind",
-                               TransformKind(self.propagate_kind))
+            object.__setattr__(self, "propagate_kind", TransformKind(self.propagate_kind))
 
 
 class ParamPermutate(Operator):
@@ -39,15 +37,12 @@ class ParamPermutate(Operator):
             self,
             config: ParamPermutateConfig,
             name: str = "permutate",
-            target: Target = tvm.target.Target(
-                "llvm"),  # assume to do permutation on gpu.
+            target: Union[str, Target] = "llvm",  # assume to do permutation on cpu.
     ):
-        # consider to warp the arguments to MatmulConfig
         super().__init__(name, config, target)
 
         if target.kind.name != "llvm":
-            raise ValueError(
-                "Currently only support llvm target for Permutation")
+            raise ValueError("Currently only support llvm target for Permutation")
 
         self.target = target
         self._build_runtime_module(target)

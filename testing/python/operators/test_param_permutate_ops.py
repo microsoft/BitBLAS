@@ -10,8 +10,7 @@ target = tvm.target.Target("llvm")
 
 # fmt: off
 @pytest.mark.parametrize(
-    "M,N,datatype,transpose_matrix,group_size,propagate_kind,target_instruction",
-    [
+    "M,N,datatype,transpose_matrix,group_size,propagate_kind,target_instruction", [
         (1024, 1024, "float16", True, 1, True, "nvidia-mma"),
     ])
 def test_param_permutate_profile_latency(

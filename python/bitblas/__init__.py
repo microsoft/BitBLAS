@@ -1,32 +1,32 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 """DLight package provides efficient schedules out-of-box for deep learning workloads."""
-from . import gpu
+from . import gpu  # noqa: F401
 from .base import (
-    Arch,
-    fast_tune,
-    ApplyDefaultSchedule,
-    ApplyFastTuning,
-    BlockInfo,
-    IterInfo,
-    ScheduleRule,
-    normalize_prim_func,
-    try_inline,
-    try_inline_contiguous_spatial,
+    Arch,  # noqa: F401
+    fast_tune,  # noqa: F401
+    ApplyDefaultSchedule,  # noqa: F401
+    ApplyFastTuning,  # noqa: F401
+    BlockInfo,  # noqa: F401
+    IterInfo,  # noqa: F401
+    ScheduleRule,  # noqa: F401
+    normalize_prim_func,  # noqa: F401
+    try_inline,  # noqa: F401
+    try_inline_contiguous_spatial,  # noqa: F401
 )
+
+from . import testing  # noqa: F401
+
+import logging
+from tqdm import tqdm
 import sys
 import os
 
 # tvm path is under the root of the project
-tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..",
-                        "3rdparty", "tvm", "python")
+tvm_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "..", "..", "3rdparty", "tvm", "python")
 if tvm_path not in sys.path:
     sys.path.append(tvm_path)
-
-from . import testing
-
-import logging
-from tqdm import tqdm
 
 
 # target logger into tqdm.write
@@ -54,8 +54,7 @@ def _init_logger():
     logger = logging.getLogger(__name__)
     handler = TqdmLoggingHandler()
     formatter = logging.Formatter(
-        fmt="%(asctime)s [BitBLAS:%(levelname)s]: %(message)s",
-        datefmt="%F %T")
+        fmt="%(asctime)s [BitBLAS:%(levelname)s]: %(message)s", datefmt="%F %T")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.propagate = False

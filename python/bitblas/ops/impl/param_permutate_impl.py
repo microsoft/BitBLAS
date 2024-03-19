@@ -3,8 +3,7 @@
 from bitblas.gpu.matmul_analysis import get_propagate_map
 from ..operator import TransformKind
 from typing import Literal
-from tvm import te, IRModule, DataType
-from tvm.tir import IndexMap
+from tvm import te, IRModule
 
 
 def select_implementation(
@@ -19,15 +18,14 @@ def select_implementation(
     if target_instruction != "nvidia-mma":
         raise ValueError("Currently only support nvidia-mma instruction")
     if propagate_kind < TransformKind.IntraWarpTransform:
-        raise ValueError(
-            "Currently only support propagate_kind >= IntraWarpTransform")
+        raise ValueError("Currently only support propagate_kind >= IntraWarpTransform")
     if transpose_matrix is not True:
         raise ValueError("Currently only support transpose_matrix == True")
     # This is trick to get the basic tile size for the current datatype
     # as for nvidia tensorcore instruction, the basic tile size is 16x16/16x32 for float16/int8
-    l = r = 16
+    l = r = 16  # noqa: E741
     if datatype == "int8":
-        l, r = 16, 32
+        l, r = 16, 32  # noqa: E741
     if group_size == -1:
         group_size = N
 
@@ -42,8 +40,7 @@ def select_implementation(
         spatial_i, spatial_j = rl // l, rr // r
         if propagate_kind >= TransformKind.IntraWarpTransform:
             warp_i, warp_j = intra_index_map.map_indices([warp_i, warp_j])
-        new_index = (spatial_i * l + warp_i,
-                     (spatial_j * r + warp_j) // group_size)
+        new_index = (spatial_i * l + warp_i, (spatial_j * r + warp_j) // group_size)
         return inp[new_index]
 
     inp_prmt = te.compute(

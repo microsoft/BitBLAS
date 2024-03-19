@@ -5,7 +5,6 @@ import torch
 import time
 import numpy as np
 import torch.nn as nn
-import bitblas
 import pytest
 
 torch.manual_seed(0)
@@ -21,8 +20,7 @@ torch.manual_seed(0)
     ],
 )
 def test_correctness_static_shape(m, infeatures, outfeatures, bias):
-    linear_torch = (nn.Linear(infeatures, outfeatures,
-                              bias=bias).to(torch.float16).cuda())
+    linear_torch = (nn.Linear(infeatures, outfeatures, bias=bias).to(torch.float16).cuda())
     linear_bitblas = BitBLASLinear(
         infeatures,
         outfeatures,
@@ -42,17 +40,14 @@ def test_correctness_static_shape(m, infeatures, outfeatures, bias):
         output_torch = linear_torch(input_data)
         output_bitblas = linear_bitblas(input_data)
 
-    torch.testing.assert_close(output_torch,
-                               output_bitblas,
-                               rtol=1e-1,
-                               atol=1e-2)
+    torch.testing.assert_close(output_torch, output_bitblas, rtol=1e-1, atol=1e-2)
 
 
 def profile(model, input_data):
     model = model.cuda()
     model.eval()
     output = torch.empty(
-        input_data.shape[:-1] + (model.outfeatures, ),
+        input_data.shape[:-1] + (model.outfeatures,),
         dtype=input_data.dtype,
         device=input_data.device,
     )
@@ -95,11 +90,9 @@ def test_profile_performance(m, infeatures, outfeatures, bias):
         input_data = torch.randn(m, infeatures, dtype=torch.float16).cuda()
         torch_latency = profile(linear_bitblas, input_data)
         bitblas_latency = linear_bitblas.bitblas_matmul.profile_latency()
-    print(
-        f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}")
-    assert (
-        abs(torch_latency - bitblas_latency) / torch_latency < 0.1
-    ), f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}"
+    print(f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}")
+    assert (abs(torch_latency - bitblas_latency) / torch_latency <
+            0.1), f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}"
 
 
 if __name__ == "__main__":

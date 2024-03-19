@@ -18,92 +18,79 @@ import time
 # fmt:off
 llm_shapes = [
     # square test
-    (matmul_nt_dequantize_b, (1, 16384, 16384, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False), Matmul
-     ),
+    (matmul_nt_dequantize_b, (1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "af",
+                              True, 128, False, False), Matmul),
     # BLOOM-176B
-    (matmul_nt_dequantize_b, (1, 43008, 14336, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False), Matmul
-     ),
-    (matmul_nt_dequantize_b, (1, 14336, 14336, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False),
-     Matmul),
-    (matmul_nt_dequantize_b, (1, 57344, 14336, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False),
-     Matmul),
-    (matmul_nt_dequantize_b, (1, 14336, 57344, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False),
-     Matmul),
+    (matmul_nt_dequantize_b, (1, 43008, 14336, "float16", "float16", "float16", 4, "int8", "af",
+                              True, 128, False, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 14336, 14336, "float16", "float16", "float16", 4, "int8", "af",
+                              True, 128, False, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 57344, 14336, "float16", "float16", "float16", 4, "int8", "af",
+                              True, 128, False, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 14336, 57344, "float16", "float16", "float16", 4, "int8", "af",
+                              True, 128, False, False), Matmul),
     # # OPT-65B
-    (matmul_nt_dequantize_b, (1, 9216, 9216, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False), Matmul
-     ),
-    (matmul_nt_dequantize_b, (1, 36864, 9216, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False),
-     Matmul),
-    (matmul_nt_dequantize_b, (1, 9216, 36864, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False),
-     Matmul),
-    (matmul_nt_dequantize_b, (1, 22016, 8192, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False),
-     Matmul),
+    (matmul_nt_dequantize_b, (1, 9216, 9216, "float16", "float16", "float16", 4, "int8", "af", True,
+                              128, False, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 36864, 9216, "float16", "float16", "float16", 4, "int8", "af",
+                              True, 128, False, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 9216, 36864, "float16", "float16", "float16", 4, "int8", "af",
+                              True, 128, False, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 22016, 8192, "float16", "float16", "float16", 4, "int8", "af",
+                              True, 128, False, False), Matmul),
     # LLAMA-70B/65B
-    (matmul_nt_dequantize_b, (1, 8192, 22016, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False), Matmul
-     ),
-    (matmul_nt_dequantize_b, (1, 8192, 8192, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False),
-     Matmul),
-    (matmul_nt_dequantize_b, (1, 28672, 8192, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False),
-     Matmul),
-    (matmul_nt_dequantize_b, (1, 8192, 28672, "float16", "float16", "float16",
-                              4, "int8", "af", True, 128, False, False),
-     Matmul),
+    (matmul_nt_dequantize_b, (1, 8192, 22016, "float16", "float16", "float16", 4, "int8", "af",
+                              True, 128, False, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 8192, 8192, "float16", "float16", "float16", 4, "int8", "af", True,
+                              128, False, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 28672, 8192, "float16", "float16", "float16", 4, "int8", "af",
+                              True, 128, False, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 8192, 28672, "float16", "float16", "float16", 4, "int8", "af",
+                              True, 128, False, False), Matmul),
 
     # square test
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (16384, 16384, 16384, "float16", "float16", "float16", 4, "int8", "af",
-      True, 128, False, False), Matmul),
+     (16384, 16384, 16384, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     # # BLOOM-176B
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 43008, 14336, "float16", "float16", "float16", 4, "int8", "af",
-      True, 128, False, False), Matmul),
+     (8192, 43008, 14336, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 14336, 14336, "float16", "float16", "float16", 4, "int8", "af",
-      True, 128, False, False), Matmul),
+     (8192, 14336, 14336, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 57344, 14336, "float16", "float16", "float16", 4, "int8", "af",
-      True, 128, False, False), Matmul),
+     (8192, 57344, 14336, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 14336, 57344, "float16", "float16", "float16", 4, "int8", "af",
-      True, 128, False, False), Matmul),
+     (8192, 14336, 57344, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     # # OPT-65B
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 9216, 9216, "float16", "float16", "float16", 4, "int8", "af", True,
-      128, False, False), Matmul),
+     (8192, 9216, 9216, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 36864, 9216, "float16", "float16", "float16", 4, "int8", "af",
-      True, 128, False, False), Matmul),
+     (8192, 36864, 9216, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 9216, 36864, "float16", "float16", "float16", 4, "int8", "af",
-      True, 128, False, False), Matmul),
+     (8192, 9216, 36864, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 22016, 8192, "float16", "float16", "float16", 4, "int8", "af",
-      True, 128, False, False), Matmul),
+     (8192, 22016, 8192, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     # # LLAMA-70B/65B
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 8192, 22016, "float16", "float16", "float16", 4, "int8", "af",
-      True, 128, False, False), Matmul),
+     (8192, 8192, 22016, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 8192, 8192, "float16", "float16", "float16", 4, "int8", "af", True,
-      128, False, False), Matmul),
+     (8192, 8192, 8192, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 28672, 8192, "float16", "float16", "float16", 4, "int8", "af",
-      True, 128, False, False), Matmul),
+     (8192, 28672, 8192, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
     (matmul_nt_dequantize_b_propagate_a_propagate_b,
-     (8192, 8192, 28672, "float16", "float16", "float16", 4, "int8", "af",
-      True, 128, False, False), Matmul),
+     (8192, 8192, 28672, "float16", "float16", "float16", 4, "int8", "af", True, 128, False,
+      False), Matmul),
 ]
 
 benchmark_sets = []
@@ -121,7 +108,7 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     policy = DefaultPolicy(func=func, arch=arch)
     try:
         tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
-    except:
+    except Exception:
         tags = None
     if tags:
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
@@ -129,15 +116,10 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     configs = policy.emit_config(20)
 
     tune_start = time.time()
-    cpresults, best = apply_and_build(func,
-                                      configs,
-                                      arch,
-                                      parallel_build=False)
+    cpresults, best = apply_and_build(func, configs, arch, parallel_build=False)
     fast_tune_time = time.time() - tune_start
-    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
-        cpresults[0].latency * 1e3))
-    print("[BitBLAS] The best latency of top 20 is {:.3f} ms".format(
-        best.latency * 1e3))
+    print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(cpresults[0].latency * 1e3))
+    print("[BitBLAS] The best latency of top 20 is {:.3f} ms".format(best.latency * 1e3))
 
     # evaluate the performance of the default schedule
 
@@ -150,7 +132,8 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
             bitblas.gpu.Reduction(),
             bitblas.gpu.GeneralReduction(),
             bitblas.gpu.Fallback(),
-        )(ir_module)
+        )(
+            ir_module)
     try:
         with tvm.transform.PassContext(config={"tir.use_async_copy": True}):
             mod_default = tvm.build(mod, target="cuda")
@@ -163,9 +146,7 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
 
     profile_tensors = best.profile_tensors
     if mod_default is not None:
-        timer_cuda_mod = mod_default.time_evaluator(mod_default.entry_name,
-                                                    arch.device,
-                                                    number=5)
+        timer_cuda_mod = mod_default.time_evaluator(mod_default.entry_name, arch.device, number=5)
         t = timer_cuda_mod(*profile_tensors).mean
     else:
         t = 1e4 - 1
@@ -194,9 +175,8 @@ headers = [
     "DefaultDLight Latency",
 ]
 
-col_width = (max(
-    len(word) for row in [headers] + list(profile_config.values())
-    for word in row) + 2)  # padding
+col_width = (max(len(word) for row in [headers] + list(profile_config.values()) for word in row) + 2
+            )  # padding
 
 print("".join(word.ljust(col_width) for word in headers))
 

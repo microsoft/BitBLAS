@@ -3,19 +3,16 @@
 
 # pylint: disable=missing-docstring, invalid-name
 """A GEMM schedule rule for GPU operators."""
-import math
 from typing import Literal, Optional
 
 from tvm import DataType, tir
 from tvm.target import Target
-from tvm.tir.stmt import ForKind
 
 from ..base.roller.rasterization import NoRasterization
 from ..base import analysis
 from .base import GPUScheduleRule
 from .matmul_analysis import (
     auto_inline_consumer_chain,
-    auto_inline_consumers,
     auto_inline_producers,
     get_index_map,
     get_reduction_blocks,
@@ -69,10 +66,8 @@ class MatmulTensorizationWMMA(GPUScheduleRule):
         thread_z = 2
         thread_y = 2
         warp_size = 32
-        thread_cnt = thread_y * thread_z * warp_size
 
         vector_size = 8
-        unroll_depth = 256
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]
         block = sch.reindex(main_block, ("read", 0))
@@ -168,9 +163,8 @@ class MatmulTensorizationWMMA(GPUScheduleRule):
             sch.compute_at(block_read, k0)
             fused = sch.fuse(*sch.get_loops(block_read)[-2:])
 
-            f0, f1, f2, f3, f4 = sch.split(
-                fused, [None, thread_z, thread_y, warp_size, vector_size]
-            )
+            f0, f1, f2, f3, f4 = sch.split(fused,
+                                           [None, thread_z, thread_y, warp_size, vector_size])
 
             sch.bind(f1, "threadIdx.z")
             sch.bind(f2, "threadIdx.y")
@@ -189,12 +183,10 @@ class MatmulTensorizationWMMA(GPUScheduleRule):
 
             return wmma_read
 
-        wmma_read_a = fetch_input(
-            block_outer, 0, [block_m, block_k, micro_size_m, micro_size_k], "wmma.matrix_a"
-        )
-        wmma_read_b = fetch_input(
-            block_outer, 1, [block_n, block_k, micro_size_n, micro_size_k], "wmma.matrix_b"
-        )
+        wmma_read_a = fetch_input(block_outer, 0, [block_m, block_k, micro_size_m, micro_size_k],
+                                  "wmma.matrix_a")
+        wmma_read_b = fetch_input(block_outer, 1, [block_n, block_k, micro_size_n, micro_size_k],
+                                  "wmma.matrix_b")
 
         def store_output(block_outer, write_buffer_idx, wmma_name):
             block_write = sch.cache_write(block_outer, write_buffer_idx, "shared.dyn")
@@ -202,9 +194,8 @@ class MatmulTensorizationWMMA(GPUScheduleRule):
 
             fused = sch.fuse(*sch.get_loops(block_write)[-2:])
 
-            f0, f1, f2, f3, f4 = sch.split(
-                fused, [None, thread_z, thread_y, warp_size, vector_size]
-            )
+            f0, f1, f2, f3, f4 = sch.split(fused,
+                                           [None, thread_z, thread_y, warp_size, vector_size])
 
             sch.bind(f1, "threadIdx.z")
             sch.bind(f2, "threadIdx.y")
@@ -233,8 +224,7 @@ class MatmulTensorizationWMMA(GPUScheduleRule):
 
         # Step 5. Schedule tensor core computation
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
-            get_wmma_intrin_group,
-        )
+            get_wmma_intrin_group,)
 
         intrin_group = get_wmma_intrin_group(
             load_scope="shared.dyn",
@@ -266,8 +256,7 @@ class MatmulInt8Tensorization(GPUScheduleRule):
         _: bool,
     ) -> Optional[tir.Schedule]:
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
-            get_wmma_intrin_group,
-        )
+            get_wmma_intrin_group,)
 
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
@@ -433,7 +422,7 @@ class MatmulInt8Tensorization(GPUScheduleRule):
             sch.unroll(i0)
             sch.unroll(j0)
             sch.tensorize(i1, intrin_group["load_b"])
-        except:  # pylint: disable=bare-except
+        except Exception:  # pylint: disable=bare-except
             return None
 
         def tensorize_init_store_compute():
@@ -443,7 +432,7 @@ class MatmulInt8Tensorization(GPUScheduleRule):
 
         try:
             tensorize_init_store_compute()
-        except:  # pylint: disable=bare-except
+        except Exception:  # pylint: disable=bare-except
             return None
 
         auto_inline_consumer_chain(sch, accumulator_shared_to_global)
@@ -469,8 +458,7 @@ class MatmulTensorizationLegacy(GPUScheduleRule):
         _: bool,
     ) -> Optional[tir.Schedule]:
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
-            get_wmma_intrin_group,
-        )
+            get_wmma_intrin_group,)
 
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
@@ -636,7 +624,7 @@ class MatmulTensorizationLegacy(GPUScheduleRule):
             sch.unroll(i0)
             sch.unroll(j0)
             sch.tensorize(i1, intrin_group["load_b"])
-        except:  # pylint: disable=bare-except
+        except Exception:  # pylint: disable=bare-except
             return None
 
         # Try to tensorize the init, store and compute block with f16 or f32 intrinsics
@@ -650,7 +638,7 @@ class MatmulTensorizationLegacy(GPUScheduleRule):
         try:
             tensorize_init_store_compute()
             tensorize_success = True
-        except:  # pylint: disable=bare-except
+        except Exception:  # pylint: disable=bare-except
             intrin_group = get_wmma_intrin_group(
                 load_scope="shared.dyn",
                 store_scope="shared.dyn",
@@ -663,7 +651,7 @@ class MatmulTensorizationLegacy(GPUScheduleRule):
             try:
                 tensorize_init_store_compute()
                 tensorize_success = True
-            except:  # pylint: disable=bare-except
+            except Exception:  # pylint: disable=bare-except
                 return None
         auto_inline_consumer_chain(sch, accumulator_shared_to_global)
 
@@ -680,8 +668,7 @@ class MatmulTensorizationLegacy(GPUScheduleRule):
         config,
     ) -> Optional[tir.Schedule]:
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
-            get_wmma_intrin_group,
-        )
+            get_wmma_intrin_group,)
 
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
@@ -767,10 +754,8 @@ class MatmulTensorizationLegacy(GPUScheduleRule):
         block_idy = sch.fuse(i1, j1)
         thread_idy = sch.fuse(j2, i2)
         # plan rasteration
-        if (
-            not isinstance(config.rasterization_plan, NoRasterization)
-            and sch.get(batch).extent.value == 1
-        ):
+        if (not isinstance(config.rasterization_plan, NoRasterization) and
+                sch.get(batch).extent.value == 1):
             device_func, invoke_func = config.rasterization_plan.get_code()
             factor = config.rasterization_plan.panel_width_
 
@@ -873,7 +858,7 @@ class MatmulTensorizationLegacy(GPUScheduleRule):
             sch.unroll(i0)
             sch.unroll(j0)
             sch.tensorize(i1, intrin_group["load_b"])
-        except:  # pylint: disable=bare-except
+        except Exception:  # pylint: disable=bare-except
             return None
 
         # Try to tensorize the init, store and compute block with f16 or f32 intrinsics
@@ -887,15 +872,14 @@ class MatmulTensorizationLegacy(GPUScheduleRule):
         try:
             tensorize_init_store_compute()
             tensorize_success = True
-        except:  # pylint: disable=bare-except
+        except Exception:  # pylint: disable=bare-except
             return None
 
         auto_inline_consumer_chain(sch, accumulator_shared_to_global)
 
         fused = sch.fuse(*sch.get_loops(accumulator_shared_to_global)[-2:])
         _, f1, f2 = sch.split(
-            fused, factors=[None, warp_size, max(list(config.vectorize.values()))]
-        )
+            fused, factors=[None, warp_size, max(list(config.vectorize.values()))])
         sch.bind(f1, "threadIdx.x")
         sch.vectorize(f2)
 
@@ -906,4 +890,3 @@ class MatmulTensorizationLegacy(GPUScheduleRule):
             sch.annotate(k0, "software_pipeline_async_stages", [0])
 
         return sch if tensorize_success else None
-

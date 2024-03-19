@@ -1,12 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
 from tvm.target import Target
-from typing import Literal
+from typing import Literal, Union
 from .operator import Operator
 from .impl.lop3_permutate_impl import select_implementation
 from dataclasses import dataclass
-from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 import torch
 
 
@@ -25,15 +23,13 @@ class LOP3Permutate(Operator):
             self,
             config: LOP3PermutateConfig,
             name: str = "permutate",
-            target: Target = tvm.target.Target(
-                "llvm"),  # assume to do permutation on gpu.
+            target: Union[str, Target] = "llvm",  # assume to do permutation on cpu.
     ):
         # consider to warp the arguments to MatmulConfig
         super().__init__(name, config, target)
 
         if target.kind.name != "llvm":
-            raise ValueError(
-                "Currently only support llvm target for Permutation")
+            raise ValueError("Currently only support llvm target for Permutation")
 
         self.target = target
         self._build_runtime_module(target)

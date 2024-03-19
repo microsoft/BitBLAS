@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 """Policy for tensorcore schedule"""
 import tvm
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 import numpy as np
 
 from ..arch import Arch
@@ -10,15 +10,12 @@ from ..config import Config, Stride, TileDict, IntrinInfo
 from ..node import PrimFuncNode
 from .common import coalesced_factor, factorize, get_all_factors
 from .default import DefaultPolicy
-from ..rasterization import *
+from ..rasterization import NoRasterization, Rasterization2DColumn
 
 
 class TensorCorePolicy(DefaultPolicy):
 
-    def __init__(self,
-                 func: tvm.tir.PrimFunc,
-                 arch: Arch,
-                 tags: Dict = {}) -> None:
+    def __init__(self, func: tvm.tir.PrimFunc, arch: Arch, tags: Optional[Dict] = None) -> None:
         super().__init__(func, arch, tags)
         # this is the trick for wmma.
         # However, for int8 mma, the wmma_k should be 32.
@@ -46,17 +43,19 @@ class TensorCorePolicy(DefaultPolicy):
                 self.use_async_copy = False
 
     def _compute_tc_strides(
-            self,
-            node: PrimFuncNode,
-            tile: List[int],
-            rstep: Dict[str, int] = {}) -> Tuple[Stride, Stride, Stride]:
+        self,
+        node: PrimFuncNode,
+        tile: List[int],
+        rstep: Optional[Dict[str, int]] = None,
+    ) -> Tuple[Stride, Stride, Stride]:
+        if rstep is None:
+            rstep = {}
         # strides was used for shared memory padding. which is necessary for avoiding
         # shared memory load bank conflict when we do not applying tensorcore layout.
         shapes = node.propagate_reduction_inputs(tile, rstep)
         AS_shape, BS_shape = shapes.values()
         CS_shape = tile
-        A_ax_m, A_ax_k, B_ax_k, B_ax_n, C_ax_m, C_ax_n = node.infer_tensorcore_axis(
-        )
+        A_ax_m, A_ax_k, B_ax_k, B_ax_n, C_ax_m, C_ax_n = node.infer_tensorcore_axis()
 
         # applying strides
         # TODO(leiwang1999): offset should be dynamically set. we can use tag -> enable_offset to control this option..
@@ -64,12 +63,9 @@ class TensorCorePolicy(DefaultPolicy):
         A_high_ax = min(A_ax_m, A_ax_k)
         B_high_ax = min(B_ax_n, B_ax_k)
         C_high_ax = min(C_ax_m, C_ax_n)
-        A_stride = Stride(stride=np.prod(AS_shape[A_high_ax + 1:]) + offset,
-                          ax=A_high_ax)
-        B_stride = Stride(stride=np.prod(BS_shape[B_high_ax + 1:]) + offset,
-                          ax=B_high_ax)
-        C_stride = Stride(stride=np.prod(CS_shape[C_high_ax + 1:]) + offset,
-                          ax=C_high_ax)
+        A_stride = Stride(stride=np.prod(AS_shape[A_high_ax + 1:]) + offset, ax=A_high_ax)
+        B_stride = Stride(stride=np.prod(BS_shape[B_high_ax + 1:]) + offset, ax=B_high_ax)
+        C_stride = Stride(stride=np.prod(CS_shape[C_high_ax + 1:]) + offset, ax=C_high_ax)
         return A_stride, B_stride, C_stride
 
     def infer_node_smem_usage(self, td: TileDict, node: PrimFuncNode):
@@ -92,8 +88,7 @@ class TensorCorePolicy(DefaultPolicy):
             iter_name = iter_info.var.name
             iter_dom = iter_info.dom.extent
             if iter_dom % 16 > 0:
-                result[iter_name] = (16 if iter_dom < basic else basic
-                                     )  # for the case of padding
+                result[iter_name] = (16 if iter_dom < basic else basic)  # for the case of padding
             elif iter_dom % basic == 0:
                 result[iter_name] = basic
             else:
@@ -114,27 +109,23 @@ class TensorCorePolicy(DefaultPolicy):
         if not _check_small_tile(td):
             return None
 
-        smem_limit = min(self.arch.max_smem_usage // td.block_per_SM,
-                         self.arch.smem_cap)
+        smem_limit = min(self.arch.max_smem_usage // td.block_per_SM, self.arch.smem_cap)
         rstep_map = td.rstep_map.copy()
 
         def _optimize(node, rstep):
             all_steps = self.get_node_reduce_step_candidates(node)
             # todo(lei): optimize the all_steps enlarge policy to be a multiple of the original all_steps[k]
             for k in all_steps:
-                all_steps[k] = list(
-                    filter(lambda x: x % rstep[k] == 0, all_steps[k]))
+                all_steps[k] = list(filter(lambda x: x % rstep[k] == 0, all_steps[k]))
             if any([v == [] for v in all_steps.values()]):
                 return rstep
 
             def _shared_memory_usage(td: TileDict):
-                return node.footprint(td.output_tile, new_rstep_map,
-                                      td.tensor_strides_map[node])
+                return node.footprint(td.output_tile, new_rstep_map, td.tensor_strides_map[node])
 
             def _score(rstep_id):
                 rstep = {
-                    k.var.name: all_steps[k.var.name][rstep_id[k.var.name]]
-                    for k in node.raxis
+                    k.var.name: all_steps[k.var.name][rstep_id[k.var.name]] for k in node.raxis
                 }
                 score = 0
                 shape = node.propagate_inputs(td.get_tile(node), rstep=rstep)
@@ -155,8 +146,7 @@ class TensorCorePolicy(DefaultPolicy):
                 return max(candidates, key=lambda x: x[1])[0]
 
             cur_rstep_id = {
-                k.var.name: all_steps[k.var.name].index(rstep[k.var.name])
-                for k in node.raxis
+                k.var.name: all_steps[k.var.name].index(rstep[k.var.name]) for k in node.raxis
             }
             new_rstep_map = rstep_map.copy()
             while True:
@@ -164,8 +154,7 @@ class TensorCorePolicy(DefaultPolicy):
                 if new_rstep_id is None:
                     break
                 new_rstep_map = {
-                    k.var.name: all_steps[k.var.name][new_rstep_id[k.var.name]]
-                    for k in node.raxis
+                    k.var.name: all_steps[k.var.name][new_rstep_id[k.var.name]] for k in node.raxis
                 }
                 old_rstep_map = td.rstep_map
                 td.rstep_map = new_rstep_map
@@ -176,8 +165,7 @@ class TensorCorePolicy(DefaultPolicy):
                 else:
                     cur_rstep_id = new_rstep_id
             rstep = {
-                k.var.name: all_steps[k.var.name][cur_rstep_id[k.var.name]]
-                for k in node.raxis
+                k.var.name: all_steps[k.var.name][cur_rstep_id[k.var.name]] for k in node.raxis
             }
             return rstep
 
@@ -186,8 +174,7 @@ class TensorCorePolicy(DefaultPolicy):
                 rstep = _optimize(node, rstep_map)
                 rstep_map = rstep
         td.rstep_map = rstep_map
-        td.smem_cost, td.cached_tensors_map = self._compute_shared_memory_usage(
-            td)
+        td.smem_cost, td.cached_tensors_map = self._compute_shared_memory_usage(td)
         return
 
     def get_node_reduce_step_candidates(self, node):
@@ -196,10 +183,8 @@ class TensorCorePolicy(DefaultPolicy):
         else:
             # must be a a multiple of wmma_k
             return {
-                k.var.name: [
-                    x * self.wmma_k
-                    for x in get_all_factors(int(k.dom.extent) // self.wmma_k)
-                ]
+                k.var.name:
+                [x * self.wmma_k for x in get_all_factors(int(k.dom.extent) // self.wmma_k)]
                 for k in node.raxis
             }
 
@@ -207,19 +192,18 @@ class TensorCorePolicy(DefaultPolicy):
         for node in self.ordered_nodes:
             if node.get_tag("tensorcore_config"):
                 ax_m, ax_n = node.get_tag("tensorcore_config")
-                block_m, block_n = td.tile_map[node][ax_m], td.tile_map[node][
-                    ax_n]
+                block_m, block_n = (
+                    td.tile_map[node][ax_m],
+                    td.tile_map[node][ax_n],
+                )
                 # check the tile size is valid
                 wmma_invalid = [
-                    block_m < wmma_m or block_n < wmma_n for wmma_m, wmma_n in
-                    self.arch.get_avaliable_tensorintrin_shapes()
+                    block_m < wmma_m or block_n < wmma_n
+                    for wmma_m, wmma_n in self.arch.get_avaliable_tensorintrin_shapes()
                 ]
                 if all(wmma_invalid):
                     return False
-                if any([
-                        y % x for x, y in zip(td.tile_map[node],
-                                              node.get_space_dim())
-                ]):
+                if any([y % x for x, y in zip(td.tile_map[node], node.get_space_dim())]):
                     return False
         return super().check_tile_shape_isvalid(td)
 
@@ -234,29 +218,24 @@ class TensorCorePolicy(DefaultPolicy):
             return super().compute_node_stride_map(node, td)
         use_layout = self._can_implement_layout(node, td)
 
-        AS_stride, BS_stride, C_stride = self._compute_tc_strides(
-            node, td.get_tile(node), td.get_rstep(node))
-        A_stride, B_stride, _ = self._compute_tc_strides(
-            node, td.get_tile(node))
+        AS_stride, BS_stride, C_stride = self._compute_tc_strides(node, td.get_tile(node),
+                                                                  td.get_rstep(node))
+        A_stride, B_stride, _ = self._compute_tc_strides(node, td.get_tile(node))
         tensor_strides = {}
         output_strides = {
-            int(i + len(node.input_buffers)): Stride()
-            for i, _ in enumerate(node.output_buffers)
+            int(i + len(node.input_buffers)): Stride() for i, _ in enumerate(node.output_buffers)
         }
         tensor_strides = {}
         # when connected to shared input, should use full stride without rstep
-        for i, (stride, stride_full) in enumerate(
-                zip([AS_stride, BS_stride], [A_stride, B_stride])):
+        for i, (_, _) in enumerate(zip([AS_stride, BS_stride], [A_stride, B_stride])):
             if use_layout:
                 continue
-            _ = node.block_analyzer.get_input_buffers(
-                node.reduction_block)[i].name
+            _ = node.block_analyzer.get_input_buffers(node.reduction_block)[i].name
         # TODO(lei): should dig further for shared memory connection case.
 
         return output_strides, tensor_strides
 
-    def _assign_block_size(self, node: PrimFuncNode, td: TileDict,
-                           block_size: int):
+    def _assign_block_size(self, node: PrimFuncNode, td: TileDict, block_size: int):
         if not node.get_tag("tensorcore_config"):
             return super()._assign_block_size(node, td, block_size)
         ax_m, ax_n = node.get_tag("tensorcore_config")
@@ -281,9 +260,7 @@ class TensorCorePolicy(DefaultPolicy):
 
         def _score(node, thread):  # small is better
             score = 0
-            block_tile = [
-                int(np.ceil(tile[i] / thread[i])) for i in range(ndim)
-            ]
+            block_tile = [int(np.ceil(tile[i] / thread[i])) for i in range(ndim)]
             shape = node.propagate_inputs(block_tile)
             for i, _ in enumerate(node.input_buffers):
                 score += np.prod(shape[i]) / self.arch.bandwidth[1]
@@ -321,8 +298,7 @@ class TensorCorePolicy(DefaultPolicy):
             codegen_dict.shared_scope = "shared.dyn"
 
         codegen_dict.complete_config(node)
-        codegen_dict.vectorize = self._plan_vectorize(self.prim_func_node, td,
-                                                      block_size)
+        codegen_dict.vectorize = self._plan_vectorize(self.prim_func_node, td, block_size)
         codegen_dict.arch = self.arch
         codegen_dict.opt_shapes = self.prim_func_node.get_tag("opt_shapes")
         return codegen_dict
@@ -341,10 +317,8 @@ class TensorCorePolicy(DefaultPolicy):
             for node in self.ordered_nodes:
                 for arg in node.args:
                     overall_gmem_size_in_bytes += (
-                        int(np.prod(arg.shape)) *
-                        tvm.DataType(arg.dtype).bits // 8)
-            return overall_gmem_size_in_bytes < (
-                self.arch.l2_cache_size_bytes * 4)
+                        int(np.prod(arg.shape)) * tvm.DataType(arg.dtype).bits // 8)
+            return overall_gmem_size_in_bytes < (self.arch.l2_cache_size_bytes * 4)
 
         conditions.append(_check_memory_size())
         if any(conditions):

@@ -29,8 +29,7 @@ class TransformExecutorCPU:
     def forward(self, weight):
         inputs = [weight]
         for op in self.operators:
-            inputs.append(
-                tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
+            inputs.append(tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
             inputs = [op.forward(*inputs)]
         return inputs[-1]
 
@@ -58,9 +57,7 @@ class MatmulConfig:
     def __post_init__(self):
         # set M to tuple if it is list
         # otherwise, M is not hashable
-        object.__setattr__(
-            self, "M",
-            tuple(self.M) if isinstance(self.M, list) else self.M)
+        object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
         if isinstance(self.propagate_a, bool):
             object.__setattr__(
                 self,
@@ -69,8 +66,7 @@ class MatmulConfig:
                  if self.propagate_a else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_a, int):
-            object.__setattr__(self, "propagate_a",
-                               TransformKind(self.propagate_a))
+            object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
 
         if isinstance(self.propagate_b, bool):
             object.__setattr__(
@@ -80,30 +76,27 @@ class MatmulConfig:
                  if self.propagate_b else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_b, int):
-            object.__setattr__(self, "propagate_b",
-                               TransformKind(self.propagate_b))
+            object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
 
 
 class Matmul(Operator):
 
     def __init__(
-            self,
-            config: MatmulConfig,
-            name: str = "matmul",
-            target: Target = tvm.target.Target("cuda"),
+        self,
+        config: MatmulConfig,
+        name: str = "matmul",
+        target: Union[str, Target] = "cuda",
     ):
         super().__init__(name, config, target)
         target = self.target
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
 
-        self.optimized_func = self.apply_default_schedule(
-            self.prim_func_mod, target)
+        self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
-            self.update_func(
-                self.prim_func.with_attrs({"opt_shapes": self.dynamic_range}))
+            self.update_func(self.prim_func.with_attrs({"opt_shapes": self.dynamic_range}))
         else:
             self.dynamic_range = None
 
@@ -133,7 +126,7 @@ class Matmul(Operator):
                 datatype=self.in_dtype,
                 storage_dtype=self.in_dtype,
                 propagate_kind="B",
-                transpose_matrix=True if self.layout == "nt" else False,
+                transpose_matrix=(self.layout == "nt"),
                 transform_kind=self.propagate_b,
             )
             self.ladder_permutate_b = LadderPermutate(
@@ -202,9 +195,8 @@ class Matmul(Operator):
                 arg = func.buffer_map[param]
                 profile_tensors.append(
                     tvm.nd.array(
-                        np.random.uniform(
-                            0, 1, [var_warpper(i, m)
-                                   for i in arg.shape]).astype(arg.dtype),
+                        np.random.uniform(0, 1,
+                                          [var_warpper(i, m) for i in arg.shape]).astype(arg.dtype),
                         device=device,
                     ))
             self.profile_tensors = profile_tensors

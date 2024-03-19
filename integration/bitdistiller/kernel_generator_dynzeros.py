@@ -36,8 +36,7 @@ target = tvm.target.Target(get_target_from_env())
 
 def get_template_path():
     cur_dir = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(
-        cur_dir, f"template/kernel_template.int{bit}.bitblas.cu.template")
+    return os.path.join(cur_dir, f"template/kernel_template.int{bit}.bitblas.cu.template")
 
 
 template_path = get_template_path()
@@ -54,7 +53,7 @@ def get_thread_block_information(mod: IRModule):
     child_blocks = sch.get_child_blocks(root_block)
     reduction_blocks = get_reduction_blocks(sch, child_blocks)
     assert len(reduction_blocks) == 1
-    (main_block, ) = reduction_blocks
+    (main_block,) = reduction_blocks
     loops = sch.get_loops(main_block)
     block_info = [1, 1, 1]
     grid_info = [1, 1, 1]
@@ -153,14 +152,12 @@ if not os.path.exists(ladder_path):
 ladder_kernel_path = os.path.join(ladder_path, "ladder_kernel.cu")
 ladder_header_path = os.path.join(ladder_path, "ladder_kernel.h")
 
-with open(template_path, mode="r",
-          encoding="utf-8") as r_f, open(ladder_kernel_path,
-                                         mode="w",
-                                         encoding="utf8") as w_f:
+with open(
+        template_path, mode="r", encoding="utf-8") as r_f, open(
+            ladder_kernel_path, mode="w", encoding="utf8") as w_f:
     template_content = r_f.read()
     template = Template(template_content)
-    data = template.substitute(kernel_body=kernel_body,
-                               kernel_call=kernel_call)
+    data = template.substitute(kernel_body=kernel_body, kernel_call=kernel_call)
     w_f.write(data)
 
 pack_half2 = """

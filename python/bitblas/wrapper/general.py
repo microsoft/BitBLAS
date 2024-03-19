@@ -1,10 +1,8 @@
 import tvm
-from typing import Optional, List, Dict, Set, Union
+from typing import Optional, List, Dict, Union
 from tvm import IRModule
 from bitblas import Arch
 from tvm.runtime import ndarray
-from bitblas.base.analysis import get_reduction_blocks
-from tvm.tir import IntImm
 from bitblas.utils import match_global_kernel
 import re
 import ctypes
@@ -56,18 +54,16 @@ def get_annotated_device_mod(mod: IRModule, target: Target):
             raise ValueError("inputs must be Schedule, IRModule, "
                              "or dict of str to IRModule.")
         annotated_mods[tgt] = mod.with_attr("runtime", runtime)
-    annotated_mods, target_host = Target.canon_target_map_and_host(
-        annotated_mods, target_host)
+    annotated_mods, target_host = Target.canon_target_map_and_host(annotated_mods, target_host)
     if not target_host:
-        for tar, mod in annotated_mods.items():
+        for tar, _ in annotated_mods.items():
             device_type = ndarray.device(tar.kind.name, 0).device_type
             if device_type == ndarray.cpu(0).device_type:
                 target_host = tar
                 break
     if not target_host:
         target_host = "llvm" if tvm.runtime.enabled("llvm") else "stackvm"
-    annotated_mods, target_host = Target.canon_target_map_and_host(
-        annotated_mods, target_host)
+    annotated_mods, target_host = Target.canon_target_map_and_host(annotated_mods, target_host)
     for target, mod in annotated_mods.items():
         mixed_mod_passes = tvm.get_global_func("driver.mixed_mod_passes")
         device_mod_passes = tvm.get_global_func("driver.device_mod_passes")
@@ -112,11 +108,9 @@ def get_thread_block_information(mod: IRModule):
             # Skip loops without thread binding
             if thread_binding:
                 if "threadIdx" in thread_binding.thread_tag:
-                    block_dims["xyz".index(
-                        thread_binding.thread_tag[-1])] = extent
+                    block_dims["xyz".index(thread_binding.thread_tag[-1])] = extent
                 elif "blockIdx" in thread_binding.thread_tag:
-                    grid_dims["xyz".index(
-                        thread_binding.thread_tag[-1])] = extent
+                    grid_dims["xyz".index(thread_binding.thread_tag[-1])] = extent
 
     return block_dims, grid_dims
 
@@ -180,9 +174,8 @@ class CUDASourceWrapper(object):
 
     def parse_source_information(self):
         device_mod = get_annotated_device_mod(self.mod, self.arch.target)
-        assert (
-            len(device_mod.functions) == 1
-        ), "Only support one function in the module for static shape kernel."
+        assert (len(device_mod.functions) == 1
+               ), "Only support one function in the module for static shape kernel."
         for g_var, func in device_mod.functions.items():
             self.function_name = g_var.name_hint
             attrs = func.attrs
@@ -194,7 +187,7 @@ class CUDASourceWrapper(object):
                     if "threadIdx" in tag:
                         self.block_info["xyz".index(tag[-1])] = extent
                     elif "blockIdx" in tag:
-                        self.block_info["xyz".index(tag[-1])] = extent
+                        self.grid_info["xyz".index(tag[-1])] = extent
 
     def get_dynamic_symbolic_set(self, prim_func):
         # Determine the set of dynamic symbols used in the function
@@ -242,10 +235,8 @@ class CUDASourceWrapper(object):
         for param in self.prim_func.params:
             buffer = self.prim_func.buffer_map[param]
             function_args.append({
-                "name":
-                buffer.name,
-                "type":
-                _TYPE_MAP[buffer.dtype] + "* __restrict__",
+                "name": buffer.name,
+                "type": _TYPE_MAP[buffer.dtype] + "* __restrict__",
             })
 
         dynamic_symbolic_set = self.get_dynamic_symbolic_set(self.prim_func)
@@ -254,8 +245,7 @@ class CUDASourceWrapper(object):
             function_args.append({"name": dyn_sym, "type": "int"})
 
         # Format the function arguments for declaration
-        def_args = ", ".join(
-            [f"{arg['type']} {arg['name']}" for arg in function_args])
+        def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
 
         def func_call_args(s, function_args):
             # Extract the function call arguments matching the function definition
@@ -273,12 +263,10 @@ class CUDASourceWrapper(object):
 
         def legalize_c(p):
             # Convert TIR expressions to legal C expressions
-            if isinstance(p, tvm.tir.Var):
-                s = str(p)
-                return s.replace("//", "/")
-            elif isinstance(p, IntImm):
-                return str(p.value)
-            return str(p)
+            # Directly convert to string since the special case handling
+            # does not alter the string representation for `tvm.tir.Var` and `IntImm`.
+            # Replace Python's floor division operator with C's division operator
+            return str(p).replace("//", "/")
 
         # Prepare the block and grid dimensions for the CUDA kernel launch
         block_str = "dim3({}, {}, {})".format(
@@ -286,14 +274,12 @@ class CUDASourceWrapper(object):
             legalize_c(block_info[1]),
             legalize_c(block_info[2]),
         )
-        grid_str = "dim3({}, {}, {})".format(legalize_c(grid_info[0]),
-                                             legalize_c(grid_info[1]),
-                                             legalize_c(grid_info[2]))
+        grid_str = "dim3({}, {}, {})".format(
+            legalize_c(grid_info[0]), legalize_c(grid_info[1]), legalize_c(grid_info[2]))
         # Determine the shared memory size, defaulting to 0 if not specified
         smem_str = 0 if self.dynamic_smem_buf is None else self.dynamic_smem_buf
         # Format the CUDA kernel launch string
-        call_str = "{}<<<{}, {}, {}>>>({});".format(function_name, grid_str,
-                                                    block_str, smem_str,
+        call_str = "{}<<<{}, {}, {}>>>({});".format(function_name, grid_str, block_str, smem_str,
                                                     call_args)
         # Create the host function wrapper for the CUDA kernel
         host_func = """
@@ -353,18 +339,15 @@ extern "C" void init() {{
         for param in self.prim_func.params:
             buffer = self.prim_func.buffer_map[param]
             function_args.append({
-                "name":
-                buffer.name,
-                "type":
-                _TYPE_MAP[buffer.dtype] + "* __restrict__",
+                "name": buffer.name,
+                "type": _TYPE_MAP[buffer.dtype] + "* __restrict__",
             })
         # Add dynamic symbols as integer arguments
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
 
         # Format the argument definitions for function declaration
-        def_args = ", ".join(
-            [f"{arg['type']} {arg['name']}" for arg in function_args])
+        def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
 
         def func_call_args(s: str, function_args):
             # Extract and clean the function call arguments to match the declaration
@@ -382,9 +365,11 @@ extern "C" void init() {{
         call_args = ", ".join(func_call_args(dummy_declaration, function_args))
 
         def legalize_c(p):
-            # Ensure the expression is valid C code
-            s = str(p)
-            return s.replace("//", "/")
+            # Convert TIR expressions to legal C expressions
+            # Directly convert to string since the special case handling
+            # does not alter the string representation for `tvm.tir.Var` and `IntImm`.
+            # Replace Python's floor division operator with C's division operator
+            return str(p).replace("//", "/")
 
         last_range = 0
         num_items = len(function_informations)
@@ -403,11 +388,10 @@ extern "C" void init() {{
                 legalize_c(grid_info[2]),
             )
             # Handle dynamic shared memory specification
-            smem_str = (0 if info["dynamic_smem_buf"] is None else
-                        info["dynamic_smem_buf"])
+            smem_str = (0 if info["dynamic_smem_buf"] is None else info["dynamic_smem_buf"])
             opt_shapes = info["opt_shapes"]
             # Generate conditional kernel launch code based on dynamic symbolic ranges
-            (symbolic, ) = list(dynamic_symbolic_set)
+            (symbolic,) = list(dynamic_symbolic_set)
             range_str = opt_shapes[symbolic]
             if last_range == 0:
                 call_str = "if ({} <= {}) {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
@@ -420,17 +404,15 @@ extern "C" void init() {{
                     call_args,
                 )
             else:
-                call_str = (
-                    "\t\telse if ({} <= {}) {{\n {}<<<{}, {}, {}>>>({}); \n}}\n"
-                    .format(
-                        symbolic,
-                        range_str,
-                        function_name,
-                        grid_str,
-                        block_str,
-                        smem_str,
-                        call_args,
-                    ))
+                call_str = ("\t\telse if ({} <= {}) {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
+                    symbolic,
+                    range_str,
+                    function_name,
+                    grid_str,
+                    block_str,
+                    smem_str,
+                    call_args,
+                ))
             if last_range == num_items - 1:
                 call_str += "\t\telse {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
                     function_name, grid_str, block_str, smem_str, call_args)

@@ -17,13 +17,10 @@ def get_codegen_result(ops, target):
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout,enable_tuning",
     [
-        (16384, 16384, 16384, "float16", "float16", "float16", False, False,
-         False, "nt", False),
+        (16384, 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
         # dynamic shape
-        ([1], 16384, 16384, "float16", "float16", "float16", False, False,
-         False, "nt", False),
-        ([1, 32], 16384, 16384, "float16", "float16", "float16", False, False,
-         False, "nt", True),
+        ([1], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
+        ([1, 32], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", True),
     ],
 )
 def test_matmul_codegen_default(
@@ -64,11 +61,9 @@ def test_matmul_codegen_default(
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout",
     [
-        (16384, 16384, 16384, "float16", "float16", "float16", False, False,
-         False, "nt"),
+        (16384, 16384, 16384, "float16", "float16", "float16", False, False, False, "nt"),
         # dynamic shape
-        ([1], 16384, 16384, "float16", "float16", "float16", False, False,
-         False, "nt"),
+        ([1], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt"),
     ],
 )
 def test_matmul_codegen_finetune(
@@ -107,8 +102,7 @@ def test_matmul_codegen_finetune(
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout",
     [
-        (1024, 1024, 1024, "float16", "float16", "float16", False, False,
-         False, "nt"),
+        (1024, 1024, 1024, "float16", "float16", "float16", False, False, False, "nt"),
     ],
 )
 def test_matmul_profile_latency(
@@ -146,16 +140,11 @@ def test_matmul_profile_latency(
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout",
     [
-        (256, 256, 256, "float16", "float16", "float16", False, False, False,
-         "nt"),
-        (256, 256, 256, "float16", "float16", "float16", False, False, True,
-         "nt"),
-        (256, 256, 256, "float16", "float16", "float16", False, False, 0,
-         "nt"),
-        (256, 256, 256, "float16", "float16", "float16", False, False, 1,
-         "nt"),
-        (256, 256, 256, "float16", "float16", "float16", False, False, 2,
-         "nt"),
+        (256, 256, 256, "float16", "float16", "float16", False, False, False, "nt"),
+        (256, 256, 256, "float16", "float16", "float16", False, False, True, "nt"),
+        (256, 256, 256, "float16", "float16", "float16", False, False, 0, "nt"),
+        (256, 256, 256, "float16", "float16", "float16", False, False, 1, "nt"),
+        (256, 256, 256, "float16", "float16", "float16", False, False, 2, "nt"),
     ],
 )
 def test_matmul_torch_forward(
@@ -197,8 +186,7 @@ def test_matmul_torch_forward(
     inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda())
     inputs.append(torch.rand(weight_shape, dtype=torch.float16).cuda())
     inputs.append(torch.rand(output_shape, dtype=torch.float16).cuda())
-    ref_result = torch.matmul(inputs[0],
-                              inputs[1].t() if layout == "nt" else inputs[1])
+    ref_result = torch.matmul(inputs[0], inputs[1].t() if layout == "nt" else inputs[1])
 
     permuted_inputs = []
     if matmul.input_transform is not None:
@@ -211,10 +199,7 @@ def test_matmul_torch_forward(
         permuted_inputs.append(inputs[1])
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
-    torch.testing.assert_close(permuted_inputs[-1],
-                               ref_result,
-                               rtol=1e-2,
-                               atol=1e-2)
+    torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
 
 
 # fmt: on

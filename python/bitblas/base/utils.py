@@ -3,7 +3,7 @@
 
 import tvm
 import os
-from tvm.contrib.popen_pool import PopenPoolExecutor, StatusKind, MapResult
+from tvm.contrib.popen_pool import PopenPoolExecutor, StatusKind
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import numpy as np
 from typing import List, Tuple, Optional, Dict, Union, Literal
@@ -83,12 +83,10 @@ def _apply_config(
     elif config.use_tc:
         if config.arch.sm_version >= 80:
             # For A100(sm_80) or more advanced gpu, use MMA tensorization.
-            return bitblas.gpu.MatmulTensorizationMMA().apply_config(
-                func, config)
+            return bitblas.gpu.MatmulTensorizationMMA().apply_config(func, config)
         else:
             # For other GPUs, use WMMA tensorization.
-            return bitblas.gpu.MatmulTensorizationWMMA().apply_config(
-                func, config)
+            return bitblas.gpu.MatmulTensorizationWMMA().apply_config(func, config)
     else:
         _reduction_rules = []
 
@@ -141,15 +139,13 @@ def get_dummy_input_arrays(
         if distribution == "uniform":
             profile_tensors.append(
                 tvm.nd.array(
-                    np.random.rand(*[var_wrapper(i)
-                                     for i in arg.shape]).astype(arg.dtype),
+                    np.random.rand(*[var_wrapper(i) for i in arg.shape]).astype(arg.dtype),
                     device=device,
                 ))
         elif distribution == "onefill":
             profile_tensors.append(
                 tvm.nd.array(
-                    np.ones([var_wrapper(i)
-                             for i in arg.shape]).astype(arg.dtype),
+                    np.ones([var_wrapper(i) for i in arg.shape]).astype(arg.dtype),
                     device=device,
                 ))
         else:
@@ -165,9 +161,7 @@ def apply_and_build_parallel(func,
                              data_distribution="uniform") -> CompileResult:
     cpresults = []
 
-    profile_tensors = get_dummy_input_arrays(func,
-                                             arch.device,
-                                             distribution=data_distribution)
+    profile_tensors = get_dummy_input_arrays(func, arch.device, distribution=data_distribution)
     max_workers = min(len(configs), os.cpu_count(), max_workers)
 
     # apply config in thread parallel
@@ -182,10 +176,7 @@ def apply_and_build_parallel(func,
         return sch
 
     with ThreadPoolExecutor(max_workers=4) as scheduler:
-        futures = {
-            scheduler.submit(_apply_schedule, func, config)
-            for config in configs
-        }
+        futures = {scheduler.submit(_apply_schedule, func, config) for config in configs}
         for future in as_completed(futures):
             _sched.append(future.result())
 
@@ -200,8 +191,7 @@ def apply_and_build_parallel(func,
         # this is a trick to implement rasteration, will be removed in the future
         config = configs[idx]
 
-        @tvm.register_func(func_name="tvm_callback_cuda_postproc",
-                           override=True)
+        @tvm.register_func(func_name="tvm_callback_cuda_postproc", override=True)
         def tvm_callback_cuda_postproc(code, _):
             index = code.index("{", match_global_kernel(code))
             if not isinstance(config.rasterization_plan, NoRasterization):
@@ -211,16 +201,12 @@ def apply_and_build_parallel(func,
             code = tensor_replace_dp4a(code)
             return code
 
-        with tvm.transform.PassContext(config={
-                "tir.use_async_copy": True,
-                **config.pass_context
-        }):
+        with tvm.transform.PassContext(config={"tir.use_async_copy": True, **config.pass_context}):
             rt_mod = tvm.build(mod, target=arch.target)
 
         from tvm.contrib.tar import tar  # pylint: disable=import-outside-toplevel
 
-        artifact_path = os.path.join(tempfile.mkdtemp(),
-                                     "tvm_tmp_mod." + tar.output_format)
+        artifact_path = os.path.join(tempfile.mkdtemp(), "tvm_tmp_mod." + tar.output_format)
         code = rt_mod.imported_modules[0].get_source()
         rt_mod.export_library(artifact_path, fcompile=tar)
         return idx, code, artifact_path
@@ -235,8 +221,7 @@ def apply_and_build_parallel(func,
             logger.debug("LocalBuilder: Timeout")
         elif map_result.status == StatusKind.EXCEPTION:
             # TODO(lei): redirect the exception to file if needed
-            logger.debug("LocalBuilder: An exception occurred {}".format(
-                map_result.value))
+            logger.debug("LocalBuilder: An exception occurred {}".format(map_result.value))
             continue
         elif map_result.status == StatusKind.COMPLETE:
             idx, code, artifact_path = map_result.value
@@ -247,9 +232,8 @@ def apply_and_build_parallel(func,
             config = configs[idx]
             rt_mod = tvm.runtime.load_module(artifact_path)
             cpresult = CompileResult(config, sch, rt_mod)
-            timer_cuda_mod = rt_mod.time_evaluator(rt_mod.entry_name,
-                                                   arch.device,
-                                                   number=num_repeats)
+            timer_cuda_mod = rt_mod.time_evaluator(
+                rt_mod.entry_name, arch.device, number=num_repeats)
             cpresult.profile_tensors = profile_tensors
             cpresult.time_evaluator = timer_cuda_mod
             cpresult.code = code
@@ -287,11 +271,8 @@ def apply_and_build(
     data_distribution="uniform",
 ) -> Tuple[List[CompileResult], CompileResult]:
     max_workers = 10 if parallel_build else 1
-    return apply_and_build_parallel(func,
-                                    configs,
-                                    arch,
-                                    max_workers=max_workers,
-                                    data_distribution=data_distribution)
+    return apply_and_build_parallel(
+        func, configs, arch, max_workers=max_workers, data_distribution=data_distribution)
 
 
 def fast_tune(
@@ -319,11 +300,9 @@ def fast_tune(
 
         for buffer in func.buffer_map.values():
             for axis in buffer.shape:
-                if isinstance(axis, tvm.tir.Var):
-                    if axis.name not in opt_shapes:
-                        raise NotImplementedError(
-                            "Currently do not support fast tune with none-dynamic range set"
-                        )
+                if isinstance(axis, tvm.tir.Var) and axis.name not in opt_shapes:
+                    raise NotImplementedError(
+                        "Currently do not support fast tune with none-dynamic range set")
         if opt_shapes:
             for name, shape in opt_shapes.items():
                 var = find_var_from_func(func, name)
@@ -335,8 +314,7 @@ def fast_tune(
 
     policy = DefaultPolicy(func=func, arch=arch)
     try:
-        specilized_func, tags = get_tensorized_func_and_tags(
-            specilized_func, arch.target)
+        specilized_func, tags = get_tensorized_func_and_tags(specilized_func, arch.target)
     except Exception as e_msg:
         logger.debug("Get tensorized func and tags failed: ", e_msg)
         tags = None
@@ -393,13 +371,12 @@ def refactor_specialized_func(g_var, func, params, buffers_to_declare):
         body = tvm.tir.DeclBuffer(buf, body=body)
 
     # device func must be private
-    device_func = tvm.tir.PrimFunc(params, body, ret_type,
-                                   attrs=attrs).without_attr("global_symbol")
+    device_func = tvm.tir.PrimFunc(
+        params, body, ret_type, attrs=attrs).without_attr("global_symbol")
     return global_symbol, device_func
 
 
-def create_dispatch_func(g_var: str, func: tir.PrimFunc,
-                         refactored_funcs: List[str]):
+def create_dispatch_func(g_var: str, func: tir.PrimFunc, refactored_funcs: List[str]):
     global_symbol = g_var
     attrs = func.attrs
     buffer_map = func.buffer_map
@@ -427,8 +404,7 @@ def create_dispatch_func(g_var: str, func: tir.PrimFunc,
         global_symbols.append(g_var)
 
     # TODO(lei): general the dispatch function to support multiple dynamic symbolics
-    assert len(
-        dyn_symbolic) == 1, "Only support one dynamic symbolics currently"
+    assert len(dyn_symbolic) == 1, "Only support one dynamic symbolics currently"
 
     ib = tvm.tir.ir_builder.create()
     syb = list(dyn_symbolic)[-1]
@@ -444,13 +420,10 @@ def create_dispatch_func(g_var: str, func: tir.PrimFunc,
     with ib.if_scope(syb > last_range):
         ib.emit(tvm.tir.Call(None, g_var, _invoke_params))
     stmt = ib.get()
-    dispatch_func = tvm.tir.PrimFunc(params, stmt, ret_type, buffer_map,
-                                     attrs).with_attrs({
-                                         "tir.is_global_func":
-                                         True,
-                                         "global_symbol":
-                                         global_symbol
-                                     })
+    dispatch_func = tvm.tir.PrimFunc(params, stmt, ret_type, buffer_map, attrs).with_attrs({
+        "tir.is_global_func": True,
+        "global_symbol": global_symbol
+    })
     return dispatch_func
 
 
@@ -461,15 +434,12 @@ def create_dispatch_mod(g_var: str, original_func: tir.PrimFunc,
     refactored_funcs = []
     for func in specialized_funcs:
         params, buffers_to_declare = collect_buffers_to_declare(func)
-        global_symbol, device_func = refactor_specialized_func(
-            g_var, func, params, buffers_to_declare)
-        global_symbol = g_var_supply.fresh_global(global_symbol,
-                                                  add_prefix=False)
+        global_symbol, device_func = refactor_specialized_func(g_var, func, params,
+                                                               buffers_to_declare)
+        global_symbol = g_var_supply.fresh_global(global_symbol, add_prefix=False)
         dispatch_mod[global_symbol] = device_func
         refactored_funcs.append((global_symbol, device_func))
-    dispatch_func = create_dispatch_func(g_var,
-                                         original_func,
-                                         refactored_funcs=refactored_funcs)
+    dispatch_func = create_dispatch_func(g_var, original_func, refactored_funcs=refactored_funcs)
     dispatch_mod.update(tvm.IRModule.from_expr(dispatch_func))
     return dispatch_mod
 
@@ -480,8 +450,10 @@ def fast_tune_with_dynamic_range(
     topk: int = 10,
     parallel_build: bool = True,
     global_symbol: Optional[str] = None,
-    dynamic_range: Dict[str, List[int]] = {},
+    dynamic_range: Optional[Dict[str, List[int]]] = None,
 ) -> IRModule:
+    if dynamic_range is None:
+        dynamic_range = {}
     if target.kind.name != "cuda":
         logger.error("Only support CUDA target")
         return None
@@ -496,22 +468,15 @@ def fast_tune_with_dynamic_range(
                 if axis.name in dynamic_range:
                     opt_shapes[axis.name] = dynamic_range[axis.name]
                 else:
-                    raise ValueError(
-                        f"[BitBLAS] The axis {axis.name} is not in dynamic_range"
-                    )
+                    raise ValueError(f"[BitBLAS] The axis {axis.name} is not in dynamic_range")
     func = func.with_attr("opt_shapes", opt_shapes)
 
     if "opt_shapes" not in func.attrs:
-        print(
-            "[BitBLAS] The primfunc has no opt_shapes, please set opt_shapes for the primfunc"
-        )
+        print("[BitBLAS] The primfunc has no opt_shapes, please set opt_shapes for the primfunc")
         return None
     else:
         # should be list value
-        if not all([
-                isinstance(v, tvm.ir.Array)
-                for v in func.attrs["opt_shapes"].values()
-        ]):
+        if not all([isinstance(v, tvm.ir.Array) for v in func.attrs["opt_shapes"].values()]):
             logger.error("The opt_shapes should be list value")
             return None
 
@@ -519,13 +484,10 @@ def fast_tune_with_dynamic_range(
     opt_shapes = func.attrs["opt_shapes"]
 
     # Step 1.Calculate the Cartesian product using itertools.product
-    product_list = list(
-        itertools.product(*(opt_shapes[key] for key in opt_shapes)))
+    product_list = list(itertools.product(*(opt_shapes[key] for key in opt_shapes)))
 
     # Convert the Cartesian product to a list of dictionaries
-    specialize_items: List[Dict] = [
-        dict(zip(opt_shapes.keys(), values)) for values in product_list
-    ]
+    specialize_items: List[Dict] = [dict(zip(opt_shapes.keys(), values)) for values in product_list]
 
     specilized_tuned_funcs: List[tir.PrimFunc] = []
     for item in specialize_items:

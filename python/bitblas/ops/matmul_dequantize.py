@@ -12,7 +12,6 @@ from dataclasses import dataclass
 from bitblas.utils import match_global_kernel
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 from .lop3_permutate import LOP3Permutate, LOP3PermutateConfig
-from .param_permutate import ParamPermutate, ParamPermutateConfig
 
 
 class OPExecutorCPU:
@@ -31,8 +30,7 @@ class OPExecutorCPU:
     def forward(self, weight):
         inputs = [weight]
         for op in self.operators:
-            inputs.append(
-                tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
+            inputs.append(tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
             inputs = [op.forward(*inputs)]
         return inputs[-1]
 
@@ -74,9 +72,7 @@ class MatmulWeightOnlyDequantizeConfig:
     def __post_init__(self):
         # set M to tuple if it is list
         # otherwise, M is not hashable
-        object.__setattr__(
-            self, "M",
-            tuple(self.M) if isinstance(self.M, list) else self.M)
+        object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
         if isinstance(self.propagate_a, bool):
             object.__setattr__(
                 self,
@@ -85,8 +81,7 @@ class MatmulWeightOnlyDequantizeConfig:
                  if self.propagate_a else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_a, int):
-            object.__setattr__(self, "propagate_a",
-                               TransformKind(self.propagate_a))
+            object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
 
         if isinstance(self.propagate_b, bool):
             object.__setattr__(
@@ -96,17 +91,16 @@ class MatmulWeightOnlyDequantizeConfig:
                  if self.propagate_b else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_b, int):
-            object.__setattr__(self, "propagate_b",
-                               TransformKind(self.propagate_b))
+            object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
 
 
 class MatmulWeightOnlyDequantize(Operator):
 
     def __init__(
-            self,
-            config: MatmulWeightOnlyDequantizeConfig,
-            name: str = "matmul_weight_only_dequantize",
-            target: Target = tvm.target.Target("cuda"),
+        self,
+        config: MatmulWeightOnlyDequantizeConfig,
+        name: str = "matmul_weight_only_dequantize",
+        target: Target = "cuda",
     ):
         super().__init__(name, config, target)
 
@@ -117,12 +111,11 @@ class MatmulWeightOnlyDequantize(Operator):
         self.arch = CUDA(target)
 
         try:
-            self.optimized_func = self.apply_default_schedule(
-                self.prim_func_mod, target)
+            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
         except Exception:
             self.optimized_func = None
             print(
-                f"[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
+                "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
             )
 
         if isinstance(self.M, Tuple):
@@ -159,7 +152,7 @@ class MatmulWeightOnlyDequantize(Operator):
                 dequantize_bits=self.bit,
                 storage_dtype=self.storage_dtype,
                 propagate_kind="B",
-                transpose_matrix=True if self.layout == "nt" else False,
+                transpose_matrix=self.layout == "nt",
                 transform_kind=self.propagate_b,
             )
             self.ladder_permutate_b = LadderPermutate(
@@ -227,10 +220,7 @@ class MatmulWeightOnlyDequantize(Operator):
         return code
 
     def retrieve_weight_shape(self):
-        return [
-            int(i)
-            for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape
-        ]
+        return [int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape]
 
     def forward(self, *args) -> Any:
         if self.lib is None:

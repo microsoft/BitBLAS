@@ -40,7 +40,7 @@ Get tuning policy and candidates:
 policy = DefaultPolicy(func=func, arch=arch)
 try:
     tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
-except:
+except Exception:
     tags = None
 # Tune with Tensor Core if possible
 if tags:
