@@ -23,7 +23,7 @@ BitBLAS achieves exceptional performance across a variety of computational patte
   </div>
 
 
-- End2End Integration with Quantzie Inference Kernel for AutoGPTQ and vLLM.
+- End2End Integration with Quantize Inference Kernel for AutoGPTQ and vLLM.
 
 
 - TensorCore FP16/INT8 GEMM Performance on gtx3090
@@ -33,7 +33,7 @@ BitBLAS achieves exceptional performance across a variety of computational patte
     <img src="./images/figures/op_benchmark_3090_s8_gemm_e8.png" alt="gemm int8 performance on 3090" style="width: 49%;" />
   </div>
 
-For more detailed information on benchmarks with other formats (NF4/FP4), please refer to the [benchmark](./benchmark/README.md).
+For more detailed information on benchmark sets with other formats (NF4/FP4), please refer to the [benchmark](./benchmark/README.md).
 
 ## Getting Started
 
