@@ -10,20 +10,28 @@ Some of the key features of BitBLAS include:
   - BitBLAS first proposed int8xint1 gemv/gemm with 10x/2x speedup over float16xfloat16 on A100, please checkout [op_benchmark_a100_int1_scaling](images/figures/op_benchmark_a100_int1_scaling.png) for detailed input scaling benchmark results.
 
 
-## Benchmark
-BitBLAS can achieve optimal performance across various compute patterns:
+## Benchmark Summary
 
-- GTX 3090
-  - FLOAT16xFLOAT16 with TensorCore ![3090-gemm-fp16](./images/figures/op_benchmark_3090_fp16_gemm.png)
-  - INT8xINT8 with TensorCore ![3090-gemm-s8](./images/figures/op_benchmark_3090_s8_gemm.png)
-  - FLOAT16xNF4(LUT4) GEMV ![3090-af4-gemv](./images/figures/op_benchmark_3090_af4_gemv.png)
-  - FLOAT16xNF4(LUT4) with TensorCore ![3090-af4-gemm](./images/figures/op_benchmark_3090_af4_gemm.png)
+BitBLAS achieves exceptional performance across a variety of computational patterns. Below are selected results showcasing its capabilities:
 
-- A100
-  - WeightOnly GEMV ![a100-wq-gemv](./images/figures/op_benchmark_a100_wq_gemv.png)
-  - WeightOnly GEMM with TensorCore ![a100-wq-gemm](./images/figures/op_benchmark_a100_wq_gemm.png)
+- TensorCore F16/INT8 GEMM Performance on gtx3090
 
-See more details in our [benchmark](./benchmark) directory.
+  <div>
+    <img src="./images/figures/op_benchmark_3090_fp16_gemm.png" alt="gemm fp16 performance on 3090" style="width: 48%;" />
+    <img src="./images/figures/op_benchmark_3090_s8_gemm.png" alt="gemm int8 performance on 3090" style="width: 48%;" />
+  </div>
+
+- Weight Only Matmul performance on A100
+
+  <div>
+    <img src="./images/figures/op_benchmark_a100_wq_gemv.png" alt="gemm weight only performance on A100" style="width: 48%;" />
+    <img src="./images/figures/op_benchmark_a100_wq_gemm.png" alt="gemm weight only performance on A100" style="width: 48%;" />
+  </div>
+
+- End2End Integration with AutoGPTQ and vLLM
+
+
+For more detailed information on benchmarks, please refer to the [benchmark](./benchmark/README.md).
 
 ## Getting Started
 
@@ -32,7 +40,7 @@ See more details in our [benchmark](./benchmark) directory.
 
 - [QuickStart](./docs/QuickStart.md): We provide two primary ways to do the code generation: using a high-level DSL (TensorIR Script), or using packed Operators, from the quick start guide, you can learn how to use BitBLAS to generate high performance kernels with both methods.
 
-- [3rd Party Integration](./integration/): BitBLAS can also be easily integrated to other frameworks, the integration provides some examples of integrating BitBLAS with PyTorch, AutoGPTQ and vLLM.
+- [Integration](./integration/): Explore how BitBLAS seamlessly integrates with other frameworks through our examples. Discover the ease of integrating BitBLAS with PyTorch, AutoGPTQ, and vLLM in the 3rd Party Integration Examples.
 
 ## Contributing
 
