@@ -14,24 +14,26 @@ Some of the key features of BitBLAS include:
 
 BitBLAS achieves exceptional performance across a variety of computational patterns. Below are selected results showcasing its capabilities:
 
-- TensorCore F16/INT8 GEMM Performance on gtx3090
-
-  <div>
-    <img src="./images/figures/op_benchmark_3090_fp16_gemm.png" alt="gemm fp16 performance on 3090" style="width: 48%;" />
-    <img src="./images/figures/op_benchmark_3090_s8_gemm.png" alt="gemm int8 performance on 3090" style="width: 48%;" />
-  </div>
 
 - Weight Only Matmul performance on A100
 
   <div>
-    <img src="./images/figures/op_benchmark_a100_wq_gemv.png" alt="gemm weight only performance on A100" style="width: 48%;" />
-    <img src="./images/figures/op_benchmark_a100_wq_gemm.png" alt="gemm weight only performance on A100" style="width: 48%;" />
+    <img src="./images/figures/op_benchmark_a100_wq_gemv_e8.png" alt="gemm weight only performance on A100" style="width: 49%;" />
+    <img src="./images/figures/op_benchmark_a100_wq_gemm_e8.png" alt="gemm weight only performance on A100" style="width: 49%;" />
   </div>
 
-- End2End Integration with AutoGPTQ and vLLM
+
+- End2End Integration with Quantzie Inference Kernel for AutoGPTQ and vLLM.
 
 
-For more detailed information on benchmarks, please refer to the [benchmark](./benchmark/README.md).
+- TensorCore FP16/INT8 GEMM Performance on gtx3090
+
+  <div>
+    <img src="./images/figures/op_benchmark_3090_fp16_gemm_e8.png" alt="gemm fp16 performance on 3090" style="width: 49%;" />
+    <img src="./images/figures/op_benchmark_3090_s8_gemm_e8.png" alt="gemm int8 performance on 3090" style="width: 49%;" />
+  </div>
+
+For more detailed information on benchmarks with other formats (NF4/FP4), please refer to the [benchmark](./benchmark/README.md).
 
 ## Getting Started
 
