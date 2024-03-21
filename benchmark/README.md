@@ -18,6 +18,13 @@ This part presents a benchmark comparison between our custom library, BitBLAS, a
 
 - CUDA 12.1
 - Compared libraries: cuBLAS, CUTLASS, bitsandbytes, faster-transformer, tensorrt-llm, vLLM, Marlin
+- Commit ID:
+  - bitsandbytes == 0.43.0
+  - vLLM: 865732342b4e3b8a4ef38f28a2a5bdb87cf3f970
+  - FasterTransformer: 1afbf20129647a35d108152fc6789bc1d029cda5
+  - TensorRT-LLM: 2bf3a0a4287069ac55ee3304c285b08592d3d1bc
+  - CUTLASS: 629f4653c3ea3db3264030382956fabe715f3436
+  - Marlin: 512f1b1ba39ff708bcc95419f11cfd1285cd31b3
 
 ## Results Summary
 
@@ -35,36 +42,56 @@ This part presents a benchmark comparison between our custom library, BitBLAS, a
 
 The benchmark configurations for each test scenario are detailed below:
 
+<!-- center -->
+<div align="center">
 
-|config|Provider|M|N|K|
-|:---:|:---:|:---:|:---:|:---:|
-|V0|None|1|16384|16384|
-|V1|BLOOM|1|43008|14336|
-|V2|BLOOM|1|14336|14336|
-|V3|BLOOM|1|57344|14336|
-|V4|BLOOM|1|14336|57344|
-|V5|OPT|1|9216|9216|
-|V6|OPT|1|36864|9216|
-|V7|OPT|1|9216|36864|
-|V8|LLAMA|1|22016|8192|
-|V9|LLAMA|1|8192|22016|
-|V10|LLAMA-2|1|8192|8192|
-|V11|LLAMA-2|1|28672|8192|
-|V12|LLAMA-2|1|8192|28672|
-|M0|None|16384|16384|16384|
-|M1|BLOOM|8192|43008|14336|
-|M2|BLOOM|8192|14336|14336|
-|M3|BLOOM|8192|57344|14336|
-|M4|BLOOM|8192|14336|57344|
-|M5|OPT|8192|9216|9216|
-|M6|OPT|8192|36864|9216|
-|M7|OPT|8192|9216|36864|
-|M8|LLAMA|8192|22016|8192|
-|M9|LLAMA|8192|8192|22016|
-|M10|LLAMA-2|8192|8192|8192|
-|M11|LLAMA-2|8192|28672|8192|
-|M12|LLAMA-2|8192|8192|28672|
-
+<style type="text/css">
+	table.tableizer-table {
+		font-size: 12px;
+		border: 1px solid #CCC; 
+		font-family: Arial, Helvetica, sans-serif;
+	} 
+	.tableizer-table td {
+		padding: 4px;
+		margin: 3px;
+		border: 1px solid #CCC;
+	}
+	.tableizer-table th {
+		background-color: #104E8B; 
+		color: #FFF;
+		font-weight: bold;
+	}
+</style>
+<table class="tableizer-table">
+<thead><tr class="tableizer-firstrow"><th>config</th><th>Provider</th><th>M</th><th>N</th><th>K</th></tr></thead><tbody>
+ <tr><td>V0</td><td>None</td><td>1</td><td>16384</td><td>16384</td></tr>
+ <tr><td>V1</td><td>BLOOM</td><td>1</td><td>43008</td><td>14336</td></tr>
+ <tr><td>V2</td><td>BLOOM</td><td>1</td><td>14336</td><td>14336</td></tr>
+ <tr><td>V3</td><td>BLOOM</td><td>1</td><td>57344</td><td>14336</td></tr>
+ <tr><td>V4</td><td>BLOOM</td><td>1</td><td>14336</td><td>57344</td></tr>
+ <tr><td>V5</td><td>OPT</td><td>1</td><td>9216</td><td>9216</td></tr>
+ <tr><td>V6</td><td>OPT</td><td>1</td><td>36864</td><td>9216</td></tr>
+ <tr><td>V7</td><td>OPT</td><td>1</td><td>9216</td><td>36864</td></tr>
+ <tr><td>V8</td><td>LLAMA</td><td>1</td><td>22016</td><td>8192</td></tr>
+ <tr><td>V9</td><td>LLAMA</td><td>1</td><td>8192</td><td>22016</td></tr>
+ <tr><td>V10</td><td>LLAMA-2</td><td>1</td><td>8192</td><td>8192</td></tr>
+ <tr><td>V11</td><td>LLAMA-2</td><td>1</td><td>28672</td><td>8192</td></tr>
+ <tr><td>V12</td><td>LLAMA-2</td><td>1</td><td>8192</td><td>28672</td></tr>
+ <tr><td>M0</td><td>None</td><td>16384</td><td>16384</td><td>16384</td></tr>
+ <tr><td>M1</td><td>BLOOM</td><td>8192</td><td>43008</td><td>14336</td></tr>
+ <tr><td>M2</td><td>BLOOM</td><td>8192</td><td>14336</td><td>14336</td></tr>
+ <tr><td>M3</td><td>BLOOM</td><td>8192</td><td>57344</td><td>14336</td></tr>
+ <tr><td>M4</td><td>BLOOM</td><td>8192</td><td>14336</td><td>57344</td></tr>
+ <tr><td>M5</td><td>OPT</td><td>8192</td><td>9216</td><td>9216</td></tr>
+ <tr><td>M6</td><td>OPT</td><td>8192</td><td>36864</td><td>9216</td></tr>
+ <tr><td>M7</td><td>OPT</td><td>8192</td><td>9216</td><td>36864</td></tr>
+ <tr><td>M8</td><td>LLAMA</td><td>8192</td><td>22016</td><td>8192</td></tr>
+ <tr><td>M9</td><td>LLAMA</td><td>8192</td><td>8192</td><td>22016</td></tr>
+ <tr><td>M10</td><td>LLAMA-2</td><td>8192</td><td>8192</td><td>8192</td></tr>
+ <tr><td>M11</td><td>LLAMA-2</td><td>8192</td><td>28672</td><td>8192</td></tr>
+ <tr><td>M12</td><td>LLAMA-2</td><td>8192</td><td>8192</td><td>28672</td></tr>
+</tbody></table>
+</div>
 
 **Note:** To reproduce the 3rdparty frameworks' benchmark results, please refer to [mlc-benchmark](https://github.com/LeiWang1999/mlc-benchmark).
 
