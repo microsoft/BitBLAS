@@ -70,3 +70,6 @@ models/frozenmodels/
 
 # .hypothesis
 .hypothesis
+
+# .ruff_cache
+.ruff_cache
