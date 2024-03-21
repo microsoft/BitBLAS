@@ -97,13 +97,22 @@ The benchmark configurations for each test scenario are detailed below:
 
 ## Benchmark Images
 
-- GTX 3090
-  - ![3090-gemm-fp16](../images/figures/op_benchmark_3090_fp16_gemm.png)
-  - ![3090-gemm-s8](../images/figures/op_benchmark_3090_s8_gemm.png)
-  - ![3090-nf4-gemv](../images/figures/op_benchmark_3090_af4_gemv.png)
-  - ![3090-nf4-gemm](../images/figures/op_benchmark_3090_af4_gemm.png)
+INT8xINT1 Matmul BS Scaling on A100.
 
-- A100
-  - ![a100-wq-gemv](../images/figures/op_benchmark_a100_wq_gemv.png)
-  - ![a100-wq-gemm](../images/figures/op_benchmark_a100_wq_gemm.png)
+![int8xint1_scaling](../images/figures/op_benchmark_a100_int1_scaling.png)
 
+3090 Related benchmark numbers
+
+![3090-gemm-fp16](../images/figures/op_benchmark_3090_fp16_gemm.png)
+
+![3090-gemm-s8](../images/figures/op_benchmark_3090_s8_gemm.png)
+
+![3090-nf4-gemv](../images/figures/op_benchmark_3090_nf4_gemv.png)
+
+![3090-nf4-gemm](../images/figures/op_benchmark_3090_nf4_gemm.png)
+
+A100 Related Benchmark Result
+
+![a100-wq-gemv](../images/figures/op_benchmark_a100_wq_gemv_e8.png)
+
+![a100-wq-gemm](../images/figures/op_benchmark_a100_wq_gemm_e8.png)
