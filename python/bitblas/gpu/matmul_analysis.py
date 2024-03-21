@@ -487,7 +487,7 @@ def normalize_to_matmul(sch: tir.Schedule,
     # let layout be 'a' to auto inference the layout
     index_maps = get_index_map(block_stmt, layout=layout)
     if index_maps is None:
-        print("[WARNING] Cannot find the appropriate index map for tensorcore")
+        logger.debug("Cannot find the appropriate index map for tensorcore")
         return None
 
     matmul_index_map, a_index_map, b_index_map, c_index_map = index_maps
