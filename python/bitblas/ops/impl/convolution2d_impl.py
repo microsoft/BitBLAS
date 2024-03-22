@@ -7,7 +7,7 @@ from bitblas.gpu.matmul_analysis import get_propagate_map
 from bitblas.ops.operator import TransformKind
 
 
-def conv_nhwc_ohwi(
+def conv2d_nhwc_ohwi(
     n,
     f,
     h,
@@ -56,8 +56,8 @@ def conv_nhwc_ohwi(
         lambda n, h, w, f: te.sum(
             pad[
                 n,
-                h * stride_h + tir.any(dilation_h),
-                w * stride_w + tir.any(dilation_w),
+                h * stride_h + kh * tir.any(dilation_h),
+                w * stride_w + kw * tir.any(dilation_w),
                 c,
             ].astype(accum_dtype)
             * B[
@@ -79,7 +79,7 @@ def conv_nhwc_ohwi(
 
     return tvm.IRModule.from_expr(func)
 
-def conv_nhwc_hwio(
+def conv2d_nhwc_hwio(
     n,
     f,
     h,
@@ -128,8 +128,8 @@ def conv_nhwc_hwio(
         lambda n, h, w, f: te.sum(
             pad[
                 n,
-                h * stride_h + tir.any(dilation_h),
-                w * stride_w + tir.any(dilation_w),
+                h * stride_h + kh * tir.any(dilation_h),
+                w * stride_w + kw * tir.any(dilation_w),
                 c,
             ].astype(accum_dtype)
             * B[
@@ -170,7 +170,7 @@ def select_implementation(
 ):
     assert input_layout in ["nhwc", "nchw"]
     if input_layout == "nhwc" and weight_layout == "ohwi":
-        return conv_nhwc_ohwi(
+        return conv2d_nhwc_ohwi(
             n,
             f,
             h,
@@ -186,7 +186,7 @@ def select_implementation(
             out_dtype,
         )
     elif input_layout == "nhwc" and weight_layout == "hwio":
-        return conv_nhwc_hwio(
+        return conv2d_nhwc_hwio(
             n,
             f,
             h,

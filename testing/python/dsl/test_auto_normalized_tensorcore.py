@@ -6,58 +6,23 @@ from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.arch import CUDA
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.gpu import Matmul
+from bitblas.ops.impl.convolution2d_impl import conv2d_nhwc_hwio, conv2d_nhwc_ohwi
 from bitblas.base.utils import apply_and_build
 import time
 from tvm import te, tir
 
-
-def conv2d_nhwc_hwio(n, f, h, w, c, kh, kw, s, d, p, in_dtype="float16", out_dtype="float16"):
-    A = te.placeholder((n, h, w, c), name="input", dtype=in_dtype)
-    B = te.placeholder((kh, kw, c, f), name="weight", dtype=in_dtype)
-
-    pad_shape = (n, h + 2 * p, w + 2 * p, c)
-    pad_value = tir.const(0.0, A.dtype)
-    pad = te.compute(
-        pad_shape,
-        lambda n, h, w, c: te.if_then_else(
-            tir.all(
-                h >= p,
-                w >= p,
-                h < pad_shape[1] - p,
-                w < pad_shape[2] - p,
-            ),
-            A[n, h - p, w - p, c],
-            pad_value,
-        ),
-        name="pad",
-    )
-    kernel_h, kernel_w = kh, kw
-    stride_h, stride_w = s, s
-    dilation_h, dilation_w = d, d
-    out_h = (h + 2 * p - (dilation_h * (kernel_h - 1) + 1)) // stride_h + 1
-    out_w = (w + 2 * p - (dilation_w * (kernel_w - 1) + 1)) // stride_w + 1
-    out_shape = (n, out_h, out_w, f)
-    kh = te.reduce_axis((0, kernel_h), name="kh")
-    kw = te.reduce_axis((0, kernel_w), name="kw")
-    c = te.reduce_axis((0, c), name="c")
-    C = te.compute(
-        out_shape,
-        lambda n, h, w, f: te.sum(
-            pad[n, h * stride_h + kh * dilation_h, w * stride_w + kw * dilation_w, c,] * B[kh, kw,
-                                                                                           c, f],
-            axis=[kh, kw, c],
-        ),
-        name="C",
-    )
-    return tvm.ir.IRModule({"main": te.create_prim_func([A, B, C])})
-
-
 benchmark_sets = [
     # (prim_func, input_args, default_dlight_schedule),
     (conv2d_nhwc_hwio, (128, 64, 224, 224, 3, 7, 7, 2, 1, 3, "float16", "float16"), Matmul),
-    (conv2d_nhwc_hwio, (128, 64, 224, 224, 64, 1, 1, 2, 1, 3, "float16", "float16"), Matmul),
-    (conv2d_nhwc_hwio, (128, 64, 224, 224, 3, 7, 7, 2, 1, 3, "float32", "float32"), Matmul),
-    (conv2d_nhwc_hwio, (128, 64, 224, 224, 3, 7, 7, 2, 1, 3, "float16", "float16"), Matmul),
+    (conv2d_nhwc_ohwi, (128, 64, 224, 224,3, 7, 7, 2, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_hwio, (128, 64, 56, 56,64, 3, 3, 1, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_ohwi, (128, 64, 56, 56,64, 1, 1, 1, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_hwio, (128, 64, 56, 56,64, 1, 1, 1, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_ohwi, (128, 256, 14, 14,128, 3, 3, 2, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_hwio, (128, 128, 28, 28,128, 3, 3, 1, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_ohwi, (128, 256, 14, 14,128, 3, 3, 2, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_hwio, (128, 256, 14, 14,128, 1, 1, 2, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_ohwi, (128, 256, 14, 14,128, 1, 1, 2, 1, 1, "float16", "float16"), Matmul),
 ]
 benchmark_results = {}
 for get_prim_func, input_args, d_schedule in benchmark_sets:
@@ -66,13 +31,15 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     target = tvm.target.Target("nvidia/nvidia-a100")
     arch = CUDA(target)
     policy = DefaultPolicy(func=func, arch=arch)
+    tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
     try:
-        func, tags = get_tensorized_func_and_tags(func, arch.target)
-    except Exception:
+        tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
+    except Exception as e:
+        print(f"Failed to get tensorized function and tags: {e}")
         tags = None
     if tags:
-        policy = TensorCorePolicy(func=func, arch=arch, tags=tags)
-
+        policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
+    print(tensorized_func)
     configs = policy.emit_config(20)
 
     tune_start = time.time()
