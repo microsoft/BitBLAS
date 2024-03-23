@@ -209,14 +209,7 @@ class MatmulWeightOnlyDequantize(Operator):
         )
 
     def post_process(self, code: str) -> str:
-        index = code.index("{", match_global_kernel(code))
         code = tensor_replace_dp4a(code)
-        # some tricky judge to decide whether to insert rasterization code
-        if self.M == 1:
-            return code
-        if self.N * self.K > 10**6:
-            rasterization_code = get_rasterization_code(10)
-            code = code[:index + 2] + rasterization_code + code[index + 2:]
         return code
 
     def retrieve_weight_shape(self):

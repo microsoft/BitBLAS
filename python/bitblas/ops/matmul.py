@@ -103,6 +103,8 @@ class Matmul(Operator):
         self._build_runtime_module(target)
 
         if self.propagate_a:
+            assert (self.propagate_a is
+                    TransformKind.NonTransform), "Currently only support NonTransform for input"
             ladder_permutate_config = LadderPermutateConfig(
                 M=self.M,
                 N=self.K,
@@ -163,11 +165,6 @@ class Matmul(Operator):
         )
 
     def post_process(self, code: str) -> str:
-        index = code.index("{", match_global_kernel(code))
-        # some tricky judge to decide whether to insert rasterization code
-        if self.N * self.K > 10**6:
-            rasterization_code = get_rasterization_code(10)
-            code = code[:index + 2] + rasterization_code + code[index + 2:]
         code = tensor_replace_dp4a(code)
         return code
 

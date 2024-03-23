@@ -379,3 +379,6 @@ class PrimFuncNode(Node):
                 buffer_len = (buffer_len + 31) // 32 * 32
                 result += buffer_len
         return result, cached_tensor
+
+    def get_input_buffers(self) -> List[tir.Buffer]:
+        return self.block_analyzer.input_buffers

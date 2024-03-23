@@ -14,15 +14,12 @@ from tvm import te, tir
 benchmark_sets = [
     # (prim_func, input_args, default_dlight_schedule),
     (conv2d_nhwc_hwio, (128, 64, 224, 224, 3, 7, 7, 2, 1, 3, "float16", "float16"), Matmul),
-    (conv2d_nhwc_ohwi, (128, 64, 224, 224,3, 7, 7, 2, 1, 1, "float16", "float16"), Matmul),
-    (conv2d_nhwc_hwio, (128, 64, 56, 56,64, 3, 3, 1, 1, 1, "float16", "float16"), Matmul),
-    (conv2d_nhwc_ohwi, (128, 64, 56, 56,64, 1, 1, 1, 1, 1, "float16", "float16"), Matmul),
-    (conv2d_nhwc_hwio, (128, 64, 56, 56,64, 1, 1, 1, 1, 1, "float16", "float16"), Matmul),
-    (conv2d_nhwc_ohwi, (128, 256, 14, 14,128, 3, 3, 2, 1, 1, "float16", "float16"), Matmul),
-    (conv2d_nhwc_hwio, (128, 128, 28, 28,128, 3, 3, 1, 1, 1, "float16", "float16"), Matmul),
-    (conv2d_nhwc_ohwi, (128, 256, 14, 14,128, 3, 3, 2, 1, 1, "float16", "float16"), Matmul),
-    (conv2d_nhwc_hwio, (128, 256, 14, 14,128, 1, 1, 2, 1, 1, "float16", "float16"), Matmul),
-    (conv2d_nhwc_ohwi, (128, 256, 14, 14,128, 1, 1, 2, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_ohwi, (128, 64, 56, 56, 64, 3, 3, 1, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_hwio, (128, 64, 56, 56, 64, 1, 1, 1, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_ohwi, (128, 64, 56, 56, 64, 1, 1, 1, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_ohwi, (128, 128, 28, 28, 128, 3, 3, 1, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_hwio, (128, 256, 14, 14, 128, 3, 3, 2, 1, 1, "float16", "float16"), Matmul),
+    (conv2d_nhwc_ohwi, (128, 256, 14, 14, 128, 1, 1, 2, 1, 1, "float16", "float16"), Matmul),
 ]
 benchmark_results = {}
 for get_prim_func, input_args, d_schedule in benchmark_sets:

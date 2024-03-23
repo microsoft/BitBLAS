@@ -171,7 +171,7 @@ def apply_and_build_parallel(func,
         try:
             sch = _apply_config(f, c)
         except Exception as apply_schedule_error:
-            logger.debug("Apply schedule failed: ", apply_schedule_error)
+            logger.debug("Apply schedule failed: {}".format(apply_schedule_error))
             sch = None
         return sch
 
@@ -193,11 +193,6 @@ def apply_and_build_parallel(func,
 
         @tvm.register_func(func_name="tvm_callback_cuda_postproc", override=True)
         def tvm_callback_cuda_postproc(code, _):
-            index = code.index("{", match_global_kernel(code))
-            if not isinstance(config.rasterization_plan, NoRasterization):
-                factor = config.rasterization_plan.panel_width_
-                rasterization_code = get_rasterization_code(factor)
-                code = code[:index + 2] + rasterization_code + code[index + 2:]
             code = tensor_replace_dp4a(code)
             return code
 

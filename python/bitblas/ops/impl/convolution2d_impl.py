@@ -54,15 +54,9 @@ def conv2d_nhwc_ohwi(
     C = te.compute(
         out_shape,
         lambda n, h, w, f: te.sum(
-            pad[
-                n,
-                h * stride_h + kh * tir.any(dilation_h),
-                w * stride_w + kw * tir.any(dilation_w),
-                c,
-            ].astype(accum_dtype)
-            * B[
-                f, kh - 1 - tir.any(dilation_h), kw - 1 - tir.any(dilation_w), c
-            ].astype(accum_dtype),
+            pad[n, h * stride_h + kh * tir.any(dilation_h), w * stride_w + kw * tir.any(dilation_w),
+                c,].astype(accum_dtype) * B[f, kh - 1 - tir.any(dilation_h), kw - 1 - tir.any(
+                    dilation_w), c].astype(accum_dtype),
             axis=[kh, kw, c],
         ),
         name="C",
@@ -70,14 +64,13 @@ def conv2d_nhwc_ohwi(
     args = [A, B]
     last_output = C
     if accum_dtype != out_dtype:
-        D = te.compute(
-            out_shape, lambda n, h, w, c: C[n, h, w, c].astype(out_dtype), name="D"
-        )
+        D = te.compute(out_shape, lambda n, h, w, c: C[n, h, w, c].astype(out_dtype), name="D")
         last_output = D
     args.append(last_output)
     func = te.create_prim_func(args)
 
     return tvm.IRModule.from_expr(func)
+
 
 def conv2d_nhwc_hwio(
     n,
@@ -126,15 +119,9 @@ def conv2d_nhwc_hwio(
     C = te.compute(
         out_shape,
         lambda n, h, w, f: te.sum(
-            pad[
-                n,
-                h * stride_h + kh * tir.any(dilation_h),
-                w * stride_w + kw * tir.any(dilation_w),
-                c,
-            ].astype(accum_dtype)
-            * B[
-                kh - 1 - tir.any(dilation_h), kw - 1 - tir.any(dilation_w), c, f
-            ].astype(accum_dtype),
+            pad[n, h * stride_h + kh * tir.any(dilation_h), w * stride_w + kw * tir.any(dilation_w),
+                c,].astype(accum_dtype) * B[kh - 1 - tir.any(dilation_h), kw - 1 - tir.any(
+                    dilation_w), c, f].astype(accum_dtype),
             axis=[kh, kw, c],
         ),
         name="C",
@@ -142,14 +129,13 @@ def conv2d_nhwc_hwio(
     args = [A, B]
     last_output = C
     if accum_dtype != out_dtype:
-        D = te.compute(
-            out_shape, lambda n, h, w, c: C[n, h, w, c].astype(out_dtype), name="D"
-        )
+        D = te.compute(out_shape, lambda n, h, w, c: C[n, h, w, c].astype(out_dtype), name="D")
         last_output = D
     args.append(last_output)
     func = te.create_prim_func(args)
 
     return tvm.IRModule.from_expr(func)
+
 
 def select_implementation(
     n,
@@ -202,8 +188,5 @@ def select_implementation(
             out_dtype,
         )
     else:
-        raise ValueError(
-            "Unsupported input_layout: {} and weight_layout: {}".format(
-                input_layout, weight_layout
-            )
-        )
+        raise ValueError("Unsupported input_layout: {} and weight_layout: {}".format(
+            input_layout, weight_layout))

@@ -307,15 +307,13 @@ class TensorCorePolicy(DefaultPolicy):
         conditions = []
         # only support single node for now
         conditions.append(len(self.ordered_nodes) > 1)
-        # small op don't need improve l2 cache
-        conditions.append(td.num_wave < 4)
         # only on Ampere+ arch
         conditions.append(self.arch.compute_capability < "80")
 
         def _check_memory_size():
             overall_gmem_size_in_bytes: int = 0
             for node in self.ordered_nodes:
-                for arg in node.args:
+                for arg in node.input_buffers:
                     overall_gmem_size_in_bytes += (
                         int(np.prod(arg.shape)) * tvm.DataType(arg.dtype).bits // 8)
             return overall_gmem_size_in_bytes < (self.arch.l2_cache_size_bytes * 4)

@@ -479,11 +479,14 @@ extern "C" void call({}) {{
                 "dynamic_smem_buf": self.dynamic_smem_buf[function_name],
             }
 
-        def compare_map_objects(map_obj):  
+        def compare_map_objects(map_obj):
             comparable_representation = list(map_obj.values())
-            return comparable_representation  
-        
-        function_informations = dict(sorted(function_informations.items(), key=lambda item: compare_map_objects(item[1]["opt_shapes"])))  
+            return comparable_representation
+
+        function_informations = dict(
+            sorted(
+                function_informations.items(),
+                key=lambda item: compare_map_objects(item[1]["opt_shapes"])))
 
         self.lib_code = code
 

@@ -343,6 +343,8 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
             get_mma_intrin_group,)
 
+        import_source: List[str] = []
+
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
         blocks = sch.get_child_blocks(root_block)
@@ -495,23 +497,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         thread_idy = i2
         thread_idz = j2
 
-        # plan rasteration
-        if (not isinstance(config.rasterization_plan, NoRasterization) and
-                sch.get(batch).extent.value == 1):
-            device_func, invoke_func = config.rasterization_plan.get_code()
-            factor = config.rasterization_plan.panel_width_
-
-            # TODO(lei): this is a trick for rasterization implementation
-            # is not optimal. (5% performance loss)
-            # require a solution for general block rasterization
-            factor = 8  # should be divisible by block_idx
-            if sch.get(block_idx).extent.value % factor == 0:
-                block_k, block_idx = sch.split(block_idx, factors=[None, factor])
-                sch.reorder(block_k, block_idy, block_idx)
-                sch.bind(block_k, "blockIdx.z")
-        else:
-            sch.bind(batch, "blockIdx.z")
-
+        sch.bind(batch, "blockIdx.z")
         sch.bind(block_idx, "blockIdx.x")
         sch.bind(block_idy, "blockIdx.y")
         sch.bind(thread_idy, "threadIdx.y")
@@ -697,4 +683,20 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         if use_async:
             sch.annotate(k0, "software_pipeline_async_stages", [0])
 
+        # plan rasteration
+        if (not isinstance(config.rasterization_plan, NoRasterization) and
+                sch.get(batch).extent.value == 1):
+            device_func, invoke_func = config.rasterization_plan.get_code()
+            import_source.append(device_func)
+            sch.annotate(
+                sch.get_loops(block_init_c)[-2],
+                ann_key="inject_customized_code_prepend",
+                ann_val=invoke_func)
+        # plan import source
+        if len(import_source) > 0:
+            sch.annotate(
+                thread_idz,
+                ann_key="pragma_import_c",
+                ann_val=("\n").join(import_source),
+            )
         return sch

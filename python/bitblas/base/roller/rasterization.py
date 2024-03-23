@@ -1,12 +1,12 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
 """Rasteration Plan For L2 Cache Locality"""
 
 from typing import List
 
 
 class Rasterization:
+
     def __init__(self) -> None:
         pass
 
@@ -15,6 +15,7 @@ class Rasterization:
 
 
 class NoRasterization(Rasterization):
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -81,5 +82,5 @@ __device__ dim3 rasterization2DColumn(const int panel_width) {
     def get_code(self) -> List[str]:
         return [
             self.get_device_function(),
-            "const dim3 blockIdx(rasterization2DColumn({});".format(self.panel_width_),
+            "const dim3 blockIdx = rasterization2DColumn({});\n".format(self.panel_width_),
         ]
