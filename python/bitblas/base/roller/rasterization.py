@@ -64,7 +64,7 @@ class Rasterization2DColumn(Rasterization):
 
     def get_device_function(self) -> str:
         return """
-__device__ dim3 rasterization2DColumn(const int panel_width) {
+__device__ __inline__ dim3 rasterization2DColumn(const int panel_width) {
     const auto baseBlockIdx = blockIdx.x + gridDim.x *blockIdx.y;
     const auto totalPanel = (gridDim.x * gridDim.y +panel_width * gridDim.x - 1) / (panel_width * gridDim.x);
     const auto totalBlock = gridDim.x * gridDim.y;

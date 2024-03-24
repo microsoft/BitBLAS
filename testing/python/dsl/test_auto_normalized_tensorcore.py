@@ -9,7 +9,6 @@ from bitblas.gpu import Matmul
 from bitblas.ops.impl.convolution2d_impl import conv2d_nhwc_hwio, conv2d_nhwc_ohwi
 from bitblas.base.utils import apply_and_build
 import time
-from tvm import te, tir
 
 benchmark_sets = [
     # (prim_func, input_args, default_dlight_schedule),
@@ -36,7 +35,7 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
         tags = None
     if tags:
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
-    print(tensorized_func)
+
     configs = policy.emit_config(20)
 
     tune_start = time.time()

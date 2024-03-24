@@ -3,7 +3,7 @@
 
 # pylint: disable=missing-docstring, invalid-name
 """A GEMM schedule rule for GPU operators."""
-from typing import Optional
+from typing import Optional, List
 
 from tvm import tir
 
@@ -84,6 +84,8 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
             get_mma_intrin_group,)
         from .intrin.lop3 import get_lop3_intrin_group
+
+        import_source: List[str] = []
 
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
@@ -278,22 +280,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         thread_idy = i2
         thread_idz = j2
 
-        # plan rasteration
-        if (not isinstance(config.rasterization_plan, NoRasterization) and
-                sch.get(batch).extent.value == 1):
-            device_func, invoke_func = (config.rasterization_plan.get_code())  # noqa: F841
-            factor = config.rasterization_plan.panel_width_  # noqa: F841
-
-            # TODO(lei): this is a trick for rasterization implementation
-            # is not optimal.
-            # require a solution for general block rasterization
-            # factor = 8  # should be divisible by block_idy
-            # if sch.get(block_idx).extent.value % factor == 0:
-            #     block_k, block_idx = sch.split(block_idx, factors=[None, factor])
-            #     sch.bind(block_k, "blockIdx.z")
-        else:
-            sch.bind(batch, "blockIdx.z")
-
+        sch.bind(batch, "blockIdx.z")
         sch.bind(block_idx, "blockIdx.x")
         sch.bind(block_idy, "blockIdx.y")
         sch.bind(thread_idy, "threadIdx.y")
@@ -403,11 +390,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     sch.get_loops(dequantize_block_local)[-1],
                     lop3_intrin_info["compute"],
                 )
-                sch.annotate(
-                    thread_idz,
-                    ann_key="pragma_import_c",
-                    ann_val=lop3_intrin_info["c_source"],
-                )
+                import_source.append(lop3_intrin_info["c_source"])
 
             sch.annotate(block_shared, ann_key="permuted_layout", ann_val=can_swizzle_b)
             union_len = (2 + 4) if intrin_info.smooth_b else (2 + 2)
@@ -525,7 +508,22 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.annotate(k0, ann_key="software_pipeline_order", ann_val=[0, 1, 2])
         if use_async:
             sch.annotate(k0, "software_pipeline_async_stages", [0])
-
+        # plan rasteration
+        if not isinstance(config.rasterization_plan, NoRasterization):
+            device_func, invoke_func = config.rasterization_plan.get_code()
+            import_source.append(device_func)
+            sch.annotate(
+                sch.get_loops(block_init_c)[-2],
+                ann_key="inject_customized_code_prepend",
+                ann_val=invoke_func,
+            )
+        # plan import source
+        if len(import_source) > 0:
+            sch.annotate(
+                thread_idz,
+                ann_key="pragma_import_c",
+                ann_val=("\n").join(import_source),
+            )
         return sch
 
     def sch_shared_memory_prefetch_with_config(
@@ -550,6 +548,8 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
             get_mma_intrin_group,)
         from .intrin.lop3 import get_lop3_intrin_group
+
+        import_source: List[str] = []
 
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
@@ -801,22 +801,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         thread_idy = i2
         thread_idz = j2
 
-        # plan rasteration
-        if (not isinstance(config.rasterization_plan, NoRasterization) and
-                sch.get(batch).extent.value == 1):
-            device_func, invoke_func = config.rasterization_plan.get_code()  # noqa: F841
-            factor = config.rasterization_plan.panel_width_  # noqa: F841
-
-            # TODO(lei): this is a trick for rasterization implementation
-            # is not optimal.
-            # require a solution for general block rasterization
-            # factor = 8  # should be divisible by block_idy
-            # if sch.get(block_idx).extent.value % factor == 0:
-            #     block_k, block_idx = sch.split(block_idx, factors=[None, factor])
-            #     sch.bind(block_k, "blockIdx.z")
-        else:
-            sch.bind(batch, "blockIdx.z")
-
+        sch.bind(batch, "blockIdx.z")
         sch.bind(block_idx, "blockIdx.x")
         sch.bind(block_idy, "blockIdx.y")
         sch.bind(thread_idy, "threadIdx.y")
@@ -929,11 +914,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     sch.get_loops(dequantize_block_local)[-1],
                     lop3_intrin_info["compute"],
                 )
-                sch.annotate(
-                    thread_idz,
-                    ann_key="pragma_import_c",
-                    ann_val=lop3_intrin_info["c_source"],
-                )
+                import_source.append(lop3_intrin_info["c_source"])
 
             sch.annotate(block_shared, ann_key="permuted_layout", ann_val=can_swizzle_b)
             union_len = (2 + 4) if intrin_info.smooth_b else (2 + 2)
@@ -1073,6 +1054,22 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.annotate(k0, ann_key="software_pipeline_order", ann_val=[0, 1, 2, 3])
         if use_async:
             sch.annotate(k0, "software_pipeline_async_stages", [0])
+        # plan rasteration
+        if not isinstance(config.rasterization_plan, NoRasterization):
+            device_func, invoke_func = config.rasterization_plan.get_code()
+            import_source.append(device_func)
+            sch.annotate(
+                sch.get_loops(block_init_c)[-2],
+                ann_key="inject_customized_code_prepend",
+                ann_val=invoke_func,
+            )
+        # plan import source
+        if len(import_source) > 0:
+            sch.annotate(
+                thread_idz,
+                ann_key="pragma_import_c",
+                ann_val=("\n").join(import_source),
+            )
         return sch
 
     def apply_config(  # pylint: disable=too-many-locals,missing-docstring

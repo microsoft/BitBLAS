@@ -313,10 +313,10 @@ class TensorCorePolicy(DefaultPolicy):
         def _check_memory_size():
             overall_gmem_size_in_bytes: int = 0
             for node in self.ordered_nodes:
-                for arg in node.input_buffers:
+                for buffer in node.input_buffers:
                     overall_gmem_size_in_bytes += (
-                        int(np.prod(arg.shape)) * tvm.DataType(arg.dtype).bits // 8)
-            return overall_gmem_size_in_bytes < (self.arch.l2_cache_size_bytes * 4)
+                        int(np.prod(buffer.shape)) * tvm.DataType(buffer.dtype).bits // 8)
+            return overall_gmem_size_in_bytes < self.arch.l2_cache_size_bytes
 
         conditions.append(_check_memory_size())
         if any(conditions):

@@ -358,10 +358,6 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
         main_block = reduction_blocks[0]
 
-        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
-        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
-            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
-
         output_blocks = [sch.get(block) for block in sch.get_output_blocks(root_block)]
 
         def check_require_cache(func: tir.PrimFunc, config):
@@ -386,14 +382,6 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             return any(conditions)
 
         cache_write_required = check_require_cache(func, config=config)
-
-        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
-        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
-            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
-
-        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
-        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
-            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
         if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
@@ -684,8 +672,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             sch.annotate(k0, "software_pipeline_async_stages", [0])
 
         # plan rasteration
-        if (not isinstance(config.rasterization_plan, NoRasterization) and
-                sch.get(batch).extent.value == 1):
+        if not isinstance(config.rasterization_plan, NoRasterization):
             device_func, invoke_func = config.rasterization_plan.get_code()
             import_source.append(device_func)
             sch.annotate(

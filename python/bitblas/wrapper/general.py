@@ -268,6 +268,8 @@ class CUDASourceWrapper(object):
             # Directly convert to string since the special case handling
             # does not alter the string representation for `tvm.tir.Var` and `IntImm`.
             # Replace Python's floor division operator with C's division operator
+            if isinstance(p, tvm.tir.IntImm):
+                p = int(p)
             return str(p).replace("//", "/")
 
         # Prepare the block and grid dimensions for the CUDA kernel launch
@@ -371,6 +373,8 @@ extern "C" void init() {{
             # Directly convert to string since the special case handling
             # does not alter the string representation for `tvm.tir.Var` and `IntImm`.
             # Replace Python's floor division operator with C's division operator
+            if isinstance(p, tvm.tir.IntImm):
+                p = int(p)
             return str(p).replace("//", "/")
 
         last_range = 0
@@ -396,7 +400,7 @@ extern "C" void init() {{
             (symbolic,) = list(dynamic_symbolic_set)
             range_str = opt_shapes[symbolic]
             if last_range == 0:
-                call_str = "if ({} <= {}) {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
+                call_str = "if ({} <= {}) {{\n\t\t\t {}<<<{}, {}, {}>>>({}); \n\t\t}}\n".format(
                     symbolic,
                     range_str,
                     function_name,
@@ -406,7 +410,7 @@ extern "C" void init() {{
                     call_args,
                 )
             else:
-                call_str = ("\t\telse if ({} <= {}) {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
+                call_str = "\t\telse if ({} <= {}) {{\n\t\t\t {}<<<{}, {}, {}>>>({}); \n\t\t}}\n".format(
                     symbolic,
                     range_str,
                     function_name,
@@ -414,10 +418,13 @@ extern "C" void init() {{
                     block_str,
                     smem_str,
                     call_args,
-                ))
+                )
             if last_range == num_items - 1:
-                call_str += "\t\telse {{\n {}<<<{}, {}, {}>>>({}); \n}}\n".format(
-                    function_name, grid_str, block_str, smem_str, call_args)
+                call_str += (
+                    "\t\telse {{\n\t\t\t {}<<<{}, {}, {}>>>({}); \n\t\t}}\n".format(
+                        function_name, grid_str, block_str, smem_str, call_args
+                    )
+                )
             last_range += 1
             _call_str += call_str
 

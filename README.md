@@ -26,7 +26,7 @@ BitBLAS achieves exceptional performance across a variety of computational patte
 - End2End Integration with Quantize Inference Kernel for AutoGPTQ and vLLM.
 
 
-- TensorCore FP16/INT8 GEMM Performance Vs. Vendor Library on A100 and GTX4090
+- TensorCore FP16/INT8 GEMM Performance Vs. Vendor Library on A100 and RTX4090
 
   <div>
     <img src="./images/figures/op_benchmark_consistent_gemm_fp16.png" alt="gemm fp16 performance on 4090 and a100" style="width: 49%;" />

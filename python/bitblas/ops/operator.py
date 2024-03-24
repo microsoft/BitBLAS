@@ -109,6 +109,7 @@ class Operator(ABC):
                 logger.debug(
                     "Failed to build optimized function for CUDA target with default schedule, Please consider enable hardware aware tuning!"
                 )
+                print(rt_build_error)
         else:
             # For non-CUDA platforms or when no optimized function is available, build with the primary function
             rt_mod = tvm.build(self.prim_func, target=target, name=self.name)
