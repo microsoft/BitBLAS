@@ -128,8 +128,11 @@ class TensorCorePolicy(DefaultPolicy):
                     k.var.name: all_steps[k.var.name][rstep_id[k.var.name]] for k in node.raxis
                 }
                 score = 0
-                shape = node.propagate_inputs(td.get_tile(node), rstep=rstep)
-                for i, input_buffer in enumerate(node.input_buffers):
+                shape = node.propagate_inputs_on_reduction(
+                    td.get_tile(node), rstep=rstep
+                )
+                input_buffers = node.block_analyzer.get_input_buffers(node.reduction_block)
+                for i, input_buffer in enumerate(input_buffers):
                     score += coalesced_factor(shape[i], input_buffer.shape)
                 return score
 
@@ -261,8 +264,9 @@ class TensorCorePolicy(DefaultPolicy):
         def _score(node, thread):  # small is better
             score = 0
             block_tile = [int(np.ceil(tile[i] / thread[i])) for i in range(ndim)]
-            shape = node.propagate_inputs(block_tile)
-            for i, _ in enumerate(node.input_buffers):
+            shape = node.propagate_inputs_on_reduction(block_tile)
+            input_buffers = node.block_analyzer.get_input_buffers(node.reduction_block)
+            for i, _ in enumerate(input_buffers):
                 score += np.prod(shape[i]) / self.arch.bandwidth[1]
             return score
 

@@ -185,7 +185,7 @@ class PrimFuncNode(Node):
             return None
         return opt_shapes[name]
 
-    def extent_warpper(self, value) -> int:
+    def extent_wrapper(self, value) -> int:
         if isinstance(value, tvm.tir.Var):
             return self.get_opt_shape(value.name)
         elif isinstance(value, tvm.tir.IntImm):
@@ -250,8 +250,33 @@ class PrimFuncNode(Node):
                 continue
             # should not exceed original shape
             trimmed_shape = [
-                self.extent_warpper(i)
+                self.extent_wrapper(i)
                 for i in list(map(min, zip(shapes[arg.name], self.input_buffers[i].shape)))
+            ]
+            results.append(trimmed_shape)
+        return results
+    
+    # Propagate inputs only on reduction block
+    def propagate_inputs_on_reduction(self, tile, rstep: Optional[Dict] = None) -> List[List[int]]:
+        if rstep is None:
+            rstep = {}
+        reduction_block = self.reduction_block
+        args = self.block_analyzer.get_input_buffers(reduction_block)
+        targets = [t.name for t in args]
+        shapes, intermediate_bind = self.propagate(tile, rstep, targets)
+        results = []
+        for i, arg in enumerate(args):
+            if arg.name in intermediate_bind:
+                results.append(shapes[arg.name])
+                continue
+            # should not exceed original shape
+            propagate_shape = shapes[arg.name]
+            buffer_shape = args[i].shape
+            if len(buffer_shape) > len(propagate_shape):
+                buffer_shape = buffer_shape[-len(propagate_shape):]
+            trimmed_shape = [
+                self.extent_wrapper(j)
+                for j in list(map(min, zip(propagate_shape, buffer_shape)))
             ]
             results.append(trimmed_shape)
         return results
