@@ -61,10 +61,3 @@ This project has adopted the Microsoft Open Source Code of Conduct. For more inf
 ## Trademarks
 
 This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft trademarks or logos is subject to and must follow Microsoft's Trademark & Brand Guidelines. Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship. Any use of third-party trademarks or logos are subject to those third-party's policies.
-
-## Acknowledgement
-
-We learned a lot from the following projects.
-
-- [Apache TVM](https://github.com/apache/tvm): BitBLAS havs adopted TensorIR as our DSL. Additionally, we have customized TVM from the unity branch to incorporate specific features that were required for our project.
-- [Microsoft Roller](https://github.com/microsoft/nnfusion/tree/roller): The design and algo inspiration of hardware aware tuning in BitBLAS comes from Roller,.
