@@ -3,8 +3,6 @@
 # pre-transformed tir expression of matmul
 import tvm
 from tvm import te, tir
-from bitblas.gpu.matmul_analysis import get_propagate_map
-from bitblas.ops.operator import TransformKind
 
 
 def conv2d_nhwc_ohwi(

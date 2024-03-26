@@ -128,9 +128,7 @@ class TensorCorePolicy(DefaultPolicy):
                     k.var.name: all_steps[k.var.name][rstep_id[k.var.name]] for k in node.raxis
                 }
                 score = 0
-                shape = node.propagate_inputs_on_reduction(
-                    td.get_tile(node), rstep=rstep
-                )
+                shape = node.propagate_inputs_on_reduction(td.get_tile(node), rstep=rstep)
                 input_buffers = node.block_analyzer.get_input_buffers(node.reduction_block)
                 for i, input_buffer in enumerate(input_buffers):
                     score += coalesced_factor(shape[i], input_buffer.shape)

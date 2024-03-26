@@ -1,8 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import numpy as np
 import tvm
-from tvm.script import tir as T
 import bitblas
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.arch import CUDA
@@ -140,7 +138,7 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     policy = DefaultPolicy(func=func, arch=arch)
     try:
         tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
-    except:
+    except Exception:
         tags = None
     if tags:
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)

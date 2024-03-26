@@ -6,10 +6,9 @@ from bitblas.base.roller.arch.cuda import CUDA
 from typing import Any, List, Literal, Optional, Tuple, Union
 from .operator import Operator, TransformKind
 from .impl.matmul_dequantize_impl import select_implementation
-from ..base.utils import get_rasterization_code, tensor_replace_dp4a
+from ..base.utils import tensor_replace_dp4a
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from dataclasses import dataclass
-from bitblas.utils import match_global_kernel
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 from .lop3_permutate import LOP3Permutate, LOP3PermutateConfig
 import logging

@@ -7,8 +7,7 @@ from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from typing import List, Union, Optional, Any, Tuple
 from .operator import Operator, TransformKind
 from .impl.matmul_impl import select_implementation
-from ..base.utils import get_rasterization_code
-from bitblas.utils import match_global_kernel, tensor_replace_dp4a
+from bitblas.utils import tensor_replace_dp4a
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 

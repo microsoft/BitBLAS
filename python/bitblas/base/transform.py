@@ -18,6 +18,9 @@ from tvm.target import Target
 from .schedule_rule import ScheduleRule
 from ..base.analysis import check_func_with_dynamic
 from .utils import fast_tune, fast_tune_with_dynamic_range
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def _is_scheduled(func: tir.PrimFunc) -> bool:

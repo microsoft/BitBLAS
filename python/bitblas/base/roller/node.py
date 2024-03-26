@@ -255,7 +255,7 @@ class PrimFuncNode(Node):
             ]
             results.append(trimmed_shape)
         return results
-    
+
     # Propagate inputs only on reduction block
     def propagate_inputs_on_reduction(self, tile, rstep: Optional[Dict] = None) -> List[List[int]]:
         if rstep is None:
@@ -275,8 +275,7 @@ class PrimFuncNode(Node):
             if len(buffer_shape) > len(propagate_shape):
                 buffer_shape = buffer_shape[-len(propagate_shape):]
             trimmed_shape = [
-                self.extent_wrapper(j)
-                for j in list(map(min, zip(propagate_shape, buffer_shape)))
+                self.extent_wrapper(j) for j in list(map(min, zip(propagate_shape, buffer_shape)))
             ]
             results.append(trimmed_shape)
         return results

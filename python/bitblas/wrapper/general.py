@@ -420,11 +420,8 @@ extern "C" void init() {{
                     call_args,
                 )
             if last_range == num_items - 1:
-                call_str += (
-                    "\t\telse {{\n\t\t\t {}<<<{}, {}, {}>>>({}); \n\t\t}}\n".format(
-                        function_name, grid_str, block_str, smem_str, call_args
-                    )
-                )
+                call_str += ("\t\telse {{\n\t\t\t {}<<<{}, {}, {}>>>({}); \n\t\t}}\n".format(
+                    function_name, grid_str, block_str, smem_str, call_args))
             last_range += 1
             _call_str += call_str
 

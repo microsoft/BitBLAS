@@ -16,11 +16,10 @@ from .analysis import get_root_block, get_reduction_blocks, find_var_from_func
 from bitblas.base.roller.arch import CUDA
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
-from bitblas.base.roller.rasterization import NoRasterization
 import tempfile
 import itertools
 from tvm.ir.supply import GlobalVarSupply
-from bitblas.utils import match_global_kernel, tensor_replace_dp4a
+from bitblas.utils import tensor_replace_dp4a
 import logging
 
 logger = logging.getLogger(__name__)
@@ -467,7 +466,8 @@ def fast_tune_with_dynamic_range(
     func = func.with_attr("opt_shapes", opt_shapes)
 
     if "opt_shapes" not in func.attrs:
-        logger.error("[BitBLAS] The primfunc has no opt_shapes, please set opt_shapes for the primfunc")
+        logger.error(
+            "[BitBLAS] The primfunc has no opt_shapes, please set opt_shapes for the primfunc")
         return None
     else:
         # should be list value
