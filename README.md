@@ -14,6 +14,14 @@ Some of the key features of BitBLAS include:
 
 BitBLAS achieves exceptional performance across a variety of computational patterns. Below are selected results showcasing its capabilities:
 
+- End2End Integration with Quantize Inference Kernel for AutoGPTQ and vLLM.
+
+  <div>
+    <img src="./images/figures/end2end_llama_13b_auto_gptq.png" alt="AutoGPTQ end2end performance of llama13b on A100" style="width: 24%;" />
+    <img src="./images/figures/end2end_llama_70b_auto_gptq.png" alt="AutoGPTQ end2end performance of llama13b on A100" style="width: 24%;" />
+    <img src="./images/figures/end2end_llama_13b_vllm.png" alt="vLLM end2end performance of llama13b on A100" style="width: 24%;" />
+    <img src="./images/figures/end2end_llama_70B_vllm.png" alt="vLLM end2end performance of llama13b on A100" style="width: 24%;" />
+  </div>
 
 - Weight Only Matmul performance on A100
 
@@ -22,8 +30,6 @@ BitBLAS achieves exceptional performance across a variety of computational patte
     <img src="./images/figures/op_benchmark_a100_wq_gemm_e7.png" alt="gemm weight only performance on A100" style="width: 49%;" />
   </div>
 
-
-- End2End Integration with Quantize Inference Kernel for AutoGPTQ and vLLM.
 
 
 - TensorCore FP16/INT8 GEMM Performance Vs. Vendor Library on A100 and RTX4090

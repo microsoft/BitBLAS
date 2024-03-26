@@ -12,6 +12,9 @@ from dataclasses import dataclass
 from bitblas.utils import match_global_kernel
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 from .lop3_permutate import LOP3Permutate, LOP3PermutateConfig
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class OPExecutorCPU:
