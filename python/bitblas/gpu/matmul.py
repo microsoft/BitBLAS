@@ -352,7 +352,7 @@ class Matmul(GPUScheduleRule):
         for i, input_region in enumerate(sch.get(main_block).reads):
             _buffer_name = input_region.buffer.name.replace("_reindex", "").replace("_pad", "")
             if _buffer_name not in config.cached_tensors:
-                print(
+                logger.warning(
                     f"Warning: {_buffer_name} is not in cached_tensors {config.cached_tensors}, skip."
                 )
                 continue

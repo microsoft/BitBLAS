@@ -467,7 +467,7 @@ def fast_tune_with_dynamic_range(
     func = func.with_attr("opt_shapes", opt_shapes)
 
     if "opt_shapes" not in func.attrs:
-        print("[BitBLAS] The primfunc has no opt_shapes, please set opt_shapes for the primfunc")
+        logger.error("[BitBLAS] The primfunc has no opt_shapes, please set opt_shapes for the primfunc")
         return None
     else:
         # should be list value

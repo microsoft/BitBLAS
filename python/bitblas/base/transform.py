@@ -96,7 +96,6 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
         self.whitelist = whitelist
         self.dynamic_range = dynamic_range
         self.temp_dir = tempfile.TemporaryDirectory()
-        print(f"[BitBLAS] Using meta database dir {self.temp_dir}")
         path_workload = osp.join(self.temp_dir.name, "database_workload.json")
         path_tuning_record = osp.join(self.temp_dir.name, "database_tuning_record.json")
         self.cache_meta_database = ms.database.JSONDatabase(
@@ -119,7 +118,6 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
             if isinstance(func, tir.PrimFunc) and not _is_scheduled(func):
                 if not self._in_white_list(g_var.name_hint):
                     continue
-                print(f"[BitBLAS] Start to apply fast tuning for {g_var}")
                 normalize_mod_func_ = tvm._ffi.get_global_func("tvm.meta_schedule.normalize_mod")
                 _normalized_func_mod = normalize_mod_func_(func)
 
@@ -133,7 +131,6 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
                         trace = tuning_record.trace
                         sch = tvm.tir.Schedule(func)
                         trace.apply_to_schedule(sch, remove_postproc=False)
-                        print(f"[BitBLAS] Find Cache for {g_var}")
                         updated_functions[g_var] = sch.mod["main"].with_attr("tir.is_scheduled", 1)
                         continue
 
@@ -208,7 +205,7 @@ def _apply_rules(
         try:
             space = rule.apply(func, target, tunable)
         except Exception:
-            print(f"[BitBLAS][Error] applying rule {rule} failed")
+            logger.debug(f"[BitBLAS][Error] applying rule {rule} failed")
             space = None
         if space is None:
             continue

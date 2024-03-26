@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+import bitblas
 from bitblas_linear import Linear as BitBLASLinear
 import torch
 import time
@@ -96,5 +97,4 @@ def test_profile_performance(m, infeatures, outfeatures, bias):
 
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_profile_performance(1, 16384, 16384, False)
+    bitblas.testing.main()

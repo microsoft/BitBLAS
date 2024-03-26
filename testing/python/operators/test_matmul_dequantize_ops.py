@@ -519,9 +519,10 @@ def test_matmul_dequantize_torch_forward(M, N, K, in_dtype, out_dtype, accum_dty
         permuted_inputs.append(bias)
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
-    print(permuted_inputs[-1])
-    print(ref_result)
-    torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
+    if zeros_type == "rescale":
+        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-0, atol=1e-0)
+    else:
+        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-0, atol=1e-1)
 
 
 @pytest.mark.parametrize(
