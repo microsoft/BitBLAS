@@ -1,8 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-"""Config definition for schedule"""
+"""Hint definition for schedule"""
 from typing import Dict, List, Tuple
-from ..roller import PrimFuncNode
+from . import PrimFuncNode
 import numpy as np
 
 
@@ -144,7 +144,7 @@ class IntrinInfo:
         return self.weight_transform_kind >= 1
 
 
-class Config(object):
+class Hint(object):
     """
     Central configuration class for managing various parameters of computational tasks.
     """
@@ -204,7 +204,7 @@ class Config(object):
             dic["vectorize"] = self.vectorize
         return dic
 
-    def from_dict(self, dic: Dict) -> "Config":
+    def from_dict(self, dic: Dict) -> "Hint":
         self.__init__()
         if "use_tc" in dic:
             self.use_tc = dic["use_tc"]

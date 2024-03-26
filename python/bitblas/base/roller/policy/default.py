@@ -11,7 +11,7 @@ import tvm
 
 from ..arch import TileDevice
 from ..bestfit import BestFit
-from ..config import Config, Stride, TileDict
+from ..hint import Hint, Stride, TileDict
 from .common import coalesced_factor, coalesced_tensor_shape, factorize, get_all_factors
 from ..node import PrimFuncNode
 from ..rasterization import NoRasterization
@@ -31,7 +31,7 @@ class DefaultPolicy:
         self.ordered_nodes = [self.prim_func_node]
         self.output_nodes = [self.prim_func_node]
 
-    def emit_config(self, topk: int) -> List[Config]:
+    def emit_config(self, topk: int) -> List[Hint]:
         base_tile = self.get_base_tile()
         if base_tile is None:
             return []
@@ -613,8 +613,8 @@ class DefaultPolicy:
 
         Returns
         -------
-        Config
-            A Config object containing the assigned block size and other related settings.
+        Hint
+            A Hint object containing the assigned block size and other related settings.
         """
         tile, rsteps = td.get_tile(node), td.get_rstep(node)
         factors = factorize(block_size)
@@ -656,7 +656,7 @@ class DefaultPolicy:
                 assert target_ax
                 reduce_thread[target_ax] *= factor
 
-        codegen_dict = Config()
+        codegen_dict = Hint()
         codegen_dict.block = tile
         codegen_dict.thread = cur_threads
         codegen_dict.rstep = [rsteps[ax.var.name] for ax in node.raxis]

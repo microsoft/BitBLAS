@@ -6,7 +6,7 @@ from typing import Dict, List, Tuple, Optional
 import numpy as np
 
 from ..arch import TileDevice
-from ..config import Config, Stride, TileDict, IntrinInfo
+from ..hint import Hint, Stride, TileDict, IntrinInfo
 from ..node import PrimFuncNode
 from .common import coalesced_factor, factorize, get_all_factors
 from .default import DefaultPolicy
@@ -282,7 +282,7 @@ class TensorCorePolicy(DefaultPolicy):
             dim_order = sorted(score_map.keys(), key=lambda x: score_map[x])
             warp_tile[dim_order[0]] *= factor
 
-        codegen_dict = Config()
+        codegen_dict = Hint()
         codegen_dict.block = tile
         codegen_dict.warp = warp_tile
         codegen_dict.use_tc = True
