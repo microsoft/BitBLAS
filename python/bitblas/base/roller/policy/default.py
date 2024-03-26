@@ -9,7 +9,7 @@ from typing import Iterable, Dict, List, Optional
 import numpy as np
 import tvm
 
-from ..arch import Arch
+from ..arch import TileDevice
 from ..bestfit import BestFit
 from ..config import Config, Stride, TileDict
 from .common import coalesced_factor, coalesced_tensor_shape, factorize, get_all_factors
@@ -23,7 +23,7 @@ class DefaultPolicy:
     minimize memory traffic and maximize parallelism.for Dlight Schedule.
     """
 
-    def __init__(self, func: tvm.tir.PrimFunc, arch: Arch, tags: Optional[Dict] = None) -> None:
+    def __init__(self, func: tvm.tir.PrimFunc, arch: TileDevice, tags: Optional[Dict] = None) -> None:
         if tags is None:
             tags = {}
         self.arch = arch

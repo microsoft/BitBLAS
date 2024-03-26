@@ -11,7 +11,7 @@ if tvm_path not in sys.path:
 
 from . import gpu  # noqa: F401
 from .base import (
-    Arch,  # noqa: F401
+    TileDevice,  # noqa: F401
     fast_tune,  # noqa: F401
     ApplyDefaultSchedule,  # noqa: F401
     ApplyFastTuning,  # noqa: F401

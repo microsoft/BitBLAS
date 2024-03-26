@@ -4,7 +4,7 @@
 from typing import List
 
 
-class Arch:
+class TileDevice:
     """
     Represents the architecture of a computing device, capturing various hardware specifications.
     """

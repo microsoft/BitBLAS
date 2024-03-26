@@ -3,7 +3,7 @@
 
 import tvm
 from tvm.target import Target
-from .arch_base import Arch
+from .arch_base import TileDevice
 from typing import List, Dict
 
 def check_sm_version(arch: str) -> int:
@@ -22,7 +22,7 @@ class TensorInstruction(object):
         # only mantain the shape of M and N
         self.shape: List[int] = shape
 
-class CUDA(Arch):
+class CUDA(TileDevice):
     def __init__(self, target: Target):
         self.target = target
         self.sm_version = check_sm_version(self.target.arch)

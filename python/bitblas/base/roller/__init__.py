@@ -3,4 +3,4 @@
 from .node import PrimFuncNode
 from .config import Config
 from .policy import DefaultPolicy, TensorCorePolicy
-from .arch import Arch, CUDA
+from .arch import TileDevice, CUDA

@@ -3,7 +3,7 @@
 import tvm
 from typing import Optional, List, Dict, Union
 from tvm import IRModule
-from bitblas import Arch
+from bitblas import TileDevice
 from tvm.runtime import ndarray
 from bitblas.utils import match_global_kernel
 import re
@@ -119,7 +119,7 @@ def get_thread_block_information(mod: IRModule):
 
 class CUDASourceWrapper(object):
 
-    def __init__(self, optimized_mod: IRModule, source: str, arch: Arch):
+    def __init__(self, optimized_mod: IRModule, source: str, arch: TileDevice):
         self.mod = optimized_mod
         self.arch = arch
         self.source = source
@@ -302,7 +302,7 @@ class CUDASourceWrapper(object):
 
 class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
 
-    def __init__(self, optimized_mod: IRModule, source: str, arch: Arch):
+    def __init__(self, optimized_mod: IRModule, source: str, arch: TileDevice):
         super().__init__(optimized_mod, source, arch)
 
     def get_cuda_init_func(self):

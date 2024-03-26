@@ -5,7 +5,7 @@ import tvm
 from typing import Dict, List, Tuple, Optional
 import numpy as np
 
-from ..arch import Arch
+from ..arch import TileDevice
 from ..config import Config, Stride, TileDict, IntrinInfo
 from ..node import PrimFuncNode
 from .common import coalesced_factor, factorize, get_all_factors
@@ -15,7 +15,7 @@ from ..rasterization import NoRasterization, Rasterization2DColumn
 
 class TensorCorePolicy(DefaultPolicy):
 
-    def __init__(self, func: tvm.tir.PrimFunc, arch: Arch, tags: Optional[Dict] = None) -> None:
+    def __init__(self, func: tvm.tir.PrimFunc, arch: TileDevice, tags: Optional[Dict] = None) -> None:
         super().__init__(func, arch, tags)
         # this is the trick for wmma.
         # However, for int8 mma, the wmma_k should be 32.
