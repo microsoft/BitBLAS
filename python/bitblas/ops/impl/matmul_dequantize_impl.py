@@ -10,6 +10,7 @@ from bitblas.quantization import (
     _tir_packed_to_signed_convert,
     _tir_packed_to_unsigned_convert,
     _tir_u32_to_f4_to_f16,
+    _tir_packed_to_unsigned_convert_with_zeros,
 )
 
 
@@ -43,25 +44,55 @@ def matmul_nt_dequantize_b(
     LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
     Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
     Zeros = te.placeholder((N, K // group_size), name="Zeros", dtype=in_dtype)
+    QZeros = te.placeholder(
+        ((K // group_size),  N // storage_nbit * bit), name="QZeros", dtype=storage_dtype
+    )
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
 
+    def qzeros_dequantize(k, n):
+        return _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+            bit,
+            QZeros[k, n // n_float_per_elem],
+            n % n_float_per_elem,
+            dtype=storage_dtype,
+        )
+
+    Dequantize_qzeros = te.compute(
+        (K // group_size, N),
+        qzeros_dequantize,
+        name="Dequantize_zeros",
+    )
+
     def decode_func(n, k):
-        if source_format == "uint":
-            w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
-                bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
-        elif source_format == "int":
-            w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
-                bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
-        elif source_format == "fp":
-            w = _tir_u32_to_f4_to_f16(
-                bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
-        elif source_format == "af":
-            w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+        if with_zeros and zeros_type == "quantized":
+            w = _tir_packed_to_unsigned_convert_with_zeros(storage_type, storage_nbit)(
                 bit,
                 B[n, k // n_float_per_elem],
                 k % n_float_per_elem,
-                dtype="int32",  # assume the index data type is int32
-            )]
+                Dequantize_qzeros[k // group_size, n],
+                dtype=in_dtype,
+            )
+        elif source_format == "uint":
+            w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype
+            )
+        elif source_format == "int":
+            w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
+                bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype
+            )
+        elif source_format == "fp":
+            w = _tir_u32_to_f4_to_f16(
+                bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype
+            )
+        elif source_format == "af":
+            w = LUT[
+                _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    bit,
+                    B[n, k // n_float_per_elem],
+                    k % n_float_per_elem,
+                    dtype="int32",  # assume the index data type is int32
+                )
+            ]
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
 
@@ -75,6 +106,8 @@ def matmul_nt_dequantize_b(
             w = (w - Zeros[n, k // group_size]) * Scale[n, k // group_size]
         elif zeros_type == "rescale":
             w = w * Scale[n, k // group_size] - Zeros[n, k // group_size]
+        elif zeros_type == "quantized":
+            w = w * Scale[n, k // group_size]
         else:
             raise ValueError("Unsupported zeros_type: {}".format(zeros_type))
 
@@ -86,7 +119,8 @@ def matmul_nt_dequantize_b(
     C = te.compute(
         (M, N),
         lambda i, j: te.sum(
-            A[i, k].astype(accum_dtype) * B_decode[j, k].astype(accum_dtype), axis=k),
+            A[i, k].astype(accum_dtype) * B_decode[j, k].astype(accum_dtype), axis=k
+        ),
         name="C",
     )
     D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
@@ -97,7 +131,10 @@ def matmul_nt_dequantize_b(
     if with_scaling:
         args.append(Scale)
     if with_zeros:
-        args.append(Zeros)
+        if zeros_type == "quantized":
+            args.append(QZeros)
+        else:
+            args.append(Zeros)
     if with_bias:
         E = te.compute((M, N), lambda i, j: D[i, j] + Bias[j], name="E")
         last_output = E
@@ -155,11 +192,15 @@ def matmul_nt_dequantize_b_propagate_b(
     target_dtype = DataType(in_dtype)
     scaling_factor = 1
     if bit > 0 and bit < target_dtype.bits:
-        scaling_factor = ((target_dtype.bits // bit) * DataType(storage_dtype).bits //
-                          target_dtype.bits)
+        scaling_factor = (
+            (target_dtype.bits // bit)
+            * DataType(storage_dtype).bits
+            // target_dtype.bits
+        )
         initial_indices = inverse_indexmap.initial_indices
-        scaling_final_indices = inverse_indexmap.map_indices(initial_indices[:-1] +
-                                                             [initial_indices[-1] * scaling_factor])
+        scaling_final_indices = inverse_indexmap.map_indices(
+            initial_indices[:-1] + [initial_indices[-1] * scaling_factor]
+        )
         scaling_final_indices = scaling_final_indices[:-1] + [
             scaling_final_indices[-1] // scaling_factor
         ]
@@ -176,7 +217,9 @@ def matmul_nt_dequantize_b_propagate_b(
         group_size = K
     qr = r * bit // storage_nbit
     A = te.placeholder((M, K), name="A", dtype=in_dtype)
-    B = te.placeholder((N // l, (K // scaling_factor) // qr, l, qr), name="B", dtype=storage_dtype)
+    B = te.placeholder(
+        (N // l, (K // scaling_factor) // qr, l, qr), name="B", dtype=storage_dtype
+    )
     LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
     Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
     Zeros = te.placeholder((N, K // group_size), name="Zeros", dtype=in_dtype)
@@ -219,12 +262,14 @@ def matmul_nt_dequantize_b_propagate_b(
                 dtype=in_dtype,
             )
         elif source_format == "af":
-            w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
-                bit,
-                B_reindex[n, k // n_float_per_elem],
-                k % n_float_per_elem,
-                dtype="int32",  # assume the index data type is int32
-            )]
+            w = LUT[
+                _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    bit,
+                    B_reindex[n, k // n_float_per_elem],
+                    k % n_float_per_elem,
+                    dtype="int32",  # assume the index data type is int32
+                )
+            ]
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
 
@@ -250,7 +295,8 @@ def matmul_nt_dequantize_b_propagate_b(
     C = te.compute(
         (M, N),
         lambda i, j: te.sum(
-            A[i, k].astype(accum_dtype) * B_decode[j, k].astype(accum_dtype), axis=k),
+            A[i, k].astype(accum_dtype) * B_decode[j, k].astype(accum_dtype), axis=k
+        ),
         name="C",
     )
     D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
@@ -316,7 +362,9 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     l = r = 16  # noqa: E741
     if in_dtype == "int8":
         l, r = 16, 32  # noqa: E741
-    _, inversed_index_map = get_propagate_map(trans=False, dtype=in_dtype, matrix_name="A")
+    _, inversed_index_map = get_propagate_map(
+        trans=False, dtype=in_dtype, matrix_name="A"
+    )
     A = te.placeholder((M // l, K // r, l, r), name="A", dtype=in_dtype)
 
     def fcompute(i, j):
@@ -333,15 +381,21 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
         name="A_reindex",
     )
 
-    _, inversed_index_map = get_propagate_map(trans=True, dtype=in_dtype, matrix_name="B")
+    _, inversed_index_map = get_propagate_map(
+        trans=True, dtype=in_dtype, matrix_name="B"
+    )
     target_dtype = DataType(in_dtype)
     scaling_factor = 1
     if bit > 0 and bit < target_dtype.bits:
-        scaling_factor = ((target_dtype.bits // bit) * DataType(storage_dtype).bits //
-                          target_dtype.bits)
+        scaling_factor = (
+            (target_dtype.bits // bit)
+            * DataType(storage_dtype).bits
+            // target_dtype.bits
+        )
         initial_indices = inversed_index_map.initial_indices
         scaling_final_indices = inversed_index_map.map_indices(
-            initial_indices[:-1] + [initial_indices[-1] * scaling_factor])
+            initial_indices[:-1] + [initial_indices[-1] * scaling_factor]
+        )
         scaling_final_indices = scaling_final_indices[:-1] + [
             scaling_final_indices[-1] // scaling_factor
         ]
@@ -357,7 +411,9 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     if group_size == -1:
         group_size = K
     qr = r * bit // storage_nbit
-    B = te.placeholder((N // l, (K // scaling_factor) // qr, l, qr), name="B", dtype=storage_dtype)
+    B = te.placeholder(
+        (N // l, (K // scaling_factor) // qr, l, qr), name="B", dtype=storage_dtype
+    )
     LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
     Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
@@ -399,12 +455,14 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
                 dtype=in_dtype,
             )
         elif source_format == "af":
-            w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
-                bit,
-                B_reindex[n, k // n_float_per_elem],
-                k % n_float_per_elem,
-                dtype="int32",  # assume the index data type is int32
-            )]
+            w = LUT[
+                _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    bit,
+                    B_reindex[n, k // n_float_per_elem],
+                    k % n_float_per_elem,
+                    dtype="int32",  # assume the index data type is int32
+                )
+            ]
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
 

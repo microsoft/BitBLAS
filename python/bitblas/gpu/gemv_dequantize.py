@@ -146,6 +146,21 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         sch.vectorize(block_local_a_v)
         block_local_b_v = sch.get_loops(block_shared_local_B)[-1]
         sch.vectorize(block_local_b_v)
+
+        if "with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]:
+            block_local_scales = sch.cache_read(
+                block_decode_B, get_idx(weight_decode_info) + 1, "local"
+            )
+            sch.compute_at(block_local_scales, tx, preserve_unit_loops=True)
+            auto_inline_producers(sch, block_local_scales)
+
+        if "with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]:
+            block_local_zeros = sch.cache_read(
+                block_decode_B, get_idx(weight_decode_info) + 2, "local"
+            )
+            sch.compute_at(block_local_zeros, tx, preserve_unit_loops=True)
+            auto_inline_producers(sch, block_local_zeros)
+
         if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):
             source_bit = weight_decode_info["source_format"]["bits"]
             out_dtype = weight_decode_info["target_format"]

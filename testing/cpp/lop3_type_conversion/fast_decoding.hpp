@@ -105,8 +105,8 @@ Kind 2: quantized
 # Notice: only support "original" and "rescale" now
 zeros_type: Literal["original", "rescale", "quantized"] = "original"
 */
-template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false, int ZerosKind = 1, typename T3 = T2>
-__device__ void decode_i4b_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T2 *scale = nullptr, const T3 *zeros = nullptr)
+template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false, int ZerosKind = 1, typename T3=T2, typename T4=T3>
+__device__ void decode_i4b_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T3 *scale = nullptr, const T4 *zeros = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -142,8 +142,8 @@ __device__ void decode_i4u_to_f16(T1 *_i4u, T2 *B_local_decode, const int N = 8)
     decode_i4b_to_f16<T1, T2, false>(_i4u, B_local_decode, N);
 }
 
-template <typename T1, typename T2, bool isSigned = false, bool withScaling = false>
-__device__ void decode_i4b_to_f16_scale(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T2 *scale = nullptr)
+template <typename T1, typename T2, typename T3, bool isSigned = false, bool withScaling = false>
+__device__ void decode_i4b_to_f16_scale(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T3 *scale = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -153,7 +153,7 @@ __device__ void decode_i4b_to_f16_scale(T1 *_i4s, T2 *B_local_decode, const int 
     // Minus 7 to scale the value to signed
     static constexpr uint MEDIAN_NUM = isSigned ? 0x64076407 : 0x64006400;
     uint const i4s = *reinterpret_cast<uint *>(_i4s);
-    T2 const scale_r = *scale;
+    T3 const scale_r = *scale;
     uint const packed_scales = __pack_half2(scale_r, scale_r);
 
 #pragma unroll
@@ -169,20 +169,20 @@ __device__ void decode_i4b_to_f16_scale(T1 *_i4s, T2 *B_local_decode, const int 
     }
 }
 
-template <typename T1, typename T2>
-__device__ void decode_i4s_to_f16_scale(T1 *_i4s, T2 *B_local_decode, half *scale = nullptr, const int N = 8)
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i4s_to_f16_scale(T1 *_i4s, T2 *B_local_decode, T3 *scale = nullptr, const int N = 8)
 {
-    decode_i4b_to_f16_scale<T1, T2, true, true>(_i4s, B_local_decode, N, scale);
+    decode_i4b_to_f16_scale<T1, T2, T3, true, true>(_i4s, B_local_decode, N, scale);
 }
 
-template <typename T1, typename T2>
-__device__ void decode_i4u_to_f16_scale(T1 *_i4u, T2 *B_local_decode, half *scale = nullptr, const int N = 8)
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i4u_to_f16_scale(T1 *_i4u, T2 *B_local_decode, T3 *scale = nullptr, const int N = 8)
 {
-    decode_i4b_to_f16_scale<T1, T2, false, true>(_i4u, B_local_decode, N, scale);
+    decode_i4b_to_f16_scale<T1, T2, T3, false, true>(_i4u, B_local_decode, N, scale);
 }
 
-template <typename T1, typename T2, typename T3, bool isSigned = false>
-__device__ void decode_i4b_to_f16_zeros_original(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T2 *scale = nullptr, const T3 *zeros = nullptr)
+template <typename T1, typename T2, typename T3, typename T4, bool isSigned = false>
+__device__ void decode_i4b_to_f16_zeros_original(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T3 *scale = nullptr, const T4 *zeros = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -192,10 +192,10 @@ __device__ void decode_i4b_to_f16_zeros_original(T1 *_i4s, T2 *B_local_decode, c
     // Minus 7 to scale the value to signed
     static constexpr uint MEDIAN_NUM = isSigned ? 0x64076407 : 0x64006400;
     uint const i4s = *reinterpret_cast<uint *>(_i4s);
-    T2 const scale_r = *scale;
+    T3 const scale_r = *scale;
     uint const packed_scales = __pack_half2(scale_r, scale_r);
     // input zeros maybe int32(qzeros) or half format
-    T3 const zero_r = *zeros;
+    T4 const zero_r = *zeros;
     uint const packed_zeros = __pack_half2(zero_r, zero_r);
 
 
@@ -215,14 +215,14 @@ __device__ void decode_i4b_to_f16_zeros_original(T1 *_i4s, T2 *B_local_decode, c
     }
 }
 
-template <typename T1, typename T2, typename T3>
-__device__ void decode_i4u_to_f16_scale_zeros_original(T1 *_i4u, T2 *B_local_decode, T2 *scale = nullptr, T3 *zeros = nullptr, const int N = 8)
+template <typename T1, typename T2, typename T3, typename T4>
+__device__ void decode_i4u_to_f16_scale_zeros_original(T1 *_i4u, T2 *B_local_decode, T3 *scale = nullptr, T4 *zeros = nullptr, const int N = 8)
 {
-    decode_i4b_to_f16_zeros_original<T1, T2, T3, false>(_i4u, B_local_decode, N, scale, zeros);
+    decode_i4b_to_f16_zeros_original<T1, T2, T3, T4, false>(_i4u, B_local_decode, N, scale, zeros);
 }
 
-template <typename T1, typename T2, bool isSigned = false, typename T3 = T2>
-__device__ void decode_i4b_to_f16_scale_zeros_rescale(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T2 *scale = nullptr, const T3 *zeros = nullptr)
+template <typename T1, typename T2, typename T3, typename T4, bool isSigned = false>
+__device__ void decode_i4b_to_f16_scale_zeros_rescale(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T3 *scale = nullptr, const T4 *zeros = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -232,9 +232,9 @@ __device__ void decode_i4b_to_f16_scale_zeros_rescale(T1 *_i4s, T2 *B_local_deco
     // Minus 7 to scale the value to signed
     static constexpr uint MEDIAN_NUM = isSigned ? 0x64076407 : 0x64006400;
     uint const i4s = *reinterpret_cast<uint *>(_i4s);
-    T2 const scale_r = *scale;
+    T3 const scale_r = *scale;
     uint const packed_scales = __pack_half2(scale_r, scale_r);
-    T3 const zero_r = *zeros;
+    T4 const zero_r = *zeros;
     uint const packed_zeros = 0x80008000 | __pack_half2(zero_r, zero_r);
 
 #pragma unroll
@@ -252,14 +252,14 @@ __device__ void decode_i4b_to_f16_scale_zeros_rescale(T1 *_i4s, T2 *B_local_deco
     }
 }
 
-template <typename T1, typename T2>
-__device__ void decode_i4u_to_f16_scale_zeros_rescale(T1 *_i4u, T2 *B_local_decode, T2 *scale = nullptr, T2 *zeros = nullptr, const int N = 8)
+template <typename T1, typename T2, typename T3, typename T4>
+__device__ void decode_i4u_to_f16_scale_zeros_rescale(T1 *_i4u, T2 *B_local_decode, T3 *scale = nullptr, T4 *zeros = nullptr, const int N = 8)
 {
-    decode_i4b_to_f16_scale_zeros_rescale<T1, T2, false>(_i4u, B_local_decode, N, scale, zeros);
+    decode_i4b_to_f16_scale_zeros_rescale<T1, T2, T3, T4, false>(_i4u, B_local_decode, N, scale, zeros);
 }
 
-template <typename T1, typename T2, bool isSigned = false, typename T3 = T2>
-__device__ void decode_i4b_to_f16_scale_zeros_quantized(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T2 *scale = nullptr, const T3 *zeros = nullptr)
+template <typename T1, typename T2, typename T3, typename T4, bool isSigned = false>
+__device__ void decode_i4b_to_f16_scale_zeros_quantized(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T3 *scale = nullptr, const T4 *zeros = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -268,10 +268,10 @@ __device__ void decode_i4b_to_f16_scale_zeros_quantized(T1 *_i4s, T2 *B_local_de
     static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
     // Minus 7 to scale the value to signed
     uint const i4s = *reinterpret_cast<uint *>(_i4s);
-    T2 const scale_r = *scale;
+    T3 const scale_r = *scale;
     uint const packed_scales = __pack_half2(scale_r, scale_r);
     // input zeros maybe int32(qzeros) or half format
-    T3 const zero_r = *zeros;
+    T4 const zero_r = *zeros;
     uint median_num = ((0xe400 | zero_r) << 16) | (0xe400 | zero_r);
 
 #pragma unroll
@@ -289,10 +289,10 @@ __device__ void decode_i4b_to_f16_scale_zeros_quantized(T1 *_i4s, T2 *B_local_de
     }
 }
 
-template <typename storage_dtype, typename target_dtype, typename zero_dtype>
-__device__ void decode_i4u_to_f16_scale_zeros_quantized(storage_dtype *_i4u, target_dtype *B_local_decode, target_dtype *scale = nullptr, zero_dtype *zeros = nullptr, const int N = 8)
+template <typename storage_dtype, typename target_dtype, typename scale_dtype, typename zero_dtype>
+__device__ void decode_i4u_to_f16_scale_zeros_quantized(storage_dtype *_i4u, target_dtype *B_local_decode, scale_dtype *scale = nullptr, zero_dtype *zeros = nullptr, const int N = 8)
 {
-    decode_i4b_to_f16_scale_zeros_quantized<storage_dtype, target_dtype, false, zero_dtype>(_i4u, B_local_decode, N, scale, zeros);
+    decode_i4b_to_f16_scale_zeros_quantized<storage_dtype, target_dtype, scale_dtype, zero_dtype, false>(_i4u, B_local_decode, N, scale, zeros);
 }
 
 /*

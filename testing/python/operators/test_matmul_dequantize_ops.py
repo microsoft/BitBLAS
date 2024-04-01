@@ -640,6 +640,166 @@ def test_matmul_dequantize_propgate_comparison(M, N, K, in_dtype, out_dtype, acc
     torch.testing.assert_close(ref_result, propagated_result, rtol=1e-2, atol=1e-2)
 
 
+@pytest.mark.parametrize(
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout,zeros_type",
+    [
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False,
+         False, False, False, "nt", "rescale", "quantized"),
+        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False,
+         False, False, False, "nt", "rescale", "original"),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False,
+         False, False, False, "nt", "rescale", "quantized"),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False,
+         False, False, False, "nt", "rescale", "original"),
+
+    ],
+)
+def test_matmul_dequantize_diff_zero_types(M, N, K, in_dtype, out_dtype, accum_dtype, bit,
+                                         storage_dtype, source_format, with_scaling, with_zeros,
+                                         group_size, fast_decoding, with_bias, propagate_a,
+                                         propagate_b, layout, source_zeros_type, target_zeros_type):
+    import torch
+    torch.random.manual_seed(0)
+    import numpy as np
+    from bitblas.quantization.utils import general_compress
+
+    source_quantized_matmul_config = MatmulWeightOnlyDequantizeConfig(
+        M=M,
+        N=N,
+        K=K,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        bit=bit,
+        storage_dtype=storage_dtype,
+        source_format=source_format,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        group_size=group_size,
+        fast_decoding=fast_decoding,
+        with_bias=with_bias,
+        propagate_a=propagate_a,
+        propagate_b=propagate_b,
+        layout=layout,
+        zeros_type=source_zeros_type)
+    source_quantized_matmul = MatmulWeightOnlyDequantize(
+        config=source_quantized_matmul_config,
+        target=target,
+    )
+    if not isinstance(M, int):
+        M = 32
+    source_quantized_matmul.hardware_aware_finetune(topk=20)
+    input_shape = (M, K)
+    weight_shape = (N, K) if layout == "nt" else (K, N)
+    output_shape = (M, N)
+    inputs = []
+    inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda() - 0.5)
+    maxq = 2**(bit - 1) - 1
+    zeros = maxq
+    if source_format == "uint":
+        inputs.append(torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda())
+    elif source_format == "int":
+        inputs.append(torch.randint(-maxq, maxq, weight_shape, dtype=torch.int8).cuda())
+    else:
+        raise NotImplementedError
+
+    inputs.append(torch.rand(output_shape, dtype=torch.float16).cuda())
+
+    intweight = inputs[1]
+    intweight = intweight.cpu().numpy().astype(np.int8)
+    if source_format == "int":
+        intweight = intweight + maxq
+    if with_zeros:
+        inputs[1] = inputs[1] - zeros
+    bias = torch.rand((output_shape[-1],), dtype=torch.float16).cuda()
+    qw_np = general_compress(intweight, source_bits=bit, storage_dtype=np.int8)
+    qw_torch = torch.from_numpy(qw_np).cuda()
+    permuted_inputs = []
+    if source_quantized_matmul.input_transform is not None:
+        permuted_inputs.append(source_quantized_matmul.input_transform(qw_torch.cpu()).cuda())
+    else:
+        permuted_inputs.append(inputs[0])
+    if source_quantized_matmul.weight_transform is not None:
+        permuted_inputs.append(source_quantized_matmul.weight_transform(qw_torch.cpu()).cuda())
+    else:
+        permuted_inputs.append(qw_torch)
+    if with_scaling:
+        if group_size == -1:
+            group_size = K
+        permuted_inputs.append(torch.rand([N, K // group_size], dtype=torch.float16).cuda())
+    if with_zeros:
+        if source_zeros_type == "original":
+            permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
+        elif source_zeros_type == "rescale":
+            original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros
+            scaled_zeros = original_zeros * permuted_inputs[-1]
+            permuted_inputs.append(scaled_zeros)
+        elif source_zeros_type == "quantized":
+            original_zeros = torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros
+            qzeros = general_compress(original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
+            permuted_inputs.append(torch.from_numpy(qzeros).cuda())
+        else:
+            raise NotImplementedError
+            
+    if with_bias:
+        permuted_inputs.append(bias)
+    permuted_inputs.append(inputs[2])
+    source_quantized_matmul(*permuted_inputs)
+    ref_result = permuted_inputs[-1]
+    target_quantized_matmul_config = MatmulWeightOnlyDequantizeConfig(
+        M=M,
+        N=N,
+        K=K,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        bit=bit,
+        storage_dtype=storage_dtype,
+        source_format=source_format,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        group_size=group_size,
+        fast_decoding=fast_decoding,
+        with_bias=with_bias,
+        propagate_a=propagate_a,
+        propagate_b=propagate_b,
+        layout=layout,
+        zeros_type=target_zeros_type)
+    target_quantized_matmul = MatmulWeightOnlyDequantize(
+        config=target_quantized_matmul_config,
+        target=target,
+    )
+    if not isinstance(M, int):
+        M = 32
+    target_quantized_matmul.hardware_aware_finetune(topk=20)
+    input_shape = (M, K)
+    weight_shape = (N, K) if layout == "nt" else (K, N)
+    output_shape = (M, N)
+
+    target_inputs = []
+    target_inputs.append(permuted_inputs[0])
+    target_inputs.append(permuted_inputs[1])
+
+    if with_scaling:
+        target_inputs.append(permuted_inputs[2])
+    if with_zeros:
+        if target_zeros_type == "original":
+            target_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
+        elif target_zeros_type == "rescale":
+            original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros
+            scaled_zeros = original_zeros * target_inputs[-1]
+            target_inputs.append(scaled_zeros)
+        elif target_zeros_type == "quantized":
+            original_zeros = torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros
+            qzeros = general_compress(original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
+            target_inputs.append(torch.from_numpy(qzeros).cuda())
+        else:
+            raise NotImplementedError
+    if with_bias:
+        target_inputs.append(bias)
+    target_inputs.append(torch.zeros_like(inputs[2]))
+    target_quantized_matmul(*target_inputs)
+    torch.testing.assert_close(target_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
 # fmt: on
 
 if __name__ == "__main__":

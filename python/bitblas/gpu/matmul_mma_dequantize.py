@@ -19,6 +19,7 @@ from .matmul_analysis import (
     get_propagate_map,
     layout_propagate_chain,
     find_last_producer_from_buffer,
+    _collect_producers,
 )
 
 
@@ -355,7 +356,9 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             block_shared_local = sch.cache_read(block_shared, 0, "local")
             # global -> dequantzed_local -> shared
             # step2. inline to local block
-            auto_inline_producers(sch, block_shared_local)
+            weight_dequantize_block = sch.get_block(weight_decode_info["decode_block"])
+            weight_producers = _collect_producers(sch, weight_dequantize_block)
+            auto_inline_producers(sch, block_shared_local, weight_producers)
 
             # get target dequantize buffer's idx
             def get_idx():
@@ -374,6 +377,32 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(block_shared_local_local, B_shared_vi, preserve_unit_loops=True)
 
             dequantize_block_local = block_shared_local
+            if (
+                "with_scaling" in weight_decode_info
+                and weight_decode_info["with_scaling"]
+            ):
+                block_local_scales = sch.cache_read(
+                    dequantize_block_local, b_idx + 1, "local"
+                )
+                sch.compute_at(
+                    block_local_scales, B_shared_vi, preserve_unit_loops=True
+                )
+                # pop the scale block
+                auto_inline_producers(sch, block_local_scales)
+                #
+
+            if "with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]:
+                block_local_zeros = sch.cache_read(
+                    dequantize_block_local, b_idx + 2, "local"
+                )
+                sch.compute_at(block_local_zeros, B_shared_vi, preserve_unit_loops=True)
+                auto_inline_producers(sch, block_local_zeros)
+
+            for producer in weight_producers:
+                try:
+                    auto_inline_producers(sch, producer)
+                except Exception:
+                    pass
             # fast type conversion
             if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):
                 source_bit = weight_decode_info["source_format"]["bits"]
@@ -876,8 +905,10 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 sch.get_loops(block_shared)[-1], factors=[None, 1, decode_factor])
             block_shared_local = sch.cache_read(block_shared, 0, "local")
             # global -> dequantzed_local -> shared
-            # step2. inline to local block
-            auto_inline_producers(sch, block_shared_local)
+            # step2. inline to local block, should skip qzeros
+            weight_dequantize_block = sch.get_block(weight_decode_info["decode_block"])
+            weight_producers = _collect_producers(sch, weight_dequantize_block)
+            auto_inline_producers(sch, block_shared_local, weight_producers)
 
             # get target dequantize buffer's idx
             def get_idx():
@@ -898,6 +929,27 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(block_shared_local_local, B_shared_vi, preserve_unit_loops=True)
 
             dequantize_block_local = block_shared_local
+            if "with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]:
+                block_local_scales = sch.cache_read(
+                    dequantize_block_local, b_idx + 1, "local"
+                )
+                sch.compute_at(block_local_scales, B_shared_vi, preserve_unit_loops=True)
+                # pop the scale block
+                auto_inline_producers(sch, block_local_scales)
+                #
+
+            if "with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]:
+                block_local_zeros = sch.cache_read(
+                    dequantize_block_local, b_idx + 2, "local"
+                )
+                sch.compute_at(block_local_zeros, B_shared_vi, preserve_unit_loops=True)
+                auto_inline_producers(sch, block_local_zeros)
+
+            for producer in weight_producers:
+                try:
+                    auto_inline_producers(sch, producer)
+                except Exception:
+                    pass
             # fast type conversion
             if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):
                 source_bit = weight_decode_info["source_format"]["bits"]
@@ -909,6 +961,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     source_bit=source_bit,
                     with_scaling=weight_decode_info["with_scaling"],
                     with_zeros=weight_decode_info["with_zeros"],
+                    zeros_type=weight_decode_info["zeros_type"],
                 )
                 sch.tensorize(
                     sch.get_loops(dequantize_block_local)[-1],

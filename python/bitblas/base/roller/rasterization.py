@@ -79,8 +79,10 @@ __device__ __inline__ dim3 rasterization2DColumn(const int panel_width) {
 }
     """
 
-    def get_code(self) -> List[str]:
+    def get_code(self, panel_width:int = None) -> List[str]:
+        if panel_width is None:
+            panel_width = self.panel_width_
         return [
             self.get_device_function(),
-            "const dim3 blockIdx = rasterization2DColumn({});\n".format(self.panel_width_),
+            "const dim3 blockIdx = rasterization2DColumn({});\n".format(panel_width),
         ]

@@ -66,10 +66,10 @@ class MatmulWeightOnlyDequantizeConfig:
     # documents for zeros_type:
     # original: target = (dequantize_weight - zero_point) * scale
     # rescale: target = dequantize_weight * scale - zero_point
-    # quantzied: target = (dequantize_weight - dequantize_zeros) * scale
+    # quantized: target = (dequantize_weight - dequantize_zeros) * scale
     # Notice: only support "original" and "rescale" now
     # The auto-gptq framework prefer "original" for alignment with cuda.
-    zeros_type: Literal["original", "rescale", "quantzied"] = "original"
+    zeros_type: Literal["original", "rescale", "quantized"] = "original"
 
     def __post_init__(self):
         # set M to tuple if it is list
