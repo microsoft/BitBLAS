@@ -36,7 +36,7 @@ parser.add_argument(
 parser.add_argument(
     "--benchmark_sets",
     nargs="+",
-    default=["llm_shape_fp16xint4_propagate_b_with_scaling_zeros"],
+    default=["llm_shape_fp16xint4_with_scaling_zeros_original_g128", "llm_shape_fp16xint4_with_scaling_zeros_rescale_g128", "llm_shape_fp16xint4_with_scaling_zeros_quantized_g128"],
     help="List of benchmark sets, e.g., llm_int8xint1_bs4096",
 )
 
@@ -114,6 +114,199 @@ with_zeros = False
 zeros_type = "original"
 # fmt:off
 llm_shape_fp16xint4_with_scaling = [
+    (matmul_nt_dequantize_b, (1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (16, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (32, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (64, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (128, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (256, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (512, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b,
+     (16384, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", with_scaling,
+      with_zeros, group_size, True, False, zeros_type), Matmul),
+]
+
+group_size = -1
+with_scaling = True
+with_zeros = True
+zeros_type = "original"
+# fmt:off
+llm_shape_fp16xint4_with_scaling_zeros_original = [
+    (matmul_nt_dequantize_b, (1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (16, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (32, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (64, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (128, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (256, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (512, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b,
+     (16384, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", with_scaling,
+      with_zeros, group_size, True, False, zeros_type), Matmul),
+]
+
+group_size = -1
+with_scaling = True
+with_zeros = True
+zeros_type = "rescale"
+# fmt:off
+llm_shape_fp16xint4_with_scaling_zeros_rescale = [
+    (matmul_nt_dequantize_b, (1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (16, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (32, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (64, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (128, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (256, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (512, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b,
+     (16384, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", with_scaling,
+      with_zeros, group_size, True, False, zeros_type), Matmul),
+]
+
+group_size = -1
+with_scaling = True
+with_zeros = True
+zeros_type = "quantized"
+# fmt:off
+llm_shape_fp16xint4_with_scaling_zeros_quantized = [
+    (matmul_nt_dequantize_b, (1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (16, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (32, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (64, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (128, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (256, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (512, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b,
+     (16384, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", with_scaling,
+      with_zeros, group_size, True, False, zeros_type), Matmul),
+]
+
+
+group_size = 128
+with_scaling = True
+with_zeros = True
+zeros_type = "original"
+# fmt:off
+llm_shape_fp16xint4_with_scaling_zeros_original_g128 = [
+    (matmul_nt_dequantize_b, (1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (16, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (32, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (64, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (128, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (256, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (512, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b,
+     (16384, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", with_scaling,
+      with_zeros, group_size, True, False, zeros_type), Matmul),
+]
+
+group_size = 128
+with_scaling = True
+with_zeros = True
+zeros_type = "rescale"
+# fmt:off
+llm_shape_fp16xint4_with_scaling_zeros_rescale_g128 = [
+    (matmul_nt_dequantize_b, (1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (16, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (32, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (64, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (128, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (256, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b, (512, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
+                              with_scaling, with_zeros, group_size, True, False, zeros_type),
+     Matmul),
+    (matmul_nt_dequantize_b,
+     (16384, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", with_scaling,
+      with_zeros, group_size, True, False, zeros_type), Matmul),
+]
+
+group_size = 128
+with_scaling = True
+with_zeros = True
+zeros_type = "quantized"
+# fmt:off
+llm_shape_fp16xint4_with_scaling_zeros_quantized_g128 = [
     (matmul_nt_dequantize_b, (1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
                               with_scaling, with_zeros, group_size, True, False, zeros_type),
      Matmul),
