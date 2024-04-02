@@ -9,7 +9,7 @@ Some of the key features of BitBLAS include:
   - Support with dynamic symbolic throuth tvm unity -> generate source code with dynamic shape.
   - BitBLAS first proposed int8xint1 gemv/gemm with 10x/2x speedup over float16xfloat16 on A100, please checkout [op_benchmark_a100_int1_scaling](images/figures/op_benchmark_a100_int1_scaling.png) for detailed input scaling benchmark results.
 
-## Integration Example of FasterTransformers with BitBLAS
+## Integration Example of FasterTransformer with BitBLAS
 ![FasterTransformer Integration](images/gif/FasterTransformer.gif)
 
 
