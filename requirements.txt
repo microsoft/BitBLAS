@@ -10,5 +10,5 @@ pytest>=6.2.4
 pytest_xdist>=2.2.1
 PyYAML
 tqdm>=4.62.3
-typing_extensions>=4.10.0    
-xgboost>=1.7.1    
+typing_extensions>=4.10.0
+xgboost>=1.7.1
