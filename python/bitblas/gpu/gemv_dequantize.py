@@ -27,7 +27,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         config,
     ):
         sch = tir.Schedule(func)
-        from .intrin.lop3 import get_lop3_intrin_group
+        from .intrin import get_lop3_intrin_group
 
         dequantize_info = func.attrs["dequantize_info"]
 

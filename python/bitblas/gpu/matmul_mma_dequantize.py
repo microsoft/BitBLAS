@@ -84,7 +84,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         """
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
             get_mma_intrin_group,)
-        from .intrin.lop3 import get_lop3_intrin_group
+        from .intrin import get_lop3_intrin_group
 
         import_source: List[str] = []
 
@@ -577,7 +577,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         """
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
             get_mma_intrin_group,)
-        from .intrin.lop3 import get_lop3_intrin_group
+        from .intrin import get_lop3_intrin_group
 
         import_source: List[str] = []
 
