@@ -49,20 +49,30 @@ class MatmulConfig:
     out_dtype: str = "float16"
     accum_dtype: str = "float16"
     with_bias: bool = False
+    # layout of matrix A and B
+    # "nn": C[i, j] = A[i, k] * B[k, j]
+    # "nt": C[i, j] = A[i, k] * B[j, k]
     layout: str = "nt"
+    # weight transformation kind of matrix A
     propagate_a: TransformKind = TransformKind.NonTransform
+    # weight transformation kind of matrix B
     propagate_b: TransformKind = TransformKind.NonTransform
 
     def __post_init__(self):
         # set M to tuple if it is list
         # otherwise, M is not hashable
-        object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
+        object.__setattr__(
+            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
+        )
         if isinstance(self.propagate_a, bool):
             object.__setattr__(
                 self,
                 "propagate_a",
-                (TransformKind.IntraWarpTransform
-                 if self.propagate_a else TransformKind.NonTransform),
+                (
+                    TransformKind.IntraWarpTransform
+                    if self.propagate_a
+                    else TransformKind.NonTransform
+                ),
             )
         elif isinstance(self.propagate_a, int):
             object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
@@ -71,8 +81,11 @@ class MatmulConfig:
             object.__setattr__(
                 self,
                 "propagate_b",
-                (TransformKind.IntraWarpTransform
-                 if self.propagate_b else TransformKind.NonTransform),
+                (
+                    TransformKind.IntraWarpTransform
+                    if self.propagate_b
+                    else TransformKind.NonTransform
+                ),
             )
         elif isinstance(self.propagate_b, int):
             object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
@@ -95,15 +108,18 @@ class Matmul(Operator):
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
-            self.update_func(self.prim_func.with_attrs({"opt_shapes": self.dynamic_range}))
+            self.update_func(
+                self.prim_func.with_attrs({"opt_shapes": self.dynamic_range})
+            )
         else:
             self.dynamic_range = None
 
         self._build_runtime_module(target)
 
         if self.propagate_a:
-            assert (self.propagate_a is
-                    TransformKind.NonTransform), "Currently only support NonTransform for input"
+            assert (
+                self.propagate_a is TransformKind.NonTransform
+            ), "Currently only support NonTransform for input"
             ladder_permutate_config = LadderPermutateConfig(
                 M=self.M,
                 N=self.K,
@@ -191,10 +207,12 @@ class Matmul(Operator):
                 arg = func.buffer_map[param]
                 profile_tensors.append(
                     tvm.nd.array(
-                        np.random.uniform(0, 1,
-                                          [var_warpper(i, m) for i in arg.shape]).astype(arg.dtype),
+                        np.random.uniform(
+                            0, 1, [var_warpper(i, m) for i in arg.shape]
+                        ).astype(arg.dtype),
                         device=device,
-                    ))
+                    )
+                )
             self.profile_tensors = profile_tensors
             latency = self.time_evaluator(*profile_tensors).mean * 1e3
             benchmark_latencies.append({"m": m, "latency": latency})

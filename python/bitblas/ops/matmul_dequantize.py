@@ -54,7 +54,15 @@ class MatmulWeightOnlyDequantizeConfig:
     accum_dtype: str = "float16"
     bit: int = 4
     storage_dtype: str = "int8"
-    source_format: str = "int"
+    # documents for source_format:
+    # the format of the source data, which can be "int", "uint", "fp", "af"
+    # "int": dequantize_weight = (target)((int)(quantize_weight - fixed_zero_point)) * scale
+    #        where the fixed_zero_point is 2^(bit - 1) - 1
+    # "uint": dequantize_weight = (target)((uint)(quantize_weight - zero_point)) * scale
+    #        where the zero_point is manually set by zeros tensor
+    # "fp": dequantize_weight = (quantize_weight - zero_point) * scale
+    # "af": dequantize_weight = (lut[quantize_weight] - zero_point) * scale
+    source_format: Literal["int", "uint", "fp", "af"] = "int"
     with_scaling: bool = False
     with_zeros: bool = False
     group_size: int = -1
@@ -67,20 +75,24 @@ class MatmulWeightOnlyDequantizeConfig:
     # original: target = (dequantize_weight - zero_point) * scale
     # rescale: target = dequantize_weight * scale - zero_point
     # quantized: target = (dequantize_weight - dequantize_zeros) * scale
-    # Notice: only support "original" and "rescale" now
-    # The auto-gptq framework prefer "original" for alignment with cuda.
+    # The auto-gptq framework prefer "quantized" and "original" for alignment with cuda.
     zeros_type: Literal["original", "rescale", "quantized"] = "original"
 
     def __post_init__(self):
         # set M to tuple if it is list
         # otherwise, M is not hashable
-        object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
+        object.__setattr__(
+            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
+        )
         if isinstance(self.propagate_a, bool):
             object.__setattr__(
                 self,
                 "propagate_a",
-                (TransformKind.IntraWarpTransform
-                 if self.propagate_a else TransformKind.NonTransform),
+                (
+                    TransformKind.IntraWarpTransform
+                    if self.propagate_a
+                    else TransformKind.NonTransform
+                ),
             )
         elif isinstance(self.propagate_a, int):
             object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
@@ -89,8 +101,11 @@ class MatmulWeightOnlyDequantizeConfig:
             object.__setattr__(
                 self,
                 "propagate_b",
-                (TransformKind.IntraWarpTransform
-                 if self.propagate_b else TransformKind.NonTransform),
+                (
+                    TransformKind.IntraWarpTransform
+                    if self.propagate_b
+                    else TransformKind.NonTransform
+                ),
             )
         elif isinstance(self.propagate_b, int):
             object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
@@ -113,7 +128,9 @@ class MatmulWeightOnlyDequantize(Operator):
         self.arch = CUDA(target)
 
         try:
-            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
+            self.optimized_func = self.apply_default_schedule(
+                self.prim_func_mod, target
+            )
         except Exception:
             self.optimized_func = None
             logger.warnning(
@@ -123,7 +140,8 @@ class MatmulWeightOnlyDequantize(Operator):
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
-                {"opt_shapes": self.dynamic_range})
+                {"opt_shapes": self.dynamic_range}
+            )
         else:
             self.dynamic_range = None
 
@@ -215,7 +233,9 @@ class MatmulWeightOnlyDequantize(Operator):
         return code
 
     def retrieve_weight_shape(self):
-        return [int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape]
+        return [
+            int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape
+        ]
 
     def forward(self, *args) -> Any:
         if self.lib is None:
