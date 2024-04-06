@@ -30,6 +30,8 @@ matmul = Matmul(
 )
 ```
 
+More details of the configuration can be found in the [Operator Configuration Documentation](OperatorConfig.md).
+
 By default, BitBLAS will apply a default schedule into the operator (the performance is not optimal), you can also get code generation result by calling matmul.get_source().
 
 ```python
@@ -649,8 +651,188 @@ matmul.hardware_aware_finetune(topk=20)
 
 ```
 
+## Use Packed Operators as Linear Module in PyTorch
+The section "Use Packed Operators as Linear Module in PyTorch" demonstrates how to leverage the optimized matrix multiplication operations from BitBLAS directly within a PyTorch `nn.Module`. This enables the utilization of highly optimized, low-precision matrix multiplication operations. Relevant examples can be found at [integration/pytorch](../integration/pytorch/).
 
+### Implementing a Custom Linear Module
+
+Here's a step-by-step guide to implementing a custom linear module using BitBLAS packed operators:
+
+```python
+import torch
+import torch.nn as nn
+from bitblas.ops.matmul import Matmul, MatmulConfig
+
+class BitBLASLinear(nn.Module):
+    def __init__(self, in_features, out_features, bias=True, dtype=torch.float16, layout="nt"):
+        super(BitBLASLinear, self).__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.bias = bias
+        self.dtype = dtype
+        self.layout = layout
+
+        # Initialize weights and bias
+        self.weight = nn.Parameter(torch.randn(out_features, in_features, dtype=dtype))
+        if self.bias:
+            self.bias = nn.Parameter(torch.randn(out_features, dtype=dtype))
+        else:
+            self.register_parameter('bias', None)
+
+        # Configure the Matmul operator
+        self.matmul_config = MatmulConfig(
+            M=1,  # Dynamic input feature size
+            N=out_features,
+            K=in_features,
+            in_dtype="float16",
+            out_dtype="float16",
+            accum_dtype="float16",
+            layout=self.layout,
+        )
+        self.matmul_op = Matmul(
+            config=self.matmul_config,
+            target="cuda",  # Assuming CUDA is available
+        )
+
+    def forward(self, x):
+        output = self.matmul_op(x, self.weight)
+        if self.bias is not None:
+            output += self.bias
+        return output
+```
+
+### Integration with PyTorch
+
+This custom module can now be used as any standard PyTorch layer within your model definitions:
+
+```python
+model = nn.Sequential(
+    BitBLASLinear(1024, 512, bias=True, dtype=torch.float16),
+    nn.ReLU(),
+    BitBLASLinear(512, 256, bias=True, dtype=torch.float16),
+)
+
+# Move model to GPU
+model.cuda()
+
+# Dummy input
+x = torch.randn(1, 1024, dtype=torch.float16).cuda()
+
+# Forward pass
+output = model(x)
+```
+
+### Benefits
+
+- **Performance:** By leveraging BitBLAS's optimized matrix multiplication, you can achieve comparable performance with Library.
+- **Low Precision Arithmetic:** Utilizing low-precision computations (e.g., float16, int8) can drastically reduce memory usage and improve computational efficiency.
+- **Customization:** The flexibility to configure the matrix multiplication operation allows for fine-tuning the performance characteristics to match specific hardware capabilities.
+
+## PyTorch Weight Only Quantization Module
+
+This guide demonstrates how to implement a PyTorch module for weight-only quantization, leveraging the capabilities of BitBLAS to handle low-precision arithmetic efficiently. This quantization approach focuses exclusively on reducing the precision of the weights while keeping input data in its original format, which can be particularly useful for models where the precision of input data is crucial.
+
+### Implementing the QuantLinear Module
+
+The `QuantLinear` module quantizes the weights of a linear layer into a specified bit-width representation (e.g., 1-bit, 2-bit, or 4-bit) for storage and computation efficiency. During the forward pass, it dequantizes the weights on-the-fly for matrix multiplication with the input data. Which can be used as an efficient alternative inference kernel in frameworks like AutoGPTQ or vLLM.
+
+The following is an example implementation of the `QuantLinear` module using the `MatmulWeightOnlyDequantize` operator from BitBLAS.Please Checkout the integration of AutoGPTQ and vLLM integration in the relevant [integration](../integration) part of this project.
+
+```python
+import torch
+import torch.nn as nn
+from bitblas.quantization.utils import general_compress, interleave_weight
+from bitblas.ops.matmul_dequantize import MatmulWeightOnlyDequantize, MatmulWeightOnlyDequantizeConfig
+from bitblas.utils import get_target_from_env
+
+class QuantLinear(nn.Module):
+    def __init__(
+        self,
+        in_features: int,
+        out_features: int,
+        bits: int = 4,
+        bias: bool = True,
+        group_size: int = -1,
+    ):
+        super(QuantLinear, self).__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.bits = bits
+        self.group_size = group_size if group_size != -1 else in_features
+        self.bias = bias
+
+        # Define quantized weight and bias parameters
+        self.qweight = nn.Parameter(torch.empty(out_features, in_features // (8 // bits), dtype=torch.int8))
+        if self.bias:
+            self.bias = nn.Parameter(torch.empty(out_features, dtype=torch.float16))
+        else:
+            self.register_parameter('bias', None)
+
+        # Configuration for the BitBLAS MatmulWeightOnlyDequantize operation
+        self.matmul_config = MatmulWeightOnlyDequantizeConfig(
+            M=1,  # The input size is dynamic
+            N=out_features,
+            K=in_features,
+            bit=bits,
+            layout="nt",
+            with_bias=bias,
+            group_size=self.group_size,
+            storage_dtype="int8",
+            source_format="uint",
+            with_scaling=True,
+            with_zeros=True,
+            zeros_type="quantized",
+        )
+        self.matmul_op = MatmulWeightOnlyDequantize(config=self.matmul_config, target=get_target_from_env())
+
+    def forward(self, input):
+        if self.bias is not None:
+            output = self.matmul_op(input, self.qweight, self.bias)
+        else:
+            output = self.matmul_op(input, self.qweight)
+        return output
+```
+
+### Using the QuantLinear Module
+
+After defining the `QuantLinear` module, you can incorporate it into your neural network architectures in PyTorch. Here's an example of using `QuantLinear` in a simple feedforward network:
+
+```python
+class QuantizedNetwork(nn.Module):
+    def __init__(self):
+        super(QuantizedNetwork, self).__init__()
+        self.layer1 = QuantLinear(in_features=784, out_features=256, bits=4, bias=True)
+        self.relu = nn.ReLU()
+        self.layer2 = QuantLinear(in_features=256, out_features=10, bits=4, bias=True)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.relu(x)
+        x = self.layer2(x)
+        return x
+
+# Initialize the network and move it to GPU
+net = QuantizedNetwork().cuda()
+
+# Dummy input tensor
+x = torch.randn(64, 784).float().cuda()
+
+# Forward pass
+output = net(x)
+```
+
+### Benefits of Weight Only Quantization
+
+Certainly, here's a more detailed exploration of each point:
+
+- **Diverse Data Type Support**: Weight-only quantization allows for a wider range of data type combinations, enabling the model to process inputs in high-precision formats (e.g., FP16/INT8) while the weights are stored and computed in a quantized, low-precision format (INT4/FP4/NF4).
+
+- **Optimized Performance**: By quantizing the weights, models can leverage the specialized hardware acceleration features present in modern CPUs and GPUs, which are optimized for low-bit-width arithmetic operations.
+
+- **Adaptability**: This ensures that quantized models can achieve optimal performance across a diverse array of platforms, without requiring significant modifications to the underlying architecture.
+
+## Additional Notes
 
 Please see more examples and relevant usages in `testing/python/operators`, and we currently only provide two operators: `Matmul` and `MatmulWeightOnlyDequantize`. But the packed operators can be easily extended to other operators through a triton-like DSL.
 
-If you are interest in extending Operators to another Compute by yourself, Please Checkout ![ExtendOperatorsWithDSL](./ExtendOperatorsWithDSL.md). 
+If you are interest in extending Operators to another Compute by yourself, Please Checkout [ExtendOperatorsWithDSL](./ExtendOperatorsWithDSL.md). 
