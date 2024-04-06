@@ -47,9 +47,9 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 ## Getting Started
 
 - Installation:
-  To manually install BitBLAS, please checkout `maint/scripts/installation.sh`. Also Make sure you already have the cuda toolkit (version >= 11) installed in the system. Or you can install from `python setup.py install` or `pip install .` in the root directory. 
+  To install BitBLAS, please checkout the document [installation](./docs/Installation.md). Also Make sure you already have the cuda toolkit (version >= 11) installed in the system. Or you can easily install from `pip install bitblas` in the root directory. 
 
-- [QuickStart](./docs/QuickStart.md): We provide two primary ways to do the code generation: using a high-level DSL (TensorIR Script), or using packed Operators, from the quick start guide, you can learn how to use BitBLAS to generate high performance kernels with both methods.
+- [QuickStart](./docs/QuickStart.md): We provide two primary ways to do the code generation: using a high-level DSL (TensorIR Script), or using packed Operators, from the quick start guide, you can learn how to use BitBLAS to generate high performance kernels through Packed Operators API and example usage with PyTorch.
 
 - [Integration](./integration/): Explore how BitBLAS seamlessly integrates with other frameworks through our examples. Discover the ease of integrating BitBLAS with PyTorch, AutoGPTQ, and vLLM in the 3rd Party Integration Examples.
 
