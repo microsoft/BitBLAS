@@ -15,7 +15,10 @@ from ..rasterization import NoRasterization, Rasterization2DColumn
 
 class TensorCorePolicy(DefaultPolicy):
 
-    def __init__(self, func: tvm.tir.PrimFunc, arch: TileDevice, tags: Optional[Dict] = None) -> None:
+    def __init__(self,
+                 func: tvm.tir.PrimFunc,
+                 arch: TileDevice,
+                 tags: Optional[Dict] = None) -> None:
         super().__init__(func, arch, tags)
         # this is the trick for wmma.
         # However, for int8 mma, the wmma_k should be 32.

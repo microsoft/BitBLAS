@@ -152,17 +152,15 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
 
         if "zeros_type" in weight_decode_info and weight_decode_info["zeros_type"] == "quantized":
             if "with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]:
-                block_local_scales = sch.cache_read(
-                    block_decode_B, get_idx(weight_decode_info) + 1, "local"
-                )
+                block_local_scales = sch.cache_read(block_decode_B,
+                                                    get_idx(weight_decode_info) + 1, "local")
                 sch.compute_at(block_local_scales, tx, preserve_unit_loops=True)
                 auto_inline_producers(sch, block_local_scales)
                 skip_blocks.append(block_local_scales)
 
             if "with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]:
-                block_local_zeros = sch.cache_read(
-                    block_decode_B, get_idx(weight_decode_info) + 2, "local"
-                )
+                block_local_zeros = sch.cache_read(block_decode_B,
+                                                   get_idx(weight_decode_info) + 2, "local")
                 sch.compute_at(block_local_zeros, tx, preserve_unit_loops=True)
                 auto_inline_producers(sch, block_local_zeros)
                 skip_blocks.append(block_local_zeros)
@@ -185,7 +183,6 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             sch.annotate(block_b, ann_key="pragma_import_c", ann_val=intrin_info["c_source"])
         return sch
 
-  
     def sch_inner_reduction_with_config(  # pylint: disable=too-many-locals,too-many-branches,too-many-return-statements
         self,
         func: tir.PrimFunc,
@@ -316,17 +313,15 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
 
         if "zeros_type" in weight_decode_info and weight_decode_info["zeros_type"] == "quantized":
             if "with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]:
-                block_local_scales = sch.cache_read(
-                    block_decode_B, get_idx(weight_decode_info) + 1, "local"
-                )
+                block_local_scales = sch.cache_read(block_decode_B,
+                                                    get_idx(weight_decode_info) + 1, "local")
                 sch.compute_at(block_local_scales, tx, preserve_unit_loops=True)
                 auto_inline_producers(sch, block_local_scales)
                 skip_blocks.append(block_local_scales)
 
             if "with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]:
-                block_local_zeros = sch.cache_read(
-                    block_decode_B, get_idx(weight_decode_info) + 2, "local"
-                )
+                block_local_zeros = sch.cache_read(block_decode_B,
+                                                   get_idx(weight_decode_info) + 2, "local")
                 sch.compute_at(block_local_zeros, tx, preserve_unit_loops=True)
                 auto_inline_producers(sch, block_local_zeros)
                 skip_blocks.append(block_local_zeros)

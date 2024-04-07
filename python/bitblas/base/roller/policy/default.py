@@ -23,7 +23,10 @@ class DefaultPolicy:
     minimize memory traffic and maximize parallelism.for Dlight Schedule.
     """
 
-    def __init__(self, func: tvm.tir.PrimFunc, arch: TileDevice, tags: Optional[Dict] = None) -> None:
+    def __init__(self,
+                 func: tvm.tir.PrimFunc,
+                 arch: TileDevice,
+                 tags: Optional[Dict] = None) -> None:
         if tags is None:
             tags = {}
         self.arch = arch

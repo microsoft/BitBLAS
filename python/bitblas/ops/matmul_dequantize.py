@@ -81,18 +81,13 @@ class MatmulWeightOnlyDequantizeConfig:
     def __post_init__(self):
         # set M to tuple if it is list
         # otherwise, M is not hashable
-        object.__setattr__(
-            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
-        )
+        object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
         if isinstance(self.propagate_a, bool):
             object.__setattr__(
                 self,
                 "propagate_a",
-                (
-                    TransformKind.IntraWarpTransform
-                    if self.propagate_a
-                    else TransformKind.NonTransform
-                ),
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_a else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_a, int):
             object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
@@ -101,11 +96,8 @@ class MatmulWeightOnlyDequantizeConfig:
             object.__setattr__(
                 self,
                 "propagate_b",
-                (
-                    TransformKind.IntraWarpTransform
-                    if self.propagate_b
-                    else TransformKind.NonTransform
-                ),
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_b else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_b, int):
             object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
@@ -128,9 +120,7 @@ class MatmulWeightOnlyDequantize(Operator):
         self.arch = CUDA(target)
 
         try:
-            self.optimized_func = self.apply_default_schedule(
-                self.prim_func_mod, target
-            )
+            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
         except Exception:
             self.optimized_func = None
             logger.warnning(
@@ -140,8 +130,7 @@ class MatmulWeightOnlyDequantize(Operator):
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
-                {"opt_shapes": self.dynamic_range}
-            )
+                {"opt_shapes": self.dynamic_range})
         else:
             self.dynamic_range = None
 
@@ -233,9 +222,7 @@ class MatmulWeightOnlyDequantize(Operator):
         return code
 
     def retrieve_weight_shape(self):
-        return [
-            int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape
-        ]
+        return [int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape]
 
     def forward(self, *args) -> Any:
         if self.lib is None:

@@ -161,14 +161,17 @@ def _tir_packed_to_unsigned_convert(storage_type="uint", storage_nbit=8):
 
     return f_convert
 
+
 def _tir_packed_to_unsigned_convert_with_zeros(storage_type="uint", storage_nbit=8):
     storage_dtype = storage_type + str(storage_nbit)
 
-    def f_convert(nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, zero: tvm.tir.PrimExpr, dtype: str):
+    def f_convert(nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, zero: tvm.tir.PrimExpr,
+                  dtype: str):
         assert val.dtype == storage_dtype, f"{val.dtype} != {storage_dtype}"
         mask = tvm.tir.const((1 << nbit) - 1, storage_dtype)
         return (((val >> (pos * nbit).astype(storage_dtype)) & mask) - zero).astype(dtype)
 
     return f_convert
+
 
 # fmt: on

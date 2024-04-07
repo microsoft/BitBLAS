@@ -36,7 +36,11 @@ parser.add_argument(
 parser.add_argument(
     "--benchmark_sets",
     nargs="+",
-    default=["llm_shape_fp16xint4_with_scaling_zeros_original_g128", "llm_shape_fp16xint4_with_scaling_zeros_rescale_g128", "llm_shape_fp16xint4_with_scaling_zeros_quantized_g128"],
+    default=[
+        "llm_shape_fp16xint4_with_scaling_zeros_original_g128",
+        "llm_shape_fp16xint4_with_scaling_zeros_rescale_g128",
+        "llm_shape_fp16xint4_with_scaling_zeros_quantized_g128"
+    ],
     help="List of benchmark sets, e.g., llm_int8xint1_bs4096",
 )
 
@@ -235,7 +239,6 @@ llm_shape_fp16xint4_with_scaling_zeros_quantized = [
      (16384, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", with_scaling,
       with_zeros, group_size, True, False, zeros_type), Matmul),
 ]
-
 
 group_size = 128
 with_scaling = True

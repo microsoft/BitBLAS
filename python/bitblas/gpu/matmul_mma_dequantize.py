@@ -66,7 +66,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
     The schedule rule for float16 tensor core matmul computation.
     func with attr 'dlight.do_not_tensorize' will not be tensorized.
     """
-    
+
     def apply(
         self,
         func: tir.PrimFunc,
@@ -138,7 +138,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
         # Start Schedule
         # Step 1. Get default schedule config.
-    
+
         # tensor core intrinsic size
         in_dtype, out_dtype = get_in_out_dtypes(sch.get(main_block))
         intrin_info = IntrinInfo(
@@ -146,17 +146,15 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             out_dtype=out_dtype,
             trans_b=True,
         )
-        config = Hint().from_dict(
-            {
-                "block": [128, 128],
-                "warp": [64, 64],
-                "rstep": [32],
-                "pipeline_stage": 1,
-                "use_async": False,
-                "intrin_info": intrin_info,
-                "shared_scope": "shared.dyn",
-            }
-        )
+        config = Hint().from_dict({
+            "block": [128, 128],
+            "warp": [64, 64],
+            "rstep": [32],
+            "pipeline_stage": 1,
+            "use_async": False,
+            "intrin_info": intrin_info,
+            "shared_scope": "shared.dyn",
+        })
         shared_scope = config.shared_scope
 
         intrin_group = get_mma_intrin_group(
@@ -396,24 +394,16 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(block_shared_local_local, B_shared_vi, preserve_unit_loops=True)
 
             dequantize_block_local = block_shared_local
-            if "zeros_type" in weight_decode_info and weight_decode_info["zeros_type"] == "quantized":
-                if (
-                    "with_scaling" in weight_decode_info
-                    and weight_decode_info["with_scaling"]
-                ):
-                    block_local_scales = sch.cache_read(
-                        dequantize_block_local, b_idx + 1, "local"
-                    )
-                    sch.compute_at(
-                        block_local_scales, B_shared_vi, preserve_unit_loops=True
-                    )
+            if "zeros_type" in weight_decode_info and weight_decode_info[
+                    "zeros_type"] == "quantized":
+                if ("with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]):
+                    block_local_scales = sch.cache_read(dequantize_block_local, b_idx + 1, "local")
+                    sch.compute_at(block_local_scales, B_shared_vi, preserve_unit_loops=True)
                     # pop the scale block
                     auto_inline_producers(sch, block_local_scales)
 
                 if "with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]:
-                    block_local_zeros = sch.cache_read(
-                        dequantize_block_local, b_idx + 2, "local"
-                    )
+                    block_local_zeros = sch.cache_read(dequantize_block_local, b_idx + 2, "local")
                     sch.compute_at(block_local_zeros, B_shared_vi, preserve_unit_loops=True)
                     auto_inline_producers(sch, block_local_zeros)
 
@@ -888,24 +878,16 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(block_shared_local_local, B_shared_vi, preserve_unit_loops=True)
 
             dequantize_block_local = block_shared_local
-            if "zeros_type" in weight_decode_info and weight_decode_info["zeros_type"] == "quantized":
-                if (
-                    "with_scaling" in weight_decode_info
-                    and weight_decode_info["with_scaling"]
-                ):
-                    block_local_scales = sch.cache_read(
-                        dequantize_block_local, b_idx + 1, "local"
-                    )
-                    sch.compute_at(
-                        block_local_scales, B_shared_vi, preserve_unit_loops=True
-                    )
+            if "zeros_type" in weight_decode_info and weight_decode_info[
+                    "zeros_type"] == "quantized":
+                if ("with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]):
+                    block_local_scales = sch.cache_read(dequantize_block_local, b_idx + 1, "local")
+                    sch.compute_at(block_local_scales, B_shared_vi, preserve_unit_loops=True)
                     # pop the scale block
                     auto_inline_producers(sch, block_local_scales)
 
                 if "with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]:
-                    block_local_zeros = sch.cache_read(
-                        dequantize_block_local, b_idx + 2, "local"
-                    )
+                    block_local_zeros = sch.cache_read(dequantize_block_local, b_idx + 2, "local")
                     sch.compute_at(block_local_zeros, B_shared_vi, preserve_unit_loops=True)
                     auto_inline_producers(sch, block_local_zeros)
 
@@ -1441,20 +1423,17 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(block_shared_local_local, B_shared_vi, preserve_unit_loops=True)
 
             dequantize_block_local = block_shared_local
-            if "zeros_type" in weight_decode_info and weight_decode_info["zeros_type"] == "quantized":
+            if "zeros_type" in weight_decode_info and weight_decode_info[
+                    "zeros_type"] == "quantized":
                 if "with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]:
-                    block_local_scales = sch.cache_read(
-                        dequantize_block_local, b_idx + 1, "local"
-                    )
+                    block_local_scales = sch.cache_read(dequantize_block_local, b_idx + 1, "local")
                     sch.compute_at(block_local_scales, B_shared_vi, preserve_unit_loops=True)
                     # pop the scale block
                     auto_inline_producers(sch, block_local_scales)
                     #
 
                 if "with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]:
-                    block_local_zeros = sch.cache_read(
-                        dequantize_block_local, b_idx + 2, "local"
-                    )
+                    block_local_zeros = sch.cache_read(dequantize_block_local, b_idx + 2, "local")
                     sch.compute_at(block_local_zeros, B_shared_vi, preserve_unit_loops=True)
                     auto_inline_producers(sch, block_local_zeros)
 

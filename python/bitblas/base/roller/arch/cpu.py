@@ -10,6 +10,7 @@ from typing import List, Dict
 # For LLVM Backend, we do not provide the detailed information of the CPU
 # As the LLVM backend do not required tuning, just maintain the consistency
 class CPU(TileDevice):
+
     def __init__(self, target: Target):
         self.target = target
         device = tvm.runtime.cpu(0)

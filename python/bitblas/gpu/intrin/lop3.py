@@ -550,9 +550,7 @@ def get_fast_decode_intrin(
     elem_per_unit = storage_nbit // source_bit
     n_storage_elems = loops_extent // elem_per_unit
     if with_zeros and zeros_type == "quantized":
-        decode_func = _tir_packed_to_unsigned_convert_with_zeros(
-            storage_type, storage_nbit
-        )
+        decode_func = _tir_packed_to_unsigned_convert_with_zeros(storage_type, storage_nbit)
     elif source_format == "int":
         decode_func = _tir_packed_to_signed_convert(storage_type, storage_nbit)
     elif source_format == "uint":
@@ -709,6 +707,7 @@ def get_fast_decode_intrin(
                 )
 
     elif zeros_type == "quantized":
+
         def get_dequantize_buffers_list(weight, scale, zeros, zeros_type="original"):
             if zeros_type == "original":
                 return [weight, zeros, scale]
@@ -1089,7 +1088,6 @@ TensorIntrin.register(
         zeros_type="rescale",
     ),
 )
-
 
 LOP3_FAST_DECODE_UINT4_TO_INT8_TO_FP16_L8_SCALE_ZEROS_QUANTIZED_INTRIN = (
     "lop3_fast_decode_u4_to_int8_to_f16_l8_scale_zeros_quantized_")

@@ -31,14 +31,11 @@ def get_codegen_result(ops, target):
         (1, 768, 768, "float16", "float16", "float16", 4, "int8", "uint", True, True, -1, True,
          True, "nt", True, True, "original"),
     ],
-    
 )
-def test_matmul_dequantize_codegen_default(
-    M, N, K, in_dtype, out_dtype, accum_dtype, bit,
-    storage_dtype, source_format, with_scaling,
-    with_zeros, group_size, fast_decoding, with_bias,
-    layout, propagate_a, propagate_b, zeros_type
-):
+def test_matmul_dequantize_codegen_default(M, N, K, in_dtype, out_dtype, accum_dtype, bit,
+                                           storage_dtype, source_format, with_scaling, with_zeros,
+                                           group_size, fast_decoding, with_bias, layout,
+                                           propagate_a, propagate_b, zeros_type):
 
     matmul_config = MatmulWeightOnlyDequantizeConfig(
         M=M,
@@ -651,17 +648,17 @@ def test_matmul_dequantize_propgate_comparison(M, N, K, in_dtype, out_dtype, acc
          False, False, False, "nt", "rescale", "quantized"),
         (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False,
          False, False, False, "nt", "rescale", "original"),
-        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False,
-         False, False, False, "nt", "rescale", "quantized"),
-        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False,
-         False, False, False, "nt", "rescale", "original"),
-
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1,
+         False, False, False, False, "nt", "rescale", "quantized"),
+        (1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1,
+         False, False, False, False, "nt", "rescale", "original"),
     ],
 )
 def test_matmul_dequantize_diff_zero_types(M, N, K, in_dtype, out_dtype, accum_dtype, bit,
-                                         storage_dtype, source_format, with_scaling, with_zeros,
-                                         group_size, fast_decoding, with_bias, propagate_a,
-                                         propagate_b, layout, source_zeros_type, target_zeros_type):
+                                           storage_dtype, source_format, with_scaling, with_zeros,
+                                           group_size, fast_decoding, with_bias, propagate_a,
+                                           propagate_b, layout, source_zeros_type,
+                                           target_zeros_type):
     import torch
     torch.random.manual_seed(0)
     import numpy as np
@@ -733,18 +730,20 @@ def test_matmul_dequantize_diff_zero_types(M, N, K, in_dtype, out_dtype, accum_d
         permuted_inputs.append(torch.rand([N, K // group_size], dtype=torch.float16).cuda())
     if with_zeros:
         if source_zeros_type == "original":
-            permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
+            permuted_inputs.append(
+                torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
         elif source_zeros_type == "rescale":
             original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros
             scaled_zeros = original_zeros * permuted_inputs[-1]
             permuted_inputs.append(scaled_zeros)
         elif source_zeros_type == "quantized":
             original_zeros = torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros
-            qzeros = general_compress(original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
+            qzeros = general_compress(
+                original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
             permuted_inputs.append(torch.from_numpy(qzeros).cuda())
         else:
             raise NotImplementedError
-            
+
     if with_bias:
         permuted_inputs.append(bias)
     permuted_inputs.append(inputs[2])
@@ -788,14 +787,16 @@ def test_matmul_dequantize_diff_zero_types(M, N, K, in_dtype, out_dtype, accum_d
         target_inputs.append(permuted_inputs[2])
     if with_zeros:
         if target_zeros_type == "original":
-            target_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
+            target_inputs.append(
+                torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
         elif target_zeros_type == "rescale":
             original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros
             scaled_zeros = original_zeros * target_inputs[-1]
             target_inputs.append(scaled_zeros)
         elif target_zeros_type == "quantized":
             original_zeros = torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros
-            qzeros = general_compress(original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
+            qzeros = general_compress(
+                original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
             target_inputs.append(torch.from_numpy(qzeros).cuda())
         else:
             raise NotImplementedError
@@ -804,6 +805,8 @@ def test_matmul_dequantize_diff_zero_types(M, N, K, in_dtype, out_dtype, accum_d
     target_inputs.append(torch.zeros_like(inputs[2]))
     target_quantized_matmul(*target_inputs)
     torch.testing.assert_close(target_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
+
+
 # fmt: on
 
 if __name__ == "__main__":

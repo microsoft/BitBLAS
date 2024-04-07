@@ -23,9 +23,7 @@ ROOT_DIR = os.path.dirname(__file__)
 MAIN_CUDA_VERSION = "12.1"
 
 # BitBLAS only supports Linux platform
-assert sys.platform.startswith(
-    "linux"
-), "BitBLAS only supports Linux platform (including WSL)."
+assert sys.platform.startswith("linux"), "BitBLAS only supports Linux platform (including WSL)."
 
 
 def get_path(*filepath) -> str:
@@ -45,9 +43,7 @@ def find_version(filepath: str) -> str:
     Adapted from https://github.com/ray-project/ray/blob/0b190ee1160eeca9796bc091e07eaebf4c85b511/python/setup.py
     """
     with open(filepath) as fp:
-        version_match = re.search(
-            r"^__version__ = ['\"]([^'\"]*)['\"]", fp.read(), re.M
-        )
+        version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", fp.read(), re.M)
         if version_match:
             return version_match.group(1)
         raise RuntimeError("Unable to find version string.")
@@ -58,9 +54,7 @@ def get_nvcc_cuda_version():
 
     Adapted from https://github.com/NVIDIA/apex/blob/8b7a1ff183741dd8f9b87e7bafd04cfde99cea28/setup.py
     """
-    nvcc_output = subprocess.check_output(
-        ["nvcc", "-V"], universal_newlines=True
-    )
+    nvcc_output = subprocess.check_output(["nvcc", "-V"], universal_newlines=True)
     output = nvcc_output.split()
     release_idx = output.index("release") + 1
     nvcc_cuda_version = LooseVersion(output[release_idx].split(",")[0])
@@ -104,9 +98,7 @@ def download_and_extract_llvm(version, is_aarch64=False, extract_path="3rdparty"
     elif version >= "13.0.0":
         ubuntu_version = "18.04"
 
-    base_url = (
-        f"https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}"
-    )
+    base_url = (f"https://github.com/llvm/llvm-project/releases/download/llvmorg-{version}")
     file_name = f"clang+llvm-{version}-{'aarch64-linux-gnu' if is_aarch64 else f'x86_64-linux-gnu-ubuntu-{ubuntu_version}'}.tar.xz"
 
     download_url = f"{base_url}/{file_name}"
@@ -132,6 +124,7 @@ def download_and_extract_llvm(version, is_aarch64=False, extract_path="3rdparty"
     print("Download and extraction completed successfully.")
     return os.path.abspath(os.path.join(extract_path, file_name.replace(".tar.xz", "")))
 
+
 package_data = {
     "bitblas": ["py.typed"],
 }
@@ -144,11 +137,10 @@ EXTRACT_PATH = "3rdparty"  # Default extraction path
 def update_submodules():
     """Updates git submodules."""
     try:
-        subprocess.check_call(
-            ["git", "submodule", "update", "--init", "--recursive"]
-        )
+        subprocess.check_call(["git", "submodule", "update", "--init", "--recursive"])
     except subprocess.CalledProcessError as error:
         raise RuntimeError(f"Failed to update submodules: {error}")
+
 
 def build_tvm(llvm_config_path):
     """Configures and builds TVM."""
@@ -173,12 +165,14 @@ def build_tvm(llvm_config_path):
         # Go back to the original directory
         os.chdir("../../..")
 
+
 def setup_llvm_for_tvm():
     """Downloads and extracts LLVM, then configures TVM to use it."""
     # Assume the download_and_extract_llvm function and its dependencies are defined elsewhere in this script
     extract_path = download_and_extract_llvm(LLVM_VERSION, IS_AARCH64, EXTRACT_PATH)
     llvm_config_path = os.path.join(extract_path, "bin", "llvm-config")
     return extract_path, llvm_config_path
+
 
 class BitBLASInstallCommand(install):
     """Customized setuptools install command - builds TVM after setting up LLVM."""
@@ -193,6 +187,7 @@ class BitBLASInstallCommand(install):
         # Continue with the standard installation process
         install.run(self)
 
+
 class BitBLASBuilPydCommand(build_py):
     """Customized setuptools install command - builds TVM after setting up LLVM."""
 
@@ -201,10 +196,10 @@ class BitBLASBuilPydCommand(build_py):
         # custom build tvm
         # update_submodules()
         # Set up LLVM for TVM
-        extract_path, llvm_path = setup_llvm_for_tvm()
+        _, llvm_path = setup_llvm_for_tvm()
         # Build TVM
         build_tvm(llvm_path)
-        # Copy the built TVM to the package directory 
+        # Copy the built TVM to the package directory
         TVM_PREBUILD_ITEMS = [
             "3rdparty/tvm/build/libtvm_runtime.so",
             "3rdparty/tvm/build/libtvm.so",
@@ -220,10 +215,7 @@ class BitBLASBuilPydCommand(build_py):
             "3rdparty/tvm/pyproject.toml",
             "3rdparty/tvm/version.py",
         ]
-        LLVM_PREBUILD_ITEMS = [
-            extract_path,
-        ]
-        for item in TVM_PREBUILD_ITEMS + LLVM_PREBUILD_ITEMS:
+        for item in TVM_PREBUILD_ITEMS:
             source_dir = os.path.join(ROOT_DIR, item)
             target_dir = os.path.join(self.build_lib, PACKAGE_NAME, item)
             if os.path.isdir(source_dir):
@@ -235,19 +227,20 @@ class BitBLASBuilPydCommand(build_py):
                     os.makedirs(target_dir)
                 shutil.copy2(source_dir, target_dir)
 
+
 class BitBLASSdistCommand(sdist):
     """Customized setuptools sdist command - includes the pyproject.toml file."""
+
     def make_distribution(self):
         self.distribution.metadata.name = PACKAGE_NAME
         self.distribution.metadata.version = get_bitblas_version(with_cuda=False)
         super().make_distribution()
 
+
 setup(
     name=PACKAGE_NAME,
     version=get_bitblas_version(),
-    packages=find_packages(
-        where="python"
-    ),
+    packages=find_packages(where="python"),
     package_dir={"": "python"},
     author="Microsoft Research",
     description="A light weight framework to generate high performance CUDA/HIP code for BLAS operators.",
@@ -266,11 +259,7 @@ setup(
     python_requires=">=3.8",
     install_requires=get_requirements(),
     tests_require=[
-        "yapf>=0.32.0",
-        "toml>=0.10.2",
-        "tomli>=2.0.1",
-        "ruff>=0.1.5",
-        "codespell>=2.2.6"
+        "yapf>=0.32.0", "toml>=0.10.2", "tomli>=2.0.1", "ruff>=0.1.5", "codespell>=2.2.6"
     ],
     package_data=package_data,
     include_package_data=True,
