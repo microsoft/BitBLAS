@@ -410,8 +410,8 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
             for producer in weight_producers:
                 with suppress(Exception):
-                    auto_inline_producers(sch, producer) 
- 
+                    auto_inline_producers(sch, producer)
+
             # fast type conversion
             if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):
                 source_bit = weight_decode_info["source_format"]["bits"]
