@@ -75,6 +75,9 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         target: Target,
         _: bool,
     ) -> Optional[tir.Schedule]:
+        if "dequantize_info" in func.attrs:
+            dequantize_rule = MatmulTensorizationMMAWithDequantizeInfo()
+            return dequantize_rule.apply(func, target, False)
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
         blocks = sch.get_child_blocks(root_block)

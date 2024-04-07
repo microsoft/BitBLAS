@@ -191,6 +191,9 @@ class GEMV(GPUScheduleRule):
     ) -> Union[None, tir.Schedule, List[tir.Schedule]]:
         if not isinstance(func, tir.PrimFunc) or not self.is_target_available(target):
             return None
+        if "dequantize_info" in func.attrs:
+            dequantize_rule = GEMVWithDequantizeInfo()
+            return dequantize_rule.apply(func, target, False)
         sch = tir.Schedule(func)
         block_infos = normalize_prim_func(sch)
         block_infos = try_inline_contiguous_spatial(sch, block_infos)

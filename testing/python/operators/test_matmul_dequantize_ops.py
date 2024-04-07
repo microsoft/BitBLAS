@@ -22,30 +22,22 @@ def get_codegen_result(ops, target):
 
 # fmt: off
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,layout,zeros_type",
     [
-        (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False,
-         False, False, False, "nt"),
+        (16, 768, 768, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True,
+         False, "nt", False, False, "original"),
+        (1, 768, 768, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True,
+         False, "nt", False, False, "original"),
+        (1, 768, 768, "float16", "float16", "float16", 4, "int8", "uint", True, True, -1, True,
+         True, "nt", True, True, "original"),
     ],
+    
 )
 def test_matmul_dequantize_codegen_default(
-    M,
-    N,
-    K,
-    in_dtype,
-    out_dtype,
-    accum_dtype,
-    bit,
-    storage_dtype,
-    source_format,
-    with_scaling,
-    with_zeros,
-    group_size,
-    fast_decoding,
-    with_bias,
-    propagate_a,
-    propagate_b,
-    layout,
+    M, N, K, in_dtype, out_dtype, accum_dtype, bit,
+    storage_dtype, source_format, with_scaling,
+    with_zeros, group_size, fast_decoding, with_bias,
+    layout, propagate_a, propagate_b, zeros_type
 ):
 
     matmul_config = MatmulWeightOnlyDequantizeConfig(
@@ -66,11 +58,23 @@ def test_matmul_dequantize_codegen_default(
         propagate_a=propagate_a,
         propagate_b=propagate_b,
         layout=layout,
+        zeros_type=zeros_type,
     )
     matmul = MatmulWeightOnlyDequantize(
         config=matmul_config,
         target=target,
     )
+    # with matmul.arch.target:
+    #     mod = bitblas.ApplyDefaultSchedule(  # pylint: disable=not-callable
+    #         bitblas.gpu.Matmul(),
+    #         # bitblas.gpu.GEMV(),
+    #         # bitblas.gpu.Reduction(),
+    #         # bitblas.gpu.GeneralReduction(),
+    #         # bitblas.gpu.Fallback(),
+    #     )(
+    #         matmul.prim_func_mod)
+    sch = bitblas.gpu.GEMVWithDequantizeInfo().apply(matmul.prim_func, target, False)
+    print(sch.mod)
     assert get_codegen_result(matmul, target)
 
 

@@ -4,7 +4,7 @@
 from typing import Dict, List, Tuple
 from . import PrimFuncNode
 import numpy as np
-
+from .rasterization import *
 
 class TensorCoreExtraConfig:
     """
@@ -161,7 +161,7 @@ class Hint(object):
         # reduce axes tiling info
         self.rstep = []
         self.reduce_thread = []
-        self.rasterization_plan = None
+        self.rasterization_plan = NoRasterization()
         self.cached_tensors = []
         self.output_strides = {}
         self.schedule_stages = None
@@ -206,26 +206,8 @@ class Hint(object):
 
     def from_dict(self, dic: Dict) -> "Hint":
         self.__init__()
-        if "use_tc" in dic:
-            self.use_tc = dic["use_tc"]
-        self.block = dic["block"]
-        if self.use_tc:
-            self.warp = dic["warp"]
-        else:
-            self.thread = dic["thread"]
-        self.rstep = dic["rstep"]
-        if "reduce_thread" in dic:
-            self.reduce_thread = dic["reduce_thread"]
-        else:
-            self.reduce_thread = [1 for _ in self.rstep]
-        if "strides" in dic:
-            self.output_strides = dic["strides"]
-        if "step" in dic:
-            self._step = dic["step"]
-        if "raxis_order" in dic:
-            self._raxis_order = dic["raxis_order"]
-        if "vectorize" in dic:
-            self.vectorize = dic["vectorize"]
+        for k, v in dic.items():
+            setattr(self, k, v)
         return self
 
     @property
