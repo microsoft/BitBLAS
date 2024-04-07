@@ -4,6 +4,7 @@
 # pylint: disable=missing-docstring, invalid-name
 """A GEMM schedule rule for GPU operators."""
 from typing import Optional, List
+from contextlib import suppress
 
 from tvm import tir
 
@@ -408,10 +409,9 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     auto_inline_producers(sch, block_local_zeros)
 
             for producer in weight_producers:
-                try:
-                    auto_inline_producers(sch, producer)
-                except Exception:
-                    pass
+                with suppress(Exception):
+                    auto_inline_producers(sch, producer) 
+ 
             # fast type conversion
             if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):
                 source_bit = weight_decode_info["source_format"]["bits"]
@@ -892,10 +892,9 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     auto_inline_producers(sch, block_local_zeros)
 
             for producer in weight_producers:
-                try:
+                with suppress(Exception):
                     auto_inline_producers(sch, producer)
-                except Exception:
-                    pass
+
             # fast type conversion
             if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):
                 source_bit = weight_decode_info["source_format"]["bits"]
@@ -1438,10 +1437,9 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     auto_inline_producers(sch, block_local_zeros)
 
             for producer in weight_producers:
-                try:
+                with suppress(Exception):
                     auto_inline_producers(sch, producer)
-                except Exception:
-                    pass
+
             # fast type conversion
             if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):
                 source_bit = weight_decode_info["source_format"]["bits"]

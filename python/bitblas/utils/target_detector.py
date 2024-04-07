@@ -55,9 +55,6 @@ def auto_detect_nvidia_target() -> str:
 
     # Get the current GPU model and find the best matching target
     gpu_model = get_gpu_model_from_nvidia_smi()
-    if gpu_model:
-        target = find_best_match(nvidia_tags, gpu_model)
-    else:
-        target = "cuda"  # Default to 'cuda' if the GPU model cannot be determined
+    target = find_best_match(nvidia_tags, gpu_model) if gpu_model else "cuda"
 
     return target

@@ -139,7 +139,7 @@ def update_submodules():
     try:
         subprocess.check_call(["git", "submodule", "update", "--init", "--recursive"])
     except subprocess.CalledProcessError as error:
-        raise RuntimeError(f"Failed to update submodules: {error}")
+        raise RuntimeError("Failed to update submodules") from error
 
 
 def build_tvm(llvm_config_path):
@@ -160,7 +160,7 @@ def build_tvm(llvm_config_path):
         subprocess.check_call(["cmake", ".."])
         subprocess.check_call(["make", "-j"])
     except subprocess.CalledProcessError as error:
-        raise RuntimeError(f"Failed to build TVM: {error}")
+        raise RuntimeError("Failed to build TVM") from error
     finally:
         # Go back to the original directory
         os.chdir("../../..")

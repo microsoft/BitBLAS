@@ -365,7 +365,164 @@ __device__ void decode_i2u_to_f16_scale_zeros_rescale(T1 *_i2u, T2 *B_local_deco
 }
 """
 
-decode_i1s_to_i8s_l16 = """template <typename T1, typename T2>
+decode_i1_to_f16 = """
+template <typename T1, typename T2, bool isSigned = false>
+__device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8)
+{
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x00010001;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64006400 : 0x64006400;
+    int8_t const i1s_i16 = *reinterpret_cast<int8_t *>(_i1s);
+    int i1s = (i1s_i16 & 0x0f);
+    i1s |= ((i1s_i16 & 0xf0) << 12);
+#pragma unroll
+    // decode 2 elems at one time.
+    for (int i = 0; i < (N / 2); i++)
+    {
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                     : "=r"(h[i])
+                     : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+        asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+    }
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i1s_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8)
+{
+    decode_i1b_to_f16<T1, T2, true>(_i1s, B_local_decode, N);
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i1u_to_f16(T1 *_i1u, T2 *B_local_decode, const int N = 8)
+{
+    decode_i1b_to_f16<T1, T2, false>(_i1u, B_local_decode, N);
+}
+"""
+
+decode_i1_to_f16_scale = """
+template <typename T1, typename T2, typename T3, bool isSigned = false>
+__device__ void decode_i1b_to_f16_scale(T1 *_i1s, T2 *B_local_decode, const int N = 8, T3 *scale = nullptr)
+{
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x00010001;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64006400 : 0x64006400;
+    // interleave {e31,e29,e27,e25,e23,e21,e19,e17,e15,e13,e11,e9,e7,e5,e3,e1,e30,e28,e26,e24,e22,e20,e18,e16,e14,e12,e10,e8,e6,e4,e2,e0}
+    // only decode e7,e5,e3,e1,e8,e6,e4,e2,e0
+    int8_t const i1s_i16 = *reinterpret_cast<int8_t *>(_i1s);
+    int i1s = (i1s_i16 & 0x0f);
+    i1s |= ((i1s_i16 & 0xf0) << 12);
+    T3 const scale_r = *scale;
+    uint const packed_scales = __pack_half2(scale_r, scale_r);
+#pragma unroll
+    // decode 2 elems at one time.
+    for (int i = 0; i < (N / 2); i++)
+    {
+
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                     : "=r"(h[i])
+                     : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+        asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_scales), "r"(0));
+    }
+}
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i1s_to_f16_scale(T1 *_i1s, T2 *B_local_decode, T3 *scale = nullptr, const int N = 8)
+{
+    decode_i1b_to_f16_scale<T1, T2, T3, true>(_i1s, B_local_decode, N, scale);
+}
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i1u_to_f16_scale(T1 *_i1u, T2 *B_local_decode, T3 *scale = nullptr, const int N = 8)
+{
+    decode_i1b_to_f16_scale<T1, T2, T3, false>(_i1u, B_local_decode, N, scale);
+}
+"""
+decode_i1_to_f16_scale_zeros_original = """
+template <typename T1, typename T2, typename T3, typename T4, bool isSigned = false>
+__device__ void decode_i1b_to_f16_zeros_original(T1 *_i1s, T2 *B_local_decode, const int N = 8, T3 *scale = nullptr, T4 *zeros = nullptr)
+{
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x00010001;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64006400 : 0x64006400;
+    // interleave {e31,e29,e27,e25,e23,e21,e19,e17,e15,e13,e11,e9,e7,e5,e3,e1,e30,e28,e26,e24,e22,e20,e18,e16,e14,e12,e10,e8,e6,e4,e2,e0}
+    // only decode e7,e5,e3,e1,e8,e6,e4,e2,e0
+    int8_t const i1s_i16 = *reinterpret_cast<int8_t *>(_i1s);
+    int i1s = (i1s_i16 & 0x0f);
+    i1s |= ((i1s_i16 & 0xf0) << 12);
+    T3 const scale_r = *scale;
+    uint const packed_scales = __pack_half2(scale_r, scale_r);
+    // input zeros maybe int32(qzeros) or half format
+    T4 const zero_r = *zeros;
+    uint const packed_zeros = __pack_half2(zero_r, zero_r);
+
+#pragma unroll
+    // decode 2 elems at one time.
+    for (int i = 0; i < (N / 2); i++)
+    {
+
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                     : "=r"(h[i])
+                     : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+        asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_zeros));
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_scales), "r"(0));
+    }
+}
+template <typename T1, typename T2, typename T3, typename T4>
+__device__ void decode_i1u_to_f16_scale_zeros_original(T1 *_i1u, T2 *B_local_decode, T3 *scale = nullptr, T4 *zeros = nullptr, const int N = 8)
+{
+    decode_i1b_to_f16_zeros_original<T1, T2, T3, T4, false>(_i1u, B_local_decode, N, scale, zeros);
+}
+"""
+decode_i1_to_f16_scale_zeros_rescale = """
+template <typename T1, typename T2, typename T3, typename T4, bool isSigned = false>
+__device__ void decode_i1b_to_f16_scale_zeros_rescale(T1 *_i1s, T2 *B_local_decode, const int N = 8, T3 *scale = nullptr, T4 *zeros = nullptr)
+{
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x00010001;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64006400 : 0x64006400;
+    // interleave {e31,e29,e27,e25,e23,e21,e19,e17,e15,e13,e11,e9,e7,e5,e3,e1,e30,e28,e26,e24,e22,e20,e18,e16,e14,e12,e10,e8,e6,e4,e2,e0}
+    // only decode e7,e5,e3,e1,e8,e6,e4,e2,e0
+    int8_t const i1s_i16 = *reinterpret_cast<int8_t *>(_i1s);
+    int i1s = (i1s_i16 & 0x0f);
+    i1s |= ((i1s_i16 & 0xf0) << 12);
+    T3 const scale_r = *scale;
+    uint const packed_scales = __pack_half2(scale_r, scale_r);
+    T4 const zero_r = *zeros;
+    uint const packed_zeros = 0x80008000 | __pack_half2(zero_r, zero_r);
+
+#pragma unroll
+    // decode 2 elems at one time.
+    for (int i = 0; i < (N / 2); i++)
+    {
+
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                     : "=r"(h[i])
+                     : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+        asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_scales), "r"(packed_zeros));
+    }
+}
+
+template <typename T1, typename T2, typename T3, typename T4>
+__device__ void decode_i1u_to_f16_scale_zeros_rescale(T1 *_i4u, T2 *B_local_decode, T3 *scale = nullptr, T4 *zeros = nullptr, const int N = 8)
+{
+    decode_i1b_to_f16_scale_zeros_rescale<T1, T2, T3, T4, false>(_i4u, B_local_decode, N, scale, zeros);
+}
+"""
+
+decode_i1s_to_i8s = """template <typename T1, typename T2>
 __device__ void decode_i1s_to_i8s(T1 *_i1b, T2 *_i8s, const int N = 16)
 {
     int *i8s = reinterpret_cast<int *>(_i8s);
@@ -1006,6 +1163,13 @@ TensorIntrin.register(
         source_bit=2, storage_dtype="int8", target_dtype="float16", loops_extent=8),
 )
 
+LOP3_FAST_DECODE_UINT1_TO_INT8_TO_FP16_L8_INTRIN = ("lop3_fast_decode_u1_to_int8_to_f16_l8_")
+TensorIntrin.register(
+    LOP3_FAST_DECODE_UINT1_TO_INT8_TO_FP16_L8_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=1, storage_dtype="int8", target_dtype="float16", loops_extent=8),
+)
+
 LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_INTRIN = ("lop3_fast_decode_u4_to_int32_to_f16_l8_")
 TensorIntrin.register(
     LOP3_FAST_DECODE_UINT4_TO_INT32_TO_FP16_L8_INTRIN,
@@ -1138,6 +1302,49 @@ TensorIntrin.register(
     LOP3_FAST_DECODE_UINT2_TO_INT8_TO_FP16_L8_SCALE_ZEROS_RESCALE_INTRIN,
     *get_fast_decode_intrin(
         source_bit=2,
+        storage_dtype="int8",
+        target_dtype="float16",
+        loops_extent=8,
+        with_scale=True,
+        with_zeros=True,
+        zeros_type="rescale",
+    ),
+)
+
+LOP3_FAST_DECODE_UINT1_TO_INT8_TO_FP16_L8_SCALE_INTRIN = (
+    "lop3_fast_decode_u1_to_int8_to_f16_l8_scale_")
+TensorIntrin.register(
+    LOP3_FAST_DECODE_UINT1_TO_INT8_TO_FP16_L8_SCALE_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=1,
+        storage_dtype="int8",
+        target_dtype="float16",
+        loops_extent=8,
+        with_scale=True,
+    ),
+)
+
+LOP3_FAST_DECODE_UINT1_TO_INT8_TO_FP16_L8_SCALE_ZEROS_ORIGINAL_INTRIN = (
+    "lop3_fast_decode_u1_to_int8_to_f16_l8_scale_zeros_original_")
+TensorIntrin.register(
+    LOP3_FAST_DECODE_UINT1_TO_INT8_TO_FP16_L8_SCALE_ZEROS_ORIGINAL_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=1,
+        storage_dtype="int8",
+        target_dtype="float16",
+        loops_extent=8,
+        with_scale=True,
+        with_zeros=True,
+        zeros_type="original",
+    ),
+)
+
+LOP3_FAST_DECODE_UINT1_TO_INT8_TO_FP16_L8_SCALE_ZEROS_RESCALE_INTRIN = (
+    "lop3_fast_decode_u1_to_int8_to_f16_l8_scale_zeros_rescale_")
+TensorIntrin.register(
+    LOP3_FAST_DECODE_UINT1_TO_INT8_TO_FP16_L8_SCALE_ZEROS_RESCALE_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=1,
         storage_dtype="int8",
         target_dtype="float16",
         loops_extent=8,
@@ -1287,14 +1494,18 @@ def get_lop3_intrin_group(
     import_c_map = {
         "i4_to_f16": decode_i4_to_f16,
         "i2_to_f16": decode_i2_to_f16,
+        "i1_to_f16": decode_i1_to_f16,
         "i4_to_f16_scale": decode_i4_to_f16_scale,
         "i2_to_f16_scale": decode_i2_to_f16_scale,
+        "i1_to_f16_scale": decode_i1_to_f16_scale,
         "i4_to_f16_scale_zeros_original": decode_i4_to_f16_scale_zeros_original,
         "i2_to_f16_scale_zeros_original": decode_i2_to_f16_scale_zeros_original,
+        "i1_to_f16_scale_zeros_original": decode_i1_to_f16_scale_zeros_original,
         "i4_to_f16_scale_zeros_rescale": decode_i4_to_f16_scale_zeros_rescale,
         "i2_to_f16_scale_zeros_rescale": decode_i2_to_f16_scale_zeros_rescale,
+        "i1_to_f16_scale_zeros_rescale": decode_i1_to_f16_scale_zeros_rescale,
         "i4_to_f16_scale_zeros_quantized": decode_i4_to_f16_scale_zeros_quantized,
-        "i1_to_i8": decode_i1s_to_i8s_l16,
+        "i1_to_i8": decode_i1s_to_i8s,
         "i2_to_i8": decode_i2s_to_i8s,
         "i4_to_i8": decode_i4s_to_i8s,
     }

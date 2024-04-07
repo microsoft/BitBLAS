@@ -4,7 +4,6 @@
 import tvm
 from tvm.target import Target
 from .arch_base import TileDevice
-from typing import List, Dict
 
 
 # For LLVM Backend, we do not provide the detailed information of the CPU

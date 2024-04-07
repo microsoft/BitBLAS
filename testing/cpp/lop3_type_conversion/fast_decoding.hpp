@@ -142,7 +142,7 @@ __device__ void decode_i4u_to_f16(T1 *_i4u, T2 *B_local_decode, const int N = 8)
     decode_i4b_to_f16<T1, T2, false>(_i4u, B_local_decode, N);
 }
 
-template <typename T1, typename T2, typename T3, bool isSigned = false, bool withScaling = false>
+template <typename T1, typename T2, typename T3, bool isSigned = false>
 __device__ void decode_i4b_to_f16_scale(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T3 *scale = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
@@ -172,13 +172,13 @@ __device__ void decode_i4b_to_f16_scale(T1 *_i4s, T2 *B_local_decode, const int 
 template <typename T1, typename T2, typename T3>
 __device__ void decode_i4s_to_f16_scale(T1 *_i4s, T2 *B_local_decode, T3 *scale = nullptr, const int N = 8)
 {
-    decode_i4b_to_f16_scale<T1, T2, T3, true, true>(_i4s, B_local_decode, N, scale);
+    decode_i4b_to_f16_scale<T1, T2, T3, true>(_i4s, B_local_decode, N, scale);
 }
 
 template <typename T1, typename T2, typename T3>
 __device__ void decode_i4u_to_f16_scale(T1 *_i4u, T2 *B_local_decode, T3 *scale = nullptr, const int N = 8)
 {
-    decode_i4b_to_f16_scale<T1, T2, T3, false, true>(_i4u, B_local_decode, N, scale);
+    decode_i4b_to_f16_scale<T1, T2, T3, false>(_i4u, B_local_decode, N, scale);
 }
 
 template <typename T1, typename T2, typename T3, typename T4, bool isSigned = false>
@@ -442,28 +442,121 @@ __device__ void decode_i1u_to_f16(T1 *_i1u, T2 *B_local_decode, const int N = 8)
     decode_i1b_to_f16<T1, T2, false>(_i1u, B_local_decode, N);
 }
 
-template <typename T1, typename T2>
-__device__ void decode_i1s_to_f16_scale(T1 *_i1s, T2 *B_local_decode, half *scale = nullptr, const int N = 8)
+template <typename T1, typename T2, typename T3, bool isSigned = false>
+__device__ void decode_i1b_to_f16_scale(T1 *_i1s, T2 *B_local_decode, const int N = 8, T3 *scale = nullptr)
 {
-    decode_i1b_to_f16<T1, T2, true, true>(_i1s, B_local_decode, N, scale);
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x00010001;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64006400 : 0x64006400;
+    // interleave {e31,e29,e27,e25,e23,e21,e19,e17,e15,e13,e11,e9,e7,e5,e3,e1,e30,e28,e26,e24,e22,e20,e18,e16,e14,e12,e10,e8,e6,e4,e2,e0}
+    // only decode e7,e5,e3,e1,e8,e6,e4,e2,e0
+    int8_t const i1s_i16 = *reinterpret_cast<int8_t *>(_i1s);
+    int i1s = (i1s_i16 & 0x0f);
+    i1s |= ((i1s_i16 & 0xf0) << 12);
+    T3 const scale_r = *scale;
+    uint const packed_scales = __pack_half2(scale_r, scale_r);
+#pragma unroll
+    // decode 2 elems at one time.
+    for (int i = 0; i < (N / 2); i++)
+    {
+
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
+                     : "=r"(h[i])
+                     : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+        asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_scales), "r"(0));
+    }
+}
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i1s_to_f16_scale(T1 *_i1s, T2 *B_local_decode, T3 *scale = nullptr, const int N = 8)
+{
+    decode_i1b_to_f16_scale<T1, T2, T3, true>(_i1s, B_local_decode, N, scale);
 }
 
-template <typename T1, typename T2>
-__device__ void decode_i1u_to_f16_scale(T1 *_i1u, T2 *B_local_decode, half *scale = nullptr, const int N = 8)
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i1u_to_f16_scale(T1 *_i1u, T2 *B_local_decode, T3 *scale = nullptr, const int N = 8)
 {
-    decode_i1b_to_f16<T1, T2, false, true>(_i1u, B_local_decode, N, scale);
+    decode_i1b_to_f16_scale<T1, T2, T3, false>(_i1u, B_local_decode, N, scale);
 }
 
-template <typename T1, typename T2>
-__device__ void decode_i1u_to_f16_scale_zeros_original(T1 *_i1u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
+template <typename T1, typename T2, typename T3, typename T4, bool isSigned = false>
+__device__ void decode_i1b_to_f16_zeros_original(T1 *_i1s, T2 *B_local_decode, const int N = 8, T3 *scale = nullptr, T4 *zeros = nullptr)
 {
-    decode_i1b_to_f16<T1, T2, false, true, true, 0>(_i1u, B_local_decode, N, scale, zeros);
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x00010001;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64006400 : 0x64006400;
+    // interleave {e31,e29,e27,e25,e23,e21,e19,e17,e15,e13,e11,e9,e7,e5,e3,e1,e30,e28,e26,e24,e22,e20,e18,e16,e14,e12,e10,e8,e6,e4,e2,e0}
+    // only decode e7,e5,e3,e1,e8,e6,e4,e2,e0
+    int8_t const i1s_i16 = *reinterpret_cast<int8_t *>(_i1s);
+    int i1s = (i1s_i16 & 0x0f);
+    i1s |= ((i1s_i16 & 0xf0) << 12);
+    T3 const scale_r = *scale;
+    uint const packed_scales = __pack_half2(scale_r, scale_r);
+    // input zeros maybe int32(qzeros) or half format
+    T4 const zero_r = *zeros;
+    uint const packed_zeros = __pack_half2(zero_r, zero_r);
+
+#pragma unroll
+    // decode 2 elems at one time.
+    for (int i = 0; i < (N / 2); i++)
+    {
+
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
+                     : "=r"(h[i])
+                     : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+        asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_zeros));
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_scales), "r"(0));
+    }
+}
+template <typename T1, typename T2, typename T3, typename T4>
+__device__ void decode_i1u_to_f16_scale_zeros_original(T1 *_i1u, T2 *B_local_decode, T3 *scale = nullptr, T4 *zeros = nullptr, const int N = 8)
+{
+    decode_i1b_to_f16_zeros_original<T1, T2, T3, T4, false>(_i1u, B_local_decode, N, scale, zeros);
 }
 
-template <typename T1, typename T2>
-__device__ void decode_i1u_to_f16_scale_zeros_rescale(T1 *_i1u, T2 *B_local_decode, half *scale = nullptr, half *zeros = nullptr, const int N = 8)
+template <typename T1, typename T2, typename T3, typename T4, bool isSigned = false>
+__device__ void decode_i1b_to_f16_scale_zeros_rescale(T1 *_i1s, T2 *B_local_decode, const int N = 8, T3 *scale = nullptr, T4 *zeros = nullptr)
 {
-    decode_i1b_to_f16<T1, T2, false, true, true, 1>(_i1u, B_local_decode, N, scale, zeros);
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x00010001;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64006400 : 0x64006400;
+    // interleave {e31,e29,e27,e25,e23,e21,e19,e17,e15,e13,e11,e9,e7,e5,e3,e1,e30,e28,e26,e24,e22,e20,e18,e16,e14,e12,e10,e8,e6,e4,e2,e0}
+    // only decode e7,e5,e3,e1,e8,e6,e4,e2,e0
+    int8_t const i1s_i16 = *reinterpret_cast<int8_t *>(_i1s);
+    int i1s = (i1s_i16 & 0x0f);
+    i1s |= ((i1s_i16 & 0xf0) << 12);
+    T3 const scale_r = *scale;
+    uint const packed_scales = __pack_half2(scale_r, scale_r);
+    T4 const zero_r = *zeros;
+    uint const packed_zeros = 0x80008000 | __pack_half2(zero_r, zero_r);
+
+#pragma unroll
+    // decode 2 elems at one time.
+    for (int i = 0; i < (N / 2); i++)
+    {
+
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
+                     : "=r"(h[i])
+                     : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+        asm volatile("sub.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_scales), "r"(packed_zeros));
+    }
+}
+
+template <typename T1, typename T2, typename T3, typename T4>
+__device__ void decode_i1u_to_f16_scale_zeros_rescale(T1 *_i4u, T2 *B_local_decode, T3 *scale = nullptr, T4 *zeros = nullptr, const int N = 8)
+{
+    decode_i1b_to_f16_scale_zeros_rescale<T1, T2, T3, T4, false>(_i4u, B_local_decode, N, scale, zeros);
 }
 
 void general_interleave_int8(int8_t *origin_arr, int8_t *interleaved, const int nbit, size_t size_in_bytes, bool verbose = false)
