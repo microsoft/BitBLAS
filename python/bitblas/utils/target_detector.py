@@ -33,8 +33,8 @@ def find_best_match(tags, query):
     """
     Finds the best match for a query within a list of tags using fuzzy string matching.
     """
-    MATCH_THRESHOLD = 80
-    best_match, score = process.extractOne(query, tags, scorer=fuzz.WRatio)
+    MATCH_THRESHOLD = 25
+    best_match, score, _ = process.extractOne(query, tags, scorer=fuzz.WRatio)
     return best_match if score >= MATCH_THRESHOLD else "cuda"
 
 
