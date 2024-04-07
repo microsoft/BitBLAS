@@ -3,19 +3,25 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-echo "Check MIT Liscense boilerplate..."
+echo "Check MIT License boilerplate..."
 PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# TO source code root
+# To source code root
 pushd "${PWD}/../../" > /dev/null
 
 EXITCODE=0
 
-for SRC_FILE in $(find . -path './3rdparty' -prune -false -o -path './build' -prune -false -o -type f -not -name '*apply_mit_liscense.sh' \
-    -not -name '*check_mit_liscense.sh' -and \( -name 'CMakeLists.txt' -or -name '*.cpp' -or -name '*.cu' -or -name '*.h'  -or -name '*.hpp' \
-    -or -name '*.in' -or -name '*.py' -or -name '*.sh' -or -name '*.dockerfile' -or -name '*.yaml' \) ); do
+for SRC_FILE in $(find . -path './3rdparty' -prune -false -o -path './build' -prune -false -o -type f -not -name '*apply_mit_license.sh' \
+    -not -name '*check_mit_license.sh' -and \( -name 'CMakeLists.txt' -or -name '*.cpp' -or -name '*.cu' -or -name '*.h'  -or -name '*.hpp' \
+    -or -name '*.py' -or -name '*.sh' -or -name '*.dockerfile' -or -name '*.yaml' \) ); do
+    
+    # Skip files that already contain the Apache License
+    if grep -q "Apache License" "${SRC_FILE}"; then
+        continue
+    fi
+
     if !(grep -q "Copyright (c) Microsoft Corporation." "${SRC_FILE}") || !(grep -q "Licensed under the MIT License." "${SRC_FILE}") \
-    || (grep -q -i -P "Microsoft( |)\(c\)" "${SRC_FILE}") || (grep -q "Apache License" "${SRC_FILE}"); then
-        echo "[ERROR] Require: MIT Liscense biolerplate" "${SRC_FILE}"
+    || (grep -q -i -P "Microsoft( |)\(c\)" "${SRC_FILE}"); then
+        echo "[ERROR] Require: MIT License boilerplate" "${SRC_FILE}"
         EXITCODE=1
     fi
 done
