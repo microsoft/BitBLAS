@@ -11,7 +11,7 @@ from bitblas.ops.matmul_dequantize import (
 )
 from bitblas.cache import global_operator_cache
 
-target = bitblas.utils.get_target_from_env()
+target = bitblas.utils.auto_detect_nvidia_target()
 
 
 def get_codegen_result(ops, target):

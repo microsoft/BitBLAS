@@ -3,7 +3,7 @@
 import pytest
 import tvm
 import bitblas
-from bitblas.utils import get_target_from_env
+from bitblas.utils import auto_detect_nvidia_target
 from bitblas.ops.matmul_dequantize import (
     MatmulWeightOnlyDequantize,
     MatmulWeightOnlyDequantizeConfig,
@@ -12,7 +12,7 @@ import logging
 from bitblas import set_log_level
 
 set_log_level(logging.DEBUG)
-target = tvm.target.Target(get_target_from_env())
+target = tvm.target.Target(auto_detect_nvidia_target())
 
 
 def get_codegen_result(ops, target):

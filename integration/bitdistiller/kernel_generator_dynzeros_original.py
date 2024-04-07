@@ -6,7 +6,7 @@ import os
 import tvm
 from tvm import IRModule
 from tvm.target import Target
-from bitblas.utils import match_global_kernel, get_target_from_env
+from bitblas.utils import match_global_kernel, auto_detect_nvidia_target
 from bitblas.base.analysis import get_reduction_blocks
 from bitblas.ops import Operator
 from bitblas.ops.matmul_dequantize import (
@@ -28,7 +28,7 @@ ft_shapes = [
     [128, 15360, 5120],
 ]
 
-target = tvm.target.Target(get_target_from_env())
+target = tvm.target.Target(auto_detect_nvidia_target())
 
 
 def get_template_path():

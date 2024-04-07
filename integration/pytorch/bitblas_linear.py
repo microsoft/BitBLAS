@@ -23,7 +23,7 @@ except ImportError as e:
 
     autogptq_bitblas_cuda = bitblas_import_exception
 
-from bitblas.utils import get_target_from_env  # noqa: E402
+from bitblas.utils import auto_detect_nvidia_target  # noqa: E402
 from bitblas.ops.matmul import MatmulConfig, Matmul  # noqa: E402
 
 
@@ -73,7 +73,7 @@ class Linear(nn.Module):
         assert dtype in BITBLAS_DTYPES, f"Unsupported dtype: {dtype}"
 
         bitblas_dtype = BITBLAS_DTYPES[dtype]
-        self.target = target or get_target_from_env()
+        self.target = target or auto_detect_nvidia_target()
         matmul_config = MatmulConfig(
             M=self.opt_features,
             N=self.outfeatures,

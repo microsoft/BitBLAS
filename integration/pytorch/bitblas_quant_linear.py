@@ -27,7 +27,7 @@ from bitblas.ops.matmul_dequantize import (
     MatmulWeightOnlyDequantizeConfig,
     MatmulWeightOnlyDequantize,
 )
-from bitblas.utils import get_target_from_env
+from bitblas.utils import auto_detect_nvidia_target
 from typing import List, Union, Literal, Optional
 
 
@@ -110,7 +110,7 @@ class QuantLinear(nn.Module):
         }
         assert dtype in BITBLAS_DTYPES, f"Unsupported dtype: {dtype}"
         bitblas_dtype = BITBLAS_DTYPES[dtype]
-        self.target = get_target_from_env()
+        self.target = auto_detect_nvidia_target()
         matmul_config = MatmulWeightOnlyDequantizeConfig(
             M=self.opt_features,
             N=self.outfeatures,

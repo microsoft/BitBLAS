@@ -3,9 +3,9 @@
 import pytest
 import bitblas
 from bitblas.ops.matmul import Matmul, MatmulConfig
-from bitblas.utils import get_target_from_env
+from bitblas.utils import auto_detect_nvidia_target
 
-target = get_target_from_env()
+target = auto_detect_nvidia_target()
 
 
 def get_codegen_result(ops, target):

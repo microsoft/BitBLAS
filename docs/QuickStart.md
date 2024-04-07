@@ -8,9 +8,9 @@ We have packaged common operators with configurations in `bitblas/ops/impl`. You
 
 ```python
 from bitblas.ops.matmul import Matmul, MatmulConfig
-from bitblas.utils import get_target_from_env
+from bitblas.utils import auto_detect_nvidia_target
 
-target = get_target_from_env()
+target = auto_detect_nvidia_target()
 # or use brief target = "cuda"
 # or use detailed target = "nvidia/nvidia-a100" 
 # to let the tuner aware more hardware information
@@ -565,7 +565,7 @@ The latency will be reduced after tuning. We re-implement OSDI'22 paper Roller t
 
 More details about Performance improvements can be found in the relevant document [Benchmark](../benchmark/README.md).
 
-**Notice**: The tuning process uses hardware information to optimize performance. By default, the target is set to `cuda`. However, you can change the target to `nvidia/nvidia-a100` or any other [available targets](3rdparty/tvm/src/target/tag.cc) by setting the `TVM_TARGET` environment variable, like so: `export TVM_TARGET="nvidia/nvidia-a100"`. This allows the tuning process to utilize more specific hardware information.
+**Notice**: The tuning process uses hardware information to optimize performance. By default, the target is set to `cuda`. However, you can change the target to `nvidia/nvidia-a100` or any other [available targets](3rdparty/tvm/src/target/tag.cc) by setting the `TVM_TARGET` environment variable, like so: `export TVM_TARGET="nvidia/nvidia-a100"`. This allows the tuning process to utilize more specific hardware information. We also provide `auto_detect_nvidia_target` to automatically detect the target from `nvidia-smi`.
 
 ### Tune with Dynamic Symbolic
 
@@ -743,7 +743,7 @@ import torch
 import torch.nn as nn
 from bitblas.quantization.utils import general_compress, interleave_weight
 from bitblas.ops.matmul_dequantize import MatmulWeightOnlyDequantize, MatmulWeightOnlyDequantizeConfig
-from bitblas.utils import get_target_from_env
+from bitblas.utils import auto_detect_nvidia_target
 
 class QuantLinear(nn.Module):
     def __init__(
@@ -783,7 +783,7 @@ class QuantLinear(nn.Module):
             with_zeros=True,
             zeros_type="quantized",
         )
-        self.matmul_op = MatmulWeightOnlyDequantize(config=self.matmul_config, target=get_target_from_env())
+        self.matmul_op = MatmulWeightOnlyDequantize(config=self.matmul_config, target=auto_detect_nvidia_target())
 
     def forward(self, input):
         if self.bias is not None:
