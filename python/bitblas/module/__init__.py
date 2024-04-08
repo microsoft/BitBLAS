@@ -34,8 +34,6 @@ from bitblas import auto_detect_nvidia_target
 BITBLAS_TARGET = auto_detect_nvidia_target()
 BITBLAS_DATABASE_PATH = ".bitblas_database"
 BITBLAS_PROPAGATE_WEIGHTS = False
-global_operator_cache.load_from_database(BITBLAS_DATABASE_PATH, BITBLAS_TARGET)
-
 
 class Linear(nn.Module):
     OPT_FEATURES = [1, 16, 32, 64, 128, 256, 512]
@@ -122,7 +120,7 @@ class Linear(nn.Module):
             raise ValueError("`infeatures` must be divisible by `group_size`.")
 
     def _set_group_size(self, group_size, infeatures):
-        return infeatures if group_size == -1 else group_size
+        return infeatures if (group_size == -1 or group_size == None) else group_size
 
     def _initialize_buffers(self, infeatures, outfeatures, bias):
         if self.consistent:
@@ -208,6 +206,11 @@ class Linear(nn.Module):
         )
 
     def _get_or_create_bitblas_operator(self, config, enable_tuning):
+        if global_operator_cache.size() == 0:
+            global_operator_cache.load_from_database(
+                BITBLAS_DATABASE_PATH, BITBLAS_TARGET
+            )
+
         bitblas_matmul = global_operator_cache.get(config)
         if bitblas_matmul is None:
             bitblas_matmul = Matmul(config, target=BITBLAS_TARGET)
@@ -232,7 +235,7 @@ class Linear(nn.Module):
     def forward(self, A, Output=None):
         if A.dtype != torch.float16:
             A = A.half()
-        
+
         # can be lifted to post init.
         self.init_params()
 

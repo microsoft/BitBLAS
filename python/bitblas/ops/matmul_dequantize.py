@@ -102,29 +102,6 @@ class MatmulWeightOnlyDequantizeConfig:
         elif isinstance(self.propagate_b, int):
             object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
 
-        if self.weight_dtype is not None:
-            # Transform weight_dtype to source_format and bit
-            BITBLAS_TRICK_DTYPE_MAP = {
-                "int8": ("int", 4),
-                "uint8": ("uint", 4),
-                "int4": ("int", 4),
-                "uint4": ("uint", 4),
-                "int2": ("int", 2),
-                "uint2": ("uint", 2),
-                "int1": ("int", 1),
-                "uint1": ("uint", 1),
-                "float16": ("fp", 16),
-                "nf4": ("af", 4),
-                "fp8_e5m2": ("fp", 8),
-                "fp4_e2m1": ("af", 4),
-            }
-            assert (self.weight_dtype
-                    in BITBLAS_TRICK_DTYPE_MAP), f"Unsupported weight_dtype: {self.weight_dtype}"
-            source_format, bit = BITBLAS_TRICK_DTYPE_MAP[self.weight_dtype]
-            object.__setattr__(self, "source_format", source_format)
-            object.__setattr__(self, "bit", bit)
-
-
 class MatmulWeightOnlyDequantize(Operator):
 
     def __init__(

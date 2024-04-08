@@ -8,3 +8,5 @@ from .quantization import (
     _tir_u32_to_f4_to_f16,  # noqa: F401
     _tir_packed_to_unsigned_convert_with_zeros,  # noqa: F401
 )
+
+from .utils import general_compress  # noqa: F401

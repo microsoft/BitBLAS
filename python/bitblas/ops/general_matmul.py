@@ -107,6 +107,17 @@ class MatmulConfig:
         else:
             object.__setattr__(self, "fast_decoding", self.fast_decoding)
 
+        if self.with_bias is None:
+            object.__setattr__(self, "with_bias", False)
+        
+        if self.group_size is None:
+            object.__setattr__(self, "group_size", -1)
+        
+        if self.with_scaling is None:
+            object.__setattr__(self, "with_scaling", False)
+        
+        if self.with_zeros is None:
+            object.__setattr__(self, "with_zeros", False)
 
 class Matmul(Operator):
 

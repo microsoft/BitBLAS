@@ -1,0 +1,33 @@
+import bitblas
+import torch
+
+matmul_config = bitblas.MatmulConfig(
+    M=1, # M dimension
+    N=1024, # N dimension
+    K=1024, # K dimension
+    A_dtype="float16", # activation A dtype
+    W_dtype="int4", # weight W dtype
+    accum_dtype="float16", # accumulation dtype
+    out_dtype="float16", # output dtype
+    layout="nt", # matrix layout, "nt" indicates the layout of A is non-transpose and the layout of W is transpose
+    with_bias=None, # bias
+
+    # configs for weight only quantization
+    group_size=None, # setting for grouped quantization
+    with_scaling=None, # setting for scaling factor
+    with_zeros=None, # setting for zeros
+    zeros_mode=None, # setting for how to calculating zeros
+)
+matmul = bitblas.Matmul(
+    config=matmul_config
+)
+
+activation = torch.rand((1024, 1024), dtype=torch.float16).cuda()
+intweight = torch.randint(-7, 7, (1024, 1024), dtype=torch.int8).cuda()
+compressed_weight = torch.from_numpy(bitblas.quantization.general_compress(intweight.cpu().numpy(), source_bits=4))
+# if weight transform can be applied (e.g., Ladder Layout Propagation or Fast Type Conversion).
+if matmul.weight_transform is not None:
+    weight_int4 = matmul.weight_transform(compressed_weight.cpu()).cuda()
+output = torch.empty((1024, 1024), dtype=torch.float16).cuda()
+matmul(activation, weight_int4, output)
+print(output)
