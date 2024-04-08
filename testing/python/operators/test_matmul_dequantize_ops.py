@@ -22,7 +22,7 @@ def get_codegen_result(ops, target):
 
 # fmt: off
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,layout,zeros_type",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,layout,propagate_a,propagate_b,zeros_type",
     [
         (16, 768, 768, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True,
          False, "nt", False, False, "original"),
@@ -61,17 +61,6 @@ def test_matmul_dequantize_codegen_default(M, N, K, in_dtype, out_dtype, accum_d
         config=matmul_config,
         target=target,
     )
-    # with matmul.arch.target:
-    #     mod = bitblas.ApplyDefaultSchedule(  # pylint: disable=not-callable
-    #         bitblas.gpu.Matmul(),
-    #         # bitblas.gpu.GEMV(),
-    #         # bitblas.gpu.Reduction(),
-    #         # bitblas.gpu.GeneralReduction(),
-    #         # bitblas.gpu.Fallback(),
-    #     )(
-    #         matmul.prim_func_mod)
-    sch = bitblas.gpu.GEMVWithDequantizeInfo().apply(matmul.prim_func, target, False)
-    print(sch.mod)
     assert get_codegen_result(matmul, target)
 
 
@@ -503,7 +492,7 @@ def test_matmul_dequantize_torch_forward(M, N, K, in_dtype, out_dtype, accum_dty
     qw_torch = torch.from_numpy(qw_np).cuda()
     permuted_inputs = []
     if matmul.input_transform is not None:
-        permuted_inputs.append(matmul.input_transform(qw_torch.cpu()).cuda())
+        permuted_inputs.append(matmul.input_transform(inputs[0].cpu()).cuda())
     else:
         permuted_inputs.append(inputs[0])
     if matmul.weight_transform is not None:
@@ -642,7 +631,7 @@ def test_matmul_dequantize_propgate_comparison(M, N, K, in_dtype, out_dtype, acc
 
 
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout,zeros_type",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout,source_zeros_type,target_zeros_type",
     [
         (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False,
          False, False, False, "nt", "rescale", "quantized"),

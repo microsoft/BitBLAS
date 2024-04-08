@@ -147,6 +147,12 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             out_dtype=out_dtype,
             trans_b=True,
         )
+        if "weight_transform_kind" in func.attrs:
+            intrin_info.weight_transform_kind = int(func.attrs["weight_transform_kind"])
+
+        if "input_transform_kind" in func.attrs:
+            intrin_info.input_transform_kind = int(func.attrs["input_transform_kind"])
+        # default Hint
         config = Hint().from_dict({
             "block": [128, 128],
             "warp": [64, 64],
@@ -220,21 +226,21 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 return
 
             # step2: transform the layout with inverse permutation
-            _, inverse_indexmap = get_propagate_map(
+            intra_indexmap, _ = get_propagate_map(
                 trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name)
 
             # step3: propagate the matmul layout to the first reindex block
 
-            inverse_indexmap = layout_propagate_chain(
+            intra_indexmap = layout_propagate_chain(
                 sch,
                 start_block=main_block,
                 start_buffer=source_buffer,
                 end_block=propagate_block,
-                index_map=inverse_indexmap,
+                index_map=intra_indexmap,
             )
 
             def inverse_permutation(i, j, ii, jj):
-                return (i, j, *inverse_indexmap.map_indices([ii, jj]))
+                return (i, j, *intra_indexmap.map_indices([ii, jj]))
 
             sch.transform_layout(propagate_block, ("read", 0), inverse_permutation)
 
@@ -395,15 +401,15 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(block_shared_local_local, B_shared_vi, preserve_unit_loops=True)
 
             dequantize_block_local = block_shared_local
-            if "zeros_type" in weight_decode_info and weight_decode_info[
-                    "zeros_type"] == "quantized":
+            if ("zeros_type" in weight_decode_info and
+                    weight_decode_info["zeros_type"] == "quantized"):
                 if ("with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]):
                     block_local_scales = sch.cache_read(dequantize_block_local, b_idx + 1, "local")
                     sch.compute_at(block_local_scales, B_shared_vi, preserve_unit_loops=True)
                     # pop the scale block
                     auto_inline_producers(sch, block_local_scales)
 
-                if "with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]:
+                if ("with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]):
                     block_local_zeros = sch.cache_read(dequantize_block_local, b_idx + 2, "local")
                     sch.compute_at(block_local_zeros, B_shared_vi, preserve_unit_loops=True)
                     auto_inline_producers(sch, block_local_zeros)
@@ -411,6 +417,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             for producer in weight_producers:
                 with suppress(Exception):
                     auto_inline_producers(sch, producer)
+                    sch.compute_inline(producer)
 
             # fast type conversion
             if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):
@@ -703,21 +710,21 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 return
 
             # step2: transform the layout with inverse permutation
-            _, inverse_indexmap = get_propagate_map(
+            intra_indexmap, _ = get_propagate_map(
                 trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name)
 
             # step3: propagate the matmul layout to the first reindex block
 
-            inverse_indexmap = layout_propagate_chain(
+            intra_indexmap = layout_propagate_chain(
                 sch,
                 start_block=main_block,
                 start_buffer=source_buffer,
                 end_block=propagate_block,
-                index_map=inverse_indexmap,
+                index_map=intra_indexmap,
             )
 
             def inverse_permutation(i, j, ii, jj):
-                return (i, j, *inverse_indexmap.map_indices([ii, jj]))
+                return (i, j, *intra_indexmap.map_indices([ii, jj]))
 
             sch.transform_layout(propagate_block, ("read", 0), inverse_permutation)
 
@@ -878,15 +885,15 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(block_shared_local_local, B_shared_vi, preserve_unit_loops=True)
 
             dequantize_block_local = block_shared_local
-            if "zeros_type" in weight_decode_info and weight_decode_info[
-                    "zeros_type"] == "quantized":
+            if ("zeros_type" in weight_decode_info and
+                    weight_decode_info["zeros_type"] == "quantized"):
                 if ("with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]):
                     block_local_scales = sch.cache_read(dequantize_block_local, b_idx + 1, "local")
                     sch.compute_at(block_local_scales, B_shared_vi, preserve_unit_loops=True)
                     # pop the scale block
                     auto_inline_producers(sch, block_local_scales)
 
-                if "with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]:
+                if ("with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]):
                     block_local_zeros = sch.cache_read(dequantize_block_local, b_idx + 2, "local")
                     sch.compute_at(block_local_zeros, B_shared_vi, preserve_unit_loops=True)
                     auto_inline_producers(sch, block_local_zeros)
@@ -894,6 +901,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             for producer in weight_producers:
                 with suppress(Exception):
                     auto_inline_producers(sch, producer)
+                    sch.compute_inline(producer)
 
             # fast type conversion
             if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):
@@ -1398,9 +1406,11 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 sch.get_loops(block_shared)[-1], factors=[None, 1, decode_factor])
             block_shared_local = sch.cache_read(block_shared, 0, "local")
             # global -> dequantzed_local -> shared
-            # step2. inline to local block, should skip qzeros
+            # step2. inline to local block, should skip qzeros]\
+            is_qzeros = ("with_zeros" in weight_decode_info and weight_decode_info["with_zeros"])
             weight_dequantize_block = sch.get_block(weight_decode_info["decode_block"])
-            weight_producers = _collect_producers(sch, weight_dequantize_block)
+            weight_producers = (
+                _collect_producers(sch, weight_dequantize_block) if is_qzeros else [])
             auto_inline_producers(sch, block_shared_local, weight_producers)
 
             # get target dequantize buffer's idx
@@ -1422,16 +1432,13 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(block_shared_local_local, B_shared_vi, preserve_unit_loops=True)
 
             dequantize_block_local = block_shared_local
-            if "zeros_type" in weight_decode_info and weight_decode_info[
-                    "zeros_type"] == "quantized":
-                if "with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]:
+            if is_qzeros:
+                if ("with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]):
                     block_local_scales = sch.cache_read(dequantize_block_local, b_idx + 1, "local")
                     sch.compute_at(block_local_scales, B_shared_vi, preserve_unit_loops=True)
-                    # pop the scale block
                     auto_inline_producers(sch, block_local_scales)
-                    #
 
-                if "with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]:
+                if ("with_zeros" in weight_decode_info and weight_decode_info["with_zeros"]):
                     block_local_zeros = sch.cache_read(dequantize_block_local, b_idx + 2, "local")
                     sch.compute_at(block_local_zeros, B_shared_vi, preserve_unit_loops=True)
                     auto_inline_producers(sch, block_local_zeros)
@@ -1439,6 +1446,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             for producer in weight_producers:
                 with suppress(Exception):
                     auto_inline_producers(sch, producer)
+                    sch.compute_inline(producer)
 
             # fast type conversion
             if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):

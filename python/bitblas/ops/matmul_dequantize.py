@@ -50,6 +50,8 @@ class MatmulWeightOnlyDequantizeConfig:
     N: int
     K: int
     in_dtype: str = "float16"
+    # is a wrapper for source_format and bit
+    weight_dtype: Optional[str] = None  # can be "int8", "uint8", ...
     out_dtype: str = "float16"
     accum_dtype: str = "float16"
     bit: int = 4
@@ -101,6 +103,28 @@ class MatmulWeightOnlyDequantizeConfig:
             )
         elif isinstance(self.propagate_b, int):
             object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
+
+        if self.weight_dtype is not None:
+            # Transform weight_dtype to source_format and bit
+            BITBLAS_TRICK_DTYPE_MAP = {
+                "int8": ("int", 4),
+                "uint8": ("uint", 4),
+                "int4": ("int", 4),
+                "uint4": ("uint", 4),
+                "int2": ("int", 2),
+                "uint2": ("uint", 2),
+                "int1": ("int", 1),
+                "uint1": ("uint", 1),
+                "float16": ("fp", 16),
+                "nf4": ("af", 4),
+                "fp8_e5m2": ("fp", 8),
+                "fp4_e2m1": ("af", 4),
+            }
+            assert (self.weight_dtype
+                    in BITBLAS_TRICK_DTYPE_MAP), f"Unsupported weight_dtype: {self.weight_dtype}"
+            source_format, bit = BITBLAS_TRICK_DTYPE_MAP[self.weight_dtype]
+            object.__setattr__(self, "source_format", source_format)
+            object.__setattr__(self, "bit", bit)
 
 
 class MatmulWeightOnlyDequantize(Operator):
@@ -185,6 +209,11 @@ class MatmulWeightOnlyDequantize(Operator):
             )
         else:
             self.lop3_permutate = None
+
+        input_executors = OPExecutorCPU()
+        if self.ladder_permutate_a is not None:
+            input_executors.append(self.ladder_permutate_a)
+        self.input_executors = input_executors
 
         weight_executors = OPExecutorCPU()
         if self.lop3_permutate is not None:
@@ -308,9 +337,7 @@ class MatmulWeightOnlyDequantize(Operator):
 
     @property
     def input_transform(self):
-        if self.ladder_permutate_a is not None:
-            return self.ladder_permutate_a
-        return None
+        return self.input_executors if self.input_executors.size else None
 
     @property
     def weight_transform(self):
