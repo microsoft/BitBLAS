@@ -26,8 +26,8 @@ def test_correctness_consistent(m, infeatures, outfeatures, bias):
         infeatures,
         outfeatures,
         bias=bias,
-        in_dtype="float16",
-        weight_dtype="float16",
+        A_dtype="float16",
+        W_dtype="float16",
         accum_dtype="float16",
         out_dtype="float16",
         opt_features=m,
@@ -49,7 +49,7 @@ def test_correctness_consistent(m, infeatures, outfeatures, bias):
 
 
 @pytest.mark.parametrize(
-    "m, infeatures, outfeatures, bias, weight_dtype, group_size, with_scaling, with_zeros, zeros_mode",
+    "m, infeatures, outfeatures, bias, W_dtype, group_size, with_scaling, with_zeros, zeros_mode",
     [
         (1, 1024, 1024, False, "uint4", -1, False, False, None),
         (1, 1024, 1024, False, "uint4", -1, False, False, None),
@@ -65,7 +65,7 @@ def test_correctness_weight_only_dequantize(
     infeatures,
     outfeatures,
     bias,
-    weight_dtype,
+    W_dtype,
     group_size,
     with_scaling,
     with_zeros,
@@ -78,8 +78,8 @@ def test_correctness_weight_only_dequantize(
         infeatures,
         outfeatures,
         bias=bias,
-        in_dtype="float16",
-        weight_dtype=weight_dtype,
+        A_dtype="float16",
+        W_dtype=W_dtype,
         accum_dtype="float16",
         out_dtype="float16",
         group_size=group_size,
@@ -227,7 +227,7 @@ def profile(model, input_data):
 #         infeatures,
 #         outfeatures,
 #         bias=bias,
-#         in_dtype=torch.float16,
+#         A_dtype=torch.float16,
 #         opt_features=m,
 #         enable_tuning=False,
 #     ).cuda()

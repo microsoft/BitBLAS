@@ -52,9 +52,9 @@ class MatmulConfig:
     M: Union[int, Tuple[int]]
     N: int
     K: int
-    in_dtype: str = "float16"
+    A_dtype: str = "float16"
     # is a wrapper for source_format and bit
-    weight_dtype: str = in_dtype  # weight_dtype is the same as in_dtype by default
+    W_dtype: str = A_dtype  # W_dtype is the same as A_dtype by default
     out_dtype: str = "float16"
     accum_dtype: str = "float16"
     layout: Literal["nn", "nt", "tn", "tt"] = "nt"
@@ -102,7 +102,7 @@ class MatmulConfig:
         if self.zeros_mode is None:
             object.__setattr__(self, "zeros_mode", "original")
 
-        if "int" not in self.weight_dtype:
+        if "int" not in self.W_dtype:
             object.__setattr__(self, "fast_decoding", False)
         else:
             object.__setattr__(self, "fast_decoding", self.fast_decoding)
@@ -140,9 +140,9 @@ class Matmul(Operator):
     ):
         if target is None:
             target = auto_detect_nvidia_target()
-        assert (config.in_dtype
-                in self.BITBLAS_TRICK_DTYPE_MAP), f"Unsupported input dtype {config.in_dtype}"
-        source_format, bit = self.BITBLAS_TRICK_DTYPE_MAP[config.weight_dtype]
+        assert (config.A_dtype
+                in self.BITBLAS_TRICK_DTYPE_MAP), f"Unsupported input dtype {config.A_dtype}"
+        source_format, bit = self.BITBLAS_TRICK_DTYPE_MAP[config.W_dtype]
 
         self.source_format = source_format
         self.bit = bit
@@ -180,8 +180,8 @@ class Matmul(Operator):
             ladder_permutate_config = LadderPermutateConfig(
                 M=self.M,
                 N=self.K,
-                datatype=self.in_dtype,
-                storage_dtype=self.in_dtype,
+                datatype=self.A_dtype,
+                storage_dtype=self.A_dtype,
                 propagate_kind="A",
                 transpose_matrix=False,
                 transform_kind=self.propagate_a,
@@ -197,7 +197,7 @@ class Matmul(Operator):
             ladder_permutate_config = LadderPermutateConfig(
                 M=self.N,
                 N=self.K,
-                datatype=self.in_dtype,
+                datatype=self.A_dtype,
                 dequantize_bits=self.bit,
                 storage_dtype=self.storage_dtype,
                 propagate_kind="B",
@@ -215,7 +215,7 @@ class Matmul(Operator):
             lop3_permutate_config = LOP3PermutateConfig(
                 M=self.N,
                 N=self.K,
-                datatype=self.in_dtype,
+                datatype=self.A_dtype,
                 dequantize_bits=self.bit,
                 storage_dtype=self.storage_dtype,
             )
@@ -241,12 +241,12 @@ class Matmul(Operator):
         self.weight_executors = weight_executors
 
     def _select_implementation(self):
-        if self.in_dtype == self.weight_dtype:
+        if self.A_dtype == self.W_dtype:
             return consistent_implementation(
                 M=self.M,
                 N=self.N,
                 K=self.K,
-                in_dtype=self.in_dtype,
+                in_dtype=self.A_dtype,
                 out_dtype=self.out_dtype,
                 accum_dtype=self.accum_dtype,
                 with_bias=self.with_bias,
@@ -259,7 +259,7 @@ class Matmul(Operator):
                 M=self.M,
                 N=self.N,
                 K=self.K,
-                in_dtype=self.in_dtype,
+                in_dtype=self.A_dtype,
                 out_dtype=self.out_dtype,
                 accum_dtype=self.accum_dtype,
                 bit=self.bit,
@@ -306,12 +306,12 @@ class Matmul(Operator):
         return self.config.K
 
     @property
-    def in_dtype(self):
-        return self.config.in_dtype
+    def A_dtype(self):
+        return self.config.A_dtype
 
     @property
-    def weight_dtype(self):
-        return self.config.weight_dtype
+    def W_dtype(self):
+        return self.config.W_dtype
 
     @property
     def out_dtype(self):

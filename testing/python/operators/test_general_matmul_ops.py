@@ -16,7 +16,7 @@ def get_codegen_result(ops):
 
 # fmt: off
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,weight_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
+    "M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
     [
         (1, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
          None),
@@ -40,15 +40,15 @@ def get_codegen_result(ops):
          "original"),
     ],
 )
-def test_matmul_codegen_default(M, N, K, in_dtype, weight_dtype, accum_dtype, out_dtype, layout,
+def test_matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout,
                                 with_bias, group_size, with_scaling, with_zeros, zeros_mode):
 
     matmul_config = MatmulConfig(
         M=M,
         N=N,
         K=K,
-        in_dtype=in_dtype,
-        weight_dtype=weight_dtype,
+        A_dtype=A_dtype,
+        W_dtype=W_dtype,
         accum_dtype=accum_dtype,
         out_dtype=out_dtype,
         layout=layout,
@@ -63,7 +63,7 @@ def test_matmul_codegen_default(M, N, K, in_dtype, weight_dtype, accum_dtype, ou
 
 
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,weight_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
+    "M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
     [
         (1, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
          None),
@@ -87,15 +87,15 @@ def test_matmul_codegen_default(M, N, K, in_dtype, weight_dtype, accum_dtype, ou
          "original"),
     ],
 )
-def test_matmul_finetune(M, N, K, in_dtype, weight_dtype, accum_dtype, out_dtype, layout, with_bias,
+def test_matmul_finetune(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias,
                          group_size, with_scaling, with_zeros, zeros_mode):
 
     matmul_config = MatmulConfig(
         M=M,
         N=N,
         K=K,
-        in_dtype=in_dtype,
-        weight_dtype=weight_dtype,
+        A_dtype=A_dtype,
+        W_dtype=W_dtype,
         accum_dtype=accum_dtype,
         out_dtype=out_dtype,
         layout=layout,
@@ -111,7 +111,7 @@ def test_matmul_finetune(M, N, K, in_dtype, weight_dtype, accum_dtype, out_dtype
 
 
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,weight_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
+    "M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
     [
         (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
          None),
@@ -129,7 +129,7 @@ def test_matmul_finetune(M, N, K, in_dtype, weight_dtype, accum_dtype, out_dtype
          "original"),
     ],
 )
-def test_matmul_torch_forward(M, N, K, in_dtype, weight_dtype, accum_dtype, out_dtype, layout,
+def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout,
                               with_bias, group_size, with_scaling, with_zeros, zeros_mode):
     import torch
     torch.random.manual_seed(0)
@@ -140,8 +140,8 @@ def test_matmul_torch_forward(M, N, K, in_dtype, weight_dtype, accum_dtype, out_
         M=M,
         N=N,
         K=K,
-        in_dtype=in_dtype,
-        weight_dtype=weight_dtype,
+        A_dtype=A_dtype,
+        W_dtype=W_dtype,
         accum_dtype=accum_dtype,
         out_dtype=out_dtype,
         layout=layout,
@@ -158,7 +158,7 @@ def test_matmul_torch_forward(M, N, K, in_dtype, weight_dtype, accum_dtype, out_
     output_shape = (M, N)
     inputs = []
     inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda() - 0.5)
-    source_format, bit = matmul.BITBLAS_TRICK_DTYPE_MAP[weight_dtype]
+    source_format, bit = matmul.BITBLAS_TRICK_DTYPE_MAP[W_dtype]
     maxq = 2**(bit - 1) - 1
     zeros = maxq
     if source_format == "uint":

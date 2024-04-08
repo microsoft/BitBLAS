@@ -53,8 +53,8 @@ class Linear(nn.Module):
         infeatures: int,
         outfeatures: int,
         bias: bool = False,
-        in_dtype: str = "float16",
-        weight_dtype: str = "float16",
+        A_dtype: str = "float16",
+        W_dtype: str = "float16",
         accum_dtype: str = "float16",
         out_dtype: str = "float16",
         # configs for weight only quantization
@@ -79,13 +79,13 @@ class Linear(nn.Module):
         self.outfeatures = outfeatures
         self.opt_features = opt_features
         self.group_size = self._set_group_size(group_size, infeatures)
-        self.torch_dtype = getattr(torch, in_dtype)
-        self.is_consitent = in_dtype == weight_dtype
+        self.torch_dtype = getattr(torch, A_dtype)
+        self.is_consitent = A_dtype == W_dtype
         self.zeros_mode = zeros_mode
         self._validate_parameters(self.group_size, infeatures, outfeatures)
         self._configure_bitblas_matmul(
-            in_dtype,
-            weight_dtype,
+            A_dtype,
+            W_dtype,
             accum_dtype,
             out_dtype,
             with_scaling,
@@ -174,8 +174,8 @@ class Linear(nn.Module):
 
     def _configure_bitblas_matmul(
         self,
-        in_dtype,
-        weight_dtype,
+        A_dtype,
+        W_dtype,
         accum_dtype,
         out_dtype,
         with_scaling,
@@ -190,8 +190,8 @@ class Linear(nn.Module):
             M=self.opt_features,
             N=self.outfeatures,
             K=self.infeatures,
-            in_dtype=in_dtype,
-            weight_dtype=weight_dtype,
+            A_dtype=A_dtype,
+            W_dtype=W_dtype,
             accum_dtype=accum_dtype,
             out_dtype=out_dtype,
             storage_dtype=self.STORAGE_DTYPE,
