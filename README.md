@@ -1,13 +1,17 @@
 # BitBLAS
 
-BitBLAS is a lightweight framework designed to generate high-performance CUDA/HIP code for BLAS operators, featuring swizzling and layout propagation. It achieves performance comparable to vendor libraries across various platforms and hardware. BitBLAS aims to assist algorithm developers working on projects like BitNet, GPTQ, and similar endeavors by enabling the rapid implementation of accelerated kernels and their efficient deployment.
+BitBLAS is a library to support mixed-precision BLAS operations on GPUs, for example, the $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication where $C_{cdtype}[M, N] = A_{adtype}[M, K] \times W_{wdtype}[N, K]$.
+BitBLAS aims to support efficient mixed-precision DNN model deployment, especially the $W_{wdtype}A_{adtype}$ quantization in large language models (LLMs), for example, the $W_{INT4}A_{FP16}$ in [GPTQ](https://arxiv.org/abs/2210.17323), the $W_{INT2}A_{FP16}$ in [BitDistiller](https://arxiv.org/abs/2402.10631), the $W_{INT1}A_{INT8}$ and $W_{INT2}A_{INT8}$ in [BitNet](https://arxiv.org/abs/2310.11453) and [BitNet-b1.58](https://arxiv.org/abs/2402.17764).
+
 
 Some of the key features of BitBLAS include:
-  - Auto Tensorize compute with TensorCore-like hardware instructions.
-  - High Performance (Not only FP16xFP16, INT8xINT8, but also FP16xINT4/2/1, INT8xINT4/2/1).
-  - With the flexible DSL (TIR Script) to effortlessly craft domain-specific kernels for your situations.
-  - Support with dynamic symbolic throuth tvm unity -> generate source code with dynamic shape.
-  - BitBLAS first proposed int8xint1 gemv/gemm with 10x/2x speedup over float16xfloat16 on A100, please checkout [op_benchmark_a100_int1_scaling](images/figures/op_benchmark_a100_int1_scaling.png) for detailed input scaling benchmark results.
+  - High performance matrix multiplication for both GEMV (e.g., the single batch auto-regressive decode phase in LLM) and GEMM (e.g., the batched auto-regressive decode phase and the prefill phase in LLM):
+    - $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication including FP16xINT4/2/1, INT8xINT4/2/1, etc. Please checkout [support matrix](#support-matrix) for detailed data types support.
+    - Matrix multiplication like FP16xFP16 and INT8xINT8.
+  - Auto-Tensorization for TensorCore-like hardware instructions.
+  - Implemented [integration](./integration/) to [PyTorch](https://pytorch.org/), [AutoGPTQ](https://github.com/AutoGPTQ/AutoGPTQ) and [vLLM](https://github.com/vllm-project/vllm) for LLM deployment. Please checkout [benchmark summary](#benchmark-summary) for detailed end2end LLM inference performance.
+  - BitBLAS first implemented $W_{INT1}A_{INT8}$ GEMV/GEMM with 10x/2x speedup over $W_{FP16}A_{FP16}$ on A100, please checkout [op_benchmark_a100_int1_scaling](images/figures/op_benchmark_a100_int1_scaling.png) for detailed benchmark results.
+  - Support customizing mixed-precision DNN operations for your specific scenarios via the flexible DSL (TIR Script).
 
 ## Integration Example of FasterTransformer with BitBLAS
 ![FasterTransformer Integration](images/gif/FasterTransformer.gif)
@@ -44,14 +48,21 @@ BitBLAS achieves exceptional performance across a variety of computational patte
 
 For more detailed information on benchmark sets with other formats (NF4/FP4) and other devices (GTX 3090), please refer to the [benchmark](./benchmark/README.md).
 
+## Support Matrix
+
+
 ## Getting Started
 
-- [installation](./docs/Installation.md):
+- [Installation](./docs/Installation.md):
   To install BitBLAS, please checkout the document [installation](./docs/Installation.md). Also Make sure you already have the cuda toolkit (version >= 11) installed in the system. Or you can easily install from `pip install bitblas` in the root directory. 
 
-- [QuickStart](./docs/QuickStart.md): We provide two primary ways to do the code generation: using a high-level DSL (TensorIR Script), or using packed Operators, from the quick start guide, you can learn how to use BitBLAS to generate high performance kernels through Packed Operators API and example usage with PyTorch.
+- [QuickStart](./docs/QuickStart.md): BitBLAS provides two Python APIs to perform mixed-precision matrix multiplication:
+  - ```bitblas.Matmul``` implements the $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication of $C_{cdtype}[M, N] = A_{adtype}[M, K] \times W_{wdtype}[N, K]$.
+  - ```bitblas.Linear``` is a PyTorch ```nn.Linear```-like module to support a Linear of mixed-precision.
 
-- [Integration](./integration/): Explore how BitBLAS seamlessly integrates with other frameworks through our examples. Discover the ease of integrating BitBLAS with PyTorch, AutoGPTQ, and vLLM in the 3rd Party Integration Examples.
+- [Integration](./integration/): Explore how BitBLAS seamlessly integrates with LLM deployment frameworks through our examples. Discover the ease of integrating BitBLAS with PyTorch, AutoGPTQ, and vLLM in the 3rd-party integration examples.
+
+- [Customization](./docs/ExtendOperatorsWithDSL.md): BitBLAS supports implementing customized mixed-precision DNN operations rather than matrix multiplication with the flexible DSL (TIR Script).
 
 ## Contributing
 
