@@ -11,6 +11,7 @@ Some of the key features of BitBLAS include:
   - Auto-Tensorization for TensorCore-like hardware instructions.
   - Implemented [integration](./integration/) to [PyTorch](https://pytorch.org/), [AutoGPTQ](https://github.com/AutoGPTQ/AutoGPTQ) and [vLLM](https://github.com/vllm-project/vllm) for LLM deployment. Please checkout [benchmark summary](#benchmark-summary) for detailed end2end LLM inference performance.
   - BitBLAS first implemented $W_{INT1}A_{INT8}$ GEMV/GEMM with 10x/2x speedup over $W_{FP16}A_{FP16}$ on A100, please checkout [op_benchmark_a100_int1_scaling](images/figures/op_benchmark_a100_int1_scaling.png) for detailed benchmark results.
+  - Support customizing mixed-precision DNN operations for your specific scenarios via the flexible DSL (TIR Script).
 
 ## Integration Example of FasterTransformer with BitBLAS
 ![FasterTransformer Integration](images/gif/FasterTransformer.gif)
@@ -59,7 +60,9 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
   - ```bitblas.Matmul``` implements the $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication of $C_{cdtype}[M, N] = A_{adtype}[M, K] \times W_{wdtype}[N, K]$.
   - ```bitblas.Linear``` is a PyTorch ```nn.Linear```-like module to support a Linear of mixed-precision.
 
-- [Integration](./integration/): Explore how BitBLAS seamlessly integrates with other frameworks through our examples. Discover the ease of integrating BitBLAS with PyTorch, AutoGPTQ, and vLLM in the 3rd Party Integration Examples.
+- [Integration](./integration/): Explore how BitBLAS seamlessly integrates with LLM deployment frameworks through our examples. Discover the ease of integrating BitBLAS with PyTorch, AutoGPTQ, and vLLM in the 3rd-party integration examples.
+
+- [Customization](./docs/ExtendOperatorsWithDSL.md): BitBLAS supports implementing customized mixed-precision DNN operations rather than matrix multiplication with the flexible DSL (TIR Script).
 
 ## Contributing
 
