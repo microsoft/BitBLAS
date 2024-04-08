@@ -145,8 +145,8 @@ class OperatorCache:
             self._instantiate_and_add_operator(mapping, config, rt_mod, lib_name, target)
 
     def _instantiate_and_add_operator(self, mapping, config, rt_mod, lib_name, target):
-        config_cls = getattr(bitblas.ops, mapping["config_type"])
-        operator_cls = getattr(bitblas.ops, mapping["operator_type"])
+        config_cls = getattr(bitblas, mapping["config_type"])
+        operator_cls = getattr(bitblas, mapping["operator_type"])
         op_inst = operator_cls(config=config_cls(**config), target=target)
         op_inst.update_runtime_module(rt_mod, lib_name=lib_name)
         self.add(config_cls(**config), op_inst)

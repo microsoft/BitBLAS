@@ -6,8 +6,7 @@ from bitblas.base.roller.arch.cuda import CUDA
 from typing import Any, List, Literal, Optional, Tuple, Union
 from .operator import Operator, TransformKind
 from .impl.matmul_dequantize_impl import (
-    select_implementation as weight_dequantize_implementation,
-)
+    select_implementation as weight_dequantize_implementation,)
 from .impl.matmul_impl import select_implementation as consistent_implementation
 from ..base.utils import tensor_replace_dp4a
 from bitblas.utils.target_detector import auto_detect_nvidia_target
@@ -58,7 +57,7 @@ class MatmulConfig:
     weight_dtype: str = in_dtype  # weight_dtype is the same as in_dtype by default
     out_dtype: str = "float16"
     accum_dtype: str = "float16"
-    layout: Literal["nn", "nt", "tn", "tt"] = "nn"
+    layout: Literal["nn", "nt", "tn", "tt"] = "nt"
     with_bias: bool = False
     group_size: int = -1
     with_scaling: bool = False
@@ -72,25 +71,20 @@ class MatmulConfig:
     storage_dtype: str = "int8"
 
     # weight transform related flags
-    fast_decoding: bool = False
+    fast_decoding: bool = True  # enable fast decoding by default
     propagate_a: TransformKind = TransformKind.NonTransform
     propagate_b: TransformKind = TransformKind.NonTransform
 
     def __post_init__(self):
         # set M to tuple if it is list
         # otherwise, M is not hashable
-        object.__setattr__(
-            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
-        )
+        object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
         if isinstance(self.propagate_a, bool):
             object.__setattr__(
                 self,
                 "propagate_a",
-                (
-                    TransformKind.IntraWarpTransform
-                    if self.propagate_a
-                    else TransformKind.NonTransform
-                ),
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_a else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_a, int):
             object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
@@ -99,11 +93,8 @@ class MatmulConfig:
             object.__setattr__(
                 self,
                 "propagate_b",
-                (
-                    TransformKind.IntraWarpTransform
-                    if self.propagate_b
-                    else TransformKind.NonTransform
-                ),
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_b else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_b, int):
             object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
@@ -111,19 +102,31 @@ class MatmulConfig:
         if self.zeros_mode is None:
             object.__setattr__(self, "zeros_mode", "original")
 
+        if "int" not in self.weight_dtype:
+            object.__setattr__(self, "fast_decoding", False)
+        else:
+            object.__setattr__(self, "fast_decoding", self.fast_decoding)
+
+
 class Matmul(Operator):
 
     # TODO(lei): This should be improved into a general datatype.
     BITBLAS_TRICK_DTYPE_MAP = {
-        "int8": ("int", 4),
-        "uint8": ("uint", 4),
+        "float64": ("fp", 64),
+        "float32": ("fp", 32),
+        "float16": ("fp", 16),
+        "int32": ("int", 32),
+        "uint32": ("uint", 32),
+        "int16": ("int", 16),
+        "uint16": ("uint", 16),
+        "int8": ("int", 8),
+        "uint8": ("uint", 8),
         "int4": ("int", 4),
         "uint4": ("uint", 4),
         "int2": ("int", 2),
         "uint2": ("uint", 2),
         "int1": ("int", 1),
         "uint1": ("uint", 1),
-        "float16": ("fp", 16),
         "nf4": ("af", 4),
         "fp8_e5m2": ("fp", 8),
         "fp4_e2m1": ("af", 4),
@@ -133,9 +136,22 @@ class Matmul(Operator):
         self,
         config: MatmulConfig,
         name: str = "matmul",
+        target: Optional[Union[str, Target]] = None,
     ):
-        target = auto_detect_nvidia_target()
+        if target is None:
+            target = auto_detect_nvidia_target()
+        assert (config.in_dtype
+                in self.BITBLAS_TRICK_DTYPE_MAP), f"Unsupported input dtype {config.in_dtype}"
+        source_format, bit = self.BITBLAS_TRICK_DTYPE_MAP[config.weight_dtype]
+
+        self.source_format = source_format
+        self.bit = bit
         super().__init__(name, config, target)
+
+        if source_format == "int" and self.with_zeros:
+            logger.warning(
+                "[BitBLAS][Warning] with_zeros is not supported for int source format as int has a constant zeropoints already."
+            )
 
         target = self.target
         if target.kind.name != "cuda":
@@ -144,9 +160,7 @@ class Matmul(Operator):
         self.arch = CUDA(target)
 
         try:
-            self.optimized_func = self.apply_default_schedule(
-                self.prim_func_mod, target
-            )
+            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
         except Exception:
             self.optimized_func = None
             logger.warnning(
@@ -156,8 +170,7 @@ class Matmul(Operator):
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
-                {"opt_shapes": self.dynamic_range}
-            )
+                {"opt_shapes": self.dynamic_range})
         else:
             self.dynamic_range = None
 
@@ -242,10 +255,6 @@ class Matmul(Operator):
                 propagate_b=self.propagate_b,
             )
         else:
-            assert (
-                self.weight_dtype in self.BITBLAS_TRICK_DTYPE_MAP
-            ), f"Unsupported weight_dtype: {self.weight_dtype}"
-            source_format, bit = self.BITBLAS_TRICK_DTYPE_MAP[self.weight_dtype]
             return weight_dequantize_implementation(
                 M=self.M,
                 N=self.N,
@@ -253,9 +262,9 @@ class Matmul(Operator):
                 in_dtype=self.in_dtype,
                 out_dtype=self.out_dtype,
                 accum_dtype=self.accum_dtype,
-                bit=bit,
+                bit=self.bit,
                 storage_dtype=self.storage_dtype,
-                source_format=source_format,
+                source_format=self.source_format,
                 with_scaling=self.with_scaling,
                 with_zeros=self.with_zeros,
                 group_size=self.group_size,
@@ -272,9 +281,7 @@ class Matmul(Operator):
         return code
 
     def retrieve_weight_shape(self):
-        return [
-            int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape
-        ]
+        return [int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape]
 
     def forward(self, *args) -> Any:
         if self.lib is None:
