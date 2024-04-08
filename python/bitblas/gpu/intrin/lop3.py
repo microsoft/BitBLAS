@@ -682,7 +682,7 @@ def get_fast_decode_intrin(
     loops_extent=8,
     with_scale=False,
     with_zeros=False,
-    zeros_type="original",
+    zeros_mode="original",
 ):
     """
     loops extent is the number of elements to be decoded in one stage
@@ -700,13 +700,13 @@ def get_fast_decode_intrin(
     if with_scale:
         func_name += "_scale"
     if with_zeros:
-        func_name += f"_zeros_{zeros_type}"
+        func_name += f"_zeros_{zeros_mode}"
     assert storage_dtype in ["int8", "int32", "uint32"]
     storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
     storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
     elem_per_unit = storage_nbit // source_bit
     n_storage_elems = loops_extent // elem_per_unit
-    if with_zeros and zeros_type == "quantized":
+    if with_zeros and zeros_mode == "quantized":
         decode_func = _tir_packed_to_unsigned_convert_with_zeros(storage_type, storage_nbit)
     elif source_format == "int":
         decode_func = _tir_packed_to_signed_convert(storage_type, storage_nbit)
@@ -863,27 +863,27 @@ def get_fast_decode_intrin(
                     loops_extent,
                 )
 
-    elif zeros_type == "quantized":
+    elif zeros_mode == "quantized":
 
-        def get_dequantize_buffers_list(weight, scale, zeros, zeros_type="original"):
-            if zeros_type == "original":
+        def get_dequantize_buffers_list(weight, scale, zeros, zeros_mode="original"):
+            if zeros_mode == "original":
                 return [weight, zeros, scale]
-            elif zeros_type == "rescale":
+            elif zeros_mode == "rescale":
                 return [weight, scale, zeros]
-            elif zeros_type == "quantized":
+            elif zeros_mode == "quantized":
                 return [weight, zeros, scale]
             else:
-                raise ValueError(f"Unsupported zeros_type: {zeros_type}")
+                raise ValueError(f"Unsupported zeros_mode: {zeros_mode}")
 
-        def get_dequantize_func(weight, scale, zeros, zeros_type="original"):
-            if zeros_type == "original":
+        def get_dequantize_func(weight, scale, zeros, zeros_mode="original"):
+            if zeros_mode == "original":
                 return (weight - zeros) * scale
-            elif zeros_type == "rescale":
+            elif zeros_mode == "rescale":
                 return weight * scale - zeros
-            elif zeros_type == "quantized":
+            elif zeros_mode == "quantized":
                 return weight * scale
             else:
-                raise ValueError(f"Unsupported zeros_type: {zeros_type}")
+                raise ValueError(f"Unsupported zeros_mode: {zeros_mode}")
 
         # Scale with Zeros
         @T.prim_func
@@ -930,7 +930,7 @@ def get_fast_decode_intrin(
                     Compressed[0:n_storage_elems],
                     Scale[0:1],
                     Zeros[0:1],
-                    zeros_type=zeros_type,
+                    zeros_mode=zeros_mode,
                 ))
                 T.writes(Decompressed[0:loops_extent])
                 for i in T.grid(loops_extent):
@@ -946,7 +946,7 @@ def get_fast_decode_intrin(
                             ),
                             Scale[0],
                             Zeros[0],
-                            zeros_type,
+                            zeros_mode,
                         )
 
         @T.prim_func
@@ -1009,21 +1009,21 @@ def get_fast_decode_intrin(
 
     else:
 
-        def get_dequantize_buffers_list(weight, scale, zeros, zeros_type="original"):
-            if zeros_type == "original":
+        def get_dequantize_buffers_list(weight, scale, zeros, zeros_mode="original"):
+            if zeros_mode == "original":
                 return [weight, zeros, scale]
-            elif zeros_type == "rescale":
+            elif zeros_mode == "rescale":
                 return [weight, scale, zeros]
             else:
-                raise ValueError(f"Unsupported zeros_type: {zeros_type}")
+                raise ValueError(f"Unsupported zeros_mode: {zeros_mode}")
 
-        def get_dequantize_func(weight, scale, zeros, zeros_type="original"):
-            if zeros_type == "original":
+        def get_dequantize_func(weight, scale, zeros, zeros_mode="original"):
+            if zeros_mode == "original":
                 return (weight - zeros) * scale
-            elif zeros_type == "rescale":
+            elif zeros_mode == "rescale":
                 return weight * scale - zeros
             else:
-                raise ValueError(f"Unsupported zeros_type: {zeros_type}")
+                raise ValueError(f"Unsupported zeros_mode: {zeros_mode}")
 
         # Scale with Zeros
         @T.prim_func
@@ -1070,7 +1070,7 @@ def get_fast_decode_intrin(
                     Compressed[0:n_storage_elems],
                     Scale[0:1],
                     Zeros[0:1],
-                    zeros_type=zeros_type,
+                    zeros_mode=zeros_mode,
                 ))
                 T.writes(Decompressed[0:loops_extent])
                 for i in T.grid(loops_extent):
@@ -1085,7 +1085,7 @@ def get_fast_decode_intrin(
                             ),
                             Scale[0],
                             Zeros[0],
-                            zeros_type,
+                            zeros_mode,
                         )
 
         @T.prim_func
@@ -1234,7 +1234,7 @@ TensorIntrin.register(
         loops_extent=8,
         with_scale=True,
         with_zeros=True,
-        zeros_type="original",
+        zeros_mode="original",
     ),
 )
 
@@ -1249,7 +1249,7 @@ TensorIntrin.register(
         loops_extent=8,
         with_scale=True,
         with_zeros=True,
-        zeros_type="rescale",
+        zeros_mode="rescale",
     ),
 )
 
@@ -1264,7 +1264,7 @@ TensorIntrin.register(
         loops_extent=8,
         with_scale=True,
         with_zeros=True,
-        zeros_type="quantized",
+        zeros_mode="quantized",
     ),
 )
 
@@ -1292,7 +1292,7 @@ TensorIntrin.register(
         loops_extent=8,
         with_scale=True,
         with_zeros=True,
-        zeros_type="original",
+        zeros_mode="original",
     ),
 )
 
@@ -1307,7 +1307,7 @@ TensorIntrin.register(
         loops_extent=8,
         with_scale=True,
         with_zeros=True,
-        zeros_type="rescale",
+        zeros_mode="rescale",
     ),
 )
 
@@ -1335,7 +1335,7 @@ TensorIntrin.register(
         loops_extent=8,
         with_scale=True,
         with_zeros=True,
-        zeros_type="original",
+        zeros_mode="original",
     ),
 )
 
@@ -1350,7 +1350,7 @@ TensorIntrin.register(
         loops_extent=8,
         with_scale=True,
         with_zeros=True,
-        zeros_type="rescale",
+        zeros_mode="rescale",
     ),
 )
 
@@ -1449,7 +1449,7 @@ def get_lop3_intrin_group(
     storage_dtype: Literal["int32", "int8"] = "int8",
     with_scaling: bool = False,
     with_zeros: bool = False,
-    zeros_type: Literal["original", "rescale", "quantized"] = "original",
+    zeros_mode: Literal["original", "rescale", "quantized"] = "original",
 ) -> Dict[str, str]:
     """
     This function is used to get the intrinsic group of the LOP3 operation to avoid the overhead of fast decoding.
@@ -1489,7 +1489,7 @@ def get_lop3_intrin_group(
     if with_scaling:
         _intrin += "scale_"
     if with_zeros:
-        _intrin += f"zeros_{zeros_type}_"
+        _intrin += f"zeros_{zeros_mode}_"
 
     import_c_map = {
         "i4_to_f16": decode_i4_to_f16,
@@ -1513,7 +1513,7 @@ def get_lop3_intrin_group(
     if with_scaling:
         key += "_scale"
     if with_zeros:
-        key += f"_zeros_{zeros_type}"
+        key += f"_zeros_{zeros_mode}"
 
     return {
         "c_source": import_c_map[key],

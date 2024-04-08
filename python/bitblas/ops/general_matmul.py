@@ -5,8 +5,12 @@ from tvm.target import Target
 from bitblas.base.roller.arch.cuda import CUDA
 from typing import Any, List, Literal, Optional, Tuple, Union
 from .operator import Operator, TransformKind
-from .impl.matmul_dequantize_impl import select_implementation
+from .impl.matmul_dequantize_impl import (
+    select_implementation as weight_dequantize_implementation,
+)
+from .impl.matmul_impl import select_implementation as consistent_implementation
 from ..base.utils import tensor_replace_dp4a
+from bitblas.utils.target_detector import auto_detect_nvidia_target
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
@@ -45,49 +49,48 @@ class OPExecutorCPU:
 
 
 @dataclass(frozen=True)
-class MatmulWeightOnlyDequantizeConfig:
+class MatmulConfig:
     M: Union[int, Tuple[int]]
     N: int
     K: int
     in_dtype: str = "float16"
+    # is a wrapper for source_format and bit
+    weight_dtype: str = in_dtype  # weight_dtype is the same as in_dtype by default
     out_dtype: str = "float16"
     accum_dtype: str = "float16"
-    bit: int = 4
-    storage_dtype: str = "int8"
-    # documents for source_format:
-    # the format of the source data, which can be "int", "uint", "fp", "af"
-    # "int": dequantize_weight = (target)((int)(quantize_weight - fixed_zero_point)) * scale
-    #        where the fixed_zero_point is 2^(bit - 1) - 1
-    # "uint": dequantize_weight = (target)((uint)(quantize_weight - zero_point)) * scale
-    #        where the zero_point is manually set by zeros tensor
-    # "fp": dequantize_weight = (quantize_weight - zero_point) * scale
-    # "af": dequantize_weight = (lut[quantize_weight] - zero_point) * scale
-    source_format: Literal["int", "uint", "fp", "af"] = "int"
+    layout: Literal["nn", "nt", "tn", "tt"] = "nn"
+    with_bias: bool = False
+    group_size: int = -1
     with_scaling: bool = False
     with_zeros: bool = False
-    group_size: int = -1
-    fast_decoding: bool = False
-    with_bias: bool = False
-    propagate_a: TransformKind = TransformKind.NonTransform
-    propagate_b: TransformKind = TransformKind.NonTransform
-    layout: str = "nt"
     # documents for zeros_mode:
     # original: target = (dequantize_weight - zero_point) * scale
     # rescale: target = dequantize_weight * scale - zero_point
     # quantized: target = (dequantize_weight - dequantize_zeros) * scale
     # The auto-gptq framework prefer "quantized" and "original" for alignment with cuda.
     zeros_mode: Literal["original", "rescale", "quantized"] = "original"
+    storage_dtype: str = "int8"
+
+    # weight transform related flags
+    fast_decoding: bool = False
+    propagate_a: TransformKind = TransformKind.NonTransform
+    propagate_b: TransformKind = TransformKind.NonTransform
 
     def __post_init__(self):
         # set M to tuple if it is list
         # otherwise, M is not hashable
-        object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
+        object.__setattr__(
+            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
+        )
         if isinstance(self.propagate_a, bool):
             object.__setattr__(
                 self,
                 "propagate_a",
-                (TransformKind.IntraWarpTransform
-                 if self.propagate_a else TransformKind.NonTransform),
+                (
+                    TransformKind.IntraWarpTransform
+                    if self.propagate_a
+                    else TransformKind.NonTransform
+                ),
             )
         elif isinstance(self.propagate_a, int):
             object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
@@ -96,43 +99,42 @@ class MatmulWeightOnlyDequantizeConfig:
             object.__setattr__(
                 self,
                 "propagate_b",
-                (TransformKind.IntraWarpTransform
-                 if self.propagate_b else TransformKind.NonTransform),
+                (
+                    TransformKind.IntraWarpTransform
+                    if self.propagate_b
+                    else TransformKind.NonTransform
+                ),
             )
         elif isinstance(self.propagate_b, int):
             object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
 
-        if self.weight_dtype is not None:
-            # Transform weight_dtype to source_format and bit
-            BITBLAS_TRICK_DTYPE_MAP = {
-                "int8": ("int", 4),
-                "uint8": ("uint", 4),
-                "int4": ("int", 4),
-                "uint4": ("uint", 4),
-                "int2": ("int", 2),
-                "uint2": ("uint", 2),
-                "int1": ("int", 1),
-                "uint1": ("uint", 1),
-                "float16": ("fp", 16),
-                "nf4": ("af", 4),
-                "fp8_e5m2": ("fp", 8),
-                "fp4_e2m1": ("af", 4),
-            }
-            assert (self.weight_dtype
-                    in BITBLAS_TRICK_DTYPE_MAP), f"Unsupported weight_dtype: {self.weight_dtype}"
-            source_format, bit = BITBLAS_TRICK_DTYPE_MAP[self.weight_dtype]
-            object.__setattr__(self, "source_format", source_format)
-            object.__setattr__(self, "bit", bit)
+        if self.zeros_mode is None:
+            object.__setattr__(self, "zeros_mode", "original")
 
+class Matmul(Operator):
 
-class MatmulWeightOnlyDequantize(Operator):
+    # TODO(lei): This should be improved into a general datatype.
+    BITBLAS_TRICK_DTYPE_MAP = {
+        "int8": ("int", 4),
+        "uint8": ("uint", 4),
+        "int4": ("int", 4),
+        "uint4": ("uint", 4),
+        "int2": ("int", 2),
+        "uint2": ("uint", 2),
+        "int1": ("int", 1),
+        "uint1": ("uint", 1),
+        "float16": ("fp", 16),
+        "nf4": ("af", 4),
+        "fp8_e5m2": ("fp", 8),
+        "fp4_e2m1": ("af", 4),
+    }
 
     def __init__(
         self,
-        config: MatmulWeightOnlyDequantizeConfig,
-        name: str = "matmul_weight_only_dequantize",
-        target: Target = "cuda",
+        config: MatmulConfig,
+        name: str = "matmul",
     ):
+        target = auto_detect_nvidia_target()
         super().__init__(name, config, target)
 
         target = self.target
@@ -142,7 +144,9 @@ class MatmulWeightOnlyDequantize(Operator):
         self.arch = CUDA(target)
 
         try:
-            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
+            self.optimized_func = self.apply_default_schedule(
+                self.prim_func_mod, target
+            )
         except Exception:
             self.optimized_func = None
             logger.warnning(
@@ -152,7 +156,8 @@ class MatmulWeightOnlyDequantize(Operator):
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
-                {"opt_shapes": self.dynamic_range})
+                {"opt_shapes": self.dynamic_range}
+            )
         else:
             self.dynamic_range = None
 
@@ -223,33 +228,53 @@ class MatmulWeightOnlyDequantize(Operator):
         self.weight_executors = weight_executors
 
     def _select_implementation(self):
-        return select_implementation(
-            M=self.M,
-            N=self.N,
-            K=self.K,
-            in_dtype=self.in_dtype,
-            out_dtype=self.out_dtype,
-            accum_dtype=self.accum_dtype,
-            bit=self.bit,
-            storage_dtype=self.storage_dtype,
-            source_format=self.source_format,
-            with_scaling=self.with_scaling,
-            with_zeros=self.with_zeros,
-            group_size=self.group_size,
-            fast_decoding=self.fast_decoding,
-            with_bias=self.with_bias,
-            layout=self.layout,
-            zeros_mode=self.zeros_mode,
-            propagate_a=self.propagate_a,
-            propagate_b=self.propagate_b,
-        )
+        if self.in_dtype == self.weight_dtype:
+            return consistent_implementation(
+                M=self.M,
+                N=self.N,
+                K=self.K,
+                in_dtype=self.in_dtype,
+                out_dtype=self.out_dtype,
+                accum_dtype=self.accum_dtype,
+                with_bias=self.with_bias,
+                layout=self.layout,
+                propagate_a=self.propagate_a,
+                propagate_b=self.propagate_b,
+            )
+        else:
+            assert (
+                self.weight_dtype in self.BITBLAS_TRICK_DTYPE_MAP
+            ), f"Unsupported weight_dtype: {self.weight_dtype}"
+            source_format, bit = self.BITBLAS_TRICK_DTYPE_MAP[self.weight_dtype]
+            return weight_dequantize_implementation(
+                M=self.M,
+                N=self.N,
+                K=self.K,
+                in_dtype=self.in_dtype,
+                out_dtype=self.out_dtype,
+                accum_dtype=self.accum_dtype,
+                bit=bit,
+                storage_dtype=self.storage_dtype,
+                source_format=source_format,
+                with_scaling=self.with_scaling,
+                with_zeros=self.with_zeros,
+                group_size=self.group_size,
+                fast_decoding=self.fast_decoding,
+                with_bias=self.with_bias,
+                layout=self.layout,
+                zeros_mode=self.zeros_mode,
+                propagate_a=self.propagate_a,
+                propagate_b=self.propagate_b,
+            )
 
     def post_process(self, code: str) -> str:
         code = tensor_replace_dp4a(code)
         return code
 
     def retrieve_weight_shape(self):
-        return [int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape]
+        return [
+            int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape
+        ]
 
     def forward(self, *args) -> Any:
         if self.lib is None:
@@ -278,6 +303,10 @@ class MatmulWeightOnlyDequantize(Operator):
         return self.config.in_dtype
 
     @property
+    def weight_dtype(self):
+        return self.config.weight_dtype
+
+    @property
     def out_dtype(self):
         return self.config.out_dtype
 
@@ -286,16 +315,8 @@ class MatmulWeightOnlyDequantize(Operator):
         return self.config.accum_dtype
 
     @property
-    def bit(self):
-        return self.config.bit
-
-    @property
     def storage_dtype(self):
         return self.config.storage_dtype
-
-    @property
-    def source_format(self):
-        return self.config.source_format
 
     @property
     def with_scaling(self):

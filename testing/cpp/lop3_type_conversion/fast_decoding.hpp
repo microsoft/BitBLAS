@@ -98,12 +98,12 @@ void general_interleave_fp16(int8_t *origin_arr, int8_t *interleaved, const int 
 Kind 0: original
 Kind 1: rescale
 Kind 2: quantized
-# documents for zeros_type:
+# documents for zeros_mode:
 # original: target = (dequantize_weight - zero_point) * scale
 # rescale: target = dequantize_weight * scale - zero_point
 # quantized: target = (dequantize_weight - dequantize_zeros) * scale
 # Notice: only support "original" and "rescale" now
-zeros_type: Literal["original", "rescale", "quantized"] = "original"
+zeros_mode: Literal["original", "rescale", "quantized"] = "original"
 */
 template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false, int ZerosKind = 1, typename T3=T2, typename T4=T3>
 __device__ void decode_i4b_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T3 *scale = nullptr, const T4 *zeros = nullptr)
@@ -299,12 +299,12 @@ __device__ void decode_i4u_to_f16_scale_zeros_quantized(storage_dtype *_i4u, tar
 Kind 0: original
 Kind 1: rescale
 Kind 2: quantized
-# documents for zeros_type:
+# documents for zeros_mode:
 # original: target = (dequantize_weight - zero_point) * scale
 # rescale: target = dequantize_weight * scale - zero_point
 # quantized: target = (dequantize_weight - dequantize_zeros) * scale
 # Notice: only support "original" and "rescale" now
-zeros_type: Literal["original", "rescale", "quantized"] = "original"
+zeros_mode: Literal["original", "rescale", "quantized"] = "original"
 */
 template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false, int ZerosKind = 1>
 __device__ void decode_i2b_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8, half *scale = nullptr, half *zeros = nullptr)
@@ -385,12 +385,12 @@ __device__ void decode_i2u_to_f16_scale_zeros_rescale(T1 *_i2u, T2 *B_local_deco
 Kind 0: original
 Kind 1: rescale
 Kind 2: quantized
-# documents for zeros_type:
+# documents for zeros_mode:
 # original: target = (dequantize_weight - zero_point) * scale
 # rescale: target = dequantize_weight * scale - zero_point
 # quantized: target = (dequantize_weight - dequantize_zeros) * scale
 # Notice: only support "original" and "rescale" now
-zeros_type: Literal["original", "rescale", "quantized"] = "original"
+zeros_mode: Literal["original", "rescale", "quantized"] = "original"
 */
 template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false, int ZerosKind = 1>
 __device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8, half *scale = nullptr, half *zeros = nullptr)

@@ -29,7 +29,7 @@ def matmul_nt_dequantize_b(
     group_size=-1,
     fast_decoding=False,
     with_bias=False,
-    zeros_type="original",
+    zeros_mode="original",
 ):
     if not isinstance(M, int):
         M = tvm.te.var("m")
@@ -64,7 +64,7 @@ def matmul_nt_dequantize_b(
     )
 
     def decode_func(n, k):
-        if with_zeros and zeros_type == "quantized":
+        if with_zeros and zeros_mode == "quantized":
             w = _tir_packed_to_unsigned_convert_with_zeros(storage_type, storage_nbit)(
                 bit,
                 B[n, k // n_float_per_elem],
@@ -97,14 +97,14 @@ def matmul_nt_dequantize_b(
         if not with_zeros:
             return w * Scale[n, k // group_size]
 
-        if zeros_type == "original":
+        if zeros_mode == "original":
             w = (w - Zeros[n, k // group_size]) * Scale[n, k // group_size]
-        elif zeros_type == "rescale":
+        elif zeros_mode == "rescale":
             w = w * Scale[n, k // group_size] - Zeros[n, k // group_size]
-        elif zeros_type == "quantized":
+        elif zeros_mode == "quantized":
             w = w * Scale[n, k // group_size]
         else:
-            raise ValueError("Unsupported zeros_type: {}".format(zeros_type))
+            raise ValueError("Unsupported zeros_mode: {}".format(zeros_mode))
 
         return w
 
@@ -125,7 +125,7 @@ def matmul_nt_dequantize_b(
     if with_scaling:
         args.append(Scale)
     if with_zeros:
-        if zeros_type == "quantized":
+        if zeros_mode == "quantized":
             args.append(QZeros)
         else:
             args.append(Zeros)
@@ -149,7 +149,7 @@ def matmul_nt_dequantize_b(
                 "target_format": in_dtype,
                 "with_scaling": with_scaling,
                 "with_zeros": with_zeros,
-                "zeros_type": zeros_type,
+                "zeros_mode": zeros_mode,
                 "group_size": group_size,
             }
         },
@@ -172,7 +172,7 @@ def matmul_nt_dequantize_b_propagate_b(
     group_size=-1,
     fast_decoding=False,
     with_bias=False,
-    zeros_type="original",
+    zeros_mode="original",
     transform_kind: TransformKind = TransformKind.IntraWarpTransform,
 ):
     if not isinstance(M, int):
@@ -265,12 +265,12 @@ def matmul_nt_dequantize_b_propagate_b(
         if not with_zeros:
             return w * Scale[n, k // group_size]
 
-        if zeros_type == "original":
+        if zeros_mode == "original":
             w = (w - Zeros[n, k // group_size]) * Scale[n, k // group_size]
-        elif zeros_type == "rescale":
+        elif zeros_mode == "rescale":
             w = w * Scale[n, k // group_size] - Zeros[n, k // group_size]
         else:
-            raise ValueError("Unsupported zeros_type: {}".format(zeros_type))
+            raise ValueError("Unsupported zeros_mode: {}".format(zeros_mode))
 
         return w
 
@@ -312,7 +312,7 @@ def matmul_nt_dequantize_b_propagate_b(
                 "storage_dtype": storage_dtype,
                 "target_format": in_dtype,
                 "with_zeros": with_zeros,
-                "zeros_type": zeros_type,
+                "zeros_mode": zeros_mode,
                 "with_scaling": with_scaling,
                 "group_size": group_size,
             }
@@ -337,7 +337,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     group_size=-1,
     fast_decoding=False,
     with_bias=False,
-    zeros_type="original",
+    zeros_mode="original",
     transform_kind_input: TransformKind = TransformKind.IntraWarpTransform,
     transform_kind_weight: TransformKind = TransformKind.IntraWarpTransform,
 ):
@@ -481,7 +481,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
                 "storage_dtype": storage_dtype,
                 "target_format": in_dtype,
                 "with_zeros": with_zeros,
-                "zeros_type": zeros_type,
+                "zeros_mode": zeros_mode,
                 "with_scaling": with_scaling,
                 "group_size": group_size,
             }
@@ -508,7 +508,7 @@ def select_implementation(
     fast_decoding=False,
     with_bias=False,
     layout="nt",
-    zeros_type="original",
+    zeros_mode="original",
     propagate_a=False,
     propagate_b=False,
 ):
@@ -533,7 +533,7 @@ def select_implementation(
                 group_size,
                 fast_decoding,
                 with_bias,
-                zeros_type,
+                zeros_mode,
                 transform_kind_input=propagate_a,
                 transform_kind_weight=propagate_b,
             )
@@ -555,7 +555,7 @@ def select_implementation(
                 group_size,
                 fast_decoding,
                 with_bias,
-                zeros_type,
+                zeros_mode,
                 transform_kind=propagate_b,
             )
         else:
@@ -574,7 +574,7 @@ def select_implementation(
                 group_size,
                 fast_decoding,
                 with_bias,
-                zeros_type,
+                zeros_mode,
             )
     else:
         raise ValueError(f"Unsupported layout: {layout}")

@@ -22,7 +22,7 @@ def get_codegen_result(ops, target):
 
 # fmt: off
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,layout,propagate_a,propagate_b,zeros_type",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,layout,propagate_a,propagate_b,zeros_mode",
     [
         (16, 768, 768, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True,
          False, "nt", False, False, "original"),
@@ -35,7 +35,7 @@ def get_codegen_result(ops, target):
 def test_matmul_dequantize_codegen_default(M, N, K, in_dtype, out_dtype, accum_dtype, bit,
                                            storage_dtype, source_format, with_scaling, with_zeros,
                                            group_size, fast_decoding, with_bias, layout,
-                                           propagate_a, propagate_b, zeros_type):
+                                           propagate_a, propagate_b, zeros_mode):
 
     matmul_config = MatmulWeightOnlyDequantizeConfig(
         M=M,
@@ -55,7 +55,7 @@ def test_matmul_dequantize_codegen_default(M, N, K, in_dtype, out_dtype, accum_d
         propagate_a=propagate_a,
         propagate_b=propagate_b,
         layout=layout,
-        zeros_type=zeros_type,
+        zeros_mode=zeros_mode,
     )
     matmul = MatmulWeightOnlyDequantize(
         config=matmul_config,
@@ -394,7 +394,7 @@ def test_matmul_dequantize_profile_latency(
 
 
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout,zeros_type",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout,zeros_mode",
     [
         (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False,
          False, False, False, "nt", "rescale"),
@@ -429,7 +429,7 @@ def test_matmul_dequantize_profile_latency(
 def test_matmul_dequantize_torch_forward(M, N, K, in_dtype, out_dtype, accum_dtype, bit,
                                          storage_dtype, source_format, with_scaling, with_zeros,
                                          group_size, fast_decoding, with_bias, propagate_a,
-                                         propagate_b, layout, zeros_type):
+                                         propagate_b, layout, zeros_mode):
     import torch
     torch.random.manual_seed(0)
     import numpy as np
@@ -453,7 +453,7 @@ def test_matmul_dequantize_torch_forward(M, N, K, in_dtype, out_dtype, accum_dty
         propagate_a=propagate_a,
         propagate_b=propagate_b,
         layout=layout,
-        zeros_type=zeros_type)
+        zeros_mode=zeros_mode)
     matmul = MatmulWeightOnlyDequantize(
         config=matmul_config,
         target=target,
@@ -509,14 +509,14 @@ def test_matmul_dequantize_torch_forward(M, N, K, in_dtype, out_dtype, accum_dty
         permuted_inputs.append(bias)
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
-    if zeros_type == "rescale":
+    if zeros_mode == "rescale":
         torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-0, atol=1e-0)
     else:
         torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-0, atol=1e-1)
 
 
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,layout,zeros_type",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,layout,zeros_mode",
     [
         (16, 768, 768, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True,
          False, "nt", "original"),
@@ -531,7 +531,7 @@ def test_matmul_dequantize_torch_forward(M, N, K, in_dtype, out_dtype, accum_dty
 def test_matmul_dequantize_propgate_comparison(M, N, K, in_dtype, out_dtype, accum_dtype, bit,
                                                storage_dtype, source_format, with_scaling,
                                                with_zeros, group_size, fast_decoding, with_bias,
-                                               layout, zeros_type):
+                                               layout, zeros_mode):
     import torch
     torch.random.manual_seed(0)
     original_matmul_config = MatmulWeightOnlyDequantizeConfig(
@@ -552,7 +552,7 @@ def test_matmul_dequantize_propgate_comparison(M, N, K, in_dtype, out_dtype, acc
         propagate_a=False,
         propagate_b=False,
         layout=layout,
-        zeros_type=zeros_type)
+        zeros_mode=zeros_mode)
     original_matmul = MatmulWeightOnlyDequantize(
         config=original_matmul_config,
         target=target,
@@ -605,7 +605,7 @@ def test_matmul_dequantize_propgate_comparison(M, N, K, in_dtype, out_dtype, acc
         propagate_a=False,
         propagate_b=True,
         layout=layout,
-        zeros_type=zeros_type)
+        zeros_mode=zeros_mode)
     propagated_matmul = MatmulWeightOnlyDequantize(
         config=propagated_matmul_config,
         target=target,
@@ -631,7 +631,7 @@ def test_matmul_dequantize_propgate_comparison(M, N, K, in_dtype, out_dtype, acc
 
 
 @pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout,source_zeros_type,target_zeros_type",
+    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout,source_zeros_mode,target_zeros_mode",
     [
         (1, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, False,
          False, False, False, "nt", "rescale", "quantized"),
@@ -646,8 +646,8 @@ def test_matmul_dequantize_propgate_comparison(M, N, K, in_dtype, out_dtype, acc
 def test_matmul_dequantize_diff_zero_types(M, N, K, in_dtype, out_dtype, accum_dtype, bit,
                                            storage_dtype, source_format, with_scaling, with_zeros,
                                            group_size, fast_decoding, with_bias, propagate_a,
-                                           propagate_b, layout, source_zeros_type,
-                                           target_zeros_type):
+                                           propagate_b, layout, source_zeros_mode,
+                                           target_zeros_mode):
     import torch
     torch.random.manual_seed(0)
     import numpy as np
@@ -671,7 +671,7 @@ def test_matmul_dequantize_diff_zero_types(M, N, K, in_dtype, out_dtype, accum_d
         propagate_a=propagate_a,
         propagate_b=propagate_b,
         layout=layout,
-        zeros_type=source_zeros_type)
+        zeros_mode=source_zeros_mode)
     source_quantized_matmul = MatmulWeightOnlyDequantize(
         config=source_quantized_matmul_config,
         target=target,
@@ -718,14 +718,14 @@ def test_matmul_dequantize_diff_zero_types(M, N, K, in_dtype, out_dtype, accum_d
             group_size = K
         permuted_inputs.append(torch.rand([N, K // group_size], dtype=torch.float16).cuda())
     if with_zeros:
-        if source_zeros_type == "original":
+        if source_zeros_mode == "original":
             permuted_inputs.append(
                 torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
-        elif source_zeros_type == "rescale":
+        elif source_zeros_mode == "rescale":
             original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros
             scaled_zeros = original_zeros * permuted_inputs[-1]
             permuted_inputs.append(scaled_zeros)
-        elif source_zeros_type == "quantized":
+        elif source_zeros_mode == "quantized":
             original_zeros = torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros
             qzeros = general_compress(
                 original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
@@ -756,7 +756,7 @@ def test_matmul_dequantize_diff_zero_types(M, N, K, in_dtype, out_dtype, accum_d
         propagate_a=propagate_a,
         propagate_b=propagate_b,
         layout=layout,
-        zeros_type=target_zeros_type)
+        zeros_mode=target_zeros_mode)
     target_quantized_matmul = MatmulWeightOnlyDequantize(
         config=target_quantized_matmul_config,
         target=target,
@@ -775,14 +775,14 @@ def test_matmul_dequantize_diff_zero_types(M, N, K, in_dtype, out_dtype, accum_d
     if with_scaling:
         target_inputs.append(permuted_inputs[2])
     if with_zeros:
-        if target_zeros_type == "original":
+        if target_zeros_mode == "original":
             target_inputs.append(
                 torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
-        elif target_zeros_type == "rescale":
+        elif target_zeros_mode == "rescale":
             original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros
             scaled_zeros = original_zeros * target_inputs[-1]
             target_inputs.append(scaled_zeros)
-        elif target_zeros_type == "quantized":
+        elif target_zeros_mode == "quantized":
             original_zeros = torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros
             qzeros = general_compress(
                 original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)

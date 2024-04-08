@@ -129,7 +129,7 @@ class QuantLinear(nn.Module):
             propagate_a=propagate_a,
             propagate_b=propagate_b,
             layout=layout,
-            zeros_type="original",
+            zeros_mode="original",
         )
         # optimize target shapes for dynamic symbolic
         self.bitblas_matmul = MatmulWeightOnlyDequantize(

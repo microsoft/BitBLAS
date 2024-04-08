@@ -5,13 +5,15 @@ import os
 
 # installing tvm
 install_tvm_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tvm", "python")
+    os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tvm", "python"
+)
 if os.path.exists(install_tvm_path) and install_tvm_path not in sys.path:
     os.environ["PYTHONPATH"] = install_tvm_path + ":" + os.environ.get("PYTHONPATH", "")
     sys.path.insert(0, install_tvm_path)
 
 develop_tvm_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "..", "..", "3rdparty", "tvm", "python")
+    os.path.dirname(os.path.abspath(__file__)), "..", "..", "3rdparty", "tvm", "python"
+)
 if os.path.exists(develop_tvm_path) and develop_tvm_path not in sys.path:
     os.environ["PYTHONPATH"] = develop_tvm_path + ":" + os.environ.get("PYTHONPATH", "")
     sys.path.insert(0, develop_tvm_path)
@@ -31,7 +33,8 @@ from .base import (
 )
 
 from . import testing  # noqa: F401
-
+from .utils import auto_detect_nvidia_target  # noqa: F401
+from .ops.general_matmul import MatmulConfig, Matmul
 import logging
 from tqdm import tqdm
 
@@ -61,7 +64,8 @@ def _init_logger():
     logger = logging.getLogger(__name__)
     handler = TqdmLoggingHandler()
     formatter = logging.Formatter(
-        fmt="%(asctime)s [BitBLAS:%(levelname)s]: %(message)s", datefmt="%F %T")
+        fmt="%(asctime)s [BitBLAS:%(levelname)s]: %(message)s", datefmt="%F %T"
+    )
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.propagate = False

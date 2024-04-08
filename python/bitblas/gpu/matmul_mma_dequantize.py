@@ -401,8 +401,8 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(block_shared_local_local, B_shared_vi, preserve_unit_loops=True)
 
             dequantize_block_local = block_shared_local
-            if ("zeros_type" in weight_decode_info and
-                    weight_decode_info["zeros_type"] == "quantized"):
+            if ("zeros_mode" in weight_decode_info and
+                    weight_decode_info["zeros_mode"] == "quantized"):
                 if ("with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]):
                     block_local_scales = sch.cache_read(dequantize_block_local, b_idx + 1, "local")
                     sch.compute_at(block_local_scales, B_shared_vi, preserve_unit_loops=True)
@@ -430,7 +430,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     source_bit=source_bit,
                     with_scaling=weight_decode_info["with_scaling"],
                     with_zeros=weight_decode_info["with_zeros"],
-                    zeros_type=weight_decode_info["zeros_type"],
+                    zeros_mode=weight_decode_info["zeros_mode"],
                 )
                 sch.tensorize(
                     sch.get_loops(dequantize_block_local)[-1],
@@ -885,8 +885,8 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(block_shared_local_local, B_shared_vi, preserve_unit_loops=True)
 
             dequantize_block_local = block_shared_local
-            if ("zeros_type" in weight_decode_info and
-                    weight_decode_info["zeros_type"] == "quantized"):
+            if ("zeros_mode" in weight_decode_info and
+                    weight_decode_info["zeros_mode"] == "quantized"):
                 if ("with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]):
                     block_local_scales = sch.cache_read(dequantize_block_local, b_idx + 1, "local")
                     sch.compute_at(block_local_scales, B_shared_vi, preserve_unit_loops=True)
@@ -914,7 +914,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     source_bit=source_bit,
                     with_scaling=weight_decode_info["with_scaling"],
                     with_zeros=weight_decode_info["with_zeros"],
-                    zeros_type=weight_decode_info["zeros_type"],
+                    zeros_mode=weight_decode_info["zeros_mode"],
                 )
                 sch.tensorize(
                     sch.get_loops(dequantize_block_local)[-1],
@@ -1459,7 +1459,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                     source_bit=source_bit,
                     with_scaling=weight_decode_info["with_scaling"],
                     with_zeros=weight_decode_info["with_zeros"],
-                    zeros_type=weight_decode_info["zeros_type"],
+                    zeros_mode=weight_decode_info["zeros_mode"],
                 )
                 sch.tensorize(
                     sch.get_loops(dequantize_block_local)[-1],

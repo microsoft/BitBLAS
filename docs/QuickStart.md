@@ -640,7 +640,7 @@ matmul_config = MatmulWeightOnlyDequantizeConfig(
     with_scaling=True,
     with_zeros=True,
     group_size=128,
-    zeros_type="quantized",
+    zeros_mode="quantized",
 )
 matmul = MatmulWeightOnlyDequantize(
     config=matmul_config,
@@ -781,7 +781,7 @@ class QuantLinear(nn.Module):
             source_format="uint",
             with_scaling=True,
             with_zeros=True,
-            zeros_type="quantized",
+            zeros_mode="quantized",
         )
         self.matmul_op = MatmulWeightOnlyDequantize(config=self.matmul_config, target=auto_detect_nvidia_target())
 

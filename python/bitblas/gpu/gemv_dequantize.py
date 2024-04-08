@@ -150,7 +150,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
 
         skip_blocks = [block_shared_local_B]
 
-        if "zeros_type" in weight_decode_info and weight_decode_info["zeros_type"] == "quantized":
+        if "zeros_mode" in weight_decode_info and weight_decode_info["zeros_mode"] == "quantized":
             if "with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]:
                 block_local_scales = sch.cache_read(block_decode_B,
                                                     get_idx(weight_decode_info) + 1, "local")
@@ -177,7 +177,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
                 source_bit=source_bit,
                 with_scaling=weight_decode_info["with_scaling"],
                 with_zeros=weight_decode_info["with_zeros"],
-                zeros_type=weight_decode_info["zeros_type"],
+                zeros_mode=weight_decode_info["zeros_mode"],
             )
             sch.tensorize(sch.get_loops(block_decode_B)[-1], intrin_info["compute"])
             sch.annotate(block_b, ann_key="pragma_import_c", ann_val=intrin_info["c_source"])
@@ -311,7 +311,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
 
         skip_blocks = [block_shared_local_B]
 
-        if "zeros_type" in weight_decode_info and weight_decode_info["zeros_type"] == "quantized":
+        if "zeros_mode" in weight_decode_info and weight_decode_info["zeros_mode"] == "quantized":
             if "with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]:
                 block_local_scales = sch.cache_read(block_decode_B,
                                                     get_idx(weight_decode_info) + 1, "local")
@@ -338,7 +338,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
                 source_bit=source_bit,
                 with_scaling=weight_decode_info["with_scaling"],
                 with_zeros=weight_decode_info["with_zeros"],
-                zeros_type=weight_decode_info["zeros_type"],
+                zeros_mode=weight_decode_info["zeros_mode"],
             )
             sch.tensorize(sch.get_loops(block_decode_B)[-1], intrin_info["compute"])
             sch.annotate(block_b, ann_key="pragma_import_c", ann_val=intrin_info["c_source"])

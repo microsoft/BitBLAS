@@ -93,7 +93,7 @@ for M, N, K in ft_shapes:
         group_size=group_size,
         fast_decoding=True,
         with_bias=False,
-        zeros_type="original",
+        zeros_mode="original",
         propagate_a=False,
         propagate_b=False,
         layout="nt",

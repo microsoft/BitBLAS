@@ -37,7 +37,7 @@ This configuration class is designed for specifying the parameters related to th
 - **group_size**: Specifies the group size for grouped operations. Default is `-1`.
 - **propagate_a, propagate_b**: Specifies whether and how weight transformation is applied to matrix A and matrix B, using the `TransformKind` enumeration.
 - **layout**: The layout of matrices involved in the operation. Default is `"nt"`.
-- **zeros_type**: Specifies the zero-point adjustment method during dequantization. Options are `"original"`, `"rescale"`, and `"quantized"`. Default is `"original"`.
+- **zeros_mode**: Specifies the zero-point adjustment method during dequantization. Options are `"original"`, `"rescale"`, and `"quantized"`. Default is `"original"`.
     - **`"original"`**: In this mode, the dequantization formula is adjusted to subtract the zero-point before scaling. The formula used is `target = (dequantize_weight - zero_point) * scale`. This method is straightforward and aligns closely with many hardware implementations.
 
     - **`"rescale"`**: This option modifies the dequantization process by applying the scale factor directly to the dequantized weight and then subtracting the zero-point. The formula becomes `target = dequantize_weight * scale - zero_point`. This can be useful for operations where scaling prior to zero-point correction aligns better with the computational workflow or hardware optimizations.
