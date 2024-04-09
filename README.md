@@ -50,21 +50,21 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 
 ## Support Matrix
 
-| **A_dtype** | **W_dtype** | **Accum_dtype** | **BitBLAS<br>Support** | **Tested<br>Platform** |
-|:-----------:|:-----------:|:---------------:|:----------------------:|:----------------------:|
-|     FP16    |     FP16    |       FP16      |          **√**         |   V100/A100/RTX 4090   |
-|     FP16    |   FP4_E2M1  |       FP16      |          **√**         |   V100/A100/RTX 4090   |
-|     FP16    |     INT8    |       FP16      |          **√**         |   V100/A100/RTX 4090   |
-|     FP16    |     INT4    |       FP16      |          **√**         |   V100/A100/RTX 4090   |
-|     FP16    |     INT2    |       FP16      |          **√**         |   V100/A100/RTX 4090   |
-|     FP16    |     INT1    |       FP16      |          **√**         |   V100/A100/RTX 4090   |
-|     FP16    |     NF4     |       FP16      |          **√**         |   V100/A100/RTX 4090   |
-|     FP16    |     NF2     |       FP16      |          **√**         |   V100/A100/RTX 4090   |
-|     FP16    |     NF1     |       FP16      |          **√**         |   V100/A100/RTX 4090   |
-|     INT8    |     INT8    |      INT32      |          **√**         |   V100/A100/RTX 4090   |
-|     INT8    |     INT4    |      INT32      |          **√**         |   V100/A100/RTX 4090   |
-|     INT8    |     INT2    |      INT32      |          **√**         |   V100/A100/RTX 4090   |
-|     INT8    |     INT1    |      INT32      |          **√**         |   V100/A100/RTX 4090   |
+| **A_dtype** | **W_dtype** | **Accum_dtype** | **Out_dtype** | **BitBLAS<br>Support** | **Tested<br>Platform** |
+|:-----------:|:-----------:|:---------------:|:---------------:|:----------------------:|:----------------------:|
+|     FP16    |     FP16    |       FP16      |       FP16      |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     FP16    |   FP4_E2M1  |       FP16      |       FP16      |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     FP16    |     INT8    |       FP16      |       FP16      |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     FP16    |     INT4    |       FP16      |       FP16      |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     FP16    |     INT2    |       FP16      |       FP16      |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     FP16    |     INT1    |       FP16      |       FP16      |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     FP16    |     NF4     |       FP16      |       FP16      |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     FP16    |     NF2     |       FP16      |       FP16      |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     FP16    |     NF1     |       FP16      |       FP16      |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     INT8    |     INT8    |      INT32      |    INT32/INT8   |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     INT8    |     INT4    |      INT32      |    INT32/INT8   |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     INT8    |     INT2    |      INT32      |    INT32/INT8   |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
+|     INT8    |     INT1    |      INT32      |    INT32/INT8   |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(89) |
 
 ## Getting Started
 
