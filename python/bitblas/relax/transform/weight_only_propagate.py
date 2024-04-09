@@ -362,7 +362,7 @@ class WeightOnlyLayoutPropagation:
 
                 if source_format in ["int", "uint"]:
                     weight_buffer = sch.get(dequantize_block).reads[0].buffer
-                elif source_format in ["af"]:
+                elif source_format in ["nf"]:
                     weight_buffer = sch.get(dequantize_block).reads[1].buffer
                 else:
                     raise ValueError(f"Unsupported source format {source_format}")

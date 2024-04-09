@@ -32,7 +32,7 @@ This configuration class is designed for specifying the parameters related to th
 - **in_dtype, out_dtype, accum_dtype**: Data types for input, output, and accumulation during the operation. Defaults to `"float16"`.
 - **bit**: The bit width used for quantization. Default is `4`.
 - **storage_dtype**: Data type used for storing the quantized weights. Default is `"int8"`.
-- **source_format**: Specifies the format of the source data for dequantization, with options including `"int"`, `"uint"`, `"fp"`, and `"af"`. Default is `"int"`.
+- **source_format**: Specifies the format of the source data for dequantization, with options including `"int"`, `"uint"`, `"fp"`, and `"nf"`. Default is `"int"`.
 - **with_scaling, with_zeros, fast_decoding, with_bias**: Boolean flags to enable specific features in the dequantization process.
 - **group_size**: Specifies the group size for grouped operations. Default is `-1`.
 - **propagate_a, propagate_b**: Specifies whether and how weight transformation is applied to matrix A and matrix B, using the `TransformKind` enumeration.

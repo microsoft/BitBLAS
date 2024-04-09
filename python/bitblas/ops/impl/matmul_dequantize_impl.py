@@ -81,7 +81,7 @@ def matmul_nt_dequantize_b(
         elif source_format == "fp":
             w = _tir_u32_to_f4_to_f16(
                 bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
-        elif source_format == "af":
+        elif source_format == "nf":
             w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit,
                 B[n, k // n_float_per_elem],
@@ -120,7 +120,7 @@ def matmul_nt_dequantize_b(
     D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
     args = [A, B]
     last_output = D
-    if source_format == "af":
+    if source_format == "nf":
         args.append(LUT)
     if with_scaling:
         args.append(Scale)
@@ -249,7 +249,7 @@ def matmul_nt_dequantize_b_propagate_b(
                 k % n_float_per_elem,
                 dtype=in_dtype,
             )
-        elif source_format == "af":
+        elif source_format == "nf":
             w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit,
                 B_reindex[n, k // n_float_per_elem],
@@ -287,7 +287,7 @@ def matmul_nt_dequantize_b_propagate_b(
     D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
     args = [A, B]
     last_output = D
-    if source_format == "af":
+    if source_format == "nf":
         args.append(LUT)
     if with_scaling:
         args.append(Scale)
@@ -429,7 +429,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
                 k % n_float_per_elem,
                 dtype=in_dtype,
             )
-        elif source_format == "af":
+        elif source_format == "nf":
             w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit,
                 B_reindex[n, k // n_float_per_elem],
@@ -458,7 +458,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
     args = [A, B]
     last_output = D
-    if source_format == "af":
+    if source_format == "nf":
         args.append(LUT)
     if with_scaling:
         args.append(Scale)

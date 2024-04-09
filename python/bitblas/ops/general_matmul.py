@@ -143,9 +143,9 @@ class Matmul(Operator):
         "uint2": ("uint", 2),
         "int1": ("int", 1),
         "uint1": ("uint", 1),
-        "nf4": ("af", 4),
+        "nf4": ("nf", 4),
         "fp8_e5m2": ("fp", 8),
-        "fp4_e2m1": ("af", 4),
+        "fp4_e2m1": ("nf", 4),
     }
 
     def __init__(

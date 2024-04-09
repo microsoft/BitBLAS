@@ -126,6 +126,6 @@ class AnnotateDecodeInformation:
         """Determine storage data type based on source format."""
         return (
             block_stmt.reads[0].buffer.dtype
-            if "af" not in source_format
+            if "nf" not in source_format
             else block_stmt.reads[1].buffer.dtype
         )

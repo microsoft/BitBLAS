@@ -55,14 +55,14 @@ class MatmulWeightOnlyDequantizeConfig:
     bit: int = 4
     storage_dtype: str = "int8"
     # documents for source_format:
-    # the format of the source data, which can be "int", "uint", "fp", "af"
+    # the format of the source data, which can be "int", "uint", "fp", "nf"
     # "int": dequantize_weight = (target)((int)(quantize_weight - fixed_zero_point)) * scale
     #        where the fixed_zero_point is 2^(bit - 1) - 1
     # "uint": dequantize_weight = (target)((uint)(quantize_weight - zero_point)) * scale
     #        where the zero_point is manually set by zeros tensor
     # "fp": dequantize_weight = (quantize_weight - zero_point) * scale
-    # "af": dequantize_weight = (lut[quantize_weight] - zero_point) * scale
-    source_format: Literal["int", "uint", "fp", "af"] = "int"
+    # "nf": dequantize_weight = (lut[quantize_weight] - zero_point) * scale
+    source_format: Literal["int", "uint", "fp", "nf"] = "int"
     with_scaling: bool = False
     with_zeros: bool = False
     group_size: int = -1
