@@ -45,23 +45,6 @@ The benchmark configurations for each test scenario are detailed below:
 <!-- center -->
 <div align="center">
 
-<style type="text/css">
-	table.tableizer-table {
-		font-size: 12px;
-		border: 1px solid #CCC; 
-		font-family: Arial, Helvetica, sans-serif;
-	} 
-	.tableizer-table td {
-		padding: 4px;
-		margin: 3px;
-		border: 1px solid #CCC;
-	}
-	.tableizer-table th {
-		background-color: #104E8B; 
-		color: #FFF;
-		font-weight: bold;
-	}
-</style>
 <table class="tableizer-table">
 <thead><tr class="tableizer-firstrow"><th>config</th><th>Provider</th><th>M</th><th>N</th><th>K</th></tr></thead><tbody>
  <tr><td>V0</td><td>None</td><td>1</td><td>16384</td><td>16384</td></tr>
