@@ -1,6 +1,7 @@
 ## Matmul
 
 `Matmul` is an operator class that performs matrix multiplication, supporting various optimizations and quantization strategies.
+
 ### MatmulConfig:
 
 `MatmulConfig` is a configuration class for the `Matmul` operator, specifying the matrix multiplication operation's parameters and behaviors.
@@ -11,11 +12,11 @@
     - If `int`, the bitblas matmul will generate a static shape kernel, which can only be used for the input shape of the specified value.
     - If `List[int]`, the bitblas matmul will generate a dynamic shape kernel, which can be used for the input shape of the specified values. While the input shape represents the target optimized range.
     - If `None`, the bitblas matmul will use a default value [1, 16, 32, 64, 128, 256, 512, 1024].
-- **N** *(int)*: The size of the second dimension of matrix B and the output matrix.
-- **K** *(int)*: The common dimension of matrices A and B.
+- **N** *(int)*: The size of the second dimension of matrix W and the output matrix.
+- **K** *(int)*: The common dimension of matrices A and W.
 - **A_dtype** *(str, default='float16')*: The data type of matrix A.
     - Choices: `'float16'`, `'int8'`.
-- **W_dtype** *(str, default='float16')*: The data type of matrix B. Also acts as a wrapper for source_format and bit.
+- **W_dtype** *(str, default='float16')*: The data type of matrix W. Also acts as a wrapper for source_format and bit.
     - Choices: `'float16'`, `'int8'`, `'int4'`, `'int2'`, `'int1'`, `'fp4_e2m1'`, `'af4'`.
 - **out_dtype** *(str, default='float16')*: The data type of the output matrix.
     - Choices: `'float16'`, `'int8'`, `'int32'`.
@@ -23,8 +24,8 @@
     - Choices: `'float16'`, `'int32'`.
 - **layout** *(Literal['nn', 'nt', 'tn', 'tt'], default='nt')*: The layout of the matrix multiplication operation.
     - `'nn'`: Both matrices are non-transposed.
-    - `'nt'`: Matrix A is non-transposed, and matrix B is transposed.
-    - `'tn'`: Matrix A is transposed, and matrix B is non-transposed.
+    - `'nt'`: Matrix A is non-transposed, and matrix W is transposed.
+    - `'tn'`: Matrix A is transposed, and matrix W is non-transposed.
     - `'tt'`: Both matrices are transposed.
 - **with_bias** *(bool, default=False)*: Indicates whether a bias vector is added to the output.
 - **group_size** *(int, default=-1)*: The group size for quantization, -1 indicates no grouping.
@@ -43,7 +44,7 @@
     - Choices: `NonTransform`, `InterWarpTransform`, `IntraWarpTransform`.
     - Choices: `False`, `True`. Where `False` is equivalent to `NonTransform`. `True` is equivalent to `IntraWarpTransform`.
     - Choices: `0`, `1`, `2`. Where `0` is equivalent to `NonTransform`. `1` is equivalent to `InterWarpTransform`. `2` is equivalent to `IntraWarpTransform`.
-- **propagate_b** *(TransformKind, default=NonTransform)*: Transformation kind for matrix B. Which comes from Ladder, detailed document is coming soon. By default, it is `NonTransform`, which means do not enable transformation.
+- **propagate_b** *(TransformKind, default=NonTransform)*: Transformation kind for matrix W. Which comes from Ladder, detailed document is coming soon. By default, it is `NonTransform`, which means do not enable transformation.
     - Choices: `NonTransform`, `InterWarpTransform`, `IntraWarpTransform`.
     - Choices: `False`, `True`. Where `False` is equivalent to `NonTransform`. `True` is equivalent to `IntraWarpTransform`.
     - Choices: `0`, `1`, `2`. Where `0` is equivalent to `NonTransform`. `1` is equivalent to `InterWarpTransform`. `2` is equivalent to `IntraWarpTransform`.
@@ -63,11 +64,14 @@ Matmul(config: MatmulConfig, name: str = "matmul", target: Optional[Union[str, T
 
 #### `forward(*args) -> Any`
 
-Executes the matrix multiplication operation with the given arguments.
+The number of arguments and their types depend on the configuration of the `Matmul` object. We list the possible argument combinations below:
 
-- **args**: Input tensors for the operation.
-
-if arguemnts do not contain the output tensor, the method will create a new tensor for the output. Finally, the method returns the output tensor.
+| with_scaling | with_zeros | with_bias | Arguments                |
+| ------------ | ---------- | --------- | ------------------------ |
+| FALSE        | FALSE      | FALSE     | A, W                     |
+| FALSE        | FALSE      | TRUE      | A, W, Bias               |
+| TRUE         | TRUE       | FALSE     | A, W, Scale, Zeros       |
+| TRUE         | TRUE       | TRUE      | A, W, Scale, Zeros, Bias |
 
 #### `transform_weight(weight, scale=None, zeros=None, bias=None)`
 
