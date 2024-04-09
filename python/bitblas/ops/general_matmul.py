@@ -256,7 +256,7 @@ class Matmul(Operator):
             weight_executors.append(self.ladder_permutate_b)
 
         self.weight_executors = weight_executors
-        
+
         if enable_tuning:
             self.hardware_aware_finetune()
 
