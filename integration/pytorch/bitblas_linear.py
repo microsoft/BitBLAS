@@ -33,7 +33,7 @@ class Linear(nn.Module):
         self,
         infeatures: int,
         outfeatures: int,
-        opt_features: Union[int, List[int]] = 1,
+        opt_m: Union[int, List[int]] = 1,
         bias: bool = False,
         dtype: torch.dtype = torch.float16,
         propagate_a: bool = False,
@@ -44,7 +44,7 @@ class Linear(nn.Module):
         target: Optional[str] = None,
     ):
         """
-        @opt_features: optimize range of the input shape for dynamic symbolic
+        @opt_m: optimize range of the input shape for dynamic symbolic
         if the input shape is a range, we will optimize the matmul with dynamic symbolic.
         if the input shape is int, we will optimize the matmul with static symbolic.
         """
@@ -54,7 +54,7 @@ class Linear(nn.Module):
 
         self.infeatures = infeatures
         self.outfeatures = outfeatures
-        self.opt_features = opt_features
+        self.opt_m = opt_m
         self.dtype = dtype
         self.propagate_a = propagate_a
         self.propagate_b = propagate_b
@@ -75,7 +75,7 @@ class Linear(nn.Module):
         bitblas_dtype = BITBLAS_DTYPES[dtype]
         self.target = target or auto_detect_nvidia_target()
         matmul_config = MatmulConfig(
-            M=self.opt_features,
+            M=self.opt_m,
             N=self.outfeatures,
             K=self.infeatures,
             in_dtype=bitblas_dtype,

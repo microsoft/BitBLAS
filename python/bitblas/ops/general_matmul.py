@@ -316,11 +316,6 @@ class Matmul(Operator):
     def retrieve_weight_shape(self):
         return [int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape]
 
-    def forward(self, *args) -> Any:
-        if self.lib is None:
-            self._forward_from_torch_func(*args)
-        self._forward_from_prebuild_lib(*args)
-
     def transform_weight(self, weight, scale=None, zeros=None, bias=None):
         """
         Transforms the given weight tensor based on the specified quantization parameters and
@@ -379,28 +374,33 @@ class Matmul(Operator):
 
         return next(iter(result), result)
 
-    def __call__(self, A, W, Scale=None, Zeros=None, bias=None, Output=None) -> Any:
+    def forward(self, A, W, scale=None, zeros=None, bias=None, output=None) -> Any:
         args = [A]
         if self.lut is not None:
             args.append(self.lut)
         args.append(W)
 
-        if Output is None:
-            Output = torch.empty(A.shape[:-1] + (self.N,), dtype=A.dtype, device=A.device)
-        if Scale is not None:
-            args.append(Scale)
-        if Zeros is not None:
-            args.append(Zeros)
+        if output is None:
+            output = torch.empty(A.shape[:-1] + (self.N,), dtype=A.dtype, device=A.device)
+        if scale is not None:
+            args.append(scale)
+        if zeros is not None:
+            args.append(zeros)
         if bias is not None:
             args.append(bias)
-        args.append(Output)
+        args.append(output)
 
         m = reduce(operator.mul, A.shape[:-1], 1)
         args.append(m)
 
-        self.forward(*args)
+        if self.lib is None:
+            self._forward_from_torch_func(*args)
+        self._forward_from_prebuild_lib(*args)
 
-        return Output
+        return output
+
+    def __call__(self, *args: Any, **kwds: Any) -> Any:
+        return self.forward(*args, **kwds)
 
     @property
     def M(self):

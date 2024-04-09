@@ -27,7 +27,7 @@ def test_correctness_static_shape(m, infeatures, outfeatures, bias):
         outfeatures,
         bias=bias,
         dtype=torch.float16,
-        opt_features=m,
+        opt_m=m,
         enable_tuning=False,
     ).cuda()
 
@@ -84,7 +84,7 @@ def test_profile_performance(m, infeatures, outfeatures, bias):
         outfeatures,
         bias=bias,
         dtype=torch.float16,
-        opt_features=m,
+        opt_m=m,
         enable_tuning=False,
     ).cuda()
     with torch.no_grad():

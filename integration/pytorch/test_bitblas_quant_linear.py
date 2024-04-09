@@ -98,7 +98,7 @@ def test_quantization_accuracy(m, infeatures, outfeatures, bits, group_size, bia
 
     scales = s.to("cuda")
     bitblas_qlinear = QuantLinear(
-        bits, group_size, infeatures, outfeatures, bias, opt_features=m, enable_tuning=True)
+        bits, group_size, infeatures, outfeatures, bias, opt_m=m, enable_tuning=True)
 
     bitblas_qlinear.pack(
         linear_module.to("cuda"),
@@ -159,7 +159,7 @@ def test_profile_performance(m, infeatures, outfeatures, bits, group_size, bias)
         infeatures,
         outfeatures,
         bias,
-        opt_features=m,
+        opt_m=m,
         enable_tuning=True,
     ).cuda()
 

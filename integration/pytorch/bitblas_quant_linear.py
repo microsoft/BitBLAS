@@ -45,7 +45,7 @@ class QuantLinear(nn.Module):
         fast_decoding: bool = False,
         propagate_a: bool = False,
         propagate_b: bool = False,
-        opt_features: Union[int, List[int]] = [1, 16, 32],
+        opt_m: Union[int, List[int]] = [1, 16, 32],
         layout: Literal["nt"] = "nt",
         trainable=False,
         **kwargs,
@@ -68,7 +68,7 @@ class QuantLinear(nn.Module):
         storage_nbit = 8  # assume int8 storage
         n_float_per_elem = storage_nbit // bits
 
-        self.opt_features = opt_features
+        self.opt_m = opt_m
         self.infeatures = infeatures
         self.outfeatures = outfeatures
         self.group_size = group_size if group_size != -1 else infeatures
@@ -112,7 +112,7 @@ class QuantLinear(nn.Module):
         bitblas_dtype = BITBLAS_DTYPES[dtype]
         self.target = auto_detect_nvidia_target()
         matmul_config = MatmulWeightOnlyDequantizeConfig(
-            M=self.opt_features,
+            M=self.opt_m,
             N=self.outfeatures,
             K=self.infeatures,
             in_dtype=bitblas_dtype,

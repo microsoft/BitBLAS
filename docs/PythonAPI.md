@@ -40,26 +40,23 @@
 ###  Initialization:
 
 ```python
-Matmul(config: MatmulConfig, name: str = "matmul", target: Optional[Union[str, Target]] = None, enable_tuning: bool = True)
+Matmul(config: MatmulConfig)
 ```
 
 - **config** *(MatmulConfig)*: The configuration for the matrix multiplication operation.
-- **name** *(str, default='matmul')*: The name of the operator. Currently this parameter is not used.
-- **target** *(Optional[Union[str, Target]], default=None)*: The compilation target. If `None`, the target is auto-detected.
-- **enable_tuning** *(bool, default=True)*: If `True`, enables hardware-aware tuning.
 
 ###  Methods:
 
-#### `forward(A, W, Scale=None, Zeros=None, bias=None, Output=None) -> Any`
+#### `forward(A, W, scale=None, seros=None, bias=None, output=None) -> Any`
 
 Performs the matrix multiplication operation with the given input tensors and optional scaling, zeros, and bias.
 
 - **A** *(Tensor)*: The input tensor A.
 - **W** *(Tensor)*: The input tensor W.
-- **Scale** *(Optional[Tensor], default=None)*: The scaling tensor.
-- **Zeros** *(Optional[Tensor], default=None)*: The zeros tensor.
+- **scale** *(Optional[Tensor], default=None)*: The scaling tensor.
+- **zeros** *(Optional[Tensor], default=None)*: The zeros tensor.
 - **bias** *(Optional[Tensor], default=None)*: The bias tensor.
-- **Output** *(Optional[Tensor], default=None)*: The pre-allocated output tensor.
+- **output** *(Optional[Tensor], default=None)*: The pre-allocated output tensor.
 
 #### `transform_weight(weight, scale=None, zeros=None, bias=None)`
 
@@ -76,19 +73,19 @@ Allows the object to be called like a function, forwarding the call to the `forw
 
 ### Properties:
 
-- **M**, **N**, **K**, **A_dtype**, **W_dtype**, **out_dtype**, **accum_dtype**, **storage_dtype**, **with_scaling**, **with_zeros**, **group_size**, **fast_decoding**, **with_bias**, **propagate_a**, **propagate_b**, **layout**, **zeros_mode**: These properties correspond to the parameters defined in `MatmulConfig`, providing easy access to the configuration details.
+- **M**, **N**, **K**, **A_dtype**, **W_dtype**, **out_dtype**, **accum_dtype**, **storage_dtype**, **with_scaling**, **with_zeros**, **group_size**, **fast_decoding**, **with_bias**, **layout**, **zeros_mode**: These properties correspond to the parameters defined in `MatmulConfig`, providing easy access to the configuration details.
 
 
 ## Linear
 
-`Linear(infeatures: int, outfeatures: int, bias: bool = False, A_dtype: str = 'float16', W_dtype: str = 'float16', accum_dtype: str = 'float16', out_dtype: str = 'float16', group_size: int = -1, with_scaling: bool = None, with_zeros: bool = False, zeros_mode: str = None, opt_features: Union[int, List[int]] = [1, 16, 32, 64, 128, 256, 512], enable_tuning: bool = True, fast_decoding: bool = True, propagate_b: bool = False)`
+`Linear(infeatures: int, outfeatures: int, bias: bool = False, A_dtype: str = 'float16', W_dtype: str = 'float16', accum_dtype: str = 'float16', out_dtype: str = 'float16', group_size: int = -1, with_scaling: bool = None, with_zeros: bool = False, zeros_mode: str = None, opt_m: Union[int, List[int]] = [1, 16, 32, 64, 128, 256, 512])`
 
 Applies a linear transformation to the incoming data: $out[M, N] = A[M, K] \times W[N, K]$ . This module supports quantization and optimization for NVIDIA GPUs using the BitBLAS library.
 
 ### Parameters:
 
-- **infeatures** *(int)*: size of each input sample.
-- **outfeatures** *(int)*: size of each output sample.
+- **in_features** *(int)*: size of each input sample.
+- **out_features** *(int)*: size of each output sample.
 - **bias** *(bool, optional)*: If set to `False`, the layer will not learn an additive bias. Default: `False`.
 - **A_dtype** *(str, optional)*: Data type of the input tensor. Default: `'float16'`.
     - Choices: `'float16'`, `'int8'`.
@@ -100,13 +97,13 @@ Applies a linear transformation to the incoming data: $out[M, N] = A[M, K] \time
     - Choices: `'float16'`, `'int8'`, `'int32'`.
 - **group_size** *(int, optional)*: Group size for quantization. Default: `-1` (no grouping).
 - **with_scaling** *(bool, optional)*: Whether to use scaling during quantization. Default: `False`.
-- **with_zeros** *(bool, optional)*: Whether to use zero optimization. Default: `False`.
-- **zeros_mode** *(str, optional)*: Mode for zero optimization. Default: `None`.
+- **with_zeros** *(bool, optional)*: Whether to use zeropoints . Default: `False`.
+- **zeros_mode** *(str, optional)*: Mode for zero zeropoints. Default: `None`.
     - Choices: `None`, `'original'`, `'rescale'`, `'quantized'`.
         - `'original'`: Subtract zero-point before scaling. Formula: `target = (dequantize_weight - zero_point) * scale`. where `zero_point` has the same datatype with scale.
         - `'rescale'`: Apply scale factor directly to dequantized weight and then subtract zero-point. Formula: `target = dequantize_weight * scale - zero_point`.
         - `'quantized'`: Apply zero-point adjustment after dequantization and additional dequantization of zero values. Formula: `target = (dequantize_weight - dequantize_qzeros) * scale`, where `dequantize_zeros` represents the dequantized representation of zero values, which can be adapted to qzeros params.
-- **opt_features** *(Union[int, List[int]], optional)*: Optimize range of the input shape for dynamic symbolic. Default: `[1, 16, 32, 64, 128, 256, 512]`.
+- **opt_m** *(Union[int, List[int]], optional)*: Optimize range of the input shape for dynamic symbolic. Default: `[1, 16, 32, 64, 128, 256, 512]`.
     - If `int`, the bitblas matmul will generate a static shape kernel, which can only be used for the input shape of the specified value.
     - If `List[int]`, the bitblas matmul will generate a dynamic shape kernel, which can be used for the input shape of the specified values. While the input shape represents the target optimized range.
 
@@ -134,7 +131,7 @@ This method is designed to load and optionally transform the weight matrix along
 - **Parameters:**
   - **weight** *(Tensor)*: The weight tensor to be loaded into the layer. This tensor should have dimensions that match the expected input features and output features of the layer. The method will also apply any necessary transformations to the weight tensor to align with the quantization and optimization configurations of the layer.
   - **scales** *(Tensor, optional)*: A tensor containing scale factors for quantization. These scales are used to adjust the weight values during the quantization process, ensuring that the dynamic range of the weights is appropriately represented in the quantized format. If not provided, the method assumes that either scaling is not required or has already been applied to the weights.
-  - **zeros** *(Tensor, optional)*: A tensor indicating the optimized representation of zeros, particularly useful in sparse models where zero values can be efficiently encoded. This parameter is only relevant if zero optimization (`with_zeros`) is enabled for the layer. Providing this tensor allows for further memory and computation optimizations during the forward pass.
+  - **zeros** *(Tensor, optional)*: A tensor indicating the optimized representation of zeros, particularly useful in sparse models where zero values can be efficiently encoded. This parameter is only relevant if zero points (`with_zeros`) is enabled for the layer. Providing this tensor allows for further memory and computation optimizations during the forward pass.
   - **bias** *(Tensor, optional)*: The bias tensor to be loaded into the layer. If the layer is configured to use a bias (`bias=True` during initialization), this tensor provides the bias values for each output feature. If `None`, it is assumed that the layer does not use a bias or that the bias is already incorporated into another parameter.
 `load_and_transform_weight(weight, scales=None, zeros=None, bias=None)`
 
@@ -142,7 +139,7 @@ Loads and transforms the weight matrix and optional scales, zeros, and bias for 
 
 - **weight** *(Tensor)*: Weight tensor.
 - **scales** *(Tensor, optional)*: Scales tensor for quantization. Default: `None`.
-- **zeros** *(Tensor, optional)*: Zeros tensor for zero optimization. Default: `None`.
+- **zeros** *(Tensor, optional)*: Zeros tensor for zeropoints. Default: `None`.
 - **bias** *(Tensor, optional)*: Bias tensor. Default: `None`.
 
 ### `repack_from_gptq(gptq_module)`
