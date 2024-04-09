@@ -34,7 +34,7 @@ matmul = bitblas.Matmul(config=matmul_config)
 activation = torch.rand((1024, 1024), dtype=torch.float16).cuda()
 weight = torch.randint(-7, 7, (1024, 1024), dtype=torch.int8).cuda()
 weight_int4 = matmul.transform_weight(weight)
-output = matmul(activation, weight_int4, output)
+output = matmul(activation, weight_int4)
 ```
 
 The second example includes the creation of input matrices, quantization of weight matrices, and execution of the multiplication. The result is then compared against a reference result obtained through conventional methods to ensure accuracy.
@@ -69,18 +69,71 @@ maxq = 7
 
 input_tensor = torch.rand(input_shape, dtype=torch.float16).cuda()
 weight_tensor = torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda()
-output_tensor = torch.rand(output_shape, dtype=torch.float16).cuda()
 ref_result = torch.matmul(input_tensor, weight_tensor.t().to(torch.float16))
 
-bitblas_inputs = [input_tensor]
 weight_tensor_int4 = matmul.transform_weight(weight_tensor)
-bitblas_inputs.append(weight_tensor_int4)
-output_tensor = matmul(*bitblas_inputs)
+output_tensor = matmul(input_tensor, weight_tensor_int4)
 
 torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-0)
 ```
 
 
+```python
+import bitblas
+import torch
+
+infeatures = 1024
+outfeatures = 1024
+group_size = 128
+
+matmul_config = bitblas.MatmulConfig(
+    M=1,  # M dimension
+    N=outfeatures,  # N dimension
+    K=infeatures,  # K dimension
+    A_dtype="float16",  # activation A dtype
+    W_dtype="uint4",  # weight W dtype
+    accum_dtype="float16",  # accumulation dtype
+    out_dtype="float16",  # output dtype
+    layout="nt",  # matrix layout, "nt" indicates the layout of A is non-transpose and the layout of W is transpose
+    with_bias=False,  # bias
+    # configs for weight only quantization
+    group_size=group_size,  # setting for grouped quantization
+    with_scaling=True,  # setting for scaling factor
+    with_zeros=True,  # setting for zeros
+    zeros_mode="original",  # setting for how to calculating zeros
+)
+matmul = bitblas.Matmul(config=matmul_config)
+
+input_shape = (1, infeatures)
+weight_shape = (outfeatures, infeatures)
+scaling_shape = (outfeatures, infeatures // group_size)
+zeros_shape = (outfeatures, infeatures // group_size)
+output_shape = (1, outfeatures)
+
+maxq = 7
+
+scaling = torch.rand(scaling_shape, dtype=torch.float16).cuda()
+# original zeros_mod should be the same dtype as input, we support multiple zeros_mode, please refer to python/bitblas/ops/general_matmul.py:MatmulConfig::zeros_mode
+zeros = torch.rand(zeros_shape, dtype=torch.float16).cuda()
+
+input_tensor = torch.rand(input_shape, dtype=torch.float16).cuda()
+
+weight_tensor = torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda()
+rescaling_tensor = torch.zeros_like(weight_tensor, dtype=torch.float16).cuda()
+# rescale = (weight - zeros) * scaling
+for i in range(infeatures // group_size):
+    for j in range(group_size):
+        rescaling_tensor[:, i * group_size + j] = (
+            weight_tensor[:, i * group_size + j].to(torch.float16) - zeros[:, i]
+        ) * scaling[:, i]
+
+ref_result = torch.matmul(input_tensor, rescaling_tensor.t().to(torch.float16))
+
+weight_tensor_int4 = matmul.transform_weight(weight_tensor)
+output_tensor = matmul(input_tensor, weight_tensor_int4, scaling, zeros)
+
+torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-0)
+```
 
 To highlight the efficiency gains achievable with BitBLAS, the following code snippet demonstrates how to measure the latency of the mixed-precision matrix multiplication. By profiling the operation, users can quantify the performance benefits of BitBLAS.
 
@@ -107,12 +160,9 @@ matmul_config = bitblas.MatmulConfig(
     with_zeros=None,  # setting for zeros
     zeros_mode=None,  # setting for how to calculating zeros
 )
-matmul = bitblas.Matmul(config=matmul_config)
+matmul = bitblas.Matmul(config=matmul_config, enable_tuning=False)
 latency = matmul.profile_latency()
 print(f"Latency: {latency} ms")
-# improve performance through fine tuning
-matmul.hardware_aware_finetune()
-print(f"Latency After Tuning: {latency} ms")
 ```
 
 ## Example: bitblas.Linear module for PyTorch
