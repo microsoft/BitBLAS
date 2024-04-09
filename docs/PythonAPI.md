@@ -105,7 +105,7 @@ Applies a linear transformation to the incoming data: $out[M, N] = A[M, K] \time
         - `'quantized'`: Apply zero-point adjustment after dequantization and additional dequantization of zero values. Formula: `target = (dequantize_weight - dequantize_qzeros) * scale`, where `dequantize_zeros` represents the dequantized representation of zero values, which can be adapted to qzeros params.
 - **opt_m** *(Union[int, List[int]], optional)*: Optimize range of the input shape for dynamic symbolic. Default: `[1, 16, 32, 64, 128, 256, 512]`.
     - If `int`, the bitblas matmul will generate a static shape kernel, which can only be used for the input shape of the specified value.
-    - If `List[int]`, the bitblas matmul will generate a dynamic shape kernel, which can be used for the input shape of the specified values. While the input shape represents the target optimized range.
+    - If `List[int]`, the bitblas matmul will generate a dynamic shape kernel, which can be used for the input shape of the specified values. While the input shape represents the target optimized range. It is important to note that if an input size is provided that is not explicitly listed, such as 15, bitblas matmul will select the nearest larger kernel available. In the case where opt_m is `[1, 16, 32, 64, 128, 256, 512]`, an input size of 15 would utilize the kernel optimized for size 16. T
 
 ### Methods:
 

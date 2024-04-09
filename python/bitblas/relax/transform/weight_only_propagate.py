@@ -355,7 +355,7 @@ class WeightOnlyLayoutPropagation:
                 sch = tir.Schedule(func)
                 dequantize_block = sch.get_block(weight_dequantize_info["decode_block"])
 
-                # weight is the first read buffer if format in ["int", "uint"], otherwise the second read buffer, af .etc
+                # weight is the first read buffer if format in ["int", "uint"], otherwise the second read buffer, nf .etc
                 source_format = weight_dequantize_info["source_format"]["format"]
                 source_bits = weight_dequantize_info["source_format"]["bits"]
                 target_dtype = weight_dequantize_info["target_format"]
