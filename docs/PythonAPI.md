@@ -36,18 +36,6 @@
         - `'original'`: Subtract zero-point before scaling. Formula: `target = (dequantize_weight - zero_point) * scale`. where `zero_point` has the same datatype with scale.
         - `'rescale'`: Apply scale factor directly to dequantized weight and then subtract zero-point. Formula: `target = dequantize_weight * scale - zero_point`.
         - `'quantized'`: Apply zero-point adjustment after dequantization and additional dequantization of zero values. Formula: `target = (dequantize_weight - dequantize_qzeros) * scale`, where `dequantize_zeros` represents the dequantized representation of zero values, which can be adapted to qzeros params.
-- **storage_dtype** *(str, default='int8')*: The storage data type for quantized weights.
-    - Choices: `'int32'`, `'int8'`. (we prefer using `'int8'` as the storage data type)
-- **fast_decoding** *(bool, default=True)*: Enables fast decoding by default.
-    - If `True`, the module will use fast decoding for INT4/2/1 quantization, which will introduce a weight transformation, and this transformation will be applied to the weight automalically when you call `transform_weight`. More details about this transformation is coming soon.
-- **propagate_a** *(TransformKind, default=NonTransform)*: Transformation kind for matrix A. Which comes from Ladder, detailed document is coming soon. By default, it is `NonTransform`, which means do not enable transformation.
-    - Choices: `NonTransform`, `InterWarpTransform`, `IntraWarpTransform`.
-    - Choices: `False`, `True`. Where `False` is equivalent to `NonTransform`. `True` is equivalent to `IntraWarpTransform`.
-    - Choices: `0`, `1`, `2`. Where `0` is equivalent to `NonTransform`. `1` is equivalent to `InterWarpTransform`. `2` is equivalent to `IntraWarpTransform`.
-- **propagate_b** *(TransformKind, default=NonTransform)*: Transformation kind for matrix W. Which comes from Ladder, detailed document is coming soon. By default, it is `NonTransform`, which means do not enable transformation.
-    - Choices: `NonTransform`, `InterWarpTransform`, `IntraWarpTransform`.
-    - Choices: `False`, `True`. Where `False` is equivalent to `NonTransform`. `True` is equivalent to `IntraWarpTransform`.
-    - Choices: `0`, `1`, `2`. Where `0` is equivalent to `NonTransform`. `1` is equivalent to `InterWarpTransform`. `2` is equivalent to `IntraWarpTransform`.
 
 ###  Initialization:
 
@@ -62,16 +50,16 @@ Matmul(config: MatmulConfig, name: str = "matmul", target: Optional[Union[str, T
 
 ###  Methods:
 
-#### `forward(*args) -> Any`
+#### `forward(A, W, Scale=None, Zeros=None, bias=None, Output=None) -> Any`
 
-The number of arguments and their types depend on the configuration of the `Matmul` object. We list the possible argument combinations below:
+Performs the matrix multiplication operation with the given input tensors and optional scaling, zeros, and bias.
 
-| with_scaling | with_zeros | with_bias | Arguments                |
-| ------------ | ---------- | --------- | ------------------------ |
-| FALSE        | FALSE      | FALSE     | A, W                     |
-| FALSE        | FALSE      | TRUE      | A, W, Bias               |
-| TRUE         | TRUE       | FALSE     | A, W, Scale, Zeros       |
-| TRUE         | TRUE       | TRUE      | A, W, Scale, Zeros, Bias |
+- **A** *(Tensor)*: The input tensor A.
+- **W** *(Tensor)*: The input tensor W.
+- **Scale** *(Optional[Tensor], default=None)*: The scaling tensor.
+- **Zeros** *(Optional[Tensor], default=None)*: The zeros tensor.
+- **bias** *(Optional[Tensor], default=None)*: The bias tensor.
+- **Output** *(Optional[Tensor], default=None)*: The pre-allocated output tensor.
 
 #### `transform_weight(weight, scale=None, zeros=None, bias=None)`
 
@@ -121,13 +109,6 @@ Applies a linear transformation to the incoming data: $out[M, N] = A[M, K] \time
 - **opt_features** *(Union[int, List[int]], optional)*: Optimize range of the input shape for dynamic symbolic. Default: `[1, 16, 32, 64, 128, 256, 512]`.
     - If `int`, the bitblas matmul will generate a static shape kernel, which can only be used for the input shape of the specified value.
     - If `List[int]`, the bitblas matmul will generate a dynamic shape kernel, which can be used for the input shape of the specified values. While the input shape represents the target optimized range.
-- **enable_tuning** *(bool, optional)*: Whether to enable hardware-aware tuning. Default: `True`.
-    - If `True`, the module will perform hardware-aware tuning, and you can also specify the `BITBLAS_DATABASE` value to load pre-optimized kernel from database.
-    - If `False`, the module use a default schedule (the performan may not be optimal).
-- **fast_decoding** *(bool, optional)*: Whether to enable fast decoding. Default: `True`.
-    - If `True`, the module will use fast decoding for INT4/2/1 quantization, which will introduce a weight transformation, and this transformation will be applied to the weight automalically when you call `load_and_transform_weight`.
-- **propagate_b** *(bool, optional)*: Whether to propagate bias. Default: `False`.
-    - If `Ture`, the module will use a further optimization for layout propagation(OSDI'24 Ladder), which will introduce another transformation to get better performance, and this transformation will be applied to the weight automalically when you call `load_and_transform_weight`. The default value is `False` because we currently do not implement the gemv case, which will be addressed in the future.
 
 ### Methods:
 

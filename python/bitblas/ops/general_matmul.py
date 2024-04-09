@@ -2,6 +2,8 @@
 # Licensed under the MIT License.
 import tvm
 from tvm.target import Target
+import operator
+from functools import reduce
 from bitblas.base.roller.arch.cuda import CUDA
 from typing import Any, List, Literal, Optional, Tuple, Union
 from .operator import Operator, TransformKind
@@ -260,6 +262,17 @@ class Matmul(Operator):
         if enable_tuning:
             self.hardware_aware_finetune()
 
+        if source_format == "nf":
+            self.lut = torch.Tensor(([
+                -1.0, -0.6961928009986877, -0.5250730514526367, -0.39491748809814453,
+                -0.28444138169288635, -0.18477343022823334, -0.09105003625154495, 0.0,
+                0.07958029955625534, 0.16093020141124725, 0.24611230194568634, 0.33791524171829224,
+                0.44070982933044434, 0.5626170039176941, 0.7229568362236023, 1.0
+            ]),
+                                    dtype=getattr(torch, self.A_dtype)).cuda()
+        else:
+            self.lut = None
+
     def _select_implementation(self):
         if self.A_dtype == self.W_dtype:
             return consistent_implementation(
@@ -306,12 +319,7 @@ class Matmul(Operator):
     def forward(self, *args) -> Any:
         if self.lib is None:
             self._forward_from_torch_func(*args)
-        dynamic_symbolic = []
-        if self.dynamic_range is not None:
-            # assume we only have one dynamic range
-            m = args[0].shape[0]
-            dynamic_symbolic.append(m)
-        self._forward_from_prebuild_lib(*args, *dynamic_symbolic)
+        self._forward_from_prebuild_lib(*args)
 
     def transform_weight(self, weight, scale=None, zeros=None, bias=None):
         """
@@ -371,15 +379,28 @@ class Matmul(Operator):
 
         return next(iter(result), result)
 
-    def __call__(self, *args: Any) -> Any:
-        if len(args) < self.num_args:
-            args = args + (torch.empty(
-                args[0].shape[:-1] + (self.N,),
-                dtype=args[0].dtype,
-                device=args[0].device,
-            ),)
+    def __call__(self, A, W, Scale=None, Zeros=None, bias=None, Output=None) -> Any:
+        args = [A]
+        if self.lut is not None:
+            args.append(self.lut)
+        args.append(W)
+
+        if Output is None:
+            Output = torch.empty(A.shape[:-1] + (self.N,), dtype=A.dtype, device=A.device)
+        if Scale is not None:
+            args.append(Scale)
+        if Zeros is not None:
+            args.append(Zeros)
+        if bias is not None:
+            args.append(bias)
+        args.append(Output)
+
+        m = reduce(operator.mul, A.shape[:-1], 1)
+        args.append(m)
+
         self.forward(*args)
-        return args[-1]
+
+        return Output
 
     @property
     def M(self):

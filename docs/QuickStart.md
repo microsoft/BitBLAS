@@ -28,6 +28,9 @@ matmul_config = bitblas.MatmulConfig(
     with_zeros=False,  # setting for zeros
     zeros_mode=None,  # setting for how to calculating zeros
 )
+
+matmul = bitblas.Matmul(config=matmul_config)
+
 # Create input matrices
 input_tensor = torch.rand((1, 1024), dtype=torch.float16).cuda()
 weight_tensor = torch.randint(0, 7, (1024, 1024), dtype=torch.int8).cuda()
@@ -91,7 +94,7 @@ weight_tensor = torch.randint(0, 7, weight_shape, dtype=torch.int8).cuda()
 weight_tensor_int4 = matmul.transform_weight(weight_tensor)
 
 # Perform mixed-precision matrix multiplication with quantization
-output_tensor = matmul(input_tensor, weight_tensor_int4, scaling, zeros)
+output_tensor = matmul(input_tensor, weight_tensor_int4, Scale=scaling, Zeros=zeros)
 
 rescaling_tensor = torch.zeros_like(weight_tensor, dtype=torch.float16).cuda()
 # Compute reference result with manual scaling and zero-point adjustment
@@ -106,37 +109,7 @@ ref_result = torch.matmul(input_tensor, rescaling_tensor.t().to(torch.float16))
 torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-2)
 ```
 
-To highlight the efficiency gains achievable with BitBLAS, the following code snippet demonstrates how to measure the latency of the mixed-precision matrix multiplication. By profiling the operation, users can quantify the performance benefits of BitBLAS.
-
-```python
-import bitblas
-import torch
-
-import numpy as np
-from bitblas.quantization import general_compress
-
-matmul_config = bitblas.MatmulConfig(
-    M=1,  # M dimension
-    N=1024,  # N dimension
-    K=1024,  # K dimension
-    A_dtype="float16",  # activation A dtype
-    W_dtype="int4",  # weight W dtype
-    accum_dtype="float16",  # accumulation dtype
-    out_dtype="float16",  # output dtype
-    layout="nt",  # matrix layout, "nt" indicates the layout of A is non-transpose and the layout of W is transpose
-    with_bias=None,  # bias
-    # configs for weight only quantization
-    group_size=None,  # setting for grouped quantization
-    with_scaling=None,  # setting for scaling factor
-    with_zeros=None,  # setting for zeros
-    zeros_mode=None,  # setting for how to calculating zeros
-)
-matmul = bitblas.Matmul(config=matmul_config)
-
-# get latency and print
-latency = matmul.profile_latency()
-print(f"Latency: {latency} ms")
-```
+The init stage of the ```bitblas.Matmul``` class will take minutes to finish, as it will use hardware informations to do a one-time kernel library initialization.
 
 ## Example: bitblas.Linear module for PyTorch
 
@@ -170,10 +143,10 @@ intweight = torch.randint(-7, 7, (1024, 1024), dtype=torch.int8)
 model.load_and_transform_weight(intweight)
 
 # Save the state of the model
-torch.save(model.state_dict(), "./debug/model.pth")
+torch.save(model.state_dict(), "./model.pth")
 
 # Load the model state
-model.load_state_dict(torch.load("./debug/model.pth"))
+model.load_state_dict(torch.load("./model.pth"))
 
 # Set the model to evaluation mode
 model.eval()

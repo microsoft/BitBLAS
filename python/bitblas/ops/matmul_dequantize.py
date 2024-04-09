@@ -110,6 +110,7 @@ class MatmulWeightOnlyDequantize(Operator):
         config: MatmulWeightOnlyDequantizeConfig,
         name: str = "matmul_weight_only_dequantize",
         target: Target = "cuda",
+        enable_tuning: bool = False,
     ):
         super().__init__(name, config, target)
 
@@ -199,6 +200,9 @@ class MatmulWeightOnlyDequantize(Operator):
             weight_executors.append(self.ladder_permutate_b)
 
         self.weight_executors = weight_executors
+
+        if enable_tuning:
+            self.hardware_aware_finetune()
 
     def _select_implementation(self):
         return select_implementation(

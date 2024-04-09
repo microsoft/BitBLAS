@@ -90,6 +90,7 @@ class Matmul(Operator):
         config: MatmulConfig,
         name: str = "matmul",
         target: Union[str, Target] = "cuda",
+        enable_tuning: bool = False,
     ):
         super().__init__(name, config, target)
         target = self.target
@@ -153,6 +154,9 @@ class Matmul(Operator):
             weight_executors.append(self.ladder_permutate_b)
 
         self.weight_executors = weight_executors
+
+        if enable_tuning:
+            self.hardware_aware_finetune()
 
     def _select_implementation(self):
         return select_implementation(

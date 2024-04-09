@@ -22,6 +22,7 @@ from bitblas.base import (
 # Define a module pass to annotate dequantization information
 @module_pass(opt_level=0, name="AnnotateDecodeInformation")
 class AnnotateDecodeInformation:
+
     def __init__(self, spec: str = "q4f16_0"):
         # Validate and store the specified quantization scheme
         if spec not in quantization_schemes:
@@ -80,24 +81,18 @@ class AnnotateDecodeInformation:
             mod[g_var] = func.with_attr("dequantize_info", dequantize_info)
         return mod
 
-    def prepare_dequantize_info(
-        self, sch: tir.Schedule, dequantize_block: BlockRV
-    ) -> Dict:
+    def prepare_dequantize_info(self, sch: tir.Schedule, dequantize_block: BlockRV) -> Dict:
         """Generate dequantize information for a given block."""
         block_stmt = sch.get(dequantize_block)
         block_name = block_stmt.name_hint
-        dequantize_info = {
-            block_name: {"decode_block": block_name, "fast_decoding": False}
-        }
+        dequantize_info = {block_name: {"decode_block": block_name, "fast_decoding": False}}
 
         quantize_spec = self.quantize_scheme.linear_weight
         if isinstance(quantize_spec, GroupQuantizationSpec):
-            dequantize_info[block_name].update(
-                {
-                    "with_scaling": True,
-                    "group_size": quantize_spec.group_size,
-                }
-            )
+            dequantize_info[block_name].update({
+                "with_scaling": True,
+                "group_size": quantize_spec.group_size,
+            })
 
         # Determine source format based on quantization mode
         quantize_mod = quantize_spec.mode
@@ -124,8 +119,5 @@ class AnnotateDecodeInformation:
 
     def get_storage_dtype(self, block_stmt: BlockRV, source_format: str) -> str:
         """Determine storage data type based on source format."""
-        return (
-            block_stmt.reads[0].buffer.dtype
-            if "nf" not in source_format
-            else block_stmt.reads[1].buffer.dtype
-        )
+        return (block_stmt.reads[0].buffer.dtype
+                if "nf" not in source_format else block_stmt.reads[1].buffer.dtype)
