@@ -6,8 +6,7 @@ from bitblas.base.roller.arch.cuda import CUDA
 from typing import Any, List, Literal, Optional, Tuple, Union
 from .operator import Operator, TransformKind
 from .impl.matmul_dequantize_impl import (
-    select_implementation as weight_dequantize_implementation,
-)
+    select_implementation as weight_dequantize_implementation,)
 from .impl.matmul_impl import select_implementation as consistent_implementation
 from ..base.utils import tensor_replace_dp4a
 from bitblas.utils.target_detector import auto_detect_nvidia_target
@@ -80,18 +79,13 @@ class MatmulConfig:
     def __post_init__(self):
         # set M to tuple if it is list
         # otherwise, M is not hashable
-        object.__setattr__(
-            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
-        )
+        object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
         if isinstance(self.propagate_a, bool):
             object.__setattr__(
                 self,
                 "propagate_a",
-                (
-                    TransformKind.IntraWarpTransform
-                    if self.propagate_a
-                    else TransformKind.NonTransform
-                ),
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_a else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_a, int):
             object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
@@ -100,11 +94,8 @@ class MatmulConfig:
             object.__setattr__(
                 self,
                 "propagate_b",
-                (
-                    TransformKind.IntraWarpTransform
-                    if self.propagate_b
-                    else TransformKind.NonTransform
-                ),
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_b else TransformKind.NonTransform),
             )
         elif isinstance(self.propagate_b, int):
             object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
@@ -162,9 +153,8 @@ class Matmul(Operator):
     ):
         if target is None:
             target = auto_detect_nvidia_target()
-        assert (
-            config.A_dtype in self.BITBLAS_TRICK_DTYPE_MAP
-        ), f"Unsupported input dtype {config.A_dtype}"
+        assert (config.A_dtype
+                in self.BITBLAS_TRICK_DTYPE_MAP), f"Unsupported input dtype {config.A_dtype}"
         source_format, bit = self.BITBLAS_TRICK_DTYPE_MAP[config.W_dtype]
 
         self.source_format = source_format
@@ -183,9 +173,7 @@ class Matmul(Operator):
         self.arch = CUDA(target)
 
         try:
-            self.optimized_func = self.apply_default_schedule(
-                self.prim_func_mod, target
-            )
+            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
         except Exception:
             self.optimized_func = None
             logger.warnning(
@@ -195,8 +183,7 @@ class Matmul(Operator):
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
-                {"opt_shapes": self.dynamic_range}
-            )
+                {"opt_shapes": self.dynamic_range})
         else:
             self.dynamic_range = None
 
@@ -307,9 +294,7 @@ class Matmul(Operator):
         return code
 
     def retrieve_weight_shape(self):
-        return [
-            int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape
-        ]
+        return [int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape]
 
     def forward(self, *args) -> Any:
         if self.lib is None:
@@ -335,6 +320,10 @@ class Matmul(Operator):
         Returns:
         A list containing the transformed weight tensor and optionally the scale, zeros, and bias.
         """
+        if self.W_dtype == self.A_dtype:
+            if self.weight_transform is not None:
+                return self.weight_transform(weight.cpu()).cuda().contiguous()
+            return weight
 
         from bitblas.quantization import general_compress
         import torch
@@ -346,7 +335,7 @@ class Matmul(Operator):
         if source_format == "int":
             assert not self.with_scaling, "scale should be False for int source format"
             assert not self.with_zeros, "zeros should be False for int source format"
-            maxq = 2 ** (bit - 1) - 1
+            maxq = 2**(bit - 1) - 1
             # Clamp weight values to be within the quantizable range and adjust
             weight = torch.clamp(weight, -maxq, maxq).int() + maxq
         else:
@@ -356,8 +345,7 @@ class Matmul(Operator):
         np_storage_dtype = getattr(np, self.storage_dtype)
 
         weight = general_compress(
-            weight.cpu().numpy(), source_bits=bit, storage_dtype=np_storage_dtype
-        )
+            weight.cpu().numpy(), source_bits=bit, storage_dtype=np_storage_dtype)
 
         weight = torch.from_numpy(weight).cuda().contiguous()
 
@@ -378,13 +366,11 @@ class Matmul(Operator):
 
     def __call__(self, *args: Any) -> Any:
         if len(args) < self.num_args:
-            args = args + (
-                torch.empty(
-                    args[0].shape[:-1] + (self.N,),
-                    dtype=args[0].dtype,
-                    device=args[0].device,
-                ),
-            )
+            args = args + (torch.empty(
+                args[0].shape[:-1] + (self.N,),
+                dtype=args[0].dtype,
+                device=args[0].device,
+            ),)
         self.forward(*args)
         return args[-1]
 

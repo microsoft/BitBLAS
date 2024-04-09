@@ -102,6 +102,7 @@ class MatmulWeightOnlyDequantizeConfig:
         elif isinstance(self.propagate_b, int):
             object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
 
+
 class MatmulWeightOnlyDequantize(Operator):
 
     def __init__(

@@ -9,4 +9,4 @@ from .quantization import (
     _tir_packed_to_unsigned_convert_with_zeros,  # noqa: F401
 )
 
-from .utils import general_compress  # noqa: F401
+from .utils import gen_quant4, general_compress  # noqa: F401

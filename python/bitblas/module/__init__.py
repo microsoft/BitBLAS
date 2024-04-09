@@ -9,20 +9,7 @@ from logging import getLogger
 import torch
 import torch.nn as nn
 
-
 logger = getLogger(__name__)
-
-try:
-    import bitblas
-except ImportError as e:
-    bitblas_import_exception = e
-
-    def error_raiser_bitblas(*args, **kwargs):
-        raise ValueError(
-            f"Trying to use the bitblas backend, but could not import dependencies with the following error: {bitblas_import_exception}"
-        )
-
-    autogptq_bitblas_cuda = bitblas_import_exception
 
 from typing import List, Union
 
@@ -33,7 +20,24 @@ from bitblas import auto_detect_nvidia_target
 
 BITBLAS_TARGET = auto_detect_nvidia_target()
 BITBLAS_DATABASE_PATH = ".bitblas_database"
-BITBLAS_PROPAGATE_WEIGHTS = False
+
+
+def unpack_qzeros(qzeros, bits):
+    qzeros = qzeros.view(torch.int32)
+    elems_per_int32 = 32 // bits
+    unpacked_zeros = torch.zeros(
+        (qzeros.shape[0], qzeros.shape[1] * elems_per_int32),
+        dtype=torch.int8,
+        device=qzeros.device,
+        requires_grad=False,
+    )
+
+    for col in range(unpacked_zeros.shape[1]):
+        i = col % elems_per_int32
+        unpacked_zeros[:, col] = (qzeros[:, col // elems_per_int32] >> (bits * i)) & 0xF
+
+    return unpacked_zeros + 1
+
 
 class Linear(nn.Module):
     OPT_FEATURES = [1, 16, 32, 64, 128, 256, 512]
@@ -120,15 +124,13 @@ class Linear(nn.Module):
             raise ValueError("`infeatures` must be divisible by `group_size`.")
 
     def _set_group_size(self, group_size, infeatures):
-        return infeatures if (group_size == -1 or group_size == None) else group_size
+        return infeatures if (group_size == -1 or group_size is None) else group_size
 
     def _initialize_buffers(self, infeatures, outfeatures, bias):
         if self.consistent:
             self.register_buffer(
                 "weight",
-                torch.zeros(
-                    (outfeatures, infeatures // self.group_size), dtype=self.torch_dtype
-                ),
+                torch.zeros((outfeatures, infeatures // self.group_size), dtype=self.torch_dtype),
             )
         else:
             self.register_buffer(
@@ -140,9 +142,7 @@ class Linear(nn.Module):
             )
             self.register_buffer(
                 "scales",
-                torch.zeros(
-                    (outfeatures, infeatures // self.group_size), dtype=self.torch_dtype
-                ),
+                torch.zeros((outfeatures, infeatures // self.group_size), dtype=self.torch_dtype),
             )
             if self.zeros_mode == "quantized":
                 storage_nbit = int("".join(c for c in self.STORAGE_DTYPE if c.isdigit()))
@@ -160,13 +160,12 @@ class Linear(nn.Module):
                 self.register_buffer(
                     "zeros",
                     torch.zeros(
-                        (outfeatures, infeatures // self.group_size), dtype=self.torch_dtype
+                        (outfeatures, infeatures // self.group_size),
+                        dtype=self.torch_dtype,
                     ),
                 )
         if bias:
-            self.register_buffer(
-                "bias", torch.zeros((outfeatures), dtype=self.torch_dtype)
-            )
+            self.register_buffer("bias", torch.zeros((outfeatures), dtype=self.torch_dtype))
         else:
             self.bias = None
 
@@ -201,15 +200,13 @@ class Linear(nn.Module):
             propagate_b=propagate_b,
             zeros_mode=zeros_mode,
         )
-        self.bitblas_matmul = self._get_or_create_bitblas_operator(
-            matmul_config, enable_tuning
-        )
+        self.bitblas_matmul = self._get_or_create_bitblas_operator(matmul_config, enable_tuning)
+        self.bits = self.bitblas_matmul.bit
+        self.source_format = self.bitblas_matmul.source_format
 
     def _get_or_create_bitblas_operator(self, config, enable_tuning):
         if global_operator_cache.size() == 0:
-            global_operator_cache.load_from_database(
-                BITBLAS_DATABASE_PATH, BITBLAS_TARGET
-            )
+            global_operator_cache.load_from_database(BITBLAS_DATABASE_PATH, BITBLAS_TARGET)
 
         bitblas_matmul = global_operator_cache.get(config)
         if bitblas_matmul is None:
@@ -217,12 +214,8 @@ class Linear(nn.Module):
             if enable_tuning:
                 bitblas_matmul.hardware_aware_finetune(topk=20)
                 global_operator_cache.add(config, bitblas_matmul)
-                global_operator_cache.save_into_database(
-                    BITBLAS_DATABASE_PATH, BITBLAS_TARGET
-                )
-                print(
-                    "BitBLAS Tuning done, appended operator to global_operator_cache."
-                )
+                global_operator_cache.save_into_database(BITBLAS_DATABASE_PATH, BITBLAS_TARGET)
+                print("BitBLAS Tuning done, appended operator to global_operator_cache.")
             else:
                 print("BitBLAS Operator created.")
         else:
@@ -240,21 +233,65 @@ class Linear(nn.Module):
         self.init_params()
 
         if Output is None:
-            Output = torch.empty(
-                A.shape[:-1] + (self.outfeatures,), dtype=A.dtype, device=A.device
-            )
+            Output = torch.empty(A.shape[:-1] + (self.outfeatures,), dtype=A.dtype, device=A.device)
 
         A_void = ctypes.c_void_p(A.data_ptr())
         # m is the product of the last n - 1 dimensions of A
         m = ctypes.c_int32(reduce(operator.mul, A.shape[:-1], 1))
-        self.bitblas_matmul.lib.call(
-            A_void, *self.q_params, ctypes.c_void_p(Output.data_ptr()), m
-        )
+        self.bitblas_matmul.lib.call(A_void, *self.q_params, ctypes.c_void_p(Output.data_ptr()), m)
 
         return Output
+
+    def load_and_transform_weight(
+        self,
+        weight: torch.Tensor,
+        scales: torch.Tensor = None,
+        zeros: torch.Tensor = None,
+        bias: torch.Tensor = None,
+    ):
+        if self.consistent:
+            assert scales is None, "scales should be None for consistent mode."
+            assert zeros is None, "zeros should be None for consistent mode."
+            self.weight = weight
+            if bias is not None:
+                self.bias = bias
+        else:
+            weight = self.bitblas_matmul.transform_weight(weight)
+            self.qweight = weight
+            if scales is not None:
+                self.scales = scales
+            if zeros is not None:
+                self.zeros = zeros
+            if bias is not None:
+                self.bias = bias
+
+    def repack_from_gptq(self, gptq_module):
+        # qweight in gptq old quant linear stored with (outfeatures, infeatures), should be transposed.
+        qweight = gptq_module.qweight.T.contiguous().view(self.TORCH_STORAGE_DTYPE)
+        if self.bitblas_matmul.weight_transform is not None:
+            qweight = self.bitblas_matmul.weight_transform(qweight.cpu()).cuda()
+        self.qweight = qweight
+        # scales in gptq old quant linear stored with (infeatures // group_size, outfeatures), should be transposed.
+        scales = gptq_module.scales.T.contiguous().view(self.torch_dtype)
+        self.scales = scales
+        # qzeros should be dequantized to int zeros.
+        intzeros = unpack_qzeros(gptq_module.qzeros, self.bits).T.contiguous()
+        if self.bitblas_matmul.config.zeros_mode == "original":
+            self.zeros = intzeros.to(torch.float16).contiguous()
+        elif self.bitblas_matmul.config.zeros_mode == "rescale":
+            self.zeros[:, :] = intzeros.to(torch.float16)[:, :] * self.scales[:, :]
+        elif self.bitblas_matmul.config.zeros_mode == "quantized":
+            self.zeros = (
+                torch.Tensor(general_compress(intzeros.T.contiguous().cpu().numpy(), self.bits)).to(
+                    self.qweight.device).to(self.zeros.dtype).contiguous())
+        else:
+            raise ValueError(f"Unsupported zeros type: {self.bitblas_matmul.config.zeros_mode}")
+        if self.bias is not None:
+            self.bias = gptq_module.bias.data.to(torch.float16).contiguous()
 
     @property
     def consistent(self):
         return self.is_consitent
+
 
 __all__ = ["Linear"]

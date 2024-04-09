@@ -115,24 +115,24 @@ def test_matmul_finetune(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
     [
         (1, 1024, 1024, "float16", "int4", "float16", "float16", "nt", None, None, None, None,
          None),
-(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
- None),
-(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False, None),
-(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False, None),
-(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
- "original"),
-(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
- None),
-(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False,
- None),
-(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False,
- None),
-(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
- "original"),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
+         None),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False, None),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False, None),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
+         "original"),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
+         None),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False,
+         None),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False,
+         None),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
+         "original"),
     ],
 )
-def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout,
-                              with_bias, group_size, with_scaling, with_zeros, zeros_mode):
+def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias,
+                              group_size, with_scaling, with_zeros, zeros_mode):
     import torch
     torch.random.manual_seed(0)
     import numpy as np
@@ -243,10 +243,7 @@ def test_matmul_transform_weight(
     with_bias,
 ):
     import torch
-
     torch.random.manual_seed(0)
-    import numpy as np
-    from bitblas.quantization import general_compress
 
     matmul_config = MatmulConfig(
         M=M,
@@ -258,16 +255,14 @@ def test_matmul_transform_weight(
         out_dtype=out_dtype,
         with_bias=with_bias,
     )
-    matmul = Matmul(
-        config=matmul_config,
-    )
+    matmul = Matmul(config=matmul_config,)
 
     input_shape = (M, K)
     weight_shape = (N, K)
     output_shape = (M, N)
 
     _, bit = matmul.BITBLAS_TRICK_DTYPE_MAP[W_dtype]
-    maxq = 2 ** (bit - 1) - 1
+    maxq = 2**(bit - 1) - 1
 
     input_tensor = torch.rand(input_shape, dtype=torch.float16).cuda()
     intweight_tensor = torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda()

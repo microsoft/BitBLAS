@@ -154,6 +154,7 @@ class OperatorCache:
 
 global_operator_cache = OperatorCache()
 
+
 def load_global_ops_cache(database_path, target=None):
     if target is None:
         target = bitblas.auto_detect_nvidia_target()

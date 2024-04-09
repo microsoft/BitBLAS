@@ -100,7 +100,7 @@ def test_correctness_weight_only_dequantize(
         linear_bitblas.bitblas_matmul.bit,
     )
 
-    maxq = 2 ** (bit - 1) - 1
+    maxq = 2**(bit - 1) - 1
     zeros = maxq
     if source_format == "uint":
         inputs.append(torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda())
@@ -128,14 +128,12 @@ def test_correctness_weight_only_dequantize(
         permuted_inputs = []
         if linear_bitblas.bitblas_matmul.input_transform is not None:
             permuted_inputs.append(
-                linear_bitblas.bitblas_matmul.input_transform(inputs[0].cpu()).cuda()
-            )
+                linear_bitblas.bitblas_matmul.input_transform(inputs[0].cpu()).cuda())
         else:
             permuted_inputs.append(inputs[0])
         if linear_bitblas.bitblas_matmul.weight_transform is not None:
             permuted_inputs.append(
-                linear_bitblas.bitblas_matmul.weight_transform(qw_torch.cpu()).cuda()
-            )
+                linear_bitblas.bitblas_matmul.weight_transform(qw_torch.cpu()).cuda())
         else:
             permuted_inputs.append(qw_torch)
         linear_bitblas.qweight.data = permuted_inputs[-1].clone()
@@ -143,38 +141,25 @@ def test_correctness_weight_only_dequantize(
             if group_size == -1:
                 group_size = infeatures
             permuted_inputs.append(
-                torch.ones(
-                    [outfeatures, infeatures // group_size], dtype=torch.float16
-                ).cuda()
-            )
+                torch.ones([outfeatures, infeatures // group_size], dtype=torch.float16).cuda())
             linear_bitblas.scales.data = permuted_inputs[-1].clone()
         if with_zeros:
             if zeros_mode == "original":
                 permuted_inputs.append(
-                    torch.ones(
-                        [outfeatures, infeatures // group_size], dtype=torch.float16
-                    ).cuda()
-                    * zeros
-                )
+                    torch.ones([outfeatures, infeatures // group_size], dtype=torch.float16).cuda()
+                    * zeros)
             elif zeros_mode == "rescale":
                 original_zeros = (
-                    torch.ones(
-                        [outfeatures, infeatures // group_size], dtype=torch.float16
-                    ).cuda()
-                    * zeros
-                )
+                    torch.ones([outfeatures, infeatures // group_size], dtype=torch.float16).cuda()
+                    * zeros)
                 scaled_zeros = original_zeros * permuted_inputs[-1]
                 permuted_inputs.append(scaled_zeros)
             elif zeros_mode == "quantized":
                 original_zeros = (
-                    torch.ones(
-                        [infeatures // group_size, outfeatures], dtype=torch.int8
-                    ).cuda()
-                    * zeros
-                )
+                    torch.ones([infeatures // group_size, outfeatures], dtype=torch.int8).cuda() *
+                    zeros)
                 qzeros = general_compress(
-                    original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8
-                )
+                    original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
                 permuted_inputs.append(torch.from_numpy(qzeros).cuda())
             else:
                 raise NotImplementedError
@@ -238,7 +223,6 @@ def profile(model, input_data):
 #     print(f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}")
 #     assert (abs(torch_latency - bitblas_latency) / torch_latency <
 #             0.1), f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}"
-
 
 if __name__ == "__main__":
     bitblas.testing.main()
