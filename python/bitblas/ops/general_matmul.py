@@ -77,6 +77,9 @@ class MatmulConfig:
     propagate_b: TransformKind = TransformKind.NonTransform
 
     def __post_init__(self):
+        # set M to default dynamic range if it is None
+        if self.M is None:
+            object.__setattr__(self, "M", [1, 16, 32, 64, 128, 256, 512, 1024])
         # set M to tuple if it is list
         # otherwise, M is not hashable
         object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
@@ -150,6 +153,7 @@ class Matmul(Operator):
         config: MatmulConfig,
         name: str = "matmul",
         target: Optional[Union[str, Target]] = None,
+        enable_tuning: bool = True,
     ):
         if target is None:
             target = auto_detect_nvidia_target()
@@ -252,6 +256,9 @@ class Matmul(Operator):
             weight_executors.append(self.ladder_permutate_b)
 
         self.weight_executors = weight_executors
+        
+        if enable_tuning:
+            self.hardware_aware_finetune()
 
     def _select_implementation(self):
         if self.A_dtype == self.W_dtype:
