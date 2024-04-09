@@ -14,100 +14,100 @@ def get_codegen_result(ops):
     return code
 
 
-# # fmt: off
-# @pytest.mark.parametrize(
-#     "M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
-#     [
-#         (1, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
-#          None),
-#         (768, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
-#          None),
-#         (1, 768, 768, "int8", "int8", "int32", "int8", "nt", False, -1, False, False, None),
-#         (768, 768, 768, "int8", "int8", "int32", "int8", "nt", False, -1, False, False, None),
-#         (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
-#          None),
-#         (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False, None),
-#         (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False, None),
-#         (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
-#          "original"),
-#         (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
-#          None),
-#         (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False,
-#          None),
-#         (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False,
-#          None),
-#         (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
-#          "original"),
-#     ],
-# )
-# def test_matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout,
-#                                 with_bias, group_size, with_scaling, with_zeros, zeros_mode):
+# fmt: off
+@pytest.mark.parametrize(
+    "M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
+    [
+        (1, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
+         None),
+        (768, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
+         None),
+        (1, 768, 768, "int8", "int8", "int32", "int8", "nt", False, -1, False, False, None),
+        (768, 768, 768, "int8", "int8", "int32", "int8", "nt", False, -1, False, False, None),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
+         None),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False, None),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False, None),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
+         "original"),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
+         None),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False,
+         None),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False,
+         None),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
+         "original"),
+    ],
+)
+def test_matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout,
+                                with_bias, group_size, with_scaling, with_zeros, zeros_mode):
 
-#     matmul_config = MatmulConfig(
-#         M=M,
-#         N=N,
-#         K=K,
-#         A_dtype=A_dtype,
-#         W_dtype=W_dtype,
-#         accum_dtype=accum_dtype,
-#         out_dtype=out_dtype,
-#         layout=layout,
-#         with_bias=with_bias,
-#         group_size=group_size,
-#         with_scaling=with_scaling,
-#         with_zeros=with_zeros,
-#         zeros_mode=zeros_mode,
-#     )
-#     matmul = Matmul(config=matmul_config,)
-#     assert get_codegen_result(matmul)
+    matmul_config = MatmulConfig(
+        M=M,
+        N=N,
+        K=K,
+        A_dtype=A_dtype,
+        W_dtype=W_dtype,
+        accum_dtype=accum_dtype,
+        out_dtype=out_dtype,
+        layout=layout,
+        with_bias=with_bias,
+        group_size=group_size,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        zeros_mode=zeros_mode,
+    )
+    matmul = Matmul(config=matmul_config,)
+    assert get_codegen_result(matmul)
 
 
-# @pytest.mark.parametrize(
-#     "M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
-#     [
-#         (1, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
-#          None),
-#         (768, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
-#          None),
-#         (1, 768, 768, "int8", "int8", "int32", "int8", "nt", False, -1, False, False, None),
-#         (768, 768, 768, "int8", "int8", "int32", "int8", "nt", False, -1, False, False, None),
-#         (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
-#          None),
-#         (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False, None),
-#         (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False, None),
-#         (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
-#          "original"),
-#         (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
-#          None),
-#         (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False,
-#          None),
-#         (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False,
-#          None),
-#         (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
-#          "original"),
-#     ],
-# )
-# def test_matmul_finetune(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias,
-#                          group_size, with_scaling, with_zeros, zeros_mode):
+@pytest.mark.parametrize(
+    "M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
+    [
+        (1, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
+         None),
+        (768, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
+         None),
+        (1, 768, 768, "int8", "int8", "int32", "int8", "nt", False, -1, False, False, None),
+        (768, 768, 768, "int8", "int8", "int32", "int8", "nt", False, -1, False, False, None),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
+         None),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False, None),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False, None),
+        (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
+         "original"),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
+         None),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False,
+         None),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False,
+         None),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
+         "original"),
+    ],
+)
+def test_matmul_finetune(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias,
+                         group_size, with_scaling, with_zeros, zeros_mode):
 
-#     matmul_config = MatmulConfig(
-#         M=M,
-#         N=N,
-#         K=K,
-#         A_dtype=A_dtype,
-#         W_dtype=W_dtype,
-#         accum_dtype=accum_dtype,
-#         out_dtype=out_dtype,
-#         layout=layout,
-#         with_bias=with_bias,
-#         group_size=group_size,
-#         with_scaling=with_scaling,
-#         with_zeros=with_zeros,
-#         zeros_mode=zeros_mode,
-#     )
-#     matmul = Matmul(config=matmul_config,)
-#     matmul.hardware_aware_finetune(topk=10)
-#     assert get_codegen_result(matmul)
+    matmul_config = MatmulConfig(
+        M=M,
+        N=N,
+        K=K,
+        A_dtype=A_dtype,
+        W_dtype=W_dtype,
+        accum_dtype=accum_dtype,
+        out_dtype=out_dtype,
+        layout=layout,
+        with_bias=with_bias,
+        group_size=group_size,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        zeros_mode=zeros_mode,
+    )
+    matmul = Matmul(config=matmul_config,)
+    matmul.hardware_aware_finetune(topk=10)
+    assert get_codegen_result(matmul)
 
 
 @pytest.mark.parametrize(
@@ -115,20 +115,20 @@ def get_codegen_result(ops):
     [
         (1, 1024, 1024, "float16", "int4", "float16", "float16", "nt", None, None, None, None,
          None),
-        # (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
-        #  None),
-        # (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False, None),
-        # (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False, None),
-        # (1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
-        #  "original"),
-        # (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
-        #  None),
-        # (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False,
-        #  None),
-        # (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False,
-        #  None),
-        # (768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
-        #  "original"),
+(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
+ None),
+(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False, None),
+(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False, None),
+(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
+ "original"),
+(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, False, False,
+ None),
+(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1, False, False,
+ None),
+(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, False,
+ None),
+(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1, True, True,
+ "original"),
     ],
 )
 def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout,
@@ -221,6 +221,70 @@ def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
         torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e-0)
     else:
         torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e-1)
+
+
+@pytest.mark.parametrize(
+    "M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,with_bias",
+    [
+        (1, 768, 768, "float16", "uint4", "float16", "float16", False),
+        (1, 768, 768, "float16", "int4", "float16", "float16", False),
+        (768, 768, 768, "float16", "uint4", "float16", "float16", False),
+        (768, 768, 768, "float16", "int4", "float16", "float16", False),
+    ],
+)
+def test_matmul_transform_weight(
+    M,
+    N,
+    K,
+    A_dtype,
+    W_dtype,
+    accum_dtype,
+    out_dtype,
+    with_bias,
+):
+    import torch
+
+    torch.random.manual_seed(0)
+    import numpy as np
+    from bitblas.quantization import general_compress
+
+    matmul_config = MatmulConfig(
+        M=M,
+        N=N,
+        K=K,
+        A_dtype=A_dtype,
+        W_dtype=W_dtype,
+        accum_dtype=accum_dtype,
+        out_dtype=out_dtype,
+        with_bias=with_bias,
+    )
+    matmul = Matmul(
+        config=matmul_config,
+    )
+
+    input_shape = (M, K)
+    weight_shape = (N, K)
+    output_shape = (M, N)
+
+    _, bit = matmul.BITBLAS_TRICK_DTYPE_MAP[W_dtype]
+    maxq = 2 ** (bit - 1) - 1
+
+    input_tensor = torch.rand(input_shape, dtype=torch.float16).cuda()
+    intweight_tensor = torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda()
+    output_tensor = torch.rand(output_shape, dtype=torch.float16).cuda()
+
+    bias = torch.rand((output_shape[-1],), dtype=torch.float16).cuda()
+    ref_result = torch.matmul(input_tensor, intweight_tensor.t().to(torch.float16))
+    if with_bias:
+        ref_result = ref_result + bias
+
+    bitblas_inputs = [input_tensor]
+    intweight_tensor = matmul.transform_weight(intweight_tensor)
+    bitblas_inputs.append(intweight_tensor)
+    if with_bias:
+        bitblas_inputs.append(bias)
+    output_tensor = matmul(*bitblas_inputs)
+    torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-0)
 
 
 # fmt: on
