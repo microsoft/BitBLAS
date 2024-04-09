@@ -30,7 +30,7 @@ def test_correctness_consistent(m, infeatures, outfeatures, bias):
         W_dtype="float16",
         accum_dtype="float16",
         out_dtype="float16",
-        opt_m=m,
+        opt_M=m,
     ).cuda()
 
     with torch.no_grad():
@@ -85,7 +85,7 @@ def test_correctness_weight_only_dequantize(
         group_size=group_size,
         with_scaling=with_scaling,
         with_zeros=with_zeros,
-        opt_m=m,
+        opt_M=m,
     ).cuda()
     if not isinstance(m, int):
         # average m
@@ -213,7 +213,7 @@ def profile(model, input_data):
 #         outfeatures,
 #         bias=bias,
 #         A_dtype=torch.float16,
-#         opt_m=m,
+#         opt_M=m,
 #         enable_tuning=False,
 #     ).cuda()
 #     with torch.no_grad():

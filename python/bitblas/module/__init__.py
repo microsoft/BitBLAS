@@ -40,7 +40,7 @@ def unpack_qzeros(qzeros, bits):
 
 
 class Linear(nn.Module):
-    opt_m = [1, 16, 32, 64, 128, 256, 512]
+    opt_M = [1, 16, 32, 64, 128, 256, 512]
     STORAGE_DTYPE = "int8"  # assume int8 storage
     TORCH_STORAGE_DTYPE = getattr(torch, STORAGE_DTYPE)
     BITBLAS_DTYPES = {
@@ -64,14 +64,14 @@ class Linear(nn.Module):
         with_scaling: bool = None,
         with_zeros: bool = False,
         zeros_mode: str = None,
-        opt_m: Union[int, List[int]] = opt_m,
+        opt_M: Union[int, List[int]] = opt_M,
         # performance related configs
         enable_tuning: bool = True,
         fast_decoding: bool = True,
         propagate_b: bool = False,
     ):
         """
-        @opt_m: optimize range of the input shape for dynamic symbolic
+        @opt_M: optimize range of the input shape for dynamic symbolic
         if the input shape is a range, we will optimize the matmul with dynamic symbolic.
         if the input shape is int, we will optimize the matmul with static symbolic.
         """
@@ -79,7 +79,7 @@ class Linear(nn.Module):
 
         self.infeatures = infeatures
         self.outfeatures = outfeatures
-        self.opt_m = opt_m
+        self.opt_M = opt_M
         self.group_size = self._set_group_size(group_size, infeatures)
         self.torch_dtype = getattr(torch, A_dtype)
         self.is_consitent = A_dtype == W_dtype
@@ -184,7 +184,7 @@ class Linear(nn.Module):
         propagate_b,
     ):
         matmul_config = MatmulConfig(
-            M=self.opt_m,
+            M=self.opt_M,
             N=self.outfeatures,
             K=self.infeatures,
             A_dtype=A_dtype,
