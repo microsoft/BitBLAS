@@ -94,7 +94,7 @@ weight_tensor = torch.randint(0, 7, weight_shape, dtype=torch.int8).cuda()
 weight_tensor_int4 = matmul.transform_weight(weight_tensor)
 
 # Perform mixed-precision matrix multiplication with quantization
-output_tensor = matmul(input_tensor, weight_tensor_int4, Scale=scaling, Zeros=zeros)
+output_tensor = matmul(input_tensor, weight_tensor_int4, scale=scaling, zeros=zeros)
 
 rescaling_tensor = torch.zeros_like(weight_tensor, dtype=torch.float16).cuda()
 # Compute reference result with manual scaling and zero-point adjustment
