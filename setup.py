@@ -66,9 +66,8 @@ def get_bitblas_version(with_cuda=True) -> str:
     if not with_cuda:
         return version
     cuda_version = str(get_nvcc_cuda_version())
-    if cuda_version != MAIN_CUDA_VERSION:
-        cuda_version_str = cuda_version.replace(".", "")[:3]
-        version += f"+cu{cuda_version_str}"
+    cuda_version_str = cuda_version.replace(".", "")[:3]
+    version += f"+cu{cuda_version_str}"
     return version
 
 
@@ -193,12 +192,6 @@ class BitBLASBuilPydCommand(build_py):
 
     def run(self):
         build_py.run(self)
-        # custom build tvm
-        # update_submodules()
-        # Set up LLVM for TVM
-        _, llvm_path = setup_llvm_for_tvm()
-        # Build TVM
-        build_tvm(llvm_path)
         # Copy the built TVM to the package directory
         TVM_PREBUILD_ITEMS = [
             "3rdparty/tvm/build/libtvm_runtime.so",
