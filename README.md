@@ -49,6 +49,42 @@ BitBLAS achieves exceptional performance across a variety of computational patte
 For more detailed information on benchmark sets with other formats (NF4/FP4) and other devices (GTX 3090), please refer to the [benchmark](./benchmark/README.md).
 
 ## Support Matrix
+<div align="center">
+<style type="text/css">
+	table.tableizer-table {
+		font-size: 12px;
+		border: 1px solid #CCC; 
+		font-family: Arial, Helvetica, sans-serif;
+	} 
+	.tableizer-table td {
+		padding: 4px;
+		margin: 3px;
+		border: 1px solid #CCC;
+	}
+	.tableizer-table th {
+		background-color: #104E8B; 
+		color: #FFF;
+		font-weight: bold;
+	}
+</style>
+<table class="tableizer-table">
+<thead><tr class="tableizer-firstrow"><th>A_dtype</th><th>W_dtype</th><th>Accum_dtype</th><th>CUTLASS Support</th><th>bitsandbytes support</th><th>Marlin Support</th><th>BitBLAS Support</th><th>Tested Platform</th></tr></thead><tbody>
+ <tr><td>FLOAT16</td><td>FLOAT16</td><td>FLOAT16</td><td>√</td><td>×</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>&nbsp;</td><td>FLOAT4_E2M1</td><td>FLOAT16</td><td>×</td><td>√</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>&nbsp;</td><td>INT8</td><td>FLOAT16</td><td>>SM80</td><td>×</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>&nbsp;</td><td>INT4</td><td>FLOAT16</td><td>>SM80</td><td>×</td><td>>SM80</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>&nbsp;</td><td>INT2</td><td>FLOAT16</td><td>×</td><td>×</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>&nbsp;</td><td>INT1</td><td>FLOAT16</td><td>×</td><td>×</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>&nbsp;</td><td>NF4</td><td>FLOAT16</td><td>×</td><td>√</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>&nbsp;</td><td>NF2</td><td>FLOAT16</td><td>×</td><td>×</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>&nbsp;</td><td>NF1</td><td>FLOAT16</td><td>×</td><td>×</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>INT8</td><td>INT8</td><td>INT32</td><td>√</td><td>×</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>&nbsp;</td><td>INT4</td><td>INT32</td><td>×</td><td>×</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>&nbsp;</td><td>INT2</td><td>INT32</td><td>×</td><td>×</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+ <tr><td>&nbsp;</td><td>INT1</td><td>INT32</td><td>×</td><td>×</td><td>×</td><td>√</td><td>V100/A100/RTX 4090</td></tr>
+</tbody></table>
+
+</div>
 
 
 ## Getting Started
