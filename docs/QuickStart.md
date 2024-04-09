@@ -130,7 +130,7 @@ matmul_config = bitblas.MatmulConfig(
     with_zeros=None,  # setting for zeros
     zeros_mode=None,  # setting for how to calculating zeros
 )
-matmul = bitblas.Matmul(config=matmul_config, enable_tuning=False)
+matmul = bitblas.Matmul(config=matmul_config)
 latency = matmul.profile_latency()
 print(f"Latency: {latency} ms")
 ```
