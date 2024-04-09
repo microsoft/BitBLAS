@@ -91,7 +91,7 @@ Allows the object to be called like a function, forwarding the call to the `forw
 
 `Linear(infeatures: int, outfeatures: int, bias: bool = False, A_dtype: str = 'float16', W_dtype: str = 'float16', accum_dtype: str = 'float16', out_dtype: str = 'float16', group_size: int = -1, with_scaling: bool = None, with_zeros: bool = False, zeros_mode: str = None, opt_features: Union[int, List[int]] = [1, 16, 32, 64, 128, 256, 512], enable_tuning: bool = True, fast_decoding: bool = True, propagate_b: bool = False)`
 
-Applies a linear transformation to the incoming data: `y = Ax + b`. This module supports quantization and optimization for NVIDIA GPUs using the BitBLAS library.
+Applies a linear transformation to the incoming data: $out[M, N] = A[M, K] \times W[N, K]$ . This module supports quantization and optimization for NVIDIA GPUs using the BitBLAS library.
 
 ### Parameters:
 
