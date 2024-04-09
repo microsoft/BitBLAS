@@ -64,6 +64,8 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 |     INT8    |     INT2    |      INT32      |    INT32/FP16/INT8   |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     INT8    |     INT1    |      INT32      |    INT32/FP16/INT8   |          **√**         |   V100(SM_75)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 
+We are continuously expanding the support matrix. If you have any specific requirements, please feel free to open an issue or PR.
+
 ## Getting Started
 
 - [Installation](./docs/Installation.md):
