@@ -7,37 +7,7 @@ BitBLAS provides two Python APIs to perform mixed-precision matrix multiplicatio
 
 ## Example: $W_{INT4}A_{FP16}$ mixed-precision matrix multiplication
 
-Here is an example for a $W_{INT4}A_{FP16}$ mixed-precision matrix multiplication: $out_{FP16}[M, N] = A_{FP16}[M, K] \times W_{INT4}[N, K]$
-
-```python
-import bitblas
-import torch
-
-matmul_config = bitblas.MatmulConfig(
-    M=1,  # M dimension
-    N=1024,  # N dimension
-    K=1024,  # K dimension
-    A_dtype="float16",  # activation A dtype
-    W_dtype="int4",  # weight W dtype
-    accum_dtype="float16",  # accumulation dtype
-    out_dtype="float16",  # output dtype
-    layout="nt",  # matrix layout, "nt" indicates the layout of A is non-transpose and the layout of W is transpose
-    with_bias=False,  # bias
-    # configs for weight only quantization
-    group_size=None,  # setting for grouped quantization
-    with_scaling=False,  # setting for scaling factor
-    with_zeros=False,  # setting for zeros
-    zeros_mode=None,  # setting for how to calculating zeros
-)
-matmul = bitblas.Matmul(config=matmul_config)
-
-activation = torch.rand((1024, 1024), dtype=torch.float16).cuda()
-weight = torch.randint(-7, 7, (1024, 1024), dtype=torch.int8).cuda()
-weight_int4 = matmul.transform_weight(weight)
-output = matmul(activation, weight_int4)
-```
-
-The second example includes the creation of input matrices, quantization of weight matrices, and execution of the multiplication. The result is then compared against a reference result obtained through conventional methods to ensure accuracy.
+Here is an example for a $W_{INT4}A_{FP16}$ mixed-precision matrix multiplication: $out_{FP16}[M, N] = A_{FP16}[M, K] \times W_{INT4}[N, K]$, the example includes the creation of input matrices, quantization of weight matrices, and execution of the multiplication. The result is then compared against a reference result obtained through conventional methods to ensure accuracy.
 
 ```python
 import bitblas
@@ -77,7 +47,7 @@ output_tensor = matmul(input_tensor, weight_tensor_int4)
 torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-0)
 ```
 
-
+The same example can be extended to include the quantization of the weight tensor with scaling and zeros. The following code snippet demonstrates how to quantize the weight tensor with scaling and zeros and execute the mixed-precision matrix multiplication.
 ```python
 import bitblas
 import torch
