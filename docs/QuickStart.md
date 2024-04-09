@@ -137,7 +137,7 @@ print(f"Latency: {latency} ms")
 
 ## Example: bitblas.Linear module for PyTorch
 
-BitBLAS also implemented a variant PyTorch ```nn.Linear``` module, i.e., ```bitblas.Linear```, to support a Linear of mixed-precision. (link to code)
+BitBLAS also implemented a variant PyTorch ```nn.Linear``` module, i.e., ```bitblas.Linear```, to support a Linear of mixed-precision. See code [implementation](../python/bitblas/module/__init__.py)
 
 Here is an example to define a ```bitblas.Linear``` of $W_{INT4}A_{FP16}$:
 
