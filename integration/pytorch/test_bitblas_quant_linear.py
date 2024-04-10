@@ -63,33 +63,33 @@ def gen_quant4(k, n, groupsize=-1):
 
 
 @pytest.mark.parametrize(
-    "m, infeatures, outfeatures, bits, group_size, bias",
+    "m, in_features, out_features, bits, group_size, bias",
     [
         (1, 1024, 4096, 4, -1, False),
         (1, 1024, 4096, 4, 128, False),
         (1, 1024, 4096, 4, 128, True),
     ],
 )
-def test_quantization_accuracy(m, infeatures, outfeatures, bits, group_size, bias):
-    original_w, linear, s, qw = gen_quant4(infeatures, outfeatures, group_size)
+def test_quantization_accuracy(m, in_features, out_features, bits, group_size, bias):
+    original_w, linear, s, qw = gen_quant4(in_features, out_features, group_size)
 
     if group_size == -1:
-        group_size = infeatures
-    zeros = torch.full((infeatures // group_size, outfeatures), 7, dtype=torch.int32)
+        group_size = in_features
+    zeros = torch.full((in_features // group_size, out_features), 7, dtype=torch.int32)
 
     bitblas_zeros = zeros.clone().T
     cuda_old_linear = CudaOldQuantLinear(
         bits=bits,
         group_size=group_size,
-        infeatures=infeatures,
-        outfeatures=outfeatures,
+        in_features=in_features,
+        out_features=out_features,
         bias=bias,
     )
     cuda_old_linear.pack(linear, s.T, zeros.T, g_idx=None)
 
     linear_module = torch.nn.Linear(
-        in_features=infeatures,
-        out_features=outfeatures,
+        in_features=in_features,
+        out_features=out_features,
         bias=bias,
         dtype=torch.float16,
         device="cuda",
@@ -98,7 +98,7 @@ def test_quantization_accuracy(m, infeatures, outfeatures, bits, group_size, bia
 
     scales = s.to("cuda")
     bitblas_qlinear = QuantLinear(
-        bits, group_size, infeatures, outfeatures, bias, opt_M=m, enable_tuning=True)
+        bits, group_size, in_features, out_features, bias, opt_M=m, enable_tuning=True)
 
     bitblas_qlinear.pack(
         linear_module.to("cuda"),
@@ -106,7 +106,7 @@ def test_quantization_accuracy(m, infeatures, outfeatures, bits, group_size, bia
         zeros=bitblas_zeros.contiguous().to("cuda"),
     )
 
-    inp = torch.rand(m, infeatures, dtype=torch.float16, device="cuda")
+    inp = torch.rand(m, in_features, dtype=torch.float16, device="cuda")
 
     cuda_old_linear = cuda_old_linear.to("cuda")
     bitblas_qlinear = bitblas_qlinear.to("cuda")
@@ -123,7 +123,7 @@ def profile(model, input_data):
     model = model.cuda()
     model.eval()
     output = torch.empty(
-        input_data.shape[:-1] + (model.outfeatures,),
+        input_data.shape[:-1] + (model.out_features,),
         dtype=input_data.dtype,
         device=input_data.device,
     )
@@ -147,24 +147,24 @@ def profile(model, input_data):
 
 
 @pytest.mark.parametrize(
-    "m, infeatures, outfeatures, bits, group_size, bias",
+    "m, in_features, out_features, bits, group_size, bias",
     [
         (1, 16384, 16384, 4, -1, False),
     ],
 )
-def test_profile_performance(m, infeatures, outfeatures, bits, group_size, bias):
+def test_profile_performance(m, in_features, out_features, bits, group_size, bias):
     bitblas_qlinear = QuantLinear(
         bits,
         group_size,
-        infeatures,
-        outfeatures,
+        in_features,
+        out_features,
         bias,
         opt_M=m,
         enable_tuning=True,
     ).cuda()
 
     with torch.no_grad():
-        input_data = torch.randn(m, infeatures, dtype=torch.float16).cuda()
+        input_data = torch.randn(m, in_features, dtype=torch.float16).cuda()
         torch_latency = profile(bitblas_qlinear, input_data)
         bitblas_latency = bitblas_qlinear.bitblas_matmul.profile_latency()
 

@@ -53,14 +53,14 @@ The same example can be extended to include the quantization of the weight tenso
 import bitblas
 import torch
 
-infeatures = 1024
-outfeatures = 1024
+in_features = 1024
+out_features = 1024
 group_size = 128
 
 matmul_config = bitblas.MatmulConfig(
     M=1,  # M dimension
-    N=outfeatures,  # N dimension
-    K=infeatures,  # K dimension
+    N=out_features,  # N dimension
+    K=in_features,  # K dimension
     A_dtype="float16",  # activation A dtype
     W_dtype="uint4",  # weight W dtype
     accum_dtype="float16",  # accumulation dtype
@@ -99,7 +99,7 @@ output_tensor = matmul(input_tensor, weight_tensor_int4, scale=scaling, zeros=ze
 rescaling_tensor = torch.zeros_like(weight_tensor, dtype=torch.float16).cuda()
 # Compute reference result with manual scaling and zero-point adjustment
 # rescale = (weight - zeros) * scaling
-for i in range(infeatures // group_size):
+for i in range(in_features // group_size):
     for j in range(group_size):
         rescaling_tensor[:, i * group_size + j] = (
             weight_tensor[:, i * group_size + j].to(torch.float16) - zeros[:, i]
@@ -122,8 +122,8 @@ import bitblas
 import torch
 
 model = bitblas.Linear(
-    infeatures=1024,
-    outfeatures=1024,
+    in_features=1024,
+    out_features=1024,
     bias=False,
     A_dtype="float16",  # activation A dtype
     W_dtype="int4",  # weight W dtype
@@ -166,25 +166,25 @@ from auto_gptq.nn_modules.qlinear.qlinear_cuda_old import (
     QuantLinear as CudaOldQuantLinear,
 )
 
-infeatures = 1024
-outfeatures = 1024
+in_features = 1024
+out_features = 1024
 group_size = 128
 
-original_w, linear, s, qw = bitblas.quantization.gen_quant4(infeatures, outfeatures, group_size)
-zeros = torch.full((infeatures // group_size, outfeatures), 7, dtype=torch.int32)
+original_w, linear, s, qw = bitblas.quantization.gen_quant4(in_features, out_features, group_size)
+zeros = torch.full((in_features // group_size, out_features), 7, dtype=torch.int32)
 
 cuda_old_linear = CudaOldQuantLinear(
     bits=4,
     group_size=group_size,
-    infeatures=infeatures,
-    outfeatures=outfeatures,
+    in_features=in_features,
+    out_features=out_features,
     bias=False,
 )
 cuda_old_linear.pack(linear, s.T, zeros.T, g_idx=None)
 
 bitblas_linear = bitblas.Linear(
-    infeatures=infeatures,
-    outfeatures=outfeatures,
+    in_features=in_features,
+    out_features=out_features,
     bias=False,
     A_dtype="float16",  # activation A dtype
     W_dtype="uint4",  # weight W dtype
@@ -201,7 +201,7 @@ bitblas_linear.repack_from_gptq(cuda_old_linear)
 
 # Prepare input data
 m = 1 # Batch size
-inp = torch.rand(m, infeatures, dtype=torch.float16, device="cuda")
+inp = torch.rand(m, in_features, dtype=torch.float16, device="cuda")
 
 # Move models to CUDA for execution
 cuda_old_linear = cuda_old_linear.to("cuda")

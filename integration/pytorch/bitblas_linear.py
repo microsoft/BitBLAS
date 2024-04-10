@@ -31,8 +31,8 @@ class Linear(nn.Module):
 
     def __init__(
         self,
-        infeatures: int,
-        outfeatures: int,
+        in_features: int,
+        out_features: int,
         opt_M: Union[int, List[int]] = 1,
         bias: bool = False,
         dtype: torch.dtype = torch.float16,
@@ -52,16 +52,16 @@ class Linear(nn.Module):
         if trainable:
             raise NotImplementedError("Bitblas does not support train.")
 
-        self.infeatures = infeatures
-        self.outfeatures = outfeatures
+        self.in_features = in_features
+        self.out_features = out_features
         self.opt_M = opt_M
         self.dtype = dtype
         self.propagate_a = propagate_a
         self.propagate_b = propagate_b
         self.enable_tuning = enable_tuning
-        self.weight = nn.Parameter(torch.empty((outfeatures, infeatures), dtype=dtype))
+        self.weight = nn.Parameter(torch.empty((out_features, in_features), dtype=dtype))
         if bias:
-            self.bias = nn.Parameter(torch.empty(outfeatures, dtype=dtype))
+            self.bias = nn.Parameter(torch.empty(out_features, dtype=dtype))
         else:
             self.register_parameter("bias", None)
 
@@ -76,8 +76,8 @@ class Linear(nn.Module):
         self.target = target or auto_detect_nvidia_target()
         matmul_config = MatmulConfig(
             M=self.opt_M,
-            N=self.outfeatures,
-            K=self.infeatures,
+            N=self.out_features,
+            K=self.in_features,
             in_dtype=bitblas_dtype,
             out_dtype=bitblas_dtype,
             accum_dtype="int32" if bitblas_dtype == "int8" else bitblas_dtype,
@@ -112,7 +112,7 @@ class Linear(nn.Module):
         if self.bias is not None:
             args.append(self.bias)
         if Output is None:
-            Output = torch.empty(A.shape[:-1] + (self.outfeatures,), dtype=A.dtype, device=A.device)
+            Output = torch.empty(A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
         args.append(Output)
 
         self.bitblas_matmul(*args)
