@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 BITBLAS_DATABASE_PATH = "~/.cache/bitblas"
 
+
 class OperatorCache:
     """
     Manages a cache for operator instances (e.g., Matmul, Convolution) based on their configurations.
@@ -161,3 +162,13 @@ def load_global_ops_cache(database_path=BITBLAS_DATABASE_PATH, target=None):
         target = bitblas.auto_detect_nvidia_target()
     global_operator_cache.load_from_database(database_path, target)
     return global_operator_cache
+
+
+def get_database_path():
+    return BITBLAS_DATABASE_PATH
+
+
+def set_database_path(path):
+    global BITBLAS_DATABASE_PATH
+    BITBLAS_DATABASE_PATH = path
+    return BITBLAS_DATABASE_PATH

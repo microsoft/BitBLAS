@@ -7,11 +7,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-
 logger = getLogger(__name__)
 
 try:
-    import bitblas
+    import bitblas # noqa: F401
 except ImportError as e:
     bitblas_import_exception = e
 
@@ -45,7 +44,7 @@ class QuantLinear(nn.Module):
         fast_decoding: bool = False,
         propagate_a: bool = False,
         propagate_b: bool = False,
-        opt_M: Union[int, List[int]] = [1, 16, 32],
+        opt_M: Optional[Union[int, List[int]]] = None,
         layout: Literal["nt"] = "nt",
         trainable=False,
         **kwargs,
@@ -54,15 +53,15 @@ class QuantLinear(nn.Module):
         if group_size == -1:
             group_size = in_features
         if in_features % 128 != 0 or out_features % 256 != 0:
-            raise ValueError(
-                "`in_features` must be divisible by 128 and `out_features` by 256."
-            )
+            raise ValueError("`in_features` must be divisible by 128 and `out_features` by 256.")
         if bits not in [1, 2, 4]:
             raise NotImplementedError("Only 1/2/4 bits are supported.")
         if in_features % group_size != 0:
             raise ValueError("`in_features` must be divisible by `group_size`.")
         if trainable:
             raise NotImplementedError("Bitblas does not support train.")
+        if opt_M is None:
+            opt_M = [1, 32, 64]
 
         self.bits = bits
         storage_nbit = 8  # assume int8 storage
@@ -81,9 +80,7 @@ class QuantLinear(nn.Module):
         )
         self.register_buffer(
             "scales",
-            torch.empty(
-                (self.out_features, self.in_features // self.group_size), dtype=torch.half
-            ),
+            torch.empty((self.out_features, self.in_features // self.group_size), dtype=torch.half),
         )
         self.register_buffer(
             "zeros",
@@ -132,9 +129,7 @@ class QuantLinear(nn.Module):
             zeros_mode="original",
         )
         # optimize target shapes for dynamic symbolic
-        self.bitblas_matmul = MatmulWeightOnlyDequantize(
-            matmul_config, target=self.target
-        )
+        self.bitblas_matmul = MatmulWeightOnlyDequantize(matmul_config, target=self.target)
         if enable_tuning:
             self.bitblas_matmul.hardware_aware_finetune(topk=20)
 
@@ -145,7 +140,7 @@ class QuantLinear(nn.Module):
         self.qweight = torch.randint_like(
             self.qweight,
             0,
-            2 ** (self.bits - 1) - 1,
+            2**(self.bits - 1) - 1,
             dtype=torch.int8,
             device=self.qweight.device,
         )
@@ -180,17 +175,13 @@ class QuantLinear(nn.Module):
         for idx in range(self.in_features):
             g_idx = idx // self.group_size
             intweight.append(
-                torch.round((w[:, idx] + scale_zeros[:, g_idx]) / scales[:, g_idx]).to(
-                    torch.int
-                )[:, None]
-            )
+                torch.round(
+                    (w[:, idx] + scale_zeros[:, g_idx]) / scales[:, g_idx]).to(torch.int)[:, None])
         intweight = torch.cat(intweight, dim=1)
         intweight = intweight.contiguous()
         intweight = intweight.cpu().numpy().astype(np.int8)
         # quantize to 4bit
-        qw_np = general_compress(
-            intweight, source_bits=self.bits, storage_dtype=np.int8
-        )
+        qw_np = general_compress(intweight, source_bits=self.bits, storage_dtype=np.int8)
         # do interleave for fast type conversion
         if self.fast_type_conversion:
             qw_np = interleave_weight(qw_np, nbits=self.bits, target_dtype="float16")
@@ -211,8 +202,7 @@ class QuantLinear(nn.Module):
             args.append(self.bias)
         if output is None:
             output = torch.empty(
-                A.shape[:-1] + (self.qweight.shape[0],), dtype=A.dtype, device=A.device
-            )
+                A.shape[:-1] + (self.qweight.shape[0],), dtype=A.dtype, device=A.device)
         args.append(output)
 
         self.bitblas_matmul(*args)

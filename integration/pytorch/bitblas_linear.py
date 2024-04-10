@@ -112,7 +112,8 @@ class Linear(nn.Module):
         if self.bias is not None:
             args.append(self.bias)
         if output is None:
-            output = torch.empty(A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
+            output = torch.empty(
+                A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
         args.append(output)
 
         self.bitblas_matmul(*args)

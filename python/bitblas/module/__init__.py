@@ -13,13 +13,13 @@ logger = getLogger(__name__)
 
 from typing import List, Union
 
-from bitblas.cache import global_operator_cache
+from bitblas.cache import global_operator_cache, get_database_path
 from bitblas import Matmul, MatmulConfig
 from bitblas.quantization.utils import general_compress
 from bitblas import auto_detect_nvidia_target
 
 BITBLAS_TARGET = auto_detect_nvidia_target()
-BITBLAS_DATABASE_PATH = ".bitblas_database"
+BITBLAS_DATABASE_PATH = get_database_path()
 
 
 def unpack_qzeros(qzeros, bits):
@@ -235,7 +235,8 @@ class Linear(nn.Module):
         self.init_params()
 
         if output is None:
-            output = torch.empty(A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
+            output = torch.empty(
+                A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
 
         A_void = ctypes.c_void_p(A.data_ptr())
         # m is the product of the last n - 1 dimensions of A

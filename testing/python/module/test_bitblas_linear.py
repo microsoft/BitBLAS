@@ -146,12 +146,12 @@ def test_correctness_weight_only_dequantize(
         if with_zeros:
             if zeros_mode == "original":
                 permuted_inputs.append(
-                    torch.ones([out_features, in_features // group_size], dtype=torch.float16).cuda()
-                    * zeros)
+                    torch.ones([out_features, in_features // group_size],
+                               dtype=torch.float16).cuda() * zeros)
             elif zeros_mode == "rescale":
                 original_zeros = (
-                    torch.ones([out_features, in_features // group_size], dtype=torch.float16).cuda()
-                    * zeros)
+                    torch.ones([out_features, in_features // group_size],
+                               dtype=torch.float16).cuda() * zeros)
                 scaled_zeros = original_zeros * permuted_inputs[-1]
                 permuted_inputs.append(scaled_zeros)
             elif zeros_mode == "quantized":
