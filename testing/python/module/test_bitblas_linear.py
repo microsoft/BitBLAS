@@ -12,7 +12,7 @@ torch.manual_seed(0)
 
 
 @pytest.mark.parametrize(
-    "m, infeatures, outfeatures, bias",
+    "m, in_features, out_features, bias",
     [
         (1, 1024, 1024, False),
         (1, 1024, 1024, True),
@@ -20,11 +20,11 @@ torch.manual_seed(0)
         ([1, 1024], 1024, 1024, True),
     ],
 )
-def test_correctness_consistent(m, infeatures, outfeatures, bias):
-    linear_torch = (nn.Linear(infeatures, outfeatures, bias=bias).to(torch.float16).cuda())
+def test_correctness_consistent(m, in_features, out_features, bias):
+    linear_torch = (nn.Linear(in_features, out_features, bias=bias).to(torch.float16).cuda())
     linear_bitblas = BitBLASLinear(
-        infeatures,
-        outfeatures,
+        in_features,
+        out_features,
         bias=bias,
         A_dtype="float16",
         W_dtype="float16",
@@ -42,14 +42,14 @@ def test_correctness_consistent(m, infeatures, outfeatures, bias):
         if not isinstance(m, int):
             # average m
             m = sum(m) // len(m)
-        input_data = torch.randn(m, infeatures, dtype=torch.float16).cuda()
+        input_data = torch.randn(m, in_features, dtype=torch.float16).cuda()
         output_torch = linear_torch(input_data)
         output_bitblas = linear_bitblas(input_data)
     torch.testing.assert_close(output_torch, output_bitblas, rtol=1e-1, atol=1e-2)
 
 
 @pytest.mark.parametrize(
-    "m, infeatures, outfeatures, bias, W_dtype, group_size, with_scaling, with_zeros, zeros_mode",
+    "m, in_features, out_features, bias, W_dtype, group_size, with_scaling, with_zeros, zeros_mode",
     [
         (1, 1024, 1024, False, "uint4", -1, False, False, None),
         (1, 1024, 1024, False, "uint4", -1, False, False, None),
@@ -62,8 +62,8 @@ def test_correctness_consistent(m, infeatures, outfeatures, bias):
 )
 def test_correctness_weight_only_dequantize(
     m,
-    infeatures,
-    outfeatures,
+    in_features,
+    out_features,
     bias,
     W_dtype,
     group_size,
@@ -75,8 +75,8 @@ def test_correctness_weight_only_dequantize(
     from bitblas.quantization.utils import general_compress
 
     linear_bitblas = BitBLASLinear(
-        infeatures,
-        outfeatures,
+        in_features,
+        out_features,
         bias=bias,
         A_dtype="float16",
         W_dtype=W_dtype,
@@ -90,9 +90,9 @@ def test_correctness_weight_only_dequantize(
     if not isinstance(m, int):
         # average m
         m = sum(m) // len(m)
-    input_shape = (m, infeatures)
-    weight_shape = (outfeatures, infeatures)
-    output_shape = (m, outfeatures)
+    input_shape = (m, in_features)
+    weight_shape = (out_features, in_features)
+    output_shape = (m, out_features)
     inputs = []
     inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda() - 0.5)
     source_format, bit = (
@@ -139,24 +139,24 @@ def test_correctness_weight_only_dequantize(
         linear_bitblas.qweight.data = permuted_inputs[-1].clone()
         if with_scaling:
             if group_size == -1:
-                group_size = infeatures
+                group_size = in_features
             permuted_inputs.append(
-                torch.ones([outfeatures, infeatures // group_size], dtype=torch.float16).cuda())
+                torch.ones([out_features, in_features // group_size], dtype=torch.float16).cuda())
             linear_bitblas.scales.data = permuted_inputs[-1].clone()
         if with_zeros:
             if zeros_mode == "original":
                 permuted_inputs.append(
-                    torch.ones([outfeatures, infeatures // group_size], dtype=torch.float16).cuda()
+                    torch.ones([out_features, in_features // group_size], dtype=torch.float16).cuda()
                     * zeros)
             elif zeros_mode == "rescale":
                 original_zeros = (
-                    torch.ones([outfeatures, infeatures // group_size], dtype=torch.float16).cuda()
+                    torch.ones([out_features, in_features // group_size], dtype=torch.float16).cuda()
                     * zeros)
                 scaled_zeros = original_zeros * permuted_inputs[-1]
                 permuted_inputs.append(scaled_zeros)
             elif zeros_mode == "quantized":
                 original_zeros = (
-                    torch.ones([infeatures // group_size, outfeatures], dtype=torch.int8).cuda() *
+                    torch.ones([in_features // group_size, out_features], dtype=torch.int8).cuda() *
                     zeros)
                 qzeros = general_compress(
                     original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
@@ -177,7 +177,7 @@ def profile(model, input_data):
     model = model.cuda()
     model.eval()
     output = torch.empty(
-        input_data.shape[:-1] + (model.outfeatures,),
+        input_data.shape[:-1] + (model.out_features,),
         dtype=input_data.dtype,
         device=input_data.device,
     )
@@ -201,23 +201,23 @@ def profile(model, input_data):
 
 
 # @pytest.mark.parametrize(
-#     "m, infeatures, outfeatures, bias",
+#     "m, in_features, out_features, bias",
 #     [
 #         (1, 1024, 1024, False),
 #         (1024, 1024, 1024, False),
 #     ],
 # )
-# def test_profile_performance(m, infeatures, outfeatures, bias):
+# def test_profile_performance(m, in_features, out_features, bias):
 #     linear_bitblas = BitBLASLinear(
-#         infeatures,
-#         outfeatures,
+#         in_features,
+#         out_features,
 #         bias=bias,
 #         A_dtype=torch.float16,
 #         opt_M=m,
 #         enable_tuning=False,
 #     ).cuda()
 #     with torch.no_grad():
-#         input_data = torch.randn(m, infeatures, dtype=torch.float16).cuda()
+#         input_data = torch.randn(m, in_features, dtype=torch.float16).cuda()
 #         torch_latency = profile(linear_bitblas, input_data)
 #         bitblas_latency = linear_bitblas.bitblas_matmul.profile_latency()
 #     print(f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}")

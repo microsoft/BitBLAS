@@ -12,7 +12,7 @@ torch.manual_seed(0)
 
 
 @pytest.mark.parametrize(
-    "m, infeatures, outfeatures, bias",
+    "m, in_features, out_features, bias",
     [
         (1, 1024, 1024, False),
         (1, 1024, 1024, True),
@@ -20,11 +20,11 @@ torch.manual_seed(0)
         (1024, 1024, 1024, True),
     ],
 )
-def test_correctness_static_shape(m, infeatures, outfeatures, bias):
-    linear_torch = (nn.Linear(infeatures, outfeatures, bias=bias).to(torch.float16).cuda())
+def test_correctness_static_shape(m, in_features, out_features, bias):
+    linear_torch = (nn.Linear(in_features, out_features, bias=bias).to(torch.float16).cuda())
     linear_bitblas = BitBLASLinear(
-        infeatures,
-        outfeatures,
+        in_features,
+        out_features,
         bias=bias,
         dtype=torch.float16,
         opt_M=m,
@@ -37,7 +37,7 @@ def test_correctness_static_shape(m, infeatures, outfeatures, bias):
             linear_bitblas.bias = nn.Parameter(linear_torch.bias.clone())
 
     with torch.no_grad():
-        input_data = torch.randn(m, infeatures, dtype=torch.float16).cuda()
+        input_data = torch.randn(m, in_features, dtype=torch.float16).cuda()
         output_torch = linear_torch(input_data)
         output_bitblas = linear_bitblas(input_data)
 
@@ -48,7 +48,7 @@ def profile(model, input_data):
     model = model.cuda()
     model.eval()
     output = torch.empty(
-        input_data.shape[:-1] + (model.outfeatures,),
+        input_data.shape[:-1] + (model.out_features,),
         dtype=input_data.dtype,
         device=input_data.device,
     )
@@ -72,23 +72,23 @@ def profile(model, input_data):
 
 
 @pytest.mark.parametrize(
-    "m, infeatures, outfeatures, bias",
+    "m, in_features, out_features, bias",
     [
         (1, 1024, 1024, False),
         (1024, 1024, 1024, False),
     ],
 )
-def test_profile_performance(m, infeatures, outfeatures, bias):
+def test_profile_performance(m, in_features, out_features, bias):
     linear_bitblas = BitBLASLinear(
-        infeatures,
-        outfeatures,
+        in_features,
+        out_features,
         bias=bias,
         dtype=torch.float16,
         opt_M=m,
         enable_tuning=False,
     ).cuda()
     with torch.no_grad():
-        input_data = torch.randn(m, infeatures, dtype=torch.float16).cuda()
+        input_data = torch.randn(m, in_features, dtype=torch.float16).cuda()
         torch_latency = profile(linear_bitblas, input_data)
         bitblas_latency = linear_bitblas.bitblas_matmul.profile_latency()
     print(f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}")

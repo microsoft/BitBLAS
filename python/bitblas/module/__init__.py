@@ -52,8 +52,8 @@ class Linear(nn.Module):
 
     def __init__(
         self,
-        infeatures: int,
-        outfeatures: int,
+        in_features: int,
+        out_features: int,
         bias: bool = False,
         A_dtype: str = "float16",
         W_dtype: str = "float16",
@@ -77,14 +77,14 @@ class Linear(nn.Module):
         """
         super().__init__()
 
-        self.infeatures = infeatures
-        self.outfeatures = outfeatures
+        self.in_features = in_features
+        self.out_features = out_features
         self.opt_M = opt_M
-        self.group_size = self._set_group_size(group_size, infeatures)
+        self.group_size = self._set_group_size(group_size, in_features)
         self.torch_dtype = getattr(torch, A_dtype)
         self.is_consitent = A_dtype == W_dtype
         self.zeros_mode = zeros_mode
-        self._validate_parameters(self.group_size, infeatures, outfeatures)
+        self._validate_parameters(self.group_size, in_features, out_features)
         self._configure_bitblas_matmul(
             A_dtype,
             W_dtype,
@@ -98,7 +98,7 @@ class Linear(nn.Module):
             bias,
             propagate_b,
         )
-        self._initialize_buffers(infeatures, outfeatures, bias)
+        self._initialize_buffers(in_features, out_features, bias)
 
     def init_params(self):
         # eliminate runtime overhead like exllama state
@@ -117,20 +117,20 @@ class Linear(nn.Module):
                 param_list.append(self.bias)
             self.q_params = [ctypes.c_void_p(arr.data_ptr()) for arr in param_list]
 
-    def _validate_parameters(self, group_size, infeatures, outfeatures):
-        if infeatures % 16 != 0 or outfeatures % 16 != 0:
-            raise ValueError("`infeatures` and `outfeatures` must be divisible by 16.")
-        if infeatures % group_size != 0:
-            raise ValueError("`infeatures` must be divisible by `group_size`.")
+    def _validate_parameters(self, group_size, in_features, out_features):
+        if in_features % 16 != 0 or out_features % 16 != 0:
+            raise ValueError("`in_features` and `out_features` must be divisible by 16.")
+        if in_features % group_size != 0:
+            raise ValueError("`in_features` must be divisible by `group_size`.")
 
-    def _set_group_size(self, group_size, infeatures):
-        return infeatures if (group_size == -1 or group_size is None) else group_size
+    def _set_group_size(self, group_size, in_features):
+        return in_features if (group_size == -1 or group_size is None) else group_size
 
-    def _initialize_buffers(self, infeatures, outfeatures, bias):
+    def _initialize_buffers(self, in_features, out_features, bias):
         if self.consistent:
             self.register_buffer(
                 "weight",
-                torch.zeros((outfeatures, infeatures // self.group_size), dtype=self.torch_dtype),
+                torch.zeros((out_features, in_features // self.group_size), dtype=self.torch_dtype),
             )
         else:
             self.register_buffer(
@@ -142,7 +142,7 @@ class Linear(nn.Module):
             )
             self.register_buffer(
                 "scales",
-                torch.zeros((outfeatures, infeatures // self.group_size), dtype=self.torch_dtype),
+                torch.zeros((out_features, in_features // self.group_size), dtype=self.torch_dtype),
             )
             if self.zeros_mode == "quantized":
                 storage_nbit = int("".join(c for c in self.STORAGE_DTYPE if c.isdigit()))
@@ -150,8 +150,8 @@ class Linear(nn.Module):
                     "zeros",
                     torch.zeros(
                         (
-                            infeatures // self.group_size,
-                            outfeatures // storage_nbit * self.bits,
+                            in_features // self.group_size,
+                            out_features // storage_nbit * self.bits,
                         ),
                         dtype=self.TORCH_STORAGE_DTYPE,
                     ),
@@ -160,12 +160,12 @@ class Linear(nn.Module):
                 self.register_buffer(
                     "zeros",
                     torch.zeros(
-                        (outfeatures, infeatures // self.group_size),
+                        (out_features, in_features // self.group_size),
                         dtype=self.torch_dtype,
                     ),
                 )
         if bias:
-            self.register_buffer("bias", torch.zeros((outfeatures), dtype=self.torch_dtype))
+            self.register_buffer("bias", torch.zeros((out_features), dtype=self.torch_dtype))
         else:
             self.bias = None
 
@@ -185,8 +185,8 @@ class Linear(nn.Module):
     ):
         matmul_config = MatmulConfig(
             M=self.opt_M,
-            N=self.outfeatures,
-            K=self.infeatures,
+            N=self.out_features,
+            K=self.in_features,
             A_dtype=A_dtype,
             W_dtype=W_dtype,
             accum_dtype=accum_dtype,
@@ -235,7 +235,7 @@ class Linear(nn.Module):
         self.init_params()
 
         if Output is None:
-            Output = torch.empty(A.shape[:-1] + (self.outfeatures,), dtype=A.dtype, device=A.device)
+            Output = torch.empty(A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
 
         A_void = ctypes.c_void_p(A.data_ptr())
         # m is the product of the last n - 1 dimensions of A
@@ -268,12 +268,12 @@ class Linear(nn.Module):
                 self.bias = bias
 
     def repack_from_gptq(self, gptq_module):
-        # qweight in gptq old quant linear stored with (outfeatures, infeatures), should be transposed.
+        # qweight in gptq old quant linear stored with (out_features, in_features), should be transposed.
         qweight = gptq_module.qweight.T.contiguous().view(self.TORCH_STORAGE_DTYPE)
         if self.bitblas_matmul.weight_transform is not None:
             qweight = self.bitblas_matmul.weight_transform(qweight.cpu()).cuda()
         self.qweight = qweight
-        # scales in gptq old quant linear stored with (infeatures // group_size, outfeatures), should be transposed.
+        # scales in gptq old quant linear stored with (in_features // group_size, out_features), should be transposed.
         scales = gptq_module.scales.T.contiguous().view(self.torch_dtype)
         self.scales = scales
         # qzeros should be dequantized to int zeros.

@@ -38,8 +38,8 @@ class QuantLinear(nn.Module):
         self,
         bits: int,
         group_size: int,
-        infeatures: int,
-        outfeatures: int,
+        in_features: int,
+        out_features: int,
         bias: bool,
         enable_tuning: bool = False,
         fast_decoding: bool = False,
@@ -52,15 +52,15 @@ class QuantLinear(nn.Module):
     ):
         super().__init__()
         if group_size == -1:
-            group_size = infeatures
-        if infeatures % 128 != 0 or outfeatures % 256 != 0:
+            group_size = in_features
+        if in_features % 128 != 0 or out_features % 256 != 0:
             raise ValueError(
-                "`infeatures` must be divisible by 128 and `outfeatures` by 256."
+                "`in_features` must be divisible by 128 and `out_features` by 256."
             )
         if bits not in [1, 2, 4]:
             raise NotImplementedError("Only 1/2/4 bits are supported.")
-        if infeatures % group_size != 0:
-            raise ValueError("`infeatures` must be divisible by `group_size`.")
+        if in_features % group_size != 0:
+            raise ValueError("`in_features` must be divisible by `group_size`.")
         if trainable:
             raise NotImplementedError("Bitblas does not support train.")
 
@@ -69,32 +69,32 @@ class QuantLinear(nn.Module):
         n_float_per_elem = storage_nbit // bits
 
         self.opt_M = opt_M
-        self.infeatures = infeatures
-        self.outfeatures = outfeatures
-        self.group_size = group_size if group_size != -1 else infeatures
+        self.in_features = in_features
+        self.out_features = out_features
+        self.group_size = group_size if group_size != -1 else in_features
         self.register_buffer(
             "qweight",
             torch.empty(
-                (self.outfeatures, self.infeatures // n_float_per_elem),
+                (self.out_features, self.in_features // n_float_per_elem),
                 dtype=torch.int8,
             ),
         )
         self.register_buffer(
             "scales",
             torch.empty(
-                (self.outfeatures, self.infeatures // self.group_size), dtype=torch.half
+                (self.out_features, self.in_features // self.group_size), dtype=torch.half
             ),
         )
         self.register_buffer(
             "zeros",
             torch.full(
-                (self.outfeatures, self.infeatures // self.group_size),
+                (self.out_features, self.in_features // self.group_size),
                 0,
                 dtype=torch.float16,
             ),
         )
         if bias:
-            self.register_buffer("bias", torch.zeros((outfeatures), dtype=torch.half))
+            self.register_buffer("bias", torch.zeros((out_features), dtype=torch.half))
         else:
             self.bias = None
 
@@ -113,8 +113,8 @@ class QuantLinear(nn.Module):
         self.target = auto_detect_nvidia_target()
         matmul_config = MatmulWeightOnlyDequantizeConfig(
             M=self.opt_M,
-            N=self.outfeatures,
-            K=self.infeatures,
+            N=self.out_features,
+            K=self.in_features,
             in_dtype=bitblas_dtype,
             out_dtype=bitblas_dtype,
             accum_dtype="int32" if bitblas_dtype == "int8" else bitblas_dtype,
@@ -160,7 +160,7 @@ class QuantLinear(nn.Module):
     def pack(self, linear, scales, zeros=None):
         """Pack a fake-quantized linear layer into this actual Bitblas representation.
         @linear: fake-quantized `torch.nn.Linear` layer to convert (must be of type `torch.half`)
-        @scales: corresponding quantization scales of shape `(infeatures, groups)`
+        @scales: corresponding quantization scales of shape `(in_features, groups)`
         """
         if linear.weight.dtype != torch.half:
             raise ValueError("Only `torch.half` weights are supported.")
@@ -177,7 +177,7 @@ class QuantLinear(nn.Module):
 
         # do permutation on weight
         intweight = []
-        for idx in range(self.infeatures):
+        for idx in range(self.in_features):
             g_idx = idx // self.group_size
             intweight.append(
                 torch.round((w[:, idx] + scale_zeros[:, g_idx]) / scales[:, g_idx]).to(
