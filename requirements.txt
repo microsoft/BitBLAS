@@ -15,3 +15,9 @@ typing_extensions>=4.10.0
 xgboost>=1.7.1
 requests
 rapidfuzz>=3.8.0
+attrs
+cloudpickle
+ml_dtypes
+psutil
+scipy
+tornado

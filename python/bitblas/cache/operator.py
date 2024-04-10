@@ -14,7 +14,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-BITBLAS_DATABASE_PATH = "~/.cache/bitblas"
+BITBLAS_DATABASE_PATH =  os.path.expanduser("~/.cache/bitblas")
 
 
 class OperatorCache:
