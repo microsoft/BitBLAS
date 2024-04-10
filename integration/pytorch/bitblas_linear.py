@@ -104,20 +104,20 @@ class Linear(nn.Module):
             if self.bias is not None:
                 self.bias.uniform_(-stdv, stdv)
 
-    def forward(self, A, Output=None):
+    def forward(self, A, output=None):
         args = [
             A,
             self.weight,
         ]
         if self.bias is not None:
             args.append(self.bias)
-        if Output is None:
-            Output = torch.empty(A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
-        args.append(Output)
+        if output is None:
+            output = torch.empty(A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
+        args.append(output)
 
         self.bitblas_matmul(*args)
 
-        return Output
+        return output
 
 
 __all__ = ["Linear"]

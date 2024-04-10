@@ -227,22 +227,22 @@ class Linear(nn.Module):
     def warmup(self, topk=20):
         self.bitblas_matmul.hardware_aware_finetune(topk=topk)
 
-    def forward(self, A, Output=None):
+    def forward(self, A, output=None):
         if A.dtype != torch.float16:
             A = A.half()
 
         # can be lifted to post init.
         self.init_params()
 
-        if Output is None:
-            Output = torch.empty(A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
+        if output is None:
+            output = torch.empty(A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
 
         A_void = ctypes.c_void_p(A.data_ptr())
         # m is the product of the last n - 1 dimensions of A
         m = ctypes.c_int32(reduce(operator.mul, A.shape[:-1], 1))
-        self.bitblas_matmul.lib.call(A_void, *self.q_params, ctypes.c_void_p(Output.data_ptr()), m)
+        self.bitblas_matmul.lib.call(A_void, *self.q_params, ctypes.c_void_p(output.data_ptr()), m)
 
-        return Output
+        return output
 
     def load_and_transform_weight(
         self,
