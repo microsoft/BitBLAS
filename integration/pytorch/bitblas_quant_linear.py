@@ -80,7 +80,10 @@ class QuantLinear(nn.Module):
         )
         self.register_buffer(
             "scales",
-            torch.empty((self.out_features, self.in_features // self.group_size), dtype=torch.half),
+            torch.empty(
+                (self.out_features, self.in_features // self.group_size),
+                dtype=torch.half,
+            ),
         )
         self.register_buffer(
             "zeros",
