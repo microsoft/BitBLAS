@@ -17,12 +17,12 @@
 - **A_dtype** *(str, default='float16')*: The data type of matrix A.
     - Choices: `'float16'`, `'int8'`.
 - **W_dtype** *(str, default='float16')*: The data type of matrix W. Also acts as a wrapper for source_format and bit.
-    - Choices: `'float16'`, `'int8'`, `'int4'`, `'int2'`, `'int1'`, `'fp4_e2m1'`, `'af4'`.
-- **out_dtype** *(str, default='float16')*: The data type of the output matrix.
-    - Choices: `'float16'`, `'int8'`, `'int32'`.
+    - Choices: `'float16'`, `'int8'`, `'int4'`, `'int2'`, `'int1'`, `'fp4_e2m1'`, `'nf4'`.
 - **accum_dtype** *(str, default='float16')*: The data type used for accumulation during the matrix multiplication.
     - Choices: `'float16'`, `'int32'`.
-- **layout** *(Literal['nn', 'nt', 'tn', 'tt'], default='nt')*: The layout of the matrix multiplication operation.
+- **out_dtype** *(str, default='float16')*: The data type of the output matrix.
+    - Choices: `'float32'`, `'float16'`, `'int8'`, `'int32'`.
+- **layout** *(Literal['nn', 'nt', 'tn', 'tt'], default='nt')*: The layout of the matrix multiplication operation. The matrix is stored in row-major.
     - `'nn'`: Both matrices are non-transposed.
     - `'nt'`: Matrix A is non-transposed, and matrix W is transposed.
     - `'tn'`: Matrix A is transposed, and matrix W is non-transposed.
@@ -94,7 +94,7 @@ Applies a linear transformation to the incoming data: $out[M, N] = A[M, K] \time
 - **accum_dtype** *(str, optional)*: Data type for accumulation. Default: `'float16'`.
     - Choices: `'float16'`, `'int32'`.
 - **out_dtype** *(str, optional)*: Data type of the output tensor. Default: `'float16'`.
-    - Choices: `'float16'`, `'int8'`, `'int32'`.
+    - Choices: `'float32'`, `'float16'`, `'int8'`, `'int32'`.
 - **group_size** *(int, optional)*: Group size for quantization. Default: `-1` (no grouping).
 - **with_scaling** *(bool, optional)*: Whether to use scaling during quantization. Default: `False`.
 - **with_zeros** *(bool, optional)*: Whether to use zeropoints . Default: `False`.
@@ -109,7 +109,7 @@ Applies a linear transformation to the incoming data: $out[M, N] = A[M, K] \time
 
 ### Methods:
 
-#### `forward(A, Output=None)`
+#### `forward(A, output=None)`
 
 Defines the computation performed at every call.
 
