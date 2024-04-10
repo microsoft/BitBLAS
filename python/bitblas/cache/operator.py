@@ -14,6 +14,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+BITBLAS_DATABASE_PATH = "~/.cache/bitblas"
 
 class OperatorCache:
     """
@@ -155,7 +156,8 @@ class OperatorCache:
 global_operator_cache = OperatorCache()
 
 
-def load_global_ops_cache(database_path, target=None):
+def load_global_ops_cache(database_path=BITBLAS_DATABASE_PATH, target=None):
     if target is None:
         target = bitblas.auto_detect_nvidia_target()
     global_operator_cache.load_from_database(database_path, target)
+    return global_operator_cache
