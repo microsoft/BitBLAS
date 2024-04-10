@@ -58,7 +58,7 @@ def test_matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtyp
         with_zeros=with_zeros,
         zeros_mode=zeros_mode,
     )
-    matmul = Matmul(config=matmul_config,)
+    matmul = Matmul(config=matmul_config, enable_tuning=False)
     assert get_codegen_result(matmul)
 
 
@@ -105,7 +105,7 @@ def test_matmul_finetune(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
         with_zeros=with_zeros,
         zeros_mode=zeros_mode,
     )
-    matmul = Matmul(config=matmul_config,)
+    matmul = Matmul(config=matmul_config, enable_tuning=False)
     matmul.hardware_aware_finetune(topk=10)
     assert get_codegen_result(matmul)
 
@@ -153,7 +153,7 @@ def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
         with_zeros=with_zeros,
         zeros_mode=zeros_mode,
     )
-    matmul = Matmul(config=matmul_config,)
+    matmul = Matmul(config=matmul_config, enable_tuning=False)
 
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
@@ -186,10 +186,7 @@ def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
     qw_np = general_compress(intweight, source_bits=bit, storage_dtype=np.int8)
     qw_torch = torch.from_numpy(qw_np).cuda()
     permuted_inputs = []
-    if matmul.input_transform is not None:
-        permuted_inputs.append(matmul.input_transform(inputs[0].cpu()).cuda())
-    else:
-        permuted_inputs.append(inputs[0])
+    permuted_inputs.append(inputs[0])
     if matmul.weight_transform is not None:
         permuted_inputs.append(matmul.weight_transform(qw_torch.cpu()).cuda())
     else:
@@ -217,6 +214,8 @@ def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
         permuted_inputs.append(bias)
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
+    print(permuted_inputs[-1])
+    print(ref_result)
     if zeros_mode == "rescale":
         torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e-0)
     else:
@@ -255,7 +254,7 @@ def test_matmul_transform_weight(
         out_dtype=out_dtype,
         with_bias=with_bias,
     )
-    matmul = Matmul(config=matmul_config,)
+    matmul = Matmul(config=matmul_config, enable_tuning=False)
 
     input_shape = (M, K)
     weight_shape = (N, K)

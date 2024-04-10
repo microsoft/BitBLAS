@@ -230,17 +230,16 @@ class Linear(nn.Module):
     def forward(self, A, output=None):
         if A.dtype != torch.float16:
             A = A.half()
-
         # can be lifted to post init.
         self.init_params()
 
         if output is None:
             output = torch.empty(
                 A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
-
+        m = ctypes.c_int32(reduce(operator.mul, A.shape[:-1], 1))
+        A = self.bitblas_matmul.transform_input(A)
         A_void = ctypes.c_void_p(A.data_ptr())
         # m is the product of the last n - 1 dimensions of A
-        m = ctypes.c_int32(reduce(operator.mul, A.shape[:-1], 1))
         self.bitblas_matmul.lib.call(A_void, *self.q_params, ctypes.c_void_p(output.data_ptr()), m)
 
         return output
@@ -255,7 +254,8 @@ class Linear(nn.Module):
         if self.consistent:
             assert scales is None, "scales should be None for consistent mode."
             assert zeros is None, "zeros should be None for consistent mode."
-            self.weight = weight
+            weight = self.bitblas_matmul.transform_weight(weight)
+            self.weight = nn.Parameter(weight)
             if bias is not None:
                 self.bias = bias
         else:

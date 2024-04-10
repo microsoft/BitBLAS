@@ -25,18 +25,20 @@ class LadderPermutateConfig:
 class LadderPermutate(Operator):
 
     def __init__(
-            self,
-            config: LadderPermutateConfig,
-            name: str = "permutate",
-            target: Union[str, Target] = "llvm",  # assume to do permutation on cpu.
+        self,
+        config: LadderPermutateConfig,
+        name: str = "permutate",
+        target: Union[str, Target] = "llvm",  # assume to do permutation on cpu.
+        enable_tuning: bool = False,
     ):
         # consider to warp the arguments to MatmulConfig
         super().__init__(name, config, target)
 
-        if target.kind.name != "llvm":
-            raise ValueError("Currently only support llvm target for Permutation")
-
-        self.target = target
+        target = self.target
+        if target.kind.name == "cuda":
+            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
+            if enable_tuning:
+                self.hardware_aware_finetune()
         self._build_runtime_module(target)
 
     # select implementation based on the Operator config

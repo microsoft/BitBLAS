@@ -391,6 +391,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     B = te.placeholder((N // l, (K // scaling_factor) // qr, l, qr), name="B", dtype=storage_dtype)
     LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
     Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
+    Zeros = te.placeholder((N, K // group_size), name="Zeros", dtype=in_dtype)
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
 
     def fcompute(i, j):
@@ -439,8 +440,19 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
 
-        if with_scaling:
-            w = w * Scale[n, k // group_size]
+        if not with_scaling:
+            return w
+
+        if not with_zeros:
+            return w * Scale[n, k // group_size]
+
+        if zeros_mode == "original":
+            w = (w - Zeros[n, k // group_size]) * Scale[n, k // group_size]
+        elif zeros_mode == "rescale":
+            w = w * Scale[n, k // group_size] - Zeros[n, k // group_size]
+        else:
+            raise ValueError("Unsupported zeros_mode: {}".format(zeros_mode))
+
         return w
 
     B_decode = te.compute((N, K), decode_func, name="B_decode")
@@ -462,6 +474,8 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
         args.append(LUT)
     if with_scaling:
         args.append(Scale)
+    if with_zeros:
+        args.append(Zeros)
     if with_bias:
         E = te.compute((M, N), lambda i, j: D[i, j] + Bias[j], name="E")
         last_output = E

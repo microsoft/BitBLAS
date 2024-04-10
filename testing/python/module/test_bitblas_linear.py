@@ -34,7 +34,7 @@ def test_correctness_consistent(m, in_features, out_features, bias):
     ).cuda()
 
     with torch.no_grad():
-        linear_bitblas.weight = nn.Parameter(linear_torch.weight.clone())
+        linear_bitblas.load_and_transform_weight(linear_torch.weight.clone())
         if bias:
             linear_bitblas.bias = nn.Parameter(linear_torch.bias.clone())
 
@@ -126,11 +126,7 @@ def test_correctness_weight_only_dequantize(
         qw_np = general_compress(intweight, source_bits=bit, storage_dtype=np.int8)
         qw_torch = torch.from_numpy(qw_np).cuda()
         permuted_inputs = []
-        if linear_bitblas.bitblas_matmul.input_transform is not None:
-            permuted_inputs.append(
-                linear_bitblas.bitblas_matmul.input_transform(inputs[0].cpu()).cuda())
-        else:
-            permuted_inputs.append(inputs[0])
+        permuted_inputs.append(inputs[0])
         if linear_bitblas.bitblas_matmul.weight_transform is not None:
             permuted_inputs.append(
                 linear_bitblas.bitblas_matmul.weight_transform(qw_torch.cpu()).cuda())
@@ -176,16 +172,11 @@ def test_correctness_weight_only_dequantize(
 def profile(model, input_data):
     model = model.cuda()
     model.eval()
-    output = torch.empty(
-        input_data.shape[:-1] + (model.out_features,),
-        dtype=input_data.dtype,
-        device=input_data.device,
-    )
 
     def get_runtime(num_repeats=1):
         tic = time.time()
         for _ in range(num_repeats):
-            _ = model(input_data, output)
+            _ = model(input_data)
         torch.cuda.synchronize()
         return (time.time() - tic) * 1000 / num_repeats
 
@@ -199,30 +190,6 @@ def profile(model, input_data):
         times = get_runtime(num_repeats)
     return np.mean(times)
 
-
-# @pytest.mark.parametrize(
-#     "m, in_features, out_features, bias",
-#     [
-#         (1, 1024, 1024, False),
-#         (1024, 1024, 1024, False),
-#     ],
-# )
-# def test_profile_performance(m, in_features, out_features, bias):
-#     linear_bitblas = BitBLASLinear(
-#         in_features,
-#         out_features,
-#         bias=bias,
-#         A_dtype=torch.float16,
-#         opt_M=m,
-#         enable_tuning=False,
-#     ).cuda()
-#     with torch.no_grad():
-#         input_data = torch.randn(m, in_features, dtype=torch.float16).cuda()
-#         torch_latency = profile(linear_bitblas, input_data)
-#         bitblas_latency = linear_bitblas.bitblas_matmul.profile_latency()
-#     print(f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}")
-#     assert (abs(torch_latency - bitblas_latency) / torch_latency <
-#             0.1), f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}"
 
 if __name__ == "__main__":
     bitblas.testing.main()

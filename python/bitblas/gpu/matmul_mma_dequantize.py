@@ -1406,8 +1406,9 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 sch.get_loops(block_shared)[-1], factors=[None, 1, decode_factor])
             block_shared_local = sch.cache_read(block_shared, 0, "local")
             # global -> dequantzed_local -> shared
-            # step2. inline to local block, should skip qzeros]\
-            is_qzeros = ("with_zeros" in weight_decode_info and weight_decode_info["with_zeros"])
+            # step2. inline to local block, should skip qzeros
+            is_qzeros = ("with_zeros" in weight_decode_info and weight_decode_info["with_zeros"] and
+                         weight_decode_info["zeros_mode"] == "quantized")
             weight_dequantize_block = sch.get_block(weight_decode_info["decode_block"])
             weight_producers = (
                 _collect_producers(sch, weight_dequantize_block) if is_qzeros else [])

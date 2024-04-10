@@ -21,6 +21,8 @@ import torch
 
 logger = logging.getLogger(__name__)
 
+WORKSPACE_SIZE = 1024 * 1024 * 1024
+
 
 class OPExecutorCPU:
 
@@ -105,6 +107,22 @@ class MatmulConfig:
         elif isinstance(self.propagate_b, int):
             object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
 
+        # This is hack to legalize propagate_a and b
+        # TODO(lei): should be removed in the future when tc+br template is ready.
+        MICRO_KERNEL_SIZE = 16
+        if isinstance(
+                self.M,
+                int) and (self.M % MICRO_KERNEL_SIZE) == 0 and (self.K % MICRO_KERNEL_SIZE) == 0:
+            object.__setattr__(self, "propagate_a", TransformKind.IntraWarpTransform)
+        else:
+            object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
+
+        if self.M == 1 or (self.N % MICRO_KERNEL_SIZE) != 0 or (
+                self.K % MICRO_KERNEL_SIZE) != 0 or isinstance(self.M, Tuple):
+            object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
+        else:
+            object.__setattr__(self, "propagate_b", TransformKind.IntraWarpTransform)
+
         if self.zeros_mode is None:
             object.__setattr__(self, "zeros_mode", "original")
 
@@ -124,6 +142,9 @@ class MatmulConfig:
 
         if self.with_zeros is None:
             object.__setattr__(self, "with_zeros", False)
+
+        if self.A_dtype == self.W_dtype and self.W_dtype in ["float16", "int8"]:
+            object.__setattr__(self, "storage_dtype", self.W_dtype)
 
 
 class Matmul(Operator):
@@ -195,7 +216,9 @@ class Matmul(Operator):
 
         self._build_runtime_module(target)
 
+        self.workspace = None
         if self.propagate_a:
+            # for general purpose, we use propagate_a to control the ladder permutation.
             ladder_permutate_config = LadderPermutateConfig(
                 M=self.M,
                 N=self.K,
@@ -207,8 +230,10 @@ class Matmul(Operator):
             )
             self.ladder_permutate_a = LadderPermutate(
                 config=ladder_permutate_config,
-                target=tvm.target.Target("llvm"),
+                target=target,
+                enable_tuning=enable_tuning,
             )
+            self.workspace = torch.empty(WORKSPACE_SIZE, dtype=torch.float16).cuda()
         else:
             self.ladder_permutate_a = None
 
@@ -374,8 +399,20 @@ class Matmul(Operator):
 
         return next(iter(result), result)
 
+    def transform_input(self, input_tensor):
+        if self.propagate_a is not TransformKind.NonTransform:
+            # check workspace size
+            if input_tensor.numel() > WORKSPACE_SIZE:
+                raise ValueError(
+                    f"Input size {input_tensor.numel()} is larger than the workspace size {WORKSPACE_SIZE}, please increase the workspace size."
+                )
+            self.ladder_permutate_a._forward_from_prebuild_lib(input_tensor, self.workspace)
+            return self.workspace
+        return input_tensor
+
     def forward(self, A, W, scale=None, zeros=None, bias=None, output=None) -> Any:
-        args = [A]
+        args = []
+        args.append(self.transform_input(A))
         if self.lut is not None:
             args.append(self.lut)
         args.append(W)

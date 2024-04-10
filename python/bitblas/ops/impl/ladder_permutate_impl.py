@@ -25,7 +25,6 @@ def select_implementation(
     l = r = 16  # noqa: E741
     if datatype == "int8":
         l, r = 16, 32  # noqa: E741
-
     intra_index_map, _ = get_propagate_map(
         transpose_matrix, dtype=datatype, matrix_name=propagate_kind)
 
