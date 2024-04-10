@@ -205,19 +205,19 @@ class QuantLinear(nn.Module):
         if self.bias is not None:
             self.bias[:] = linear.bias.data.to(self.bias.device).contiguous()
 
-    def forward(self, A, Output=None):
+    def forward(self, A, output=None):
         args = [A, self.qweight, self.scales, self.zeros]
         if self.bias is not None:
             args.append(self.bias)
-        if Output is None:
-            Output = torch.empty(
+        if output is None:
+            output = torch.empty(
                 A.shape[:-1] + (self.qweight.shape[0],), dtype=A.dtype, device=A.device
             )
-        args.append(Output)
+        args.append(output)
 
         self.bitblas_matmul(*args)
 
-        return Output
+        return output
 
 
 __all__ = ["QuantLinear"]
