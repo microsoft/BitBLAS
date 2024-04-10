@@ -17,7 +17,7 @@ pytest_xdist==3.5.0    
 PyYAML==6.0.1    
 tornado==6.3.3    
 tqdm==4.64.1    
-transformers==4.36.0    
+transformers==4.38.0    
 treelib==1.7.0    
 typeguard==2.13.3             
 typing_extensions==4.10.0    
