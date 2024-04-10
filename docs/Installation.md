@@ -4,6 +4,7 @@
 
 - **Operating System**: Linux
 - **Python Version**: >= 3.7
+- **CUDA Version**: >= 10.0
 
 ## Installing with pip
 
@@ -18,12 +19,6 @@ Alternatively, you may choose to install BitBLAS using prebuilt packages availab
 pip install bitblas-0.0.0.dev0+cu120-py3-none-any.whl
 ```
 
-or install from a source archive file (**Note:** The process also requires certain pre-requistes same as [Building from Source Section](#building-from-source)):
-
-```bash
-pip install bitblas-0.0.0.dev.tar.gz
-```
-
 After installing BitBLAS, you can verify the installation by running:
 
 ```bash
@@ -31,6 +26,12 @@ python -c "import bitblas; print(bitblas.__version__)"
 ```
 
 ## Building from Source
+
+We recommend using a docker container with the necessary dependencies to build BitBLAS from source. You can use the following command to run a docker container with the necessary dependencies:
+
+```bash
+docker run --gpus all -it --rm --ipc=host nvcr.io/nvidia/pytorch:23.01-py3
+```
 
 To build and install BitBLAS directly from source, follow the steps below. This process requires certain pre-requisites from apache tvm, which can be installed on Ubuntu/Debian-based systems using the following commands:
 
@@ -45,12 +46,4 @@ After installing the prerequisites, you can clone the BitBLAS repository and ins
 git clone --recursive https://github.com/Microsoft/BitBLAS.git
 cd BitBLAS
 pip install -e .  # Please be patient, this may take some time.
-```
-
-### Troubleshooting
-
-If you encounter issues while building BitBLAS, using the NVIDIA PyTorch Docker image is recommended as an alternative. This method ensures adequate shared memory:
-
-```bash
-docker run --gpus all -it --rm --ipc=host nvcr.io/nvidia/pytorch:23.01-py3
 ```

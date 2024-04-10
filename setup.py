@@ -17,6 +17,7 @@ import os
 import sys
 import urllib.request
 from distutils.version import LooseVersion
+import platform
 
 PACKAGE_NAME = "bitblas"
 ROOT_DIR = os.path.dirname(__file__)
@@ -61,15 +62,31 @@ def get_nvcc_cuda_version():
     return nvcc_cuda_version
 
 
-def get_bitblas_version(with_cuda=True) -> str:
+def get_bitblas_version(with_cuda=True, with_system_info=True) -> str:
     version = find_version(get_path("python/bitblas", "__init__.py"))
-    if not with_cuda:
-        return version
-    cuda_version = str(get_nvcc_cuda_version())
-    cuda_version_str = cuda_version.replace(".", "")[:3]
-    version += f"+cu{cuda_version_str}"
+    if with_system_info:
+        version += f"+{get_system_info()}"
+    if with_cuda:       
+        cuda_version = str(get_nvcc_cuda_version())
+        cuda_version_str = cuda_version.replace(".", "")[:3]
+        version += f".cu{cuda_version_str}"
     return version
 
+
+def get_system_info():
+    system = platform.system().lower()
+    if system == "linux":
+        try:
+            with open("/etc/os-release") as f:
+                os_release = f.read()
+            version_id_match = re.search(r'VERSION_ID="(\d+\.\d+)"', os_release)
+            if version_id_match:
+                version_id = version_id_match.group(1)
+                distro = "ubuntu" 
+                return f"{distro}-{version_id}"
+        except FileNotFoundError:
+            pass
+    return system
 
 def read_readme() -> str:
     """Read the README file if present."""
@@ -138,7 +155,7 @@ def update_submodules():
     try:
         subprocess.check_call(["git", "submodule", "update", "--init", "--recursive"])
     except subprocess.CalledProcessError as error:
-        raise RuntimeError("Failed to update submodules") from error
+        raise RuntimeError(f"Failed to update submodules: {error}")
 
 
 def build_tvm(llvm_config_path):
@@ -159,7 +176,7 @@ def build_tvm(llvm_config_path):
         subprocess.check_call(["cmake", ".."])
         subprocess.check_call(["make", "-j"])
     except subprocess.CalledProcessError as error:
-        raise RuntimeError("Failed to build TVM") from error
+        raise RuntimeError(f"Failed to build TVM: {error}")
     finally:
         # Go back to the original directory
         os.chdir("../../..")
@@ -178,7 +195,7 @@ class BitBLASInstallCommand(install):
 
     def run(self):
         # Recursively update submodules
-        update_submodules()
+        # update_submodules()
         # Set up LLVM for TVM
         _, llvm_path = setup_llvm_for_tvm()
         # Build TVM
@@ -192,14 +209,12 @@ class BitBLASBuilPydCommand(build_py):
 
     def run(self):
         build_py.run(self)
-        # Recursively update submodules
+        # custom build tvm
         update_submodules()
         # Set up LLVM for TVM
         _, llvm_path = setup_llvm_for_tvm()
         # Build TVM
         build_tvm(llvm_path)
-        # Continue with the standard installation process
-        install.run(self)
         # Copy the built TVM to the package directory
         TVM_PREBUILD_ITEMS = [
             "3rdparty/tvm/build/libtvm_runtime.so",
@@ -234,7 +249,7 @@ class BitBLASSdistCommand(sdist):
 
     def make_distribution(self):
         self.distribution.metadata.name = PACKAGE_NAME
-        self.distribution.metadata.version = get_bitblas_version(with_cuda=False)
+        self.distribution.metadata.version = get_bitblas_version(with_cuda=False, with_system_info=False)
         super().make_distribution()
 
 
