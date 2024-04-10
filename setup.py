@@ -178,7 +178,7 @@ class BitBLASInstallCommand(install):
 
     def run(self):
         # Recursively update submodules
-        # update_submodules()
+        update_submodules()
         # Set up LLVM for TVM
         _, llvm_path = setup_llvm_for_tvm()
         # Build TVM
@@ -192,6 +192,14 @@ class BitBLASBuilPydCommand(build_py):
 
     def run(self):
         build_py.run(self)
+        # Recursively update submodules
+        update_submodules()
+        # Set up LLVM for TVM
+        _, llvm_path = setup_llvm_for_tvm()
+        # Build TVM
+        build_tvm(llvm_path)
+        # Continue with the standard installation process
+        install.run(self)
         # Copy the built TVM to the package directory
         TVM_PREBUILD_ITEMS = [
             "3rdparty/tvm/build/libtvm_runtime.so",
