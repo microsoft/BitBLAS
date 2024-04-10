@@ -10,7 +10,7 @@ import torch.nn as nn
 logger = getLogger(__name__)
 
 try:
-    import bitblas # noqa: F401
+    import bitblas  # noqa: F401
 except ImportError as e:
     bitblas_import_exception = e
 
