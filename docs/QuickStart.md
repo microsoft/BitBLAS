@@ -138,6 +138,10 @@ model = bitblas.Linear(
     with_scaling=False,  # setting for scaling factor
     with_zeros=False,  # setting for zeros
     zeros_mode=None,  # setting for how to calculating zeros
+    # Target optimization var for dynamic symbolic.
+    # For detailed information please checkout docs/PythonAPI.md
+    # By default, the optimization var is [1, 16, 32, 64, 128, 256, 512]
+    opt_M=[1, 16, 32, 64, 128],
 )
 
 # Create an integer weight tensor
