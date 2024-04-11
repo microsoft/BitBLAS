@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- **Operating System**: Linux
+ **Operating System**: Linux (Ubuntu 20.04 or later recommended for installation via wheel or PyPI or you may need to install some of the dependencies manually)
 - **Python Version**: >= 3.7
 - **CUDA Version**: >= 10.0
 
@@ -16,7 +16,7 @@ pip install bitblas
 Alternatively, you may choose to install BitBLAS using prebuilt packages available on the Release Page:
 
 ```bash
-pip install bitblas-0.0.0.dev0+cu120-py3-none-any.whl
+pip install bitblas-0.0.0.dev0+ubuntu.20.4.cu120-py3-none-any.whl
 ```
 
 After installing BitBLAS, you can verify the installation by running:
