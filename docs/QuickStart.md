@@ -153,6 +153,10 @@ model.eval()
 
 # Create a dummy input tensor
 dummpy_input = torch.randn(1, 1024, dtype=torch.float16)
+
+# Perform inference
+output = model(dummpy_input)
+
 # Please checkout the correctness evaluation code in `testing/python/module/test_bitblas_linear.py`
 ```
 

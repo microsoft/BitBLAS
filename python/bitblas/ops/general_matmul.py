@@ -21,7 +21,7 @@ import torch
 
 logger = logging.getLogger(__name__)
 
-WORKSPACE_SIZE = 1024 * 1024 * 1024
+WORKSPACE_SIZE = 1024 * 1024 * 256
 
 
 class OPExecutorCPU:
@@ -118,7 +118,8 @@ class MatmulConfig:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
 
         if self.M == 1 or (self.N % MICRO_KERNEL_SIZE) != 0 or (
-                self.K % MICRO_KERNEL_SIZE) != 0 or isinstance(self.M, Tuple):
+                self.K % MICRO_KERNEL_SIZE) != 0 or isinstance(self.M, Tuple) or (self.with_zeros and self.zeros_mode == "quantized"):
+            object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
             object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
         else:
             object.__setattr__(self, "propagate_b", TransformKind.IntraWarpTransform)
