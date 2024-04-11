@@ -44,8 +44,8 @@ output_tensor = matmul(input_tensor, weight_tensor_int4)
 # Reference result using PyTorch matmul for comparison
 ref_result = torch.matmul(input_tensor, weight_tensor.t().to(torch.float16))
 # Assert that the results are close within a specified tolerance, note that the int4 randint value is a little bigger than the float16 value, so we set the atol to 1.0
-print("Ref output:", res_cuda_old)
-print("BitBLAS output:", res_bitblas)
+print("Ref output:", ref_result)
+print("BitBLAS output:", output_tensor)
 torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-0)
 ```
 
@@ -108,8 +108,8 @@ for i in range(in_features // group_size):
         ) * scaling[:, i]
 ref_result = torch.matmul(input_tensor, rescaling_tensor.t().to(torch.float16))
 # Assert that the results are close within a specified tolerance
-print("Ref output:", res_cuda_old)
-print("BitBLAS output:", res_bitblas)
+print("Ref output:", ref_result)
+print("BitBLAS output:", output_tensor)
 torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-2)
 ```
 
