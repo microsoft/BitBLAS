@@ -44,6 +44,8 @@ output_tensor = matmul(input_tensor, weight_tensor_int4)
 # Reference result using PyTorch matmul for comparison
 ref_result = torch.matmul(input_tensor, weight_tensor.t().to(torch.float16))
 # Assert that the results are close within a specified tolerance, note that the int4 randint value is a little bigger than the float16 value, so we set the atol to 1.0
+print("Ref output:", res_cuda_old)
+print("BitBLAS output:", res_bitblas)
 torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-0)
 ```
 
@@ -106,6 +108,8 @@ for i in range(in_features // group_size):
         ) * scaling[:, i]
 ref_result = torch.matmul(input_tensor, rescaling_tensor.t().to(torch.float16))
 # Assert that the results are close within a specified tolerance
+print("Ref output:", res_cuda_old)
+print("BitBLAS output:", res_bitblas)
 torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-2)
 ```
 
@@ -156,7 +160,7 @@ dummpy_input = torch.randn(1, 1024, dtype=torch.float16)
 
 # Perform inference
 output = model(dummpy_input)
-
+print("BitBLAS output:", output)
 # Please checkout the correctness evaluation code in `testing/python/module/test_bitblas_linear.py`
 ```
 
@@ -217,6 +221,9 @@ bitblas_linear = bitblas_linear.to("cuda")
 with torch.no_grad():
     res_cuda_old = cuda_old_linear(inp)
     res_bitblas = bitblas_linear(inp)
+
+print("CudaOldQuantLinear output:", res_cuda_old)
+print("BitBLAS output:", res_bitblas)
 
 # Verify the outputs are close within specified tolerances
 torch.testing.assert_close(res_bitblas, res_cuda_old, rtol=1e-0, atol=1e-1)
