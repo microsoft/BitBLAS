@@ -66,7 +66,7 @@ def get_bitblas_version(with_cuda=True, with_system_info=True) -> str:
     version = find_version(get_path("python/bitblas", "__init__.py"))
     if with_system_info:
         version += f"+{get_system_info()}"
-    if with_cuda:       
+    if with_cuda:
         cuda_version = str(get_nvcc_cuda_version())
         cuda_version_str = cuda_version.replace(".", "")[:3]
         version += f".cu{cuda_version_str}"
@@ -82,11 +82,12 @@ def get_system_info():
             version_id_match = re.search(r'VERSION_ID="(\d+\.\d+)"', os_release)
             if version_id_match:
                 version_id = version_id_match.group(1)
-                distro = "ubuntu" 
+                distro = "ubuntu"
                 return f"{distro}-{version_id}"
         except FileNotFoundError:
             pass
     return system
+
 
 def read_readme() -> str:
     """Read the README file if present."""
@@ -155,7 +156,7 @@ def update_submodules():
     try:
         subprocess.check_call(["git", "submodule", "update", "--init", "--recursive"])
     except subprocess.CalledProcessError as error:
-        raise RuntimeError(f"Failed to update submodules: {error}")
+        raise RuntimeError("Failed to update submodules") from error
 
 
 def build_tvm(llvm_config_path):
@@ -176,7 +177,7 @@ def build_tvm(llvm_config_path):
         subprocess.check_call(["cmake", ".."])
         subprocess.check_call(["make", "-j"])
     except subprocess.CalledProcessError as error:
-        raise RuntimeError(f"Failed to build TVM: {error}")
+        raise RuntimeError("Failed to build TVM") from error
     finally:
         # Go back to the original directory
         os.chdir("../../..")
@@ -249,7 +250,8 @@ class BitBLASSdistCommand(sdist):
 
     def make_distribution(self):
         self.distribution.metadata.name = PACKAGE_NAME
-        self.distribution.metadata.version = get_bitblas_version(with_cuda=False, with_system_info=False)
+        self.distribution.metadata.version = get_bitblas_version(
+            with_cuda=False, with_system_info=False)
         super().make_distribution()
 
 
