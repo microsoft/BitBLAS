@@ -710,12 +710,12 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
 
         # block_row_warps = 2
         # block_col_warps = 2
-        # warp_row_tiles = 4
-        # warp_col_tiles = 4
+        # warp_row_tiles = 8
+        # warp_col_tiles = 2
         # chunk = 2
         # stage = 2
         # use_async = 1
-        # raster = 0
+        # raster = 10
 
         block_i, i, ii = sch.split(i, factors=[None, block_row_warps, warp_row_tiles])
         block_j, j, jj = sch.split(j, factors=[None, block_col_warps, warp_col_tiles])

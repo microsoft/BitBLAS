@@ -5,7 +5,7 @@ from tvm.tir.tensor_intrin.cuda import (WMMA_FILL_16x16x16_F16_INTRIN,
                                         WMMA_STORE_16x16x16_F16_GLOBAL_INTRIN,
                                         WMMA_STORE_16x16x16_F16_SHARED_INTRIN,
                                         WMMA_SYNC_16x16x16_f16f16f16_INTRIN)
-from ladder.utils import CompileResult
+from ladder.utils import 
 
 from ladder.tvm_build import unset_tvm_cuda_compile
 unset_tvm_cuda_compile()
@@ -223,7 +223,7 @@ kernel_code = mod.imported_modules[0].get_source()
 
 kernel_code = kernel_code[kernel_code.index('extern "C" __global__ void'):]
 print(kernel_code)
-cp = CompileResult(None, kernel_code, [32, 4, 1], [64, 1, 1], "default_function_kernel", args)
+cp = (None, kernel_code, [32, 4, 1], [64, 1, 1], "default_function_kernel", args)
 cp.compile_and_load(ladder.arch.cuda())
 a = cp.get_example_outputs()
 print(cp.profile())

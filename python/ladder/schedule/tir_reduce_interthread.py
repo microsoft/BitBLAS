@@ -107,8 +107,6 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         num_warps = int(np.prod(self.config.thread))
         warp_size = int(np.prod(self.config.reduce_thread))
         write_sch(sch, "origin")
-        # num_warps = 1
-        # warp_size = 32
 
         block_b = sch.get_block(self.reduce_op.name)
 
