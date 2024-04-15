@@ -1379,7 +1379,7 @@ LOP3_FAST_DECODE_INT2_TO_INT8_TO_INT8_L16_INTRIN = ("lop3_fast_decode_i2_to_int8
 TensorIntrin.register(
     LOP3_FAST_DECODE_INT2_TO_INT8_TO_INT8_L16_INTRIN,
     *get_fast_decode_intrin(
-        source_bit=2, storage_dtype="int8", target_dtype="int8", loops_extent=16),
+        source_bit=2, source_format="int", storage_dtype="int8", target_dtype="int8", loops_extent=16),
 )
 
 LOP3_FAST_DECODE_UINT1_TO_INT8_TO_INT8_L16_INTRIN = ("lop3_fast_decode_u1_to_int8_to_i8_l16_")
