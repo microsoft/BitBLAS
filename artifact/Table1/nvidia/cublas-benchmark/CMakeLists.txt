@@ -1,9 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
 
-if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-    set(CMAKE_CUDA_ARCHITECTURES 86)
-endif()
-
 project(Cuda_Gemm C CXX CUDA)
 
 # Sets the possible install locations
