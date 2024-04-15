@@ -100,7 +100,7 @@ def test_correctness_weight_only_dequantize(
         linear_bitblas.bitblas_matmul.bit,
     )
 
-    maxq = 2**(bit - 1) - 1
+    maxq = 2**(bit - 1)
     zeros = maxq
     if source_format == "uint":
         inputs.append(torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda())

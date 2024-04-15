@@ -161,7 +161,7 @@ def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
     inputs = []
     inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda() - 0.5)
     source_format, bit = matmul.BITBLAS_TRICK_DTYPE_MAP[W_dtype]
-    maxq = 2**(bit - 1) - 1
+    maxq = 2**(bit - 1)
     zeros = maxq
     if source_format == "uint":
         inputs.append(torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda())
@@ -261,7 +261,7 @@ def test_matmul_transform_weight(
     output_shape = (M, N)
 
     _, bit = matmul.BITBLAS_TRICK_DTYPE_MAP[W_dtype]
-    maxq = 2**(bit - 1) - 1
+    maxq = 2**(bit - 1)
 
     input_tensor = torch.rand(input_shape, dtype=torch.float16).cuda()
     intweight_tensor = torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda()

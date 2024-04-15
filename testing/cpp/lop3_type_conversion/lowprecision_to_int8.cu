@@ -284,7 +284,7 @@ TEST(DecodeTest, DecodeInt1ToINT8)
     cudaCheckLastError(cudaFree(decoded_gpu));
     for (int i = 0; i < N; i++)
     {
-        EXPECT_EQ(in_data[i], int(decoded[i]));
+        EXPECT_EQ(2 * in_data[i] - 1, int(decoded[i]));
     }
     free(ins);
     free(interleaved);
