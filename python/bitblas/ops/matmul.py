@@ -5,15 +5,15 @@ import numpy as np
 from tvm.target import Target
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from typing import List, Union, Optional, Any, Tuple
-from .operator import Operator
+from .operator import Operator, TransformKind
 from .impl.matmul_impl import select_implementation
-from ..base.utils import get_rasterization_code
-from bitblas.utils import match_global_kernel, tensor_replace_dp4a
+from bitblas.utils import tensor_replace_dp4a
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 
 
 class TransformExecutorCPU:
+
     def __init__(self, operators: Optional[List[Operator]] = None):
         if operators is None:
             operators = []
@@ -49,46 +49,67 @@ class MatmulConfig:
     out_dtype: str = "float16"
     accum_dtype: str = "float16"
     with_bias: bool = False
+    # layout of matrix A and B
+    # "nn": C[i, j] = A[i, k] * B[k, j]
+    # "nt": C[i, j] = A[i, k] * B[j, k]
     layout: str = "nt"
-    propagate_a: bool = False
-    propagate_b: bool = False
+    # weight transformation kind of matrix A
+    propagate_a: TransformKind = TransformKind.NonTransform
+    # weight transformation kind of matrix B
+    propagate_b: TransformKind = TransformKind.NonTransform
 
     def __post_init__(self):
         # set M to tuple if it is list
         # otherwise, M is not hashable
-        object.__setattr__(
-            self, "M", tuple(self.M) if isinstance(self.M, list) else self.M
-        )
+        object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
+        if isinstance(self.propagate_a, bool):
+            object.__setattr__(
+                self,
+                "propagate_a",
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_a else TransformKind.NonTransform),
+            )
+        elif isinstance(self.propagate_a, int):
+            object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
+
+        if isinstance(self.propagate_b, bool):
+            object.__setattr__(
+                self,
+                "propagate_b",
+                (TransformKind.IntraWarpTransform
+                 if self.propagate_b else TransformKind.NonTransform),
+            )
+        elif isinstance(self.propagate_b, int):
+            object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
 
 
 class Matmul(Operator):
+
     def __init__(
         self,
         config: MatmulConfig,
         name: str = "matmul",
-        target: Target = tvm.target.Target("cuda"),
+        target: Union[str, Target] = "cuda",
+        enable_tuning: bool = False,
     ):
-        super().__init__(name, target)
-        self.config = config
+        super().__init__(name, config, target)
         target = self.target
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
 
-        prim_func_mod = self._select_implementation()
-        self.prim_func_mod = prim_func_mod
-        self.optimized_func = self.apply_default_schedule(prim_func_mod, target)
+        self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
-            self.update_func(
-                self.prim_func.with_attrs({"opt_shapes": self.dynamic_range})
-            )
+            self.update_func(self.prim_func.with_attrs({"opt_shapes": self.dynamic_range}))
         else:
             self.dynamic_range = None
 
         self._build_runtime_module(target)
 
         if self.propagate_a:
+            assert (self.propagate_a is
+                    TransformKind.NonTransform), "Currently only support NonTransform for input"
             ladder_permutate_config = LadderPermutateConfig(
                 M=self.M,
                 N=self.K,
@@ -96,7 +117,7 @@ class Matmul(Operator):
                 storage_dtype=self.in_dtype,
                 propagate_kind="A",
                 transpose_matrix=False,
-                transform_kind=2,
+                transform_kind=self.propagate_a,
             )
             self.ladder_permutate_a = LadderPermutate(
                 config=ladder_permutate_config,
@@ -112,8 +133,8 @@ class Matmul(Operator):
                 datatype=self.in_dtype,
                 storage_dtype=self.in_dtype,
                 propagate_kind="B",
-                transpose_matrix=True if self.layout == "nt" else False,
-                transform_kind=2,
+                transpose_matrix=(self.layout == "nt"),
+                transform_kind=self.propagate_b,
             )
             self.ladder_permutate_b = LadderPermutate(
                 config=ladder_permutate_config,
@@ -134,6 +155,9 @@ class Matmul(Operator):
 
         self.weight_executors = weight_executors
 
+        if enable_tuning:
+            self.hardware_aware_finetune()
+
     def _select_implementation(self):
         return select_implementation(
             M=self.M,
@@ -149,11 +173,6 @@ class Matmul(Operator):
         )
 
     def post_process(self, code: str) -> str:
-        index = code.index("{", match_global_kernel(code))
-        # some tricky judge to decide whether to insert rasterization code
-        if self.N * self.K > 10**6:
-            rasterization_code = get_rasterization_code(10)
-            code = code[: index + 2] + rasterization_code + code[index + 2 :]
         code = tensor_replace_dp4a(code)
         return code
 
@@ -181,17 +200,25 @@ class Matmul(Operator):
                 arg = func.buffer_map[param]
                 profile_tensors.append(
                     tvm.nd.array(
-                        np.random.uniform(
-                            0, 1, [var_warpper(i, m) for i in arg.shape]
-                        ).astype(arg.dtype),
+                        np.random.uniform(0, 1,
+                                          [var_warpper(i, m) for i in arg.shape]).astype(arg.dtype),
                         device=device,
-                    )
-                )
+                    ))
             self.profile_tensors = profile_tensors
             latency = self.time_evaluator(*profile_tensors).mean * 1e3
             benchmark_latencies.append({"m": m, "latency": latency})
         # ms
         return benchmark_latencies
+
+    def forward(self, *args) -> Any:
+        if self.lib is None:
+            self._forward_from_torch_func(*args)
+        dynamic_symbolic = []
+        if self.dynamic_range is not None:
+            # assume we only have one dynamic range
+            m = args[0].shape[0]
+            dynamic_symbolic.append(m)
+        self._forward_from_prebuild_lib(*args, *dynamic_symbolic)
 
     @property
     def M(self):

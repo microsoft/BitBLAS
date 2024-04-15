@@ -1,8 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
 from tvm.target import Target
-from typing import List, Union, Literal
+from typing import Literal, Union
 from .operator import Operator
 from .impl.ladder_permutate_impl import select_implementation
 from dataclasses import dataclass
@@ -24,22 +23,22 @@ class LadderPermutateConfig:
 
 
 class LadderPermutate(Operator):
+
     def __init__(
         self,
         config: LadderPermutateConfig,
         name: str = "permutate",
-        target: Target = tvm.target.Target("llvm"),  # assume to do permutation on gpu.
+        target: Union[str, Target] = "llvm",  # assume to do permutation on cpu.
+        enable_tuning: bool = False,
     ):
         # consider to warp the arguments to MatmulConfig
-        super().__init__(name, target)
-        self.config = config
+        super().__init__(name, config, target)
 
-        if target.kind.name != "llvm":
-            raise ValueError("Currently only support llvm target for Permutation")
-
-        prim_func_mod = self._select_implementation()
-        self.prim_func_mod = prim_func_mod
-        self.target = target
+        target = self.target
+        if target.kind.name == "cuda":
+            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
+            if enable_tuning:
+                self.hardware_aware_finetune()
         self._build_runtime_module(target)
 
     # select implementation based on the Operator config

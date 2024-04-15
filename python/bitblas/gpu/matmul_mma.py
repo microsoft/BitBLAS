@@ -28,7 +28,8 @@ from .matmul_analysis import (
 )
 
 
-def get_index_map_3d(index_map, l=16, r=16):
+def get_index_map_3d(index_map, l=16, r=16):  # noqa: E741
+
     def index_map_3d(b, i, j):
         return (
             b,
@@ -56,7 +57,7 @@ def get_index_map_5d(index_map):
     return index_map_5d
 
 
-def get_warp_index_map(index_map, l=16, r=16, is_5d=False):
+def get_warp_index_map(index_map, l=16, r=16, is_5d=False):  # noqa: E741
     if is_5d:
         return get_index_map_5d(index_map)
     return get_index_map_3d(index_map, l, r)
@@ -74,6 +75,9 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         target: Target,
         _: bool,
     ) -> Optional[tir.Schedule]:
+        if "dequantize_info" in func.attrs:
+            dequantize_rule = MatmulTensorizationMMAWithDequantizeInfo()
+            return dequantize_rule.apply(func, target, False)
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
         blocks = sch.get_child_blocks(root_block)
@@ -114,8 +118,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
         # Tensorization by hardware intrinsics
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
-            get_mma_intrin_group,
-            shared_16x16_to_mma_32x8_layout,
+            get_mma_intrin_group, shared_16x16_to_mma_32x8_layout,
         )
 
         # tile size
@@ -129,7 +132,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         thread_z, thread_y, thread_x = 2, 2, 32
 
         vector_size = 8
-        unroll_depth = 4
+        unroll_depth = 4  # noqa: F841
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]
         block = sch.reindex(main_block, ("read", 0))
@@ -193,33 +196,24 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         sch.bind(j2, "threadIdx.y")
 
         # Step 4. Read/write to shared mem and register
-        def fetch_input(
-            block_outer, read_buffer_idx, tensor_name: Literal["A", "B"], is_transpose
-        ):
+        def fetch_input(block_outer, read_buffer_idx, tensor_name: Literal["A", "B"], is_transpose):
             # 1) Read to shared memory
             block_read_smem = sch.cache_read(block_outer, read_buffer_idx, "shared.dyn")
             sch.compute_at(block_read_smem, k0)
-            auto_inline_producers(
-                sch, block_read_smem, [dequantize_block] if dequantize_block else []
-            )
+            auto_inline_producers(sch, block_read_smem,
+                                  [dequantize_block] if dequantize_block else [])
 
             # For transposed read, we directly load transposed tensor from global
             # Then use ldmatrix.trans to handle transpose later
-            if (tensor_name == "A" and is_transpose) or (
-                tensor_name == "B" and not is_transpose
-            ):
+            if (tensor_name == "A" and is_transpose) or (tensor_name == "B" and not is_transpose):
                 # specifical handle transpose read (for NN matmul or TT matmul)
                 v0, v1 = sch.get_loops(block_read_smem)[-2:]
                 sch.reorder(v1, v0)
-                sch.transform_layout(
-                    block_read_smem, ("write", 0), lambda b, i, j: (b, j, i)
-                )
+                sch.transform_layout(block_read_smem, ("write", 0), lambda b, i, j: (b, j, i))
 
             # bind loops
             fused = sch.fuse(*sch.get_loops(block_read_smem)[-2:])
-            f0, f1, f2, f3, f4 = sch.split(
-                fused, [None, thread_z, thread_y, thread_x, vector_size]
-            )
+            f0, f1, f2, f3, f4 = sch.split(fused, [None, thread_z, thread_y, thread_x, vector_size])
             sch.bind(f1, "threadIdx.z")
             sch.bind(f2, "threadIdx.y")
             sch.bind(f3, "threadIdx.x")
@@ -234,17 +228,11 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
             # bind_loops
             micro_size_spatial = micro_size_m if tensor_name == "A" else micro_size_n
-            micro_size_1, micro_size_2 = (
-                (micro_size_spatial, micro_size_k)
-                if not is_transpose
-                else (micro_size_k, micro_size_spatial)
-            )
-            v00, v01 = sch.split(
-                sch.get_loops(block_read_reg)[-2], [None, micro_size_1]
-            )
-            v10, v11 = sch.split(
-                sch.get_loops(block_read_reg)[-1], [None, micro_size_2]
-            )
+            micro_size_1, micro_size_2 = ((micro_size_spatial,
+                                           micro_size_k) if not is_transpose else
+                                          (micro_size_k, micro_size_spatial))
+            v00, v01 = sch.split(sch.get_loops(block_read_reg)[-2], [None, micro_size_1])
+            v10, v11 = sch.split(sch.get_loops(block_read_reg)[-1], [None, micro_size_2])
             sch.reorder(v00, v10, v01, v11)
 
             # reorder read axis to match the layout of ldmatrix
@@ -255,9 +243,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
                     v0,
                     v1 // micro_size_1,
                     v2 // micro_size_2,
-                    *shared_16x16_to_mma_32x8_layout(
-                        v1 % micro_size_1, v2 % micro_size_2
-                    ),
+                    *shared_16x16_to_mma_32x8_layout(v1 % micro_size_1, v2 % micro_size_2),
                 ),
             )
 
@@ -267,19 +253,13 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
             return block_read_smem, block_read_reg
 
-        block_read_a, block_read_reg_a = fetch_input(
-            block_outer, 0, "A", is_transpose_a
-        )
-        block_read_b, block_read_reg_b = fetch_input(
-            block_outer, 1, "B", is_transpose_b
-        )
+        block_read_a, block_read_reg_a = fetch_input(block_outer, 0, "A", is_transpose_a)
+        block_read_b, block_read_reg_b = fetch_input(block_outer, 1, "B", is_transpose_b)
 
         # Write to register, and then smem
         def store_output(block_outer, write_buffer_idx):
             # 1) Write to shared memory
-            block_write_smem = sch.cache_write(
-                block_outer, write_buffer_idx, "shared.dyn"
-            )
+            block_write_smem = sch.cache_write(block_outer, write_buffer_idx, "shared.dyn")
             sch.reverse_compute_at(block_write_smem, block_axis)
             auto_inline_consumer_chain(sch, block_write_smem)
 
@@ -308,9 +288,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
                     v0,
                     v1 // micro_size_m,
                     v2 // micro_size_n,
-                    *shared_16x16_to_mma_32x8_layout(
-                        v1 % micro_size_m, v2 % micro_size_n
-                    ),
+                    *shared_16x16_to_mma_32x8_layout(v1 % micro_size_m, v2 % micro_size_n),
                 ),
             )
 
@@ -366,8 +344,9 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             return dequantize_rule.apply_config(func, config)
 
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
-            get_mma_intrin_group,
-        )
+            get_mma_intrin_group,)
+
+        import_source: List[str] = []
 
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
@@ -381,10 +360,6 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             return None
 
         main_block = reduction_blocks[0]
-        
-        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
-        if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
-            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
 
         output_blocks = [sch.get(block) for block in sch.get_output_blocks(root_block)]
 
@@ -413,20 +388,6 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
         if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
-            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
-
-        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
-        if not (
-            func.attrs is not None
-            and "dlight.tensorcore_prenormlized" in func.attrs.keys()
-        ):
-            sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
-
-        # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
-        if not (
-            func.attrs is not None
-            and "dlight.tensorcore_prenormlized" in func.attrs.keys()
-        ):
             sch = normalize_to_matmul(sch, main_block, ["a", "a", "a"])
 
         shared_scope = config.shared_scope
@@ -460,8 +421,8 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         micro_size_x, micro_size_y, micro_size_k = intrin_group["micro_kernel"]
 
         # get the axis for layout transform
-        def get_axis(l, r, trans):
-            return (r, l) if trans else (l, r)
+        def get_axis(l, r, trans):  # noqa: E741
+            return (r, l) if trans else (l, r)  # noqa: E741
 
         a_lr = get_axis(micro_size_x, micro_size_k, intrin_info.trans_a)
         b_lr = get_axis(micro_size_k, micro_size_y, intrin_info.trans_b)
@@ -473,8 +434,8 @@ class MatmulTensorizationMMA(GPUScheduleRule):
                 return not smooth
             return False
 
-        can_swizzle_a = can_enable_swizzle(intrin_info.in_dtype, intrin_info.smooth_a)
-        can_swizzle_b = can_enable_swizzle(intrin_info.in_dtype, intrin_info.smooth_b)
+        can_swizzle_a = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_a)
+        can_swizzle_b = can_enable_swizzle(intrin_info.in_dtype, intrin_info.inter_transform_b)
 
         warp_size = 32
 
@@ -527,32 +488,14 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         thread_idy = i2
         thread_idz = j2
 
-        # plan rasteration
-        if (
-            not isinstance(config.rasterization_plan, NoRasterization)
-            and sch.get(batch).extent.value == 1
-        ):
-            device_func, invoke_func = config.rasterization_plan.get_code()
-            factor = config.rasterization_plan.panel_width_
-
-            # TODO(lei): this is a trick for rasterization implementation
-            # is not optimal. (5% performance loss)
-            # require a solution for general block rasterization
-            factor = 8  # should be divisible by block_idx
-            if sch.get(block_idx).extent.value % factor == 0:
-                block_k, block_idx = sch.split(block_idx, factors=[None, factor])
-                sch.reorder(block_k, block_idy, block_idx)
-                sch.bind(block_k, "blockIdx.z")
-        else:
-            sch.bind(batch, "blockIdx.z")
-
+        sch.bind(batch, "blockIdx.z")
         sch.bind(block_idx, "blockIdx.x")
         sch.bind(block_idy, "blockIdx.y")
         sch.bind(thread_idy, "threadIdx.y")
         sch.bind(thread_idz, "threadIdx.z")
 
         # rewrite smooth layout of shared memory
-        def smooth_smem_layout_rewrite(block, scope, l=16, r=16, enable=True):
+        def smooth_smem_layout_rewrite(block, scope, l=16, r=16, enable=True):  # noqa: E741
             if not enable:
                 return
             sch.transform_layout(
@@ -568,24 +511,19 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             )
 
         smooth_smem_layout_rewrite(
-            block_outer, ("read", 0), *a_lr, enable=intrin_info.smooth_a
-        )
+            block_outer, ("read", 0), *a_lr, enable=intrin_info.inter_transform_a)
         smooth_smem_layout_rewrite(
-            block_outer, ("read", 1), *b_lr, enable=intrin_info.smooth_b
-        )
+            block_outer, ("read", 1), *b_lr, enable=intrin_info.inter_transform_b)
         smooth_smem_layout_rewrite(block_outer, ("write", 0), enable=True)
 
-        def fetch_to_shared(
-            block, idx, vec_len, can_swizzle=False, is_smooth=False, trans=False
-        ):
+        def fetch_to_shared(block, idx, vec_len, can_swizzle=False, is_smooth=False, trans=False):
             block_read = sch.cache_read(block, idx, shared_scope)
             sch.compute_at(block_read, k0, preserve_unit_loops=True)
             ndim = len(sch.get(block_read).iter_vars)
             fused = sch.fuse(*sch.get_loops(block_read)[-ndim:])
 
             f_0, f_1, f_2, f_3, f_4 = sch.split(
-                fused, factors=[num_ty, num_tz, None, warp_size, vec_len]
-            )
+                fused, factors=[num_ty, num_tz, None, warp_size, vec_len])
 
             sch.bind(f_3, "threadIdx.x")
             sch.bind(f_1, "threadIdx.z")
@@ -622,9 +560,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         )
 
         # rewrite global smooth layout
-        def smooth_gmem_layout_rewrite(
-            sch, block, enable=True, trans=False, matrix_name="A"
-        ):
+        def smooth_gmem_layout_rewrite(sch, block, enable=True, trans=False, matrix_name="A"):
             if not enable:
                 return
             # step1: find the first producer block
@@ -633,10 +569,11 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             # read and write buffer
             producers = _collect_producers(sch, block)
             g2s_block = a_g2s if matrix_name == "A" else b_g2s
-            propagate_block: tir.Block = producers[-1] if len(producers) > 0 else g2s_block
+            propagate_block: tir.Block = (producers[-1] if len(producers) > 0 else g2s_block)
 
             # step2: transform the layout with inverse permutation
-            _, inverse_indexmap = get_propagate_map(trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name)
+            intra_indexmap, _ = get_propagate_map(
+                trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name)
 
             def inverse_permutation(i, j, ii, jj):
                 return (i, j, *intra_indexmap.map_indices([ii, jj]))
@@ -644,11 +581,9 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             sch.transform_layout(propagate_block, ("read", 0), inverse_permutation)
 
         smooth_gmem_layout_rewrite(
-            sch, a_g2s, intrin_info.smooth_a, intrin_info.trans_a, matrix_name="A"
-        )
+            sch, a_g2s, intrin_info.smooth_a, intrin_info.trans_a, matrix_name="A")
         smooth_gmem_layout_rewrite(
-            sch, b_g2s, intrin_info.smooth_b, intrin_info.trans_b, matrix_name="B"
-        )
+            sch, b_g2s, intrin_info.smooth_b, intrin_info.trans_b, matrix_name="B")
         auto_inline_producers(sch, a_g2s)
         auto_inline_producers(sch, b_g2s)
 
@@ -697,12 +632,12 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         sch.transform_layout(
             A_mat,
             ("write", 0),
-            get_warp_index_map(index_map_a, *a_lr, intrin_info.smooth_a),
+            get_warp_index_map(index_map_a, *a_lr, intrin_info.inter_transform_a),
         )
         sch.transform_layout(
             B_mat,
             ("write", 0),
-            get_warp_index_map(index_map_b, *b_lr, intrin_info.smooth_b),
+            get_warp_index_map(index_map_b, *b_lr, intrin_info.inter_transform_b),
         )
         sch.transform_layout(
             store,
@@ -734,11 +669,24 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         tensorize_init_store_compute()
 
         if stage > 1:
-            sch.annotate(
-                k0, ann_key="software_pipeline_stage", ann_val=[0, 0, stage - 1]
-            )
+            sch.annotate(k0, ann_key="software_pipeline_stage", ann_val=[0, 0, stage - 1])
             sch.annotate(k0, ann_key="software_pipeline_order", ann_val=[0, 1, 2])
         if use_async:
             sch.annotate(k0, "software_pipeline_async_stages", [0])
 
+        # plan rasteration
+        if not isinstance(config.rasterization_plan, NoRasterization):
+            device_func, invoke_func = config.rasterization_plan.get_code()
+            import_source.append(device_func)
+            sch.annotate(
+                sch.get_loops(block_init_c)[-2],
+                ann_key="inject_customized_code_prepend",
+                ann_val=invoke_func)
+        # plan import source
+        if len(import_source) > 0:
+            sch.annotate(
+                thread_idz,
+                ann_key="pragma_import_c",
+                ann_val=("\n").join(import_source),
+            )
         return sch

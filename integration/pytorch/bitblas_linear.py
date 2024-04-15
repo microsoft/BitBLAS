@@ -7,11 +7,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+from typing import List, Union, Literal, Optional
 
 logger = getLogger(__name__)
 
 try:
-    import bitblas
+    import bitblas  # noqa: F401
 except ImportError as e:
     bitblas_import_exception = e
 
@@ -22,18 +23,17 @@ except ImportError as e:
 
     autogptq_bitblas_cuda = bitblas_import_exception
 
-from bitblas.utils import get_target_from_env
-from bitblas.ops.matmul import MatmulConfig, Matmul
-from typing import List, Union, Literal, Optional
+from bitblas.utils import auto_detect_nvidia_target  # noqa: E402
+from bitblas.ops.matmul import MatmulConfig, Matmul  # noqa: E402
 
 
 class Linear(nn.Module):
 
     def __init__(
         self,
-        infeatures: int,
-        outfeatures: int,
-        opt_features: Union[int, List[int]] = 1,
+        in_features: int,
+        out_features: int,
+        opt_M: Union[int, List[int]] = 1,
         bias: bool = False,
         dtype: torch.dtype = torch.float16,
         propagate_a: bool = False,
@@ -44,7 +44,7 @@ class Linear(nn.Module):
         target: Optional[str] = None,
     ):
         """
-        @opt_features: optimze range of the input shape for dynamic symbolic
+        @opt_M: optimize range of the input shape for dynamic symbolic
         if the input shape is a range, we will optimize the matmul with dynamic symbolic.
         if the input shape is int, we will optimize the matmul with static symbolic.
         """
@@ -52,16 +52,16 @@ class Linear(nn.Module):
         if trainable:
             raise NotImplementedError("Bitblas does not support train.")
 
-        self.infeatures = infeatures
-        self.outfeatures = outfeatures
-        self.opt_features = opt_features
+        self.in_features = in_features
+        self.out_features = out_features
+        self.opt_M = opt_M
         self.dtype = dtype
         self.propagate_a = propagate_a
         self.propagate_b = propagate_b
         self.enable_tuning = enable_tuning
-        self.weight = nn.Parameter(torch.empty((outfeatures, infeatures), dtype=dtype))
+        self.weight = nn.Parameter(torch.empty((out_features, in_features), dtype=dtype))
         if bias:
-            self.bias = nn.Parameter(torch.empty(outfeatures, dtype=dtype))
+            self.bias = nn.Parameter(torch.empty(out_features, dtype=dtype))
         else:
             self.register_parameter("bias", None)
 
@@ -73,11 +73,11 @@ class Linear(nn.Module):
         assert dtype in BITBLAS_DTYPES, f"Unsupported dtype: {dtype}"
 
         bitblas_dtype = BITBLAS_DTYPES[dtype]
-        self.target = target or get_target_from_env()
+        self.target = target or auto_detect_nvidia_target()
         matmul_config = MatmulConfig(
-            M=self.opt_features,
-            N=self.outfeatures,
-            K=self.infeatures,
+            M=self.opt_M,
+            N=self.out_features,
+            K=self.in_features,
             in_dtype=bitblas_dtype,
             out_dtype=bitblas_dtype,
             accum_dtype="int32" if bitblas_dtype == "int8" else bitblas_dtype,
@@ -104,22 +104,21 @@ class Linear(nn.Module):
             if self.bias is not None:
                 self.bias.uniform_(-stdv, stdv)
 
-    def forward(self, A, Output=None):
+    def forward(self, A, output=None):
         args = [
             A,
             self.weight,
         ]
         if self.bias is not None:
             args.append(self.bias)
-        if Output is None:
-            Output = torch.empty(
-                A.shape[:-1] + (self.outfeatures,), dtype=A.dtype, device=A.device
-            )
-        args.append(Output)
+        if output is None:
+            output = torch.empty(
+                A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
+        args.append(output)
 
         self.bitblas_matmul(*args)
 
-        return Output
+        return output
 
 
 __all__ = ["Linear"]

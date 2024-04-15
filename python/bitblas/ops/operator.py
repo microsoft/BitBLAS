@@ -6,27 +6,45 @@ from tvm import IRModule
 from tvm.target import Target
 from tvm.tir import PrimFunc
 from tvm.contrib.dlpack import to_pytorch_func
+from tvm._ffi.base import _LIB, raise_last_ffi_error
+from tvm._ffi._ctypes.types import TVMValue, ArgTypeCode
 import bitblas
-from typing import List, Dict, Any
+import ctypes
+from typing import List, Dict, Any, Optional
 import numpy as np
 from ..base import fast_tune, fast_tune_with_dynamic_range
 from copy import deepcopy
 from bitblas.base.roller.arch import get_arch
-from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
-import torch
+from bitblas.wrapper import CUDASourceWrapper, CUDASourceWrapperWithDynamic
+from dataclasses import dataclass
+from enum import IntEnum
+import logging
 
+logger = logging.getLogger(__name__)
+
+
+class TransformKind(IntEnum):
+    NonTransform = 0
+    InterWarpTransform = 1
+    IntraWarpTransform = 2
+
+
+@dataclass
 class OperatorConfig:
     """Base class for operator configurations. Used for typing."""
+
     pass
 
 
 class Operator(ABC):
-    def __init__(self, name, target: Target = None):
+
+    def __init__(self, name, config: OperatorConfig, target: Target = None):
         if isinstance(target, str):
             target = Target(target)
         self.name = name
+        self.config = config
         self.target = target
-        self.prim_func_mod = None
+        self.prim_func_mod = self._select_implementation()
         self.optimized_func = None
         self.rt_mod = None
         self.time_evaluator = None
@@ -34,8 +52,16 @@ class Operator(ABC):
         self.arch = get_arch(target) if target else None
         self.dynamic_range = None
         self.pass_context: Dict = {}
+        self.num_args = len(self.prim_func.params)
+        self.function_handle = None
+        self.num_output_args: int = (
+            1  # todo(lei): should be analyzed from the prim_func.
+        )
+        self.wrapper = None
+        self.lib_name = None
+        self.lib = None
 
-    def codegen(self, target: Target = None) -> str:
+    def get_source(self, target: Target = None) -> str:
         if target is None:
             target = self.target
         if self.rt_mod is None:
@@ -73,13 +99,16 @@ class Operator(ABC):
 
             try:
                 # Use a specific TVM pass context for CUDA platforms
-                with tvm.transform.PassContext(config={"tir.use_async_copy": True, **self.pass_context}):
-                    rt_mod = tvm.build(
-                        self.optimized_func, target=target, name=self.name
-                    )
-            except Exception:
-                # Log the exception for debugging purposes. Replace 'print' with logging if necessary.
-                print(f"Failed to build optimized function for CUDA target")
+                with tvm.transform.PassContext(config={
+                        "tir.use_async_copy": True,
+                        **self.pass_context
+                }):
+                    rt_mod = tvm.build(self.optimized_func, target=target, name=self.name)
+            except Exception as e:
+                rt_build_error = e  # noqa
+                logger.debug(
+                    "Failed to build optimized function for CUDA target with default schedule, Please consider enable hardware aware tuning!"
+                )
         else:
             # For non-CUDA platforms or when no optimized function is available, build with the primary function
             rt_mod = tvm.build(self.prim_func, target=target, name=self.name)
@@ -89,9 +118,26 @@ class Operator(ABC):
             self.rt_mod = rt_mod
             # Initialize a time evaluator with the built module, specifying the device and the number of runs
             self.time_evaluator = rt_mod.time_evaluator(
-                rt_mod.entry_name, self.arch.device, number=10
-            )
+                rt_mod.entry_name, self.arch.device, number=10)
+            self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
             self.torch_func = to_pytorch_func(rt_mod)
+            if self.arch.platform == "CUDA":
+                try:
+                    if (self.dynamic_range is not None and len(self.optimized_func.functions) > 1):
+                        wrapper = CUDASourceWrapperWithDynamic(self.optimized_func,
+                                                               self.get_source(target), self.arch)
+                    else:
+                        wrapper = CUDASourceWrapper(self.optimized_func, self.get_source(target),
+                                                    self.arch)
+                    wrapper.compile_lib()
+                    self.wrapper = wrapper
+                    self.lib_name = self.wrapper.lib_name
+                    self.lib = self.wrapper.load_lib()
+                    self.lib.init()
+                except Exception as e:
+                    build_runtime_library_error = e
+                    logger.debug(
+                        "Failed to build runtime library {}".format(build_runtime_library_error))
 
         return rt_mod
 
@@ -105,8 +151,7 @@ class Operator(ABC):
                     bitblas.gpu.Reduction(),
                     bitblas.gpu.GeneralReduction(),
                     bitblas.gpu.Fallback(),
-                )(mod_for_opt)
-            )
+                )(mod_for_opt))
 
         if optimized_mod is not None:
             return optimized_mod
@@ -115,9 +160,11 @@ class Operator(ABC):
     def post_process(self, code: str) -> str:
         return code
 
-    def apply_fast_tuning(
-        self, func: PrimFunc, target: Target, topk: int = 20, parallel_build=True
-    ) -> IRModule:
+    def apply_fast_tuning(self,
+                          func: PrimFunc,
+                          target: Target,
+                          topk: int = 20,
+                          parallel_build=True) -> IRModule:
         _, best = fast_tune(func, target, topk=topk, parallel_build=parallel_build)
         if best is not None:
             return best.sch.mod
@@ -132,35 +179,37 @@ class Operator(ABC):
         dynamic_range: Dict[str, List[int]] = None,
     ):
         optimized_mod = fast_tune_with_dynamic_range(
-            func, target, topk=topk, parallel_build=True, dynamic_range=dynamic_range
-        )
+            func, target, topk=topk, parallel_build=True, dynamic_range=dynamic_range)
         if optimized_mod is not None:
             return optimized_mod
         return None
 
-    def hardware_aware_finetune(
-        self, topk: int = 20, target: tvm.target.Target = None, parallel_build=True
-    ):
+    def hardware_aware_finetune(self,
+                                topk: int = 20,
+                                target: tvm.target.Target = None,
+                                parallel_build=True):
         if target is None:
             target = self.target
         dynamic_range = self.dynamic_range
         func = self.prim_func
         if dynamic_range is not None:
             self.optimized_func = self.apply_fast_tuning_with_dynamic_range(
-                func, target, topk, dynamic_range
-            )
+                func, target, topk, dynamic_range)
         else:
             self.optimized_func = self.apply_fast_tuning(
-                func, target, topk, parallel_build=parallel_build
-            )
+                func, target, topk, parallel_build=parallel_build)
         self._build_runtime_module(self.target)
 
-    def get_profile_tensors(self):
+    def get_profile_tensors(self, dynamic_symbolic_constrains: Optional[Dict] = None):
+        if dynamic_symbolic_constrains is None:
+            dynamic_symbolic_constrains = {}
         func = self.prim_func
         device = self.arch.device
 
         def var_warpper(v):
             if isinstance(v, tvm.tir.Var):
+                if v.name in dynamic_symbolic_constrains:
+                    return dynamic_symbolic_constrains[v.name]
                 assert "opt_shapes" in func.attrs
                 assert v.name in func.attrs["opt_shapes"]
                 return func.attrs["opt_shapes"][v.name].value
@@ -177,25 +226,18 @@ class Operator(ABC):
             arg = func.buffer_map[param]
             profile_tensors.append(
                 tvm.nd.array(
-                    np.random.uniform(0, 1, [var_warpper(i) for i in arg.shape]).astype(
-                        arg.dtype
-                    ),
+                    np.random.uniform(0, 1, [var_warpper(i) for i in arg.shape]).astype(arg.dtype),
                     device=device,
-                )
-            )
+                ))
         self.profile_tensors = profile_tensors
         return profile_tensors
 
-    def profile_latency(self) -> str:
-        if self.dynamic_range is not None:
-            return self._profile_latency_with_dynamic_range()
-
-        profile_tensors = self.get_profile_tensors()
+    def profile_latency(self, dynamic_symbolic_constrains: Optional[Dict] = None) -> str:
+        if dynamic_symbolic_constrains is None:
+            dynamic_symbolic_constrains = {}
+        profile_tensors = self.get_profile_tensors(dynamic_symbolic_constrains)
         latency = self.time_evaluator(*profile_tensors).mean * 1e3
         return latency
-
-    def _profile_latency_with_dynamic_range(self) -> List:
-        raise NotImplementedError
 
     def _tensor_adapter(self, tensor, device):
         import torch
@@ -210,21 +252,54 @@ class Operator(ABC):
         else:
             raise RuntimeError("Not supported type: ", type(tensor))
 
-    def forward_from_torch(self, *args):
-        # convert tensor from torch to tvm
+    def _forward_from_tvm_args(self, *args):
         _tvm_args = [self._tensor_adapter(arg, self.arch.device) for arg in args]
         self.rt_mod(*_tvm_args)
-        return tvm_tensor_to_torch(_tvm_args[-1])
+
+    def _forward_from_torch_func(self, *args):
+        self.torch_func(*args)
+        return args[-1]
 
     def forward(self, *args):
-        # "Currently only support forward from torch tensor"
-        return self.torch_func(*args)
+        return self._forward_from_torch_func(*args)
 
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
-        return self.forward(*args, **kwds)
+    def _forward_from_prebuild_lib(self, *args):
+        ctypes_args = [
+            ctypes.c_void_p(arr.data_ptr()) if not isinstance(arr, int) else arr for arr in args
+        ]
+        self.lib.call(*ctypes_args)
+
+    def _forward_from_tvm_lib_func(self, values):
+        tcodes = (ctypes.c_int * self.num_args)()
+        ret_val = TVMValue()
+        ret_tcode = ctypes.c_int()
+        for i in range(self.num_args):
+            tcodes[i] = ArgTypeCode.NDARRAY_HANDLE
+        if (_LIB.TVMFuncCall(
+                self.function_handle,
+                values,
+                tcodes,
+                ctypes.c_int(self.num_args),
+                ctypes.byref(ret_val),
+                ctypes.byref(ret_tcode),
+        ) != 0):
+            raise_last_ffi_error()
+
+    def __call__(self, *args: Any) -> Any:
+        return self.forward(*args)
 
     def update_func(self, func: PrimFunc):
         self.prim_func_mod["main"] = func
+
+    def update_runtime_module(self, rt_mod, lib_name=None):
+        self.rt_mod = rt_mod
+        self.time_evaluator = rt_mod.time_evaluator(rt_mod.entry_name, self.arch.device, number=10)
+        self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
+        self.torch_func = to_pytorch_func(rt_mod)
+        if lib_name is not None:
+            self.lib_name = lib_name
+            self.lib = ctypes.CDLL(lib_name)
+            self.lib.init()
 
     @abstractmethod
     def _select_implementation(self) -> IRModule:

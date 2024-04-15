@@ -1,12 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
 from tvm.target import Target
-from typing import Literal
+from typing import Literal, Union
 from .operator import Operator
 from .impl.lop3_permutate_impl import select_implementation
 from dataclasses import dataclass
-from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 import torch
 
 
@@ -20,21 +18,19 @@ class LOP3PermutateConfig:
 
 
 class LOP3Permutate(Operator):
+
     def __init__(
-        self,
-        config: LOP3PermutateConfig,
-        name: str = "permutate",
-        target: Target = tvm.target.Target("llvm"),  # assume to do permutation on gpu.
+            self,
+            config: LOP3PermutateConfig,
+            name: str = "permutate",
+            target: Union[str, Target] = "llvm",  # assume to do permutation on cpu.
     ):
         # consider to warp the arguments to MatmulConfig
-        super().__init__(name, target)
-        self.config = config
+        super().__init__(name, config, target)
 
         if target.kind.name != "llvm":
             raise ValueError("Currently only support llvm target for Permutation")
 
-        prim_func_mod = self._select_implementation()
-        self.prim_func_mod = prim_func_mod
         self.target = target
         self._build_runtime_module(target)
 
@@ -46,11 +42,11 @@ class LOP3Permutate(Operator):
             dequantize_bits=self.dequantize_bits,
         )
 
-    def forward_from_torch(self, weight, res):
-        # reintepret the input tensor to int32 format
-        _tvm_args = [self._tensor_adapter(arg.view(torch.int32), self.arch.device) for arg in [weight, res]]
-        self.rt_mod(*_tvm_args)
-        return tvm_tensor_to_torch(_tvm_args[-1]).view(weight.dtype)
+    def forward(self, weight, res):
+        # reinterpret the input tensor to int32 format
+        args = [arg.view(torch.int32) for arg in [weight, res]]
+        self.torch_func(*args)
+        return args[-1].view(weight.dtype)
 
     @property
     def M(self):

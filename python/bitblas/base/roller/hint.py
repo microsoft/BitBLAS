@@ -1,11 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
-"""Config definition for schedule"""
-from typing import Dict, List, Optional, Tuple
-from ..roller import PrimFuncNode
+"""Hint definition for schedule"""
+from typing import Dict, List, Tuple
+from . import PrimFuncNode
 import numpy as np
-
+from .rasterization import *
 
 class TensorCoreExtraConfig:
     """
@@ -62,7 +61,7 @@ class Stride:
             strided_elem = original_shape
         else:
             assert self.ax < len(shape)
-            strided_elem = np.prod(shape[0 : self.ax + 1]) * self.stride
+            strided_elem = np.prod(shape[0:self.ax + 1]) * self.stride
             assert strided_elem >= original_shape
         return int(strided_elem)
 
@@ -107,7 +106,7 @@ class TileDict:
 
 class IntrinInfo:
     """
-    The information of tensorcore intrinsic related infomation
+    The information of tensorcore intrinsic related information
     """
 
     def __init__(
@@ -115,21 +114,37 @@ class IntrinInfo:
         in_dtype: str,
         out_dtype: str,
         trans_b: bool,
-        smooth_a: bool = False,
-        smooth_b: bool = False,
+        input_transform_kind: int = 0,
+        weight_transform_kind: int = 0,
     ) -> None:
         self.in_dtype = in_dtype
         self.out_dtype = out_dtype
         self.trans_a = False
         self.trans_b = trans_b
-        self.smooth_a = smooth_a
-        self.smooth_b = smooth_b
+        self.input_transform_kind = input_transform_kind
+        self.weight_transform_kind = weight_transform_kind
 
     def __repr__(self) -> str:
         return f"<IntrinInfo, {self.in_dtype}, {self.out_dtype}, {self.trans_b}, {self.propagate_b}>"
 
+    @property
+    def smooth_a(self) -> bool:
+        return self.input_transform_kind >= 2
 
-class Config(object):
+    @property
+    def smooth_b(self) -> bool:
+        return self.weight_transform_kind >= 2
+
+    @property
+    def inter_transform_a(self) -> bool:
+        return self.input_transform_kind >= 1
+
+    @property
+    def inter_transform_b(self) -> bool:
+        return self.weight_transform_kind >= 1
+
+
+class Hint(object):
     """
     Central configuration class for managing various parameters of computational tasks.
     """
@@ -138,7 +153,7 @@ class Config(object):
         self.arch = None
         self.use_tc = None  # todo(lei): this should be renamed.
 
-        # spacial axes tiling info
+        # special axes tiling info
         self.block = []
         self.thread = []
         # special axes for tensorCore
@@ -146,7 +161,7 @@ class Config(object):
         # reduce axes tiling info
         self.rstep = []
         self.reduce_thread = []
-        self.rasterization_plan = None
+        self.rasterization_plan = NoRasterization()
         self.cached_tensors = []
         self.output_strides = {}
         self.schedule_stages = None
@@ -189,28 +204,10 @@ class Config(object):
             dic["vectorize"] = self.vectorize
         return dic
 
-    def from_dict(self, dic: Dict) -> "Config":
+    def from_dict(self, dic: Dict) -> "Hint":
         self.__init__()
-        if "use_tc" in dic:
-            self.use_tc = dic["use_tc"]
-        self.block = dic["block"]
-        if self.use_tc:
-            self.warp = dic["warp"]
-        else:
-            self.thread = dic["thread"]
-        self.rstep = dic["rstep"]
-        if "reduce_thread" in dic:
-            self.reduce_thread = dic["reduce_thread"]
-        else:
-            self.reduce_thread = [1 for _ in self.rstep]
-        if "strides" in dic:
-            self.output_strides = dic["strides"]
-        if "step" in dic:
-            self._step = dic["step"]
-        if "raxis_order" in dic:
-            self._raxis_order = dic["raxis_order"]
-        if "vectorize" in dic:
-            self.vectorize = dic["vectorize"]
+        for k, v in dic.items():
+            setattr(self, k, v)
         return self
 
     @property
@@ -228,7 +225,7 @@ class Config(object):
     def __repr__(self) -> str:
         return str(self.to_dict())
 
-    def complete_config(self, node:PrimFuncNode):
+    def complete_config(self, node: PrimFuncNode):
         # analysis pass context, for int8 mma, we should merge static shared memory
         merge_static_smem = False
         if self.use_tc and self.intrin_info.in_dtype == "int8":

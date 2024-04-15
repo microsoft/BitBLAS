@@ -1,16 +1,15 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import pytest
-import tvm
 import bitblas
 from bitblas.ops.matmul import Matmul, MatmulConfig
-from bitblas.utils import tvm_tensor_to_torch
+from bitblas.utils import auto_detect_nvidia_target
 
-target = tvm.target.Target("nvidia/nvidia-a100")
+target = auto_detect_nvidia_target()
 
 
 def get_codegen_result(ops, target):
-    code = ops.codegen(target=target)
+    code = ops.get_source(target=target)
     return code
 
 
@@ -143,6 +142,9 @@ def test_matmul_profile_latency(
     [
         (256, 256, 256, "float16", "float16", "float16", False, False, False, "nt"),
         (256, 256, 256, "float16", "float16", "float16", False, False, True, "nt"),
+        (256, 256, 256, "float16", "float16", "float16", False, False, 0, "nt"),
+        (256, 256, 256, "float16", "float16", "float16", False, False, 1, "nt"),
+        (256, 256, 256, "float16", "float16", "float16", False, False, 2, "nt"),
     ],
 )
 def test_matmul_torch_forward(
@@ -188,20 +190,17 @@ def test_matmul_torch_forward(
 
     permuted_inputs = []
     if matmul.input_transform is not None:
-        permuted_inputs.append(
-            matmul.input_transform(inputs[0].cpu())
-        ).cuda()
+        permuted_inputs.append(matmul.input_transform(inputs[0].cpu())).cuda()
     else:
         permuted_inputs.append(inputs[0])
     if matmul.weight_transform is not None:
-        permuted_inputs.append(
-            matmul.weight_transform(inputs[1].cpu()).cuda()
-        )
+        permuted_inputs.append(matmul.weight_transform(inputs[1].cpu()).cuda())
     else:
         permuted_inputs.append(inputs[1])
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
+
 
 # fmt: on
 

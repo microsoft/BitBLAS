@@ -7,7 +7,7 @@ from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.arch import CUDA
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.base.utils import apply_and_build
-from bitblas.ops.matmul_impl import matmul_nt, matmul_nt_dequantize_b
+from bitblas.ops.impl.matmul_impl import matmul_nt, matmul_nt_dequantize_b
 import numpy as np
 
 
@@ -19,7 +19,7 @@ def test_f16_f16_gemm():
     policy = DefaultPolicy(func=func, arch=arch)
     try:
         tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
-    except:
+    except Exception:
         tags = None
     if tags:
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
@@ -55,7 +55,7 @@ def test_f16_i4_gemm(M=1, N=16384, K=16384, bit=4, fast_decoding=True):
     policy = DefaultPolicy(func=func, arch=arch)
     try:
         tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
-    except:
+    except Exception:
         tags = None
     if tags:
         policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
