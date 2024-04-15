@@ -7,6 +7,7 @@ from tvm.tir import IndexMap
 from bitblas.ops.operator import TransformKind
 from bitblas.gpu.matmul_analysis import get_propagate_map
 from bitblas.quantization import (
+    _tir_packed_int_to_int_convert,
     _tir_packed_to_signed_convert,
     _tir_packed_to_unsigned_convert,
     _tir_u32_to_f4_to_f16,
@@ -76,8 +77,13 @@ def matmul_nt_dequantize_b(
             w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
         elif source_format == "int":
-            w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
-                bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
+            if bit == 1:
+                # Dequantize int1 to -1 and 1. Without this step, the values would be 0 and 1, identical to uint1.
+                w = _tir_packed_int_to_int_convert(storage_type, storage_nbit)(
+                    bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
+            else:
+                w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
+                    bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
         elif source_format == "fp":
             w = _tir_u32_to_f4_to_f16(
                 bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
@@ -91,6 +97,8 @@ def matmul_nt_dequantize_b(
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
 
+            
+            
         if not with_scaling:
             return w
 
@@ -236,12 +244,17 @@ def matmul_nt_dequantize_b_propagate_b(
                 dtype=in_dtype,
             )
         elif source_format == "int":
-            w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
-                bit,
-                B_reindex[n, k // n_float_per_elem],
-                k % n_float_per_elem,
-                dtype=in_dtype,
-            )
+            if bit == 1:
+                # Dequantize int1 to -1 and 1. Without this step, the values would be 0 and 1, identical to uint1.
+                w = _tir_packed_int_to_int_convert(storage_type, storage_nbit)(
+                    bit, B_reindex[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
+            else:
+                w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
+                    bit,
+                    B_reindex[n, k // n_float_per_elem],
+                    k % n_float_per_elem,
+                    dtype=in_dtype,
+                )
         elif source_format == "fp":
             w = _tir_u32_to_f4_to_f16(
                 bit,
@@ -417,12 +430,17 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
                 dtype=in_dtype,
             )
         elif source_format == "int":
-            w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
-                bit,
-                B_reindex[n, k // n_float_per_elem],
-                k % n_float_per_elem,
-                dtype=in_dtype,
-            )
+            # Dequantize int1 to -1 and 1. Without this step, the values would be 0 and 1, identical to uint1.
+            if bit == 1:
+                w = _tir_packed_int_to_int_convert(storage_type, storage_nbit)(
+                    bit, B_reindex[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
+            else:
+                w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
+                    bit,
+                    B_reindex[n, k // n_float_per_elem],
+                    k % n_float_per_elem,
+                    dtype=in_dtype,
+                )
         elif source_format == "fp":
             w = _tir_u32_to_f4_to_f16(
                 bit,

@@ -371,7 +371,7 @@ class Matmul(Operator):
         if source_format == "int":
             assert not self.with_scaling, "scale should be False for int source format"
             assert not self.with_zeros, "zeros should be False for int source format"
-            maxq = 2**(bit - 1) - 1
+            maxq = 2**(bit - 1)
             # Clamp weight values to be within the quantizable range and adjust
             weight = torch.clamp(weight, -maxq, maxq).int() + maxq
         else:

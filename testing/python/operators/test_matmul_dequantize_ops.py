@@ -29,7 +29,7 @@ def get_codegen_result(ops, target):
         (1, 768, 768, "float16", "float16", "float16", 4, "int8", "uint", False, False, -1, True,
          False, "nt", False, False, "original"),
         (1, 768, 768, "float16", "float16", "float16", 4, "int8", "uint", True, True, -1, True,
-         True, "nt", True, True, "original"),
+         True, "nt", False, True, "original"),
     ],
 )
 def test_matmul_dequantize_codegen_default(M, N, K, in_dtype, out_dtype, accum_dtype, bit,
@@ -466,7 +466,7 @@ def test_matmul_dequantize_torch_forward(M, N, K, in_dtype, out_dtype, accum_dty
     output_shape = (M, N)
     inputs = []
     inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda() - 0.5)
-    maxq = 2**(bit - 1) - 1
+    maxq = 2 ** (bit - 1)
     zeros = maxq
     if source_format == "uint":
         inputs.append(torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda())

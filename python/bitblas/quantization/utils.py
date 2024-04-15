@@ -6,7 +6,7 @@ import torch.nn as nn
 
 
 def gen_quant4(k, n, groupsize=-1):
-    maxq = 2**4 - 1
+    maxq = 2**4
     w = torch.randn((k, n), dtype=torch.half, device="cpu")
 
     original_w = w.clone()
