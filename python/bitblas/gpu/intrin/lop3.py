@@ -391,7 +391,7 @@ __device__ void decode_i1u_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8)
 }
 
 template <typename T1, typename T2>
-__device__ void decode_i1u_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8)
+__device__ void decode_i1s_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
@@ -522,7 +522,6 @@ __device__ void decode_i1u_to_f16_scale_zeros_original(T1 *_i1u, T2 *B_local_dec
     decode_i1b_to_f16_zeros_original<T1, T2, T3, T4, false>(_i1u, B_local_decode, N, scale, zeros);
 }
 """
-
 decode_i1_to_f16_scale_zeros_rescale = """
 template <typename T1, typename T2, typename T3, typename T4, bool isSigned = false>
 __device__ void decode_i1b_to_f16_scale_zeros_rescale(T1 *_i1s, T2 *B_local_decode, const int N = 8, T3 *scale = nullptr, T4 *zeros = nullptr)
