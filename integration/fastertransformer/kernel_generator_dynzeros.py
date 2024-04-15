@@ -6,7 +6,7 @@ import os
 import tvm
 from tvm import IRModule
 from tvm.target import Target
-from bitblas.utils import match_global_kernel, get_target_from_env
+from bitblas.utils import match_global_kernel, auto_detect_nvidia_target
 from bitblas.base.analysis import get_reduction_blocks
 from bitblas.ops import Operator
 from bitblas.ops.matmul_dequantize import (
@@ -19,36 +19,33 @@ from bitblas.gpu.intrin.lop3 import (
     decode_i4_to_f16,
     decode_i4_to_f16_scale,
 )
+
 bit = 2
 mask = (1 << bit) - 1
 group_size = 128
-
 
 ft_shapes = [
     [1, 15360, 5120],
     [128, 15360, 5120],
 ]
 
-
-target = tvm.target.Target(get_target_from_env())
+target = tvm.target.Target(auto_detect_nvidia_target())
 
 
 def get_template_path():
     cur_dir = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(
-        cur_dir, f"template/kernel_template.int{bit}.bitblas.cu.template"
-    )
+    return os.path.join(cur_dir, f"template/kernel_template.int{bit}.bitblas.cu.template")
 
 
 template_path = get_template_path()
 
 
 def get_codegen_result(ops: Operator, target: Target):
-    code = ops.codegen(target=target)
+    code = ops.get_source(target=target)
     return code
 
 
-def get_thread_block_infomation(mod: IRModule):
+def get_thread_block_information(mod: IRModule):
     sch = tvm.tir.Schedule(mod)
     root_block = sch.get_block("root")
     child_blocks = sch.get_child_blocks(root_block)
@@ -77,6 +74,7 @@ def get_thread_block_infomation(mod: IRModule):
         elif thread_binding.thread_tag == "blockIdx.z":
             grid_info[2] = extent
     return block_info, grid_info
+
 
 kernel_body = ""
 kernel_call = ""
@@ -113,14 +111,12 @@ for M, N, K in ft_shapes:
     index = code.index("{", index)
 
     function_body = declarations + code[index:]
-    # get block infomation from mod
-    block_size, grid_size = get_thread_block_infomation(matmul.optimized_func)
+    # get block information from mod
+    block_size, grid_size = get_thread_block_information(matmul.optimized_func)
     if M != 1 and block_size[0] == 1:
         block_size[0] = 32
 
-    new_kernel_name = (
-        f"bitblas_kernel_fp16_int{bit}_fp16_m{M}n{N}k{K}_nt"
-    )
+    new_kernel_name = (f"bitblas_kernel_fp16_int{bit}_fp16_m{M}n{N}k{K}_nt")
     Qweight_bytes = N * K // 8 * bit
     Scale_bytes = N * K // group_size * 2
     function_body = function_body.replace("main_kernel", new_kernel_name)
@@ -147,18 +143,17 @@ for M, N, K in ft_shapes:
     """
     kernel_call += real_call
 
-
 # make output
 cur_dir = os.path.dirname(os.path.abspath(__file__))
-ladder_path = os.path.join(cur_dir, f"kenrel_output")
+ladder_path = os.path.join(cur_dir, "kenrel_output")
 if not os.path.exists(ladder_path):
     os.makedirs(ladder_path)
-ladder_kernel_path = os.path.join(ladder_path, f"ladder_kernel.cu")
-ladder_header_path = os.path.join(ladder_path, f"ladder_kernel.h")
+ladder_kernel_path = os.path.join(ladder_path, "ladder_kernel.cu")
+ladder_header_path = os.path.join(ladder_path, "ladder_kernel.h")
 
-with open(template_path, mode="r", encoding="utf-8") as r_f, open(
-    ladder_kernel_path, mode="w", encoding="utf8"
-) as w_f:
+with open(
+        template_path, mode="r", encoding="utf-8") as r_f, open(
+            ladder_kernel_path, mode="w", encoding="utf8") as w_f:
     template_content = r_f.read()
     template = Template(template_content)
     data = template.substitute(kernel_body=kernel_body, kernel_call=kernel_call)
@@ -173,9 +168,7 @@ __pack_half2(const half x, const half y) {
   return (v1 << 16) | v0;
 }
 """
-with open(
-    ladder_header_path, mode="w", encoding="utf8"
-) as w_f:
+with open(ladder_header_path, mode="w", encoding="utf8") as w_f:
     headers = f"""// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 #ifndef __LADDER_KERNEL_H__

@@ -4,7 +4,7 @@
 from typing import List
 
 
-class Arch:
+class TileDevice:
     """
     Represents the architecture of a computing device, capturing various hardware specifications.
     """
@@ -38,4 +38,3 @@ class Arch:
 
     def get_avaliable_tensorintrin_shapes(self):
         raise NotImplementedError()
-    

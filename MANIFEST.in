@@ -1,0 +1,4 @@
+recursive-include 3rdparty/tvm *
+recursive-exclude 3rdparty/tvm/build *
+recursive-exclude 3rdparty/clang* * 
+recursive-exclude 3rdparty/llvm* *

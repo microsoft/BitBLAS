@@ -22,8 +22,15 @@ from .matmul_analysis import (
     get_reduction_blocks,
 )
 from .matmul_mma import MatmulTensorizationMMA
-from .matmul_wmma import MatmulInt8Tensorization, MatmulTensorizationWMMA, MatmulTensorizationLegacy
+from .matmul_wmma import (
+    MatmulInt8Tensorization,
+    MatmulTensorizationWMMA,
+)
 from functools import reduce
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class Matmul(GPUScheduleRule):
     """The schedule rule for matmul-like computation"""
@@ -115,9 +122,9 @@ class Matmul(GPUScheduleRule):
                 apply_tensorization = False
             for item_var in block_stmt.iter_vars[1:]:
                 extent = item_var.dom.extent
-                if isinstance(extent, tir.expr.IntImm):
-                    if extent.value <= minimal_tensorize_threshold:
-                        apply_tensorization = False
+                if isinstance(extent,
+                              tir.expr.IntImm) and extent.value <= minimal_tensorize_threshold:
+                    apply_tensorization = False
             if apply_tensorization:
                 if in_dtype == "int8" and out_dtype == "int32":
                     tensorize_sch = MatmulInt8Tensorization().apply(func, target, _)
@@ -149,11 +156,9 @@ class Matmul(GPUScheduleRule):
             )
             batch, x, y, k = sch.get_loops(main_block)
         by, vy, ty, yi = sch.split(
-            y, [None, config.vthread_y, config.block_size_y, config.micro_size_y]
-        )
+            y, [None, config.vthread_y, config.block_size_y, config.micro_size_y])
         bx, vx, tx, xi = sch.split(
-            x, [None, config.vthread_x, config.block_size_x, config.micro_size_x]
-        )
+            x, [None, config.vthread_x, config.block_size_x, config.micro_size_x])
         ko, ki = sch.split(k, factors=[None, config.micro_size_k])
         sch.reorder(by, bx, vy, vx, ty, tx, ko, ki, yi, xi)
         by = sch.fuse(batch, by)
@@ -214,7 +219,7 @@ class Matmul(GPUScheduleRule):
             return loop_kinds != {ForKind.SERIAL}
 
         blocks = sch.get_child_blocks(root_block)
-        max_threads_per_block = utils.max_threads_per_block(target)
+        max_threads_per_block = utils.max_threads_per_block(target)  # noqa: F841
         for block in blocks:
             if is_scheduled(block):
                 continue
@@ -248,7 +253,7 @@ class Matmul(GPUScheduleRule):
         # in some case conv template will use this rule, but the tile config is not
         # analyzed by matmul expr.
         if len(config.block) != 2:
-            print(f"Warning: block config {config.block} is not valid for matmul, skip.")
+            logger.debug(f"Warning: block config {config.block} is not valid for matmul, skip.")
             return None
 
         main_block = reduction_blocks[0]
@@ -275,8 +280,8 @@ class Matmul(GPUScheduleRule):
         block_col_warps = config.block[1] // (config.thread[1] * config.step[1])
         thread_row_tiles = config.thread[1] // (config.step[0] * 2)
         thread_col_tiles = config.thread[1] // (config.step[1] * 2)
-        vthread_row_tiles = config.step[0] * 2  # expand vtrhead to avoid load band conflict
-        vthread_col_tiles = config.step[1] * 2  # expand vtrhead to avoid load band conflict
+        vthread_row_tiles = (config.step[0] * 2)  # expand vtrhead to avoid load band conflict
+        vthread_col_tiles = (config.step[1] * 2)  # expand vtrhead to avoid load band conflict
         chunk = config.rstep[0]
 
         # Step 3. Schedule matmul
@@ -328,8 +333,7 @@ class Matmul(GPUScheduleRule):
                 if len(reads) != 1 or len(writes) != 1:
                     return False
                 return all(
-                    read.region[-1] == write.region[-1] for read, write in zip(reads, writes)
-                )
+                    read.region[-1] == write.region[-1] for read, write in zip(reads, writes))
 
             if is_trivial_load(block):
                 sch.vectorize(vec)
@@ -348,24 +352,20 @@ class Matmul(GPUScheduleRule):
         for i, input_region in enumerate(sch.get(main_block).reads):
             _buffer_name = input_region.buffer.name.replace("_reindex", "").replace("_pad", "")
             if _buffer_name not in config.cached_tensors:
-                print(
+                logger.warning(
                     f"Warning: {_buffer_name} is not in cached_tensors {config.cached_tensors}, skip."
                 )
                 continue
 
             # otherwise cooperative fetch in shared memory.
-            if _buffer_name in config.vectorize:
-                vectorize = config.vectorize[_buffer_name]
-            else:
-                vectorize = 1
+            vectorize = config.vectorize.get(_buffer_name, 1)
 
             _cooperative_fetch(i, vec_len=vectorize)
 
         auto_inline_consumer_chain(sch, l2g)
 
         _, vec = sch.split(
-            sch.fuse(*sch.get_loops(l2g)[-2:]), [None, vectorize // prod(config.step)]
-        )
+            sch.fuse(*sch.get_loops(l2g)[-2:]), [None, vectorize // prod(config.step)])
         sch.vectorize(vec)
 
         sch.decompose_reduction(main_block, ko)

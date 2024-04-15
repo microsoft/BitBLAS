@@ -1,44 +1,14 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
 """Analysis on TIR blocks, loops and functions."""
-from typing import List, Optional, Set, Union, Tuple, Dict
+from typing import List, Optional, Set, Union
 from typing_extensions import Literal
-from dataclasses import dataclass
-from enum import Enum
 
 from tvm import ir, tir, DataType
-from tvm.ir import Range
-from tvm.tir.analysis import undefined_vars
 from tvm._ffi import get_global_func
 from tvm.target.target import Target
-from tvm.tir import Schedule, IterVar, Var, PrimExpr
+from tvm.tir import Schedule, IterVar
 from tvm.tir.schedule import BlockRV
-
-
-def get_reduction_blocks(sch, blocks) -> bool:
-    # Get the main computation block
-    def is_reduction(block: BlockRV) -> bool:
-        block_stmt = sch.get(block)
-        iter_types = {iter_var.iter_type for iter_var in block_stmt.iter_vars}
-        return iter_types == {IterVar.CommReduce, IterVar.DataPar}
-
-    def is_spatial(block: BlockRV) -> bool:
-        block_stmt = sch.get(block)
-        iter_types = {iter_var.iter_type for iter_var in block_stmt.iter_vars}
-        return iter_types == {IterVar.DataPar}
-
-    # NOTE: We assume there is only one reduction block in the function
-    # all blocks are required to be spatial or reduction
-    if not all([is_reduction(block) or is_spatial(block) for block in blocks]):
-        return None
-
-    # There is only one reduction block
-    reduction_blocks = [block for block in blocks if is_reduction(block)]
-    if len(reduction_blocks) != 1:
-        return None
-
-    return reduction_blocks
 
 
 class IterInfo:
@@ -123,9 +93,7 @@ class BlockInfo:
         if len(r_region) != len(w_region):
             return False
         for var, r_dom, w_dom in zip(block.iter_vars, r_region, w_region):
-            if not _check_unit_var_range(var, r_dom) or not _check_unit_var_range(
-                var, w_dom
-            ):
+            if not _check_unit_var_range(var, r_dom) or not _check_unit_var_range(var, w_dom):
                 return False
         return True
 
@@ -178,13 +146,11 @@ def normalize_prim_func(sch: tir.Schedule) -> Optional[List[BlockInfo]]:
                         var=iter.var,
                         dom=iter.dom,
                         loop_rv=loop,
-                    )
-                    for loop, iter in zip(loops, iters)
+                    ) for loop, iter in zip(loops, iters)
                 ],
                 block_rv=block,
                 reduction_block=is_reduction,
-            )
-        )
+            ))
     return blocks
 
 
@@ -225,25 +191,21 @@ def get_max_shared_memory_per_block(target: Target) -> int:
     max_shared_memory_per_block = target.attrs.get("max_shared_memory_per_block", None)
     if max_shared_memory_per_block is None:
         raise ValueError(
-            f"Cannot find `max_shared_memory_per_block` in {target}, please specify it manually"
-        )
+            f"Cannot find `max_shared_memory_per_block` in {target}, please specify it manually")
     return int(max_shared_memory_per_block)
 
 
 def get_root_block(sch: Schedule, func_name: str = "main") -> BlockRV:
     try:
         block = sch.mod[func_name].body.block
-    except:
-        raise ValueError(
-            f"The function body is expected to be the root block, but got:\n"
-            f"{sch.mod[func_name].body}"
-        )
+    except Exception:
+        raise ValueError(f"The function body is expected to be the root block, but got:\n"
+                         f"{sch.mod[func_name].body}") from None
     return sch.get_block(block.name_hint)
 
 
-def collect_block_iter_vars_used_in_access_region(
-    block: tir.Block, region: List[ir.Range]
-) -> Set[tir.Var]:
+def collect_block_iter_vars_used_in_access_region(block: tir.Block,
+                                                  region: List[ir.Range]) -> Set[tir.Var]:
     """Collect the block iter variables used in the access region of a buffer region."""
     tir_vars = set()
     for expr in region:
@@ -271,9 +233,7 @@ def detect_dominant_read(block: tir.Block) -> tir.PrimExpr:
     dominant_read = None
     num_read_iters = -1
     for buffer_region in block.reads:
-        tir_vars = collect_block_iter_vars_used_in_access_region(
-            block, buffer_region.region
-        )
+        tir_vars = collect_block_iter_vars_used_in_access_region(block, buffer_region.region)
         if num_read_iters < len(tir_vars):
             num_read_iters = len(tir_vars)
             dominant_read = buffer_region
@@ -294,16 +254,14 @@ def is_broadcast_epilogue(
         if buffer_region.buffer not in write_buffers:
             continue
         tir_vars = collect_block_iter_vars_used_in_access_region(
-            sch.get(epilogue), buffer_region.region
-        )
+            sch.get(epilogue), buffer_region.region)
         if len(tir_vars) < len(epilogue_iters):
             return True
     return False
 
 
-def get_reduction_blocks(
-    sch: tir.Schedule, blocks: List[tir.schedule.BlockRV]
-) -> List[tir.schedule.BlockRV]:
+def get_reduction_blocks(sch: tir.Schedule,
+                         blocks: List[tir.schedule.BlockRV]) -> List[tir.schedule.BlockRV]:
     # Get the main computation block
     def is_reduction(block: BlockRV) -> bool:
         block_stmt = sch.get(block)
@@ -330,7 +288,6 @@ def get_reduction_blocks(
 def get_coalesced_veclen(block_stmt: tir.Block, target_bits: int = 128) -> int:
     # gpu memory prefer 128 bits coalesced access (e.g. four banks)
     # 128 bits
-    block_stmt
     buffers: List[tir.Buffer] = []
     for read in block_stmt.reads:
         buffers.append(read.buffer)

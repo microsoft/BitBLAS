@@ -1,6 +1,54 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import numpy as np
+import torch
+import torch.nn as nn
+
+
+def gen_quant4(k, n, groupsize=-1):
+    maxq = 2**4 - 1
+    w = torch.randn((k, n), dtype=torch.half, device="cpu")
+
+    original_w = w.clone()
+
+    if groupsize == -1:
+        groupsize = k
+
+    if groupsize != -1:
+        w = w.reshape((-1, groupsize, n))
+        w = w.permute(1, 0, 2)
+        w = w.reshape((groupsize, -1))
+
+    s = torch.max(torch.abs(w), 0, keepdim=True)[0]
+    s *= 2 / maxq
+
+    # Quantize.
+    w = torch.round(w / s).int()
+
+    # Unsigned storage.
+    w += (maxq) // 2
+
+    w = torch.clamp(w, 0, maxq)
+
+    # Dequantize.
+    ref = (w - (maxq) // 2).half() * s
+
+    if groupsize != -1:
+
+        def reshape(w):
+            w = w.reshape((groupsize, -1, n))
+            w = w.permute(1, 0, 2)
+            w = w.reshape((k, n)).contiguous()
+            return w
+
+        ref = reshape(ref)
+        w = reshape(w)
+
+    s = s.reshape((-1, n)).contiguous()
+    linear = nn.Linear(k, n, bias=False)
+    linear.weight.data = ref.t()
+
+    return original_w, linear, s, (w - (maxq) // 2)
 
 
 def general_compress(lowprecision_weight, source_bits=4, storage_dtype=np.int8):
@@ -16,9 +64,7 @@ def general_compress(lowprecision_weight, source_bits=4, storage_dtype=np.int8):
     )
     for j in range(lowprecision_weight.shape[-1] // elems_per_byte):
         for k in range(elems_per_byte):
-            int8_weight[:, j] |= lowprecision_weight[:, j * elems_per_byte + k] << (
-                source_bits * k
-            )
+            int8_weight[:, j] |= lowprecision_weight[:, j * elems_per_byte + k] << (source_bits * k)
 
     return int8_weight.view(storage_dtype)
 
