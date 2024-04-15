@@ -419,7 +419,7 @@ __device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8,
         if constexpr (isSigned)
         {
             asm volatile("add.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(h[i]));
-            asm volatile("add.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(0xbc00bc00));
+            asm volatile("add.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(TRANSFORM_SUBTRACT));
         }
         if constexpr (withZeros && ZerosKind == 0)
         {
@@ -724,7 +724,6 @@ __device__ void decode_i1b_to_i8s(T1 *_i1b, T2 *_i8s, const int N = 16)
     static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa; // 0b11101010
     static constexpr uint BOTTOM_MASK = 0x01010101;      // 0x1 -> 0b01 select 0,1
     static constexpr uint I8s_MAGIC_NUM = 0x00000000;
-    static constexpr uint MEDIAN_NUM = isSigned ? 0x00000000 : 0x00000000;
     static constexpr uint TRANSFORM_SUBTRACT = 0x01010101;
     
     for (int i = 0; i < N / 4; i++)
