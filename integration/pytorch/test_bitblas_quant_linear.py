@@ -17,7 +17,7 @@ torch.manual_seed(0)
 
 
 def gen_quant4(k, n, groupsize=-1):
-    maxq = 2**4 - 1
+    maxq = 2**4
     w = torch.randn((k, n), dtype=torch.half, device="cpu")
 
     original_w = w.clone()
@@ -75,7 +75,7 @@ def test_quantization_accuracy(m, in_features, out_features, bits, group_size, b
 
     if group_size == -1:
         group_size = in_features
-    zeros = torch.full((in_features // group_size, out_features), 7, dtype=torch.int32)
+    zeros = torch.full((in_features // group_size, out_features), 8, dtype=torch.int32)
 
     bitblas_zeros = zeros.clone().T
     cuda_old_linear = CudaOldQuantLinear(

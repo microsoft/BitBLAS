@@ -144,7 +144,7 @@ def _tir_packed_to_signed_convert(storage_type="uint", storage_nbit=8):
 
     def f_convert(nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr, dtype: str):
         assert val.dtype == storage_dtype, f"{val.dtype} != {storage_dtype}"
-        max_int_value = (1 << (nbit - 1)) - 1
+        max_int_value = (1 << (nbit - 1))
         return ((val >> (pos.astype("uint32") * tir.const(nbit, "uint32"))) & tir.const(
             (1 << nbit) - 1, "uint32")).astype(dtype) - tir.const(max_int_value, dtype)
 
@@ -173,5 +173,16 @@ def _tir_packed_to_unsigned_convert_with_zeros(storage_type="uint", storage_nbit
 
     return f_convert
 
+def _tir_packed_int_to_int_convert(storage_type="uint", storage_nbit=8):
+    storage_dtype = storage_type + str(storage_nbit)
+
+    def f_convert(nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr, dtype: str):
+        assert val.dtype == storage_dtype, f"{val.dtype} != {storage_dtype}"
+        mask = tir.const((1 << nbit) - 1, "int32")
+        unextended = (val >> (pos.astype("int32") * tir.const(nbit, "int32"))) & mask
+        return tir.Cast(
+            dtype, (unextended << tir.const(32 - nbit, "int32")) >> tir.const(32 - nbit, "int32"))
+
+    return f_convert
 
 # fmt: on
