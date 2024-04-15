@@ -38,7 +38,6 @@ BitBLAS achieves exceptional performance across a variety of computational patte
   </div>
 
 
-
 - TensorCore FP16/INT8 GEMM Performance Vs. Vendor Library on A100 and RTX4090
 
   <div>
@@ -79,6 +78,7 @@ We are continuously expanding the support matrix. If you have any specific requi
 
 - [Customization](./docs/ExtendOperatorsWithDSL.md): BitBLAS supports implementing customized mixed-precision DNN operations rather than matrix multiplication with the flexible DSL (TIR Script).
 
+
 ## Contributing
 
 This project welcomes contributions and suggestions. Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
@@ -90,3 +90,4 @@ This project has adopted the Microsoft Open Source Code of Conduct. For more inf
 ## Trademarks
 
 This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft trademarks or logos is subject to and must follow Microsoft's Trademark & Brand Guidelines. Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship. Any use of third-party trademarks or logos are subject to those third-party's policies.
+
