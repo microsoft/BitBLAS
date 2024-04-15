@@ -276,6 +276,10 @@ def fast_tune(
     parallel_build: bool = True,
     data_distribution: Literal["uniform", "onefill"] = "uniform",
 ):
+    # check the function is a primfunc
+    if not isinstance(func, tir.PrimFunc):
+        raise ValueError("Only support func is PrimFunc") # pragma: no cover
+
     if target.kind.name != "cuda":
         logger.error("Only support CUDA target")
         return None, None

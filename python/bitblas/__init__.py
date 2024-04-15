@@ -39,14 +39,15 @@ from .module import Linear  # noqa: F401
 import logging
 from tqdm import tqdm
 
-
-# target logger into tqdm.write
 class TqdmLoggingHandler(logging.Handler):
+    """ Custom logging handler that directs log output to tqdm progress bar to avoid interference. """
 
     def __init__(self, level=logging.NOTSET):
+        """ Initialize the handler with an optional log level. """
         super().__init__(level)
 
     def emit(self, record):
+        """ Emit a log record. Messages are written to tqdm to ensure output in progress bars isn't corrupted. """
         try:
             msg = self.format(record)
             tqdm.write(msg)
@@ -55,21 +56,27 @@ class TqdmLoggingHandler(logging.Handler):
 
 
 def set_log_level(level):
+    """ Set the logging level for the module's logger.
+    
+    Args:
+        level (str or int): Can be the string name of the level (e.g., 'INFO') or the actual level (e.g., logging.INFO).
+    """
     if isinstance(level, str):
-        level = getattr(logging, level.upper())
+        level = getattr(logging, level.upper(), logging.INFO)
     logger = logging.getLogger(__name__)
     logger.setLevel(level)
 
 
 def _init_logger():
+    """ Initialize the logger specific for this module with custom settings and a Tqdm-based handler. """
     logger = logging.getLogger(__name__)
     handler = TqdmLoggingHandler()
     formatter = logging.Formatter(
-        fmt="%(asctime)s [BitBLAS:%(levelname)s]: %(message)s", datefmt="%F %T")
+        fmt="%(asctime)s [BitBLAS:%(levelname)s]: %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.propagate = False
-    set_log_level(logging.INFO)
+    set_log_level('WARNING')
 
 
 _init_logger()
