@@ -21,7 +21,7 @@
     - The Range of the INT Format:
         - `'int4'`: [-8, 7]
         - `'int2'`: [-2, 1]
-        - `'int1'`: [-1, 1]
+        - `'int1'`: -1 and 1
 - **accum_dtype** *(str, default='float16')*: The data type used for accumulation during the matrix multiplication.
     - Choices: `'float16'`, `'int32'`.
 - **out_dtype** *(str, default='float16')*: The data type of the output matrix.
@@ -96,7 +96,7 @@ Applies a linear transformation to the incoming data: $out[M, N] = A[M, K] \time
     - The Range of the INT Format:
         - `'int4'`: [-8, 7]
         - `'int2'`: [-2, 1]
-        - `'int1'`: [-1, 1]
+        - `'int1'`: -1 and 1
 - **accum_dtype** *(str, optional)*: Data type for accumulation. Default: `'float16'`.
     - Choices: `'float16'`, `'int32'`.
 - **out_dtype** *(str, optional)*: Data type of the output tensor. Default: `'float16'`.
