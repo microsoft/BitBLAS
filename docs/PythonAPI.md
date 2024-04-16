@@ -16,8 +16,12 @@
 - **K** *(int)*: The common dimension of matrices A and W.
 - **A_dtype** *(str, default='float16')*: The data type of matrix A.
     - Choices: `'float16'`, `'int8'`.
-- **W_dtype** *(str, default='float16')*: The data type of matrix W. Also acts as a wrapper for source_format and bit.
-    - Choices: `'float16'`, `'int8'`, `'int4'`, `'int2'`, `'int1'`, `'fp4_e2m1'`, `'nf4'`.
+- **W_dtype** *(str, optional)*: Data type of the weights. Default: `'float16'`.
+    - Choices: `'float16'`, `'int8'`, `'int4'`, `'int2'`, `'int1'`, `'uint4'`,`'uint2'`, `'uint1'`, `'fp4_e2m1'`, `'nf4'`.
+    - The Range of the INT Format:
+        - `'int4'`: [-8, 7]
+        - `'int2'`: [-2, 1]
+        - `'int1'`: [-1, 1]
 - **accum_dtype** *(str, default='float16')*: The data type used for accumulation during the matrix multiplication.
     - Choices: `'float16'`, `'int32'`.
 - **out_dtype** *(str, default='float16')*: The data type of the output matrix.
@@ -25,8 +29,6 @@
 - **layout** *(Literal['nn', 'nt', 'tn', 'tt'], default='nt')*: The layout of the matrix multiplication operation. The matrix is stored in row-major.
     - `'nn'`: Both matrices are non-transposed.
     - `'nt'`: Matrix A is non-transposed, and matrix W is transposed.
-    - `'tn'`: Matrix A is transposed, and matrix W is non-transposed.
-    - `'tt'`: Both matrices are transposed.
 - **with_bias** *(bool, default=False)*: Indicates whether a bias vector is added to the output.
 - **group_size** *(int, default=-1)*: The group size for quantization, -1 indicates no grouping.
 - **with_scaling** *(bool, default=False)*: Indicates whether scaling is applied during quantization.
@@ -90,7 +92,11 @@ Applies a linear transformation to the incoming data: $out[M, N] = A[M, K] \time
 - **A_dtype** *(str, optional)*: Data type of the input tensor. Default: `'float16'`.
     - Choices: `'float16'`, `'int8'`.
 - **W_dtype** *(str, optional)*: Data type of the weights. Default: `'float16'`.
-    - Choices: `'float16'`, `'int8'`, `'int4'`, `'int2'`, `'int1'`, `'fp4_e2m1'`, `'af4'`.
+    - Choices: `'float16'`, `'int8'`, `'int4'`, `'int2'`, `'int1'`, `'uint4'`,`'uint2'`, `'uint1'`, `'fp4_e2m1'`, `'nf4'`.
+    - The Range of the INT Format:
+        - `'int4'`: [-8, 7]
+        - `'int2'`: [-2, 1]
+        - `'int1'`: [-1, 1]
 - **accum_dtype** *(str, optional)*: Data type for accumulation. Default: `'float16'`.
     - Choices: `'float16'`, `'int32'`.
 - **out_dtype** *(str, optional)*: Data type of the output tensor. Default: `'float16'`.
