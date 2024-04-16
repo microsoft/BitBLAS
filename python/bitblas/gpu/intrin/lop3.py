@@ -633,14 +633,14 @@ __device__ void decode_i2s_to_i8s(T1 *_i2b, T2 *_i8s, const int N = 16)
     static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa; // 0b11101010
     static constexpr uint BOTTOM_MASK = 0x03030303;      // 0xf -> 0b11 select 0,3
     static constexpr uint I8s_MAGIC_NUM = 0x00000000;    // 1024
-    static constexpr uint MEDIAN_NUM = 0x01010101;
+    static constexpr uint MEDIAN_NUM = 0x02020202;
 #pragma unroll
     for (int i = 0; i < (N / 4); i++)
     {
         asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
                      : "=r"(i8s[i])
                      : "r"(i2b >> (2 * i)), "n"(BOTTOM_MASK), "n"(I8s_MAGIC_NUM), "n"(immLut));
-        i8s[i] = __vsubss4(i8s[i], MEDIAN_NUM);
+        i8s[i] = __vsub4(i8s[i], MEDIAN_NUM);
     }
 }
 template <typename T1, typename T2>
