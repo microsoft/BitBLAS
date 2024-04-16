@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-"""Benifit For Dlight Schedule"""
+"""Benifit For BitBLAS Schedule"""
 class Block:
     def __init__(self, start, end, is_free):
         self.start = start

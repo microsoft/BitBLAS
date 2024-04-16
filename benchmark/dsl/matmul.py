@@ -17,7 +17,7 @@ import time
 
 # fmt:off
 test_shapes = [
-    # (prim_func, input_args, default_dlight_schedule),
+    # (prim_func, input_args, default_bitblas_schedule),
     (matmul_nt, (1024, 1024, 1024, "float16", "float16"), Matmul),
     (matmul_nt, (16, 8192, 8192, "float16", "float16"), Matmul),
     (matmul_nt, (32, 8192, 8192, "float16", "float16"), Matmul),
@@ -113,15 +113,15 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     timer_cuda_mod = mod_default.time_evaluator(mod_default.entry_name, arch.device, number=5)
     t = timer_cuda_mod(*profile_tensors).mean
 
-    print("Time cost of Dlight default schedule: {:.3f} ms".format(t * 1e3))
+    print("Time cost of BitBLAS default schedule: {:.3f} ms".format(t * 1e3))
 
     profile_config = {
         f"{get_prim_func.__name__}-{'-'.join([str(i) for i in input_args])}": {
-            "fast_dlight_top20_tune_time": fast_tune_time,
-            "fast_dlight_top1_latency": cpresults[0].latency * 1e3,
-            "fast_dlight_top20_latency": best.latency * 1e3,
-            "default_dlight_tune_time": default_tune_time,
-            "default_dlight_latency": t * 1e3,
+            "fast_bitblas_top20_tune_time": fast_tune_time,
+            "fast_bitblas_top1_latency": cpresults[0].latency * 1e3,
+            "fast_bitblas_top20_latency": best.latency * 1e3,
+            "default_bitblas_tune_time": default_tune_time,
+            "default_bitblas_latency": t * 1e3,
         }
     }
 
@@ -151,10 +151,10 @@ for config, values in benchmark_results.items():
     row = [
         func_name,
         input_args,
-        f" {str(values['fast_dlight_top20_tune_time'])} s",
-        f"{values['fast_dlight_top1_latency']:.3f} ms",
-        f"{values['fast_dlight_top20_latency']:.3f} ms",
-        str(values["default_dlight_tune_time"]),
-        f"{values['default_dlight_latency']:.3f} ms",
+        f" {str(values['fast_bitblas_top20_tune_time'])} s",
+        f"{values['fast_bitblas_top1_latency']:.3f} ms",
+        f"{values['fast_bitblas_top20_latency']:.3f} ms",
+        str(values["default_bitblas_tune_time"]),
+        f"{values['default_bitblas_latency']:.3f} ms",
     ]
     print("".join(word.ljust(col_width) for word in row))

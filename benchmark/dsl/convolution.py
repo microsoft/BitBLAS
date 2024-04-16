@@ -103,7 +103,7 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     timer_cuda_mod = mod_default.time_evaluator(mod_default.entry_name, arch.device, number=5)
     t = timer_cuda_mod(*profile_tensors).mean
 
-    print("Time cost of Dlight default schedule: {:.3f} ms".format(t * 1e3))
+    print("Time cost of BitBLAS default schedule: {:.3f} ms".format(t * 1e3))
 
     profile_config = {
         f"{get_prim_func.__name__}-{'-'.join([str(i) for i in input_args])}": {

@@ -712,7 +712,9 @@ __device__ void decode_i2u_to_i8s(T1 *_i2u, T2 *B_local_decode, const int N = 16
 template <typename T1, typename T2, bool isSigned>
 __device__ void decode_i1b_to_i8s(T1 *_i1b, T2 *_i8s, const int N = 16)
 {
-    int *i8s = reinterpret_cast<int *>(_i8s);
+    int i8s[4];
+    // vector load
+    *reinterpret_cast<int4 *>(i8s) = *reinterpret_cast<int4 *>(_i8s);
     int16_t i1b_i16 = *reinterpret_cast<int16_t *>(_i1b);
     // permutate: {e0,e4,e8,e12,e2,e6,e10,e14,e1,e5,e9,e13,e3,e7,e11,e15}
     // into: {e0,e4,e8,e12,x,x,x,x,e1,e5,e9,x,x,x,x,e13,e2,e6,e10,e14,e1,e5,e9,e13,e3,e7,e11,e15,x,x,x,x}
@@ -724,7 +726,7 @@ __device__ void decode_i1b_to_i8s(T1 *_i1b, T2 *_i8s, const int N = 16)
     static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa; // 0b11101010
     static constexpr uint BOTTOM_MASK = 0x01010101;      // 0x1 -> 0b01 select 0,1
     static constexpr uint I8s_MAGIC_NUM = 0x00000000;
-    static constexpr uint TRANSFORM_SUBTRACT = 0x01010101;
+    static constexpr uint TRANSFORM_SUBTRACT = 0xffffffff; // for signed int 2x - 1
     
     for (int i = 0; i < N / 4; i++)
     {
@@ -734,9 +736,15 @@ __device__ void decode_i1b_to_i8s(T1 *_i1b, T2 *_i8s, const int N = 16)
 
         if constexpr (isSigned)
         {
-            i8s[i] = __vsubss4(__vaddss4(i8s[i], i8s[i]), TRANSFORM_SUBTRACT);
+            int _i8s = i8s[i];
+            int tmp = 	__vcmpleu4(_i8s, 0);
+            _i8s |= tmp;
+            i8s[i] = _i8s;
+            //             // i8s[i] = __vadd4(__vadd4(i8s[i], i8s[i]), TRANSFORM_SUBTRACT);
         }
     }
+    // vector store
+    *reinterpret_cast<int4 *>(_i8s) = *reinterpret_cast<int4 *>(i8s);
 }
 
 template <typename T1, typename T2>

@@ -1,9 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import pytest
-import tvm
 import bitblas
 from bitblas.ops.param_permutate import ParamPermutate, ParamPermutateConfig
+
+import tvm
 
 target = tvm.target.Target("llvm")
 

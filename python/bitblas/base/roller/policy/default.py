@@ -20,7 +20,7 @@ from ..rasterization import NoRasterization
 class DefaultPolicy:
     """
     Default Policy for fastdlight, a heuristic plan that tries to
-    minimize memory traffic and maximize parallelism.for Dlight Schedule.
+    minimize memory traffic and maximize parallelism.for BitBLAS Schedule.
     """
 
     def __init__(self,
