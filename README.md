@@ -1,7 +1,7 @@
 # BitBLAS
 
 BitBLAS is a library to support mixed-precision BLAS operations on GPUs, for example, the $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication where $C_{cdtype}[M, N] = A_{adtype}[M, K] \times W_{wdtype}[N, K]$.
-BitBLAS aims to support efficient mixed-precision DNN model deployment, especially the $W_{wdtype}A_{adtype}$ quantization in large language models (LLMs), for example, the $W_{INT4}A_{FP16}$ in [GPTQ](https://arxiv.org/abs/2210.17323), the $W_{INT2}A_{FP16}$ in [BitDistiller](https://arxiv.org/abs/2402.10631), the $W_{INT2}A_{INT8}$ in [BitNet-b1.58](https://arxiv.org/abs/2402.17764). BitBLAS is based on techniques from our accepted submission at OSDI'24.
+BitBLAS aims to support efficient mixed-precision DNN model deployment, especially the $W_{wdtype}A_{adtype}$ quantization in large language models (LLMs), for example, the $W_{UINT4}A_{FP16}$ in [GPTQ](https://arxiv.org/abs/2210.17323), the $W_{INT2}A_{FP16}$ in [BitDistiller](https://arxiv.org/abs/2402.10631), the $W_{INT2}A_{INT8}$ in [BitNet-b1.58](https://arxiv.org/abs/2402.17764). BitBLAS is based on techniques from our accepted submission at OSDI'24.
 
 
 Some of the key features of BitBLAS include:
@@ -10,7 +10,7 @@ Some of the key features of BitBLAS include:
     - Matrix multiplication like FP16xFP16 and INT8xINT8.
   - Auto-Tensorization for TensorCore-like hardware instructions.
   - Implemented [integration](./integration/) to [PyTorch](https://pytorch.org/), [AutoGPTQ](https://github.com/AutoGPTQ/AutoGPTQ) and [vLLM](https://github.com/vllm-project/vllm) for LLM deployment. Please checkout [benchmark summary](#benchmark-summary) for detailed end2end LLM inference performance.
-  - BitBLAS first implemented $W_{INT2}A_{INT8}$ GEMV/GEMM with 8x/2x speedup over $W_{FP16}A_{FP16}$ on A100, please checkout [op_benchmark_a100_int2_scaling](images/figures/op_benchmark_a100_int2_scaling.png) for detailed benchmark results.
+  - BitBLAS first implemented $W_{INT2}A_{INT8}$ GEMV/GEMM with 7x/2x speedup over $W_{FP16}A_{FP16}$ on A100, please checkout [op_benchmark_a100_int2_scaling](images/figures/op_benchmark_a100_int2_scaling.png) for detailed benchmark results.
   - Support customizing mixed-precision DNN operations for your specific scenarios via the flexible DSL (TIR Script).
 
 ## Integration Example of FasterTransformer with BitBLAS
@@ -55,13 +55,13 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 |     FP16    |     FP16    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     FP16    |   FP4_E2M1  |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     FP16    |     INT8    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     FP16    |     INT4/UINT4    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     FP16    |     INT2/UINT2    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     FP16    |     UINT4/INT4    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     FP16    |     UINT2/INT2    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     FP16    |     UINT1    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     FP16    |     NF4     |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     INT8    |     INT8    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     INT8    |     INT4/UINT4    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     INT8    |     INT2/UINT2    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     INT8    |     UINT4/INT4    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     INT8    |     UINT2/INT2    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     INT8    |     UINT1    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 
 We are continuously expanding the support matrix. If you have any specific requirements, please feel free to open an issue or PR.
