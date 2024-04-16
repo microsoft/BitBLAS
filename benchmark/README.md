@@ -80,9 +80,13 @@ The benchmark configurations for each test scenario are detailed below:
 
 ## Benchmark Images
 
-INT8xINT1 Matmul BS Scaling on A100.
+BitNET 1.58B INT8xINT2 Matmul BS Scaling on A100.
 
-![int8xint1_scaling](../images/figures/op_benchmark_a100_int1_scaling.png)
+![int8xiint2_scaling](../images/figures/op_benchmark_a100_int2_scaling.png)
+
+INT8xUINT1 Matmul BS Scaling on A100.
+
+![int8xiint1_scaling](../images/figures/op_benchmark_a100_uint1_scaling.png)
 
 3090 Related benchmark numbers
 
