@@ -1,9 +1,9 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import pytest
-import tvm
 import bitblas
 from bitblas.ops.ladder_permutate import LadderPermutate, LadderPermutateConfig
+import tvm
 
 target = tvm.target.Target("llvm")
 

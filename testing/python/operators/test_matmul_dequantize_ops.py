@@ -1,13 +1,13 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import pytest
-import tvm
 import bitblas
 from bitblas.utils import auto_detect_nvidia_target
 from bitblas.ops.matmul_dequantize import (
     MatmulWeightOnlyDequantize,
     MatmulWeightOnlyDequantizeConfig,
 )
+import tvm
 import logging
 from bitblas import set_log_level
 
