@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
 import bitblas
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.arch import CUDA
@@ -12,9 +11,10 @@ from bitblas.ops.impl.matmul_dequantize_impl import (
     matmul_nt_dequantize_b,
     matmul_nt_dequantize_b_propagate_a_propagate_b,
 )
+import tvm
 import time
 import argparse
-
+bitblas.set_log_level("DEBUG")
 # append a parser for the benchmark set
 
 parser = argparse.ArgumentParser(description="Benchmark BitBLAS int8xint1 on a specific target.")
@@ -50,7 +50,7 @@ group_size = args.group_size
 
 llm_int8xint1 = [
     # square test
-    (matmul_nt_dequantize_b, (1, 16384, 16384, "int8", "int8", "int32", 1, "int8", "uint", False,
+    (matmul_nt_dequantize_b, (1, 16384, 16384, "int8", "int8", "int32", 1, "int8", "int", False,
                               False, group_size, True, False), Matmul),
     # BLOOM-176B
     (matmul_nt_dequantize_b, (1, 43008, 14336, "int8", "int8", "int32", 1, "int8", "uint", False,
@@ -150,6 +150,8 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     tune_start = time.time()
     cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     fast_tune_time = time.time() - tune_start
+    # print(best.sch.mod)
+    print(best.code)
     print("[BitBLAS] The best latency of top 1 is {:.3f} ms".format(cpresults[0].latency))
     print("[BitBLAS] The best latency of top 20 is {:.3f} ms".format(best.latency))
 
@@ -183,15 +185,15 @@ for get_prim_func, input_args, d_schedule in benchmark_sets:
     else:
         t = 1e4 - 1
 
-    print("Time cost of Dlight default schedule: {:.3f} ms".format(t * 1e3))
+    print("Time cost of BitBLAS default schedule: {:.3f} ms".format(t * 1e3))
 
     profile_config = {
         f"{get_prim_func.__name__}-{'-'.join([str(i) for i in input_args])}": {
-            "fast_dlight_top20_tune_time": fast_tune_time,
-            "fast_dlight_top1_latency": cpresults[0].latency,
-            "fast_dlight_top20_latency": best.latency,
-            "default_dlight_tune_time": default_tune_time,
-            "default_dlight_latency": t * 1e3 if t is not None else "Failed",
+            "fast_bitblas_top20_tune_time": fast_tune_time,
+            "fast_bitblas_top1_latency": cpresults[0].latency,
+            "fast_bitblas_top20_latency": best.latency,
+            "default_bitblas_tune_time": default_tune_time,
+            "default_bitblas_latency": t * 1e3 if t is not None else "Failed",
         }
     }
 
@@ -221,10 +223,10 @@ for config, values in benchmark_results.items():
     row = [
         func_name,
         input_args,
-        f" {str(values['fast_dlight_top20_tune_time'])} s",
-        f"{values['fast_dlight_top1_latency']:.3f} ms",
-        f"{values['fast_dlight_top20_latency']:.3f} ms",
-        str(values["default_dlight_tune_time"]),
-        f"{values['default_dlight_latency']:.3e} ms",
+        f" {str(values['fast_bitblas_top20_tune_time'])} s",
+        f"{values['fast_bitblas_top1_latency']:.3f} ms",
+        f"{values['fast_bitblas_top20_latency']:.3f} ms",
+        str(values["default_bitblas_tune_time"]),
+        f"{values['default_bitblas_latency']:.3e} ms",
     ]
     print("".join(word.ljust(col_width) for word in row))

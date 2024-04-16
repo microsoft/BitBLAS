@@ -565,7 +565,9 @@ __device__ void decode_i1u_to_f16_scale_zeros_rescale(T1 *_i4u, T2 *B_local_deco
 decode_i1s_to_i8s = """template <typename T1, typename T2>
 __device__ void decode_i1s_to_i8s(T1 *_i1b, T2 *_i8s, const int N = 16)
 {
-    int *i8s = reinterpret_cast<int *>(_i8s);
+    int i8s[4];
+    // vector load
+    *reinterpret_cast<int4 *>(i8s) = *reinterpret_cast<int4 *>(_i8s);
     int16_t i1b_i16 = *reinterpret_cast<int16_t *>(_i1b);
     // permutate: {e0,e4,e8,e12,e2,e6,e10,e14,e1,e5,e9,e13,e3,e7,e11,e15}
     // into: {e0,e4,e8,e12,x,x,x,x,e1,e5,e9,x,x,x,x,e13,e2,e6,e10,e14,e1,e5,e9,e13,e3,e7,e11,e15,x,x,x,x}
@@ -577,16 +579,17 @@ __device__ void decode_i1s_to_i8s(T1 *_i1b, T2 *_i8s, const int N = 16)
     static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa; // 0b11101010
     static constexpr uint BOTTOM_MASK = 0x01010101;      // 0x1 -> 0b01 select 0,1
     static constexpr uint I8s_MAGIC_NUM = 0x00000000;
-    static constexpr uint MEDIAN_NUM = 0x00000000;
-    static constexpr uint TRANSFORM_SUBTRACT = 0x01010101;
+    static constexpr uint TRANSFORM_SUBTRACT = 0xffffffff; // for signed int 2x - 1
 
     for (int i = 0; i < N / 4; i++)
     {
         asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
                      : "=r"(i8s[i])
                      : "r"(i1b >> i), "n"(BOTTOM_MASK), "n"(I8s_MAGIC_NUM), "n"(immLut));
-        i8s[i] = __vsubss4(__vaddss4(i8s[i], i8s[i]), TRANSFORM_SUBTRACT);
+        i8s[i] = __vadd4(i8s[i], i8s[i]);
+        i8s[i] = __vadd4(i8s[i], TRANSFORM_SUBTRACT);
     }
+    *reinterpret_cast<int4 *>(_i8s) = *reinterpret_cast<int4 *>(i8s);
 }
 
 template <typename T1, typename T2>

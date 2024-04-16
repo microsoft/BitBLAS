@@ -1,10 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import pytest
-import tvm
 import bitblas
 from bitblas.ops.lop3_permutate import LOP3Permutate, LOP3PermutateConfig
 
+import tvm
 target = tvm.target.Target("llvm")
 
 # fmt: off
