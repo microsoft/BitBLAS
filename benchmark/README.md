@@ -84,10 +84,6 @@ BitNET 1.58B INT8xINT2 Matmul BS Scaling on A100.
 
 ![int8xiint2_scaling](../images/figures/op_benchmark_a100_int2_scaling.png)
 
-INT8xUINT1 Matmul BS Scaling on A100.
-
-![int8xiint1_scaling](../images/figures/op_benchmark_a100_uint1_scaling.png)
-
 3090 Related benchmark numbers
 
 ![3090-gemm-fp16](../images/figures/op_benchmark_3090_fp16_gemm.png)
@@ -103,3 +99,7 @@ A100 Related Benchmark Result
 ![a100-wq-gemv](../images/figures/op_benchmark_a100_wq_gemv_e8.png)
 
 ![a100-wq-gemm](../images/figures/op_benchmark_a100_wq_gemm_e8.png)
+
+INT8xUINT1 Matmul BS Scaling on A100.
+
+![int8xiint1_scaling](../images/figures/op_benchmark_a100_uint1_scaling.png)
