@@ -6,7 +6,7 @@ from bitblas.base.roller.arch.cuda import CUDA
 from typing import Any, List, Literal, Optional, Tuple, Union
 from .operator import Operator, TransformKind
 from .impl.matmul_dequantize_impl import select_implementation
-from ..base.utils import tensor_replace_dp4a
+from ..base.utils import tensor_replace_dp4a, tensor_remove_make_int4
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
@@ -111,6 +111,7 @@ class MatmulWeightOnlyDequantize(Operator):
         name: str = "matmul_weight_only_dequantize",
         target: Target = "cuda",
         enable_tuning: bool = False,
+        from_database: bool = False,
     ):
         super().__init__(name, config, target)
 
@@ -120,14 +121,6 @@ class MatmulWeightOnlyDequantize(Operator):
 
         self.arch = CUDA(target)
 
-        try:
-            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
-        except Exception:
-            self.optimized_func = None
-            logger.warnning(
-                "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
-            )
-
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
@@ -135,7 +128,8 @@ class MatmulWeightOnlyDequantize(Operator):
         else:
             self.dynamic_range = None
 
-        self._build_runtime_module(target)
+        if not from_database:
+            self._build_default_module(target)
 
         if self.propagate_a:
             ladder_permutate_config = LadderPermutateConfig(
@@ -204,6 +198,17 @@ class MatmulWeightOnlyDequantize(Operator):
         if enable_tuning:
             self.hardware_aware_finetune()
 
+    def _build_default_module(self, target: Target):
+        try:
+            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
+        except Exception:
+            self.optimized_func = None
+            logger.warnning(
+                "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
+            )
+
+        self._build_runtime_module(target)
+
     def _select_implementation(self):
         return select_implementation(
             M=self.M,
@@ -228,6 +233,7 @@ class MatmulWeightOnlyDequantize(Operator):
 
     def post_process(self, code: str) -> str:
         code = tensor_replace_dp4a(code)
+        code = tensor_remove_make_int4(code)
         return code
 
     def retrieve_weight_shape(self):

@@ -10,7 +10,7 @@ from .operator import Operator, TransformKind
 from .impl.matmul_dequantize_impl import (
     select_implementation as weight_dequantize_implementation,)
 from .impl.matmul_impl import select_implementation as consistent_implementation
-from ..base.utils import tensor_replace_dp4a
+from ..base.utils import tensor_replace_dp4a, tensor_remove_make_int4
 from bitblas.utils.target_detector import auto_detect_nvidia_target
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from dataclasses import dataclass
@@ -54,9 +54,9 @@ class OPExecutorCPU:
 
 @dataclass(frozen=True)
 class MatmulConfig:
-    M: Union[int, Tuple[int]]
-    N: int
-    K: int
+    M: Union[int, Tuple[int]] = None
+    N: int = None
+    K: int = None
     A_dtype: str = "float16"
     # is a wrapper for source_format and bit
     W_dtype: str = A_dtype  # W_dtype is the same as A_dtype by default
@@ -84,6 +84,11 @@ class MatmulConfig:
         # set M to default dynamic range if it is None
         if self.M is None:
             object.__setattr__(self, "M", [1, 16, 32, 64, 128, 256, 512, 1024])
+        if self.N is None:
+            raise ValueError("N should be specified currently.")
+        if self.K is None:
+            raise ValueError("K should be specified currently.")
+
         # set M to tuple if it is list
         # otherwise, M is not hashable
         object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
@@ -117,8 +122,9 @@ class MatmulConfig:
         else:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
 
-        if self.M == 1 or (self.N % MICRO_KERNEL_SIZE) != 0 or (
-                self.K % MICRO_KERNEL_SIZE) != 0 or isinstance(self.M, Tuple) or (self.with_zeros and self.zeros_mode == "quantized"):
+        if self.M == 1 or (
+                self.N % MICRO_KERNEL_SIZE) != 0 or (self.K % MICRO_KERNEL_SIZE) != 0 or isinstance(
+                    self.M, Tuple) or (self.with_zeros and self.zeros_mode == "quantized"):
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
             object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
         else:
@@ -127,7 +133,7 @@ class MatmulConfig:
         if self.zeros_mode is None:
             object.__setattr__(self, "zeros_mode", "original")
 
-        if "int" not in self.W_dtype:
+        if "int" not in self.W_dtype or self.W_dtype == self.A_dtype:
             object.__setattr__(self, "fast_decoding", False)
         else:
             object.__setattr__(self, "fast_decoding", self.fast_decoding)
@@ -178,7 +184,10 @@ class Matmul(Operator):
         name: str = "matmul",
         target: Optional[Union[str, Target]] = None,
         enable_tuning: bool = True,
+        from_database: bool = False,
     ):
+        # if from database, we should disable default schedule
+        # to save compilation time
         if target is None:
             target = auto_detect_nvidia_target()
         assert (config.A_dtype
@@ -200,14 +209,6 @@ class Matmul(Operator):
 
         self.arch = CUDA(target)
 
-        try:
-            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
-        except Exception:
-            self.optimized_func = None
-            logger.warnning(
-                "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
-            )
-
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
@@ -215,7 +216,8 @@ class Matmul(Operator):
         else:
             self.dynamic_range = None
 
-        self._build_runtime_module(target)
+        if not from_database:
+            self._build_default_module(target)
 
         self.workspace = None
         if self.propagate_a:
@@ -299,6 +301,20 @@ class Matmul(Operator):
         else:
             self.lut = None
 
+        # output data type
+        self.torch_output_dtype = getattr(torch, self.out_dtype)
+
+    def _build_default_module(self, target: Target):
+        try:
+            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
+        except Exception:
+            self.optimized_func = None
+            logger.warnning(
+                "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
+            )
+
+        self._build_runtime_module(target)
+
     def _select_implementation(self):
         if self.A_dtype == self.W_dtype:
             return consistent_implementation(
@@ -337,6 +353,7 @@ class Matmul(Operator):
 
     def post_process(self, code: str) -> str:
         code = tensor_replace_dp4a(code)
+        code = tensor_remove_make_int4(code)
         return code
 
     def retrieve_weight_shape(self):
@@ -419,7 +436,8 @@ class Matmul(Operator):
         args.append(W)
 
         if output is None:
-            output = torch.empty(A.shape[:-1] + (self.N,), dtype=A.dtype, device=A.device)
+            output = torch.empty(
+                A.shape[:-1] + (self.N,), dtype=self.torch_output_dtype, device=A.device)
         if scale is not None:
             args.append(scale)
         if zeros is not None:

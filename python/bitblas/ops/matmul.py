@@ -7,9 +7,12 @@ from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from typing import List, Union, Optional, Any, Tuple
 from .operator import Operator, TransformKind
 from .impl.matmul_impl import select_implementation
-from bitblas.utils import tensor_replace_dp4a
+from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class TransformExecutorCPU:
@@ -91,13 +94,12 @@ class Matmul(Operator):
         name: str = "matmul",
         target: Union[str, Target] = "cuda",
         enable_tuning: bool = False,
+        from_database: bool = False,
     ):
         super().__init__(name, config, target)
         target = self.target
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
-
-        self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
@@ -105,7 +107,8 @@ class Matmul(Operator):
         else:
             self.dynamic_range = None
 
-        self._build_runtime_module(target)
+        if not from_database:
+            self._build_default_module(target)
 
         if self.propagate_a:
             assert (self.propagate_a is
@@ -158,6 +161,17 @@ class Matmul(Operator):
         if enable_tuning:
             self.hardware_aware_finetune()
 
+    def _build_default_module(self, target: Target):
+        try:
+            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
+        except Exception:
+            self.optimized_func = None
+            logger.warnning(
+                "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
+            )
+
+        self._build_runtime_module(target)
+
     def _select_implementation(self):
         return select_implementation(
             M=self.M,
@@ -174,6 +188,7 @@ class Matmul(Operator):
 
     def post_process(self, code: str) -> str:
         code = tensor_replace_dp4a(code)
+        code = tensor_remove_make_int4(code)
         return code
 
     def _profile_latency_with_dynamic_range(self) -> List:

@@ -5,7 +5,7 @@
 """A GEMM schedule rule for GPU operators."""
 from typing import Literal, Optional, List
 
-from tvm import tir
+from tvm import tir, DataType
 from tvm.target import Target
 
 from ..base.roller.rasterization import NoRasterization
@@ -430,6 +430,9 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         def can_enable_swizzle(dtype: str, smooth: bool):
             # inject_permuted_layout only support float16 currently
             if dtype == "float16" or dtype == "int8":
+                if chunk * DataType(dtype).bits != 512:
+                    # currently the swizzle rule only support 512 bit.
+                    return False
                 # if we use smooth layout, we don't need to do swizzling
                 return not smooth
             return False

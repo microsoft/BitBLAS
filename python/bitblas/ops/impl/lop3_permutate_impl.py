@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from typing import Literal
+from tvm import DataType
 from tvm import IRModule
 from tvm.ir import GlobalVar
 from tvm.script import tir as T
@@ -18,7 +19,7 @@ def tir_interleave_weight(
 ):
     if QK == -1:
         QK = K * bits // 32
-    bits_stride = 16
+    bits_stride = DataType(target_dtype).bits
     mask = (1 << bits) - 1  # for 4bit the val is 0x0000000f
     num_groups = 32 // bits_stride
     elems_per_group = bits_stride // bits
