@@ -177,7 +177,6 @@ def test_matmul_torch_forward(
         config=matmul_config,
         target=target,
     )
-    matmul.hardware_aware_finetune(topk=20)
     # convert tensors to torch
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
@@ -239,7 +238,7 @@ def test_matmul_torch_forward_int(
         config=matmul_config,
         target=target,
     )
-    matmul.hardware_aware_finetune(topk=20)
+
     # convert tensors to torch
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
