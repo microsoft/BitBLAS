@@ -6,7 +6,7 @@
 from typing import Optional, List
 from contextlib import suppress
 
-from tvm import tir
+from tvm import tir, DataType
 
 from ..base.roller.hint import Hint, IntrinInfo
 from tvm.target import Target
@@ -196,6 +196,9 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         def can_enable_swizzle(dtype: str, smooth: bool):
             # inject_permuted_layout only support float16 currently
             if dtype == "float16" or dtype == "int8":
+                if chunk * DataType(dtype).bits != 512:
+                    # currently the swizzle rule only support 512 bit.
+                    return False
                 # if we use smooth layout, we don't need to do swizzling
                 return not smooth
             return False
@@ -680,6 +683,9 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         def can_enable_swizzle(dtype: str, smooth: bool):
             # inject_permuted_layout only support float16 currently
             if dtype == "float16" or dtype == "int8":
+                if chunk * DataType(dtype).bits != 512:
+                    # currently the swizzle rule only support 512 bit.
+                    return False
                 # if we use smooth layout, we don't need to do swizzling
                 return not smooth
             return False
@@ -1166,6 +1172,9 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         def can_enable_swizzle(dtype: str, smooth: bool):
             # inject_permuted_layout only support float16 currently
             if dtype == "float16" or dtype == "int8":
+                if chunk * DataType(dtype).bits != 512:
+                    # currently the swizzle rule only support 512 bit.
+                    return False
                 # if we use smooth layout, we don't need to do swizzling
                 return not smooth
             return False

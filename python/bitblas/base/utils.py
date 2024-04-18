@@ -19,7 +19,7 @@ from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 import tempfile
 import itertools
 from tvm.ir.supply import GlobalVarSupply
-from bitblas.utils import tensor_replace_dp4a
+from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4
 import logging
 
 logger = logging.getLogger(__name__)
@@ -193,6 +193,7 @@ def apply_and_build_parallel(func,
         @tvm.register_func(func_name="tvm_callback_cuda_postproc", override=True)
         def tvm_callback_cuda_postproc(code, _):
             code = tensor_replace_dp4a(code)
+            code = tensor_remove_make_int4(code)
             return code
 
         with tvm.transform.PassContext(config={"tir.use_async_copy": True, **config.pass_context}):
@@ -278,7 +279,7 @@ def fast_tune(
 ):
     # check the function is a primfunc
     if not isinstance(func, tir.PrimFunc):
-        raise ValueError("Only support func is PrimFunc") # pragma: no cover
+        raise ValueError("Only support func is PrimFunc")  # pragma: no cover
 
     if target.kind.name != "cuda":
         logger.error("Only support CUDA target")

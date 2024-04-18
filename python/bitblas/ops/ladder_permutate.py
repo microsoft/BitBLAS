@@ -30,6 +30,7 @@ class LadderPermutate(Operator):
         name: str = "permutate",
         target: Union[str, Target] = "llvm",  # assume to do permutation on cpu.
         enable_tuning: bool = False,
+        from_database: bool = False,
     ):
         # consider to warp the arguments to MatmulConfig
         super().__init__(name, config, target)
@@ -39,7 +40,8 @@ class LadderPermutate(Operator):
             self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
             if enable_tuning:
                 self.hardware_aware_finetune()
-        self._build_runtime_module(target)
+        if not from_database:
+            self._build_runtime_module(target)
 
     # select implementation based on the Operator config
     def _select_implementation(self):

@@ -105,7 +105,8 @@ class OperatorCache:
         # For writing optimized.py file
         optimized_file_path = os.path.join(config_path, "optimized.py")
         with open(optimized_file_path, "w") as optimized_file:
-            optimized_file.write(op_inst.optimized_func.script(show_meta=False))
+            if op_inst.optimized_func is not None:
+                optimized_file.write(op_inst.optimized_func.script(show_meta=False))
         if op_inst.wrapper.lib_name is not None:
             # copy lib name to the same directory as the artifact
             src_name = op_inst.wrapper.src_name
@@ -149,7 +150,8 @@ class OperatorCache:
     def _instantiate_and_add_operator(self, mapping, config, rt_mod, lib_name, target):
         config_cls = getattr(bitblas, mapping["config_type"])
         operator_cls = getattr(bitblas, mapping["operator_type"])
-        op_inst = operator_cls(config=config_cls(**config), target=target, enable_tuning=False)
+        op_inst = operator_cls(
+            config=config_cls(**config), target=target, enable_tuning=False, from_database=False)
         op_inst.update_runtime_module(rt_mod, lib_name=lib_name)
         self.add(config_cls(**config), op_inst)
 
