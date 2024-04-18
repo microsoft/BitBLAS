@@ -177,7 +177,7 @@ def test_matmul_torch_forward(
         config=matmul_config,
         target=target,
     )
-
+    matmul.hardware_aware_finetune(topk=20)
     # convert tensors to torch
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
@@ -200,6 +200,73 @@ def test_matmul_torch_forward(
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs)
     torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
+
+
+@pytest.mark.parametrize(
+    "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout",
+    [
+        (256, 256, 256, "int8", "int8", "int32", False, False, False, "nt"),
+    ],
+)
+def test_matmul_torch_forward_int(
+    M,
+    N,
+    K,
+    in_dtype,
+    out_dtype,
+    accum_dtype,
+    with_bias,
+    propagate_a,
+    propagate_b,
+    layout,
+):
+    import torch
+    torch.random.manual_seed(0)
+
+    matmul_config = MatmulConfig(
+        M=M,
+        N=N,
+        K=K,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        with_bias=with_bias,
+        propagate_a=propagate_a,
+        propagate_b=propagate_b,
+        layout=layout,
+    )
+    matmul = Matmul(
+        config=matmul_config,
+        target=target,
+    )
+    matmul.hardware_aware_finetune(topk=20)
+    # convert tensors to torch
+    input_shape = (M, K)
+    weight_shape = (N, K) if layout == "nt" else (K, N)
+    output_shape = (M, N)
+    inputs = []
+    inputs.append(torch.randint(-16, 16, input_shape, dtype=torch.int8).cuda())
+    inputs.append(torch.randint(-1, 2, weight_shape, dtype=torch.int8).cuda())
+    ref_result = torch.matmul(
+        inputs[0].to(torch.float32),
+        inputs[1].t().to(torch.float32) if layout == "nt" else inputs[1].to(torch.float32))
+
+    permuted_inputs = []
+    if matmul.input_transform is not None:
+        permuted_inputs.append(matmul.input_transform(inputs[0].cpu())).cuda()
+    else:
+        permuted_inputs.append(inputs[0])
+    if matmul.weight_transform is not None:
+        permuted_inputs.append(matmul.weight_transform(inputs[1].cpu()).cuda())
+    else:
+        permuted_inputs.append(inputs[1])
+
+    permuted_inputs.append(torch.randint(-7, 7, output_shape, dtype=torch.int32).cuda())
+    matmul(*permuted_inputs)
+    print(permuted_inputs[-1])
+    print(ref_result)
+    torch.testing.assert_close(
+        permuted_inputs[-1].to(torch.float32), ref_result, rtol=1e-2, atol=1e-2)
 
 
 # fmt: on
