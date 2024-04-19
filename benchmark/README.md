@@ -1,6 +1,6 @@
 # Speedup Benchmark vs Vendor Libraries
 
-This part presents a benchmark comparison between our custom library, BitBLAS, and various vendor libraries (cuBLAS, CUTLASS, bitsandbytes, faster-transformer, tensorrt-llm, vLLM, and Marlin) across different matrix operation types (GEMM, GEMV) and data formats (float16xfloat16, int8xint8, float16xint4/nf4). The benchmarks are conducted on NVIDIA GPUs - 24GB GTX 3090 and 80GB A100, with CUDA 12.1 installed.
+This part presents a benchmark comparison between our custom library, BitBLAS, and various vendor libraries (cuBLAS, CUTLASS, bitsandbytes, faster-transformer, tensorrt-llm, vLLM, and Marlin) across different matrix operation types (GEMM, GEMV) and data formats (float16xfloat16, int8xint8, float16xint4/nf4). The benchmarks are conducted on NVIDIA GPUs - 24GB RTX 3090 and 80GB A100, with CUDA 12.1 installed.
 
 ## Benchmark Overview
 
@@ -11,7 +11,7 @@ This part presents a benchmark comparison between our custom library, BitBLAS, a
 
 ### Hardware
 
-- NVIDIA GTX 3090 (24GB)
+- NVIDIA RTX 3090 (24GB)
 - NVIDIA A100 (80GB)
 
 ### Software
@@ -28,7 +28,7 @@ This part presents a benchmark comparison between our custom library, BitBLAS, a
 
 ## Results Summary
 
-### GTX 3090 Benchmarks
+### RTX 3090 Benchmarks
 
 - **Float16 and Int8 GEMM with Tensorcore**: BitBLAS matches the performance of cuBLAS and CUTLASS.
 - **Float16xnf4 GEMV and GEMM**: BitBLAS achieves 2x the speed of bitsandbytes and 4x the base float16 performance.

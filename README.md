@@ -46,7 +46,7 @@ BitBLAS achieves exceptional performance across a variety of computational patte
     <img src="./images/figures/op_benchmark_consistent_gemm_int8.png" alt="gemm int8 performance on 4090 and a100" style="width: 49%;" />
   </div>
 
-For more detailed information on benchmark sets with other formats (NF4/FP4) and other devices (GTX 3090), please refer to the [benchmark](./benchmark/README.md).
+For more detailed information on benchmark sets with other formats (NF4/FP4) and other devices (RTX 3090), please refer to the [benchmark](./benchmark/README.md).
 
 ## Support Matrix
 
