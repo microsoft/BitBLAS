@@ -1,5 +1,6 @@
-# Import necessary libraries
-import os
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 import subprocess
 import logging
 from thefuzz import process
