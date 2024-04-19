@@ -1,3 +1,9 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+# pylint: disable=missing-docstring, invalid-name
+"""This is modified from https://huggingface.co/1bitLLM/bitnet_b1_58-3B/blob/main/utils_quant.py."""
+
 import math
 import argparse
 import torch
@@ -5,9 +11,10 @@ import random
 
 from eval_utils import get_test_dataset
 from modeling_bitnet import BitnetForCausalLM
-from tokenization_bitnet import BitnetTokenizer 
+from tokenization_bitnet import BitnetTokenizer
 
 from tqdm import tqdm
+
 torch.set_grad_enabled(False)
 
 parser = argparse.ArgumentParser()
@@ -17,10 +24,7 @@ parser.add_argument('--seqlen', default=2048, type=int)
 
 
 def calulate_loss(model, input, loss_fct):
-    output = model(input,
-                    use_cache=False,
-                    output_hidden_states=False,
-                    output_attentions=False)[0]
+    output = model(input, use_cache=False, output_hidden_states=False, output_attentions=False)[0]
     shift_logits = output[:, :-1, :].contiguous()
     shift_labels = input[:, 1:]
     loss = loss_fct(shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1))
@@ -32,7 +36,7 @@ def main(args):
     model = BitnetForCausalLM.from_pretrained(
         args.hf_path,
         device_map='auto',
-        low_cpu_mem_usage=True, 
+        low_cpu_mem_usage=True,
         use_flash_attention_2=True,
         torch_dtype=torch.float16,
     ).half()
@@ -52,7 +56,7 @@ def main(args):
             progress.set_description(f"avg_loss = {acc_loss/ count / math.log(2)}")
 
         avg_loss = acc_loss / count / math.log(2)
-        ppl.append(2 ** avg_loss)
+        ppl.append(2**avg_loss)
         print("{} PPL: {}".format(dataset, ppl[-1]))
 
     print(ppl)
