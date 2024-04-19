@@ -10,7 +10,7 @@
 
 The easiest way to install BitBLAS is direcly from the PyPi using pip. To install the latest version, run the following command in your terminal.
 
-**Note**: Currently, bitblas whl is only supported on Linux systems. We recommend using Ubuntu 20.04 or later version as we build the whl files on this platform. 
+**Note**: Currently, bitblas whl is only supported on Linux systems. We recommend using Ubuntu 20.04 or later version as we build the whl files on this platform. Currently we only provide whl files for CUDA 12.1 and with Python 3.8. If you are using a different version of CUDA. you may need to build BitBLAS from source.
 
 ```bash
 pip install bitblas
