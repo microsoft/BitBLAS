@@ -2,9 +2,34 @@
 license: mit
 ---
 
-This is a reproduction of the <a href="https://arxiv.org/abs/2402.17764"> BitNet b1.58</a> paper. The models are trained with <a href="https://github.com/togethercomputer/RedPajama-Data">RedPajama dataset</a> for 100B tokens. The hypers, as well as two-stage LR and weight decay, are implemented as suggested in their following <a href="https://github.com/microsoft/unilm/blob/master/bitnet/The-Era-of-1-bit-LLMs__Training_Tips_Code_FAQ.pdf">paper</a>. All models are open-source in the <a href="https://huggingface.co/1bitLLM">repo</a>. We will train larger models and/or more tokens when resource is available.
+This is a BitBLAS Implementation for the reproduced 1.58bit model from [1bitLLM/bitnet_b1_58-3B](https://huggingface.co/1bitLLM/bitnet_b1_58-3B). We replaced the original simulated Int8x3bit Quantized Inference Kernel with BitBLAS INT8xINT2 Kernel. We also evaluated the model's correctness and performance through `eval_correctness.py` and `benchmark_inference_latency.py`.
 
-## Results
+## BitBLAS Results
+
+### Performance
+
+**Note:** To reproduce the results of BitBLAS, Please checkout the `benchmark_inference_latency.py`. To reproduce the results of the original model, Please checkout the [1bitLLM/bitnet_b1_58-3B](https://huggingface.co/1bitLLM/bitnet_b1_58-3B) repo.
+
+|      Model      | Device | batchsize | in_seq |   model  | bitnet-1.58b-3b-huggingface | bitnet-1.58b-3b-bitblas |
+|:---------------:|:------:|:---------:|:------:|:--------:|:---------------------------:|:-----------------------:|
+| bitnet_b1_58-3B |  A100  |     1     |    1   | LLAMA-3B |         177.6729107         |       64.17962909       |
+| bitnet_b1_58-3B |  A100  |    128    |    1   | LLAMA-3B |         188.6145592         |       63.48158518       |
+| bitnet_b1_58-3B |  A100  |     1     |  2048  | LLAMA-3B |         348.7066031         |       202.6877999       |
+
+### On-the-Fly GPU Memory Footprint
+
+We measured the GPU memory footprint through the `nvidia-smi` command. Please checkout `nvidia_measure_memory.sh` to get the real-time GPU memory usage. And then start a `benchmark_model_10k_loops.py` workload to measure the overall GPU memory usage.
+
+|    **Model**    | **Device** | **batchsize** | **in_seq** | **bitnet-1.58b-3b-huggingface** | **bitnet-1.58b-3b-bitblas** |
+|:---------------:|:----------:|:-------------:|:----------:|:-------------------------------:|:---------------------------:|
+| bitnet_b1_58-3B |    A100    |       1       |      1     |             7595 MB             |           1729 MB           |
+| bitnet_b1_58-3B |    A100    |      128      |      1     |             7677 MB             |           1789 MB           |
+| bitnet_b1_58-3B |    A100    |       1       |    2048    |             8731 MB             |           3163 MB           |
+
+## PPL and Zero-shot Accuracy
+
+The number is Reported from the [1bitLLM/bitnet_b1_58-3B](https://huggingface.co/1bitLLM/bitnet_b1_58-3B), Please checkout the `eval_ppl.py`.
+
 PPL and zero-shot accuracy:
 | Models | PPL| ARCe| ARCc| HS | BQ | OQ | PQ | WGe | Avg
 |-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
@@ -20,19 +45,13 @@ PPL and zero-shot accuracy:
 
 The differences between the reported numbers and the reproduced results are possibly variances from the training data processing, seeds, or other random factors.
 
-## Evaluation
-The evaluation pipelines are from the paper authors. Here is the commands to run the evaluation:
-```
-pip install lm-eval==0.3.0
-```
-```
-python eval_ppl.py --hf_path 1bitLLM/bitnet_b1_58-3B --seqlen 2048
-```
-```
-python eval_task.py --hf_path 1bitLLM/bitnet_b1_58-3B \
-    --batch_size 1 \
-    --tasks \
-    --output_path result.json \
-    --num_fewshot 0 \
-    --ctx_size 2048
+## Citations
+
+```bibtex
+@article{ma2024era,
+  title={The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits},
+  author={Ma, Shuming and Wang, Hongyu and Ma, Lingxiao and Wang, Lei and Wang, Wenhui and Huang, Shaohan and Dong, Li and Wang, Ruiping and Xue, Jilong and Wei, Furu},
+  journal={arXiv preprint arXiv:2402.17764},
+  year={2024}
+}
 ```
