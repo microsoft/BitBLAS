@@ -69,7 +69,7 @@ We are continuously expanding the support matrix. If you have any specific requi
 ## Getting Started
 
 - [Installation](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md):
-  To install BitBLAS, please checkout the document [installation](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md). Also Make sure you already have the cuda toolkit (version >= 11) installed in the system. Or you can easily install from `pip install bitblas` from PyPi. Currently we only provide whl files for CUDA 12.1 and Ubuntu >= 20.04 with Python 3.8, if you are using a different version of CUDA or OS System, you may need to build BitBLAS from source.
+  To install BitBLAS, please checkout the document [installation](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md). Also Make sure you already have the cuda toolkit (version >= 11) installed in the system. Or you can easily install from `pip install bitblas` from PyPi. Currently we only provide whl files for CUDA>=12.1 and Ubuntu>=20.04 with Python>=3.8, if you are using a different version of CUDA or OS System, you may need to build BitBLAS from source.
 
 - [QuickStart](https://github.com/microsoft/BitBLAS/blob/main/docs/QuickStart.md): BitBLAS provides two Python APIs to perform mixed-precision matrix multiplication:
   - ```bitblas.Matmul``` implements the $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication of $C_{cdtype}[M, N] = A_{adtype}[M, K] \times W_{wdtype}[N, K]$.
