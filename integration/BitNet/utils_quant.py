@@ -153,30 +153,3 @@ class BitLinear(nn.Linear):
         if not self.bias is None:
             out += self.bias.view(1, -1).expand_as(out)
         return out
-    
-# # Naive BitLinear
-# class BitLinear(nn.Linear):
-
-#     def __init__(self,
-#             *kargs,
-#             weight_bits=1,
-#             input_bits=8,
-#             **kwargs
-#         ):
-#         super(BitLinear, self).__init__(*kargs, **kwargs)
-#         """
-#         RMSNorm is placed outside BitLinear
-#         """
-#         self.weight_bits = weight_bits
-#         self.input_bits = input_bits
-
-#     def forward(self, input):
-        
-#         quant_input = input + (activation_quant(input, self.input_bits) - input).detach()
-#         quant_weight = self.weight + (weight_quant(self.weight, self.weight_bits) - self.weight).detach()
-
-#         out = nn.functional.linear(quant_input, quant_weight)
-#         if not self.bias is None:
-#             out += self.bias.view(1, -1).expand_as(out)
-
-#         return out
