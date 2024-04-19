@@ -9,8 +9,8 @@ Some of the key features of BitBLAS include:
     - $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication including FP16xINT4/2/1, INT8xINT4/2/1, etc. Please checkout [support matrix](#support-matrix) for detailed data types support.
     - Matrix multiplication like FP16xFP16 and INT8xINT8.
   - Auto-Tensorization for TensorCore-like hardware instructions.
-  - Implemented [integration](/integration/) to [PyTorch](https://pytorch.org/), [AutoGPTQ](https://github.com/AutoGPTQ/AutoGPTQ) and [vLLM](https://github.com/vllm-project/vllm) for LLM deployment. Please checkout [benchmark summary](#benchmark-summary) for detailed end2end LLM inference performance.
-  - BitBLAS first implemented $W_{INT2}A_{INT8}$ GEMV/GEMM in [BitNet-b1.58](https://arxiv.org/abs/2402.17764) with 8x/2x speedup over cuBLAS $W_{FP16}A_{FP16}$ on A100, please checkout [op_benchmark_a100_int2_scaling](images/figures/op_benchmark_a100_int2_scaling.png) for detailed benchmark results.
+  - Implemented [integration](/integration/) to [PyTorch](https://pytorch.org/), [AutoGPTQ](https://github.com/AutoGPTQ/AutoGPTQ), [vLLM](https://github.com/vllm-project/vllm) and [BitNet-b1.58](https://huggingface.co/1bitLLM/bitnet_b1_58-3B) for LLM deployment. Please checkout [benchmark summary](#benchmark-summary) for detailed end2end LLM inference performance.
+  - BitBLAS first implemented $W_{INT2}A_{INT8}$ GEMV/GEMM in [BitNet-b1.58](https://arxiv.org/abs/2402.17764) with 8x/2x speedup over cuBLAS $W_{FP16}A_{FP16}$ on A100, please checkout [op_benchmark_a100_int2_scaling](images/figures/op_benchmark_a100_int2_scaling.png) for detailed benchmark results. Please checkout [BitNet-b1.58 integration] for the integration with the reproduced BitNet-b1.58 model.
   - Support customizing mixed-precision DNN operations for your specific scenarios via the flexible DSL (TIR Script).
 
 ## Integration Example of FasterTransformer with BitBLAS
