@@ -68,16 +68,16 @@ We are continuously expanding the support matrix. If you have any specific requi
 
 ## Getting Started
 
-- [Installation](./docs/Installation.md):
-  To install BitBLAS, please checkout the document [installation](./docs/Installation.md). Also Make sure you already have the cuda toolkit (version >= 11) installed in the system. Or you can easily install from `pip install bitblas` in the root directory. 
+- [Installation](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md):
+  To install BitBLAS, please checkout the document [installation](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md). Also Make sure you already have the cuda toolkit (version >= 11) installed in the system. Or you can easily install from `pip install bitblas` in the root directory. 
 
-- [QuickStart](./docs/QuickStart.md): BitBLAS provides two Python APIs to perform mixed-precision matrix multiplication:
+- [QuickStart](https://github.com/microsoft/BitBLAS/blob/main/docs/QuickStart.md): BitBLAS provides two Python APIs to perform mixed-precision matrix multiplication:
   - ```bitblas.Matmul``` implements the $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication of $C_{cdtype}[M, N] = A_{adtype}[M, K] \times W_{wdtype}[N, K]$.
   - ```bitblas.Linear``` is a PyTorch ```nn.Linear```-like module to support a Linear of mixed-precision.
 
-- [Integration](./integration/): Explore how BitBLAS seamlessly integrates with LLM deployment frameworks through our examples. Discover the ease of integrating BitBLAS with PyTorch, AutoGPTQ, and vLLM in the 3rd-party integration examples.
+- [Integration](https://github.com/microsoft/BitBLAS/tree/main/integration): Explore how BitBLAS seamlessly integrates with LLM deployment frameworks through our examples. Discover the ease of integrating BitBLAS with PyTorch, AutoGPTQ, and vLLM in the 3rd-party integration examples.
 
-- [Customization](./docs/ExtendOperatorsWithDSL.md): BitBLAS supports implementing customized mixed-precision DNN operations rather than matrix multiplication with the flexible DSL (TIR Script).
+- [Customization](https://github.com/microsoft/BitBLAS/blob/main/docs/ExtendOperatorsWithDSL.md): BitBLAS supports implementing customized mixed-precision DNN operations rather than matrix multiplication with the flexible DSL (TIR Script).
 
 
 ## Contributing
