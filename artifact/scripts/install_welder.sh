@@ -19,7 +19,7 @@ echo "set(USE_LLVM llvm-config-10)" >> config.cmake && echo "set(USE_CUDA ON)" >
 cmake .. && make -j && cd ../../..
 
 # MemFusion Artifact
-git clone https://github.com/LeiWang1999/memfusion_artifact WELDER
+git clone https://github.com/LeiWang1999/memfusion_artifact ./baseline_framework/WELDER
 
 # MemFusion NNFusion
 
@@ -29,3 +29,7 @@ cd ./baseline_framework/welder_nnfusion
 ./maint/script/install_dependency.sh 
 mkdir build && cd build
 cmake .. && make -j && cd ../../..
+
+# MemFusion Cutlass
+
+git clone --branch ladder https://github.com/LeiWang1999/cutlass ./baseline_framework/welder_cutlass --recursive

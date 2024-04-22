@@ -92,27 +92,26 @@ def extract_amos_fp16_perf(log_path="./amos-benchmark/gemm_nt_16384_float16.log"
 
 amos_fp16_latency = extract_amos_fp16_perf()
 amos_fp16_tflops = latency_to_tflops(amos_fp16_latency, 16384, 16384, 16384)
-print(amos_fp16_tflops)
 
-# if device == "V100":
-#     nvidia_res["W$_{FP16}$A$_{FP16}$"]["cuBLAS"] = f"{cublas_fp16_percent:.0f}%"
-# else:
-#     nvidia_res["W$_{FP16}$A$_{FP16}$"]["cuBLAS"] = f"{cublas_fp16_percent:.0f}%"
-#     nvidia_res["W$_{INT8}$A$_{INT8}$"]["cuBLAS"] = f"{cublas_int8_percent:.0f}%"
+if device == "V100":
+    nvidia_res["W$_{FP16}$A$_{FP16}$"]["cuBLAS"] = f"{cublas_fp16_percent:.0f}%"
+else:
+    nvidia_res["W$_{FP16}$A$_{FP16}$"]["cuBLAS"] = f"{cublas_fp16_percent:.0f}%"
+    nvidia_res["W$_{INT8}$A$_{INT8}$"]["cuBLAS"] = f"{cublas_int8_percent:.0f}%"
 
-# # initialize the figures
-# table = PrettyTable()
-# table.title = f"Performance Overview - {device}"
-# table.field_names = ["Library", "W$_{FP16}$A$_{FP16}$", "W$_{INT8}$A$_{INT8}$", "W$_{FP8}$A$_{FP8}$", "W$_{NF4}$A$_{FP16}$"]
+# initialize the figures
+table = PrettyTable()
+table.title = f"Performance Overview - {device}"
+table.field_names = ["Library", "W$_{FP16}$A$_{FP16}$", "W$_{INT8}$A$_{INT8}$", "W$_{FP8}$A$_{FP8}$", "W$_{NF4}$A$_{FP16}$"]
 
-# # collect the transposed data
-# transposed_data = {key: [] for key in table.field_names[1:]}  # 初始化库对应的列表
-# libraries = ["cuBLAS", "rocBLAS", "AMOS", "TensorIR", "Roller"]
+# collect the transposed data
+transposed_data = {key: [] for key in table.field_names[1:]}  # 初始化库对应的列表
+libraries = ["cuBLAS", "rocBLAS", "AMOS", "TensorIR", "Roller"]
 
-# for lib in libraries:
-#     row = [lib]
-#     for precision in table.field_names[1:]:
-#         row.append(nvidia_res[precision].get(lib, 'x'))
-#     table.add_row(row)
+for lib in libraries:
+    row = [lib]
+    for precision in table.field_names[1:]:
+        row.append(nvidia_res[precision].get(lib, 'x'))
+    table.add_row(row)
 
-# print(table)
+print(table)

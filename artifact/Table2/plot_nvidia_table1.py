@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 
-
+# Paper Result
 compilation_cost = {
     "ResNet(1)": {
         "AMOS": "3852",
