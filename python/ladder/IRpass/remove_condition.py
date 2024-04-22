@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from .pass_base import PassBase
 from tvm import tir
 import tvm

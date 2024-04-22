@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 cmake_minimum_required(VERSION 3.8)  
 project(rocblas_benchmark LANGUAGES CXX)  
 

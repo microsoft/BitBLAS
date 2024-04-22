@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 import functools
 from typing import Any, Dict, List, Tuple, Union
 

@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 # !/bin/bash
 # AMOS_HOME = pwd home + .. + .. + .. + 3rdparty + AMOS
 export AMOS_HOME=$(pwd)/../../../baseline_framework/AMOS

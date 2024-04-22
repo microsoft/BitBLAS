@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from .apply_layout_pass import ApplyLayoutPass
 from .debug_pass import debug_pass
 from .fix_cuda_cast import FixCudaCastPass

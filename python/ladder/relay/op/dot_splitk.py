@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from tvm import relay, target, te, topi
 from tvm.relay.op.strategy import wrap_topi_schedule
 from tvm.relay import reg

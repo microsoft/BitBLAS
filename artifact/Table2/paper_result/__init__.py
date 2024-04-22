@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 compilation_cost = {
     "ResNet(1)": {"AMOS": "3852", "TensorIR": "156", "Welder": "11", "LADDER": "31"},
     "ResNet(128)": {"AMOS": "3328", "TensorIR": "128", "Welder": "13", "LADDER": "17"},

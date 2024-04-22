@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 class Block():
     def __init__(self, start, end, is_free):
         self.start = start

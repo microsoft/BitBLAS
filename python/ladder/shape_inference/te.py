@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from typing import Dict, List, Tuple
 
 from tvm import arith, te, tir

@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 #include "tensor.h"
 #include <chrono>
 #include <cstdint>

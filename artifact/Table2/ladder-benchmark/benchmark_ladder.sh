@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 # !/bin/bash
 
 # LADDER_HOME = pwd home + .. + .. + .. + ..

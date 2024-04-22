@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 tvm_rt_header = """
 #include <tvm/runtime/c_backend_api.h>
 #include <tvm/runtime/packed_func.h>

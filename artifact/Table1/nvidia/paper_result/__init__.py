@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 a100_res = {
     "W$_{FP16}$A$_{FP16}$": {
         "cuBLAS": "87%",

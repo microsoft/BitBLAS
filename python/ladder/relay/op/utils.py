@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
 def compute_matmul_shape(a_shape, b_shape, transpose_a, transpose_b):
     a_shape = [int(x) for x in a_shape]

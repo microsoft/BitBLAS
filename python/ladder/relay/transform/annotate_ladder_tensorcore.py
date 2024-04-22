@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from tvm import relay
 
 @relay.transform.function_pass(opt_level=0)

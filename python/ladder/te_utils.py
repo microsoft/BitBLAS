@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from typing import Callable, Dict, List, Tuple
 
 from tvm import _ffi, te, tir

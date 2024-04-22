@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 llama2_providers = ["BS1 SEQ1", "BS32 SEQ1", "BS1 SEQ4096"]
 llama2_times_data = [
     ("PyTorch-Inductor", [1.488471031, 1.450066566, 37.87029266]),

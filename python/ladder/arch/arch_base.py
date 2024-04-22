@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 class Arch:
     def __init__(self) -> None:
         self.reg_cap = 0

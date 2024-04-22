@@ -1,3 +1,5 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 recursive-include 3rdparty/tvm *
 recursive-exclude 3rdparty/tvm/build *
 recursive-exclude 3rdparty/clang* * 

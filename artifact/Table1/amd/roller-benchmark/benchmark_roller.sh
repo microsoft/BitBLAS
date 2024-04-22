@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 # !/bin/bash
 
 export TVM_HOME=$(pwd)/../../../baseline_framework/roller_tvm

@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 import roller
 from roller.graph import IRNode, OutputNode
 from roller.policy import *

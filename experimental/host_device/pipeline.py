@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 import torch
 

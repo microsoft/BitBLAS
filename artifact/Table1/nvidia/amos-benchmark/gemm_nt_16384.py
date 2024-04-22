@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from timeit import repeat
 import tvm
 from tvm import auto_tensorize as at

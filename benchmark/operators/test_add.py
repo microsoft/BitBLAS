@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 import tvm
 import ladder
 from ladder.graph import IRNode, OutputNode

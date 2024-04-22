@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from tvm import te, tir
 from tvm.script import tir as T
 from tvm.tir import TensorIntrin

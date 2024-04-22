@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from tvm import relay, ir
 import numpy as np
 import logging 

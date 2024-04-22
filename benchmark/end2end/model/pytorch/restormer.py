@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 ## Restormer: Efficient Transformer for High-Resolution Image Restoration
 ## Syed Waqas Zamir, Aditya Arora, Salman Khan, Munawar Hayat, Fahad Shahbaz Khan, and Ming-Hsuan Yang
 ## https://arxiv.org/abs/2111.09881

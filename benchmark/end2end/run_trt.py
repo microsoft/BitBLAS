@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 import tensorrt as trt
 import numpy as np
 import os.path as osp

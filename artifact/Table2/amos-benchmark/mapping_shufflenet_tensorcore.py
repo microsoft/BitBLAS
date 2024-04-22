@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 # we implement a simple graph frontend based on TVM called tensor_graph
 import argparse
 from tvm import tensor_graph, tg, auto_tensorize as at

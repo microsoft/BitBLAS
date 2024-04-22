@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 def matmul_nn(n, k, m, dtype="float32"):
     ir = "output0[N, M] +=! input0[N, K] * input1[K, M]"
     input_dict = {

@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from tvm import te
 
 from ..graph import IRNode, find_topo_sort

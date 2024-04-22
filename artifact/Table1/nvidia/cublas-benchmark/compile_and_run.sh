@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 rm -rf build
 mkdir -p build
 cd build

@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 import copy
 from collections import OrderedDict
 from typing import Iterable, List

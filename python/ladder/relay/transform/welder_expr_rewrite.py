@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from tvm import relay, ir
 from tvm.relay.dataflow_pattern import DFPatternCallback, wildcard, is_op, is_constant
 from typing import List

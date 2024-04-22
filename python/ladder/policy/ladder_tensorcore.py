@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from typing import Dict, List, Tuple, Iterable
 
 from queue import PriorityQueue

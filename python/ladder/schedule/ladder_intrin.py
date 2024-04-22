@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 # import tvm convert
 from tvm.runtime import convert
 from tvm.tir.expr import Cast, IntImm

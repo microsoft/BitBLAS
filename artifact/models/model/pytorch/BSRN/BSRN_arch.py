@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 '''
 This repository is used to implement all upsamplers(only x4) and tools for Efficient SR
 @author

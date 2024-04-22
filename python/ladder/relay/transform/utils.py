@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 experimental_mma_pad = False
 
 def check_tensor_core_valid_shape(M, N, K):

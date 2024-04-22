@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 """
 This file contains test cases for the ladder policy module. It tests the execution of various operations using the ladder architecture and code generator.
 

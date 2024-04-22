@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 import os
 # model_path = pwd + .. + .. + models
 model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "models")

@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 # !/bin/bash
 # Description: Run all benchmarks for NVIDIA GPUs.
 DEVICE=$1

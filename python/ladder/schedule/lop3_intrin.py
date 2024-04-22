@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 # registeration
 import tvm
 from tvm.runtime import convert
