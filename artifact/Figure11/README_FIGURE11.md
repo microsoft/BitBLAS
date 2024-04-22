@@ -15,4 +15,4 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 11](./png/memory_usage_a100)
+![Figure 11](./png/memory_usage_a100.png)
