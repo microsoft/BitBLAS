@@ -21,7 +21,7 @@ force_tune = args.force_tune
 
 if not reproduce:
     print("Using the paper results")
-    os.system(f"python3 memory_usage.py")
+    os.system(f"python3 plot_memory_usage.py")
 else:
     print("Reproducing the results")
     # reproduce the results for amos

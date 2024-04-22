@@ -24,7 +24,7 @@ else:
 
 # initialize the figures
 table = PrettyTable()
-table.title = f"Compilation  time (in minutes)  comparison of end-to-end models on NVIDIA A100 GPU"
+table.title = "Compilation  time (in minutes)  comparison of end-to-end models on NVIDIA A100 GPU"
 table.field_names = ["Model(BS)", "ResNet(1)", "ResNet(128)", "ShuffleNet(1)", "ShuffleNet(128)"]
 
 # collect the transposed data
@@ -37,4 +37,18 @@ for lib in libraries:
         row.append(compilation_cost[precision].get(lib, 'x'))
     table.add_row(row)
 
-print(table)
+# 转置表格
+transposed_field_names = ["Library"] + libraries
+transposed_data = [
+    [model] + [compilation_cost[model][lib] for lib in libraries] for model in table.field_names[1:]
+]
+
+# 创建转置表格
+transposed_table = PrettyTable()
+transposed_table.title = "Transposed Compilation Time Table"
+transposed_table.field_names = transposed_field_names
+
+for row in transposed_data:
+    transposed_table.add_row(row)
+
+print(transposed_table)

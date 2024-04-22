@@ -3,7 +3,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
-import matplotlib.ticker as ticker
 
 colers_sets = [
     # nilu
@@ -30,18 +29,10 @@ colers_sets = [
 ]
 hatch_patterns = ["-", "+", "x", "\\", "*", "o", "O", "."]
 
-b1s1_providers = [
-    "W$_{FP16}$A$_{FP16}$",
-    "W$_{INT4}$A$_{FP16}$",
-    "W$_{MXFP8}$A$_{MXFP8}$",
-    "W$_{INT1}$A$_{INT8}$",
-]
-llama2_times_data = [
-    ("Welder-Roller", [1.206272, 0, 0, 0]),
-    ("+Transform", [1.0305, 0.449436135, 1.72799265, 0.26879486]),
-    ("+PTX", [1.0305, 0.3437, 1.72799265, 0.1571]),
-    ("+Holistic Schedule", [1.0305, 0.3437, 0.8467, 0.1571]),
-]
+from paper_result import (
+    b1s1_llama2_providers,
+    b1s1_llama2_times_data,
+)
 
 # 创建一个figure实例
 fig = plt.figure(figsize=(12, 3.8))
@@ -49,16 +40,16 @@ fig = plt.figure(figsize=(12, 3.8))
 _1x_baseline = "+Transform"
 
 # draw for bs1_seq1
-_1x_baseline_times = dict(llama2_times_data)[_1x_baseline]
+_1x_baseline_times = dict(b1s1_llama2_times_data)[_1x_baseline]
 
 # 计算其他方法相对于Torch-Inductor的加速比
 speed_up_data = []
-for label, times in llama2_times_data:
+for label, times in b1s1_llama2_times_data:
     speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
     speed_up_data.append((label, speed_up))
 
 # Create an array for x-axis positions
-x = np.arange(len(b1s1_providers))
+x = np.arange(len(b1s1_llama2_providers))
 
 
 # Set the width of the bars
@@ -102,21 +93,15 @@ for i, (label, speedup) in enumerate(speed_up_data):
                 weight="bold",
             )
 ax0.set_xticks(x + len(speed_up_data) * bar_width / 2)
-ax0.set_xticklabels(b1s1_providers, fontsize=14)
+ax0.set_xticklabels(b1s1_llama2_providers, fontsize=14)
 # set y axis range
 ax0.set_ylim(0, 2.3)
-b1s4096_providers = [
-    "W$_{FP16}$A$_{FP16}$",
-    "W$_{INT4}$A$_{FP16}$",
-    "W$_{MXFP8}$A$_{MXFP8}$",
-    "W$_{INT1}$A$_{INT8}$",
-]
-b1s4096_llama2_times_data = [
-    ("Welder-Roller", [124, 0, 0, 0]),
-    ("+Transform", [41.84999636, 37.69587371, 106.5852877, 31.25220761]),
-    ("+PTX", [33.7857, 29.94758645, 92.32923136, 24.44975112]),
-    ("+Holistic Schedule", [33.7857, 29.94758645, 36.6284164, 24.44975112]),
-]
+
+
+from paper_result import (
+    b1s4096_llama2_providers,
+    b1s4096_llama2_times_data,
+)
 _1x_baseline = "+Transform"
 
 # draw for bs1_seq1
@@ -160,7 +145,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
                 weight="bold",
             )
 ax1.set_xticks(x + len(speed_up_data) * bar_width / 2)
-ax1.set_xticklabels(b1s4096_providers, fontsize=14)
+ax1.set_xticklabels(b1s4096_llama2_providers, fontsize=14)
 # set ylabels font size
 ax1.set_yticklabels(ax1.get_yticks(), fontsize=10)
 

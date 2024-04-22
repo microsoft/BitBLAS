@@ -75,9 +75,7 @@ times_data_bs1_seq4096 = [(label, [times[2]]) for label, times in times_data]
 providers = providers_bs1_seq1
 times_data = times_data_bs1_seq1
 
-gs_llama2_bs1_seq1 = gridspec.GridSpecFromSubplotSpec(
-    3, 1, subplot_spec=gs[0, 0:2], hspace=0.25
-)
+gs_llama2_bs1_seq1 = gridspec.GridSpecFromSubplotSpec(3, 1, subplot_spec=gs[0, 0:2], hspace=0.25)
 ax1a = fig.add_subplot(gs_llama2_bs1_seq1[0])
 ax1b = fig.add_subplot(gs_llama2_bs1_seq1[1:])
 
@@ -88,15 +86,11 @@ _1x_baseline_times = dict(times_data)[_1x_baseline]
 speed_up_data = []
 for label, times in times_data:
     if label != _1x_baseline:
-        speed_up = [
-            p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)
-        ]
+        speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
         speed_up_data.append((label, speed_up))
-
 
 # Create an array for x-axis positions
 x = np.arange(len(providers))
-
 
 # Set the width of the bars
 bar_width = 0.07
@@ -106,7 +100,6 @@ max_speedup = np.ceil(max([max(speedup) for _, speedup in speed_up_data]))
 # 设置两个Y轴的范围
 ax1a.set_ylim(6, 9)  # 上面的图为10到最大值
 ax1b.set_ylim(0, 4)  # 下面的图为0到5
-
 
 # Draw cublas as a horizontal dashed line
 ax1a.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
@@ -144,10 +137,10 @@ for i, (label, speedup) in enumerate(speed_up_data):
         height = rect.get_height()
         if height == 0:
             if label == "TensorIR":
-                warning_text = f"TIR Not Support"
+                warning_text = "TIR Not Support"
             else:
                 if "vLLM" in label:
-                    warning_text = f"vLLM Not Support"
+                    warning_text = "vLLM Not Support"
                 else:
                     warning_text = f"{label} Not Support"
             ax1a.text(
@@ -167,7 +160,6 @@ kwargs = dict(transform=ax1a.transAxes, color="k", clip_on=False)
 ax1a.plot((1 - d, 1 + d), (-d, +d), **kwargs)  # top-left diagonal
 ax1a.plot((-d, +d), (-d, +d), **kwargs)  # top-right diagonal
 
-
 kwargs.update(transform=ax1b.transAxes)  # switch to the bottom axes
 ax1b.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)  # bottom-left diagonal
 ax1b.plot((-d, +d), (1 - d, 1 + d), **kwargs)  # bottom-right diagonal
@@ -185,21 +177,17 @@ _1x_baseline_times = dict(times_data)[_1x_baseline]
 speed_up_data = []
 for label, times in times_data:
     if label != _1x_baseline:
-        speed_up = [
-            p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)
-        ]
+        speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
         speed_up_data.append((label, speed_up))
 
 ax1_1 = fig.add_subplot(gs[0, 2:4])
 x = np.arange(len(providers))
-
 
 # Set the width of the bars
 bar_width = 0.09
 
 # Draw cublas as a horizontal dashed line
 ax1_1.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-
 
 # Create bars using a loop
 for i, (label, speedup) in enumerate(speed_up_data):
@@ -220,7 +208,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
         height = rect.get_height()
         if height == 0:
             if label == "TensorIR":
-                warning_text = f"TIR Not Support"
+                warning_text = "TIR Not Support"
             else:
                 if "vLLM" in label:
                     warning_text = "vLLM Not Support"
@@ -250,21 +238,17 @@ _1x_baseline_times = dict(times_data)[_1x_baseline]
 speed_up_data = []
 for label, times in times_data:
     if label != _1x_baseline:
-        speed_up = [
-            p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)
-        ]
+        speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
         speed_up_data.append((label, speed_up))
 
 ax1_2 = fig.add_subplot(gs[0, 4:6])
 x = np.arange(len(providers))
-
 
 # Set the width of the bars
 bar_width = 0.09
 
 # Draw cublas as a horizontal dashed line
 ax1_2.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-
 
 # Create bars using a loop
 for i, (label, speedup) in enumerate(speed_up_data):
@@ -284,7 +268,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
         height = rect.get_height()
         if height == 0:
             if label == "TensorIR":
-                warning_text = f"TIR Not Support"
+                warning_text = "TIR Not Support"
             else:
                 if "vLLM" in label:
                     warning_text = "vLLM Not Support"
@@ -304,7 +288,6 @@ for i, (label, speedup) in enumerate(speed_up_data):
 
 ax1_2.set_xticks(x + len(speed_up_data) * bar_width / 2)
 ax1_2.set_xticklabels(providers)
-
 
 # bloom
 # 这里添加用于绘制bloom图表的代码
@@ -331,9 +314,7 @@ _1x_baseline_times = dict(times_data)[_1x_baseline]
 speed_up_data = []
 for label, times in times_data:
     if label != _1x_baseline:
-        speed_up = [
-            p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)
-        ]
+        speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
         speed_up_data.append((label, speed_up))
 
 # Create an array for x-axis positions
@@ -346,7 +327,6 @@ max_speedup = np.ceil(max([max(speedup) for _, speedup in speed_up_data]))
 # 设置两个Y轴的范围
 ax2a.set_ylim(8, 12)  # 上面的图为10到最大值
 ax2b.set_ylim(0, 6)  # 下面的图为0到5
-
 
 # Draw cublas as a horizontal dashed line
 ax2a.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
@@ -385,7 +365,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
         height = rect.get_height()
         if height == 0:
             if label == "TensorIR":
-                warning_text = f"TIR Not Support"
+                warning_text = "TIR Not Support"
             else:
                 if "vLLM" in label:
                     warning_text = "vLLM Not Support"
@@ -408,7 +388,6 @@ kwargs = dict(transform=ax2a.transAxes, color="k", clip_on=False)
 ax2a.plot((1 - d, 1 + d), (-d, +d), **kwargs)  # top-left diagonal
 ax2a.plot((-d, +d), (-d, +d), **kwargs)  # top-right diagonal
 
-
 kwargs.update(transform=ax2b.transAxes)  # switch to the bottom axes
 ax2b.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)  # bottom-left diagonal
 ax2b.plot((-d, +d), (1 - d, 1 + d), **kwargs)  # bottom-right diagonal
@@ -417,7 +396,6 @@ ax2b.set_xticks(x + len(speed_up_data) * bar_width / 2)
 ax2b.set_xticklabels(providers)
 ax2a.grid(False)
 ax2b.grid(False)
-
 
 providers = providers_bs32_seq1
 times_data = times_data_bs32_seq1
@@ -428,21 +406,17 @@ _1x_baseline_times = dict(times_data)[_1x_baseline]
 speed_up_data = []
 for label, times in times_data:
     if label != _1x_baseline:
-        speed_up = [
-            p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)
-        ]
+        speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
         speed_up_data.append((label, speed_up))
 
 ax2_1 = fig.add_subplot(gs[0, 8:10])
 x = np.arange(len(providers))
-
 
 # Set the width of the bars
 bar_width = 0.09
 
 # Draw cublas as a horizontal dashed line
 ax2_1.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-
 
 # Create bars using a loop
 for i, (label, speedup) in enumerate(speed_up_data):
@@ -462,7 +436,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
         height = rect.get_height()
         if height == 0:
             if label == "TensorIR":
-                warning_text = f"TIR Not Support"
+                warning_text = "TIR Not Support"
             else:
                 if "vLLM" in label:
                     warning_text = "vLLM Not Support"
@@ -492,21 +466,17 @@ _1x_baseline_times = dict(times_data)[_1x_baseline]
 speed_up_data = []
 for label, times in times_data:
     if label != _1x_baseline:
-        speed_up = [
-            p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)
-        ]
+        speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
         speed_up_data.append((label, speed_up))
 
 ax2_2 = fig.add_subplot(gs[0, 10:12])
 x = np.arange(len(providers))
-
 
 # Set the width of the bars
 bar_width = 0.09
 
 # Draw cublas as a horizontal dashed line
 ax2_2.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-
 
 # Create bars using a loop
 for i, (label, speedup) in enumerate(speed_up_data):
@@ -526,7 +496,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
         height = rect.get_height()
         if height == 0:
             if label == "TensorIR":
-                warning_text = f"TIR Not Support"
+                warning_text = "TIR Not Support"
             else:
                 if "vLLM" in label:
                     warning_text = "vLLM Not Support"
@@ -560,21 +530,17 @@ _1x_baseline_times = dict(times_data)[_1x_baseline]
 speed_up_data = []
 for label, times in times_data:
     if label != _1x_baseline:
-        speed_up = [
-            p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)
-        ]
+        speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
         speed_up_data.append((label, speed_up))
 
 # Create an array for x-axis positions
 x = np.arange(len(providers))
-
 
 # Set the width of the bars
 bar_width = 0.09
 
 # Draw cublas as a horizontal dashed line
 ax3.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-
 
 # Create bars using a loop
 for i, (label, speedup) in enumerate(speed_up_data):
@@ -608,21 +574,17 @@ _1x_baseline_times = dict(times_data)[_1x_baseline]
 speed_up_data = []
 for label, times in times_data:
     if label != _1x_baseline:
-        speed_up = [
-            p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)
-        ]
+        speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
         speed_up_data.append((label, speed_up))
 
 # Create an array for x-axis positions
 x = np.arange(len(providers))
-
 
 # Set the width of the bars
 bar_width = 0.09
 
 # Draw cublas as a horizontal dashed line
 ax4.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-
 
 # Create bars using a loop
 for i, (label, speedup) in enumerate(speed_up_data):
@@ -659,23 +621,17 @@ _1x_baseline_times = dict(times_data)[_1x_baseline]
 speed_up_data = []
 for label, times in times_data:
     if label != _1x_baseline:
-        speed_up = [
-            p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)
-        ]
+        speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
         speed_up_data.append((label, speed_up))
-
 
 # Create an array for x-axis positions
 x = np.arange(len(providers))
 
-
 # Set the width of the bars
 bar_width = 0.09
 
-
 # Draw cublas as a horizontal dashed line
 ax5.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-
 
 # Create bars using a loop
 for i, (label, speedup) in enumerate(speed_up_data):
@@ -695,7 +651,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
         height = rect.get_height()
         if height == 0:
             if label == "TensorIR":
-                warning_text = f"TIR Not Support"
+                warning_text = "TIR Not Support"
             else:
                 if "vLLM" in label:
                     warning_text = "vLLM Not Support"
@@ -721,7 +677,6 @@ ax5.set_xticklabels(providers)
 
 ax5.grid(False)
 
-
 ax6 = fig.add_subplot(gs[1, 9:12])  # ViT
 # 加载和显示ViT图表
 # Data
@@ -733,15 +688,11 @@ _1x_baseline_times = dict(times_data)[_1x_baseline]
 speed_up_data = []
 for label, times in times_data:
     if label != _1x_baseline:
-        speed_up = [
-            p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)
-        ]
+        speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
         speed_up_data.append((label, speed_up))
-
 
 # Draw cublas as a horizontal dashed line
 ax6.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-
 
 # Create bars using a loop
 for i, (label, speedup) in enumerate(speed_up_data):
@@ -761,7 +712,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
         height = rect.get_height()
         if height == 0:
             if label == "TensorIR":
-                warning_text = f"TIR Not Support"
+                warning_text = "TIR Not Support"
             else:
                 if "vLLM" in label:
                     warning_text = "vLLM Not Support"
@@ -787,7 +738,6 @@ ax6.set_xticklabels(providers)
 
 ax6.grid(False)
 
-
 # 假设ax1a, ax1b, ax2a, ax2b, ax3, ax4, ax5, ax6是您的子图对象
 # 在每个子图的外部底部添加脚注
 
@@ -808,9 +758,7 @@ ax2b.text(
     fontsize=legand_font,
     ha="center",
 )
-ax3.text(
-    0.5, -0.3, "(c) ResNet", transform=ax3.transAxes, fontsize=legand_font, ha="center"
-)
+ax3.text(0.5, -0.3, "(c) ResNet", transform=ax3.transAxes, fontsize=legand_font, ha="center")
 ax4.text(
     0.5,
     -0.3,
@@ -827,9 +775,7 @@ ax5.text(
     fontsize=legand_font,
     ha="center",
 )
-ax6.text(
-    0.5, -0.3, "(f) ViT", transform=ax6.transAxes, fontsize=legand_font, ha="center"
-)
+ax6.text(0.5, -0.3, "(f) ViT", transform=ax6.transAxes, fontsize=legand_font, ha="center")
 
 y_size = 8
 ax1a.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
@@ -876,7 +822,6 @@ fig.text(
 # 设置ax3的Y轴标签
 ax3.set_ylabel("Speedup vs. Welder", fontsize=10, labelpad=10)
 
-
 # get handles from ax1a and ax1b and get labels from ax1_1 and ax1_2
 handles1, labels1 = ax1_2.get_legend_handles_labels()
 
@@ -893,7 +838,6 @@ for ax in axes:
             labels_llm.append(label)
         else:
             pass
-
 
 # 为上面六个图添加图例
 fig.legend(
@@ -942,7 +886,9 @@ fig.legend(
 # 调整布局以避免图例被遮挡
 plt.subplots_adjust(top=0.85, bottom=0.15)
 
-plt.savefig("pdf/end2end_a100.pdf", bbox_inches="tight",
+plt.savefig(
+    "pdf/end2end_a100.pdf",
+    bbox_inches="tight",
 )
 plt.savefig(
     "png/end2end_a100.png",
