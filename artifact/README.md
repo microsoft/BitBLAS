@@ -5,10 +5,10 @@ This code branch is used for OSDI'24 Artifact Evaluation of paper #626, titled "
 
 ### Evaluation Setup
 * Artifacts Available:
-    * All Ladder related code are available under BitBLAS open-source project located in: [https://github.com/microsoft/bitblas/tree/ladder_artifact](https://github.com/microsoft/nnfusion/tree/ladder_artifact)
+    * All Ladder related code are available under Ladder open-source project located in: [https://github.com/microsoft/ladder/tree/ladder_artifact](https://github.com/microsoft/nnfusion/tree/ladder_artifact)
 * Artifacts Functional:
     * *Documentation*: the following of documents include detailed guidelines on how to build, install, test Ladder and the experiments to compare with other baselines.
-    * *Completeness*: the source code under `python/ladder` folder includes all the key components of Ladder. And the single operator part of Ladder has been merged into Microsoft BitBLAS, and the end2end optimization part is available in this artifact.
+    * *Completeness*: the source code under `python/ladder` folder includes all the key components of Ladder. And the single operator part of Ladder has been merged into Microsoft Ladder, and the end2end optimization part is available in this artifact.
     * *Exercisability*: under the *artifacts* folder, we prepare all the script and data to reproduce the experiements in individual folders named by the figure name in paper.
 * Results Reproduced:
     * To reproduce the main results presented in our paper, we provide Docker images containing all the environments and baseline software, and machines with the same configurations as we used in paper evaluation. We also provide detailed guideline to help reproduce the results step by step. 

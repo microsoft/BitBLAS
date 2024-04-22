@@ -1,4 +1,4 @@
-# TODO(lei): waiting for public refactor.
+# TODO(lei): waiting for refactor.
 FROM nvcr.io/nvidia/pytorch:23.01-py3 
 
 WORKDIR /root
