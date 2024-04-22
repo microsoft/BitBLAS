@@ -5,7 +5,7 @@ This code branch is used for OSDI'24 Artifact Evaluation of paper #626, titled "
 
 ### Evaluation Setup
 * Artifacts Available:
-    * All Ladder related code are available under NNFusion open-source project located in: [https://github.com/microsoft/bitblas/tree/ladder_artifact](https://github.com/microsoft/nnfusion/tree/ladder_artifact)
+    * All Ladder related code are available under BitBLAS open-source project located in: [https://github.com/microsoft/bitblas/tree/ladder_artifact](https://github.com/microsoft/nnfusion/tree/ladder_artifact)
 * Artifacts Functional:
     * *Documentation*: the following of documents include detailed guidelines on how to build, install, test Ladder and the experiments to compare with other baselines.
     * *Completeness*: the source code under `python/ladder` folder includes all the key components of Ladder. And the single operator part of Ladder has been merged into Microsoft BitBLAS, and the end2end optimization part is available in this artifact.
@@ -18,7 +18,7 @@ This code branch is used for OSDI'24 Artifact Evaluation of paper #626, titled "
 To ease the process of installing all the dependencies, baseline software, and Ladder code, we provide a Dockerfile and a simple guideline to build a Docker image with all of above installed.
 
 ```bash
-cd ladder
+cd docker
 # build the image
 docker build -t ladder_cuda .
 # run the container
@@ -60,46 +60,28 @@ After downloading, it should be extracted under the artifacts/temp folder. You c
 | Table1    | MatMul Support and its Performance of Vendor Libraries   | [Table1](#f5)                 |
 | Table2    | Compilation time of AMOS, TensorIR Welder and Ladder     | [Table5](#f6)                 |
 
-Note that results in Figure13/part of Table 6 requires ROCM-GPU/GraphCore IPU environments which is not directly available here.
-
-### <a id="Figure1">Figure1 </a>
+### <a id="Figure8">Figure8 </a>
 
 The run instruction is
 
 ```bash
-python run_all.py
+./run_all.sh
 ```
 
-### <a id="Figure2"> Figure2 </a>
+### <a id="Figure9"> Figure9 </a>
 
 The run instruction is
 
 ```bash
-python run_all.py
+./run_all.sh
 ```
 
-### <a id="f2">Figure9-10</a>
+### <a id="f2">Figure10</a>
 
-This figure includes several baselines. The for Ladder, onnxruntime, pytorch, tensorrt and Rammer are
-
-```bash
-python profile_rammer_all.py
-python profile_ort_all.py
-python profile_torch_all.py
-python profile_ladder_all.py
-python profile_trt_all.py
-```
-
-The run instruction for Ansor is below, it requires additional action before running it.
+The run instruction is
 
 ```bash
-# Our tunning log for Ansor only applies for this version.
-cd /root/tvm/build && git checkout v0.9.0 && make -j
-# after switching branch
-cd -
-python profile_ansor_all.py
-# don't forget to get back
-cd /root/tvm/build && git checkout ladder && make -j
+./run_all.sh
 ```
 
 ### <a id="f3">Figure11</a>
@@ -107,24 +89,16 @@ cd /root/tvm/build && git checkout ladder && make -j
 The run instruction is
 
 ```bash
-python profile_ladder_no_tc.py
+./run_all.sh
 ```
-Note that the baseline(Ansor)'s result is already shown in the above section with profile_ansor_all.py.
 
-### <a id="f4"> Figure13</a>
+### <a id="f4"> Figure12</a>
 
 The run instructions are
 
 ```bash
-# measure latency, IRS and kernel count
-python get_IRS.py
-# measure memory perf
-python get_metrics.py
+./run_all.sh
 
-# measure Ansor's latency, IRS, kernel count and memory perf
-cd /root/tvm/build && git checkout v0.9.0 && make -j
-python get_ansor_data.py
-cd /root/tvm/build && git checkout ladder && make -j
 ```
 Note 1: get_ansor_data.py requires TVM v0.9.0, please switch to that branch following the above instructions.
 
@@ -135,20 +109,13 @@ Note 2: Memory perf (Load/Store trans) from get_ansor_data.py should be halfed b
 The run instruction is
 
 ```bash
-python run_ft_cpp_all.py
+./run_all.sh
 ```
 
 If Faster Transformers is not installed, please follow the following commands:
 
 ```bash
-git clone https://github.com/NVIDIA/FasterTransformer
-cd FasterTransformer
-git checkout release/v5.2_bug_fix_tag
-# remove line 20 add_definitions("-DENABLE_BF16") in CMakeLists.txt
-# we don't use BF16 and this will cause compile error.
-mkdir build && cd build
-cmake .. -DSM=70 -DCMAKE_BUILD_TYPE=Release
-make bert_example bert_gemm vit_example vit_gemm swin_example swin_gemm -j
+./run_all.sh
 ```
 
 ### <a id="f6">Table5</a>
@@ -156,8 +123,7 @@ make bert_example bert_gemm vit_example vit_gemm swin_example swin_gemm -j
 The run instruction is
 
 ```bash
-python estimate_run_time_ladder.py
-python estimate_run_time_ansor.py
+./run_all.sh
 ```
 
 ### <a id="f7">Table6</a>
@@ -165,7 +131,7 @@ python estimate_run_time_ansor.py
 The run instruction is
 
 ```bash
-python run_all.py
+./run_all.sh
 ```
 
 ### <a id="f8">Table7</a>
@@ -216,15 +182,6 @@ Ths flag will lower some Dot kernels to CUDA library (cublas) which performs bet
 ### Step3: Evaluate Latency and correctness.
 
 After running the previous command, you can profile the latency of the ladder's generated model:
-
-```bash
-# to evaluate inference performance, you can directly use an executable
-cd PREFIX/nnfusion_rt/cuda_codegen
-./build/main_test
-
-# OR use python script which feeds data with pytorch and ctypes
-python3 run_ladder.py PREFIX
-```
 
 To check the correctness of Ladder's compiled model, you can run the following command to compare Ladder's output with onnx-runtime's output.
 

@@ -253,7 +253,7 @@ class CodeGenerator:
         try:
             sch = schedule(node.args, config)
         except Exception as e:
-            logger.error(f"Fail to create schedule for {node}, the error is {e}")
+            logger.debug(f"Fail to create schedule for {node}, the error is {e}")
             return None
         self.block_size, self.grid_size = sch.block_size, sch.grid_size
         code, _, _ = tvm_build(

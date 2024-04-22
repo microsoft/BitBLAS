@@ -34,3 +34,5 @@ def _init_logger():
     set_log_level(logging.INFO)
 
 _init_logger()
+
+__version__ = "0.1.0"

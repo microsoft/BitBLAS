@@ -1,5 +1,5 @@
 # TODO(lei): waiting for public refactor.
-FROM nvcr.io/nvidia/cuda:11.0.3-cudnn8-devel-ubuntu20.04
+FROM nvcr.io/nvidia/pytorch:23.01-py3 
 
 WORKDIR /root
 
