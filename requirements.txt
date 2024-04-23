@@ -21,3 +21,4 @@ ml_dtypes
 psutil
 scipy
 tornado
+torch
