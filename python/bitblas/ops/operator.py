@@ -58,6 +58,7 @@ class Operator(ABC):
             1  # todo(lei): should be analyzed from the prim_func.
         )
         self.wrapper = None
+        self.src_name = None
         self.lib_name = None
         self.lib = None
 
@@ -131,6 +132,7 @@ class Operator(ABC):
                                                     self.arch)
                     wrapper.compile_lib()
                     self.wrapper = wrapper
+                    self.src_name = self.wrapper.src_name
                     self.lib_name = self.wrapper.lib_name
                     self.lib = self.wrapper.load_lib()
                     self.lib.init()
@@ -291,11 +293,13 @@ class Operator(ABC):
     def update_func(self, func: PrimFunc):
         self.prim_func_mod["main"] = func
 
-    def update_runtime_module(self, rt_mod, lib_name=None):
+    def update_runtime_module(self, rt_mod, src_name=None, lib_name=None):
         self.rt_mod = rt_mod
         self.time_evaluator = rt_mod.time_evaluator(rt_mod.entry_name, self.arch.device, number=10)
         self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
         self.torch_func = to_pytorch_func(rt_mod)
+        if src_name is not None:
+            self.src_name = src_name
         if lib_name is not None:
             self.lib_name = lib_name
             self.lib = ctypes.CDLL(lib_name)

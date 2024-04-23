@@ -130,7 +130,7 @@ class OperatorCache:
                 self._load_operator(config_path, target)
 
     def _load_operator(self, config_path, target):
-        mapping, config, rt_mod, lib_name = None, None, None, None
+        mapping, config, rt_mod, src_name, lib_name = None, None, None, None, None
         for file in os.listdir(config_path):
             full_path = os.path.join(config_path, file)
             if file == "mapping.json":
@@ -143,16 +143,18 @@ class OperatorCache:
                 rt_mod = tvm.runtime.load_module(full_path)
             elif file == "wrapper_compiled.so":
                 lib_name = full_path
+            elif file == "wrapper_source.cu":
+                src_name = full_path
 
         if mapping and config and rt_mod:
-            self._instantiate_and_add_operator(mapping, config, rt_mod, lib_name, target)
+            self._instantiate_and_add_operator(mapping, config, rt_mod, src_name, lib_name, target)
 
-    def _instantiate_and_add_operator(self, mapping, config, rt_mod, lib_name, target):
+    def _instantiate_and_add_operator(self, mapping, config, rt_mod, src_name, lib_name, target):
         config_cls = getattr(bitblas, mapping["config_type"])
         operator_cls = getattr(bitblas, mapping["operator_type"])
         op_inst = operator_cls(
-            config=config_cls(**config), target=target, enable_tuning=False, from_database=False)
-        op_inst.update_runtime_module(rt_mod, lib_name=lib_name)
+            config=config_cls(**config), target=target, enable_tuning=False, from_database=True)
+        op_inst.update_runtime_module(rt_mod, src_name=src_name, lib_name=lib_name)
         self.add(config_cls(**config), op_inst)
 
 
