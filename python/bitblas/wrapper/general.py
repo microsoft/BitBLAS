@@ -247,9 +247,7 @@ class CUDASourceWrapper(object):
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
 
-        function_args.append(
-            {"name": "stream=0", "type": "cudaStream_t"},
-        )
+        function_args.append({"name": "stream=0", "type": "cudaStream_t"},)
         # Format the function arguments for declaration
         def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
 
@@ -287,8 +285,8 @@ class CUDASourceWrapper(object):
         # Determine the shared memory size, defaulting to 0 if not specified
         smem_str = 0 if self.dynamic_smem_buf is None else self.dynamic_smem_buf
         # Format the CUDA kernel launch string
-        call_str = "{}<<<{}, {}, {}, stream>>>({});".format(function_name, grid_str, block_str, smem_str,
-                                                    call_args)
+        call_str = "{}<<<{}, {}, {}, stream>>>({});".format(function_name, grid_str, block_str,
+                                                            smem_str, call_args)
         # Create the host function wrapper for the CUDA kernel
         host_func = """
     extern "C" void call({}) {{
@@ -353,11 +351,9 @@ extern "C" void init() {{
         # Add dynamic symbols as integer arguments
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
-        
-        function_args.append(
-            {"name": "stream=0", "type": "cudaStream_t"},
-        )
-        
+
+        function_args.append({"name": "stream=0", "type": "cudaStream_t"},)
+
         # Format the argument definitions for function declaration
         def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
 
@@ -428,8 +424,9 @@ extern "C" void init() {{
                     call_args,
                 )
             if last_range == num_items - 1:
-                call_str += ("\t\telse {{\n\t\t\t {}<<<{}, {}, {}, stream>>>({}); \n\t\t}}\n".format(
-                    function_name, grid_str, block_str, smem_str, call_args))
+                call_str += (
+                    "\t\telse {{\n\t\t\t {}<<<{}, {}, {}, stream>>>({}); \n\t\t}}\n".format(
+                        function_name, grid_str, block_str, smem_str, call_args))
             last_range += 1
             _call_str += call_str
 
