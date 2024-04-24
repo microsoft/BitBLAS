@@ -8,6 +8,7 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 from setuptools.command.build_py import build_py
 from setuptools.command.sdist import sdist
+from wheel.bdist_wheel import bdist_wheel
 import distutils.dir_util
 from typing import List
 import re
@@ -19,6 +20,8 @@ import urllib.request
 from distutils.version import LooseVersion
 import platform
 
+# Environment variables False/True
+PYPI_BUILD = os.environ.get("PYPI_BUILD", "False").lower() == "true"
 PACKAGE_NAME = "bitblas"
 ROOT_DIR = os.path.dirname(__file__)
 MAIN_CUDA_VERSION = "12.1"
@@ -64,12 +67,15 @@ def get_nvcc_cuda_version():
 
 def get_bitblas_version(with_cuda=True, with_system_info=True) -> str:
     version = find_version(get_path("python/bitblas", "__init__.py"))
+    local_version_parts = []
     if with_system_info:
-        version += f"+{get_system_info()}"
+        local_version_parts.append(get_system_info().replace("-", "."))
     if with_cuda:
         cuda_version = str(get_nvcc_cuda_version())
         cuda_version_str = cuda_version.replace(".", "")[:3]
-        version += f".cu{cuda_version_str}"
+        local_version_parts.append(f"cu{cuda_version_str}")
+    if local_version_parts:
+        version += f"+{'.'.join(local_version_parts)}"
     return version
 
 
@@ -257,12 +263,15 @@ class BitBLASSdistCommand(sdist):
 
 setup(
     name=PACKAGE_NAME,
-    version=get_bitblas_version(),
+    version=get_bitblas_version(with_cuda=False, with_system_info=False) if PYPI_BUILD else get_bitblas_version(),
     packages=find_packages(where="python"),
     package_dir={"": "python"},
     author="Microsoft Research",
     description="A light weight framework to generate high performance CUDA/HIP code for BLAS operators.",
     long_description=read_readme(),
+    long_description_content_type='text/markdown',
+    platforms=["Environment :: GPU :: NVIDIA CUDA", 
+               "Operating System :: POSIX :: Linux"],
     license="MIT",
     keywords="BLAS, CUDA, HIP, Code Generation, TVM",
     url="https://github.com/microsoft/BitBLAS",
@@ -272,12 +281,15 @@ setup(
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
-        "Topic :: Scientific/Engineering :: Mathematics, Scientific/Engineering :: Artificial Intelligence",
     ],
     python_requires=">=3.8",
     install_requires=get_requirements(),
     tests_require=[
-        "yapf>=0.32.0", "toml>=0.10.2", "tomli>=2.0.1", "ruff>=0.1.5", "codespell>=2.2.6"
+        "yapf>=0.32.0",
+        "toml>=0.10.2",
+        "tomli>=2.0.1",
+        "ruff>=0.1.5",
+        "codespell>=2.2.6",
     ],
     package_data=package_data,
     include_package_data=True,
