@@ -19,3 +19,4 @@ temp/
 *.onnx
 output
 .tmp/*
+debug/*

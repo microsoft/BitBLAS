@@ -1,4 +1,3 @@
-# TODO(lei): waiting for refactor.
 FROM nvcr.io/nvidia/pytorch:23.01-py3 
 
 WORKDIR /root
@@ -21,18 +20,17 @@ RUN pip install --no-cache-dir --default-timeout=1000 torch==2.1.0 torchvision t
     attrs cloudpickle decorator psutil synr tornado xgboost regex \
     && rm -rf ~/.cache/pip
 
-RUN git clone https://github.com/LeiWang1999 --recursive -b develop \
-  && mkdir tvm/build && cd tvm/build && cp ../cmake/config.cmake . \
-  && echo "set(USE_LLVM \"llvm-config --link-static\")" >> config.cmake \
-  && echo "set(USE_CUDA ON)" >> config.cmake \
-  && cmake .. && make -j
+RUN git clone https://github.com/LeiWang1999/Ladder --recursive -b develop Ladder\
+  && cd Ladder && maint/scripts/installation.sh
 
-ENV PYTHONPATH /root/tvm/python:$PYTHONPATH
+ENV PYTHONPATH /root/Ladder/3rdparty/tvm/python:$PYTHONPATH
 
-RUN git clone https://github.com/nox-410/cutlass -b welder
-ENV CPLUS_INCLUDE_PATH /root/cutlass/include:$CPLUS_INCLUDE_PATH
+ENV CPLUS_INCLUDE_PATH /root/Ladder/3rdparty/cutlass/include:$CPLUS_INCLUDE_PATH
 
-COPY . welder/
-ENV PYTHONPATH /root/welder/python:$PYTHONPATH
+ENV PYTHONPATH /root/Ladder/python:$PYTHONPATH
 
 CMD bash
+
+# install benchmark dependencies
+
+RUN cd /root/Ladder/artifact && ./scripts/install_nvidia_environments.sh

@@ -19,7 +19,7 @@ To ease the process of installing all the dependencies, baseline software, and L
 ```bash
 cd docker
 # build the image
-docker build -t ladder_cuda .
+docker build -t ladder_cuda -f Dockerfile.cu120 .
 # run the container
 nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --name ladder_test ladder_cuda bash
 ```

@@ -39,7 +39,6 @@ def latency_to_tflops(latency, M, N, K):
 
 def extract_cublas_perf(log_path="./cublas-benchmark/build/cublas_benchmark.log"):
     lines = open(log_path).read()
-    print(type(lines))
     pattern = r"\d+,\d+,\d+,\d+,\d+,(\d+\.\d+),(\d+\.\d+)"
     matches = re.search(pattern, lines)
     if matches:
@@ -63,9 +62,9 @@ def extract_amos_fp16_perf(log_path="./amos-benchmark/gemm_nt_16384_float16.log"
     # Extract cost of gemm-float16-float16-layer  
     cost_pattern = r"Cost of gemm-nt-float16-float16-layer-\((\d+),\s(\d+),\s(\d+)\) is (\d+\.\d+) ms"  
     cost_matches = re.findall(cost_pattern, log_data)
-    print(cost_matches)  
     cost_match = cost_matches[-1]
-    M, N, K, cost = int(cost_match.group(1)), int(cost_match.group(2)), int(cost_match.group(3)), float(cost_match.group(4))  
+    M, N, K = int(cost_match[0]), int(cost_match[1]), int(cost_match[2])
+    cost = float(cost_match[3])
     return cost
 
 if reproduce:
