@@ -12,4 +12,4 @@ if [ -d build ]; then
     rm -r build
 fi
 
-python setup.py sdist bdist_wheel
+python setup.py bdist_wheel
