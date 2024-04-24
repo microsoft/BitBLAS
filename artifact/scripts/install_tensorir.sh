@@ -8,9 +8,9 @@ pip3 install --user numpy decorator attrs
 
 apt-get install -y llvm-10
 
-git clone --branch v0.14.0 https://github.com/apache/tvm ./baseline_framework/tvm_14.0 --recursive
+git clone --branch v0.14.0 https://github.com/apache/tvm ./baseline_framework/tvm_v0.14.0 --recursive
 
-cd ./baseline_framework/tvm_14.0
+cd ./baseline_framework/tvm_v0.14.0
 mkdir build
 cp cmake/config.cmake build
 cd build

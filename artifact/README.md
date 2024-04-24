@@ -18,10 +18,10 @@ To ease the process of installing all the dependencies, baseline software, and L
 
 ```bash
 cd docker
-# build the image
+# build the image, this may take a while (around 30+ minutes on the author's test machine)
 docker build -t ladder_cuda -f Dockerfile.cu120 .
 # run the container
-nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --name ladder_test ladder_cuda bash
+nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --gpus all --cap-add=SYS_PTRACE --shm-size=4G --security-opt seccomp=unconfined --security-opt apparmor=unconfined --name ladder_test ladder_cuda bash
 ```
 
 ## 2. Reproducing Individual Experiement Results
