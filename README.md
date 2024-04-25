@@ -5,7 +5,7 @@ This code branch is used for OSDI'24 Artifact Evaluation of paper #626, titled "
 
 ### Evaluation Setup
 * Artifacts Available:
-    * All Ladder related code are available under Ladder open-source project located in: [https://github.com/microsoft/ladder/tree/ladder_artifact](https://github.com/microsoft/nnfusion/tree/ladder_artifact)
+    * All Ladder related code are available under Ladder open-source project located in: [https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact)
 * Artifacts Functional:
     * *Documentation*: the following of documents include detailed guidelines on how to build, install, test Ladder and the experiments to compare with other baselines.
     * *Completeness*: the source code under `python/ladder` folder includes all the key components of Ladder. And the single operator part of Ladder has been merged into Microsoft Ladder, and the end2end optimization part is available in this artifact.
