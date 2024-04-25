@@ -381,6 +381,45 @@ __device__ void decode_i2u_to_f16_scale_zeros_rescale(T1 *_i2u, T2 *B_local_deco
     decode_i2b_to_f16<T1, T2, false, true, true, 1>(_i2u, B_local_decode, N, scale, zeros);
 }
 
+template <typename T1, typename T2, typename T3, typename T4, bool isSigned = false>
+__device__ void decode_i2b_to_f16_scale_zeros_quantized(T1 *_i2s, T2 *B_local_decode, const int N = 8, T3 *scale = nullptr, T4 *zeros = nullptr)
+{
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x00030003;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64016401 : 0x64006400;
+    int16_t const i2s_i16 = *reinterpret_cast<int16_t *>(_i2s);
+    T3 const scale_r = *scale;
+    uint const packed_scales = __pack_half2(scale_r, scale_r);
+    T4 const zero_r = *zeros;
+    uint median_num = ((0xe400 | zero_r) << 16) | (0xe400 | zero_r);
+
+    // decode 2 elems at one time.
+    // interleave {e15,e13,e11,e9,e7,e5,e3,e1,e14,e12,e10,e8,e6,e4,e2,e0}
+    // only decode for {x,x,x,x,e7,e5,e3,e1,x,x,x,x,e6,e4,e2,e0}
+    // otherwise the pointer of _i2s should be moved to
+    int i2s = (i2s_i16 & 0x00ff);
+    i2s |= ((i2s_i16 & 0xff00) << 8);
+
+#pragma unroll
+    for (int i = 0; i < (N / 2); i++)
+    {
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
+                     : "=r"(h[i])
+                     : "r"(i2s >> (2 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+        asm volatile("add.f16x2 %0, %1, %2;\n" : "=r"(h[i]) : "r"(h[i]), "r"(median_num));
+
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_scales), "r"(0));
+    }
+}
+template <typename T1, typename T2, typename T3, typename T4>
+__device__ void decode_i2u_to_f16_scale_zeros_quantized(T1 *_i2u, T2 *B_local_decode, T3 *scale = nullptr, T4 *zeros = nullptr, const int N = 8)
+{
+    decode_i2b_to_f16_scale_zeros_quantized<T1, T2, T3, T4, false>(_i2u, B_local_decode, N, scale, zeros);
+}
+
 /*
 Kind 0: original
 Kind 1: rescale

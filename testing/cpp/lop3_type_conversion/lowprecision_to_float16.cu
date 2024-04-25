@@ -46,6 +46,7 @@ REGISTER_GLOBAL_DEVICE_INVOKER(kernelWrapper_i4u_to_f16_scale_zeros_rescale, dec
 REGISTER_GLOBAL_DEVICE_INVOKER(kernelWrapper_i2u_to_f16_scale_zeros_rescale, decode_i2u_to_f16_scale_zeros_rescale)
 REGISTER_GLOBAL_DEVICE_INVOKER(kernelWrapper_i1u_to_f16_scale_zeros_rescale, decode_i1u_to_f16_scale_zeros_rescale)
 REGISTER_GLOBAL_DEVICE_INVOKER(kernelWrapper_i4u_to_f16_scale_zeros_quantized, decode_i4u_to_f16_scale_zeros_quantized)
+REGISTER_GLOBAL_DEVICE_INVOKER(kernelWrapper_i2u_to_f16_scale_zeros_quantized, decode_i2u_to_f16_scale_zeros_quantized)
 
 TEST(DecodeTest, DecodeInt4ToFloat16)
 {
@@ -1065,6 +1066,61 @@ TEST(DecodeTest, DecodeUInt4ToFloat16WithScalingWithZerosQuantized)
     cudaCheckLastError(cudaMemcpy(qzeros_gpu, qzeros, 1 * sizeof(uint), cudaMemcpyHostToDevice));
     cudaCheckLastError(cudaDeviceSynchronize());
     kernelWrapper_i4u_to_f16_scale_zeros_quantized<<<dim3(1, 1, 1), dim3(1, 1, 1)>>>(ins_gpu, decoded_gpu, scale_gpu, qzeros_gpu);
+    cudaCheckLastError(cudaDeviceSynchronize());
+    cudaCheckLastError(cudaMemcpy(decoded, decoded_gpu, N * sizeof(half), cudaMemcpyDeviceToHost));
+    cudaCheckLastError(cudaFree(ins_gpu));
+    cudaCheckLastError(cudaFree(decoded_gpu));
+    for (int i = 0; i < N; i++)
+    {
+        EXPECT_NEAR(((int)in_data[i] - (int)qzeros[0]) * float(scale[0]), float(decoded[i]), 1e-2);
+    }
+    free(ins);
+    free(interleaved);
+    free(decoded);
+}
+
+TEST(DecodeTest, DecodeUInt2toFloat16WithScalingWithZerosQuantized)
+{
+    constexpr int nbits = 2;
+    constexpr int N = 32 / nbits;
+    constexpr int QN = N / 8 * nbits;
+    constexpr bool isSigned = false;
+
+    // create four int8_t values
+    int8_t in_data[N] = {
+        0};
+    half scale[1] = {__float2half(1.2)};
+    uint qzeros[1] = {(1 << (nbits - 1)) - 1};
+    // breed seed
+    srand(0);
+
+    // random initializations with nbits range
+    for (int i = 0; i < N; i++)
+    {
+        in_data[i] = (rand() % (1 << nbits));
+    }
+
+    int8_t *ins = new int8_t[QN];
+    general_compress(in_data, ins, nbits, N, isSigned);
+
+    int8_t *interleaved = new int8_t[QN];
+    general_interleave_fp16(ins, interleaved, nbits, QN * sizeof(int8_t), false);
+    half *decoded = new half[N];
+    int8_t *ins_gpu;
+    half *decoded_gpu, *scale_gpu;
+    uint *qzeros_gpu;
+
+    cudaCheckLastError(cudaMalloc((void **)&ins_gpu, QN * sizeof(int8_t)));
+    cudaCheckLastError(cudaMalloc((void **)&decoded_gpu, N * sizeof(half)));
+    cudaCheckLastError(cudaMalloc((void **)&scale_gpu, 1 * sizeof(half)));
+    cudaCheckLastError(cudaMalloc((void **)&qzeros_gpu, 1 * sizeof(uint)));
+    cudaCheckLastError(cudaMemcpy(ins_gpu, interleaved, QN * sizeof(int8_t), cudaMemcpyHostToDevice));
+    cudaCheckLastError(cudaMemcpy(decoded_gpu, decoded, N * sizeof(half), cudaMemcpyHostToDevice));
+    cudaCheckLastError(cudaMemcpy(scale_gpu, scale, 1 * sizeof(half), cudaMemcpyHostToDevice));
+    cudaCheckLastError(cudaMemcpy(qzeros_gpu, qzeros, 1 * sizeof(uint), cudaMemcpyHostToDevice));
+    cudaCheckLastError(cudaDeviceSynchronize());
+    kernelWrapper_i2u_to_f16_scale_zeros_quantized<<<dim3(1, 1, 1), dim3(1, 1, 1)>>>(ins_gpu, decoded_gpu, scale_gpu, qzeros_gpu);
+    kernelWrapper_i2u_to_f16_scale_zeros_quantized<<<dim3(1, 1, 1), dim3(1, 1, 1)>>>(ins_gpu + QN / 2, decoded_gpu + N / 2, scale_gpu, qzeros_gpu);
     cudaCheckLastError(cudaDeviceSynchronize());
     cudaCheckLastError(cudaMemcpy(decoded, decoded_gpu, N * sizeof(half), cudaMemcpyDeviceToHost));
     cudaCheckLastError(cudaFree(ins_gpu));
