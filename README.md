@@ -61,7 +61,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 8](./Figure8/png/end2end_a100.png)
+![Figure 8](./artifact/Figure8/png/end2end_a100.png)
 
 ### <a id="Figure9"> Figure9 </a>
 
@@ -80,7 +80,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 8](./Figure9/png/end2end_v100.png)
+![Figure 8](./artifact/Figure9/png/end2end_v100.png)
 
 ### <a id="f2">Figure10</a>
 
@@ -99,7 +99,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 8](./Figure10/png/end2end_a6000.png)
+![Figure 8](./artifact/Figure10/png/end2end_a6000.png)
 
 
 ### <a id="f3">Figure11</a>
@@ -119,7 +119,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 11](./Figure11/png/memory_usage_a100.png)
+![Figure 11](./artifact/Figure11/png/memory_usage_a100.png)
 
 ### <a id="f4"> Figure12</a>
 
@@ -138,7 +138,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 12](./Figure12/png/operator_performance_a100.png)
+![Figure 12](./artifact/Figure12/png/operator_performance_a100.png)
 
 ### <a id="f5">Table1</a>
 The Table1 is about the performance of the matrix multiplication of vendor libraries. The performance is measured by the throughput of the matrix multiplication. The throughput is calculated by the number of elements in the matrix divided by the time of the matrix multiplication. The throughput is measured in GFLOPS. The throughput is calculated by the following formula:
