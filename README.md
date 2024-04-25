@@ -25,7 +25,6 @@ nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --gpus all --cap-add=SY
 ```
 
 ## 2. Reproducing Individual Experiement Results
-## 2. Paper result quick reproduce
 
 Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Microsoft Onedrive]()
 
