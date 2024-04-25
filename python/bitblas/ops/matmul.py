@@ -166,7 +166,7 @@ class Matmul(Operator):
             self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
         except Exception:
             self.optimized_func = None
-            logger.warnning(
+            logger.warning(
                 "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
             )
 
