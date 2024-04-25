@@ -19,3 +19,4 @@ psutil
 scipy
 tornado
 torch
+thefuzz
