@@ -1,6 +1,7 @@
+# !/bin/bash
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-# !/bin/bash
+
 
 pip install einops
 pip install timm
@@ -37,3 +38,40 @@ echo "Conformer batch size 1 conversion done."
 echo "Converting Vision Transformer (ViT) with batch size 1..."
 python torch2onnx.py --bs 1 --prefix vit-b1 --fp16 vit
 echo "Vision Transformer batch size 1 conversion done."
+
+echo "Exporting BLOOM model with batchsize 1 and seq 1"
+cd bloom_176b
+python gen.py --batch_size 1 --seq_length 1
+cd ..
+echo "Exporting BLOOM model with batchsize 1 and seq 1 done."
+
+echo "Exporting BLOOM model with batchsize 32 and seq 1"
+cd bloom_176b
+python gen.py --batch_size 32 --seq_length 1
+cd ..
+echo "Exporting BLOOM model with batchsize 32 and seq 1 done."
+
+echo "Exporting BLOOM model with batchsize 1 and seq 4096"
+cd bloom_176b
+python gen.py --batch_size 1 --seq_length 4096
+cd ..
+echo "Exporting BLOOM model with batchsize 1 and seq 4096 done."
+
+echo "Exporting LLAMA model with batchsize 1 and seq 1"
+cd llama_70b
+python gen.py --batch_size 1 --seq_length 1
+cd ..
+echo "Exporting LLAMA model with batchsize 1 and seq 1 done."
+
+echo "Exporting LLAMA model with batchsize 32 and seq 1"
+cd llama_70b
+python gen.py --batch_size 32 --seq_length 1
+cd ..
+echo "Exporting LLAMA model with batchsize 32 and seq 1 done."
+
+
+echo "Exporting LLAMA model with batchsize 1 and seq 4096"
+cd llama_70b
+python gen.py --batch_size 1 --seq_length 4096
+cd ..
+echo "Exporting LLAMA model with batchsize 1 and seq 4096 done."

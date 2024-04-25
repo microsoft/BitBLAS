@@ -1,6 +1,7 @@
+# !/bin/bash
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-# !/bin/bash
+
 
 # python requirements
 pip install prettytable

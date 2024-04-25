@@ -1081,7 +1081,7 @@ def get_mma_intrin(k_dim, out_dtype, b_transposed, is_4b=False):
                     dtype=out_dtype,
                 )
             )
-
+            
     return mma_sync_desc, mma_sync_impl if not is_4b else mma_sync_impl_4b
 
 

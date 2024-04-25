@@ -82,7 +82,7 @@ def schedule(args: List[te.Tensor], config: Config, shared_inputs: List[te.Tenso
         try:
             scheduler = initialize_scheduler(template, args, config, shared_inputs, shared_outputs, shared_inputs_strides)
         except Exception as e:
-            logger.info(f"Tir template failed because {e}, fallback to te")
+            logger.debug(f"Tir template failed because {e}, fallback to te")
             if any([t > 1 for t in config.reduce_thread]) and not schedule_on_inner_stage:
                 logger.debug(f"Using template: {template} config: {config}")
                 template = TEReduceInterThreadScheduler

@@ -8,3 +8,5 @@ models/*
 !models/inductor.sh
 !models/torch2onnx.py
 !models/model/
+!models/bloom_176b
+!models/llama_70b

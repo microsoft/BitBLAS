@@ -67,6 +67,3 @@ Before beginning, ensure that you have set up the necessary environment variable
    ```
    The output should match the tensor provided by the quantization inference script.
 
-## Conclusion
-
-This quick start guide covers the steps for running inference and handling ONNX models in various precision settings using PyTorch, Ladder, and AutoGPTQ frameworks. Make sure to follow each step according to your project requirements and adjust the paths and model names as needed based on your environment and file structure.

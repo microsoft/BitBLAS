@@ -178,6 +178,7 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
   
             input_shape = call.args[0].checked_type.shape
             kernel_shape = call.args[1].checked_type.shape
+            print(call.attrs)
             bits = int(call.attrs["bits"])
             warp_compute_tile_m = 16
             warp_compute_tile_n = 16

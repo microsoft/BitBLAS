@@ -1,6 +1,7 @@
+# !/bin/bash
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-# !/bin/bash
+
 
 # LADDER_HOME = pwd home + .. + .. + .. + ..
 
@@ -10,8 +11,6 @@ export LADDER_CUTLASS_HOME=$LADDER_HOME/3rdparty/cutlass
 export PYTHONPATH=$LADDER_HOME/python
 export PYTHONPATH=$LADDER_TVM_HOME/python:$PYTHONPATH
 export CPLUS_INCLUDE_PATH=$LADDER_CUTLASS_HOME/include
-
-echo $LADDER_HOME
 
 force_tune=0
 if [[ "$1" == "--force_tune" ]]; then

@@ -21,7 +21,8 @@ RUN conda install pip cmake && conda clean --all
 
 RUN pip install --no-cache-dir --default-timeout=1000 torch==2.1.0 torchvision timm einops \
     onnx==1.16 onnxruntime-gpu==1.16 \
-    attrs cloudpickle decorator psutil synr tornado xgboost regex \
+    transformers==4.30.0 huggingface_hub>=0.20.2 \
+    attrs cloudpickle decorator psutil synr tornado xgboost==1.7.1 regex \
     && rm -rf ~/.cache/pip
 
 RUN git clone https://github.com/LeiWang1999/Ladder --recursive -b develop Ladder\

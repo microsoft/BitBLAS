@@ -21,3 +21,5 @@ ml_dtypes
 psutil
 scipy
 tornado
+huggingface_hub>=0.20.2
+onnxsim

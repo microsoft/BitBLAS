@@ -1,6 +1,7 @@
+# !/bin/bash
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-# !/bin/bash
+
 export TVM_HOME=$(pwd)/../../../baseline_framework/tvm_v0.14.0
 export PYTHONPATH=$TVM_HOME/python
 
