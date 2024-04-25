@@ -218,6 +218,7 @@ The `run_all.py` script has the following options:
 - `--reproduce`: bool, whether to reproduce the results, otherwise it will use our logges paper result, default value is `False`.
 - `--force_tune`: bool, whether to force tune the op with AMOS/TensorIR, otherwise use the checkpoints if available, default value is `False`.
 
+```bash
 +-----------------------------------------------------+
 |          Transposed Compilation Time Table          |
 +-----------------+------+----------+--------+--------+
@@ -228,6 +229,8 @@ The `run_all.py` script has the following options:
 |  ShuffleNet(1)  | 2191 |   836    |   18   |   44   |
 | ShuffleNet(128) | 3121 |   400    |   12   |   29   |
 +-----------------+------+----------+--------+--------+
+```
+
 
 ## 3.Quick Start Guide for Model Inference and ONNX Export
 
