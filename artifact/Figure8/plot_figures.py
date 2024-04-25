@@ -4,8 +4,19 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
 import matplotlib.ticker as ticker
-from paper_result.data_a100 import *
+import argparse
 
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--reproduce", action="store_true", help="reproduce, otherwise use the paper results", default=False)
+
+args = parser.parse_args()
+
+reproduce = args.reproduce
+if not reproduce:
+    from paper_result.data_a100 import *
+else:
+    from reproduce_result.data_a100 import *
 colers_sets = [
     # nilu
     (20 / 255, 54 / 255, 95 / 255),
