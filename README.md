@@ -27,12 +27,7 @@ nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --gpus all --cap-add=SY
 ## 2. Reproducing Individual Experiement Results
 ## 2. Paper result quick reproduce
 
-Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of V100 GPU at [temp.tar.gz - Google Cloud Drive](https://drive.google.com/file/d/1xJUk7ZBoe6bjaqMpTI-n9gqGtc01IOWG)
-
-```bash
-pip install gdown
-gdown https://drive.google.com/u/0/uc?id=1xJUk7ZBoe6bjaqMpTI-n9gqGtc01IOWG
-```
+Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Microsoft Onedrive]()
 
 After downloading, it should be extracted under the artifacts/temp folder. You can see a lot of model folders in it. With these pre-compiled models, results can be reproduced more quickly with a few commands. Here is a list of script we provide:
 
