@@ -1,5 +1,93 @@
-['mean_2', 'subtract_cast_multiply_3']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, mean_2__subtract_cast_multiply_3>: {'block': [1, 1, 1], 'thread': [1, 1, 1], 'rstep': [768], 'reduce_thread': [128], 'vectorize': {'mediate0': 2}}}
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_9>: {'block': [1, 1, 1, 4], 'thread': [1, 1, 1, 4], 'rstep': []}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
+    assert (
+AssertionError
+
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_9>: {'block': [1, 1, 1, 2], 'thread': [1, 1, 1, 2], 'rstep': []}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
+    assert (
+AssertionError
+
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_9>: {'block': [1, 1, 1, 8], 'thread': [1, 1, 1, 8], 'rstep': []}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
+    assert (
+AssertionError
+
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_9>: {'block': [1, 1, 1, 16], 'thread': [1, 1, 1, 16], 'rstep': []}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
+    assert (
+AssertionError
+
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_9>: {'block': [1, 1, 1, 32], 'thread': [1, 1, 1, 32], 'rstep': []}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
+    assert (
+AssertionError
+
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'vectorize': {'p0': 2, 'B_decode': 8}}, <Node, reshape_reshape_transpose_9>: {'block': [1, 1, 1, 64], 'thread': [1, 1, 1, 64], 'rstep': []}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
+    assert (
+AssertionError
+
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_9>: {'block': [1, 1, 1, 128], 'thread': [1, 1, 1, 128], 'rstep': []}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
+    assert (
+AssertionError
+
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_9>: {'block': [1, 2, 1, 128], 'thread': [1, 2, 1, 64], 'rstep': [], 'step': [1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
+    assert (
+AssertionError
+
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8__reshape_reshape_transpose_9>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'vectorize': {'input0': 8, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -7,8 +95,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 2], 'thread': [1, 1, 2], 'rstep': [768], 'reduce_thread': [64], 'vectorize': {'input0': 2, 'mediate0': 4}}}
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8__reshape_reshape_transpose_9>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'input0': 8, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -16,8 +104,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 1], 'thread': [1, 1, 1], 'rstep': [768], 'reduce_thread': [128], 'vectorize': {'input0': 2, 'mediate0': 2}}}
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8__reshape_reshape_transpose_9>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'input0': 8, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -25,8 +113,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 3], 'thread': [1, 1, 3], 'rstep': [768], 'reduce_thread': [48], 'vectorize': {'mediate0': 8}}}
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8__reshape_reshape_transpose_9>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'input0': 8, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -34,8 +122,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 4], 'thread': [1, 1, 4], 'rstep': [768], 'reduce_thread': [32], 'vectorize': {'input0': 2, 'mediate0': 8}}}
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8__reshape_reshape_transpose_9>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'input0': 4, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -43,8 +131,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 6], 'thread': [1, 1, 6], 'rstep': [768], 'reduce_thread': [24], 'vectorize': {'mediate0': 8}}}
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8__reshape_reshape_transpose_9>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'input0': 2, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -52,8 +140,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 8], 'thread': [1, 1, 8], 'rstep': [768], 'reduce_thread': [16], 'vectorize': {'input0': 2, 'mediate0': 8}}}
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8__reshape_reshape_transpose_9>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -61,8 +149,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 12], 'thread': [1, 1, 12], 'rstep': [768], 'reduce_thread': [12], 'vectorize': {'mediate0': 8}}}
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8__reshape_reshape_transpose_9>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -70,8 +158,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 16], 'thread': [1, 1, 16], 'rstep': [384], 'reduce_thread': [8], 'vectorize': {'mediate0': 8}}}
+['ladder_quant_linear_8', 'reshape_reshape_transpose_9']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_8__reshape_reshape_transpose_9>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -79,197 +167,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 24], 'thread': [1, 1, 24], 'rstep': [384], 'reduce_thread': [6], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 32], 'thread': [1, 1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'input0': 2, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 48], 'thread': [1, 1, 48], 'rstep': [192], 'reduce_thread': [3], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 64], 'thread': [1, 1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 96], 'thread': [1, 1, 96], 'rstep': [64], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 128], 'thread': [1, 1, 128], 'rstep': [64], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 192], 'thread': [1, 1, 96], 'rstep': [64], 'step': [1, 1, 2], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 256], 'thread': [1, 1, 128], 'rstep': [64], 'step': [1, 1, 2], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_8', 'reshape_transpose_9']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_8__reshape_transpose_9>: {'block': [1, 1, 384], 'thread': [1, 1, 128], 'rstep': [64], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 2], 'thread': [1, 1, 2], 'rstep': [768], 'reduce_thread': [64], 'vectorize': {'input0': 2, 'mediate0': 4}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 1], 'thread': [1, 1, 1], 'rstep': [768], 'reduce_thread': [128], 'vectorize': {'input0': 2, 'mediate0': 2}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 3], 'thread': [1, 1, 3], 'rstep': [768], 'reduce_thread': [48], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 4], 'thread': [1, 1, 4], 'rstep': [768], 'reduce_thread': [32], 'vectorize': {'input0': 2, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 6], 'thread': [1, 1, 6], 'rstep': [768], 'reduce_thread': [24], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 8], 'thread': [1, 1, 8], 'rstep': [768], 'reduce_thread': [16], 'vectorize': {'input0': 2, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 12], 'thread': [1, 1, 12], 'rstep': [768], 'reduce_thread': [12], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 16], 'thread': [1, 1, 16], 'rstep': [384], 'reduce_thread': [8], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 24], 'thread': [1, 1, 24], 'rstep': [384], 'reduce_thread': [6], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 32], 'thread': [1, 1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'input0': 2, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 48], 'thread': [1, 1, 48], 'rstep': [192], 'reduce_thread': [3], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_multiply_6', 'reshape_transpose_reshape_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_multiply_6__reshape_transpose_reshape_7>: {'block': [1, 1, 64], 'thread': [1, 1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['reshape_transpose_19', 'nn_batch_matmul_20', 'reshape_reshape_transpose_reshape_21']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_transpose_19>: {'block': [1, 2, 1], 'thread': [1, 2, 1], 'rstep': []}, <Node, nn_batch_matmul_20>: {'block': [1, 1, 2], 'thread': [1, 1, 2], 'rstep': [1]}, <Node, reshape_reshape_transpose_reshape_21>: {'block': [1, 1, 2], 'thread': [1, 1, 2], 'rstep': []}}
+['reshape_reshape_transpose_9', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_9>: {'block': [1, 1, 1, 128], 'thread': [1, 1, 1, 128], 'rstep': [], 'block_order': int64(block_idx)}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10>: {'block': [1, 1, 1, 128], 'thread': [1, 1, 1, 128], 'rstep': []}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -277,10 +176,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_reshape_21>, Tensor(shape=[12, 1, 64], op.name=p0), 32, 128)
+Exception: ('Shared memory mismatched', <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10>, Tensor(shape=[1, 8, 1, 128], op.name=p0), 256, 512)
 
-['reshape_transpose_19', 'nn_batch_matmul_20', 'reshape_reshape_transpose_reshape_21']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_transpose_19>: {'block': [1, 4, 1], 'thread': [1, 4, 1], 'rstep': []}, <Node, nn_batch_matmul_20>: {'block': [1, 1, 4], 'thread': [1, 1, 4], 'rstep': [1]}, <Node, reshape_reshape_transpose_reshape_21>: {'block': [1, 1, 4], 'thread': [1, 1, 4], 'rstep': []}}
+['reshape_reshape_transpose_9', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_9>: {'block': [1, 2, 1, 128], 'thread': [1, 2, 1, 64], 'rstep': [], 'block_order': int64(block_idx), 'step': [1, 1, 1, 2]}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10>: {'block': [1, 2, 1, 128], 'thread': [1, 2, 1, 64], 'rstep': [], 'step': [1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -288,10 +187,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_reshape_21>, Tensor(shape=[12, 1, 64], op.name=p0), 32, 128)
+Exception: ('Shared memory mismatched', <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10>, Tensor(shape=[1, 8, 1, 128], op.name=p0), 512, 1024)
 
-['reshape_transpose_19', 'nn_batch_matmul_20', 'reshape_reshape_transpose_reshape_21']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_transpose_19>: {'block': [1, 8, 1], 'thread': [1, 8, 1], 'rstep': []}, <Node, nn_batch_matmul_20>: {'block': [1, 1, 8], 'thread': [1, 1, 8], 'rstep': [1]}, <Node, reshape_reshape_transpose_reshape_21>: {'block': [1, 1, 8], 'thread': [1, 1, 8], 'rstep': []}}
+['reshape_reshape_transpose_9', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_9>: {'block': [1, 4, 1, 128], 'thread': [1, 4, 1, 32], 'rstep': [], 'block_order': int64(block_idx), 'step': [1, 1, 1, 2]}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10>: {'block': [1, 4, 1, 128], 'thread': [1, 4, 1, 32], 'rstep': [], 'step': [1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -299,10 +198,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_reshape_21>, Tensor(shape=[12, 1, 64], op.name=p0), 32, 128)
+Exception: ('Shared memory mismatched', <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10>, Tensor(shape=[1, 8, 1, 128], op.name=p0), 1024, 2048)
 
-['reshape_transpose_19', 'nn_batch_matmul_20', 'reshape_reshape_transpose_reshape_21']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_transpose_19>: {'block': [1, 16, 1], 'thread': [1, 16, 1], 'rstep': []}, <Node, nn_batch_matmul_20>: {'block': [1, 1, 16], 'thread': [1, 1, 16], 'rstep': [1]}, <Node, reshape_reshape_transpose_reshape_21>: {'block': [1, 1, 16], 'thread': [1, 1, 16], 'rstep': []}}
+['reshape_reshape_transpose_9', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_9>: {'block': [1, 8, 1, 128], 'thread': [1, 8, 1, 16], 'rstep': [], 'step': [1, 1, 1, 2]}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10>: {'block': [1, 8, 1, 128], 'thread': [1, 8, 1, 16], 'rstep': [], 'step': [1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -310,138 +209,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_reshape_21>, Tensor(shape=[12, 1, 64], op.name=p0), 32, 128)
+Exception: ('Shared memory mismatched', <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_10>, Tensor(shape=[1, 8, 1, 128], op.name=p0), 2048, 4096)
 
-['reshape_transpose_19', 'nn_batch_matmul_20', 'reshape_reshape_transpose_reshape_21']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_transpose_19>: {'block': [1, 32, 1], 'thread': [1, 32, 1], 'rstep': []}, <Node, nn_batch_matmul_20>: {'block': [1, 1, 32], 'thread': [1, 1, 32], 'rstep': [1]}, <Node, reshape_reshape_transpose_reshape_21>: {'block': [1, 1, 32], 'thread': [1, 1, 32], 'rstep': []}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
-    raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_reshape_21>, Tensor(shape=[12, 1, 64], op.name=p0), 64, 128)
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 2], 'thread': [1, 1, 2], 'rstep': [768], 'reduce_thread': [64], 'vectorize': {'input0': 2, 'mediate0': 4}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 1], 'thread': [1, 1, 1], 'rstep': [768], 'reduce_thread': [128], 'vectorize': {'input0': 2, 'mediate0': 2}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 3], 'thread': [1, 1, 3], 'rstep': [768], 'reduce_thread': [48], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 4], 'thread': [1, 1, 4], 'rstep': [768], 'reduce_thread': [32], 'vectorize': {'input0': 2, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 6], 'thread': [1, 1, 6], 'rstep': [768], 'reduce_thread': [24], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 8], 'thread': [1, 1, 8], 'rstep': [768], 'reduce_thread': [16], 'vectorize': {'input0': 2, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 12], 'thread': [1, 1, 12], 'rstep': [768], 'reduce_thread': [12], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 16], 'thread': [1, 1, 16], 'rstep': [384], 'reduce_thread': [8], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 24], 'thread': [1, 1, 24], 'rstep': [384], 'reduce_thread': [6], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 32], 'thread': [1, 1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'input0': 2, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 48], 'thread': [1, 1, 48], 'rstep': [192], 'reduce_thread': [3], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_22', 'add_reshape_23']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_22__add_reshape_23>: {'block': [1, 1, 64], 'thread': [1, 1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['mean_24', 'subtract_cast_multiply_25']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, mean_24__subtract_cast_multiply_25>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [768], 'reduce_thread': [128], 'vectorize': {'mediate0': 2}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [3072], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 2], 'thread': [1, 1, 2], 'rstep': []}}
+['expand_dims_broadcast_to_reshape_transpose_reshape_transpose_11', 'ladder_quant_linear_5', 'reshape_reshape_transpose_6', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7', 'nn_batch_matmul_12']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': int32(int64(block_idx)), 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_6>: {'block': [1, 1, 1, 128], 'thread': [1, 1, 1, 128], 'rstep': [], 'block_order': int64(block_idx)}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>: {'block': [1, 1, 128], 'thread': [1, 1, 128], 'rstep': []}, <Node, expand_dims_broadcast_to_reshape_transpose_reshape_transpose_11>: {'block': [1, 1, 128], 'thread': [1, 1, 128], 'rstep': []}, <Node, nn_batch_matmul_12>: {'block': [1, 1, 1], 'thread': [1, 1, 1], 'rstep': [128], 'reduce_thread': [128]}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -451,8 +222,8 @@ Traceback (most recent call last):
     assert (
 AssertionError
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 3], 'thread': [1, 3], 'rstep': [3072], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 3], 'thread': [1, 1, 3], 'rstep': []}}
+['expand_dims_broadcast_to_reshape_transpose_reshape_transpose_11', 'ladder_quant_linear_5', 'reshape_reshape_transpose_6', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7', 'nn_batch_matmul_12']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': int32(int64(block_idx)), 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_6>: {'block': [1, 2, 1, 128], 'thread': [1, 2, 1, 64], 'rstep': [], 'block_order': int64(block_idx), 'step': [1, 1, 1, 2]}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>: {'block': [2, 1, 128], 'thread': [2, 1, 64], 'rstep': [], 'step': [1, 1, 2]}, <Node, expand_dims_broadcast_to_reshape_transpose_reshape_transpose_11>: {'block': [2, 1, 128], 'thread': [1, 1, 128], 'rstep': [], 'step': [2, 1, 1]}, <Node, nn_batch_matmul_12>: {'block': [2, 1, 1], 'thread': [2, 1, 1], 'rstep': [128], 'reduce_thread': [64], 'vectorize': {'p0': 2, 'p1': 2}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -462,8 +233,8 @@ Traceback (most recent call last):
     assert (
 AssertionError
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [1536], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 4], 'thread': [1, 1, 4], 'rstep': []}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_6>: {'block': [1, 1, 1, 4], 'thread': [1, 1, 1, 4], 'rstep': []}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -473,8 +244,8 @@ Traceback (most recent call last):
     assert (
 AssertionError
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 6], 'thread': [1, 6], 'rstep': [1536], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 6], 'thread': [1, 1, 6], 'rstep': []}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_6>: {'block': [1, 1, 1, 8], 'thread': [1, 1, 1, 8], 'rstep': []}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -484,8 +255,8 @@ Traceback (most recent call last):
     assert (
 AssertionError
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 8], 'thread': [1, 1, 8], 'rstep': []}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_6>: {'block': [1, 1, 1, 2], 'thread': [1, 1, 1, 2], 'rstep': []}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -495,8 +266,8 @@ Traceback (most recent call last):
     assert (
 AssertionError
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 12], 'thread': [1, 12], 'rstep': [768], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 12], 'thread': [1, 1, 12], 'rstep': []}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_6>: {'block': [1, 1, 1, 32], 'thread': [1, 1, 1, 32], 'rstep': []}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -506,8 +277,8 @@ Traceback (most recent call last):
     assert (
 AssertionError
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 16], 'thread': [1, 1, 16], 'rstep': []}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_6>: {'block': [1, 1, 1, 16], 'thread': [1, 1, 1, 16], 'rstep': []}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -517,8 +288,8 @@ Traceback (most recent call last):
     assert (
 AssertionError
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 24], 'thread': [1, 24], 'rstep': [384], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 24], 'thread': [1, 1, 24], 'rstep': []}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'vectorize': {'p0': 2, 'B_decode': 8}}, <Node, reshape_reshape_transpose_6>: {'block': [1, 1, 1, 64], 'thread': [1, 1, 1, 64], 'rstep': []}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -528,8 +299,8 @@ Traceback (most recent call last):
     assert (
 AssertionError
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 32], 'thread': [1, 1, 32], 'rstep': []}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_6>: {'block': [1, 1, 1, 128], 'thread': [1, 1, 1, 128], 'rstep': []}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -539,8 +310,8 @@ Traceback (most recent call last):
     assert (
 AssertionError
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 48], 'thread': [1, 48], 'rstep': [192], 'vectorize': {'p0': 4, 'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 48], 'thread': [1, 1, 48], 'rstep': []}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_6>: {'block': [1, 2, 1, 128], 'thread': [1, 2, 1, 64], 'rstep': [], 'step': [1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -550,74 +321,8 @@ Traceback (most recent call last):
     assert (
 AssertionError
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'vectorize': {'p0': 2, 'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 64], 'thread': [1, 1, 64], 'rstep': []}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 96], 'thread': [1, 96], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 96], 'thread': [1, 1, 96], 'rstep': []}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 128], 'thread': [1, 1, 128], 'rstep': []}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 192], 'thread': [1, 96], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 192], 'thread': [1, 1, 96], 'rstep': [], 'step': [1, 1, 2]}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 256], 'thread': [1, 1, 128], 'rstep': [], 'step': [1, 1, 2]}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29>: {'block': [1, 384], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, add_reshape_30>: {'block': [1, 1, 384], 'thread': [1, 1, 128], 'rstep': []}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [3072], 'reduce_thread': [64], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5__reshape_reshape_transpose_6>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'vectorize': {'input0': 8, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -625,8 +330,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [3072], 'reduce_thread': [128], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5__reshape_reshape_transpose_6>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'input0': 8, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -634,8 +339,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 3], 'thread': [1, 3], 'rstep': [3072], 'reduce_thread': [48], 'vectorize': {'mediate0': 8}}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5__reshape_reshape_transpose_6>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'input0': 8, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -643,8 +348,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [1536], 'reduce_thread': [32], 'vectorize': {'input0': 4, 'mediate0': 8}}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5__reshape_reshape_transpose_6>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'input0': 8, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -652,8 +357,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 6], 'thread': [1, 6], 'rstep': [1536], 'reduce_thread': [24], 'vectorize': {'mediate0': 8}}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5__reshape_reshape_transpose_6>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'input0': 2, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -661,8 +366,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5__reshape_reshape_transpose_6>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'input0': 4, 'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -670,8 +375,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 12], 'thread': [1, 12], 'rstep': [768], 'reduce_thread': [12], 'vectorize': {'mediate0': 8}}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5__reshape_reshape_transpose_6>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -679,8 +384,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'input0': 4, 'mediate0': 8}}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5__reshape_reshape_transpose_6>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -688,80 +393,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 24], 'thread': [1, 24], 'rstep': [384], 'reduce_thread': [6], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'input0': 2, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 48], 'thread': [1, 48], 'rstep': [192], 'reduce_thread': [3], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 96], 'thread': [1, 96], 'rstep': [64], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 192], 'thread': [1, 96], 'rstep': [64], 'step': [1, 2], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_add_29', 'add_reshape_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_add_29__add_reshape_30>: {'block': [1, 384], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'mediate0': 8}}}
+['ladder_quant_linear_5', 'reshape_reshape_transpose_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_5__reshape_reshape_transpose_6>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'mediate0': 8}}}
 Traceback (most recent call last):
   File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)

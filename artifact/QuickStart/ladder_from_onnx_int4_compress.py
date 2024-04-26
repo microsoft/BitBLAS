@@ -11,6 +11,7 @@ from ladder.utils import write_mod
 import os
 import torch
 import logging
+from FakeQuantInt4 import LadderFakeQuant
 
 ladder.set_log_level(logging.INFO)
 
@@ -52,7 +53,12 @@ def run(prefix, arch, async_propagate):
     write_mod(mod, log_path, "FoldConstant")
     mod = ladder.relay.transform.WelderExprRewrite(enable_softmax=True)(mod)
     write_mod(mod, log_path, "expr_rewrite")
-   
+    mod = LadderFakeQuant(quant_type=1, quant_config={
+        "format": "int",
+        "bits": 4,
+        "group_size": -1
+    }, convert_int=False)(mod)
+    write_mod(mod, log_path, "LadderFakeQuant")
     if args.cudnn:
         from tvm.relay.op.contrib.cudnn import pattern_table
         seq = tvm.transform.Sequential(

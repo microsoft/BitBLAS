@@ -46,12 +46,12 @@ if export_single_layer:
 else:
     input_ids = torch.ones(batch_size, seq_length, device="cuda", dtype=torch.int64)
 
-# # initialize the weights
-# for name, module in model.named_modules():
-#     if isinstance(module, torch.nn.Linear):
-#         # int4_tensor = torch.randint(-1, 1, module.weight.data.size(), dtype=torch.int8)
-#         int4_tensor = torch.zeros_like(module.weight.data)
-#         module.weight.data = int4_tensor.half().cuda()
+# initialize the weights
+for name, module in model.named_modules():
+    if isinstance(module, torch.nn.Linear):
+        # int4_tensor = torch.randint(-1, 1, module.weight.data.size(), dtype=torch.int8)
+        int4_tensor = torch.zeros_like(module.weight.data) # zero filled to avoid overflow
+        module.weight.data = int4_tensor.half().cuda()
 
 # do inference and print the output
 with torch.no_grad():
