@@ -29,7 +29,7 @@ parser.add_argument('--cudnn', action="store_false")
 parser.add_argument('--nhwc', action="store_false")
 parser.add_argument('--async_propagation', action="store_true", help="Use async propagation and async instructions, which should be only enabled on data center GPUs with async copy instructions.", default=False)
 parser.add_argument("--prebuilt_path", type=str, default=None, help="Path to the prebuilt model. If set, the script will run from the prebuilt model.")
-
+parser.add_argument("--fast_decoding", action="store_true", help="Use fast decoding mode.", default=False)
 args = parser.parse_args()
 
 def run(prefix, arch, async_propagate):
@@ -111,6 +111,9 @@ def run(prefix, arch, async_propagate):
     write_mod(mod, log_path, "AnnotateLadderTensorCore")
     mod = ladder.relay.transform.AnnotateTensorCore()(mod)
     write_mod(mod, log_path, "AnnotateWelderTensorCore")
+    if args.fast_decoding:
+        mod = ladder.relay.transform.AnnotateFastDecoding()(mod)
+        write_mod(mod, log_path, "AnnotateFastDecoding")
 
     mod = ladder.relay.transform.WelderTunePass(arch, topk=40,save_perf_log="./debug_group_info")(mod)
     write_mod(mod, log_path, "WelderTunePass")

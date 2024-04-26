@@ -10,9 +10,10 @@ from ..config import Config, Stride, TileDict, LadderConfig, ConsistentConfig
 from ..graph import IRNode, Node
 from .common import factorize, get_all_factors
 from .default import DefaultPolicy
-import logging 
+import logging
 
 logger = logging.getLogger(__name__)
+
 
 class LadderPolicy(DefaultPolicy):
     def __init__(self, output_nodes: List[Node], arch: Arch) -> None:
@@ -22,7 +23,9 @@ class LadderPolicy(DefaultPolicy):
         compute_dtype = str(self.output_nodes[-1]._dtypes[-1])
         self.wmma_k = 32 if compute_dtype == "int32" else 16
 
-    def _compute_tc_strides(self, node: IRNode, tile: List[int], rstep: Dict[str, int]={}) -> Tuple[Stride, Stride, Stride]:
+    def _compute_tc_strides(
+        self, node: IRNode, tile: List[int], rstep: Dict[str, int] = {}
+    ) -> Tuple[Stride, Stride, Stride]:
         shapes = node.propogate_reduction_inputs(tile, rstep)
         AS_shape, BS_shape = shapes.values()
         CS_shape = tile
@@ -38,9 +41,15 @@ class LadderPolicy(DefaultPolicy):
         A_high_ax = min(A_ax_m, A_ax_k)
         B_high_ax = min(B_ax_n, B_ax_k)
         C_high_ax = min(C_ax_m, C_ax_n)
-        A_stride = Stride(stride=np.prod(AS_shape[A_high_ax+1:]) + offset, ax=A_high_ax)
-        B_stride = Stride(stride=np.prod(BS_shape[B_high_ax+1:]) + offset, ax=B_high_ax)
-        C_stride = Stride(stride=np.prod(CS_shape[C_high_ax+1:]) + offset, ax=C_high_ax)
+        A_stride = Stride(
+            stride=np.prod(AS_shape[A_high_ax + 1 :]) + offset, ax=A_high_ax
+        )
+        B_stride = Stride(
+            stride=np.prod(BS_shape[B_high_ax + 1 :]) + offset, ax=B_high_ax
+        )
+        C_stride = Stride(
+            stride=np.prod(CS_shape[C_high_ax + 1 :]) + offset, ax=C_high_ax
+        )
         return A_stride, B_stride, C_stride
 
     def infer_node_smem_usage(self, td: TileDict, node: IRNode):
@@ -60,7 +69,7 @@ class LadderPolicy(DefaultPolicy):
         ladder_configs = node.get_tag("ladder_config")
         pipeline_stage = ladder_configs[2] if len(ladder_configs) > 2 else 1
         # assume A is always not transposed.
-        is_matmul = (output_shape[-1] == self.wmma_n and output_shape[-2] == self.wmma_n)
+        is_matmul = output_shape[-1] == self.wmma_n and output_shape[-2] == self.wmma_n
 
         if len(output_shape) == 2:
             M = output_shape[0]
@@ -80,11 +89,11 @@ class LadderPolicy(DefaultPolicy):
             M = output_shape[0] * output_shape[1] * output_shape[2] * output_shape[-2]
             N = output_shape[3] * output_shape[-1]
         else:
-            
+
             raise NotImplementedError
 
         A_ax_m, A_ax_k, B_ax_k, B_ax_n, C_ax_m, C_ax_n = node.infer_tensorcore_axis()
-        transpose_B = B_ax_k > B_ax_n        
+        transpose_B = B_ax_k > B_ax_n
         kernel_shape = node.reduce_op.input_tensors[1].shape
         input_shape = node.args[0].shape
         if len(kernel_shape) == 2:
@@ -118,16 +127,16 @@ class LadderPolicy(DefaultPolicy):
 
         if len(node.raxis) == 1:
             for k in node.raxis:
-                if output_dtype == 'float16':
+                if output_dtype == "float16":
                     result[k] = 32
-                elif output_dtype == 'int32' or output_dtype == 'int8':
+                elif output_dtype == "int32" or output_dtype == "int8":
                     result[k] = 64
                 else:
                     raise NotImplementedError
         else:
             for i, k in enumerate(node.raxis):
                 if i == 0:
-                    if output_dtype == 'int32' or output_dtype == 'int8':
+                    if output_dtype == "int32" or output_dtype == "int8":
                         # the minumum k is 32
                         result[k] = 64 if AK > 64 else 32
                         continue
@@ -136,7 +145,11 @@ class LadderPolicy(DefaultPolicy):
                         continue
                     if node.raxis[k] % 2 == 0:
                         if M <= 128 or N <= 512:
-                            if N <= 64 and (K % 96 == 0 and K > 96) and pipeline_stage == 1:
+                            if (
+                                N <= 64
+                                and (K % 96 == 0 and K > 96)
+                                and pipeline_stage == 1
+                            ):
                                 result[k] = 96
                             elif K > 64 and K % 64 == 0 and pipeline_stage == 1:
                                 result[k] = 64
@@ -156,29 +169,49 @@ class LadderPolicy(DefaultPolicy):
             return super().get_node_reduce_step_candidates(node)
         else:
             # must be a a multiple of wmma_k
-            return {k : [x * self.wmma_k for x in get_all_factors(node.raxis[k] // self.wmma_k)] for k in node.raxis}
+            return {
+                k: [
+                    x * self.wmma_k
+                    for x in get_all_factors(node.raxis[k] // self.wmma_k)
+                ]
+                for k in node.raxis
+            }
 
     def check_tile_shape_isvalid(self, td: TileDict):
         for node in self.ordered_nodes:
             if node.get_tag("tensorCoreConfig"):
                 ax_m, ax_n = node.get_tag("tensorCoreConfig")
                 block_m, block_n = td.tile_map[node][ax_m], td.tile_map[node][ax_n]
-                wmma_invalid = [block_m % wmma_m or block_n % wmma_n for wmma_m, wmma_n in [(16, 16)]]
+                wmma_invalid = [
+                    block_m % wmma_m or block_n % wmma_n
+                    for wmma_m, wmma_n in [(16, 16)]
+                ]
                 if all(wmma_invalid):
                     return False
-                if any([x and (y % x) for x, y in zip(td.tile_map[node], node.get_space_dim())]):
+                if any(
+                    [
+                        x and (y % x)
+                        for x, y in zip(td.tile_map[node], node.get_space_dim())
+                    ]
+                ):
                     return False
         return super().check_tile_shape_isvalid(td)
 
     def compute_node_stride_map(self, node: IRNode, td: TileDict):
         if not node.get_tag("tensorCoreConfig"):
             return super().compute_node_stride_map(node, td)
-        AS_stride, BS_stride, C_stride = self._compute_tc_strides(node, td.get_tile(node), td.get_rstep(node))
+        AS_stride, BS_stride, C_stride = self._compute_tc_strides(
+            node, td.get_tile(node), td.get_rstep(node)
+        )
         A_stride, B_stride, _ = self._compute_tc_strides(node, td.get_tile(node))
-        output_strides = {int(edge.src_id + len(node.inputs)): C_stride for edge in node.outputs}
+        output_strides = {
+            int(edge.src_id + len(node.inputs)): C_stride for edge in node.outputs
+        }
         tensor_strides = {}
         # when connected to shared input, should use full stride without rstep
-        for i, (stride, stride_full) in enumerate(zip([AS_stride, BS_stride], [A_stride, B_stride])):
+        for i, (stride, stride_full) in enumerate(
+            zip([AS_stride, BS_stride], [A_stride, B_stride])
+        ):
             name = node.reduce_op.input_tensors[i].name
             tensor_strides[name] = stride
 
@@ -190,7 +223,7 @@ class LadderPolicy(DefaultPolicy):
                     tensor_strides[name] = stride_full
 
         return output_strides, tensor_strides
-    
+
     def _compute_thread_raster_factor(self, node: IRNode, td: TileDict):
         tile = td.get_tile(node)
         rstep = td.get_rstep(node)
@@ -218,7 +251,7 @@ class LadderPolicy(DefaultPolicy):
             raise NotImplementedError
 
         A_ax_m, A_ax_k, B_ax_k, B_ax_n, C_ax_m, C_ax_n = node.infer_tensorcore_axis()
-        transpose_B = B_ax_k > B_ax_n        
+        transpose_B = B_ax_k > B_ax_n
         kernel_shape = node.args[1].shape
         if len(kernel_shape) == 2:
             if transpose_B:
@@ -235,24 +268,35 @@ class LadderPolicy(DefaultPolicy):
                 K = kernel_shape[2] * kernel_shape[4]
             else:
                 K = kernel_shape[1] * kernel_shape[3]
-        total_size = (M * N  + M * K + N * K) * size_per_element
+        total_size = (M * N + M * K + N * K) * size_per_element
         if total_size < 6 * 1024 * 1024 and total_size > 0:
             logger.debug(f"Skip Thread Rasteration: Total size {total_size}.")
             return raster_factor
-        raster_factor = int(self.arch.compute_max_core ** 0.5)
+        raster_factor = int(self.arch.compute_max_core**0.5)
         return raster_factor
 
     def DFS_smem_tile(self, init_tile, topk, rstep_map) -> Iterable[TileDict]:
+        if len(init_tile) == 2:
+            return super().DFS_smem_tile(init_tile, topk, rstep_map)
         _steps = [get_all_factors(n) for n in self.output_nodes[0].get_space_dim()]
-        steps = [step[step.index(t):] for step, t in zip(_steps, init_tile)]
+        steps = [step[step.index(t) :] for step, t in zip(_steps, init_tile)]
         for i in range(len(steps)):
-            added = list(filter(lambda s:s < steps[i][-1] and s > steps[i][0] and s not in steps[i], [2, 4, 8, 16, 32]))
+            added = list(
+                filter(
+                    lambda s: s < steps[i][-1]
+                    and s > steps[i][0]
+                    and s not in steps[i],
+                    [2, 4, 8, 16, 32],
+                )
+            )
             steps[i].extend(added)
             steps[i] = sorted(steps[i])
         visited_tiles = {}
         queue = PriorityQueue()
+
         def prio(td: TileDict):
-            return (td.traffic + 1) * td.num_wave # * (td.block_per_SM ** 0.5)
+            return (td.traffic + 1) * td.num_wave  # * (td.block_per_SM ** 0.5)
+
         def add_to_queue(tile):
             tile[-1] = self.wmma_n
             tile[-2] = self.wmma_m
@@ -274,7 +318,7 @@ class LadderPolicy(DefaultPolicy):
                     add_to_queue(new_tile)
 
         visited_tiles = filter(lambda td: td.valid, visited_tiles.values())
-        sorted_tiles = sorted(visited_tiles, key=lambda td:prio(td))
+        sorted_tiles = sorted(visited_tiles, key=lambda td: prio(td))
         return sorted_tiles
 
     def _assign_block_size(self, node: Node, td: TileDict, block_size: int):
@@ -297,7 +341,7 @@ class LadderPolicy(DefaultPolicy):
             return None
         factors = factorize(np.prod(space) // warps)
 
-        def _score(node, thread): # small is better
+        def _score(node, thread):  # small is better
             score = 0
             block_tile = [int(np.ceil(tile[i] / thread[i])) for i in range(ndim)]
             shape = node.propogate_inputs(block_tile)
@@ -316,7 +360,7 @@ class LadderPolicy(DefaultPolicy):
                 warp_tile[i] //= factor
             if len(score_map) == 0:
                 return None
-            dim_order = sorted(score_map.keys(), key=lambda x:score_map[x])
+            dim_order = sorted(score_map.keys(), key=lambda x: score_map[x])
             warp_tile[dim_order[0]] *= factor
 
         ladder_configs = node.get_tag("ladder_config")
@@ -333,13 +377,19 @@ class LadderPolicy(DefaultPolicy):
         codegen_dict.cached_tensors = td.cached_tensors_map[node]
         codegen_dict.wmma = wmma
         codegen_dict.raster_factor = self._compute_thread_raster_factor(node, td)
-        codegen_dict.schedule_stages = [stage.name for stage in node._schedule_compute_stages]
+        codegen_dict.schedule_stages = [
+            stage.name for stage in node._schedule_compute_stages
+        ]
         codegen_dict.complete_config(node)
         codegen_dict.pipeline_stage = pipeline_stage
-        codegen_dict.ladder_config = LadderConfig(propagate_inter_a, propagate_inter_b, pipeline_stage)
+        codegen_dict.ladder_config = LadderConfig(
+            propagate_inter_a, propagate_inter_b, pipeline_stage
+        )
         consistent_configs = node.get_tag("consistent_config")
         if consistent_configs:
-            codegen_dict.consistent_config = ConsistentConfig(consistent_configs[0], consistent_configs[1])
+            codegen_dict.consistent_config = ConsistentConfig(
+                consistent_configs[0], consistent_configs[1]
+            )
         ladder_compute_type = node.get_tag("ladder_compute_type")
         if ladder_compute_type:
             codegen_dict.ladder_compute_type = ladder_compute_type

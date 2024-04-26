@@ -197,6 +197,8 @@ class TileGraphExtractor(relay.ExprVisitor):
                 options["ladder_compute_type"] = call.op.attrs["ladder_compute_type"]
             if call.op.attrs and "consistent" in call.op.attrs:
                 options["consistent"] = call.op.attrs["consistent"]
+            if call.op.attrs and "fast_decoding" in call.op.attrs:
+                options["fast_decoding"] = call.op.attrs["fast_decoding"]
             node = IRNode(node_inputs, args, op_name)
             if (
                 call.op.attrs

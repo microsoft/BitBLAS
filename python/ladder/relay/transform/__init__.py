@@ -12,3 +12,4 @@ from .ladder_inception_layout import LadderRewriteInceptionLayout
 from .ladder_gemm_perfectmatmul import LadderPerfectGemmTransform
 from .annotate_tensorcore import *
 from .annotate_ladder_tensorcore import *
+from .annotate_fast_decoding import *

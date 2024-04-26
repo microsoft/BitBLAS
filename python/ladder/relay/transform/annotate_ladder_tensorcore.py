@@ -102,3 +102,5 @@ class OpVisitor(relay.ExprVisitor):
             self.ladder_config = (True, True, 2)
         
         return super().visit_call(call)
+
+__all__ = ["AnnotateLadderTensorCore"]

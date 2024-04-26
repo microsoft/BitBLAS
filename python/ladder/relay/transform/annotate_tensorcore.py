@@ -55,3 +55,5 @@ class OpVisitor(relay.ExprVisitor):
                 self.axis = (num_axis - 2, num_axis - 1)
 
         return super().visit_call(call)
+
+__all__ = ["AnnotateTensorCore"]

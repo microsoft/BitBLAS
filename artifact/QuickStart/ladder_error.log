@@ -402,3 +402,250 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
+['reshape_reshape_transpose_6', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_6>: {'block': [1, 1, 1, 128], 'thread': [1, 1, 1, 128], 'rstep': [], 'block_order': int64(block_idx)}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>: {'block': [1, 1, 128], 'thread': [1, 1, 128], 'rstep': []}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>, Tensor(shape=[1, 64, 1, 128], op.name=p0), 256, 512)
+
+['reshape_reshape_transpose_6', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_6>: {'block': [1, 2, 1, 128], 'thread': [1, 2, 1, 64], 'rstep': [], 'block_order': int64(block_idx), 'step': [1, 1, 1, 2]}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>: {'block': [2, 1, 128], 'thread': [2, 1, 64], 'rstep': [], 'step': [1, 1, 2]}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>, Tensor(shape=[1, 64, 1, 128], op.name=p0), 512, 1024)
+
+['reshape_reshape_transpose_6', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_6>: {'block': [1, 4, 1, 128], 'thread': [1, 4, 1, 32], 'rstep': [], 'block_order': int64(block_idx), 'step': [1, 1, 1, 2]}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>: {'block': [4, 1, 128], 'thread': [4, 1, 32], 'rstep': [], 'step': [1, 1, 2]}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>, Tensor(shape=[1, 64, 1, 128], op.name=p0), 1024, 2048)
+
+['reshape_reshape_transpose_6', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_6>: {'block': [1, 8, 1, 128], 'thread': [1, 8, 1, 16], 'rstep': [], 'block_order': int64(block_idx), 'step': [1, 1, 1, 2]}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>: {'block': [8, 1, 128], 'thread': [8, 1, 16], 'rstep': [], 'step': [1, 1, 2]}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>, Tensor(shape=[1, 64, 1, 128], op.name=p0), 2048, 4096)
+
+['reshape_reshape_transpose_6', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_6>: {'block': [1, 16, 1, 128], 'thread': [1, 16, 1, 8], 'rstep': [], 'block_order': int64(block_idx), 'step': [1, 1, 1, 2]}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>: {'block': [16, 1, 128], 'thread': [16, 1, 8], 'rstep': [], 'step': [1, 1, 2]}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>, Tensor(shape=[1, 64, 1, 128], op.name=p0), 4096, 8192)
+
+['reshape_reshape_transpose_6', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_6>: {'block': [1, 32, 1, 128], 'thread': [1, 32, 1, 4], 'rstep': [], 'block_order': int64(block_idx), 'step': [1, 1, 1, 2]}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>: {'block': [32, 1, 128], 'thread': [16, 1, 8], 'rstep': [], 'step': [1, 1, 2]}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>, Tensor(shape=[1, 64, 1, 128], op.name=p0), 8192, 16384)
+
+['reshape_reshape_transpose_6', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_6>: {'block': [1, 64, 1, 128], 'thread': [1, 64, 1, 2], 'rstep': [], 'step': [1, 1, 1, 2]}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>: {'block': [64, 1, 128], 'thread': [16, 1, 8], 'rstep': [], 'step': [1, 1, 2]}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_7>, Tensor(shape=[1, 64, 1, 128], op.name=p0), 16384, 32768)
+
+['expand_dims_broadcast_to_reshape_reshape_transpose_20', 'nn_batch_matmul_21']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, expand_dims_broadcast_to_reshape_reshape_transpose_20>: {'block': [8, 64, 1], 'thread': [2, 64, 1], 'rstep': [], 'step': [2, 1, 1]}, <Node, nn_batch_matmul_21>: {'block': [8, 1, 64], 'thread': [8, 1, 16], 'rstep': [1], 'step': [1, 1, 2], 'vectorize': {'p1': 4}}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 177, in compile
+    ) = tvm_build(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/tvm_build.py", line 183, in tvm_build
+    src = sch.build(target)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/schedule/te_base.py", line 64, in build
+    mod = tvm.build(self.sche, self.args, target=target)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/driver/build_module.py", line 281, in build
+    rt_mod_host = _driver_ffi.tir_to_runtime(annotated_mods, target_host)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 237, in __call__
+    raise get_last_ffi_error()
+tvm._ffi.base.TVMError: Traceback (most recent call last):
+  12: TVMFuncCall
+  11: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  10: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  9: tvm::SplitMixedModule(tvm::IRModule, tvm::Target const&, tvm::Target const&)
+  8: tvm::ApplyPasses(tvm::IRModule, tvm::transform::Sequential)
+  7: tvm::transform::Pass::operator()(tvm::IRModule) const
+  6: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  5: tvm::transform::SequentialNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  4: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  3: tvm::transform::ModulePassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  2: _ZN3tvm7runtime13PackedFuncObj9ExtractorINS0_16PackedFuncSubObjIZNS0_15TypedPackedFuncIFNS_8IRModuleES5_NS_9transform11PassContextEEE17AssignTypedLambdaIZNS_3tir9transform13MakePackedAPIEvEUlS5_S7_E_EEvT_EUlRKNS0_7TVMArgsEPNS0_11TVMRetValueEE_EEE4CallEPKS1_SF_SJ_
+  1: tvm::tir::transform::MakePackedAPI()::{lambda(tvm::IRModule, tvm::transform::PassContext)#1}::operator()(tvm::IRModule, tvm::transform::PassContext) const [clone .isra.0]
+  0: tvm::tir::MakePackedAPI(tvm::tir::PrimFunc&&)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/src/tir/transforms/make_packed_api.cc", line 295
+TVMError: Not all Vars are passed in api_args:  'vthread'  is not bound to any variables
+
+['expand_dims_broadcast_to_reshape_reshape_transpose_20', 'nn_batch_matmul_21']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, expand_dims_broadcast_to_reshape_reshape_transpose_20>: {'block': [4, 128, 1], 'thread': [1, 128, 1], 'rstep': [], 'step': [2, 1, 1]}, <Node, nn_batch_matmul_21>: {'block': [4, 1, 128], 'thread': [4, 1, 32], 'rstep': [1], 'step': [1, 1, 2], 'vectorize': {'p1': 4}}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 177, in compile
+    ) = tvm_build(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/tvm_build.py", line 183, in tvm_build
+    src = sch.build(target)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/schedule/te_base.py", line 64, in build
+    mod = tvm.build(self.sche, self.args, target=target)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/driver/build_module.py", line 281, in build
+    rt_mod_host = _driver_ffi.tir_to_runtime(annotated_mods, target_host)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 237, in __call__
+    raise get_last_ffi_error()
+tvm._ffi.base.TVMError: Traceback (most recent call last):
+  12: TVMFuncCall
+  11: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  10: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  9: tvm::SplitMixedModule(tvm::IRModule, tvm::Target const&, tvm::Target const&)
+  8: tvm::ApplyPasses(tvm::IRModule, tvm::transform::Sequential)
+  7: tvm::transform::Pass::operator()(tvm::IRModule) const
+  6: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  5: tvm::transform::SequentialNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  4: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  3: tvm::transform::ModulePassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  2: _ZN3tvm7runtime13PackedFuncObj9ExtractorINS0_16PackedFuncSubObjIZNS0_15TypedPackedFuncIFNS_8IRModuleES5_NS_9transform11PassContextEEE17AssignTypedLambdaIZNS_3tir9transform13MakePackedAPIEvEUlS5_S7_E_EEvT_EUlRKNS0_7TVMArgsEPNS0_11TVMRetValueEE_EEE4CallEPKS1_SF_SJ_
+  1: tvm::tir::transform::MakePackedAPI()::{lambda(tvm::IRModule, tvm::transform::PassContext)#1}::operator()(tvm::IRModule, tvm::transform::PassContext) const [clone .isra.0]
+  0: tvm::tir::MakePackedAPI(tvm::tir::PrimFunc&&)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/src/tir/transforms/make_packed_api.cc", line 295
+TVMError: Not all Vars are passed in api_args:  'vthread'  is not bound to any variables
+
+['expand_dims_broadcast_to_reshape_reshape_transpose_20', 'nn_batch_matmul_21']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, expand_dims_broadcast_to_reshape_reshape_transpose_20>: {'block': [16, 32, 1], 'thread': [4, 32, 1], 'rstep': [], 'step': [2, 1, 1]}, <Node, nn_batch_matmul_21>: {'block': [16, 1, 32], 'thread': [16, 1, 8], 'rstep': [1], 'step': [1, 1, 2], 'vectorize': {'p1': 4}}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 177, in compile
+    ) = tvm_build(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/tvm_build.py", line 183, in tvm_build
+    src = sch.build(target)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/schedule/te_base.py", line 64, in build
+    mod = tvm.build(self.sche, self.args, target=target)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/driver/build_module.py", line 281, in build
+    rt_mod_host = _driver_ffi.tir_to_runtime(annotated_mods, target_host)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 237, in __call__
+    raise get_last_ffi_error()
+tvm._ffi.base.TVMError: Traceback (most recent call last):
+  12: TVMFuncCall
+  11: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  10: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  9: tvm::SplitMixedModule(tvm::IRModule, tvm::Target const&, tvm::Target const&)
+  8: tvm::ApplyPasses(tvm::IRModule, tvm::transform::Sequential)
+  7: tvm::transform::Pass::operator()(tvm::IRModule) const
+  6: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  5: tvm::transform::SequentialNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  4: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  3: tvm::transform::ModulePassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  2: _ZN3tvm7runtime13PackedFuncObj9ExtractorINS0_16PackedFuncSubObjIZNS0_15TypedPackedFuncIFNS_8IRModuleES5_NS_9transform11PassContextEEE17AssignTypedLambdaIZNS_3tir9transform13MakePackedAPIEvEUlS5_S7_E_EEvT_EUlRKNS0_7TVMArgsEPNS0_11TVMRetValueEE_EEE4CallEPKS1_SF_SJ_
+  1: tvm::tir::transform::MakePackedAPI()::{lambda(tvm::IRModule, tvm::transform::PassContext)#1}::operator()(tvm::IRModule, tvm::transform::PassContext) const [clone .isra.0]
+  0: tvm::tir::MakePackedAPI(tvm::tir::PrimFunc&&)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/src/tir/transforms/make_packed_api.cc", line 295
+TVMError: Not all Vars are passed in api_args:  'vthread'  is not bound to any variables
+
+['expand_dims_broadcast_to_reshape_reshape_transpose_20', 'nn_batch_matmul_21']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, expand_dims_broadcast_to_reshape_reshape_transpose_20>: {'block': [32, 16, 1], 'thread': [8, 16, 1], 'rstep': [], 'step': [2, 1, 1]}, <Node, nn_batch_matmul_21>: {'block': [32, 1, 16], 'thread': [16, 1, 8], 'rstep': [1], 'step': [1, 1, 2], 'vectorize': {'p1': 4}}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 177, in compile
+    ) = tvm_build(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/tvm_build.py", line 183, in tvm_build
+    src = sch.build(target)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/schedule/te_base.py", line 64, in build
+    mod = tvm.build(self.sche, self.args, target=target)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/driver/build_module.py", line 281, in build
+    rt_mod_host = _driver_ffi.tir_to_runtime(annotated_mods, target_host)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 237, in __call__
+    raise get_last_ffi_error()
+tvm._ffi.base.TVMError: Traceback (most recent call last):
+  12: TVMFuncCall
+  11: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  10: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  9: tvm::SplitMixedModule(tvm::IRModule, tvm::Target const&, tvm::Target const&)
+  8: tvm::ApplyPasses(tvm::IRModule, tvm::transform::Sequential)
+  7: tvm::transform::Pass::operator()(tvm::IRModule) const
+  6: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  5: tvm::transform::SequentialNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  4: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  3: tvm::transform::ModulePassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  2: _ZN3tvm7runtime13PackedFuncObj9ExtractorINS0_16PackedFuncSubObjIZNS0_15TypedPackedFuncIFNS_8IRModuleES5_NS_9transform11PassContextEEE17AssignTypedLambdaIZNS_3tir9transform13MakePackedAPIEvEUlS5_S7_E_EEvT_EUlRKNS0_7TVMArgsEPNS0_11TVMRetValueEE_EEE4CallEPKS1_SF_SJ_
+  1: tvm::tir::transform::MakePackedAPI()::{lambda(tvm::IRModule, tvm::transform::PassContext)#1}::operator()(tvm::IRModule, tvm::transform::PassContext) const [clone .isra.0]
+  0: tvm::tir::MakePackedAPI(tvm::tir::PrimFunc&&)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/src/tir/transforms/make_packed_api.cc", line 295
+TVMError: Not all Vars are passed in api_args:  'vthread'  is not bound to any variables
+
+['expand_dims_broadcast_to_reshape_reshape_transpose_20', 'nn_batch_matmul_21']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, expand_dims_broadcast_to_reshape_reshape_transpose_20>: {'block': [8, 128, 1], 'thread': [1, 128, 1], 'rstep': [], 'step': [2, 1, 1]}, <Node, nn_batch_matmul_21>: {'block': [8, 1, 128], 'thread': [8, 1, 16], 'rstep': [1], 'step': [1, 1, 2], 'vectorize': {'p1': 8}}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 177, in compile
+    ) = tvm_build(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/tvm_build.py", line 183, in tvm_build
+    src = sch.build(target)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/schedule/te_base.py", line 64, in build
+    mod = tvm.build(self.sche, self.args, target=target)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/driver/build_module.py", line 281, in build
+    rt_mod_host = _driver_ffi.tir_to_runtime(annotated_mods, target_host)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 237, in __call__
+    raise get_last_ffi_error()
+tvm._ffi.base.TVMError: Traceback (most recent call last):
+  12: TVMFuncCall
+  11: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  10: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  9: tvm::SplitMixedModule(tvm::IRModule, tvm::Target const&, tvm::Target const&)
+  8: tvm::ApplyPasses(tvm::IRModule, tvm::transform::Sequential)
+  7: tvm::transform::Pass::operator()(tvm::IRModule) const
+  6: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  5: tvm::transform::SequentialNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  4: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  3: tvm::transform::ModulePassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  2: _ZN3tvm7runtime13PackedFuncObj9ExtractorINS0_16PackedFuncSubObjIZNS0_15TypedPackedFuncIFNS_8IRModuleES5_NS_9transform11PassContextEEE17AssignTypedLambdaIZNS_3tir9transform13MakePackedAPIEvEUlS5_S7_E_EEvT_EUlRKNS0_7TVMArgsEPNS0_11TVMRetValueEE_EEE4CallEPKS1_SF_SJ_
+  1: tvm::tir::transform::MakePackedAPI()::{lambda(tvm::IRModule, tvm::transform::PassContext)#1}::operator()(tvm::IRModule, tvm::transform::PassContext) const [clone .isra.0]
+  0: tvm::tir::MakePackedAPI(tvm::tir::PrimFunc&&)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/src/tir/transforms/make_packed_api.cc", line 295
+TVMError: Not all Vars are passed in api_args:  'vthread'  is not bound to any variables
+
