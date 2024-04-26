@@ -8,7 +8,7 @@ This code branch is used for OSDI'24 Artifact Evaluation of paper #626, titled "
     * All Ladder related code are available under Ladder open-source project located in: [https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact)
 * Artifacts Functional:
     * *Documentation*: the following of documents include detailed guidelines on how to build, install, test Ladder and the experiments to compare with other baselines.
-    * *Completeness*: the source code under `python/ladder` folder includes all the key components of Ladder. Besides, the single operator part of Ladder has been implemented as [BitBLAS](https://github.com/microsoft/BitBLAS), a library to support mixed-precision DNN operations. The end2end optimization part is available in this artifact.
+    * *Completeness*: the source code under `python/ladder` folder includes all the key components of Ladder. Besides, the single operator part of Ladder has been re-implemented and released as [BitBLAS](https://github.com/microsoft/BitBLAS), a library to support mixed-precision DNN operations. The end2end optimization part is available in this artifact.
     * *Exercisability*: under the *artifacts* folder, we prepare all the script and data to reproduce the experiements in individual folders named by the figure name in paper.
 * Results Reproduced:
     * To reproduce the main results presented in our paper, we provide Docker images containing all the environments and baseline software as we used in paper evaluation. We also provide detailed guideline to help reproduce the results step by step. 
@@ -29,9 +29,9 @@ nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --gpus all --cap-add=SY
 
 ## 2. Reproducing Individual Experiement Results
 
-Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Microsoft Onedrive]()
+<!-- Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Microsoft Onedrive]()
 
-After downloading, it should be extracted under the artifacts/temp folder. You can see a lot of model folders in it. With these pre-compiled models, results can be reproduced more quickly with a few commands. Here is a list of script we provide:
+After downloading, it should be extracted under the artifacts/temp folder. You can see a lot of model folders in it. With these pre-compiled models, results can be reproduced more quickly with a few commands. Here is a list of script we provide: -->
 
 | Name      | Description                                              | Commands                      |
 | --------- | -------------------------------------------------------- | ----------------------------- |
