@@ -21,16 +21,9 @@ parser.add_argument("--force_tune_tensorir", action="store_true", help="force_tu
 parser.add_argument("--force_tune_welder", action="store_true", help="force_tune_welder, otherwise use the checkpoints if available", default=False)
 parser.add_argument("--force_tune_ladder", action="store_true", help="force_tune_ladder, otherwise use the checkpoints if available", default=False)
 
-parser.add_argument(
-    "--force_tune",
-    action="store_true",
-    help="force_tune, otherwise use the checkpoints if available",
-    default=False,
-)
 
 args = parser.parse_args()
 reproduce = args.reproduce
-force_tune = args.force_tune
 force_tune_amos = args.force_tune_amos
 force_tune_tensorir = args.force_tune_tensorir
 force_tune_welder = args.force_tune_welder
