@@ -146,22 +146,14 @@ def run_from_prebuilt(prefix, arch):
     lib_path = os.path.join(prefix, "model.so")
     with open(os.path.join(prefix, "graph.json")) as f:
         graph_json = f.read()
-    with open(os.path.join(prefix, "graph.params"), "rb") as f_params:
-        params = f_params.read()
+    
     loaded_lib = tvm.runtime.load_module(lib_path)
     module = debug_executor.create(graph_json, loaded_lib, tvm.cuda(0))
-    module.load_params(params)
+    
     print(module.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
-    # input_shape = (1, 1)
-    # dtype = 'int64'
-    # input_data = tvm.nd.array(np.ones(input_shape).astype(dtype))
-    # module.set_input("onnx::Reshape_0", input_data)
+
     module.run()
-    # outputs = []
-    # for i in range(module.get_num_outputs()):
-    #     out = module.get_output(i).asnumpy()
-    #     outputs.append(out)
-    # print(outputs)
+
 
 
 if __name__ == "__main__":
