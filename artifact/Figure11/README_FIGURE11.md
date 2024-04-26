@@ -5,7 +5,7 @@ Figure 11 provides a comparative analysis of memory usage across two machine lea
 Run the following command to generate the results of Figure 11:
 
 ```bash
-python3 run_all.py
+python3 run_all.py # This may take hours to run
 ```
 
 The `run_all.py` script has the following options:
@@ -30,3 +30,5 @@ The output will be saved in the `log` directory. For example, the output of the 
 Measure the memory for llama batch 1 seq 1 under pytorch
 {'llama_pytorch_1_1': 3872}
 ```
+
+As we do not provide Welder Execute Binaries in our checkpoints (the Welder Execute Binaries are too big), so the scripts will first compile the welder binaries from onnx model, and then run the welder binaries to measure the memory usage. The compilation process may take a while.
