@@ -33,18 +33,18 @@ nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --gpus all --cap-add=SY
 
 After downloading, it should be extracted under the artifacts/temp folder. You can see a lot of model folders in it. With these pre-compiled models, results can be reproduced more quickly with a few commands. Here is a list of script we provide: -->
 
-| Name      | Description                                              | Commands                      |
-| --------- | -------------------------------------------------------- | ----------------------------- |
-| Figure8   | End2End Performance on the NVIDIA A100 GPU               | [Figure8](#Figure8)           |
-| Figure9   | End2End Performance on the NVIDIA V100 GPU               | [Figure9](#Figure9)                |
-| Figure10  | End2End Performance on the NVIDIA RTX A6000 GPU          | [Figure10](#Figure10)               |
-| Figure11  | Memory usage of LLM inference on the NVIDIA A100 GPU     | [Figure11](#Figure11)                |
-| Figure12  | Operator Benchmark on the NVIDIA A100 GPU                | [Figure12](#Figure12)                |
-| Figure13  | Optimization breakdown of LLAMA on the NVIDIA A100 GPU   | [Figure13](#Figure13)               |
-| Figure14  | Scaling the bit width of weight and activation.          | [Figure14](#Figure14)               |
-| Figure15  | End-to-end performance on The AMD MI250 GPU              | [Figure15](#Figure15)               |
-| Table1    | MatMul Support and its Performance of Vendor Libraries   | [Table1](#Table1)                 |
-| Table2    | Compilation time of AMOS, TensorIR Welder and Ladder     | [Table5](#Table2)                 |
+| Name      | Description                                              | Commands                      | Location                      |
+| --------- | -------------------------------------------------------- | ----------------------------- | ----------------------------- |
+| Figure8   | End2End Performance on the NVIDIA A100 GPU               | [Figure8](#Figure8)           | [Figure8](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure8)           |
+| Figure9   | End2End Performance on the NVIDIA V100 GPU               | [Figure9](#Figure9)           | [Figure9](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure9)           |
+| Figure10  | End2End Performance on the NVIDIA RTX A6000 GPU          | [Figure10](#Figure10)         | [Figure10](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure10)         |
+| Figure11  | Memory usage of LLM inference on the NVIDIA A100 GPU     | [Figure11](#Figure11)         | [Figure11](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure11)         |
+| Figure12  | Operator Benchmark on the NVIDIA A100 GPU                | [Figure12](#Figure12)         | [Figure12](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure12)         |
+| Figure13  | Optimization breakdown of LLAMA on the NVIDIA A100 GPU   | [Figure13](#Figure13)         | [Figure13](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure13)         |
+| Figure14  | Scaling the bit width of weight and activation.          | [Figure14](#Figure14)         | [Figure14](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure14)         |
+| Figure15  | End-to-end performance on The AMD MI250 GPU              | [Figure15](#Figure15)         | [Figure15](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure15)         |
+| Table1    | MatMul Support and its Performance of Vendor Libraries   | [Table1](#Table1)             | [Table1](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Table1)         |
+| Table2    | Compilation time of AMOS, TensorIR Welder and Ladder     | [Table2](#Table2)             | [Table2](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Table2)         |
 
 ### <a id="Figure8">Figure8 </a>
 
