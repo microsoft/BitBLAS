@@ -3,6 +3,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+pip install requirements.txt
+
 # clone and build tvm
 git submodule update --init --recursive
 
