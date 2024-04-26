@@ -1,0 +1,409 @@
+1
+
+
+Problem size:
+16384 16384 16384
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_int8_int32, compute:ntn, shape:32x8x16)
+1 : MatchResult(hw_abs_dag:wmma_int8_int32, compute:ntn, shape:16x16x16)
+2 : MatchResult(hw_abs_dag:wmma_int8_int32, compute:ntn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_int8_int32, compute:ntn, shape:16x16x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-int8-int32-layer-(16384, 16384, 16384).log...
+Loading from file gemm-nt-int8-int32-layer-(16384, 16384, 16384).log...
+Load 0 entries! The best known is 10000000000000.000000 ms
+Using arch: sm_80
+Total search tirals: 1000 
+batch size: 16 
+batch num: 63
+Search round: 0
+.E.Y.Y.E.E.Y.E.E.Y.E.E.Y.Y.E.E.Y
+*E*E*E*T*E*E*E
+Current best timecost:  10000000000000.0 ms
+Search round: 1
+.Y.Y.E.E.E.E.Y.E.E.Y.Y.Y.E.Y.Y.Y
+*T*T*E*T*E*E*E*E*T
+Current best timecost:  10000000000000.0 ms
+Search round: 2
+.Y.Y.Y.Y.Y.Y.E.E.Y.Y.Y.E.E.E.Y.Y
+*E*Y*E*E*E*E*E*E*T*E*E
+Current best timecost:  124.091918295 ms
+Current best params:
+ {'inline': (1, 1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 3
+.E.E.E.E.Y.Y.E.Y.Y.E.Y.E.E.Y.E.E
+*E*T*E*E*E*E
+Current best timecost:  124.091918295 ms
+Current best params:
+ {'inline': (1, 1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 4
+.Y.E.Y.Y.Y.Y.Y.Y.E.Y.E.Y.Y.Y.E.Y
+*E*Y*E*Y*E*Y*Y*E*E*E*Y*Y
+Current best timecost:  90.07179813500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 5
+.E.E.E.E.E.Y.E.Y.Y.Y.E.Y.Y.Y.E.Y
+*E*Y*Y*Y*E*Y*Y*Y
+Current best timecost:  90.07179813500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 6
+.E.E.Y.E.Y.E.E.Y.Y.E.Y.E.E.E.Y.Y
+*E*E*E*E*E*E*E
+Current best timecost:  90.07179813500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 7
+.E.Y.Y.Y.Y.E.E.Y.Y.Y.E.E.Y.E.Y.Y
+*E*E*E*E*E*E*E*E*Y*T
+Current best timecost:  90.07179813500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 8
+.Y.Y.Y.Y.E.Y.Y.Y.Y.Y.Y.Y.E.Y.Y.Y
+*E*E*E*E*E*Y*Y*E*E*E*E*Y*Y*E
+Current best timecost:  90.07179813500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 9
+.E.E.Y.E.E.Y.E.E.Y.E.Y.Y.Y.E.E.Y
+*E*E*Y*E*Y*E*E
+Current best timecost:  90.07179813500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 10
+.E.Y.E.Y.Y.E.Y.Y.E.E.E.Y.E.Y.Y.Y
+*E*E*E*E*E*E*Y*Y*Y
+Current best timecost:  90.07179813500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 11
+.Y.Y.Y.Y.Y.E.Y.E.E.E.Y.Y.Y.Y.Y.E
+*E*E*E*E*E*E*Y*E*Y*Y*Y
+Current best timecost:  90.07179813500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 12
+.E.Y.Y.E.Y.Y.Y.Y.E.Y.E.Y.E.Y.Y.Y
+*E*T*E*E*E*T*E*E*E*E*Y
+Current best timecost:  90.07179813500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 13
+.E.E.E.E.Y.Y.Y.Y.Y.E.E.Y.Y.E.E.Y
+*Y*Y*E*E*T*E*E*E
+Current best timecost:  90.07179813500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (4, 1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 14
+.Y.E.Y.Y.E.Y.Y.Y.Y.E.Y.Y.Y.Y.Y.E
+*E*E*E*E*Y*E*E*Y*E*Y*E*Y
+Current best timecost:  62.93955782500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 15
+.E.E.Y.Y.Y.E.E.Y.E.Y.E.Y.Y.Y.Y.Y
+*E*E*E*E*E*T*E*Y*Y*Y
+Current best timecost:  62.93955782500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 16
+.Y.E.Y.E.Y.E.Y.Y.Y.Y.Y.Y.Y.Y.E.Y
+*E*E*E*Y*E*E*Y*Y*E*E*T*E
+Current best timecost:  62.93955782500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 17
+.Y.Y.Y.Y.Y.Y.E.E.Y.Y.Y.Y.Y.Y.Y.E
+*E*E*E*E*E*E*Y*Y*E*E*Y*Y*E
+Current best timecost:  62.93955782500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 18
+.Y.Y.Y.Y.E.E.E.Y.Y.E.Y.Y.Y.E.Y.Y
+*E*E*Y*E*E*E*Y*E*E*Y*E
+Current best timecost:  62.93955782500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 19
+.E.E.Y.E.Y.E.Y.Y.Y.Y.Y.Y.Y.E.Y.E
+*E*E*E*E*Y*E*E*Y*Y*E
+Current best timecost:  62.93955782500001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (16, -1)}
+Search round: 20
+.Y.E.Y.E.Y.Y.Y.E.Y.Y.E.Y.Y.E.Y.E
+*T*E*E*Y*Y*E*E*E*E*E
+Current best timecost:  62.93073202000001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (64, -1)}
+Search round: 21
+.Y.Y.Y.E.Y.Y.Y.Y.Y.Y.Y.E.Y.E.Y.E
+*E*E*E*E*Y*Y*Y*E*E*E*E*E
+Current best timecost:  62.93073202000001 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (64, 1), 'last_unroll_step': (64, -1)}
+Search round: 22
+.Y.Y.Y.Y.E.E.Y.E.Y.Y.Y.Y.Y.E.E.E
+*E*E*E*Y*E*E*Y*E*Y*Y
+Current best timecost:  62.81094356 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (512, -1), 'last_unroll_step': (64, -1)}
+Search round: 23
+.Y.Y.Y.E.Y.Y.Y.Y.E.E.Y.E.Y.E.Y.E
+*E*E*Y*Y*Y*Y*Y*E*E*E
+Current best timecost:  62.81094356 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (512, -1), 'last_unroll_step': (64, -1)}
+Search round: 24
+.E.E.E.E.Y.E.E.Y.E.Y.Y.Y.Y.Y.Y.Y
+*E*E*E*E*E*Y*Y*Y*T
+Current best timecost:  62.81094356 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (512, -1), 'last_unroll_step': (64, -1)}
+Search round: 25
+.E.Y.Y.Y.Y.Y.Y.E.E.E.Y.Y.E.Y.Y.Y
+*E*E*E*E*E*E*E*E*Y*Y*E
+Current best timecost:  62.81094356 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (512, -1), 'last_unroll_step': (64, -1)}
+Search round: 26
+.Y.E.E.E.E.E.E.Y.Y.E.Y.Y.Y.Y.Y.Y
+*E*Y*Y*E*Y*Y*T*Y*E
+Current best timecost:  62.81094356 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (512, -1), 'last_unroll_step': (64, -1)}
+Search round: 27
+.Y.E.Y.Y.E.Y.Y.Y.E.Y.E.E.E.Y.E.Y
+*E*T*E*E*E*T*Y*E*E
+Current best timecost:  62.81094356 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([512, 1, 2, 1], (0, -1, 1)), ([16, 16, 2, 2], (1, 1, -1))], 'reduce_factors': [([32, 1, 32], (-1, -1))], 'last_factors': [([16384, 128, 4], (0, 1))], 'output_unroll_step': (512, -1), 'last_unroll_step': (64, -1)}
+Search round: 28
+.Y.E.Y.Y.Y.Y.Y.E.Y.Y.E.Y.Y.E.Y.Y
+*E*Y*E*Y*E*Y*E*T*E*E*E*E
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 29
+.E.E.Y.Y.Y.E.E.Y.Y.Y.Y.E.E.Y.E.Y
+*E*E*E*E*E*E*E*E*E
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 30
+.E.Y.Y.Y.E.Y.Y.E.E.Y.E.E.Y.Y.E.E
+*E*Y*E*E*T*E*E*E
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 31
+.Y.Y.Y.E.E.E.Y.E.Y.Y.E.E.Y.Y.Y.Y
+*Y*E*E*E*E*E*E*E*Y*Y
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 32
+.Y.Y.Y.Y.Y.Y.Y.Y.Y.Y.E.Y.Y.Y.Y.Y
+*E*E*E*Y*Y*E*E*T*E*E*E*E*Y*E*E
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 33
+.Y.Y.Y.Y.E.E.E.Y.Y.Y.Y.Y.Y.Y.Y.E
+*E*Y*E*E*E*Y*E*Y*E*Y*Y*Y
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 34
+.Y.Y.E.E.E.E.Y.Y.E.E.Y.Y.Y.E.Y.E
+*E*Y*E*E*E*Y*E*E
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 35
+.E.E.E.Y.Y.Y.Y.Y.E.Y.Y.E.Y.Y.Y.Y
+*T*E*Y*Y*E*Y*Y*Y*E*E*E
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 36
+.Y.E.Y.E.E.Y.Y.E.Y.E.Y.Y.Y.Y.Y.Y
+*E*E*E*E*Y*E*Y*Y*Y*Y*E
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 37
+.E.E.Y.E.Y.Y.Y.Y.Y.Y.E.E.E.E.Y.E
+*E*Y*E*Y*Y*Y*E*T
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 38
+.E.E.Y.E.E.Y.E.Y.Y.E.Y.Y.E.E.E.Y
+*E*E*E*E*E*E*E
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 39
+.E.E.E.Y.Y.Y.E.Y.E.E.Y.Y.E.Y.Y.E
+*E*E*E*Y*Y*Y*Y*E
+Current best timecost:  32.08037867 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 40
+.Y.E.E.Y.Y.Y.Y.Y.Y.E.Y.Y.Y.E.E.Y
+*Y*Y*Y*E*E*E*E*Y*Y*E*T
+Current best timecost:  32.009414889999995 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (64, 1)}
+Search round: 41
+.Y.E.E.Y.Y.E.E.Y.Y.E.Y.Y.Y.E.E.E
+*E*E*E*E*E*E*E*T
+Current best timecost:  32.009414889999995 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (64, 1)}
+Search round: 42
+.Y.Y.E.E.E.E.Y.Y.Y.Y.Y.Y.E.Y.E.Y
+*E*E*E*E*Y*Y*E*Y*E*E
+Current best timecost:  32.009414889999995 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (64, 1)}
+Search round: 43
+.E.E.Y.E.E.Y.Y.Y.Y.E.E.E.E.Y.E.Y
+*E*E*Y*E*E*E*E
+Current best timecost:  32.009414889999995 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (64, 1)}
+Search round: 44
+.Y.Y.Y.Y.Y.Y.Y.Y.E.E.E.Y.Y.Y.Y.Y
+*E*Y*Y*Y*Y*E*Y*Y*E*Y*Y*Y*Y
+Current best timecost:  31.96482966 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (16, -1)}
+Search round: 45
+.Y.Y.Y.E.Y.Y.E.E.Y.Y.E.Y.Y.Y.Y.Y
+*E*Y*Y*E*E*E*T*Y*E*E*E*Y
+Current best timecost:  31.96482966 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (16, -1)}
+Search round: 46
+.Y.E.E.E.Y.E.E.E.E.E.E.E.Y.Y.Y.Y
+*E*T*Y*E*E*Y
+Current best timecost:  31.96482966 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (16, -1)}
+Search round: 47
+.Y.Y.Y.Y.Y.Y.Y.Y.E.E.E.E.E.E.E.E
+*E*Y*Y*E*E*Y*Y*E
+Current best timecost:  31.96482966 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (16, -1)}
+Search round: 48
+.Y.Y.Y.Y.Y.Y.Y.Y.E.Y.E.Y.Y.Y.E.E
+*Y*E*Y*E*E*E*E*E*E*E*Y*Y
+Current best timecost:  31.96482966 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([512, 512, 32], (1, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (16, -1)}
+Search round: 49
+.Y.E.E.Y.Y.Y.E.E.Y.E.Y.Y.Y.E.Y.Y
+*E*E*Y*Y*E*E*E*Y*Y*E
+Current best timecost:  31.751697170000003 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([4096, 64, 32], (0, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 50
+.E.Y.Y.Y.Y.E.Y.Y.Y.Y.Y.Y.Y.Y.Y.Y
+*E*E*E*E*E*E*E*E*E*E*Y*Y*Y*E
+Current best timecost:  31.751697170000003 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([4096, 64, 32], (0, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 51
+.E.Y.Y.E.E.Y.Y.E.E.E.Y.Y.Y.E.Y.Y
+*E*E*E*E*Y*E*E*E*E
+Current best timecost:  31.751697170000003 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([4096, 64, 32], (0, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 52
+.E.E.Y.E.Y.E.Y.Y.E.Y.Y.Y.Y.Y.Y.E
+*E*E*E*E*Y*E*Y*Y*E*Y
+Current best timecost:  31.751697170000003 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([4096, 64, 32], (0, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 53
+.E.Y.E.E.E.E.Y.Y.Y.E.Y.Y.Y.E.E.E
+*E*E*E*Y*E*E*E
+Current best timecost:  31.751697170000003 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([4096, 64, 32], (0, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 54
+.Y.Y.Y.Y.Y.Y.E.E.E.E.E.E.Y.Y.Y.Y
+*E*E*E*E*E*Y*Y*Y*Y*Y
+Current best timecost:  31.751697170000003 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([4096, 64, 32], (0, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 55
+.Y.Y.Y.Y.E.Y.Y.E.Y.E.Y.Y.Y.Y.E.Y
+*E*Y*Y*E*Y*Y*E*E*Y*T*E*Y
+Current best timecost:  31.751697170000003 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([4096, 64, 32], (0, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 56
+.E.E.E.E.Y.Y.Y.Y.E.Y.Y.Y.Y.Y.Y.Y
+*E*Y*Y*E*E*Y*Y*E*E*Y*E
+Current best timecost:  31.751697170000003 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([4096, 64, 32], (0, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 57
+.E.Y.Y.Y.Y.Y.Y.Y.E.Y.Y.Y.Y.E.Y.E
+*Y*E*E*Y*E*E*E*Y*E*Y*E*T
+Current best timecost:  31.751697170000003 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (8, -1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([4096, 64, 32], (0, 0))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 58
+.E.Y.Y.Y.E.Y.E.Y.Y.Y.Y.Y.Y.E.E.E
+*Y*E*E*E*Y*E*E*Y*Y*Y
+Current best timecost:  31.66661186 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (16, 1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([65536, 16, 8], (1, 1))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 59
+.Y.Y.E.Y.Y.Y.Y.E.Y.Y.Y.Y.Y.Y.Y.Y
+*E*E*E*E*E*E*Y*Y*Y*E*E*Y*Y*E
+Current best timecost:  31.66661186 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (16, 1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([65536, 16, 8], (1, 1))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 60
+.E.Y.Y.Y.Y.Y.Y.Y.E.E.E.Y.Y.Y.Y.Y
+*Y*Y*Y*E*Y*E*Y*Y*Y*E*E*Y
+Current best timecost:  31.66661186 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (16, 1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([65536, 16, 8], (1, 1))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 61
+.Y.E.Y.E.Y.E.E.Y.Y.Y.E.Y.Y.E.E.E
+*E*E*E*Y*E*E*E*Y
+Current best timecost:  31.66661186 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (16, 1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([65536, 16, 8], (1, 1))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search round: 62
+.E.Y.E.Y.Y.Y.E.E
+*E*E*E*E
+Current best timecost:  31.66661186 ms
+Current best params:
+ {'inline': (0, -1), 'vectorize': (16, 1), 'spatial_factors': [([16, 4, 2, 8], (0, 1, 0)), ([256, 1, 2, 2], (-1, 0, 0))], 'reduce_factors': [([128, 2, 4], (-1, 0))], 'last_factors': [([65536, 16, 8], (1, 1))], 'output_unroll_step': (512, 1), 'last_unroll_step': (512, 1)}
+Search 1000 trials costs 16194.740372 seconds
+Clearing...
+Logging to gemm-nt-int8-int32-layer-(16384, 16384, 16384).log...
+Loading from file gemm-nt-int8-int32-layer-(16384, 16384, 16384).log...
+Load 197 entries! The best known is 31.666612 ms
+0.03166661186
+{'inline': [0, -1], 'vectorize': [16, 1], 'spatial_factors': [[[16, 4, 2, 8], [0, 1, 0]], [[256, 1, 2, 2], [-1, 0, 0]]], 'reduce_factors': [[[128, 2, 4], [-1, 0]]], 'last_factors': [[[65536, 16, 8], [1, 1]]], 'output_unroll_step': [512, 1], 'last_unroll_step': [512, 1]}
+Cost of gemm-nt-int8-int32-layer-(16384, 16384, 16384) is 31.367171 ms
+Time cost: 16209.257567

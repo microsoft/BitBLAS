@@ -3,7 +3,7 @@
 import argparse
 import os
 
-CHECKPOINT_PATH = os.path.join(os.getcwd(), "../../checkpoints/TABLE2")
+CHECKPOINT_PATH = os.path.join(os.getcwd(), "../../checkpoints/Table2")
 
 parser = argparse.ArgumentParser()
 

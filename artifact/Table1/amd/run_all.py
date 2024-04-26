@@ -17,7 +17,7 @@ def change_directory(path):
     print(f"Changed directory to {os.getcwd()}")
 
 # Setting the environment variable for CHECKPOINT_PATH
-os.environ['CHECKPOINT_PATH'] = os.path.join(os.getcwd(), "../../checkpoints/TABLE1")
+os.environ['CHECKPOINT_PATH'] = os.path.join(os.getcwd(), "../../checkpoints/Table1")
 
 # Handling arguments
 parser = argparse.ArgumentParser(description="Run all benchmarks for NVIDIA GPUs.")
