@@ -16,3 +16,15 @@ The `run_all.py` script has the following options:
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
 ![Figure 8](./png/end2end_a100.png)
+
+## Notes for Reproducing the Results
+
+- As shown in Table2, the ML Compiler AMOS and TensorIR takes too much time to tune a whole end2end model, so we provide the tuned logs and trace files in the `$CHECKPOINTS/Figure8/` directory. The `run_all.py` script will use the logs and trace files to generate the results. If you want to reproduce the results, you can set the `--force_tune` option to `True` to force tune the model with AMOS and TensorIR. (This may take days to finish the tuning process.)
+
+- Moreover, even Ladder can have a giant reduction in tuning time, it still takes a long time to tune the all settings (around 40x models need to be tuned to reproduce all the paper data, This may takes around 10 hours to finish all of the settings tuning), we also provide the tuned logs and some of the precompiled models and trace files in the `$CHECKPOINTS/Figure8/` directory. The `run_all.py` script will use the logs and trace files to generate the results. If you want to reproduce the results, you can set the `--force_tune` option to `True` to force tune the model with Ladder. (This may take hours to finish the tuning process.)
+
+If you want to check the one of the checkpoint that we provide, you can use the following command:
+
+```bash
+python ladder_with_fake_dense_dequantize.py --prebuilt_path $CHECKPOINT_PATH/Figure8/ladder/checkpoint/llama2-70b/llama2_bs1_seq1_async
+```
