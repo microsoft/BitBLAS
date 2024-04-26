@@ -1,4 +1,4 @@
-# OSDI'24 Ladder Artifacts Evaluation
+# OSDI'24 Ladder Artifact Evaluation
 
 ## 0. Overview
 This code branch is used for OSDI'24 Artifact Evaluation of paper #626, titled "Ladder: Enabling Efficient Low-Precision Deep Learning Computing through Hardware-aware Tensor Transformation".
@@ -8,8 +8,9 @@ This code branch is used for OSDI'24 Artifact Evaluation of paper #626, titled "
     * All Ladder related code are available under Ladder open-source project located in: [https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact)
 * Artifacts Functional:
     * *Documentation*: the following of documents include detailed guidelines on how to build, install, test Ladder and the experiments to compare with other baselines.
-    * *Completeness*: the source code under `python/ladder` folder includes all the key components of Ladder. Besides, the single operator part of Ladder has been re-implemented and released as [BitBLAS](https://github.com/microsoft/BitBLAS), a library to support mixed-precision DNN operations. The end2end optimization part is available in this artifact.
+    * *Completeness*: the source code under `python/ladder` folder includes all the key components of Ladder.
     * *Exercisability*: under the *artifacts* folder, we prepare all the script and data to reproduce the experiements in individual folders named by the figure name in paper.
+    * *Reuse for further research*: the single operator part of Ladder has been re-implemented and released as [BitBLAS](https://github.com/microsoft/BitBLAS), a library to support mixed-precision DNN operations. The end-to-end optimization part is available in this artifact.
 * Results Reproduced:
     * To reproduce the main results presented in our paper, we provide Docker images containing all the environments and baseline software as we used in paper evaluation. We also provide detailed guideline to help reproduce the results step by step. 
     * Hardware requirements:
@@ -25,6 +26,8 @@ cd docker
 docker build -t ladder_cuda -f Dockerfile.cu120 .
 # run the container
 nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --gpus all --cap-add=SYS_PTRACE --shm-size=4G --security-opt seccomp=unconfined --security-opt apparmor=unconfined --name ladder_test ladder_cuda bash
+# cd the artifact folder
+cd Ladder
 ```
 
 ## 2. Reproducing Individual Experiement Results

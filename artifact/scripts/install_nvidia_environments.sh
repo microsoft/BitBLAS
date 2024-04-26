@@ -5,6 +5,7 @@
 
 # python requirements
 pip install prettytable
+pip install matplotlib
 
 # install torch inductor
 pip install torch>=2.0.0

@@ -25,7 +25,7 @@ RUN pip install --no-cache-dir --default-timeout=1000 torch==2.1.0 torchvision t
     attrs cloudpickle decorator psutil synr tornado xgboost==1.7.1 regex \
     && rm -rf ~/.cache/pip
 
-RUN git clone https://github.com/LeiWang1999/Ladder --recursive -b develop Ladder\
+RUN git clone https://github.com/microsoft/BitBLAS.git --recursive -b osdi24_ladder_artifact Ladder\
   && cd Ladder && maint/scripts/installation.sh
 
 ENV PYTHONPATH /root/Ladder/3rdparty/tvm/python:$PYTHONPATH
