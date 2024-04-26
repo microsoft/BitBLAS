@@ -3,13 +3,30 @@
 import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import argparse
 
-from paper_result import (
-    llama_providers,
-    llama_times_data,
-    bloom_providers,
-    bloom_times_data
-)
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--reproduce", action="store_true", help="reproduce, otherwise use the paper results", default=False)
+
+args = parser.parse_args()
+
+reproduce = args.reproduce
+
+if not reproduce:
+    from paper_result import (
+        llama_providers,
+        llama_times_data,
+        bloom_providers,
+        bloom_times_data
+    )
+else:
+    from reproduce_result import (
+        llama_providers,
+        llama_times_data,
+        bloom_providers,
+        bloom_times_data
+    )
 
 
 colers_sets = [

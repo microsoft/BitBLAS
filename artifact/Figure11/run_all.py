@@ -4,6 +4,7 @@ import argparse
 import os
 
 CHECKPOINT_PATH = os.path.join(os.getcwd(), "../../checkpoints/Figure11")
+os.environ["CHECKPOINT_PATH"] = CHECKPOINT_PATH
 
 parser = argparse.ArgumentParser()
 
@@ -24,5 +25,41 @@ if not reproduce:
     os.system(f"python3 plot_memory_usage.py")
 else:
     print("Reproducing the results")
-    # reproduce the results for amos
-    os.system("cd amos-benchmark")
+    # initialize the checkpoints
+    # initialize tensorrt engine
+    os.system(f"cd tensorrt-benchmark; ./initialize_tensorrt.sh")
+    # initialize welder
+    os.system(f"cd welder-benchmark; ./initialize_welder.sh")
+    # initialize ladder
+    os.system(f"cd ladder-benchmark; ./initialize_ladder.sh")
+    # initialize vllm
+    for model in ["{model}", "bloom"]:
+        for batch_size, seq_len in [
+                (1, 1),
+                (32, 1),
+                (1, 4096)
+            ]:
+            # reproduce the results for inductor
+            os.system(f"python measure_memory --framework pytorch --model {model} --batch_size {batch_size} --seq_len {seq_len}")
+            # reproduce the results for onnxruntime
+            os.system(f"python measure_memory --framework onnxruntime --model {model} --batch_size {batch_size} --seq_len {seq_len}")
+            # reproduce the results for tensorrt
+            os.system(f"python measure_memory --framework tensorrt --model {model} --batch_size {batch_size} --seq_len {seq_len}")
+            # reproduce the results for welder
+            os.system(f"python measure_memory --framework welder --model {model} --batch_size {batch_size} --seq_len {seq_len}")
+            # reproduce the results for vllm
+            os.system(f"python measure_memory --framework vllm --model {model} --batch_size {batch_size} --seq_len {seq_len}")
+            # reproduce the results for ladder
+            os.system(f"python measure_memory --framework ladder --model {model} --batch_size {batch_size} --seq_len {seq_len}")
+            # reproduce the results for ladder_fp16_int4
+            os.system(f"python measure_memory --framework ladder_fp16_int4 --model {model} --batch_size {batch_size} --seq_len {seq_len}")
+            # reproduce the results for ladder_fp16_nf4
+            os.system(f"python measure_memory --framework ladder_fp16_nf4 --model {model} --batch_size {batch_size} --seq_len {seq_len}")
+            # reproduce the results for ladder_fp8_fp8
+            os.system(f"python measure_memory --framework ladder_fp8_fp8 --model {model} --batch_size {batch_size} --seq_len {seq_len}")
+            # reproduce the results for ladder_fp16_mxfp8xmxfp8
+            os.system(f"python measure_memory --framework ladder_fp16_mxfp8xmxfp8 --model {model} --batch_size {batch_size} --seq_len {seq_len}")
+            # reproduce the results for ladder_fp16_int8xint1
+            os.system(f"python measure_memory --framework ladder_fp16_int8xint1 --model {model} --batch_size {batch_size} --seq_len {seq_len}")
+    
+    os.system(f"python3 plot_memory_usage.py --reproduce")

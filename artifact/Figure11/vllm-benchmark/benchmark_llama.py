@@ -84,15 +84,5 @@ else:
     kv_caches = [(None, None)] * config_70b.num_hidden_layers
     cache_envents = None
 
-# benchmark
-# torch inductor 
-def get_runtime():
-    tic = time.time()
+while True:
     _ = model(*args)
-    return (time.time() - tic) * 1000
-with torch.no_grad():
-    st = time.time()
-    while time.time() - st < 1.0:
-        get_runtime() # warmup
-    times = [get_runtime() for i in range(100)]
-    print(f"vllm llama run b{batch_size} s{seq_length} avg: {np.mean(times)} ms")

@@ -65,13 +65,12 @@ for model_name, model_path in models.items():
         f.write(f"# Step 3: Code generation\n")
         f.write("echo 'Running Code Generation'\n")
         f.write(
-            f"{welder_nnfusion_path}/build/src/tools/nnfusion/nnfusion {model_path} -f onnx -ftune_output_file=/dev/null -ftune_input_file=tuned.json -fwarmup_step=5 -frun_step=10 > codegen.log 2>&1\n"
+            f"{welder_nnfusion_path}/build/src/tools/nnfusion/nnfusion {model_path} -f onnx -ftune_output_file=/dev/null -ftune_input_file=tuned.json -fwarmup_step=5 -frun_step=10000 > codegen.log 2>&1\n"
         )
         f.write(
             f"cd nnfusion_rt/cuda_codegen;cmake . -DCUDA_ARCH='-gencode arch=compute_80,code=compute_80';make;./main_test > run.log \n"
         )
         f.write(f"cp run.log ../../\n")
-        f.write(f"cd ../../; rm -rf nnfusion_rt\n\n")
 
     # 让.sh文件具有执行权限
     os.chmod(sh_filepath, 0o755)

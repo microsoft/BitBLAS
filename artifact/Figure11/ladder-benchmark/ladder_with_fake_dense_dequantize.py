@@ -151,8 +151,8 @@ def run_from_prebuilt(prefix, arch):
     module = debug_executor.create(graph_json, loaded_lib, tvm.cuda(0))
     
     print(module.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
-
-    module.run()
+    while True:
+        module.run()
 
 
 
