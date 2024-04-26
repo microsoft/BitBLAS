@@ -3,12 +3,32 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
-from paper_result import (
-    matmul_providers,
-    matmul_times_data,
-    conv_providers,
-    conv_times_data
-)
+
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--reproduce", action="store_true", help="reproduce, otherwise use the paper results", default=False)
+
+args = parser.parse_args()
+
+reproduce = args.reproduce
+
+if not reproduce:
+    from paper_result import (
+        matmul_providers,
+        matmul_times_data,
+        conv_providers,
+        conv_times_data
+    )
+else:
+    from reproduce_result import (
+        matmul_providers,
+        matmul_times_data,
+        conv_providers,
+        conv_times_data
+    )
+
 colers_sets = [
     # nilu
     (20 / 255, 54 / 255, 95 / 255),

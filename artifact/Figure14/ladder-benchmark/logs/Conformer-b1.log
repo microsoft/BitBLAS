@@ -1,0 +1,5 @@
+Running from prebuilt model: /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/../checkpoints/Figure8/ladder/checkpoints/Conformer-b1
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   2.4856       2.4856       2.4857       2.4854       0.0001   
+               

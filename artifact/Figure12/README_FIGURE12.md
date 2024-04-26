@@ -16,3 +16,6 @@ The `run_all.py` script has the following options:
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
 ![Figure 12](./png/operator_performance_a100.png)
+
+For TensorIR Conv2d, we directly extract the operator performance form the end2end traces. So we do not provide the script to reproduce the result.
+

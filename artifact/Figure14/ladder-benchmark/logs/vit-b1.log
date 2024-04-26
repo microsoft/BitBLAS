@@ -1,0 +1,9 @@
+Running from prebuilt model: /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/../checkpoints/Figure8/ladder/checkpoints/vit-b1
+Traceback (most recent call last):
+  File "ladder_with_fake_conv_dequantize.py", line 149, in <module>
+    run_from_prebuilt(prebuilt_path, arch)
+  File "ladder_with_fake_conv_dequantize.py", line 127, in run_from_prebuilt
+    loaded_lib = tvm.runtime.load_module(path_lib)
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/runtime/module.py", line 592, in load_module
+    raise ValueError("cannot find file %s" % path)
+ValueError: cannot find file /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/../checkpoints/Figure8/ladder/checkpoints/vit-b1/model.so
