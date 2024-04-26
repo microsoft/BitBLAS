@@ -6,6 +6,8 @@ apt-get install -y python3 python3-dev python3-setuptools gcc libtinfo-dev zlib1
 
 apt-get install -y llvm-10
 
+pip install pebble
+
 git clone https://github.com/pku-liang/AMOS ./baseline_framework/AMOS --recursive
 
 cd ./baseline_framework/AMOS
