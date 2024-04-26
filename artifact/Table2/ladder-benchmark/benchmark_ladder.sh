@@ -20,23 +20,34 @@ fi
 echo "[LADDER] Using checkpoint path: $CHECKPOINT_PATH"
 LADDER_LOG_PATH="$CHECKPOINT_PATH/ladder/logs"
 
+if [ -d "$LADDER_LOG_PATH" ] && [ $force_tune -eq 0 ]; then
+    echo "[LADDER] Log directory logs already exists in checkpoints directory. Copying to current directory..."
+    # if the log directory already exists in current directory, remove it
+    if [ -d "./logs" ]; then
+        rm -r "./logs"
+    fi
+    cp "$LADDER_LOG_PATH" "./logs" -r
+fi
+
+# if not force_tune, skip tuning
+
+
+echo "[LADDER] Running benchmark..."
+
 # Function to run benchmark if needed
 run_benchmark() {
-    local log_file=$LADDER_LOG_PATH/$1
     local script=$2
     local options=$3
-
-    if [ ! -f "$log_file" ] || [ $force_tune -eq 1 ]; then
-        echo "[LADDER] Running benchmark for $script with options $options..."
-        python -u $script $options 2>&1 | tee ./logs/$1
-    else
-        echo "[LADDER] Log file $log_file already exists. Copying to current directory..."
-        if [ -d "./logs" ]; then
-            cp "$LADDER_LOG_PATH" "./logs"
+    if [ $force_tune -eq 0 ]; then
+        if [ -f "./logs/$1" ]; then
+            echo "[LADDER] Log file $1 already exists, skip tuning ..."
         else
-            mkdir -p "./logs"
-            cp "$LADDER_LOG_PATH" "./logs"
-        fi
+            echo "[LADDER] Log file $1 do not exist, start tuning ..."
+            python -u $script $options 2>&1 | tee ./logs/$1
+        fi  
+    else
+        echo "[LADDER] Force tuning ..."
+        python -u $script $options 2>&1 | tee ./logs/$1
     fi
 }
 

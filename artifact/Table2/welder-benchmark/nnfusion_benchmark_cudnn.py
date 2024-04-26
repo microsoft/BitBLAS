@@ -2,6 +2,13 @@
 # Licensed under the MIT License.
 import os
 from configs import models
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--force_tune", action="store_true", help="force_tune, otherwise use the checkpoints if available", default=False)
+
+args = parser.parse_args()
+force_tune = args.force_tune
 
 welder_path = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "..", "..", "baseline_framework", "WELDER"
@@ -28,6 +35,10 @@ for model_name, model_path in models.items():
         os.makedirs(compiled_model_path)
     else:
         print(f"Folder {compiled_model_path} already exists.")
+        if force_tune:
+            print("Force tuning is enabled. Removing the existing folder.")
+            os.system(f"rm -rf {compiled_model_path}")
+            os.makedirs(compiled_model_path)
         continue
 
     # 创建并写入.sh文件

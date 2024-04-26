@@ -2,7 +2,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-export TVM_HOME=$(pwd)/../../../baseline_framework/tvm_v0.14.0
+export TVM_HOME=$(pwd)/../../baseline_framework/tvm_v0.14.0
 export PYTHONPATH=$TVM_HOME/python
 
 force_tune=0
@@ -27,7 +27,7 @@ echo "[TensorIR] Running benchmark..."
 
 # 1. tune the resnet-50 batch size 1
 ## if 'logs/resnet-50-b1-(1, 3, 224, 224)' already exists, skip tuning
-if [ ! -f "./logs/resnet-50-b1-(1, 3, 224, 224)" ] || [ $force_tune -eq 1 ]; then
+if [ ! -d "./logs/resnet-50-b1-(1, 3, 224, 224)" ] || [ $force_tune -eq 1 ]; then
     START_TIME=$(date +%s)
     python3 tune_from_onnx.py --workload resnet-50-b1 --batch 1 --trials 20000 2>&1 | tee resnet-50-b1.log
     END_TIME=$(date +%s)
@@ -38,7 +38,7 @@ fi
 
 # 2. tune the resnet-50 batch size 128
 ## if 'logs/resnet-50-b128-(128, 3, 224, 224)' already exists, skip tuning
-if [ ! -f "./logs/resnet-50-b128-(128, 3, 224, 224)" ] || [ $force_tune -eq 1 ]; then
+if [ ! -d "./logs/resnet-50-b128-(128, 3, 224, 224)" ] || [ $force_tune -eq 1 ]; then
     START_TIME=$(date +%s)
     python3 tune_from_onnx.py --workload resnet-50-b128 --batch 128 --trials 20000 2>&1 | tee resnet-50-b128.log
     END_TIME=$(date +%s)
@@ -49,7 +49,7 @@ fi
 
 # 3. tune the shufflenet-v2 batch size 1
 ## if 'logs/shufflenet-v2-b1-(1, 3, 224, 224)' already exists, skip tuning
-if [ ! -f "./logs/shufflenet-b1-(1, 3, 224, 224)" ] || [ $force_tune -eq 1 ]; then
+if [ ! -d "./logs/shufflenet-b1-(1, 3, 224, 224)" ] || [ $force_tune -eq 1 ]; then
     START_TIME=$(date +%s)
     python3 tune_from_onnx.py --workload shufflenet-b1 --batch 1 --trials 20000 2>&1 | tee shufflenet-b1.log
     END_TIME=$(date +%s)
@@ -60,7 +60,7 @@ fi
 
 # 4. tune the shufflenet-v2 batch size 128
 ## if 'logs/shufflenet-v2-b128-(128, 3, 224, 224)' already exists, skip tuning
-if [ ! -f "./logs/shufflenet-b128-(128, 3, 224, 224)" ] || [ $force_tune -eq 1 ]; then
+if [ ! -d "./logs/shufflenet-b128-(128, 3, 224, 224)" ] || [ $force_tune -eq 1 ]; then
     START_TIME=$(date +%s)
     python3 tune_from_onnx.py --workload shufflenet-b128 --batch 128 --trials 20000 2>&1 | tee shufflenet-b128.log
     END_TIME=$(date +%s)
