@@ -16,11 +16,10 @@ os.environ['CHECKPOINT_PATH'] = os.path.join(os.getcwd(), "../checkpoints/Table2
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--reproduce", action="store_true", help="reproduce, otherwise use the paper results", default=False)
-parser.add_argument("--force_tune_amos", action="store_true", help="force_tune, otherwise use the checkpoints if available", default=False)
-parser.add_argument("--force_tune_tensorir", action="store_true", help="force_tune, otherwise use the checkpoints if available", default=False)
-parser.add_argument("--force_tune_welder", action="store_true", 
-help="force_tune, otherwise use the checkpoints if available", default=False)
-parser.add_argument("--force_tune_ladder", action="store_true", help="force_tune, otherwise use the checkpoints if available", default=False)
+parser.add_argument("--force_tune_amos", action="store_true", help="force_tune_amos, otherwise use the checkpoints if available", default=False)
+parser.add_argument("--force_tune_tensorir", action="store_true", help="force_tune_tensorir, otherwise use the checkpoints if available", default=False)
+parser.add_argument("--force_tune_welder", action="store_true", help="force_tune_welder, otherwise use the checkpoints if available", default=False)
+parser.add_argument("--force_tune_ladder", action="store_true", help="force_tune_ladder, otherwise use the checkpoints if available", default=False)
 
 parser.add_argument(
     "--force_tune",
