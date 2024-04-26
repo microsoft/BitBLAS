@@ -123,22 +123,12 @@ def run(prefix, arch, quant_type, quant_config, convert_int=False):
 def run_from_prebuilt(prefix, arch):
     path_lib = osp.join(prefix, "model.so")
     graph_json_path = osp.join(prefix, "graph.json")
-    params_path = osp.join(prefix, "graph.params")
+    
     loaded_lib = tvm.runtime.load_module(path_lib)
     graph_json = open(graph_json_path).read()
-    graph_params = tvm.runtime.load_param_dict(open(params_path, "rb").read())
+    
     module = debug_executor.create(graph_json, loaded_lib, tvm.cuda(0))
-    input_shape = (128, 3, 224, 224)
-    dtype='float16'
-    module.set_input(**graph_params)
-    torch.cuda.cudart().cudaProfilerStart()
     print(module.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
-    torch.cuda.cudart().cudaProfilerStop()
-    input_data = tvm.nd.array(np.ones(shape=input_shape).astype(dtype), device=tvm.cuda(0))
-    module.run(input0=input_data)
-    output = tvm.nd.empty((128, 1000), dtype=dtype, device=tvm.cuda(0))
-    output = module.get_output(0, output)
-    print(output)
     
 if __name__ == "__main__":
     arch = ladder.arch.__getattribute__(args.arch)()
@@ -155,6 +145,7 @@ if __name__ == "__main__":
         log_path += "_async"
     prebuilt_path = args.prebuilt_path
     if prebuilt_path:
+        print(f"Running from prebuilt model: {prebuilt_path}")
         run_from_prebuilt(prebuilt_path, arch)
     else:
         run(args.prefix, arch, args.fake_quant, quant_config, args.convert_int)

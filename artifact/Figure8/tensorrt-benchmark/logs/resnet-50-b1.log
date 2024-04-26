@@ -1,84 +1,99 @@
 &&&& RUNNING TensorRT.trtexec [TensorRT v9001] # /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/tensorrt-benchmark/../../baseline_framework/TensorRT-9.0.1.4/bin/trtexec --onnx=/home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/tensorrt-benchmark/../../models/resnet-50-b1/model.onnx --saveEngine=/home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/tensorrt-benchmark/../../models/resnet-50-b1/model.trt --fp16 --workspace=8192
-[04/26/2024-05:32:20] [I] === Model Options ===
-[04/26/2024-05:32:20] [I] Format: ONNX
-[04/26/2024-05:32:20] [I] Model: /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/tensorrt-benchmark/../../models/resnet-50-b1/model.onnx
-[04/26/2024-05:32:20] [I] Output:
-[04/26/2024-05:32:20] [I] === Build Options ===
-[04/26/2024-05:32:20] [I] Max batch: explicit batch
-[04/26/2024-05:32:20] [I] Memory Pools: workspace: 8192 MiB, dlaSRAM: default, dlaLocalDRAM: default, dlaGlobalDRAM: default
-[04/26/2024-05:32:20] [I] minTiming: 1
-[04/26/2024-05:32:20] [I] avgTiming: 8
-[04/26/2024-05:32:20] [I] Precision: FP32+FP16
-[04/26/2024-05:32:20] [I] LayerPrecisions: 
-[04/26/2024-05:32:20] [I] Layer Device Types: 
-[04/26/2024-05:32:20] [I] Calibration: 
-[04/26/2024-05:32:20] [I] Refit: Disabled
-[04/26/2024-05:32:20] [I] Version Compatible: Disabled
-[04/26/2024-05:32:20] [I] ONNX Native InstanceNorm: Disabled
-[04/26/2024-05:32:20] [I] TensorRT runtime: full
-[04/26/2024-05:32:20] [I] Lean DLL Path: 
-[04/26/2024-05:32:20] [I] Tempfile Controls: { in_memory: allow, temporary: allow }
-[04/26/2024-05:32:20] [I] Exclude Lean Runtime: Disabled
-[04/26/2024-05:32:20] [I] Sparsity: Disabled
-[04/26/2024-05:32:20] [I] Safe mode: Disabled
-[04/26/2024-05:32:20] [I] Build DLA standalone loadable: Disabled
-[04/26/2024-05:32:20] [I] Allow GPU fallback for DLA: Disabled
-[04/26/2024-05:32:20] [I] DirectIO mode: Disabled
-[04/26/2024-05:32:20] [I] Restricted mode: Disabled
-[04/26/2024-05:32:20] [I] Skip inference: Disabled
-[04/26/2024-05:32:20] [I] Save engine: /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/tensorrt-benchmark/../../models/resnet-50-b1/model.trt
-[04/26/2024-05:32:20] [I] Load engine: 
-[04/26/2024-05:32:20] [I] Profiling verbosity: 0
-[04/26/2024-05:32:20] [I] Tactic sources: Using default tactic sources
-[04/26/2024-05:32:20] [I] timingCacheMode: local
-[04/26/2024-05:32:20] [I] timingCacheFile: 
-[04/26/2024-05:32:20] [I] Enable Compilation Cache: Enabled
-[04/26/2024-05:32:20] [I] errorOnTimingCacheMiss: Disabled
-[04/26/2024-05:32:20] [I] Heuristic: Disabled
-[04/26/2024-05:32:20] [I] Preview Features: Use default preview flags.
-[04/26/2024-05:32:20] [I] MaxAuxStreams: -1
-[04/26/2024-05:32:20] [I] BuilderOptimizationLevel: -1
-[04/26/2024-05:32:20] [I] Calibration Profile Index: 0
-[04/26/2024-05:32:20] [I] Input(s)s format: fp32:CHW
-[04/26/2024-05:32:20] [I] Output(s)s format: fp32:CHW
-[04/26/2024-05:32:20] [I] Input build shapes: model
-[04/26/2024-05:32:20] [I] Input calibration shapes: model
-[04/26/2024-05:32:20] [I] === System Options ===
-[04/26/2024-05:32:20] [I] Device: 0
-[04/26/2024-05:32:20] [I] DLACore: 
-[04/26/2024-05:32:20] [I] Plugins:
-[04/26/2024-05:32:20] [I] setPluginsToSerialize:
-[04/26/2024-05:32:20] [I] dynamicPlugins:
-[04/26/2024-05:32:20] [I] ignoreParsedPluginLibs: 0
-[04/26/2024-05:32:20] [I] 
-[04/26/2024-05:32:20] [I] === Inference Options ===
-[04/26/2024-05:32:20] [I] Batch: Explicit
-[04/26/2024-05:32:20] [I] Input inference shapes: model
-[04/26/2024-05:32:20] [I] Iterations: 10
-[04/26/2024-05:32:20] [I] Duration: 3s (+ 200ms warm up)
-[04/26/2024-05:32:20] [I] Sleep time: 0ms
-[04/26/2024-05:32:20] [I] Idle time: 0ms
-[04/26/2024-05:32:20] [I] Inference Streams: 1
-[04/26/2024-05:32:20] [I] ExposeDMA: Disabled
-[04/26/2024-05:32:20] [I] Data transfers: Enabled
-[04/26/2024-05:32:20] [I] Spin-wait: Disabled
-[04/26/2024-05:32:20] [I] Multithreading: Disabled
-[04/26/2024-05:32:20] [I] CUDA Graph: Disabled
-[04/26/2024-05:32:20] [I] Separate profiling: Disabled
-[04/26/2024-05:32:20] [I] Time Deserialize: Disabled
-[04/26/2024-05:32:20] [I] Time Refit: Disabled
-[04/26/2024-05:32:20] [I] NVTX verbosity: 0
-[04/26/2024-05:32:20] [I] Persistent Cache Ratio: 0
-[04/26/2024-05:32:20] [I] Optimization Profile Index: 0
-[04/26/2024-05:32:20] [I] Inputs:
-[04/26/2024-05:32:20] [I] === Reporting Options ===
-[04/26/2024-05:32:20] [I] Verbose: Disabled
-[04/26/2024-05:32:20] [I] Averages: 10 inferences
-[04/26/2024-05:32:20] [I] Percentiles: 90,95,99
-[04/26/2024-05:32:20] [I] Dump refittable layers:Disabled
-[04/26/2024-05:32:20] [I] Dump output: Disabled
-[04/26/2024-05:32:20] [I] Profile: Disabled
-[04/26/2024-05:32:20] [I] Export timing to JSON file: 
-[04/26/2024-05:32:20] [I] Export output to JSON file: 
-[04/26/2024-05:32:20] [I] Export profile to JSON file: 
-[04/26/2024-05:32:20] [I] 
+[04/26/2024-11:42:25] [I] === Model Options ===
+[04/26/2024-11:42:25] [I] Format: ONNX
+[04/26/2024-11:42:25] [I] Model: /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/tensorrt-benchmark/../../models/resnet-50-b1/model.onnx
+[04/26/2024-11:42:25] [I] Output:
+[04/26/2024-11:42:25] [I] === Build Options ===
+[04/26/2024-11:42:25] [I] Max batch: explicit batch
+[04/26/2024-11:42:25] [I] Memory Pools: workspace: 8192 MiB, dlaSRAM: default, dlaLocalDRAM: default, dlaGlobalDRAM: default
+[04/26/2024-11:42:25] [I] minTiming: 1
+[04/26/2024-11:42:25] [I] avgTiming: 8
+[04/26/2024-11:42:25] [I] Precision: FP32+FP16
+[04/26/2024-11:42:25] [I] LayerPrecisions: 
+[04/26/2024-11:42:25] [I] Layer Device Types: 
+[04/26/2024-11:42:25] [I] Calibration: 
+[04/26/2024-11:42:25] [I] Refit: Disabled
+[04/26/2024-11:42:25] [I] Version Compatible: Disabled
+[04/26/2024-11:42:25] [I] ONNX Native InstanceNorm: Disabled
+[04/26/2024-11:42:25] [I] TensorRT runtime: full
+[04/26/2024-11:42:25] [I] Lean DLL Path: 
+[04/26/2024-11:42:25] [I] Tempfile Controls: { in_memory: allow, temporary: allow }
+[04/26/2024-11:42:25] [I] Exclude Lean Runtime: Disabled
+[04/26/2024-11:42:25] [I] Sparsity: Disabled
+[04/26/2024-11:42:25] [I] Safe mode: Disabled
+[04/26/2024-11:42:25] [I] Build DLA standalone loadable: Disabled
+[04/26/2024-11:42:25] [I] Allow GPU fallback for DLA: Disabled
+[04/26/2024-11:42:25] [I] DirectIO mode: Disabled
+[04/26/2024-11:42:25] [I] Restricted mode: Disabled
+[04/26/2024-11:42:25] [I] Skip inference: Disabled
+[04/26/2024-11:42:25] [I] Save engine: /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/tensorrt-benchmark/../../models/resnet-50-b1/model.trt
+[04/26/2024-11:42:25] [I] Load engine: 
+[04/26/2024-11:42:25] [I] Profiling verbosity: 0
+[04/26/2024-11:42:25] [I] Tactic sources: Using default tactic sources
+[04/26/2024-11:42:25] [I] timingCacheMode: local
+[04/26/2024-11:42:25] [I] timingCacheFile: 
+[04/26/2024-11:42:25] [I] Enable Compilation Cache: Enabled
+[04/26/2024-11:42:25] [I] errorOnTimingCacheMiss: Disabled
+[04/26/2024-11:42:25] [I] Heuristic: Disabled
+[04/26/2024-11:42:25] [I] Preview Features: Use default preview flags.
+[04/26/2024-11:42:25] [I] MaxAuxStreams: -1
+[04/26/2024-11:42:25] [I] BuilderOptimizationLevel: -1
+[04/26/2024-11:42:25] [I] Calibration Profile Index: 0
+[04/26/2024-11:42:25] [I] Input(s)s format: fp32:CHW
+[04/26/2024-11:42:25] [I] Output(s)s format: fp32:CHW
+[04/26/2024-11:42:25] [I] Input build shapes: model
+[04/26/2024-11:42:25] [I] Input calibration shapes: model
+[04/26/2024-11:42:25] [I] === System Options ===
+[04/26/2024-11:42:25] [I] Device: 0
+[04/26/2024-11:42:25] [I] DLACore: 
+[04/26/2024-11:42:25] [I] Plugins:
+[04/26/2024-11:42:25] [I] setPluginsToSerialize:
+[04/26/2024-11:42:25] [I] dynamicPlugins:
+[04/26/2024-11:42:25] [I] ignoreParsedPluginLibs: 0
+[04/26/2024-11:42:25] [I] 
+[04/26/2024-11:42:25] [I] === Inference Options ===
+[04/26/2024-11:42:25] [I] Batch: Explicit
+[04/26/2024-11:42:25] [I] Input inference shapes: model
+[04/26/2024-11:42:25] [I] Iterations: 10
+[04/26/2024-11:42:25] [I] Duration: 3s (+ 200ms warm up)
+[04/26/2024-11:42:25] [I] Sleep time: 0ms
+[04/26/2024-11:42:25] [I] Idle time: 0ms
+[04/26/2024-11:42:25] [I] Inference Streams: 1
+[04/26/2024-11:42:25] [I] ExposeDMA: Disabled
+[04/26/2024-11:42:25] [I] Data transfers: Enabled
+[04/26/2024-11:42:25] [I] Spin-wait: Disabled
+[04/26/2024-11:42:25] [I] Multithreading: Disabled
+[04/26/2024-11:42:25] [I] CUDA Graph: Disabled
+[04/26/2024-11:42:25] [I] Separate profiling: Disabled
+[04/26/2024-11:42:25] [I] Time Deserialize: Disabled
+[04/26/2024-11:42:25] [I] Time Refit: Disabled
+[04/26/2024-11:42:25] [I] NVTX verbosity: 0
+[04/26/2024-11:42:25] [I] Persistent Cache Ratio: 0
+[04/26/2024-11:42:25] [I] Optimization Profile Index: 0
+[04/26/2024-11:42:25] [I] Inputs:
+[04/26/2024-11:42:25] [I] === Reporting Options ===
+[04/26/2024-11:42:25] [I] Verbose: Disabled
+[04/26/2024-11:42:25] [I] Averages: 10 inferences
+[04/26/2024-11:42:25] [I] Percentiles: 90,95,99
+[04/26/2024-11:42:25] [I] Dump refittable layers:Disabled
+[04/26/2024-11:42:25] [I] Dump output: Disabled
+[04/26/2024-11:42:25] [I] Profile: Disabled
+[04/26/2024-11:42:25] [I] Export timing to JSON file: 
+[04/26/2024-11:42:25] [I] Export output to JSON file: 
+[04/26/2024-11:42:25] [I] Export profile to JSON file: 
+[04/26/2024-11:42:25] [I] 
+[04/26/2024-11:42:25] [I] === Device Information ===
+[04/26/2024-11:42:25] [I] Selected Device: NVIDIA A100 80GB PCIe
+[04/26/2024-11:42:25] [I] Compute Capability: 8.0
+[04/26/2024-11:42:25] [I] SMs: 108
+[04/26/2024-11:42:25] [I] Device Global Memory: 81050 MiB
+[04/26/2024-11:42:25] [I] Shared Memory per SM: 164 KiB
+[04/26/2024-11:42:25] [I] Memory Bus Width: 5120 bits (ECC enabled)
+[04/26/2024-11:42:25] [I] Application Compute Clock Rate: 1.41 GHz
+[04/26/2024-11:42:25] [I] Application Memory Clock Rate: 1.512 GHz
+[04/26/2024-11:42:25] [I] 
+[04/26/2024-11:42:25] [I] Note: The application clock rates do not reflect the actual clock rates that the GPU is currently running at.
+[04/26/2024-11:42:25] [I] 
+[04/26/2024-11:42:25] [I] TensorRT version: 9.0.1
+[04/26/2024-11:42:25] [I] Loading standard plugins
+[04/26/2024-11:42:25] [I] [TRT] [MemUsageChange] Init CUDA: CPU +2, GPU +0, now: CPU 21, GPU 515 (MiB)

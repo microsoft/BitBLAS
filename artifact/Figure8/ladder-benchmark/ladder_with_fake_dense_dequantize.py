@@ -174,6 +174,10 @@ if __name__ == "__main__":
         log_path += f'_fq_{args.fake_quant}_{quant_config["format"]}_{quant_config["bits"]}_{quant_config["group_size"]}_bs{args.batch}_seq{args.seq_len}_ci_{args.convert_int}'
     else:
         log_path += f'_bs{args.batch}_seq{args.seq_len}'
-    print("Testing model: {}".format(name))
-    run(path, arch, async_propagate=args.async_propagation, fake_quant=args.fake_quant, quant_config=quant_config, convert_int=args.convert_int)
-    run_from_prebuilt(log_path + '_async' if 'async' not in log_path else log_path, arch)
+    prebuilt_path = args.prebuilt_path
+    if prebuilt_path:
+        print(f"Running from prebuilt model: {prebuilt_path}")
+        run_from_prebuilt(log_path + '_async' if 'async' not in log_path else log_path, arch)
+    else:
+        print("Testing model: {}".format(name))
+        run(path, arch, async_propagate=args.async_propagation, fake_quant=args.fake_quant, quant_config=quant_config, convert_int=args.convert_int)
