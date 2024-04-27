@@ -9,6 +9,6 @@ cd ./baseline_framework/vLLM
 
 git checkout d1690fc997bbe074f007ffe2a6eb83591f7f8c99
 
-python setup.py install
+pip install -e .
 
 cd ../..

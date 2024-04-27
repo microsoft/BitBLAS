@@ -177,7 +177,7 @@ if __name__ == "__main__":
     prebuilt_path = args.prebuilt_path
     if prebuilt_path:
         print(f"Running from prebuilt model: {prebuilt_path}")
-        run_from_prebuilt(log_path + '_async' if 'async' not in log_path else log_path, arch)
+        run_from_prebuilt(prebuilt_path, arch)
     else:
         print("Testing model: {}".format(name))
         run(path, arch, async_propagate=args.async_propagation, fake_quant=args.fake_quant, quant_config=quant_config, convert_int=args.convert_int)
