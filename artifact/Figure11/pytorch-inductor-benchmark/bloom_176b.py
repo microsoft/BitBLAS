@@ -43,17 +43,7 @@ with torch.no_grad(), torch.autocast("cuda"):
     compiled_model = torch.compile(model)
 
 
-def get_runtime():
-    tic = time.time()
-    _ = compiled_model(input_ids, alibi, attention_mask)
-    torch.cuda.synchronize()
-    return (time.time() - tic) * 1000
+print("Compiling done, start inference")
 
-
-with torch.no_grad():
-    # print("Warming up ...")
-    st = time.time()
-    while time.time() - st < 1.0:
-        get_runtime()  # warmup
-    times = [get_runtime() for i in range(100)]
-    print(f"Inductor avg: {np.mean(times)} ms")
+while True:
+    _ = compiled_model(input_ids)

@@ -5,6 +5,7 @@
 
 MODEL_PATH=$(pwd)/../../models
 TRT_EXEC_PATH=$(pwd)/../../baseline_framework/TensorRT-9.0.1.4/bin
+LD_LIBRARY_PATH=$TRT_EXEC_PATH/../lib:$LD_LIBRARY_PATH
 
 echo "[TENSORRT] Using checkpoint path: $CHECKPOINT_PATH"
 LADDER_LOG_PATH="$CHECKPOINT_PATH/onnxruntime/logs"
@@ -28,8 +29,8 @@ convert $MODEL_PATH/bloom-176b/bloom-176b_layer1_seq1_bs32/model.onnx $MODEL_PAT
 
 convert $MODEL_PATH/bloom-176b/bloom-176b_layer1_seq4096_bs1/model.onnx $MODEL_PATH/bloom-176b/bloom-176b_layer1_seq4096_bs1/model.trt
 
-convert $MODEL_PATH/llama-70b/llama-70b_layer1_seq1_bs1/model.onnx $MODEL_PATH/llama-70b/llama-70b_layer1_seq1_bs1/model.trt
+convert $MODEL_PATH/llama-70b/llama2_70b_layer1_seq1_bs1/model.onnx $MODEL_PATH/llama-70b/llama2_70b_layer1_seq1_bs1/model.trt
 
-convert $MODEL_PATH/llama-70b/llama-70b_layer1_seq1_bs32/model.onnx $MODEL_PATH/llama-70b/llama-70b_layer1_seq1_bs32/model.trt
+convert $MODEL_PATH/llama-70b/llama2_70b_layer1_seq1_bs32/model.onnx $MODEL_PATH/llama-70b/llama2_70b_layer1_seq1_bs32/model.trt
 
-convert $MODEL_PATH/llama-70b/llama-70b_layer1_seq4096_bs1/model.onnx $MODEL_PATH/llama-70b/llama-70b_layer1_seq4096_bs1/model.trt
+convert $MODEL_PATH/llama-70b/llama2_70b_layer1_seq4096_bs1/model.onnx $MODEL_PATH/llama-70b/llama2_70b_layer1_seq4096_bs1/model.trt

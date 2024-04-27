@@ -52,5 +52,7 @@ else:
 with torch.no_grad(), torch.autocast("cuda"):
     compiled_model = torch.compile(model)
 
+print("Compiling done, start inference")
+
 while True:
     _ = compiled_model(input_ids)

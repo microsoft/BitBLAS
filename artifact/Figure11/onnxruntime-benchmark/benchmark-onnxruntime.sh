@@ -27,6 +27,6 @@ python -u ort_runtime.py --file $MODEL_PATH/bloom_176b/bloom-176b_layer1_seq1_bs
 python -u ort_runtime.py --file $MODEL_PATH/bloom_176b/bloom-176b_layer1_seq1_bs32/model.onnx | tee logs/bloom-176b-layer1-seq1-bs32.log
 python -u ort_runtime.py --file $MODEL_PATH/bloom_176b/bloom-176b_layer1_seq4096_bs1/model.onnx | tee logs/bloom-176b-layer1-seq4096-bs1.log
 
-python -u ort_runtime.py --file $MODEL_PATH/llama_70b/llama-70b_layer1_seq1_bs1/model.onnx | tee logs/llama-70b-layer1-seq1-bs1.log
-python -u ort_runtime.py --file $MODEL_PATH/llama_70b/llama-70b_layer1_seq1_bs32/model.onnx | tee logs/llama-70b-layer1-seq1-bs32.log
-python -u ort_runtime.py --file $MODEL_PATH/llama_70b/llama-70b_layer1_seq4096_bs1/model.onnx | tee logs/llama-70b-layer1-seq4096-bs1.log
+python -u ort_runtime.py --file $MODEL_PATH/llama_70b/llama2_70b_layer1_seq1_bs1/model.onnx | tee logs/llama-70b-layer1-seq1-bs1.log
+python -u ort_runtime.py --file $MODEL_PATH/llama_70b/llama2_70b_layer1_seq1_bs32/model.onnx | tee logs/llama-70b-layer1-seq1-bs32.log
+python -u ort_runtime.py --file $MODEL_PATH/llama_70b/llama2_70b_layer1_seq4096_bs1/model.onnx | tee logs/llama-70b-layer1-seq4096-bs1.log
