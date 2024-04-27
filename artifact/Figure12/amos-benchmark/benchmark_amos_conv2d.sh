@@ -16,9 +16,12 @@ echo "[AMOS] Using checkpoint path: $CHECKPOINT_PATH"
 AMOS_LOG_PATH="$CHECKPOINT_PATH/amos/logs"
 if [ -d "$AMOS_LOG_PATH" ]; then
     echo "[AMOS] Log directory already exists in checkpoints directory. Copying to current directory..."
+    if [ -d "./logs" ]; then
+        rm -rf logs
+    fi
     cp -r "$AMOS_LOG_PATH" "./logs"
 else
     echo "[AMOS] Running benchmark..."
-    python3 test_gemm_nt.py --trials 1000 --simple_mode 1 | tee llm_shape_nt.log
+    python3 conv2d-benchmark.py --trials 1000 --simple_mode 1 | tee conv2d.log
 fi
 # Path: artifact/Figure12/amos-benchmark/benchmark_amos_gemm.sh
