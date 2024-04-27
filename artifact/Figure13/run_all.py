@@ -2,6 +2,7 @@
 # Licensed under the MIT License.
 import argparse
 import os
+import subprocess
 
 CHECKPOINT_PATH = os.path.join(os.getcwd(), "../../checkpoints/Figure13")
 def run_command(command, working_dir=None):

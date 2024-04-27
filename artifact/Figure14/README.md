@@ -5,7 +5,10 @@ Figure 14 depicts the end-to-end performance comparison of various baseline conf
 Run the following command to generate the results of Figure 14:
 
 ```bash
+# to use the paper result
 python3 run_all.py
+# to reproduce
+python3 run_all.py --reproduce # This may take 1 hour to finish the ladder tuning process, if you enable --force_tune, it may take 1 day to finish the tuning process.
 ```
 
 The `run_all.py` script has the following options:

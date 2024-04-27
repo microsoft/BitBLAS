@@ -37,4 +37,3 @@ else:
     os.system("cd ladder_benchmark; ./benchmark_ladder.sh")
     # plot from the reproduced results
     os.system(f"python3 plot_scaling_bitwidth.py --reproduce")
-    

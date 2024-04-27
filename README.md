@@ -32,7 +32,16 @@ cd Ladder
 
 ## 2. Reproducing Individual Experiement Results
 
-<!-- Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Microsoft Onedrive]()
+Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Google Drive](https://drive.google.com/file/d/1-txc19hd3FS6PPhNko1BljIjNO9Ex_9l/view?usp=sharing)
+
+To use the checkpoints, you can download the checkpoints and extract it to the root/artifact of the project.
+
+```
+cd /root/of/Ladder
+pip install gdown
+gdown https://drive.google.com/uc?id=1-txc19hd3FS6PPhNko1BljIjNO9Ex_9l -O artifact/checkpoints.tar.gz
+tar -xvf artifact/checkpoints.tar.gz -C artifact/
+```
 
 After downloading, it should be extracted under the artifacts/temp folder. You can see a lot of model folders in it. With these pre-compiled models, results can be reproduced more quickly with a few commands. Here is a list of script we provide: -->
 
