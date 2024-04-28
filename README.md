@@ -60,6 +60,8 @@ After downloading, it should be extracted under the artifacts/temp folder. You c
 
 ### <a id="Figure8">Figure8 </a>
 
+**Device: NVIDIA A100-80GB-PCIe GPU**
+
 The Figure 8 is about the end-to-end performance of the selected baselines and the proposed method. The end-to-end performance is measured by the inference time of the model. The inference time is measured in seconds.
 
 Run the following command to generate the results of Figure 8:
@@ -95,6 +97,8 @@ python ladder_with_fake_dense_dequantize.py --prebuilt_path $CHECKPOINT_PATH/Fig
 
 ### <a id="Figure9"> Figure9 </a>
 
+**Device: NVIDIA V100-16GB-PCIe GPU**
+
 The Figure 9 is about the end-to-end performance of the selected baselines and the proposed method. The end-to-end performance is measured by the inference time of the model. The inference time is measured in seconds.
 
 Run the following command to generate the results of Figure 8:
@@ -118,6 +122,8 @@ The result will be saved in the `pdf` and `png` directory, respectively. For exa
 
 ### <a id="Figure10">Figure10</a>
 
+**Device: NVIDIA RTX A6000 GPU**
+
 The Figure 8 is about the end-to-end performance of the selected baselines and the proposed method. The end-to-end performance is measured by the inference time of the model. The inference time is measured in seconds.
 
 Run the following command to generate the results of Figure 8:
@@ -140,6 +146,8 @@ The result will be saved in the `pdf` and `png` directory, respectively. For exa
 
 
 ### <a id="Figure11">Figure11</a>
+
+**Device: NVIDIA A100-80GB-PCIe GPU**
 
 Figure 11 provides a comparative analysis of memory usage across two machine learning models, LLAMA and BLOOM, using various inference frameworks and precision settings. The memory usage is measured in megabytes (MB) and is benchmarked across batch sizes and sequence lengths (BS1 SEQ1, BS32 SEQ1, BS1 SEQ4096).
 
@@ -177,6 +185,8 @@ As we do not provide Welder Execute Binaries in our checkpoints (the Welder Exec
 
 ### <a id="Figure12"> Figure12</a>
 
+**Device: NVIDIA A100-80GB-PCIe GPU**
+
 Figure 12 showcases the performance speedup of various computational kernels across different models and configurations. The speedup is measured relative to the baseline performance Bitter-$W_{FP16}A_{FP16}$.
 
 Run the following command to generate the results of Figure 12:
@@ -194,7 +204,83 @@ The result will be saved in the `pdf` and `png` directory, respectively. For exa
 
 ![Figure 12](./artifact/Figure12/png/operator_performance_a100.png)
 
+For TensorIR Conv2d, we directly extract the operator performance form the end2end traces. So we do not provide the script to reproduce the result from single tensor ir expression. 
+
+### <a id="Figure13">Figure13</a>
+
+**Device: NVIDIA A100-80GB-PCIe GPU**
+
+Figure 13 illustrates the normalized speedup of various optimization techniques applied to two batch size sequences, BS1 SEQ1 and BS1 SEQ4096. It compares the performance of Welder-Roller, Transform, PTX, and Holistic Schedule optimizations against different computational precision configurations.
+
+Run the following command to generate the results of Figure 13:
+
+```bash
+# to use the paper result
+python3 run_all.py
+# to reproduce
+python3 run_all.py --reproduce # This may take 1 hour to finish the ladder tuning process, if you enable --force_tune, it may take 1 day to finish the tuning process.
+```
+
+The `run_all.py` script has the following options:
+
+- `--reproduce`: bool, whether to reproduce the results, otherwise it will use our logges paper result, default value is `False`.
+- `--force_tune`: bool, whether to force tune the op with AMOS/TensorIR, otherwise use the checkpoints if available, default value is `False`.
+
+The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
+
+![Figure 13](./png/optimization_breakdown.png)
+
+### <a id="Figure14">Figure14</a>
+
+**Device: NVIDIA A100-80GB-PCIe GPU**
+
+Figure 14 depicts the end-to-end performance comparison of various baseline configurations against our proposed method across different models (M0 to M3) and batch size sequences (BS1 SEQ1 and BS1 SEQ4096). The performance metric is speedup, presented as a ratio over the baseline performance.
+
+Run the following command to generate the results of Figure 14:
+
+```bash
+# to use the paper result
+python3 run_all.py
+# to reproduce
+python3 run_all.py --reproduce # This may take 1 hour to finish the ladder tuning process, if you enable --force_tune, it may take 1 day to finish the tuning process.
+```
+
+The `run_all.py` script has the following options:
+
+- `--reproduce`: bool, whether to reproduce the results, otherwise it will use our logged paper result, default value is `False`.
+- `--force_tune`: bool, whether to force tune the op with AMOS/TensorIR, otherwise use the checkpoints if available, default value is `False`.
+
+The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
+
+![Figure 14](./png/different_bits.png)
+
+### <a id="Figure15">Figure15</a>
+
+**Device: AMD Instinct MI250 GPU**
+
+The Figure 15 is about the end-to-end performance of the selected baselines and the proposed method. The end-to-end performance is measured by the inference time of the model. The inference time is measured in seconds.
+
+Run the following command to generate the results of Figure 15:
+
+```bash
+python3 run_all.py
+```
+
+The `run_all.py` script has the following options:
+
+- `--reproduce`: bool, whether to reproduce the results, otherwise it will use our logges paper result, default value is `False`.
+- `--force_tune`: bool, whether to force tune the op with AMOS/TensorIR, otherwise use the checkpoints if available, default value is `False`.
+
+The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
+
+![Figure 8](./png/end2end_mi250.png)
+
+
 ### <a id="Table1">Table1</a>
+
+**Device: NVIDIA A100-80GB-PCIe GPU, NVIDIA V100-16GB-PCIe GPU, AMD Instinct MI250 GPU**
+
+
 The Table1 is about the performance of the matrix multiplication of vendor libraries. The performance is measured by the throughput of the matrix multiplication. The throughput is calculated by the number of elements in the matrix divided by the time of the matrix multiplication. The throughput is measured in GFLOPS. 
 
 The Table1 is generated by the following command:
@@ -240,6 +326,8 @@ The example output of the Table1 is shown below:
 
 
 ### <a id="Table2">Table2</a>
+
+**Device: NVIDIA A100-80GB-PCIe GPU**
 
 The Table2 is about the compilation time of AMOS, TensorIR Welder and Ladder. The compilation time is measured by the time of the compilation.
 
