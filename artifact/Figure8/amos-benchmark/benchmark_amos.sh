@@ -20,7 +20,7 @@ if [ -f "$RESENET_B128_LOG_PATH" ] && [ $force_tune -eq 0 ]; then
     cp "$RESENET_B128_LOG_PATH" "./logs/resnet50_b128.log"
 else
     echo "[AMOS] Running benchmark..."
-    CUDA_VISIBLE_DEVICES=0 python3 ./mapping_resnet50_tensorcore.py--batch 1 --dtype float16 --trials 20 | tee logs/resnet50_b128.log
+    CUDA_VISIBLE_DEVICES=0 python3 ./mapping_resnet50_tensorcore.py --batch 1 --dtype float16 --trials 20 | tee logs/resnet50_b128.log
 fi
 
 SHUFFLENET_B128_LOG_PATH="$CHECKPOINT_PATH/amos/logs/shufflenet_v2_b128.log"
@@ -41,7 +41,7 @@ if [ -f "$RESENET_B1_LOG_PATH" ] && [ $force_tune -eq 0 ]; then
     cp "$RESENET_B1_LOG_PATH" "./logs/resnet50_b1.log"
 else
     echo "[AMOS] Running benchmark..."
-    CUDA_VISIBLE_DEVICES=0 python3 ./mapping_resnet50_tensorcore.py--batch 1 --dtype float16 --trials 20 | tee logs/resnet50_b1.log
+    CUDA_VISIBLE_DEVICES=0 python3 ./mapping_resnet50_tensorcore.py --batch 1 --dtype float16 --trials 20 | tee logs/resnet50_b1.log
 fi
 
 SHUFFLENET_B1_LOG_PATH="$CHECKPOINT_PATH/amos/logs/shufflenet_v2_b1.log"
