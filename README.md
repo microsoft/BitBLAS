@@ -228,7 +228,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 13](./png/optimization_breakdown.png)
+![Figure 13](./artifact/Figure13/png/optimization_breakdown.png)
 
 ### <a id="Figure14">Figure14</a>
 
@@ -252,7 +252,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 14](./png/different_bits.png)
+![Figure 14](./artifact/Figure14/png/different_bits.png)
 
 ### <a id="Figure15">Figure15</a>
 
@@ -273,7 +273,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 8](./png/end2end_mi250.png)
+![Figure 15](./artifact/Figure15/png/end2end_mi250.png)
 
 
 ### <a id="Table1">Table1</a>
