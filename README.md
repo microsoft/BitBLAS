@@ -18,6 +18,9 @@ This code branch is used for OSDI'24 Artifact Evaluation of paper #626, titled "
       * Require NVIDIA A100-80GB-PCIe GPU, NVIDIA Tesla V100-16GB-PCIe GPU, NVIDIA RTX A6000 GPU and AMD Instinct MI250 GPU to reproduce all the results.
 
 ## 1. Environment Preparation
+
+### Prepare Docker Environment
+
 To ease the process of installing all the dependencies, baseline software, and Ladder code, we provide a Dockerfile and a simple guideline to build a Docker image with all of above installed. The Docker image is built on top of Ubuntu 20.04, and it contains all the dependencies required to run the experiments. We only provide the Dockerfile for NVIDIA GPU, and the Dockerfile for AMD GPU will be provided upon request.
 
 ```bash
@@ -27,7 +30,16 @@ docker build -t ladder_cuda -f Dockerfile.cu120 .
 # run the container
 nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --gpus all --cap-add=SYS_PTRACE --shm-size=4G --security-opt seccomp=unconfined --security-opt apparmor=unconfined --name ladder_test ladder_cuda bash
 # cd the artifact folder
-cd Ladder
+cd /root/Ladder
+```
+
+### Prepare Model ONNX Files
+
+We provide scripts in [artifact/models](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/models) to export the evaluated model in ONNX format with PyTorch.
+
+```bash
+cd /root/Ladder/artifact/models
+bash export.sh
 ```
 
 ## 2. Reproducing Individual Experiement Results
@@ -36,8 +48,8 @@ Since ladder's paper evaluate different models with different batch-sizes and da
 
 To use the checkpoints, you can download the checkpoints and extract it to the root/artifact of the project.
 
-```
-cd /root/of/Ladder
+```bash
+cd /root/Ladder
 pip install gdown
 gdown https://drive.google.com/uc?id=1-txc19hd3FS6PPhNko1BljIjNO9Ex_9l -O artifact/checkpoints.tar.gz
 tar -xvf artifact/checkpoints.tar.gz -C artifact/
@@ -67,7 +79,15 @@ The Figure 8 is about the end-to-end performance of the selected baselines and t
 Run the following command to generate the results of Figure 8:
 
 ```bash
+cd /root/Ladder/artifact/Figure8
+# draw figures with paper results
+python3 run_all.py
+mv png paper_result/
+mv pdf paper_result/
+# reproduce results and draw figures
 python3 run_all.py --reproduce
+mv png reproduce_result/
+mv pdf reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -104,7 +124,15 @@ The Figure 9 is about the end-to-end performance of the selected baselines and t
 Run the following command to generate the results of Figure 8:
 
 ```bash
+cd /root/Ladder/artifact/Figure9
+# draw figures with paper results
+python3 run_all.py
+mv png paper_result/
+mv pdf paper_result/
+# reproduce results and draw figures
 python3 run_all.py --reproduce
+mv png reproduce_result/
+mv pdf reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -129,7 +157,15 @@ The Figure 8 is about the end-to-end performance of the selected baselines and t
 Run the following command to generate the results of Figure 8:
 
 ```bash
+cd /root/Ladder/artifact/Figure10
+# draw figures with paper results
+python3 run_all.py
+mv png paper_result/
+mv pdf paper_result/
+# reproduce results and draw figures
 python3 run_all.py --reproduce
+mv png reproduce_result/
+mv pdf reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
