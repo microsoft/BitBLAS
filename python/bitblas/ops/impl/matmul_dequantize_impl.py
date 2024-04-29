@@ -97,8 +97,6 @@ def matmul_nt_dequantize_b(
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
 
-            
-            
         if not with_scaling:
             return w
 

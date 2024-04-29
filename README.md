@@ -13,6 +13,17 @@ Some of the key features of BitBLAS include:
   - BitBLAS first implemented $W_{INT2}A_{INT8}$ GEMV/GEMM in [BitNet-b1.58](https://arxiv.org/abs/2402.17764) with 8x/2x speedup over cuBLAS $W_{FP16}A_{FP16}$ on A100, please checkout [op_benchmark_a100_int2_scaling](https://github.com/microsoft/BitBLAS/blob/main/images/figures/op_benchmark_a100_int2_scaling.png) for detailed benchmark results. Please checkout [BitNet-b1.58 integration](https://github.com/microsoft/BitBLAS/blob/main/integration/BitNet) for the integration with the 3rdparty reproduced BitNet-b1.58 model.
   - Support customizing mixed-precision DNN operations for your specific scenarios via the flexible DSL (TIR Script).
 
+## Latest News
+
+- 2024.04.19: BitBLAS is now open source! We are excited to announce that BitBLAS, a high-performance library for mixed-precision DNN model deployment, is now available to the public.
+- 2024.04.30: BitBLAS now support 
+
+## Integration Example of FasterTransformer with BitBLAS
+![FasterTransformer Integration](images/gif/FasterTransformer.gif)
+
+## Benchmark Summary
+
+
 ## Integration Example of FasterTransformer with BitBLAS
 ![FasterTransformer Integration](images/gif/FasterTransformer.gif)
 
@@ -63,6 +74,8 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 |     INT8    |     UINT4/INT4    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     INT8    |     UINT2/INT2    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     INT8    |     UINT1    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|   FP8_E4M3  |     FP8_E4M3    |      FP32    |    FP32/FP16   |          **√**         |   RTX 4090(SM_89) |
+|     FP8_E5M2    |     FP8_E5M2    |      FP32      |    FP32/FP16   |          **√**         |   RTX 4090(SM_89) |
 
 We are continuously expanding the support matrix. If you have any specific requirements, please feel free to open an issue or PR.
 
