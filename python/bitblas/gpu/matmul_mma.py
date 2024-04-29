@@ -303,7 +303,8 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         intrin_group = get_mma_intrin_group(
             load_scope="shared.dyn",
             store_scope="shared.dyn",
-            in_dtype=str(dtype_a),
+            a_dtype=str(dtype_a),
+            b_dtype=str(dtype_b),
             out_dtype=str(dtype_c),
             trans_a=is_transpose_a,
             trans_b=is_transpose_b,
@@ -396,7 +397,8 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         intrin_group = get_mma_intrin_group(
             load_scope=shared_scope,
             store_scope=shared_scope if cache_write_required else "global",
-            in_dtype=intrin_info.in_dtype,
+            a_dtype=intrin_info.in_dtype,
+            b_dtype=intrin_info.in_dtype,
             out_dtype=intrin_info.out_dtype,
             trans_a=intrin_info.trans_a,
             trans_b=intrin_info.trans_b,

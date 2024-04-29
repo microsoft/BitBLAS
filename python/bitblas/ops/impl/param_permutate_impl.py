@@ -24,7 +24,7 @@ def select_implementation(
     # This is trick to get the basic tile size for the current datatype
     # as for nvidia tensorcore instruction, the basic tile size is 16x16/16x32 for float16/int8
     l = r = 16  # noqa: E741
-    if datatype == "int8":
+    if datatype in ["int8", "e4m3_float8", "e5m2_float8"]:
         l, r = 16, 32  # noqa: E741
     if group_size == -1:
         group_size = N
