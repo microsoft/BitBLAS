@@ -512,7 +512,7 @@ def get_tensorized_func_and_tags(
     allow_gemv: bool = False,
 ) -> Tuple[tir.PrimFunc, Dict[str, Union[List[int], int]]]:
     from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
-        get_wmma_intrin_group,)
+        get_mma_intrin_group,)
     """
         transform function to matmul if necessary (e.g. transform conv2d with im2col)
     """
@@ -607,14 +607,18 @@ def get_tensorized_func_and_tags(
 
     block_stmt = sch.get(main_block)
     if target.kind.name == "cuda" and check_sm_version(target.arch) >= 70:
+        # TODO(lei): we should consider the dtype of the input a and b
+        # instead of assuming both a and b share the same dtype.
+        # As the tensorcore may supports e4m3_float8 * e5m2_float8
         in_dtype, out_dtype = get_in_out_dtypes(block_stmt)
         try:
-            _ = get_wmma_intrin_group(
-                in_dtype=in_dtype,
+            _ = get_mma_intrin_group(
+                a_dtype=in_dtype,
+                b_dtype=in_dtype,
                 out_dtype=out_dtype,
             )
         except Exception:
-            logger.debug("Cannot find the corresponding wmma intrin group")
+            logger.debug("Cannot find the corresponding mma intrin group")
             return func, None
 
         # reindex and transform functions
@@ -651,11 +655,16 @@ def get_propagate_map(trans: bool = True, dtype="float16", matrix_name="A", inde
         ldmatrix_32x16_to_shared_16x32_layout_a, ldmatrix_32x16_to_shared_16x32_layout_b,
     )
 
-    assert dtype in ["float16", "int8"], "Only support float16 for now"
+    assert dtype in [
+        "float16",
+        "int8",
+        "e4m3_float8",
+        "e5m2_float8",
+    ], "Only support float16, int8, e4m3_float8, e5m2_float8"
     if dtype == "float16":
         ldmatrix_layout = ldmatrix_32x8_to_shared_16x16_layout
         ldmatrix_layout_trans = ldmatrix_trans_32x8_to_shared_16x16_layout
-    elif dtype == "int8":
+    elif dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
         # int8 mma only support 32x16 to 16x32 layout
         if matrix_name == "A" and trans is False:
             ldmatrix_layout = ldmatrix_32x16_to_shared_16x32_layout_a

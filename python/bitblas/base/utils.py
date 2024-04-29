@@ -135,16 +135,27 @@ def get_dummy_input_arrays(
         else:
             raise ValueError("Not supported type: ", type(func))
 
+        def map_numpy_type(intype):
+            typemap = {
+                'e4m3_float8': 'float8_e4m3fn',
+                'e5m2_float8': 'float8_e5m2',
+            }
+            if intype in typemap:
+                return typemap[intype]
+            else:
+                return intype
+
+        numpy_dtype = map_numpy_type(arg.dtype)
         if distribution == "uniform":
             profile_tensors.append(
                 tvm.nd.array(
-                    np.random.rand(*[var_wrapper(i) for i in arg.shape]).astype(arg.dtype),
+                    np.random.rand(*[var_wrapper(i) for i in arg.shape]).astype(numpy_dtype),
                     device=device,
                 ))
         elif distribution == "onefill":
             profile_tensors.append(
                 tvm.nd.array(
-                    np.ones([var_wrapper(i) for i in arg.shape]).astype(arg.dtype),
+                    np.ones([var_wrapper(i) for i in arg.shape]).astype(numpy_dtype),
                     device=device,
                 ))
         else:
@@ -245,7 +256,7 @@ def apply_and_build_parallel(func,
         try:
             latency = cpresult.profile()
         except Exception as e_mesg:
-            logger.debug("Evaluation with config failed: ", e_mesg)
+            logger.debug(f"Evaluation with config failed {e_mesg}")
             continue
         logger.info("Evaluation with config {}".format(config))
         logger.info("Time cost of this config: {:.3f} ms".format(latency))

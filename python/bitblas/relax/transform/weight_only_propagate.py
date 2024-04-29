@@ -130,7 +130,8 @@ class WeightOnlyLayoutPropagation:
         intrin_group = get_mma_intrin_group(
             load_scope="shared",
             store_scope="shared",
-            in_dtype=intrin_info["in_dtype"],
+            a_dtype=intrin_info["in_dtype"],
+            b_dtype=intrin_info["in_dtype"],
             out_dtype=intrin_info["out_dtype"],
             trans_a=False,
             trans_b=intrin_info["trans_b"],

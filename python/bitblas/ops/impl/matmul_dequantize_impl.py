@@ -97,8 +97,6 @@ def matmul_nt_dequantize_b(
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
 
-            
-            
         if not with_scaling:
             return w
 
@@ -187,7 +185,7 @@ def matmul_nt_dequantize_b_propagate_b(
         M = tvm.te.var("m")
 
     l = r = 16  # noqa: E741
-    if in_dtype == "int8":
+    if in_dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
         l, r = 16, 32  # noqa: E741
 
     _, inverse_indexmap = get_propagate_map(trans=True, dtype=in_dtype, matrix_name="B")
@@ -358,7 +356,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
         M = tvm.te.var("m")
 
     l = r = 16  # noqa: E741
-    if in_dtype == "int8":
+    if in_dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
         l, r = 16, 32  # noqa: E741
     _, inversed_index_map = get_propagate_map(trans=False, dtype=in_dtype, matrix_name="A")
     A = te.placeholder((M // l, K // r, l, r), name="A", dtype=in_dtype)

@@ -21,6 +21,8 @@ _TYPE_MAP = {
     "float32": "float",
     "float16": "half",
     "bfloat16": "__nv_bfloat162",
+    "e4m3_float8": "__nv_fp8_e4m3",
+    "e5m2_float8": "__nv_fp8_e5m2",
     "float64": "double",
     "int64": "int64_t",
     "int32": "int",
@@ -247,7 +249,7 @@ class CUDASourceWrapper(object):
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
 
-        function_args.append({"name": "stream=0", "type": "cudaStream_t"},)
+        function_args.append({"name": "stream=cudaStreamDefault", "type": "cudaStream_t"},)
         # Format the function arguments for declaration
         def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
 
@@ -285,8 +287,8 @@ class CUDASourceWrapper(object):
         # Determine the shared memory size, defaulting to 0 if not specified
         smem_str = 0 if self.dynamic_smem_buf is None else self.dynamic_smem_buf
         # Format the CUDA kernel launch string
-        call_str = "{}<<<{}, {}, {}, stream>>>({});".format(function_name, grid_str, block_str,
-                                                            smem_str, call_args)
+        call_str = "{}<<<{}, {}, {}, 0>>>({});".format(function_name, grid_str, block_str, smem_str,
+                                                       call_args)
         # Create the host function wrapper for the CUDA kernel
         host_func = """
     extern "C" void call({}) {{
@@ -352,7 +354,7 @@ extern "C" void init() {{
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
 
-        function_args.append({"name": "stream=0", "type": "cudaStream_t"},)
+        function_args.append({"name": "stream=cudaStreamDefault", "type": "cudaStream_t"},)
 
         # Format the argument definitions for function declaration
         def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])

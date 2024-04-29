@@ -23,6 +23,24 @@ logger = logging.getLogger(__name__)
 
 WORKSPACE_SIZE = 1024 * 1024 * 256
 
+# TODO(lei): This should be improved into a general
+# Method to get the consistent compute patterns.
+NATIVE_COMPUTE_PATTERNS = [
+    # A_dtype, W_dtype
+    ("float64", "float64"),
+    ("float32", "float32"),
+    ("float16", "float16"),
+    ("int8", "int8"),
+    ("e4m3_float8", "e4m3_float8"),
+    ("e4m3_float8", "e5m2_float8"),
+    ("e5m2_float8", "e4m3_float8"),
+    ("e5m2_float8", "e5m2_float8"),
+]
+
+
+def is_native_compute(A_dtype, W_dtype) -> bool:
+    return (A_dtype, W_dtype) in NATIVE_COMPUTE_PATTERNS
+
 
 class OPExecutorCPU:
 
@@ -150,8 +168,15 @@ class MatmulConfig:
         if self.with_zeros is None:
             object.__setattr__(self, "with_zeros", False)
 
-        if self.A_dtype == self.W_dtype and self.W_dtype in ["float16", "int8"]:
+        if self.A_dtype == self.W_dtype and self.W_dtype in [
+                "float16", "int8", "e4m3_float8", "e5m2_float8"
+        ]:
             object.__setattr__(self, "storage_dtype", self.W_dtype)
+        # TODO(lei): This is a limitation arose by pytorch
+        # Should be removed in the future.
+        if self.A_dtype in ["e4m3_float8", "e5m2_float8"]:
+            object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
+            object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
 
 
 class Matmul(Operator):
@@ -176,6 +201,8 @@ class Matmul(Operator):
         "nf4": ("nf", 4),
         "fp8_e5m2": ("fp", 8),
         "fp4_e2m1": ("fp", 4),
+        "e4m3_float8": ("fp", 8),  # "e4m3_float8" is a trick for "float8_e4m3fn"
+        "e5m2_float8": ("fp", 8),
     }
 
     def __init__(
@@ -316,7 +343,7 @@ class Matmul(Operator):
         self._build_runtime_module(target)
 
     def _select_implementation(self):
-        if self.A_dtype == self.W_dtype:
+        if is_native_compute(self.A_dtype, self.W_dtype):
             return consistent_implementation(
                 M=self.M,
                 N=self.N,
@@ -446,8 +473,9 @@ class Matmul(Operator):
             args.append(bias)
         args.append(output)
 
-        m = reduce(operator.mul, A.shape[:-1], 1)
-        args.append(m)
+        if self.dynamic_range is not None:
+            m = reduce(operator.mul, A.shape[:-1], 1)
+            args.append(m)
 
         if self.lib is None:
             self._forward_from_torch_func(*args)

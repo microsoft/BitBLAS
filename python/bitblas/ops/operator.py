@@ -220,15 +220,27 @@ class Operator(ABC):
             else:
                 raise RuntimeError("Not supported type: ", type(v))
 
+        def map_numpy_type(intype):
+            typemap = {
+                'e4m3_float8': 'float8_e4m3fn',
+                'e5m2_float8': 'float8_e5m2',
+            }
+            if intype in typemap:
+                return typemap[intype]
+            else:
+                return intype
+
         profile_tensors = []
         for param in func.params:
             if param not in func.buffer_map:
                 # in case of dynamic symbolic may in params
                 continue
             arg = func.buffer_map[param]
+            numpy_dtype = map_numpy_type(arg.dtype)
             profile_tensors.append(
                 tvm.nd.array(
-                    np.random.uniform(0, 1, [var_warpper(i) for i in arg.shape]).astype(arg.dtype),
+                    np.random.uniform(0, 1,
+                                      [var_warpper(i) for i in arg.shape]).astype(numpy_dtype),
                     device=device,
                 ))
         self.profile_tensors = profile_tensors

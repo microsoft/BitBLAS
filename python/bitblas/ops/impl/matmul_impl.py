@@ -111,7 +111,7 @@ def matmul_nt_propagate_a(
     if not isinstance(M, int):
         M = tvm.te.var("m")
     l = r = 16  # noqa: E741
-    if in_dtype == "int8":
+    if in_dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
         l, r = 16, 32  # noqa: E741
 
     _, inversed_index_map = get_propagate_map(trans=False, dtype=in_dtype, matrix_name="A")
@@ -171,7 +171,7 @@ def matmul_nt_propagate_b(
     if not isinstance(M, int):
         M = tvm.te.var("m")
     l = r = 16  # noqa: E741
-    if in_dtype == "int8":
+    if in_dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
         l, r = 16, 32  # noqa: E741
 
     _, inversed_index_map = get_propagate_map(trans=True, dtype=in_dtype, matrix_name="B")
@@ -232,7 +232,7 @@ def matmul_nt_propagate_a_propagate_b(
     if not isinstance(M, int):
         M = tvm.te.var("m")
     l = r = 16  # noqa: E741
-    if in_dtype == "int8":
+    if in_dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
         l, r = 16, 32  # noqa: E741
 
     A = te.placeholder((M // l, K // r, l, r), name="A", dtype=in_dtype)

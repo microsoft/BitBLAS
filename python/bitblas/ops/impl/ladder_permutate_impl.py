@@ -9,7 +9,7 @@ from tvm.tir import IndexMap
 def select_implementation(
     M: int,
     N: int,
-    datatype: Literal["float16", "int8"] = "float16",
+    datatype: Literal["float16", "int8", "e4m3_float8", "e5m2_float8"] = "float16",
     dequantize_bits: int = -1,
     storage_dtype: Literal["float16", "int8", "uint8", "int32", "uint32"] = "float16",
     propagate_kind: Literal["A", "B"] = "B",
@@ -23,7 +23,7 @@ def select_implementation(
     # This is trick to get the basic tile size for the current datatype
     # as for nvidia tensorcore instruction, the basic tile size is 16x16/16x32 for float16/int8
     l = r = 16  # noqa: E741
-    if datatype == "int8":
+    if datatype in ["int8", "e4m3_float8", "e5m2_float8"]:
         l, r = 16, 32  # noqa: E741
     intra_index_map, _ = get_propagate_map(
         transpose_matrix, dtype=datatype, matrix_name=propagate_kind)

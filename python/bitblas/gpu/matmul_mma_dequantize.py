@@ -167,7 +167,8 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         intrin_group = get_mma_intrin_group(
             load_scope=shared_scope,
             store_scope=shared_scope if cache_write_required else "global",
-            in_dtype=intrin_info.in_dtype,
+            a_dtype=intrin_info.in_dtype,
+            b_dtype=intrin_info.in_dtype,
             out_dtype=intrin_info.out_dtype,
             trans_a=intrin_info.trans_a,
             trans_b=intrin_info.trans_b,
@@ -654,7 +655,8 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         intrin_group = get_mma_intrin_group(
             load_scope=shared_scope,
             store_scope=shared_scope if cache_write_required else "global",
-            in_dtype=intrin_info.in_dtype,
+            a_dtype=intrin_info.in_dtype,
+            b_dtype=intrin_info.in_dtype,
             out_dtype=intrin_info.out_dtype,
             trans_a=intrin_info.trans_a,
             trans_b=intrin_info.trans_b,
@@ -1143,7 +1145,8 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         intrin_group = get_mma_intrin_group(
             load_scope=shared_scope,
             store_scope=shared_scope if cache_write_required else "global",
-            in_dtype=intrin_info.in_dtype,
+            a_dtype=intrin_info.in_dtype,
+            b_dtype=intrin_info.in_dtype,
             out_dtype=intrin_info.out_dtype,
             trans_a=intrin_info.trans_a,
             trans_b=intrin_info.trans_b,
