@@ -19,7 +19,7 @@ ENV PATH="/opt/conda/bin:${PATH}"
 
 RUN conda install pip cmake && conda clean --all
 
-RUN pip install --no-cache-dir --default-timeout=1000 torch==2.1.0 torchvision timm einops \
+RUN pip install --no-cache-dir --default-timeout=1000 torch==2.1.0 torchvision==0.16.0 timm einops \
     onnx==1.16 \
     transformers==4.30.0 huggingface_hub>=0.20.2 \
     attrs cloudpickle decorator psutil synr tornado xgboost==1.5.1 regex \
