@@ -149,3 +149,5 @@ if __name__ == "__main__":
         run_from_prebuilt(prebuilt_path, arch)
     else:
         run(args.prefix, arch, args.fake_quant, quant_config, args.convert_int)
+
+    os.system("rm -rf /tmp/tvmdbg_*")
