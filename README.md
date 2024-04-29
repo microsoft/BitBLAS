@@ -44,14 +44,14 @@ bash export.sh
 
 ## 2. Reproducing Individual Experiement Results
 
-Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Google Drive](https://drive.google.com/file/d/1-txc19hd3FS6PPhNko1BljIjNO9Ex_9l/view?usp=sharing)
+Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Google Drive](https://drive.google.com/file/d/1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c/view?usp=sharing)
 
 To use the checkpoints, you can download the checkpoints and extract it to the root/artifact of the project.
 
 ```bash
 cd /root/Ladder
 pip install gdown
-gdown https://drive.google.com/uc?id=1-txc19hd3FS6PPhNko1BljIjNO9Ex_9l -O artifact/checkpoints.tar.gz
+gdown https://drive.google.com/uc?id=1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c -O artifact/checkpoints.tar.gz
 tar -xvf artifact/checkpoints.tar.gz -C artifact/
 ```
 
