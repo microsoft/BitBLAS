@@ -172,7 +172,7 @@ class MatmulConfig:
                 "float16", "int8", "e4m3_float8", "e5m2_float8"
         ]:
             object.__setattr__(self, "storage_dtype", self.W_dtype)
-        # TODO(lei): This is a limitation arose by pytorch
+        # TODO(lei): This is a limitation arose by pytorch and llvm
         # Should be removed in the future.
         if self.A_dtype in ["e4m3_float8", "e5m2_float8"]:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
@@ -268,12 +268,17 @@ class Matmul(Operator):
             self.ladder_permutate_a = None
 
         if self.propagate_b:
+            storage_dtype = self.storage_dtype
+            if self.A_dtype in ["e4m3_float8", "e5m2_float8"]:
+                # Using int8 as the storage dtype for e4m3_float8 and e5m2_float8
+                # Because the llvm does not support float8
+                storage_dtype = "int8"
             ladder_permutate_config = LadderPermutateConfig(
                 M=self.N,
                 N=self.K,
                 datatype=self.A_dtype,
                 dequantize_bits=self.bit,
-                storage_dtype=self.storage_dtype,
+                storage_dtype=storage_dtype,
                 propagate_kind="B",
                 transpose_matrix=self.layout == "nt",
                 transform_kind=self.propagate_b,
