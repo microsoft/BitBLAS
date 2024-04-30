@@ -282,11 +282,15 @@ class Operator(ABC):
     def forward(self, *args):
         return self._forward_from_torch_func(*args)
 
-    def _forward_from_prebuild_lib(self, *args):
+    def _forward_from_prebuild_lib(self, *args, stream=0):
         ctypes_args = [
             ctypes.c_void_p(arr.data_ptr()) if not isinstance(arr, int) else arr for arr in args
         ]
+        ctypes_args.append(ctypes.c_void_p(stream))
         self.lib.call(*ctypes_args)
+    
+    def call_lib(self, *args, stream=0):
+        self.lib.call(*args, ctypes.c_void_p(stream))
 
     def _forward_from_tvm_lib_func(self, values):
         tcodes = (ctypes.c_int * self.num_args)()
