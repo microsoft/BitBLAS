@@ -270,7 +270,12 @@ class Operator(ABC):
         _tvm_args = [self._tensor_adapter(arg, self.arch.device) for arg in args]
         self.rt_mod(*_tvm_args)
 
+    def _forward_from_tvm_nd_array(self, *args):
+        self.rt_mod(*args)
+
     def _forward_from_torch_func(self, *args):
+        # torch func is not reliable as some datatypes they don't support
+        # like float8.
         self.torch_func(*args)
         return args[-1]
 

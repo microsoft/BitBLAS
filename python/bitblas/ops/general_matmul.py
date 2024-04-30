@@ -172,7 +172,7 @@ class MatmulConfig:
                 "float16", "int8", "e4m3_float8", "e5m2_float8"
         ]:
             object.__setattr__(self, "storage_dtype", self.W_dtype)
-        # TODO(lei): This is a limitation arose by pytorch
+        # TODO(lei): This is a limitation arose by pytorch and llvm
         # Should be removed in the future.
         if self.A_dtype in ["e4m3_float8", "e5m2_float8"]:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)

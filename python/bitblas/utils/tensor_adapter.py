@@ -3,8 +3,10 @@
 import tvm
 from typing import Union
 from enum import IntEnum
+import numpy as np
 import torch
 from torch.utils.dlpack import from_dlpack, to_dlpack
+from math import prod
 
 from tvm.relay import TensorType
 from tvm._ffi.base import _LIB, c_str
@@ -86,5 +88,43 @@ def tvm_tensor_to_torch(tensor: Union[tvm.te.Tensor, tvm.nd.NDArray]):
         return torch.from_numpy(tensor.numpy())
     elif isinstance(tensor, tvm.nd.NDArray):
         return from_dlpack(tensor)
+    else:
+        raise RuntimeError("Not supported type: ", type(tensor))
+
+def lazy_tvm_tensor_to_torch(tensor: Union[tvm.te.Tensor, tvm.nd.NDArray]):
+    # It additionally needs the ctypes type as torch type
+    def as_tensor(address, shape, elems_inbytes, torch_type):
+        arr = (ctypes.c_int8 * elems_inbytes).from_address(
+            address)
+        return torch.frombuffer(arr, dtype=torch_type).view(*shape)
+
+    if isinstance(tensor, tvm.nd.NDArray):
+        np_array = tensor.asnumpy()
+        shape = np_array.shape
+        dtype = np_array.dtype
+        torch_dtype = getattr(torch, str(dtype))
+        num_elems_inbytes = prod(shape) * np_array.itemsize
+        data_ptr = np_array.ctypes.data
+        tensor = as_tensor(data_ptr, shape, num_elems_inbytes, torch_dtype)
+        return tensor
+    else:
+        raise RuntimeError("Not supported type: ", type(tensor))
+
+def lazy_torch_to_tvm_tensor(tensor):
+    # It additionally needs the ctypes type as torch type
+    def as_tensor(address, shape, elems_inbytes, numpy_type):
+        arr = (ctypes.c_int8 * elems_inbytes).from_address(
+            address)
+        return np.frombuffer(arr, dtype=numpy_type).reshape(shape)
+
+    if isinstance(tensor, torch.Tensor):
+        data_ptr = tensor.data_ptr()
+        shape = tensor.shape
+        torch_dtype = tensor.dtype
+        numpy_dtype = str(torch_dtype).replace("torch.", "")
+        num_elems_inbytes  = prod(shape) * tensor.itemsize
+        np_tensor = as_tensor(data_ptr, shape, num_elems_inbytes, numpy_dtype)
+        tvm_tensor = tvm.nd.array(np_tensor)
+        return tvm_tensor
     else:
         raise RuntimeError("Not supported type: ", type(tensor))
