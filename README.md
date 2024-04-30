@@ -16,13 +16,7 @@ Some of the key features of BitBLAS include:
 ## Latest News
 
 - 2024.04.19: BitBLAS is now open source! We are excited to announce that BitBLAS, a high-performance library for mixed-precision DNN model deployment, is now available to the public.
-- 2024.04.30: BitBLAS now support 
-
-## Integration Example of FasterTransformer with BitBLAS
-![FasterTransformer Integration](images/gif/FasterTransformer.gif)
-
-## Benchmark Summary
-
+- 2024.04.30: BitBLAS now supports FP8 TensorCore!
 
 ## Integration Example of FasterTransformer with BitBLAS
 ![FasterTransformer Integration](images/gif/FasterTransformer.gif)
