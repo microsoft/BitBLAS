@@ -181,3 +181,5 @@ if __name__ == "__main__":
     else:
         print("Testing model: {}".format(name))
         run(path, arch, async_propagate=args.async_propagation, fake_quant=args.fake_quant, quant_config=quant_config, convert_int=args.convert_int)
+
+    os.system("rm -rf /tmp/tvmdbg_*")
