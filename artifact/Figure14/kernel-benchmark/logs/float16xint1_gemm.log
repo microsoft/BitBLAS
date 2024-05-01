@@ -1,0 +1,18 @@
+[BitBLAS] The best latency of top 1 is 0.543 ms
+[BitBLAS] The best latency of top 20 is 0.346 ms
+Time cost of Dlight default schedule: 0.391 ms
+[BitBLAS] The best latency of top 1 is 3.941 ms
+[BitBLAS] The best latency of top 20 is 2.165 ms
+Time cost of Dlight default schedule: 2.222 ms
+[BitBLAS] The best latency of top 1 is 13.668 ms
+[BitBLAS] The best latency of top 20 is 7.319 ms
+Time cost of Dlight default schedule: 7.690 ms
+[BitBLAS] The best latency of top 1 is 13.675 ms
+[BitBLAS] The best latency of top 20 is 7.493 ms
+Time cost of Dlight default schedule: 7.798 ms
+PrimFunc                     Input Arguments              BitBLAS Top20 Tune Time      BitBLAS Top1 Latency         BitBLAS Top20 Latency        DefaultDLight Tune Time      DefaultDLight Latency        
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-1024-8192-float16-float16-float16-1-int8-uint-False-False--1-True-False 34.57691144943237 s         0.543 ms                     0.346 ms                     0.5986232757568359           3.912e-01 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-8192-8192-float16-float16-float16-1-int8-uint-False-False--1-True-False 31.501954555511475 s        3.941 ms                     2.165 ms                     0.6076867580413818           2.222e+00 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-28672-8192-float16-float16-float16-1-int8-uint-False-False--1-True-False 32.17371129989624 s         13.668 ms                    7.319 ms                     0.5982592105865479           7.690e+00 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-8192-28672-float16-float16-float16-1-int8-uint-False-False--1-True-False 33.85193729400635 s         13.675 ms                    7.493 ms                     0.5992624759674072           7.798e+00 ms                 

@@ -34,6 +34,8 @@ if not reproduce:
 else:
     print("Reproducing the results")
     # reproduce the results for amos
-    os.system("cd ladder_benchmark; ./benchmark_ladder.sh")
+    os.system("cd kernel-benchmark; ./benchmark_kernel.sh")
+    # update the figures
+    os.system("python3 update_results.py")
     # plot from the reproduced results
     os.system(f"python3 plot_scaling_bitwidth.py --reproduce")

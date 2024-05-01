@@ -26,10 +26,6 @@ arch = ladder.arch.__getattribute__(arch)()
 dtype="float16"
 
 shapes = [
-    [32, 1024, 8192 // 2],
-    [32, 8192, 8192 // 2],
-    [32, 28672, 8192 // 2],
-    [32, 8192, 28672 // 2],
     [4096, 1024, 8192 // 2],
     [4096, 8192, 8192 // 2],
     [4096, 28672, 8192 // 2],
@@ -117,8 +113,6 @@ for M, N, K in shapes:
             best_latency = latency
             best = cpresult
         print(latency)
-    with open("int4_ladder_gemm.cu", "w+") as f:
-        f.write(code)
     print("top1: {} \ttop10: {}".format(values[0], min(values)))
     print("-" * 80, flush=True)
     print("best config: {}".format(best.config))

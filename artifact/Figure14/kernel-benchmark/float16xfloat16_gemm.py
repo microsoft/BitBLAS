@@ -37,10 +37,6 @@ args = parser.parse_args()
 # fmt:off
 
 llm_shape_fp16xfp16 = [    
-    (matmul_nt_propagate_a_propagate_b, (32, 1024, 8192, "float16", "float16")),
-    (matmul_nt_propagate_a_propagate_b, (32, 8192, 8192, "float16", "float16")),
-    (matmul_nt_propagate_a_propagate_b, (32, 28672, 8192, "float16", "float16")),
-    (matmul_nt_propagate_a_propagate_b, (32, 8192, 28672, "float16", "float16")),
     (matmul_nt_propagate_a_propagate_b, (4096, 1024, 8192, "float16", "float16")),
     (matmul_nt_propagate_a_propagate_b, (4096, 8192, 8192, "float16", "float16")),
     (matmul_nt_propagate_a_propagate_b, (4096, 28672, 8192, "float16", "float16")),

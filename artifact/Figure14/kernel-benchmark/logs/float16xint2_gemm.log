@@ -1,0 +1,18 @@
+[BitBLAS] The best latency of top 1 is 0.772 ms
+[BitBLAS] The best latency of top 20 is 0.343 ms
+Time cost of Dlight default schedule: 0.387 ms
+[BitBLAS] The best latency of top 1 is 4.015 ms
+[BitBLAS] The best latency of top 20 is 2.172 ms
+Time cost of Dlight default schedule: 2.238 ms
+[BitBLAS] The best latency of top 1 is 7.396 ms
+[BitBLAS] The best latency of top 20 is 7.396 ms
+Time cost of Dlight default schedule: 7.783 ms
+[BitBLAS] The best latency of top 1 is 13.931 ms
+[BitBLAS] The best latency of top 20 is 7.506 ms
+Time cost of Dlight default schedule: 7.870 ms
+PrimFunc                     Input Arguments              BitBLAS Top20 Tune Time      BitBLAS Top1 Latency         BitBLAS Top20 Latency        DefaultDLight Tune Time      DefaultDLight Latency        
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-1024-8192-float16-float16-float16-2-int8-uint-False-False--2-True-False 33.86444973945618 s         0.772 ms                     0.343 ms                     0.5950438976287842           3.873e-01 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-8192-8192-float16-float16-float16-2-int8-uint-False-False--2-True-False 31.975609064102173 s        4.015 ms                     2.172 ms                     0.5898377895355225           2.238e+00 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-28672-8192-float16-float16-float16-2-int8-uint-False-False--2-True-False 32.75757646560669 s         7.396 ms                     7.396 ms                     0.5972824096679688           7.783e+00 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-8192-28672-float16-float16-float16-2-int8-uint-False-False--2-True-False 33.97697877883911 s         13.931 ms                    7.506 ms                     0.5850996971130371           7.870e+00 ms                 

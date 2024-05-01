@@ -1,0 +1,18 @@
+[BitBLAS] The best latency of top 1 is 0.312 ms
+[BitBLAS] The best latency of top 20 is 0.194 ms
+Time cost of Dlight default schedule: 9999000.000 ms
+[BitBLAS] The best latency of top 1 is 2.227 ms
+[BitBLAS] The best latency of top 20 is 1.253 ms
+Time cost of Dlight default schedule: 9999000.000 ms
+[BitBLAS] The best latency of top 1 is 4.845 ms
+[BitBLAS] The best latency of top 20 is 4.331 ms
+Time cost of Dlight default schedule: 9999000.000 ms
+[BitBLAS] The best latency of top 1 is 4.793 ms
+[BitBLAS] The best latency of top 20 is 4.269 ms
+Time cost of Dlight default schedule: 9999000.000 ms
+PrimFunc                     Input Arguments              BitBLAS Top20 Tune Time      BitBLAS Top1 Latency         BitBLAS Top20 Latency        DefaultDLight Tune Time      DefaultDLight Latency        
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-1024-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 33.95381450653076 s         0.312 ms                     0.194 ms                     0.08446025848388672          9.999e+06 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-8192-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 31.274256467819214 s        2.227 ms                     1.253 ms                     0.07920074462890625          9.999e+06 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-28672-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 31.124582052230835 s        4.845 ms                     4.331 ms                     0.08001160621643066          9.999e+06 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-8192-28672-int8-int8-int32-2-int8-uint-False-False--1-True-False 32.54207921028137 s         4.793 ms                     4.269 ms                     0.08468055725097656          9.999e+06 ms                 

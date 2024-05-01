@@ -51,7 +51,7 @@ group_size = args.group_size
 # fmt:off
 
 llm_float16xint1 = [
-    (matmul_nt_dequantize_b, (1, 8192, 22016, "float16", "float16", "float16", 1, "int8", "uint", False, False, group_size, True, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 1024, 8192, "float16", "float16", "float16", 1, "int8", "uint", False, False, group_size, True, False), Matmul),
     (matmul_nt_dequantize_b, (1, 8192, 8192, "float16", "float16", "float16", 1, "int8", "uint", False, False, group_size, True, False), Matmul),
     (matmul_nt_dequantize_b, (1, 28672, 8192, "float16", "float16", "float16", 1, "int8", "uint", False, False, group_size, True, False), Matmul),
     (matmul_nt_dequantize_b, (1, 8192, 28672, "float16", "float16", "float16", 1, "int8", "uint", False, False, group_size, True, False), Matmul),

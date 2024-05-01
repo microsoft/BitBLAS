@@ -51,7 +51,7 @@ group_size = args.group_size
 # fmt:off
 
 llm_shapes = [
-    (matmul_nt_dequantize_b, (1, 8192, 22016, "int8", "int8", "int32", 2, "int8", "uint", False, False, group_size, True, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 1024, 8192, "int8", "int8", "int32", 2, "int8", "uint", False, False, group_size, True, False), Matmul),
     (matmul_nt_dequantize_b, (1, 8192, 8192, "int8", "int8", "int32", 2, "int8", "uint", False, False, group_size, True, False), Matmul),
     (matmul_nt_dequantize_b, (1, 28672, 8192, "int8", "int8", "int32", 2, "int8", "uint", False, False, group_size, True, False), Matmul),
     (matmul_nt_dequantize_b, (1, 8192, 28672, "int8", "int8", "int32", 2, "int8", "uint", False, False, group_size, True, False), Matmul),

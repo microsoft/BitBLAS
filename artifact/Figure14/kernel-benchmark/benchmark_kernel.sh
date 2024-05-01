@@ -16,7 +16,7 @@ if [[ "$1" == "--force_tune" ]]; then
     force_tune=1
 fi
 
-mkdir logs
+mkdir -p logs
 
 pip install bitblas
 
