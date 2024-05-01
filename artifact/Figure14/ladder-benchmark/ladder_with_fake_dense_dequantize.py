@@ -167,7 +167,6 @@ if __name__ == "__main__":
         path = f'{model_path}/llama_70b/llama2_70b_layer1_seq{args.seq_len}_bs{args.batch}/model.onnx'
     elif args.prefix == "bloom-176b":
         path = f'{model_path}/bloom_176b/bloom-176b_layer1_seq{args.seq_len}_bs{args.batch}/model.onnx'
-    # path = f'./models/llama_70b/llama2_70b_layer1_seq{args.seq_len}_bs{args.batch}/model.onnx'
     name = args.prefix
     log_path = "progress/e2e/" + name + "/" + fname
     if args.fake_quant > -1:
