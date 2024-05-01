@@ -11,7 +11,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, choices=['llama', 'bloom'], default='llama')
-parser.add_argument('--framework', type=str, choices=['pytorch', 'onnxruntime', 'tensorrt', 'welder', 'vllm', 'vllm_fp16_int4', 'ladder', 'ladder_fp16_int4', 'ladder_fp16_nf4', 'ladder_fp8_fp8', 'ladder_fp16_mxfp8xmxfp8', 'ladder_fp16_int8xint1'], default='pytorch')
+parser.add_argument('--framework', type=str, choices=['pytorch', 'onnxruntime', 'tensorrt', 'welder', 'vllm', 'vllm_fp16_int4', 'ladder', 'ladder_fp16_int4', 'ladder_fp16_nf4', 'ladder_fp8_fp8', 'ladder_mxfp8_mxfp8', 'ladder_int8_int1'], default='pytorch')
 parser.add_argument('--batch_size', type=int, default=1)
 parser.add_argument('--seq_len', type=int, default=1)
 args = parser.parse_args()
@@ -50,7 +50,7 @@ def analyze_log(log_path):
     return peak
 
 def pytorch_inference(model='llama', batch_size=1, seq_len=1):
-    run_file = 'llama_70b.py' if model == 'llama' else 'bloom_176b.py'
+    run_file = 'llama_70b.py' if model == 'llama' else 'bloom-176b.py'
     target_process = subprocess.Popen(f'cd {pwd}/pytorch-inductor-benchmark; python {run_file} --batch_size {batch_size} --seq_len {seq_len}; cd ..', shell=True)
     return target_process
 
@@ -59,7 +59,7 @@ def onnxruntime_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.onnx'
     else:
-        model_file = f'{model_path}/bloom_176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
+        model_file = f'{model_path}/bloom-176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
     target_process = subprocess.Popen(f'cd {pwd}/onnxruntime-benchmark; python {run_file} --file {model_file} --iters 10000 ; cd ..', shell=True)
     return target_process
 
@@ -69,7 +69,7 @@ def tensorrt_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.trt'
     else:
-        model_file = f'{model_path}/bloom_176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.trt'
+        model_file = f'{model_path}/bloom-176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.trt'
     target_process = subprocess.Popen(f'{trt_exec_path} --loadEngine {model_file} --fp16 --workspace=8192 --iterations=10000 ;', shell=True)
     return target_process
 
@@ -92,7 +92,7 @@ def welder_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.onnx'
     else:
-        model_file = f'{model_path}/bloom_176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
+        model_file = f'{model_path}/bloom-176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
     target_process = subprocess.Popen(f'cd {pwd}/onnxruntime-benchmark; python {run_file} --file {model_file} --iters 10000 ; cd ..', shell=True)
     return target_process
 
@@ -102,7 +102,7 @@ def ladder_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_bs{batch_size}_seq{seq_len}_async'
     else:
-        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom_176b/llama2_bs{batch_size}_seq{seq_len}_async'
+        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_bs{batch_size}_seq{seq_len}_async'
     target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
@@ -111,7 +111,7 @@ def ladder_fp16_int4_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_fq_0_int_4_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     else:
-        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom_176b/llama2_fq_0_int_4_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
+        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_fq_0_int_4_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
@@ -120,7 +120,7 @@ def ladder_fp16_nf4_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_fq_0_nf_4_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     else:
-        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom_176b/llama2_fq_0_nf_4_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
+        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_fq_0_nf_4_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
@@ -129,25 +129,25 @@ def ladder_fp8_fp8_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_fq_0_fp_e5m2_8_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     else:
-        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom_176b/llama2_fq_0_fp_e5m2_8_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
+        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_fq_0_fp_e5m2_8_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
-def ladder_fp16_mxfp8xmxfp8_inference(model='llama', batch_size=1, seq_len=1):
+def ladder_mxfp8_mxfp8_inference(model='llama', batch_size=1, seq_len=1):
     run_file = 'ladder_with_fake_dense_dequantize.py'
     if model=='llama':
-        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_fq_0_mxfp_8_8_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
+        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_fq_0_mxfp_8_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     else:
-        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom_176b/llama2_fq_0_mxfp_8_8_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
+        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_fq_0_mxfp_8_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
-def ladder_fp16_int8xint1_inference(model='llama', batch_size=1, seq_len=1):
+def ladder_int8_int1_inference(model='llama', batch_size=1, seq_len=1):
     run_file = 'ladder_with_fake_dense_dequantize.py'
     if model=='llama':
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_fq_0_int_1_-1_bs{batch_size}_seq{seq_len}_ci_True_async'
     else:
-        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom_176b/llama2_fq_0_int_1_-1_bs{batch_size}_seq{seq_len}_ci_True_async'
+        model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_fq_0_int_1_-1_bs{batch_size}_seq{seq_len}_ci_True_async'
     target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
@@ -162,8 +162,8 @@ model_inference_mapping = {
     'ladder_fp16_int4': ladder_fp16_int4_inference,
     'ladder_fp16_nf4': ladder_fp16_nf4_inference,
     'ladder_fp8_fp8': ladder_fp8_fp8_inference,
-    'ladder_fp16_mxfp8xmxfp8': ladder_fp16_mxfp8xmxfp8_inference,
-    'ladder_fp16_int8xint1': ladder_fp16_int8xint1_inference
+    'ladder_mxfp8_mxfp8': ladder_mxfp8_mxfp8_inference,
+    'ladder_int8_int1': ladder_int8_int1_inference
 }
 
 @contextlib.contextmanager

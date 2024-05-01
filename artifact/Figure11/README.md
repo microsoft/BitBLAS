@@ -37,7 +37,7 @@ Measure the memory for llama batch 1 seq 1 under pytorch
 The options of `measure_memory.py` are:
 
 - `--model`: str, the model to measure, default value is `llama`, available values are `llama` and `bloom`.
-- `--framework`: str, the framework to measure, default value is `pytorch`, available values are `pytorch` `onnxruntime`, `tensorrt`, `welder`, `vllm`, `ladder`, `ladder_fp16_int4`, `ladder_fp16_nf4`, `ladder_fp8_fp8`, `ladder_fp16_mxfp8xmxfp8`, `ladder_fp16_int8xint1`
+- `--framework`: str, the framework to measure, default value is `pytorch`, available values are `pytorch` `onnxruntime`, `tensorrt`, `welder`, `vllm`, `ladder`, `ladder_fp16_int4`, `ladder_fp16_nf4`, `ladder_fp8_fp8`, `ladder_mxfp8_mxfp8`, `ladder_int8_int1`
 -- `--batch_size`: int, the batch size to measure, default value is `1`.
 -- `--seq_len`: int, the sequence length to measure, default value is `1`.
 
