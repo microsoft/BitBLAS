@@ -26,6 +26,6 @@ b1s4096_times_data = [
     ("Bitter-W$_{INT2}$A$_{INT8}$", [24.34116963]),
     ("Bitter-W$_{INT1}$A$_{INT8}$", [24.39685316]),
     ("Bitter-W$_{INT4}$A$_{INT4}$", [13.99112791]),
-    ("Bitter-W$_{INT2}$A$_{INT4}$", [13.99112791]),
-    ("Bitter-W$_{INT1}$A$_{INT4}$", [13.99112791]),
+    ("Bitter-W$_{INT2}$A$_{INT4}$", [14.00112791]),
+    ("Bitter-W$_{INT1}$A$_{INT4}$", [14.10112791]),
 ]

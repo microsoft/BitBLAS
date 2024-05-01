@@ -42,7 +42,7 @@ mkdir -p logs/llama2
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 4096 --fake_quant 0 --bits 8 --convert_int 2>&1 | tee logs/llama2/llama2-70b_b1_s4096_q0_b8_int.log
 
 
-nf4
+# nf4
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 1 --fake_quant 0 --bits 4 --format nf 2>&1 | tee logs/llama2/llama2-70b_b1_s1_q0_nf4.log
 
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 32 --seq_len 1 --fake_quant 0 --bits 4 --format nf 2>&1 | tee logs/llama2/llama2-70b_b32_s1_q0_nf4.log
@@ -51,7 +51,7 @@ nf4
 
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 4096 --fake_quant 0 --bits 4 --format nf 2>&1 | tee logs/llama2/llama2-70b_b1_s4096_q0_nf4.log
 
-fp8
+# fp8
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/llama2/llama2-70b_b1_s1_q0_fp_e5m2.log
 
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 32 --seq_len 1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/llama2/llama2-70b_b32_s1_q0_fp_e5m2.log
@@ -60,7 +60,7 @@ fp8
 
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 4096 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/llama2/llama2-70b_b1_s4096_q0_fp_e5m2.log
 
-fp8
+# mxfp8
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 1 --fake_quant 0 --bits 8 --format mxfp 2>&1 | tee logs/llama2/llama2-70b_b1_s1_q0_mxfp8.log
 
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 32 --seq_len 1 --fake_quant 0 --bits 8 --format mxfp 2>&1 | tee logs/llama2/llama2-70b_b32_s1_q0_mxfp8.log
