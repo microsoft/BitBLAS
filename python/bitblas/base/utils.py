@@ -332,6 +332,10 @@ def fast_tune(
         policy = TensorCorePolicy(func=specilized_func, arch=arch, tags=tags)
 
     configs = policy.emit_config(topk)
+
+    if len(configs) == 0:
+        raise ValueError("No valid config generated")
+
     cpresults, best = apply_and_build(
         func,
         configs,

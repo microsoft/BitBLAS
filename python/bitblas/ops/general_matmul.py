@@ -94,44 +94,24 @@ class MatmulConfig:
     storage_dtype: str = "int8"
 
     # weight transform related flags
-    fast_decoding: bool = True  # enable fast decoding by default
-    propagate_a: TransformKind = TransformKind.NonTransform
-    propagate_b: TransformKind = TransformKind.NonTransform
+    fast_decoding: Optional[bool] = None  # enable fast decoding by default, if not specified, it is enabled by a rule.
+    propagate_a: Optional[TransformKind] = None # propagate_a is a flag to control the ladder permutation.
+    propagate_b: Optional[TransformKind] = None # propagate_b is a flag to control the ladder permutation
 
-    def __post_init__(self):
-        # set M to default dynamic range if it is None
-        if self.M is None:
-            object.__setattr__(self, "M", [1, 16, 32, 64, 128, 256, 512, 1024])
-        if self.N is None:
-            raise ValueError("N should be specified currently.")
-        if self.K is None:
-            raise ValueError("K should be specified currently.")
+    
+    def __legalize_dynamic_symbolic(self, M):
+        return tuple(self.M) if isinstance(self.M, list) else self.M
+        
+    def __legalize_propagate(self, propagate):
+        if isinstance(propagate, bool):
+            return (TransformKind.IntraWarpTransform
+                    if propagate else TransformKind.NonTransform)
+        elif isinstance(propagate, int):
+            return TransformKind(propagate)
 
-        # set M to tuple if it is list
-        # otherwise, M is not hashable
-        object.__setattr__(self, "M", tuple(self.M) if isinstance(self.M, list) else self.M)
-        if isinstance(self.propagate_a, bool):
-            object.__setattr__(
-                self,
-                "propagate_a",
-                (TransformKind.IntraWarpTransform
-                 if self.propagate_a else TransformKind.NonTransform),
-            )
-        elif isinstance(self.propagate_a, int):
-            object.__setattr__(self, "propagate_a", TransformKind(self.propagate_a))
+        return propagate
 
-        if isinstance(self.propagate_b, bool):
-            object.__setattr__(
-                self,
-                "propagate_b",
-                (TransformKind.IntraWarpTransform
-                 if self.propagate_b else TransformKind.NonTransform),
-            )
-        elif isinstance(self.propagate_b, int):
-            object.__setattr__(self, "propagate_b", TransformKind(self.propagate_b))
-
-        # This is hack to legalize propagate_a and b
-        # TODO(lei): should be removed in the future when tc+br template is ready.
+    def __initialize_propagate(self, propagate_a: Optional[TransformKind], propagate_b: Optional[TransformKind]):
         MICRO_KERNEL_SIZE = 16
         if isinstance(
                 self.M,
@@ -148,13 +128,54 @@ class MatmulConfig:
         else:
             object.__setattr__(self, "propagate_b", TransformKind.IntraWarpTransform)
 
-        if self.zeros_mode is None:
+        # set a and b value if is not None
+        if propagate_a is not None:
+            object.__setattr__(self, "propagate_a", propagate_a)
+        if propagate_b is not None:
+            object.__setattr__(self, "propagate_b", propagate_b)
+        
+        # TODO(lei): This is a limitation arose by pytorch and llvm
+        # Should be removed in the future.
+        if self.A_dtype in ["e4m3_float8", "e5m2_float8"]:
+            object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
+            object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
+
+    def __initialize_zeros_mode(self, zeros_mode: Optional[str]):
+        if zeros_mode is None:
             object.__setattr__(self, "zeros_mode", "original")
 
+    def __initialize_fast_decoding(self, fast_decoding: Optional[bool]):
         if "int" not in self.W_dtype or self.W_dtype == self.A_dtype:
             object.__setattr__(self, "fast_decoding", False)
         else:
             object.__setattr__(self, "fast_decoding", self.fast_decoding)
+        if fast_decoding is not None:
+            object.__setattr__(self, "fast_decoding", fast_decoding)
+
+    def __post_init__(self):
+        # set M to default dynamic range if it is None
+        if self.M is None:
+            object.__setattr__(self, "M", [1, 16, 32, 64, 128, 256, 512, 1024])
+        if self.N is None:
+            raise ValueError("N should be specified currently.")
+        if self.K is None:
+            raise ValueError("K should be specified currently.")
+
+        # set M to tuple if it is list
+        # otherwise, M is not hashable
+        object.__setattr__(self, "M", self.__legalize_dynamic_symbolic(self.M))
+        
+        # set propagate_a and propagate_b to default value if it is None
+        object.__setattr__(self, "propagate_a", self.__legalize_propagate(self.propagate_a))
+        object.__setattr__(self, "propagate_b", self.__legalize_propagate(self.propagate_b))
+
+        # This is hack to legalize propagate_a and b
+        # TODO(lei): should be removed in the future when tc+br template is ready.
+        self.__initialize_propagate(self.propagate_a, self.propagate_b)
+
+        self.__initialize_zeros_mode(self.zeros_mode)
+
+        self.__initialize_fast_decoding(self.fast_decoding)
 
         if self.with_bias is None:
             object.__setattr__(self, "with_bias", False)
@@ -172,11 +193,6 @@ class MatmulConfig:
                 "float16", "int8", "e4m3_float8", "e5m2_float8"
         ]:
             object.__setattr__(self, "storage_dtype", self.W_dtype)
-        # TODO(lei): This is a limitation arose by pytorch and llvm
-        # Should be removed in the future.
-        if self.A_dtype in ["e4m3_float8", "e5m2_float8"]:
-            object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
-            object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
 
 
 class Matmul(Operator):
@@ -217,6 +233,7 @@ class Matmul(Operator):
         # to save compilation time
         if target is None:
             target = auto_detect_nvidia_target()
+            logger.info(f"Auto detected target: {target}")
         assert (config.A_dtype
                 in self.BITBLAS_TRICK_DTYPE_MAP), f"Unsupported input dtype {config.A_dtype}"
         source_format, bit = self.BITBLAS_TRICK_DTYPE_MAP[config.W_dtype]
