@@ -2,11 +2,11 @@
 # Licensed under the MIT License.
 
 import subprocess
-import logging
 from thefuzz import process
 from tvm.target import Target
 from tvm.target.tag import list_tags
 
+import logging
 logger = logging.getLogger(__name__)
 
 
@@ -44,6 +44,7 @@ def find_best_match(tags, query):
     if check_target(best_match, "cuda"):
         return best_match if score >= MATCH_THRESHOLD else "cuda"
     else:
+        logger.info(f"Best match '{best_match}' is not a valid CUDA target, falling back to 'cuda'")
         return "cuda"
 
 
@@ -65,5 +66,4 @@ def auto_detect_nvidia_target() -> str:
     # Get the current GPU model and find the best matching target
     gpu_model = get_gpu_model_from_nvidia_smi()
     target = find_best_match(nvidia_tags, gpu_model) if gpu_model else "cuda"
-
     return target

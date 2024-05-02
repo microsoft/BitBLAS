@@ -164,6 +164,7 @@ global_operator_cache = OperatorCache()
 def load_global_ops_cache(database_path=BITBLAS_DATABASE_PATH, target=None):
     if target is None:
         target = bitblas.auto_detect_nvidia_target()
+    logger.info(f"Loading operators from database {database_path} for target {target}")
     global_operator_cache.load_from_database(database_path, target)
     return global_operator_cache
 
