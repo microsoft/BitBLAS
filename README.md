@@ -24,7 +24,8 @@ This code branch is used for OSDI'24 Artifact Evaluation of paper #626, titled "
 To ease the process of installing all the dependencies, baseline software, and Ladder code, we provide a Dockerfile and a simple guideline to build a Docker image with all of above installed. The Docker image is built on top of Ubuntu 20.04, and it contains all the dependencies required to run the experiments. We only provide the Dockerfile for NVIDIA GPU, and the Dockerfile for AMD GPU will be provided upon request.
 
 ```bash
-cd docker
+git clone --recursive https://github.com/microsoft/BitBLAS --branch osdi24_ladder_artifact Ladder
+cd Ladder/docker
 # build the image, this may take a while (around 30+ minutes on the author's test machine)
 docker build -t ladder_cuda -f Dockerfile.cu120 .
 # run the container
