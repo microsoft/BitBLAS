@@ -417,6 +417,7 @@ class Matmul(Operator):
         Returns:
         A list containing the transformed weight tensor and optionally the scale, zeros, and bias.
         """
+        weight = weight.contiguous()
         if self.W_dtype == self.A_dtype:
             if self.weight_transform is not None:
                 return self.weight_transform(weight.cpu()).cuda().contiguous()
