@@ -39,11 +39,9 @@ def profile(model, input_data):
 def main():
     model = BitnetForCausalLM.from_pretrained(
         '1bitLLM/bitnet_b1_58-3B',
-        device_map='auto',
-        low_cpu_mem_usage=True,
         use_flash_attention_2=True,
         torch_dtype=torch.float16,
-    ).half()
+    ).cuda().half()
     with torch.no_grad():
         model._post_process_weights()
 
