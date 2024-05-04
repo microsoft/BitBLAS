@@ -22,6 +22,7 @@ parser.add_argument('--bits', type=int, default=4)
 parser.add_argument('--convert_int', action="store_true")
 parser.add_argument('--format', type=str, default='int')
 parser.add_argument('--fake_quant', type=int, default=-1)
+parser.add_argument("--fast_decoding", action="store_true", help="Use fast decoding mode.", default=False)
 parser.add_argument('--async_propagation', action="store_true", help="Use async propagation and async instructions, which should be only enabled on data center GPUs with async copy instructions.")
 parser.add_argument("--prebuilt_path", type=str, default=None, help="Path to the prebuilt model. If set, the script will run from the prebuilt model.")
 

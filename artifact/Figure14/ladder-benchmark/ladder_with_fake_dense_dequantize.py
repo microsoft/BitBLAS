@@ -29,6 +29,7 @@ parser.add_argument('--cublas', action="store_true")
 parser.add_argument('--cudnn', action="store_false")
 parser.add_argument('--nhwc', action="store_false")
 parser.add_argument('--fake_quant', type=int, default=-1)
+parser.add_argument("--fast_decoding", action="store_true", help="Use fast decoding mode.", default=False)
 parser.add_argument('--batch', type=int, default=1)
 parser.add_argument('--seq_len', type=int, default=4096)
 parser.add_argument('--bits', type=int, default=4)
@@ -125,6 +126,9 @@ def run(prefix, arch, async_propagate, fake_quant, quant_config, convert_int):
     write_mod(mod, log_path, "AnnotateLadderTensorCore")
     mod = ladder.relay.transform.AnnotateTensorCore()(mod)
     write_mod(mod, log_path, "AnnotateWelderTensorCore")
+    if args.fast_decoding:
+        mod = ladder.relay.transform.AnnotateFastDecoding()(mod)
+        write_mod(mod, log_path, "AnnotateFastDecoding")
 
     mod = ladder.relay.transform.WelderTunePass(arch, topk=40,save_perf_log="./debug_group_info")(mod)
     write_mod(mod, log_path, "WelderTunePass")

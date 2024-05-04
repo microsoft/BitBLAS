@@ -26,20 +26,20 @@ mkdir -p logs/llama2
 
 if [ $force_tune -eq 1 ]; then
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 1 --fake_quant -1 2>&1 | tee logs/llama2/llama2-70b_b1_s1_q-1.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding  --async_propagation --batch 1 --seq_len 1 --fake_quant -1 2>&1 | tee logs/llama2/llama2-70b_b1_s1_q-1.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 1 --fake_quant 0 --bits 4  2>&1 | tee logs/llama2/llama2-70b_b1_s1_q0_b4.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding  --async_propagation --batch 1 --seq_len 1 --fake_quant 0 --bits 4  2>&1 | tee logs/llama2/llama2-70b_b1_s1_q0_b4.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 1 --fake_quant 0 --bits 1 --convert_int  2>&1 | tee logs/llama2/llama2-70b_b1_s1_q0_b1_int.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding  --async_propagation --batch 1 --seq_len 1 --fake_quant 0 --bits 1 --convert_int  2>&1 | tee logs/llama2/llama2-70b_b1_s1_q0_b1_int.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 1 --fake_quant 0 --bits 8 --convert_int 2>&1 | tee logs/llama2/llama2-70b_b1_s1_q0_b8_int.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding  --async_propagation --batch 1 --seq_len 1 --fake_quant 0 --bits 8 --convert_int 2>&1 | tee logs/llama2/llama2-70b_b1_s1_q0_b8_int.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 4096 --fake_quant -1  2>&1 | tee logs/llama2/llama2-70b_b1_s4096_q-1.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding  --async_propagation --batch 1 --seq_len 4096 --fake_quant -1  2>&1 | tee logs/llama2/llama2-70b_b1_s4096_q-1.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 4096 --fake_quant 0 --bits 4  2>&1 | tee logs/llama2/llama2-70b_b1_s4096_q0_b4.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding  --async_propagation --batch 1 --seq_len 4096 --fake_quant 0 --bits 4  2>&1 | tee logs/llama2/llama2-70b_b1_s4096_q0_b4.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 4096 --fake_quant 0 --bits 1 --convert_int 2>&1 | tee logs/llama2/llama2-70b_b1_s4096_q0_b1_int.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding  --async_propagation --batch 1 --seq_len 4096 --fake_quant 0 --bits 1 --convert_int 2>&1 | tee logs/llama2/llama2-70b_b1_s4096_q0_b1_int.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --async_propagation --batch 1 --seq_len 4096 --fake_quant 0 --bits 8 --convert_int 2>&1 | tee logs/llama2/llama2-70b_b1_s4096_q0_b8_int.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding  --async_propagation --batch 1 --seq_len 4096 --fake_quant 0 --bits 8 --convert_int 2>&1 | tee logs/llama2/llama2-70b_b1_s4096_q0_b8_int.log
 
 fi

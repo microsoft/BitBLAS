@@ -105,6 +105,9 @@ def run(prefix, arch, async_propagate):
     write_mod(mod, log_path, "AnnotateLadderTensorCore")
     mod = ladder.relay.transform.AnnotateTensorCore()(mod)
     write_mod(mod, log_path, "AnnotateWelderTensorCore")
+    if args.fast_decoding:
+        mod = ladder.relay.transform.AnnotateFastDecoding()(mod)
+        write_mod(mod, log_path, "AnnotateFastDecoding")
 
     mod = ladder.relay.transform.WelderTunePass(arch, topk=40,save_perf_log="./debug_group_info")(mod)
     write_mod(mod, log_path, "WelderTunePass")
