@@ -53,7 +53,7 @@ To use the checkpoints, you can download the checkpoints and extract it to the r
 cd /root/Ladder
 pip install gdown
 gdown https://drive.google.com/uc?id=1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c -O artifact/checkpoints.tar.gz
-tar -xvf artifact/checkpoints.tar.gz -C artifact/
+tar -xvf artifact/checkpoints.tar.gz -C .
 ```
 
 After downloading, it should be extracted under the artifacts/temp folder. You can see a lot of model folders in it. With these pre-compiled models, results can be reproduced more quickly with a few commands. Here is a list of script we provide: -->
