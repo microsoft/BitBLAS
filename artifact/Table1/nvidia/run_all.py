@@ -7,7 +7,7 @@ import subprocess
 def run_command(command, working_dir=None):
     """Run command in the shell and handle errors."""
     try:
-       result = subprocess.run(command, shell=True, executable='/bin/bash', text=True)
+        result = subprocess.run(command, shell=True, executable='/bin/bash', text=True, cwd=working_dir)
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
 
