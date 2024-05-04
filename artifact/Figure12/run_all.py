@@ -25,11 +25,6 @@ reproduce = args.reproduce
 force_tune_amos = args.force_tune_amos
 force_tune_tensorir = args.force_tune_tensorir
 
-
-args = parser.parse_args()
-reproduce = args.reproduce
-force_tune = args.force_tune
-
 if not reproduce:
     print("Using the paper results")
     os.system(f"python3 plot_operator_performance.py")
