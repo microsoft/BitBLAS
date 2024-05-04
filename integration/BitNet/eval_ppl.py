@@ -35,11 +35,11 @@ def main(args):
     datasets = ['c4', 'wikitext2']
     model = BitnetForCausalLM.from_pretrained(
         args.hf_path,
-        device_map='auto',
-        low_cpu_mem_usage=True,
         use_flash_attention_2=True,
         torch_dtype=torch.float16,
-    ).half()
+    ).cuda().half()
+    with torch.no_grad():
+        model._post_process_weights()
     tokenizer = BitnetTokenizer.from_pretrained(args.hf_path, use_fast=False)
     loss_fct = torch.nn.CrossEntropyLoss(reduction="sum").cuda()
 
