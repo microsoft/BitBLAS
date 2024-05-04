@@ -2,6 +2,15 @@
 # Licensed under the MIT License.
 import argparse
 import os
+import subprocess
+
+def run_command(command):
+    result = subprocess.run(command, shell=True, executable='/bin/bash', text=True)
+    
+    if result.returncode == 0:
+        print("Command executed successfully")
+    else:
+        print(f"Command failed with error: {result.stderr}")
 
 CHECKPOINT_PATH = os.path.join(os.getcwd(), "../checkpoints/Figure8")
 
@@ -27,33 +36,33 @@ else:
     print("Reproducing the results")
     # reproduce the results for amos
     if force_tune_amos:
-        os.system(f"cd amos-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_amos.sh --force_tune; cd ..")
+        run_command(f"cd amos-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_amos.sh --force_tune; cd ..")
     else:
-        os.system(f"cd amos-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_amos.sh; cd ..")
+        run_command(f"cd amos-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_amos.sh; cd ..")
     # reproduce the results for ladder
     if force_tune_ladder:
-        os.system(f"cd ladder-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_ladder.sh --force_tune; cd ..")
+        run_command(f"cd ladder-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_ladder.sh --force_tune; cd ..")
     else:
-        os.system(f"cd ladder-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_ladder.sh; cd ..")
+        run_command(f"cd ladder-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_ladder.sh; cd ..")
     # reproduce the results for onnxruntime
-    os.system(f"cd onnxruntime-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_onnxruntime.sh; cd ..")
+    run_command(f"cd onnxruntime-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_onnxruntime.sh; cd ..")
     # reproduce the results for pytorch inductor
-    os.system(f"cd pytorch-inductor-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_inductor.sh; cd ..")
+    run_command(f"cd pytorch-inductor-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_inductor.sh; cd ..")
     # reproduce the results for tensorir
     if force_tune_tensorir:
-        os.system(f"cd tensorir-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_tensorir.sh --force_tune; cd ..")
+        run_command(f"cd tensorir-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_tensorir.sh --force_tune; cd ..")
     else:
-        os.system(f"cd tensorir-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_tensorir.sh; cd ..")
+        run_command(f"cd tensorir-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_tensorir.sh; cd ..")
     # reproduce the results for tensorrt
-    os.system(f"cd tensorrt-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_tensorrt.sh; cd ..")
+    run_command(f"cd tensorrt-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_tensorrt.sh; cd ..")
     # reproduce the results for vllm
-    os.system(f"cd vllm-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_vllm.sh; cd ..")
+    run_command(f"cd vllm-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_vllm.sh; cd ..")
     # reproduce the results for welder
     if force_tune_welder:
-        os.system(f"cd welder-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_welder.sh --force_tune; cd ..")
+        run_command(f"cd welder-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_welder.sh --force_tune; cd ..")
     else:
-        os.system(f"cd welder-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_welder.sh; cd ..")
+        run_command(f"cd welder-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_welder.sh; cd ..")
     # update the reproduce results from logs
-    os.system(f"python3 update_results.py")
+    run_command(f"python3 update_results.py")
     # plot from the reproduced results
-    os.system(f"python3 plot_figures.py --reproduce")
+    run_command(f"python3 plot_figures.py --reproduce")
