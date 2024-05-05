@@ -2,7 +2,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-export TVM_HOME=$(pwd)/../../../baseline_framework/tvm_v0.14.0
+export TVM_TARGET="nvidia/nvidia-a100"
+export TVM_HOME=$(pwd)/../../baseline_framework/tvm_v0.14.0
 export PYTHONPATH=$TVM_HOME/python
 pip install xgboost==1.7.1
 
