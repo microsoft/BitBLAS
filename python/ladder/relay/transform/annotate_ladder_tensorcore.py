@@ -17,10 +17,10 @@ class AnnotateLadderTensorCore(relay.ExprMutator):
         if visitor.axis is not None:
             func = func.with_attr("tensorCoreConfig", visitor.axis)
             func = func.with_attr("ladder_config", visitor.ladder_config)
-            if visitor.ladder_compute_type is not None:
-                func = func.with_attr("ladder_compute_type", visitor.ladder_compute_type)
-            if visitor.consistent is not None:
-                func = func.with_attr("consistent", visitor.consistent)
+        if visitor.ladder_compute_type is not None:
+            func = func.with_attr("ladder_compute_type", visitor.ladder_compute_type)
+        if visitor.consistent is not None:
+            func = func.with_attr("consistent_config", visitor.consistent)
         return super().visit_function(func)
 
 class OpVisitor(relay.ExprVisitor):
@@ -87,8 +87,10 @@ class OpVisitor(relay.ExprVisitor):
                     self.ladder_config = (True, True, 2) # for smem issues about bf16 accum, we set pipeline_stage to 2
                 else:
                     self.ladder_config = (True, True, pipleline_stage) if can_propagate else (False, False)
+                self.consistent = (True, False)
             elif call.op.name == "ladder.quant_linear":
                 self.ladder_config = (False, False)
+                self.consistent = (True, False)
         elif call.op.name in ["ladder.perfect_im2col_quant_conv"]:
             A_shape = call.args[0].checked_type.shape
             B_shape = call.args[1].checked_type.shape
@@ -98,9 +100,14 @@ class OpVisitor(relay.ExprVisitor):
             elif call.attrs.format == "mxfp":
                 self.ladder_compute_type = "mxfp"
                 self.consistent = (True, False) # todo(lei):special set fpa mxfpb for benchmark
+            else:
+                self.consistent = (True, False)
             self.axis = (num_axis - 2, num_axis - 1)
             self.ladder_config = (True, True, 2)
-        
+        elif call.op.name in ["ladder.quant_linear"]:
+            print(call.op.name, "ladder.quant_linear set consistent")
+            self.consistent = (True, False)
+
         return super().visit_call(call)
 
 __all__ = ["AnnotateLadderTensorCore"]
