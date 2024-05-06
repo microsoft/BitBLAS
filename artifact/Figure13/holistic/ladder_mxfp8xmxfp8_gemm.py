@@ -67,12 +67,16 @@ n_float_per_i8 = 8 // bit
 mask = (1 << bit) - 1
 
 llama2_shapes = [
+    # 70b
+    [32, 1024, 8192],
+    [32, 8192, 8192],
+    [32, 28672, 8192],
+    [32, 8192, 28672],
     [4096, 1024, 8192],
     [4096, 8192, 8192],
     [4096, 28672, 8192],
     [4096, 8192, 28672],
 ]
-
 bloom_shapes = [
     # 176b
     [32, 43008, 14336],
@@ -103,50 +107,38 @@ Conformer_shapes = [
 
 vit_shapes = [
     [6400, 384, 384],
-    [6400, 1536, 1536],
+    [6400, 1536, 384],
+    [6400, 384, 1536],
 ]
 
-shapes = llama2_shapes
+Conformer_shapes_b1 = [
+    [512, 512, 512],
+]
 
+
+shapes = [
+    [4096, 1024, 8192],
+    [4096, 8192, 8192],
+    [4096, 28672, 8192],
+    [4096, 8192, 28672],
+]
 for M, N, K in shapes:
     group_size = 32
-    
-    def _tir_u8_to_f8_to_float(nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, dtype: str, scale: tvm.tir.PrimExpr = None):
-        assert nbit == 8
-        # e_f4 == 0 -> e_f32 = 0
-        mask = tvm.tir.const((1 << nbit) - 1, "uint32")
-        f8 = (val >> (pos.astype("uint32") * tvm.tir.const(nbit, "uint32"))) & mask
-        s = f8 >> tvm.tir.const(7, "uint32")
-        # e5m2
-        e_f8 = (f8 >> tvm.tir.const(2, "uint32")) & tvm.tir.const(31, "uint32")
-        e_f16 = T.max(e_f8 + scale, tvm.tir.const(63, "uint32"))
-        m_f8 = e_f8 & tvm.tir.const(2, "uint32")
-        return tvm.tir.reinterpret(dtype, (e_f16 | (s << tvm.tir.const(8, "uint32"))) << tvm.tir.const(7, "uint32") | m_f8)
-        
+  
     def ladder_gemm(M, N, K, wmma_m, wmma_n, wmma_k):
         A = te.placeholder((M // wmma_m, K // wmma_k, wmma_m ,wmma_k), name='A', dtype='float16')
-        B = te.placeholder((N // wmma_n, K // wmma_k, wmma_n, wmma_k // 8 * bit), name='B', dtype='int8')
-        Scales = te.placeholder((K // group_size, N), name='Scales', dtype='uint8')
+        B = te.placeholder((N // wmma_n, K // wmma_k, wmma_n, wmma_k), name='B', dtype='float16')
 
-        def B_decode_func(n, k, nn, kk):
-            w = _tir_u8_to_f8_to_float(bit, B[n, k, nn, kk // n_float_per_i8], kk % n_float_per_i8, "float16", Scales[(k * wmma_k + kk) // group_size, n * wmma_n + nn])
-            return w
-        
-        B_decode = te.compute(
-            (N // wmma_n, K // wmma_k, wmma_n, wmma_k),
-            B_decode_func,
-            name='B_decode'
-        )
         
         # Describe the matrix multiplication in TE
         k = te.reduce_axis((0, K // wmma_k), name='k')
         kk = te.reduce_axis((0, wmma_k), name='kk')
         C = te.compute(
             (M // wmma_m, N // wmma_n, wmma_m, wmma_n),
-            lambda i, j, ii, jj: te.sum(A[i, k, ii, kk].astype('float16') * B_decode[j, k, jj, kk].astype('float16'), axis=[k, kk]),
+            lambda i, j, ii, jj: te.sum(A[i, k, ii, kk].astype('float32') * B[j, k, jj, kk].astype('float32'), axis=[k, kk]),
             name='C'
         )
-        return A, B, Scales, C
+        return A, B, C
 
 
     def reshape(M, N, wmma_m, wmma_n):
@@ -163,13 +155,13 @@ for M, N, K in shapes:
     args = arg1
     # args = connect_tensor_graph(arg1, arg2, {arg2[0]:arg1[2]})
 
-    input_args = args[:3]
+    input_args = args[:2]
     output_args = [args[-1]]
     node = IRNode([None for _ in input_args], args, "ladder_matmul")
     node.add_tag("tensorCoreConfig", [2, 3])
     node.add_tag("consistent_config", (True, True))
     node.add_tag("ladder_compute_type", "mxfp")
-    node.add_tag("ladder_config", (True, True))
+    node.add_tag("ladder_config", (True, True, 2))
     output_nodes = [OutputNode(node)]
     policy = LadderPolicy(output_nodes, arch)
     start = time.time()

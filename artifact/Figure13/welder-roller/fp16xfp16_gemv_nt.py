@@ -48,7 +48,7 @@ for M, N, K in shapes:
     node.add_tag("tensorCoreConfig", [0, 1])
     # node.add_tag("roller_config", (True, True, 2))
     output_nodes = [OutputNode(node)]
-    policy = TCPolicy(output_nodes, arch)
+    policy = DefaultPolicy(output_nodes, arch)
     configs = policy.emit_config(20)
 
     compile_results = []

@@ -1,0 +1,1749 @@
+2024-05-06 16:30:04 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:04 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:05 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:05 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:05 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-06 16:30:05 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:05 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 8192), "int8"], B: T.Buffer[(1024, 1024), "int8"], dtype_transform: T.Buffer[(1, 1024), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 8192], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([1024, 8192], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([1024, 8192], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([1024, 1024], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 1024], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(64, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(16, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 128):
+                    for k_1 in T.thread_binding(8, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(8):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(8192, k_0 * 64 + k_1 * 8 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(1024, j_0 * 16 + j_1 + ax0)
+                                    v1 = T.axis.spatial(1024, k_0 * 8 + k_1 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(1024, j_0 * 16 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 64 + k_1 * 8 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(1024, j_0 * 16 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 64 + k_1 * 8 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(2, 4):
+                            with T.block("B"):
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(1024, j_0 * 16 + j_1)
+                                v_k = T.axis.reduce(8192, k_0 * 64 + k_1 * 8 + k_2_0 * 4 + k_2_1)
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(1024, j_0 * 16 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=1024)), iter_var(v1_o, range(min=0, ext=1024))) {
+  reads([B_local[v0, v1_o]])
+  writes([B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]])
+  for (ax1, 0, 8) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=8))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, v1_o]])
+      writes([B_decode_local[v0, ((v1_o*8) + v1_i)]])
+      B_decode_local[v0, ((v1_o*8) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, v1_o], int8(v1_i)), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*8), ext=8) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:05 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-06 16:30:05 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:05 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 8192), "int8"], B: T.Buffer[(1024, 1024), "int8"], dtype_transform: T.Buffer[(1, 1024), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 8192], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([1024, 8192], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([1024, 8192], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([1024, 1024], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 1024], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(32, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(32, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 512):
+                    for k_1 in T.thread_binding(4, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(4):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(8192, k_0 * 16 + k_1 * 4 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(1024, j_0 * 32 + j_1 + ax0)
+                                    v1 = T.axis.spatial(1024, k_0 * 2 + k_1 // 2 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 4):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(1024, j_0 * 32 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 16 + k_1 * 4 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 4):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(1024, j_0 * 32 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 16 + k_1 * 4 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(1, 4):
+                            with T.block("B"):
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(1024, j_0 * 32 + j_1)
+                                v_k = T.axis.reduce(8192, k_0 * 16 + k_1 * 4 + k_2_0 * 4 + k_2_1)
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(1024, j_0 * 32 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=1024)), iter_var(v1_o, range(min=0, ext=2048))) {
+  reads([B_local[v0, floordiv(v1_o, 2)]])
+  writes([B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]])
+  for (ax1, 0, 4) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=4))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, floordiv(v1_o, 2)]])
+      writes([B_decode_local[v0, ((v1_o*4) + v1_i)]])
+      B_decode_local[v0, ((v1_o*4) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, floordiv(v1_o, 2)], int8(((floormod(v1_o, 2)*4) + v1_i))), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*4), ext=4) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:05 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-06 16:30:05 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:05 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 8192), "int8"], B: T.Buffer[(1024, 1024), "int8"], dtype_transform: T.Buffer[(1, 1024), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 8192], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([1024, 8192], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([1024, 8192], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([1024, 1024], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 1024], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(16, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(64, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 2048):
+                    for k_1 in T.thread_binding(2, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(2):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(8192, k_0 * 4 + k_1 * 2 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(1024, j_0 * 64 + j_1 + ax0)
+                                    v1 = T.axis.spatial(1024, k_0 // 2 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 2):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(1024, j_0 * 64 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 4 + k_1 * 2 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 2):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(1024, j_0 * 64 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 4 + k_1 * 2 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(1, 4):
+                            with T.block("B"):
+                                T.where(k_2_0 * 4 + k_2_1 < 2)
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(1024, j_0 * 64 + j_1)
+                                v_k = T.axis.reduce(8192, k_0 * 4 + k_1 * 2 + (k_2_0 * 4 + k_2_1))
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(1024, j_0 * 64 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=1024)), iter_var(v1_o, range(min=0, ext=4096))) {
+  reads([B_local[v0, floordiv(v1_o, 4)]])
+  writes([B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]])
+  for (ax1, 0, 2) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=2))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, floordiv(v1_o, 4)]])
+      writes([B_decode_local[v0, ((v1_o*2) + v1_i)]])
+      B_decode_local[v0, ((v1_o*2) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, floordiv(v1_o, 4)], int8(((floormod(v1_o, 4)*2) + v1_i))), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*2), ext=2) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:05 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:05 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:05 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:05 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.005324800033122301
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.0066559999249875546
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.012543999589979649
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
+0.04175644367933273
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
+0.09236480295658112
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.005119999870657921
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.005324800033122301
+top1: 0.005324800033122301 	top10: 0.005119999870657921
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+best latency: 0.005119999870657921
+best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
+  
+  int in_thread_B_local[1];
+  signed char A_local[16];
+  char2 B_local[1];
+  signed char B_decode_local[16];
+  __shared__ int red_buf0[128];
+  in_thread_B_local[0] = 0;
+  for (int k_0 = 0; k_0 < 8; ++k_0) {
+    *(int4*)(A_local + 0) = *(int4*)(A + ((k_0 * 1024) + (((int)threadIdx.x) * 16)));
+    B_local[0] = *(char2*)(B + ((((((int)blockIdx.x) * 2048) + (((int)threadIdx.y) * 1024)) + (k_0 * 128)) + (((int)threadIdx.x) * 2)));
+    decode_i1s_to_i8s_l16(B_local, B_decode_local, 16);
+    for (int k_2_0 = 0; k_2_0 < 4; ++k_2_0) {
+      in_thread_B_local[0] = __dp4a(*(int *)&A_local[((k_2_0 * 4))],*(int *)&B_decode_local[((k_2_0 * 4))], in_thread_B_local[0]);
+    }
+  }
+  __syncthreads();
+  ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = in_thread_B_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 32)]);
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    int w_16_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 16)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_16_0;
+    int w_8_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 8)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_8_0;
+    int w_4_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 4)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_4_0;
+    int w_2_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 2)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_2_0;
+    int w_1_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 1)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_1_0;
+  }
+  __syncthreads();
+  dtype_transform[((((int)blockIdx.x) * 2) + ((int)threadIdx.y))] = ((signed char)((volatile int*)red_buf0)[(((int)threadIdx.y) * 64)]);
+}
+
+
+2024-05-06 16:30:12 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-06 16:30:12 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:12 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 8192), "int8"], B: T.Buffer[(8192, 1024), "int8"], dtype_transform: T.Buffer[(1, 8192), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 8192], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([8192, 8192], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([8192, 8192], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([8192, 1024], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 8192], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(256, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(32, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 512):
+                    for k_1 in T.thread_binding(4, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(4):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(8192, k_0 * 16 + k_1 * 4 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(8192, j_0 * 32 + j_1 + ax0)
+                                    v1 = T.axis.spatial(1024, k_0 * 2 + k_1 // 2 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 4):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 32 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 16 + k_1 * 4 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 4):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 32 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 16 + k_1 * 4 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(1, 4):
+                            with T.block("B"):
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(8192, j_0 * 32 + j_1)
+                                v_k = T.axis.reduce(8192, k_0 * 16 + k_1 * 4 + k_2_0 * 4 + k_2_1)
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(8192, j_0 * 32 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=8192)), iter_var(v1_o, range(min=0, ext=2048))) {
+  reads([B_local[v0, floordiv(v1_o, 2)]])
+  writes([B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]])
+  for (ax1, 0, 4) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=4))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, floordiv(v1_o, 2)]])
+      writes([B_decode_local[v0, ((v1_o*4) + v1_i)]])
+      B_decode_local[v0, ((v1_o*4) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, floordiv(v1_o, 2)], int8(((floormod(v1_o, 2)*4) + v1_i))), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*4), ext=4) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:12 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-06 16:30:12 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:12 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 8192), "int8"], B: T.Buffer[(8192, 1024), "int8"], dtype_transform: T.Buffer[(1, 8192), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 8192], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([8192, 8192], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([8192, 8192], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([8192, 1024], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 8192], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(128, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(64, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 2048):
+                    for k_1 in T.thread_binding(2, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(2):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(8192, k_0 * 4 + k_1 * 2 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(8192, j_0 * 64 + j_1 + ax0)
+                                    v1 = T.axis.spatial(1024, k_0 // 2 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 2):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 64 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 4 + k_1 * 2 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 2):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 64 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 4 + k_1 * 2 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(1, 4):
+                            with T.block("B"):
+                                T.where(k_2_0 * 4 + k_2_1 < 2)
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(8192, j_0 * 64 + j_1)
+                                v_k = T.axis.reduce(8192, k_0 * 4 + k_1 * 2 + (k_2_0 * 4 + k_2_1))
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(8192, j_0 * 64 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=8192)), iter_var(v1_o, range(min=0, ext=4096))) {
+  reads([B_local[v0, floordiv(v1_o, 4)]])
+  writes([B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]])
+  for (ax1, 0, 2) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=2))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, floordiv(v1_o, 4)]])
+      writes([B_decode_local[v0, ((v1_o*2) + v1_i)]])
+      B_decode_local[v0, ((v1_o*2) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, floordiv(v1_o, 4)], int8(((floormod(v1_o, 4)*2) + v1_i))), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*2), ext=2) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:12 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-06 16:30:12 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:12 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 8192), "int8"], B: T.Buffer[(8192, 1024), "int8"], dtype_transform: T.Buffer[(1, 8192), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 8192], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([8192, 8192], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([8192, 8192], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([8192, 1024], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 8192], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(512, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(16, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 128):
+                    for k_1 in T.thread_binding(8, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(8):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(8192, k_0 * 64 + k_1 * 8 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(8192, j_0 * 16 + j_1 + ax0)
+                                    v1 = T.axis.spatial(1024, k_0 * 8 + k_1 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 16 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 64 + k_1 * 8 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 16 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 64 + k_1 * 8 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(2, 4):
+                            with T.block("B"):
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(8192, j_0 * 16 + j_1)
+                                v_k = T.axis.reduce(8192, k_0 * 64 + k_1 * 8 + k_2_0 * 4 + k_2_1)
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(8192, j_0 * 16 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=8192)), iter_var(v1_o, range(min=0, ext=1024))) {
+  reads([B_local[v0, v1_o]])
+  writes([B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]])
+  for (ax1, 0, 8) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=8))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, v1_o]])
+      writes([B_decode_local[v0, ((v1_o*8) + v1_i)]])
+      B_decode_local[v0, ((v1_o*8) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, v1_o], int8(v1_i)), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*8), ext=8) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:12 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:12 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:12 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:12 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:12 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:12 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:12 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:12 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
+0.05102933570742607
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
+0.12889599800109863
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.024405332282185555
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.010751999914646149
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.011264000087976456
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.011605333536863327
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.013567999936640263
+top1: 0.05102933570742607 	top10: 0.010751999914646149
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+best latency: 0.010751999914646149
+best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
+  
+  int in_thread_B_local[1];
+  signed char A_local[16];
+  char2 B_local[1];
+  signed char B_decode_local[16];
+  int red_buf0[1];
+  in_thread_B_local[0] = 0;
+  for (int k_0 = 0; k_0 < 32; ++k_0) {
+    *(int4*)(A_local + 0) = *(int4*)(A + ((k_0 * 256) + (((int)threadIdx.x) * 16)));
+    B_local[0] = *(char2*)(B + ((((((int)blockIdx.x) * 8192) + (((int)threadIdx.y) * 1024)) + (k_0 * 32)) + (((int)threadIdx.x) * 2)));
+    decode_i1s_to_i8s_l16(B_local, B_decode_local, 16);
+    for (int k_2_0 = 0; k_2_0 < 4; ++k_2_0) {
+      in_thread_B_local[0] = __dp4a(*(int *)&A_local[((k_2_0 * 4))],*(int *)&B_decode_local[((k_2_0 * 4))], in_thread_B_local[0]);
+    }
+  }
+  uint mask[1];
+  int t0[1];
+  red_buf0[0] = in_thread_B_local[0];
+  mask[0] = (__activemask() & ((uint)(65535 << (((int)threadIdx.y) * 16))));
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 8, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 4, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 2, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 1, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  red_buf0[0] = __shfl_sync(mask[0], red_buf0[0], (((int)threadIdx.y) * 16), 32);
+  dtype_transform[((((int)blockIdx.x) * 8) + ((int)threadIdx.y))] = ((signed char)red_buf0[0]);
+}
+
+
+2024-05-06 16:30:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 56], 'thread': [1, 56], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-06 16:30:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-06 16:30:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:16 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 8192), "int8"], B: T.Buffer[(28672, 1024), "int8"], dtype_transform: T.Buffer[(1, 28672), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 8192], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([28672, 8192], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([28672, 8192], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([28672, 1024], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 28672], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(448, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(64, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 2048):
+                    for k_1 in T.thread_binding(2, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(2):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(8192, k_0 * 4 + k_1 * 2 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(28672, j_0 * 64 + j_1 + ax0)
+                                    v1 = T.axis.spatial(1024, k_0 // 2 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 2):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(28672, j_0 * 64 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 4 + k_1 * 2 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 2):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(28672, j_0 * 64 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 4 + k_1 * 2 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(1, 4):
+                            with T.block("B"):
+                                T.where(k_2_0 * 4 + k_2_1 < 2)
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(28672, j_0 * 64 + j_1)
+                                v_k = T.axis.reduce(8192, k_0 * 4 + k_1 * 2 + (k_2_0 * 4 + k_2_1))
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(28672, j_0 * 64 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=28672)), iter_var(v1_o, range(min=0, ext=4096))) {
+  reads([B_local[v0, floordiv(v1_o, 4)]])
+  writes([B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]])
+  for (ax1, 0, 2) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=2))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, floordiv(v1_o, 4)]])
+      writes([B_decode_local[v0, ((v1_o*2) + v1_i)]])
+      B_decode_local[v0, ((v1_o*2) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, floordiv(v1_o, 4)], int8(((floormod(v1_o, 4)*2) + v1_i))), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*2), ext=2) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 28], 'thread': [1, 28], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-06 16:30:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-06 16:30:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:16 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 8192), "int8"], B: T.Buffer[(28672, 1024), "int8"], dtype_transform: T.Buffer[(1, 28672), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 8192], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([28672, 8192], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([28672, 8192], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([28672, 1024], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 28672], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(896, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(32, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 512):
+                    for k_1 in T.thread_binding(4, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(4):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(8192, k_0 * 16 + k_1 * 4 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(28672, j_0 * 32 + j_1 + ax0)
+                                    v1 = T.axis.spatial(1024, k_0 * 2 + k_1 // 2 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 4):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(28672, j_0 * 32 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 16 + k_1 * 4 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 4):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(28672, j_0 * 32 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 16 + k_1 * 4 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(1, 4):
+                            with T.block("B"):
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(28672, j_0 * 32 + j_1)
+                                v_k = T.axis.reduce(8192, k_0 * 16 + k_1 * 4 + k_2_0 * 4 + k_2_1)
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(28672, j_0 * 32 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=28672)), iter_var(v1_o, range(min=0, ext=2048))) {
+  reads([B_local[v0, floordiv(v1_o, 2)]])
+  writes([B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]])
+  for (ax1, 0, 4) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=4))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, floordiv(v1_o, 2)]])
+      writes([B_decode_local[v0, ((v1_o*4) + v1_i)]])
+      B_decode_local[v0, ((v1_o*4) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, floordiv(v1_o, 2)], int8(((floormod(v1_o, 2)*4) + v1_i))), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*4), ext=4) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 14], 'thread': [1, 14], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-06 16:30:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-06 16:30:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:16 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 8192), "int8"], B: T.Buffer[(28672, 1024), "int8"], dtype_transform: T.Buffer[(1, 28672), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 8192], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([28672, 8192], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([28672, 8192], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([28672, 1024], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 28672], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(1792, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(16, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 128):
+                    for k_1 in T.thread_binding(8, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(8):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(8192, k_0 * 64 + k_1 * 8 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(28672, j_0 * 16 + j_1 + ax0)
+                                    v1 = T.axis.spatial(1024, k_0 * 8 + k_1 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(28672, j_0 * 16 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 64 + k_1 * 8 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(28672, j_0 * 16 + j_1 + ax0)
+                                v1 = T.axis.spatial(8192, k_0 * 64 + k_1 * 8 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(2, 4):
+                            with T.block("B"):
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(28672, j_0 * 16 + j_1)
+                                v_k = T.axis.reduce(8192, k_0 * 64 + k_1 * 8 + k_2_0 * 4 + k_2_1)
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(28672, j_0 * 16 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=28672)), iter_var(v1_o, range(min=0, ext=1024))) {
+  reads([B_local[v0, v1_o]])
+  writes([B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]])
+  for (ax1, 0, 8) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=8))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, v1_o]])
+      writes([B_decode_local[v0, ((v1_o*8) + v1_i)]])
+      B_decode_local[v0, ((v1_o*8) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, v1_o], int8(v1_i)), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*8), ext=8) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 7], 'thread': [1, 7], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-06 16:30:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+{<Node, ladder_matmul>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.06942719966173172
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
+0.28723201155662537
+{<Node, ladder_matmul>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.04531199857592583
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
+0.13393919169902802
+{<Node, ladder_matmul>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.03829760104417801
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.0719359964132309
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.02908160164952278
+{<Node, ladder_matmul>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.029184000566601753
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.026419198140501976
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.029988572001457214
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.03747839853167534
+top1: 0.06942719966173172 	top10: 0.026419198140501976
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+best latency: 0.026419198140501976
+best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
+  
+  int in_thread_B_local[1];
+  signed char A_local[16];
+  char2 B_local[1];
+  signed char B_decode_local[16];
+  int red_buf0[1];
+  in_thread_B_local[0] = 0;
+  for (int k_0 = 0; k_0 < 16; ++k_0) {
+    *(int4*)(A_local + 0) = *(int4*)(A + ((k_0 * 512) + (((int)threadIdx.x) * 16)));
+    B_local[0] = *(char2*)(B + ((((((int)blockIdx.x) * 4096) + (((int)threadIdx.y) * 1024)) + (k_0 * 64)) + (((int)threadIdx.x) * 2)));
+    decode_i1s_to_i8s_l16(B_local, B_decode_local, 16);
+    for (int k_2_0 = 0; k_2_0 < 4; ++k_2_0) {
+      in_thread_B_local[0] = __dp4a(*(int *)&A_local[((k_2_0 * 4))],*(int *)&B_decode_local[((k_2_0 * 4))], in_thread_B_local[0]);
+    }
+  }
+  uint mask[1];
+  int t0[1];
+  red_buf0[0] = in_thread_B_local[0];
+  mask[0] = (__activemask() & ((uint)(0 << (((int)threadIdx.y) * 32))));
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 16, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 8, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 4, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 2, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 1, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  red_buf0[0] = __shfl_sync(mask[0], red_buf0[0], (((int)threadIdx.y) * 32), 32);
+  dtype_transform[((((int)blockIdx.x) * 4) + ((int)threadIdx.y))] = ((signed char)red_buf0[0]);
+}
+
+
+2024-05-06 16:30:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-06 16:30:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:26 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 28672), "int8"], B: T.Buffer[(8192, 3584), "int8"], dtype_transform: T.Buffer[(1, 8192), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 28672], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([8192, 28672], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([8192, 28672], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([8192, 3584], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 8192], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(256, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(32, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 1792):
+                    for k_1 in T.thread_binding(4, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(4):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(28672, k_0 * 16 + k_1 * 4 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(8192, j_0 * 32 + j_1 + ax0)
+                                    v1 = T.axis.spatial(3584, k_0 * 2 + k_1 // 2 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 4):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 32 + j_1 + ax0)
+                                v1 = T.axis.spatial(28672, k_0 * 16 + k_1 * 4 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 4):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 32 + j_1 + ax0)
+                                v1 = T.axis.spatial(28672, k_0 * 16 + k_1 * 4 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(1, 4):
+                            with T.block("B"):
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(8192, j_0 * 32 + j_1)
+                                v_k = T.axis.reduce(28672, k_0 * 16 + k_1 * 4 + k_2_0 * 4 + k_2_1)
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(8192, j_0 * 32 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=8192)), iter_var(v1_o, range(min=0, ext=7168))) {
+  reads([B_local[v0, floordiv(v1_o, 2)]])
+  writes([B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]])
+  for (ax1, 0, 4) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=4))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, floordiv(v1_o, 2)]])
+      writes([B_decode_local[v0, ((v1_o*4) + v1_i)]])
+      B_decode_local[v0, ((v1_o*4) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, floordiv(v1_o, 2)], int8(((floormod(v1_o, 2)*4) + v1_i))), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*4), ext=4) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-06 16:30:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:26 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 28672), "int8"], B: T.Buffer[(8192, 3584), "int8"], dtype_transform: T.Buffer[(1, 8192), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 28672], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([8192, 28672], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([8192, 28672], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([8192, 3584], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 8192], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(128, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(64, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 7168):
+                    for k_1 in T.thread_binding(2, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(2):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(28672, k_0 * 4 + k_1 * 2 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(8192, j_0 * 64 + j_1 + ax0)
+                                    v1 = T.axis.spatial(3584, k_0 // 2 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 2):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 64 + j_1 + ax0)
+                                v1 = T.axis.spatial(28672, k_0 * 4 + k_1 * 2 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 2):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 64 + j_1 + ax0)
+                                v1 = T.axis.spatial(28672, k_0 * 4 + k_1 * 2 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(1, 4):
+                            with T.block("B"):
+                                T.where(k_2_0 * 4 + k_2_1 < 2)
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(8192, j_0 * 64 + j_1)
+                                v_k = T.axis.reduce(28672, k_0 * 4 + k_1 * 2 + (k_2_0 * 4 + k_2_1))
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(8192, j_0 * 64 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=8192)), iter_var(v1_o, range(min=0, ext=14336))) {
+  reads([B_local[v0, floordiv(v1_o, 4)]])
+  writes([B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]])
+  for (ax1, 0, 2) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=2))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, floordiv(v1_o, 4)]])
+      writes([B_decode_local[v0, ((v1_o*2) + v1_i)]])
+      B_decode_local[v0, ((v1_o*2) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, floordiv(v1_o, 4)], int8(((floormod(v1_o, 4)*2) + v1_i))), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*2), ext=2) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-06 16:30:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:26 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 28672), "int8"], B: T.Buffer[(8192, 3584), "int8"], dtype_transform: T.Buffer[(1, 8192), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 28672], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([8192, 28672], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([8192, 28672], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([8192, 3584], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 8192], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(512, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(16, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 448):
+                    for k_1 in T.thread_binding(8, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(8):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(28672, k_0 * 64 + k_1 * 8 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(8192, j_0 * 16 + j_1 + ax0)
+                                    v1 = T.axis.spatial(3584, k_0 * 8 + k_1 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 16 + j_1 + ax0)
+                                v1 = T.axis.spatial(28672, k_0 * 64 + k_1 * 8 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 16 + j_1 + ax0)
+                                v1 = T.axis.spatial(28672, k_0 * 64 + k_1 * 8 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(2, 4):
+                            with T.block("B"):
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(8192, j_0 * 16 + j_1)
+                                v_k = T.axis.reduce(28672, k_0 * 64 + k_1 * 8 + k_2_0 * 4 + k_2_1)
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(8192, j_0 * 16 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=8192)), iter_var(v1_o, range(min=0, ext=3584))) {
+  reads([B_local[v0, v1_o]])
+  writes([B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]])
+  for (ax1, 0, 8) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=8))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, v1_o]])
+      writes([B_decode_local[v0, ((v1_o*8) + v1_i)]])
+      B_decode_local[v0, ((v1_o*8) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, v1_o], int8(v1_i)), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*8), ext=8) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-06 16:30:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [7168], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-06 16:30:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:26 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 28672), "int8"], B: T.Buffer[(8192, 3584), "int8"], dtype_transform: T.Buffer[(1, 8192), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 28672], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([8192, 28672], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([8192, 28672], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([8192, 3584], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 8192], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(4096, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(2, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 56):
+                    for k_1 in T.thread_binding(64, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(8):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(28672, k_0 * 512 + k_1 * 8 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(8192, j_0 * 2 + j_1 + ax0)
+                                    v1 = T.axis.spatial(3584, k_0 * 64 + k_1 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 2 + j_1 + ax0)
+                                v1 = T.axis.spatial(28672, k_0 * 512 + k_1 * 8 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 * 2 + j_1 + ax0)
+                                v1 = T.axis.spatial(28672, k_0 * 512 + k_1 * 8 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(2, 4):
+                            with T.block("B"):
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(8192, j_0 * 2 + j_1)
+                                v_k = T.axis.reduce(28672, k_0 * 512 + k_1 * 8 + k_2_0 * 4 + k_2_1)
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(8192, j_0 * 2 + j_1 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=8192)), iter_var(v1_o, range(min=0, ext=3584))) {
+  reads([B_local[v0, v1_o]])
+  writes([B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]])
+  for (ax1, 0, 8) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=8))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, v1_o]])
+      writes([B_decode_local[v0, ((v1_o*8) + v1_i)]])
+      B_decode_local[v0, ((v1_o*8) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, v1_o], int8(v1_i)), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*8), ext=8) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
+
+2024-05-06 16:30:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [7168], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8, 'A': 8}}
+2024-05-06 16:30:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-06 16:30:26 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
+  0: tvm::tir::ConcreteScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool) [clone .cold]
+ScheduleError: An error occurred in the schedule primitive 'tensorize'.
+The IR with diagnostic is:
+# from tvm.script import tir as T
+@tvm.script.ir_module
+class Module:
+    @T.prim_func
+    def main(A: T.Buffer[(1, 28672), "int8"], B: T.Buffer[(8192, 3584), "int8"], dtype_transform: T.Buffer[(1, 8192), "int8"]):
+        # function attr dict
+        T.func_attr({"global_symbol": "main", "tir.noalias": True})
+        # body
+        # with T.block("root")
+        A_local = T.alloc_buffer([1, 28672], dtype="int8", scope="local")
+        B_decode_local = T.alloc_buffer([8192, 28672], dtype="int8", scope="local")
+        B_decode_local_1 = T.alloc_buffer([8192, 28672], dtype="int8", scope="local")
+        B_local = T.alloc_buffer([8192, 3584], dtype="int8", scope="local")
+        B_local_1 = T.alloc_buffer([1, 8192], dtype="int32", scope="local")
+        for j_0 in T.thread_binding(8192, thread="blockIdx.x"):
+            for j_1 in T.thread_binding(1, thread="threadIdx.y"):
+                for i, k_0 in T.grid(1, 28):
+                    for k_1 in T.thread_binding(128, thread="threadIdx.x"):
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(8):
+                                with T.block("A_local"):
+                                    v0 = T.axis.spatial(1, ax0)
+                                    v1 = T.axis.spatial(28672, k_0 * 1024 + k_1 * 8 + ax1)
+                                    T.reads(A[v0, v1])
+                                    T.writes(A_local[v0, v1])
+                                    A_local[v0, v1] = A[v0, v1]
+                        for ax0 in T.serial(1):
+                            for ax1 in T.vectorized(1):
+                                with T.block("B_local"):
+                                    v0 = T.axis.spatial(8192, j_0 + ax0)
+                                    v1 = T.axis.spatial(3584, k_0 * 128 + k_1 + ax1)
+                                    T.reads(B[v0, v1])
+                                    T.writes(B_local[v0, v1])
+                                    B_local[v0, v1] = B[v0, v1]
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 + ax0)
+                                v1 = T.axis.spatial(28672, k_0 * 1024 + k_1 * 8 + ax1)
+                                T.reads(B_local[v0, v1 // 8])
+                                T.writes(B_decode_local_1[v0, v1])
+                                B_decode_local_1[v0, v1] = T.bitwise_and(T.shift_right(B_local[v0, v1 // 8], T.Cast("int8", v1 % 8), dtype="int8"), T.int8(1), dtype="int8")
+                        for ax0, ax1 in T.grid(1, 8):
+                            with T.block("B_decode_local"):
+                                v0 = T.axis.spatial(8192, j_0 + ax0)
+                                v1 = T.axis.spatial(28672, k_0 * 1024 + k_1 * 8 + ax1)
+                                T.reads(B_decode_local_1[v0, v1])
+                                T.writes(B_decode_local[v0, v1])
+                                B_decode_local[v0, v1] = B_decode_local_1[v0, v1]
+                        for k_2_0, k_2_1 in T.grid(2, 4):
+                            with T.block("B"):
+                                v_i = T.axis.spatial(1, i)
+                                v_j = T.axis.spatial(8192, j_1 + j_0)
+                                v_k = T.axis.reduce(28672, k_0 * 1024 + k_1 * 8 + k_2_0 * 4 + k_2_1)
+                                T.reads(A_local[v_i, v_k], B_decode_local[v_j, v_k])
+                                T.writes(B_local_1[v_i, v_j])
+                                with T.init():
+                                    B_local_1[v_i, v_j] = 0
+                                B_local_1[v_i, v_j] = B_local_1[v_i, v_j] + T.Cast("int32", A_local[v_i, v_k]) * T.Cast("int32", B_decode_local[v_j, v_k])
+                for ax0, ax1 in T.grid(1, 1):
+                    with T.block("B_local"):
+                        v0 = T.axis.spatial(1, ax0)
+                        v1 = T.axis.spatial(8192, j_0 + ax1)
+                        T.reads(B_local_1[v0, v1])
+                        T.writes(dtype_transform[v0, v1])
+                        dtype_transform[v0, v1] = T.Cast("int8", B_local_1[v0, v1])
+    
+Error message: The stmt tir.Block#0 doesn't match the tensor intrin
+The pattern attempting to be matched:
+block B_decode_local_o(iter_var(v0, range(min=0, ext=8192)), iter_var(v1_o, range(min=0, ext=3584))) {
+  reads([B_local[v0, v1_o]])
+  writes([B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]])
+  for (ax1, 0, 8) {
+    block B_decode_local(iter_var(v1_i, range(min=0, ext=8))) {
+      bind(v1_i, ax1)
+      reads([B_local[v0, v1_o]])
+      writes([B_decode_local[v0, ((v1_o*8) + v1_i)]])
+      B_decode_local[v0, ((v1_o*8) + v1_i)] = tir.bitwise_and(tir.shift_right(B_local[v0, v1_o], int8(v1_i)), (int8)1)
+    }
+  }
+}
+
+Does not match the tensorize description:
+block root() {
+  reads([Compressed[0:2]])
+  writes([Decompressed[0:16]])
+  for (i, 0, 16) {
+    block decode(iter_var(vi, range(min=0, ext=16))) {
+      bind(vi, i)
+      reads([Compressed[floordiv(vi, 8)]])
+      writes([Decompressed[vi]])
+      Decompressed[vi] = tir.bitwise_and(tir.shift_right(Compressed[floordiv(vi, 8)], int8(floormod(vi, 8))), (int8)1)
+    }
+  }
+}
+CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*8), ext=8) vs rhs->region[i]=range(min=0, ext=16)
+BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
+
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
+0.1868799924850464
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
+1.1632640361785889
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.08965688943862915
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.028330666944384575
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.030924800783395767
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [7168], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.06178133189678192
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [7168], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8, 'A': 8}}}
+0.06007466837763786
+top1: 0.1868799924850464 	top10: 0.028330666944384575
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+best latency: 0.028330666944384575
+best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
+  
+  int in_thread_B_local[1];
+  signed char A_local[16];
+  char2 B_local[1];
+  signed char B_decode_local[16];
+  int red_buf0[1];
+  in_thread_B_local[0] = 0;
+  for (int k_0 = 0; k_0 < 112; ++k_0) {
+    *(int4*)(A_local + 0) = *(int4*)(A + ((k_0 * 256) + (((int)threadIdx.x) * 16)));
+    B_local[0] = *(char2*)(B + ((((((int)blockIdx.x) * 28672) + (((int)threadIdx.y) * 3584)) + (k_0 * 32)) + (((int)threadIdx.x) * 2)));
+    decode_i1s_to_i8s_l16(B_local, B_decode_local, 16);
+    for (int k_2_0 = 0; k_2_0 < 4; ++k_2_0) {
+      in_thread_B_local[0] = __dp4a(*(int *)&A_local[((k_2_0 * 4))],*(int *)&B_decode_local[((k_2_0 * 4))], in_thread_B_local[0]);
+    }
+  }
+  uint mask[1];
+  int t0[1];
+  red_buf0[0] = in_thread_B_local[0];
+  mask[0] = (__activemask() & ((uint)(65535 << (((int)threadIdx.y) * 16))));
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 8, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 4, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 2, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 1, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  red_buf0[0] = __shfl_sync(mask[0], red_buf0[0], (((int)threadIdx.y) * 16), 32);
+  dtype_transform[((((int)blockIdx.x) * 8) + ((int)threadIdx.y))] = ((signed char)red_buf0[0]);
+}
+
+
+1_1024_8192	0.005119999870657921
+1_8192_8192	0.010751999914646149
+1_28672_8192	0.026419198140501976
+1_8192_28672	0.028330666944384575

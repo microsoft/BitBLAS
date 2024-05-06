@@ -3,6 +3,15 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--reproduce", action="store_true", help="reproduce, otherwise use the paper results", default=False)
+
+args = parser.parse_args()
+
+reproduce = args.reproduce
 
 colers_sets = [
     # nilu
@@ -29,10 +38,16 @@ colers_sets = [
 ]
 hatch_patterns = ["-", "+", "x", "\\", "*", "o", "O", "."]
 
-from paper_result import (
-    b1s1_llama2_providers,
-    b1s1_llama2_times_data,
-)
+if not reproduce:
+    from paper_result import (
+        b1s1_llama2_providers,
+        b1s1_llama2_times_data,
+    )
+else:
+    from reproduce_result import (
+        b1s1_llama2_providers,
+        b1s1_llama2_times_data,
+    )
 
 # 创建一个figure实例
 fig = plt.figure(figsize=(12, 3.8))
@@ -97,11 +112,17 @@ ax0.set_xticklabels(b1s1_llama2_providers, fontsize=14)
 # set y axis range
 ax0.set_ylim(0, 2.3)
 
+if not reproduce:
+    from paper_result import (
+        b1s4096_llama2_providers,
+        b1s4096_llama2_times_data,
+    )
+else:
+    from reproduce_result import (
+        b1s4096_llama2_providers,
+        b1s4096_llama2_times_data,
+    )
 
-from paper_result import (
-    b1s4096_llama2_providers,
-    b1s4096_llama2_times_data,
-)
 _1x_baseline = "+Transform"
 
 # draw for bs1_seq1
