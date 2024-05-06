@@ -162,7 +162,6 @@ for m, n, k in [
         continue
     data = get_and_print(log_path, "min_fp16_tensorcore_runtime")
     print(data)
-    
 
 # write the results to back
 reproduced_results = f"""
