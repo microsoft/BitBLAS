@@ -52,7 +52,12 @@ bloom_shapes = [
     [1, 57344, 14336],
     [1, 14336, 57344],
 ]
-# shapes = llama2_shapes + bloom_shapes
+shapes = [
+    [32, 14336, 57344],
+    [4096, 14336, 57344],
+    [32, 8192, 28672],
+    [4096, 8192, 28672],
+]
 perf_map = []
 for M, N, K in shapes:
     bit = 1

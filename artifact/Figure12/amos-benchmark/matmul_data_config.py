@@ -91,3 +91,12 @@ llm_sizes = [
 
 # m, k, n
 _gemm_sizes = square_sizes + rectangle_sizes + roller_sizes + irregular_sizes
+
+operators_shape = [
+    [1,14336,57344],
+    [32,14336,57344],
+    [4096,14336,57344],
+    [1,8192,28672],
+    [32,8192,28672],
+    [4096,8192,28672],
+]

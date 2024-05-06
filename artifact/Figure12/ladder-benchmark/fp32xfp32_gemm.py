@@ -115,7 +115,12 @@ vit_shapes = [
     [6400, 1536, 1536],
 ]
 
-shapes = llama2_shapes + bloom_shapes + text_encoder_shapes + vae_encoder_shapes + vae_decoder_shapes + Conformer_shapes + vit_shapes
+shapes = [
+    [32, 14336, 57344],
+    [4096, 14336, 57344],
+    [32, 8192, 28672],
+    [4096, 8192, 28672],
+]
 for M, N, K in shapes:
     group_size = 32
     

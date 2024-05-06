@@ -230,9 +230,15 @@ unet_shapes = [
     [16, 960, 64, 64, 320, 3, 3, 1, 1, 1],
     [16, 640, 64, 64, 320, 3, 3, 1, 1, 1],
 ]
-shapes = resnet50_shapes + shufflenet_shapes + unet_shapes
+shapes = [
+    [1, 64, 56, 56, 64, 3, 3, 1, 1, 1],
+    [1, 64, 56, 56, 64, 1, 1, 1, 1, 1],
+    [1, 128, 28, 28, 128, 3, 3, 1, 1, 1],
+    [1, 512, 28, 28, 128, 1, 1, 1, 1, 1],
+]
+
 perf_map = []
-for n, c, h, w, f, kh, kw, s, d, p in shufflenet_shapes:
+for n, c, h, w, f, kh, kw, s, d, p in shapes:
     key = f'{n}_{f}_{h}_{w}_{c}_{kh}_{kw}_{s}_{d}_{p}'
     oh = (h + 2 * p - kh) // s + 1
     ow = (w + 2 * p - kw) // s + 1

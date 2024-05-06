@@ -1,0 +1,8 @@
+./conv_nhwc_nhwc_bfp16xmxfp8_e5m2.py
+/root/Ladder/artifact/Figure12/ladder-benchmark/././conv_nhwc_nhwc_bfp16xmxfp8_e5m2.py:330: SyntaxWarning: list indices must be integers or slices, not tuple; perhaps you missed a comma?
+  [128, 64, 56, 56, 64, 3, 3, 1, 1, 1]
+Traceback (most recent call last):
+  File "/root/Ladder/artifact/Figure12/ladder-benchmark/././conv_nhwc_nhwc_bfp16xmxfp8_e5m2.py", line 330, in <module>
+    [128, 64, 56, 56, 64, 3, 3, 1, 1, 1]
+TypeError: list indices must be integers or slices, not tuple
+Error in executing ./conv_nhwc_nhwc_bfp16xmxfp8_e5m2.py

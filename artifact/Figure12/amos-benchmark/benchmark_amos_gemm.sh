@@ -20,6 +20,6 @@ if [ -d "$AMOS_LOG_PATH" ]; then
     cp -r "$AMOS_LOG_PATH" "./logs"
 else
     echo "[AMOS] Running benchmark..."
-    python3 test_gemm_nt.py --trials 1000 --simple_mode 1 | tee llm_shape_nt.log
+    python3 test_gemm_nt.py --trials 1000 --simple_mode 1 | tee operators_shape_nt.log
 fi
 # Path: artifact/Figure12/amos-benchmark/benchmark_amos_gemm.sh

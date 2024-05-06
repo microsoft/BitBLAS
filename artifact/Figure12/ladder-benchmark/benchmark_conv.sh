@@ -1,4 +1,7 @@
-#!/bin/bash
+# !/bin/bash
+
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
 run_python_script() {
     echo "$1"
@@ -19,5 +22,7 @@ scripts=(
 )
 
 for script in "${scripts[@]}"; do
-    run_python_script $script | tee logs/$script.log
+    # remove .py extension from script name as log file name
+    log_file_name=$(echo $script | sed 's/\.py//')
+    run_python_script $script | tee logs/$log_file_name.log
 done
