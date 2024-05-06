@@ -20,30 +20,43 @@ fname = os.path.splitext(fname)[0]
 # create log path
 log_path = "progress/" + fname
 
-# arch = 'cuda'
 arch = 'cuda'
 arch = ladder.arch.__getattribute__(arch)()
 dtype="float16"
 bit = 8
 n_float_per_i8 = 8 // bit
 mask = (1 << bit) - 1
-def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p, warp_i = 16, warp_j = 16, warp_k = 32):
+def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p):
+    def _tir_u8_to_f8_to_float(nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, dtype: str):
+        assert val.dtype == "int8"
+        assert nbit == 8
+        return T.reinterpret('float16', T.Cast('int16', val) << 8)
+
+    A = te.placeholder((n, h, w, c), name='input', dtype='float16')
+    B = te.placeholder((f, kh*kw*c // 8 * bit), name='weight', dtype='int8')
     
-    A = te.placeholder((n // warp_i, h, w, (c//2) // warp_k, warp_i, warp_k), name='input', dtype='int8')
-    B = te.placeholder((f // warp_j, kh*kw*(c//2) // warp_k, warp_j, warp_k), name='weight', dtype='int8')
-  
-    pad_shape = (n // warp_i, h + 2 * p, w + 2 * p, (c//2) // warp_k, warp_i, warp_k)
+    def B_decode_func(n, k):
+        w = _tir_u8_to_f8_to_float(bit, B[n, k // n_float_per_i8], k % n_float_per_i8, "float16")
+        return w
+
+    B_decode = te.compute(
+        (f, kh*kw*c),
+        B_decode_func,
+        name='B_decode'
+    )
+    
+    pad_shape = (n, h + 2 * p, w + 2 * p, c)
     pad_value = tir.const(0.0, A.dtype)
     pad = te.compute(
                     pad_shape,
-                    lambda n, h, w, c, nn, cc: te.if_then_else(
+                    lambda n, h, w, c: te.if_then_else(
                         tir.all(
                             h >= p,
                             w >= p,
                             h < pad_shape[1] - p,
                             w < pad_shape[2] - p,
                         ),
-                        A[n, h - p, w - p, c, nn, cc],
+                        A[n, h - p, w - p, c],
                         pad_value,
                     ),
                     name="pad",
@@ -51,9 +64,8 @@ def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p, warp_i = 16, warp_j = 
     kernel_h, kernel_w = kh, kw
     stride_h, stride_w = s, s
     dilation_h, dilation_w = d, d
-    k_size = kernel_h * kernel_w * (c//2)
-    k_axis = te.reduce_axis((0, k_size // warp_k), name="k")
-    wk_axis = te.reduce_axis((0, warp_k), name="wk")
+    k_size = kernel_h * kernel_w * c
+    k_axis = te.reduce_axis((0, k_size), name="k")
     out_h = (
         h + p + p - 1 - (kernel_h - 1) * dilation_h
     ) // stride_h + 1
@@ -63,21 +75,19 @@ def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p, warp_i = 16, warp_j = 
     n_size = out_h * out_w * n
     # Describe the matrix multiplication in TE
     data = te.compute(
-                [n_size // warp_i, k_size // warp_k, warp_i, warp_k],
-                lambda n, k, nn, kk: pad[
+                [n_size, k_size],
+                lambda n, k: pad[
                     n // (out_h * out_w),
                     (n % (out_h * out_w) // out_w) * stride_h
-                    + (k // (kernel_w * ((c//2) // warp_k))) * dilation_h,
-                    (n % out_w) * stride_w + (k // ((c//2) // warp_k) % kernel_w) * dilation_w,
-                    k % (c//2),
-                    nn,
-                    kk,
+                    + (k // (kernel_w * (c))) * dilation_h,
+                    (n % out_w) * stride_w + (k // (c) % kernel_w) * dilation_w,
+                    k % c,
                 ],
                 name="data",
             )
     C = te.compute(
-            [n_size // warp_i, f // warp_j, warp_i, warp_j],
-            lambda i, j, ii, jj: te.sum(data[i, k_axis, ii, wk_axis].astype('int32') * B[j, k_axis, jj, wk_axis].astype('int32'), axis=[k_axis, wk_axis]),
+            [n_size, f],
+            lambda i, j: te.sum(data[i, k_axis].astype('float16') * B_decode[j, k_axis].astype('float16'), axis=[k_axis]),
             "T_conv",
         )
     return A, B, C
@@ -178,7 +188,6 @@ def layout_transform_with_func(_N, _H, _W, _C, wmma_m = 16, wmma_n = 16, func=No
     )
     return A, B
 
-
 resnet50_shapes = [
     [128, 512, 7, 7, 2048, 1, 1, 1, 1, 0],
     [128, 512, 14, 14, 512, 3, 3, 2, 1, 1],
@@ -250,7 +259,7 @@ shapes = [
 # shapes = mobile_net
 perf_map = []
 diff_map = {}
-for n, f, h, w, c, kh, kw, s, d, p in shapes:
+for n, c, h, w, f, kh, kw, s, d, p in shapes:
     key = f'{n}_{f}_{h}_{w}_{c}_{kh}_{kw}_{s}_{d}_{p}'
     oh = (h + 2 * p - kh) // s + 1
     ow = (w + 2 * p - kw) // s + 1
@@ -279,12 +288,8 @@ for n, f, h, w, c, kh, kw, s, d, p in shapes:
     output_args = [args[-1]]
     node = IRNode([None for _ in input_args], args, "ladder_conv2d_reshape_bias")
     node.add_tag("tensorCoreConfig", [2, 3])
-    # node.add_tag("consistent_config", (True, True))
-    node.add_tag("ladder_compute_type", "int4")
-    # node.add_tag("ladder_config", (False, False, 1))
-    node.add_tag("ladder_config", (True, True, 2))
     output_nodes = [OutputNode(node)]
-    policy = LadderPolicy(output_nodes, arch)
+    policy = TCPolicy(output_nodes, arch)
     configs = policy.emit_config(40)
 
     compile_results = []
@@ -295,15 +300,19 @@ for n, f, h, w, c, kh, kw, s, d, p in shapes:
         except:
             continue
         compile_results.append(cpresult)
-    ladder.utils.compile_and_load_parallel(compile_results, arch)
-    best_latency = 10000
+    try:
+        ladder.utils.compile_and_load_parallel(compile_results, arch)
+    except:
+        perf_map.append((key, 10000.0))
+        continue
+    best_latency = 10000.0
     best = None
     values = []
     for cpresult in compile_results:
         print(cpresult.config)
         code = cpresult.code
         if cpresult.lib is None:
-            latency = 10000 
+            latency = 10000.0 
         else:
             latency = cpresult.profile()
         values.append(latency)
@@ -312,11 +321,12 @@ for n, f, h, w, c, kh, kw, s, d, p in shapes:
             best = cpresult
         print(latency)
     print('code: ', code)
-    # print("top1: {} \ttop10: {}".format(values[0], min(values)))
-    # print("-" * 80, flush=True)
-    # print("best config: {}".format(best.config))
-    # print("best latency: {}".format(best_latency))
-    # print(f"{(compute_flops/(best_latency * 1e-3))/ pow((1024), 4)} tflops, {(compute_flops/(best_latency * 1e-3))/ pow((1024), 4) / 145 * 100} %")
+    print("top1: {} \ttop10: {}".format(values[0], min(values)))
+    print("-" * 80, flush=True)
+    print("best config: {}".format(best.config))
+    print("best latency: {}".format(best_latency))
+    print(f"{(compute_flops/(best_latency * 1e-3))/ pow((1024), 4)} tflops, {(compute_flops/(best_latency * 1e-3))/ pow((1024), 4) / 145 * 100} %")
+    
     
     perf_map.append((key, best_latency))
 

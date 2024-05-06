@@ -1,0 +1,82 @@
+fp32xfp32_gemm.py
+{<Node, ladder_matmul>: {'block': [1, 7, 16, 16], 'thread': [1, 1, 8, 16], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 7, 8, 16], 'thread': [2, 1, 4, 16], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 14, 16, 8], 'thread': [1, 2, 8, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 14, 8, 8], 'thread': [2, 2, 4, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 7, 16, 8], 'thread': [2, 1, 8, 8], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 4, 16, 16], 'thread': [2, 4, 4, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 8, 16, 16], 'thread': [1, 8, 4, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 8, 8, 16], 'thread': [2, 8, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 8, 16, 8], 'thread': [2, 8, 4, 2], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 16, 16, 8], 'thread': [1, 16, 4, 2], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 16, 8, 8], 'thread': [2, 16, 2, 2], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 7, 16, 16], 'thread': [2, 1, 4, 16], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 14, 16, 4], 'thread': [2, 2, 8, 4], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 14, 16, 8], 'thread': [2, 2, 4, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 7, 16, 8], 'thread': [1, 1, 16, 8], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 7, 8, 8], 'thread': [2, 1, 8, 8], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 8, 16, 16], 'thread': [2, 8, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 14, 8, 16], 'thread': [1, 2, 4, 16], 'rstep': [1, 16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 14, 4, 16], 'thread': [2, 2, 2, 16], 'rstep': [1, 16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 16, 16, 4], 'thread': [2, 16, 4, 1], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 16, 16, 8], 'thread': [2, 16, 2, 2], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 4, 16, 16], 'thread': [1, 4, 4, 8], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 4, 8, 16], 'thread': [2, 4, 2, 8], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 8, 16, 8], 'thread': [1, 8, 4, 4], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 8, 8, 8], 'thread': [2, 8, 2, 4], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 28, 8, 8], 'thread': [1, 4, 4, 8], 'rstep': [1, 16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 28, 4, 8], 'thread': [2, 4, 2, 8], 'rstep': [1, 16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 7, 8, 8], 'thread': [1, 7, 4, 4], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 7, 4, 8], 'thread': [2, 7, 2, 4], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 14, 16, 16], 'thread': [1, 2, 4, 16], 'rstep': [1, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 14, 8, 16], 'thread': [2, 2, 2, 16], 'rstep': [1, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 7, 8, 16], 'thread': [1, 1, 8, 16], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 7, 4, 16], 'thread': [2, 1, 4, 16], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 16, 8, 16], 'thread': [1, 16, 2, 4], 'rstep': [1, 16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 16, 4, 16], 'thread': [2, 16, 1, 4], 'rstep': [1, 16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 2, 16, 16], 'thread': [1, 2, 8, 8], 'rstep': [7, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 4, 8, 16], 'thread': [1, 4, 4, 8], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 2, 8, 16], 'thread': [2, 2, 4, 8], 'rstep': [7, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [2, 4, 4, 16], 'thread': [2, 4, 2, 8], 'rstep': [4, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_matmul>: {'block': [1, 4, 16, 8], 'thread': [1, 4, 8, 4], 'rstep': [7, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}}
+100000000.0
+best latency: 10000
