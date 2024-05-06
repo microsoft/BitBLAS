@@ -5,7 +5,7 @@ export TVM_TARGET="nvidia/geforce-rtx-3090"
 
 export TVM_HOME=$(pwd)/../../../baseline_framework/tvm_v0.14.0
 export PYTHONPATH=$TVM_HOME/python
-pip install xgboost==1.7.1
+pip install xgboost==1.5.0
 
 force_tune=0
 if [[ "$1" == "--force_tune" ]]; then
