@@ -9,7 +9,6 @@ from tvm.contrib.debugger import debug_executor
 from tvm.contrib import graph_executor
 from ladder.utils import write_mod
 import os
-import torch
 import logging
 
 ladder.set_log_level(logging.DEBUG)

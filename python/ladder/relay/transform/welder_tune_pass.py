@@ -33,6 +33,13 @@ class WelderTunePass(relay.ExprMutator):
         # save_perf_log should be a directory
         self.save_perf_log_ = save_perf_log
 
+    def set_debug_nodes(self, ordered_nodes, names):
+        nodes = []
+        for node in ordered_nodes:
+            if node.name in names:
+                nodes.append(node)
+        return nodes
+
     def transform_module(self, mod, ctx):
         extractor = TileGraphExtractor(self.arch.target)
         extractor.visit(mod["main"])
@@ -46,8 +53,9 @@ class WelderTunePass(relay.ExprMutator):
                 print(tune_node(ordered_nodes, ['welder_matmul_39']))
                 raise NotImplementedError()
         """
-        # ordered_nodes = self.set_debug_nodes(ordered_nodes, ['ladder_perfect_matmul_29', 'layout_transform_reshape_reshape_add_30'])
         # print(tune_node(ordered_nodes, ["multiply_reshape_add_multiply_17", "cast_multiply_18", "mean_sqrt_divide_19", "multiply_cast_multiply_20", "reshape_21", "nn_dense_cast_divide_erf_add_multiply_22", "multiply_cast_nn_dense_multiply_23", "nn_dense_24", "reshape_add_25"]))
+        # raise NotImplementedError()
+        # print(tune_node(ordered_nodes, ['ladder_quant_linear_cast_27']))
         # raise NotImplementedError()
 
         tunner = MultiProcTunner(
@@ -195,8 +203,8 @@ class TileGraphExtractor(relay.ExprVisitor):
                 options["ladder_config"] = call.op.attrs["ladder_config"]
             if call.op.attrs and "ladder_compute_type" in call.op.attrs:
                 options["ladder_compute_type"] = call.op.attrs["ladder_compute_type"]
-            if call.op.attrs and "consistent" in call.op.attrs:
-                options["consistent"] = call.op.attrs["consistent"]
+            if call.op.attrs and "consistent_config" in call.op.attrs:
+                options["consistent_config"] = call.op.attrs["consistent_config"]
             if call.op.attrs and "fast_decoding" in call.op.attrs:
                 options["fast_decoding"] = call.op.attrs["fast_decoding"]
             node = IRNode(node_inputs, args, op_name)

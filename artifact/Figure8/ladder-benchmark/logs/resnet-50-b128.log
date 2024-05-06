@@ -1,5 +1,9 @@
-Running from prebuilt model: /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/../checkpoints/Figure8/ladder/checkpoints/resnet-50
-Execution time summary:
- mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-   7.6146       7.6142       7.6183       7.6120       0.0020   
-               
+Running from prebuilt model: /ladder/checkpoints/resnet-50
+Traceback (most recent call last):
+  File "ladder_with_fake_conv_dequantize.py", line 150, in <module>
+    run_from_prebuilt(prebuilt_path, arch)
+  File "ladder_with_fake_conv_dequantize.py", line 128, in run_from_prebuilt
+    loaded_lib = tvm.runtime.load_module(path_lib)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/runtime/module.py", line 592, in load_module
+    raise ValueError("cannot find file %s" % path)
+ValueError: cannot find file /ladder/checkpoints/resnet-50/model.so
