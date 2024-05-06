@@ -6,7 +6,7 @@
 pip install einops
 pip install timm
 pip install torch>=2.0.0
-pip install onnxconverter-common
+pip install onnxconverter_common
 pip install transformers==4.35.0
 
 echo "Converting ResNet-50 with batch size 128..."
