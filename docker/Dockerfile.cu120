@@ -15,7 +15,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py310_23.5.2-0-Linux-x86_64.sh -O install_miniconda.sh && \
   bash install_miniconda.sh -b -p /opt/conda && rm install_miniconda.sh
+
 ENV PATH="/opt/conda/bin:${PATH}"
+
+ENV LIBGL_ALWAYS_INDIRECT=1
 
 RUN conda install pip cmake && conda clean --all
 

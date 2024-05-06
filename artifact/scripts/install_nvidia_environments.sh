@@ -32,3 +32,6 @@ pip install onnxruntime-gpu==1.16.1
 
 # install tenosrrt
 ./scripts/install_tensorrt.sh
+
+# install faster transformer byoc
+./script/install_faster_transformer_tvm.sh
