@@ -50,7 +50,7 @@ bash export.sh
 
 ## 2. Reproducing Individual Experiement Results
 
-Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Google Drive](https://drive.google.com/file/d/1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c/view?usp=sharing) or [Checkpoints.tar.gz - Microsoft OneDrive](https://drive.google.com/file/d/1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c/view?usp=sharing)
+Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Google Drive](https://drive.google.com/file/d/1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c/view?usp=sharing) or [Checkpoints.tar.gz - Microsoft OneDrive](https://onedrive.live.com/?redeem=aHR0cHM6Ly8xZHJ2Lm1zL3UvYy80YzE1MTFiMjQyNTRkNTI1L0VZNHVOUFBiWEVGQW9yVXl0djMxdXkwQk8zV2hTQk04T3lRdG9UM0h6RjNkZWc&cid=4C1511B24254D525&id=4C1511B24254D525%21sf3342e8e5cdb4041a2b532b6fdf5bb2d&parId=root&o=OneUp)
 
 To use the checkpoints, you can download the checkpoints and extract it to the root/artifact of the project.
 
