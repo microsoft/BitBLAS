@@ -6,6 +6,10 @@ from reproduce_result import (
     b1s1_times_data,
     b1s4096_providers,
     b1s4096_times_data,
+    b1s1_matmul_providers,
+    b1s1_matmul_times_data,
+    b1s4096_matmul_times_data,
+    b1s4096_matmul_providers,
 )
 
 # get float16xfloat16_results
@@ -70,18 +74,18 @@ int4xint4_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + 
 int4xint2_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int4xint2_bs1_overall_latency
 int4xint1_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int4xint1_bs1_overall_latency
 
-b1s1_times_data[0] = ("Bitter", bs1_fp16_time)
-b1s1_times_data[1] = ("Bitter-W$_{INT8}$A$_{FP16}$", fp16xint8_bs1_end2end_latency)
-b1s1_times_data[2] = ("Bitter-W$_{INT4}$A$_{FP16}$", fp16xint4_bs1_end2end_latency)
-b1s1_times_data[3] = ("Bitter-W$_{INT2}$A$_{FP16}$", fp16xint2_bs1_end2end_latency)
-b1s1_times_data[4] = ("Bitter-W$_{INT1}$A$_{FP16}$", fp16xint1_bs1_end2end_latency)
-b1s1_times_data[5] = ("Bitter-W$_{INT8}$A$_{INT8}$", int8xint8_bs1_end2end_latency)
-b1s1_times_data[6] = ("Bitter-W$_{INT4}$A$_{INT8}$", int8xint4_bs1_end2end_latency)
-b1s1_times_data[7] = ("Bitter-W$_{INT2}$A$_{INT8}$", int8xint2_bs1_end2end_latency)
-b1s1_times_data[8] = ("Bitter-W$_{INT1}$A$_{INT8}$", int8xint1_bs1_end2end_latency)
-b1s1_times_data[9] = ("Bitter-W$_{INT4}$A$_{INT4}$", int4xint4_bs1_end2end_latency)
-b1s1_times_data[10] = ("Bitter-W$_{INT2}$A$_{INT4}$", int4xint2_bs1_end2end_latency)
-b1s1_times_data[11] = ("Bitter-W$_{INT1}$A$_{INT4}$", int4xint1_bs1_end2end_latency)
+b1s1_times_data[0] = ("Bitter", [bs1_fp16_time])
+b1s1_times_data[1] = ("Bitter-W$_{INT8}$A$_{FP16}$", [fp16xint8_bs1_end2end_latency])
+b1s1_times_data[2] = ("Bitter-W$_{INT4}$A$_{FP16}$", [fp16xint4_bs1_end2end_latency])
+b1s1_times_data[3] = ("Bitter-W$_{INT2}$A$_{FP16}$", [fp16xint2_bs1_end2end_latency])
+b1s1_times_data[4] = ("Bitter-W$_{INT1}$A$_{FP16}$", [fp16xint1_bs1_end2end_latency])
+b1s1_times_data[5] = ("Bitter-W$_{INT8}$A$_{INT8}$", [int8xint8_bs1_end2end_latency])
+b1s1_times_data[6] = ("Bitter-W$_{INT4}$A$_{INT8}$", [int8xint4_bs1_end2end_latency])
+b1s1_times_data[7] = ("Bitter-W$_{INT2}$A$_{INT8}$", [int8xint2_bs1_end2end_latency])
+b1s1_times_data[8] = ("Bitter-W$_{INT1}$A$_{INT8}$", [int8xint1_bs1_end2end_latency])
+b1s1_times_data[9] = ("Bitter-W$_{INT4}$A$_{INT4}$", [int4xint4_bs1_end2end_latency])
+b1s1_times_data[10] = ("Bitter-W$_{INT2}$A$_{INT4}$", [int4xint2_bs1_end2end_latency])
+b1s1_times_data[11] = ("Bitter-W$_{INT1}$A$_{INT4}$", [int4xint1_bs1_end2end_latency])
 
 def get_result_from_file_ladder(m, n, k, format="float16xfloat16"):
     suffix = "gemm" if m != 1 else "gemv"
@@ -135,20 +139,191 @@ int4xint4_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_l
 int4xint2_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int4xint2_bs4096_overall_latency
 int4xint1_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int4xint1_bs4096_overall_latency
 
-b1s4096_times_data[0] = ("Bitter", bs4096_fp16_time)
-b1s4096_times_data[1] = ("Bitter-W$_{INT8}$A$_{FP16}$", fp16xint8_bs4096_end2end_latency)
-b1s4096_times_data[2] = ("Bitter-W$_{INT4}$A$_{FP16}$", fp16xint4_bs4096_end2end_latency)
-b1s4096_times_data[3] = ("Bitter-W$_{INT2}$A$_{FP16}$", fp16xint2_bs4096_end2end_latency)
-b1s4096_times_data[4] = ("Bitter-W$_{INT1}$A$_{FP16}$", fp16xint1_bs4096_end2end_latency)
-b1s4096_times_data[5] = ("Bitter-W$_{INT8}$A$_{INT8}$", int8xint8_bs4096_end2end_latency)
-b1s4096_times_data[6] = ("Bitter-W$_{INT4}$A$_{INT8}$", int8xint4_bs4096_end2end_latency)
-b1s4096_times_data[7] = ("Bitter-W$_{INT2}$A$_{INT8}$", int8xint2_bs4096_end2end_latency)
-b1s4096_times_data[8] = ("Bitter-W$_{INT1}$A$_{INT8}$", int8xint1_bs4096_end2end_latency)
-b1s4096_times_data[9] = ("Bitter-W$_{INT4}$A$_{INT4}$", int4xint4_bs4096_end2end_latency)
-b1s4096_times_data[10] = ("Bitter-W$_{INT2}$A$_{INT4}$", int4xint2_bs4096_end2end_latency)
-b1s4096_times_data[11] = ("Bitter-W$_{INT1}$A$_{INT4}$", int4xint1_bs4096_end2end_latency)
+b1s4096_times_data[0] = ("Bitter", [bs4096_fp16_time])
+b1s4096_times_data[1] = ("Bitter-W$_{INT8}$A$_{FP16}$", [fp16xint8_bs4096_end2end_latency])
+b1s4096_times_data[2] = ("Bitter-W$_{INT4}$A$_{FP16}$", [fp16xint4_bs4096_end2end_latency])
+b1s4096_times_data[3] = ("Bitter-W$_{INT2}$A$_{FP16}$", [fp16xint2_bs4096_end2end_latency])
+b1s4096_times_data[4] = ("Bitter-W$_{INT1}$A$_{FP16}$", [fp16xint1_bs4096_end2end_latency])
+b1s4096_times_data[5] = ("Bitter-W$_{INT8}$A$_{INT8}$", [int8xint8_bs4096_end2end_latency])
+b1s4096_times_data[6] = ("Bitter-W$_{INT4}$A$_{INT8}$", [int8xint4_bs4096_end2end_latency])
+b1s4096_times_data[7] = ("Bitter-W$_{INT2}$A$_{INT8}$", [int8xint2_bs4096_end2end_latency])
+b1s4096_times_data[8] = ("Bitter-W$_{INT1}$A$_{INT8}$", [int8xint1_bs4096_end2end_latency])
+b1s4096_times_data[9] = ("Bitter-W$_{INT4}$A$_{INT4}$", [int4xint4_bs4096_end2end_latency])
+b1s4096_times_data[10] = ("Bitter-W$_{INT2}$A$_{INT4}$", [int4xint2_bs4096_end2end_latency])
+b1s4096_times_data[11] = ("Bitter-W$_{INT1}$A$_{INT4}$", [int4xint1_bs4096_end2end_latency])
 
 # write the results to back
+
+b1s1_matmul_times_data[0] = ("Bitter", [
+    get_result_from_file(1, 1024, 8192, "float16xfloat16"),
+    get_result_from_file(1, 8192, 8192, "float16xfloat16"),
+    get_result_from_file(1, 28672, 8192, "float16xfloat16"),
+    get_result_from_file(1, 8192, 28672, "float16xfloat16"),
+])
+
+b1s1_matmul_times_data[1] = ("Bitter-W$_{INT8}$A$_{FP16}$", [
+    get_result_from_file(1, 1024, 8192, "float16xint8"),
+    get_result_from_file(1, 8192, 8192, "float16xint8"),
+    get_result_from_file(1, 28672, 8192, "float16xint8"),
+    get_result_from_file(1, 8192, 28672, "float16xint8"),
+])
+
+b1s1_matmul_times_data[2] = ("Bitter-W$_{INT4}$A$_{FP16}$", [
+    get_result_from_file(1, 1024, 8192, "float16xint4"),
+    get_result_from_file(1, 8192, 8192, "float16xint4"),
+    get_result_from_file(1, 28672, 8192, "float16xint4"),
+    get_result_from_file(1, 8192, 28672, "float16xint4"),
+])
+
+b1s1_matmul_times_data[3] = ("Bitter-W$_{INT2}$A$_{FP16}$", [
+    get_result_from_file(1, 1024, 8192, "float16xint2"),
+    get_result_from_file(1, 8192, 8192, "float16xint2"),
+    get_result_from_file(1, 28672, 8192, "float16xint2"),
+    get_result_from_file(1, 8192, 28672, "float16xint2"),
+])
+
+b1s1_matmul_times_data[4] = ("Bitter-W$_{INT1}$A$_{FP16}$", [
+    get_result_from_file(1, 1024, 8192, "float16xint1"),
+    get_result_from_file(1, 8192, 8192, "float16xint1"),
+    get_result_from_file(1, 28672, 8192, "float16xint1"),
+    get_result_from_file(1, 8192, 28672, "float16xint1"),
+])
+
+b1s1_matmul_times_data[5] = ("Bitter-W$_{INT8}$A$_{INT8}$", [
+    get_result_from_file(1, 1024, 8192, "int8xint8"),
+    get_result_from_file(1, 8192, 8192, "int8xint8"),
+    get_result_from_file(1, 28672, 8192, "int8xint8"),
+    get_result_from_file(1, 8192, 28672, "int8xint8"),
+])
+
+b1s1_matmul_times_data[6] = ("Bitter-W$_{INT4}$A$_{INT8}$", [
+    get_result_from_file(1, 1024, 8192, "int8xint4"),
+    get_result_from_file(1, 8192, 8192, "int8xint4"),
+    get_result_from_file(1, 28672, 8192, "int8xint4"),
+    get_result_from_file(1, 8192, 28672, "int8xint4"),
+])
+
+b1s1_matmul_times_data[7] = ("Bitter-W$_{INT2}$A$_{INT8}$", [
+    get_result_from_file(1, 1024, 8192, "int8xint2"),
+    get_result_from_file(1, 8192, 8192, "int8xint2"),
+    get_result_from_file(1, 28672, 8192, "int8xint2"),
+    get_result_from_file(1, 8192, 28672, "int8xint2"),
+])
+
+b1s1_matmul_times_data[8] = ("Bitter-W$_{INT1}$A$_{INT8}$", [
+    get_result_from_file(1, 1024, 8192, "int8xint1"),
+    get_result_from_file(1, 8192, 8192, "int8xint1"),
+    get_result_from_file(1, 28672, 8192, "int8xint1"),
+    get_result_from_file(1, 8192, 28672, "int8xint1"),
+])
+
+b1s1_matmul_times_data[9] = ("Bitter-W$_{INT4}$A$_{INT4}$", [
+    get_result_from_file(1, 1024, 8192, "int4xint4"),
+    get_result_from_file(1, 8192, 8192, "int4xint4"),
+    get_result_from_file(1, 28672, 8192, "int4xint4"),
+    get_result_from_file(1, 8192, 28672, "int4xint4"),
+])
+
+b1s1_matmul_times_data[10] = ("Bitter-W$_{INT2}$A$_{INT4}$", [
+    get_result_from_file(1, 1024, 8192, "int4xint2"),
+    get_result_from_file(1, 8192, 8192, "int4xint2"),
+    get_result_from_file(1, 28672, 8192, "int4xint2"),
+    get_result_from_file(1, 8192, 28672, "int4xint2"),
+])
+
+b1s1_matmul_times_data[11] = ("Bitter-W$_{INT1}$A$_{INT4}$", [
+    get_result_from_file(1, 1024, 8192, "int4xint1"),
+    get_result_from_file(1, 8192, 8192, "int4xint1"),
+    get_result_from_file(1, 28672, 8192, "int4xint1"),
+    get_result_from_file(1, 8192, 28672, "int4xint1"),
+])
+
+b1s4096_matmul_times_data[0] = ("Bitter", [
+    get_result_from_file(4096, 1024, 8192, "float16xfloat16"),
+    get_result_from_file(4096, 8192, 8192, "float16xfloat16"),
+    get_result_from_file(4096, 28672, 8192, "float16xfloat16"),
+    get_result_from_file(4096, 8192, 28672, "float16xfloat16"),
+])
+
+b1s4096_matmul_times_data[1] = ("Bitter-W$_{INT8}$A$_{FP16}$", [
+    get_result_from_file(4096, 1024, 8192, "float16xint8"),
+    get_result_from_file(4096, 8192, 8192, "float16xint8"),
+    get_result_from_file(4096, 28672, 8192, "float16xint8"),
+    get_result_from_file(4096, 8192, 28672, "float16xint8"),
+])
+
+b1s4096_matmul_times_data[2] = ("Bitter-W$_{INT4}$A$_{FP16}$", [
+    get_result_from_file(4096, 1024, 8192, "float16xint4"),
+    get_result_from_file(4096, 8192, 8192, "float16xint4"),
+    get_result_from_file(4096, 28672, 8192, "float16xint4"),
+    get_result_from_file(4096, 8192, 28672, "float16xint4"),
+])
+
+b1s4096_matmul_times_data[3] = ("Bitter-W$_{INT2}$A$_{FP16}$", [
+    get_result_from_file(4096, 1024, 8192, "float16xint2"),
+    get_result_from_file(4096, 8192, 8192, "float16xint2"),
+    get_result_from_file(4096, 28672, 8192, "float16xint2"),
+    get_result_from_file(4096, 8192, 28672, "float16xint2"),
+])
+
+b1s4096_matmul_times_data[4] = ("Bitter-W$_{INT1}$A$_{FP16}$", [
+    get_result_from_file(4096, 1024, 8192, "float16xint1"),
+    get_result_from_file(4096, 8192, 8192, "float16xint1"),
+    get_result_from_file(4096, 28672, 8192, "float16xint1"),
+    get_result_from_file(4096, 8192, 28672, "float16xint1"),
+])
+
+b1s4096_matmul_times_data[5] = ("Bitter-W$_{INT8}$A$_{INT8}$", [
+    get_result_from_file(4096, 1024, 8192, "int8xint8"),
+    get_result_from_file(4096, 8192, 8192, "int8xint8"),
+    get_result_from_file(4096, 28672, 8192, "int8xint8"),
+    get_result_from_file(4096, 8192, 28672, "int8xint8"),
+])
+
+b1s4096_matmul_times_data[6] = ("Bitter-W$_{INT4}$A$_{INT8}$", [
+    get_result_from_file(4096, 1024, 8192, "int8xint4"),
+    get_result_from_file(4096, 8192, 8192, "int8xint4"),
+    get_result_from_file(4096, 28672, 8192, "int8xint4"),
+    get_result_from_file(4096, 8192, 28672, "int8xint4"),
+])
+
+b1s4096_matmul_times_data[7] = ("Bitter-W$_{INT2}$A$_{INT8}$", [
+    get_result_from_file(4096, 1024, 8192, "int8xint2"),
+    get_result_from_file(4096, 8192, 8192, "int8xint2"),
+    get_result_from_file(4096, 28672, 8192, "int8xint2"),
+    get_result_from_file(4096, 8192, 28672, "int8xint2"),
+])
+
+b1s4096_matmul_times_data[8] = ("Bitter-W$_{INT1}$A$_{INT8}$", [
+    get_result_from_file(4096, 1024, 8192, "int8xint1"),
+    get_result_from_file(4096, 8192, 8192, "int8xint1"),
+    get_result_from_file(4096, 28672, 8192, "int8xint1"),
+    get_result_from_file(4096, 8192, 28672, "int8xint1"),
+])
+
+b1s4096_matmul_times_data[9] = ("Bitter-W$_{INT4}$A$_{INT4}$", [
+    get_result_from_file_ladder(4096, 1024, 8192, "int4xint4"),
+    get_result_from_file_ladder(4096, 8192, 8192, "int4xint4"),
+    get_result_from_file_ladder(4096, 28672, 8192, "int4xint4"),
+    get_result_from_file_ladder(4096, 8192, 28672, "int4xint4"),
+])
+
+b1s4096_matmul_times_data[10] = ("Bitter-W$_{INT2}$A$_{INT4}$", [
+    get_result_from_file_ladder(4096, 1024, 8192, "int4xint2"),
+    get_result_from_file_ladder(4096, 8192, 8192, "int4xint2"),
+    get_result_from_file_ladder(4096, 28672, 8192, "int4xint2"),
+    get_result_from_file_ladder(4096, 8192, 28672, "int4xint2"),
+])
+
+b1s4096_matmul_times_data[11] = ("Bitter-W$_{INT1}$A$_{INT4}$", [
+    get_result_from_file_ladder(4096, 1024, 8192, "int4xint1"),
+    get_result_from_file_ladder(4096, 8192, 8192, "int4xint1"),
+    get_result_from_file_ladder(4096, 28672, 8192, "int4xint1"),
+    get_result_from_file_ladder(4096, 8192, 28672, "int4xint1"),
+])
+
+
+
 
 reproduced_results = f"""
 # Copyright (c) Microsoft Corporation.
@@ -158,6 +333,12 @@ b1s1_times_data = {b1s1_times_data}
 
 b1s4096_providers = {b1s4096_providers}
 b1s4096_times_data = {b1s4096_times_data}
+
+b1s1_matmul_providers = {b1s1_matmul_providers}
+b1s1_matmul_times_data = {b1s1_matmul_times_data}
+
+b1s4096_matmul_providers = {b1s4096_matmul_providers}
+b1s4096_matmul_times_data = {b1s4096_matmul_times_data}
 
 """
 

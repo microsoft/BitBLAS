@@ -220,51 +220,12 @@ ax1_2.set_xticks(x + len(speed_up_data) * bar_width / 2)
 ax1_2.set_xticklabels(providers)
 
 ax2_1 = fig.add_subplot(gs[1, 0])
-providers = ["M0", "M1", "M2", "M3"]
-times_data = [
-    ("Bitter", [0.0086016, 0.080486402, 0.265011191, 0.270745605]),
-    (
-        "Bitter-W$_{INT8}$A$_{FP16}$",
-        [0.007836564, 0.04614396, 0.145203829, 0.149608821],
-    ),
-    (
-        "Bitter-W$_{INT4}$A$_{FP16}$",
-        [0.006014286, 0.023184372, 0.077943005, 0.07997679],
-    ),
-    (
-        "Bitter-W$_{INT2}$A$_{FP16}$",
-        [0.005287193, 0.017449051, 0.061230421, 0.065832675],
-    ),
-    (
-        "Bitter-W$_{INT1}$A$_{FP16}$",
-        [0.005552147, 0.018020362, 0.056302968, 0.054814443],
-    ),
-    ("Bitter-W$_{INT8}$A$_{INT8}$", [0.00567061, 0.043749936, 0.13650924, 0.136082053]),
-    (
-        "Bitter-W$_{INT4}$A$_{INT8}$",
-        [0.005795642, 0.023643596, 0.076373927, 0.078475893],
-    ),
-    (
-        "Bitter-W$_{INT2}$A$_{INT8}$",
-        [0.004338192, 0.009642712, 0.040453974, 0.046789736],
-    ),
-    (
-        "Bitter-W$_{INT1}$A$_{INT8}$",
-        [0.004221722, 0.010228677, 0.026232524, 0.028425673],
-    ),
-    (
-        "Bitter-W$_{INT4}$A$_{INT4}$",
-        [0.005795642, 0.023643596, 0.076373927, 0.078475893],
-    ),
-    (
-        "Bitter-W$_{INT2}$A$_{INT4}$",
-        [0.004338192, 0.009642712, 0.040453974, 0.046789736],
-    ),
-    (
-        "Bitter-W$_{INT1}$A$_{INT4}$",
-        [0.004221722, 0.010228677, 0.026232524, 0.028425673],
-    ),
-]
+
+if not reproduce:
+    from paper_result import b1s1_matmul_providers as providers, b1s1_matmul_times_data as times_data
+    
+else:
+    from paper_result import b1s1_matmul_providers as providers, b1s1_matmul_times_data as times_data
 
 # 获取pytorch_inductor的时间值
 _1x_baseline = "Bitter"
@@ -328,42 +289,12 @@ ax2_1.set_xticklabels(providers)
 # ax2_1.set_ylabel('Speedup Vs. Bitter', fontsize=12, labelpad=10, )
 
 ax2_2 = fig.add_subplot(gs[1, 1])
-providers = ["M0", "M1", "M2", "M3"]
-times_data = [
-    ("Bitter", [0.35203889, 2.239631414, 7.323716164, 7.485508442]),
-    (
-        "Bitter-W$_{INT8}$A$_{FP16}$",
-        [0.376824141, 2.289058924, 7.878970623, 8.076682091],
-    ),
-    (
-        "Bitter-W$_{INT4}$A$_{FP16}$",
-        [0.356162071, 2.242493153, 6.808439732, 6.991803646],
-    ),
-    (
-        "Bitter-W$_{INT2}$A$_{FP16}$",
-        [0.354000181, 2.387015343, 7.863059521, 7.983103752],
-    ),
-    (
-        "Bitter-W$_{INT1}$A$_{FP16}$",
-        [0.371727765, 2.249416351, 7.629824162, 7.735374928],
-    ),
-    (
-        "Bitter-W$_{INT8}$A$_{INT8}$",
-        [0.262480676, 1.687499881, 5.821496964, 5.719495296],
-    ),
-    ("Bitter-W$_{INT4}$A$_{INT8}$", [0.219333276, 1.43702817, 4.975811005, 4.91797924]),
-    (
-        "Bitter-W$_{INT2}$A$_{INT8}$",
-        [0.216822594, 1.419834495, 4.880335331, 4.837766171],
-    ),
-    (
-        "Bitter-W$_{INT1}$A$_{INT8}$",
-        [0.242987201, 1.525666952, 4.79305172, 4.804022789],
-    ),
-    ("Bitter-W$_{INT4}$A$_{INT4}$", [0.108979389, 0.624639988, 1.9839499, 2.08657074]),
-    ("Bitter-W$_{INT2}$A$_{INT4}$", [0.108979389, 0.624639988, 1.9839499, 2.08657074]),
-    ("Bitter-W$_{INT1}$A$_{INT4}$", [0.108979389, 0.624639988, 1.9839499, 2.08657074]),
-]
+
+if not reproduce:
+    from paper_result import b1s4096_matmul_providers as providers, b1s4096_matmul_times_data as times_data
+    
+else:
+    from reproduce_result import b1s4096_matmul_providers as providers, b1s4096_matmul_times_data as times_data
 
 # 获取pytorch_inductor的时间值
 _1x_baseline = "Bitter"
