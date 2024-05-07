@@ -91,12 +91,12 @@ Run the following command to generate the results of Figure 8:
 cd /root/Ladder/artifact/Figure8
 # draw figures with paper results
 python3 run_all.py
-mv png paper_result/
-mv pdf paper_result/
+mv png/* paper_result/
+mv pdf/* paper_result/
 # reproduce results and draw figures
 python3 run_all.py --reproduce
-mv png reproduce_result/
-mv pdf reproduce_result/
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -136,12 +136,12 @@ Run the following command to generate the results of Figure 8:
 cd /root/Ladder/artifact/Figure9
 # draw figures with paper results
 python3 run_all.py
-mv png paper_result/
-mv pdf paper_result/
+mv png/* paper_result/
+mv pdf/* paper_result/
 # reproduce results and draw figures
 python3 run_all.py --reproduce
-mv png reproduce_result/
-mv pdf reproduce_result/
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -169,12 +169,12 @@ Run the following command to generate the results of Figure 8:
 cd /root/Ladder/artifact/Figure10
 # draw figures with paper results
 python3 run_all.py
-mv png paper_result/
-mv pdf paper_result/
+mv png/* paper_result/
+mv pdf/* paper_result/
 # reproduce results and draw figures
 python3 run_all.py --reproduce
-mv png reproduce_result/
-mv pdf reproduce_result/
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
