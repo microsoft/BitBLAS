@@ -1,180 +1,180 @@
 {<Node, ladder_matmul>: {'block': [8, 8, 16, 16], 'warp': [4, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.4169727861881256
+0.46448642015457153
 {<Node, ladder_matmul>: {'block': [4, 16, 16, 16], 'warp': [2, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.4968448281288147
+0.5644288063049316
 {<Node, ladder_matmul>: {'block': [16, 4, 16, 16], 'warp': [8, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.4933632016181946
+0.5648384094238281
 {<Node, ladder_matmul>: {'block': [4, 4, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.6256639957427979
+0.7012351751327515
 {<Node, ladder_matmul>: {'block': [4, 8, 16, 16], 'warp': [2, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.5175296068191528
+0.5849088430404663
 {<Node, ladder_matmul>: {'block': [8, 4, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.5169152021408081
+0.5802666544914246
 {<Node, ladder_matmul>: {'block': [8, 16, 16, 16], 'warp': [4, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.5586944222450256
+0.6131712198257446
 {<Node, ladder_matmul>: {'block': [16, 8, 16, 16], 'warp': [8, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.5062655806541443
+0.5574656128883362
 {<Node, ladder_matmul>: {'block': [2, 4, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.784554660320282
+0.9297919869422913
 {<Node, ladder_matmul>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.807424008846283
+0.9374720454216003
 {<Node, ladder_matmul>: {'block': [2, 8, 16, 16], 'warp': [1, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.7854080200195312
+0.929587185382843
 {<Node, ladder_matmul>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.7301119565963745
+0.8296447992324829
 {<Node, ladder_matmul>: {'block': [16, 16, 16, 16], 'warp': [8, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-1.1237375736236572
+1.162444829940796
 {<Node, ladder_matmul>: {'block': [2, 16, 16, 16], 'warp': [1, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.6643199920654297
+0.7514111995697021
 {<Node, ladder_matmul>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.675430417060852
+0.7657471895217896
 {<Node, ladder_matmul>: {'block': [4, 32, 16, 16], 'warp': [2, 16, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.7077888250350952
+0.7639039754867554
 {<Node, ladder_matmul>: {'block': [32, 4, 16, 16], 'warp': [16, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.6746112108230591
+0.7462912201881409
 {<Node, ladder_matmul>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-1.0333865880966187
+1.2299946546554565
 {<Node, ladder_matmul>: {'block': [8, 32, 16, 16], 'warp': [4, 16, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-1.40513277053833
+1.4161919355392456
 {<Node, ladder_matmul>: {'block': [32, 8, 16, 16], 'warp': [16, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-1.4319616556167603
-top1: 0.4169727861881256 	top10: 0.4169727861881256
+1.42499840259552
+top1: 0.46448642015457153 	top10: 0.46448642015457153
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_matmul>: {'block': [8, 8, 16, 16], 'warp': [4, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-best latency: 0.4169727861881256
+best latency: 0.46448642015457153
 {<Node, ladder_matmul>: {'block': [8, 8, 16, 16], 'warp': [4, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-2.4197120666503906
+2.6808319091796875
 {<Node, ladder_matmul>: {'block': [4, 16, 16, 16], 'warp': [2, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-3.0359551906585693
+3.419750213623047
 {<Node, ladder_matmul>: {'block': [16, 4, 16, 16], 'warp': [8, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-3.161907196044922
+3.5225601196289062
 {<Node, ladder_matmul>: {'block': [4, 8, 16, 16], 'warp': [2, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-3.5978240966796875
+4.053247928619385
 {<Node, ladder_matmul>: {'block': [8, 4, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-3.4536960124969482
+3.8737919330596924
 {<Node, ladder_matmul>: {'block': [8, 16, 16, 16], 'warp': [4, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-2.6791937351226807
+2.92372465133667
 {<Node, ladder_matmul>: {'block': [16, 8, 16, 16], 'warp': [8, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-2.5833470821380615
+2.8268542289733887
 {<Node, ladder_matmul>: {'block': [4, 4, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-4.1848320960998535
+4.871782302856445
 {<Node, ladder_matmul>: {'block': [16, 16, 16, 16], 'warp': [8, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-5.234073638916016
+5.372518539428711
 {<Node, ladder_matmul>: {'block': [2, 16, 16, 16], 'warp': [1, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-4.991744041442871
+5.704959869384766
 {<Node, ladder_matmul>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-4.995327949523926
+5.72492790222168
 {<Node, ladder_matmul>: {'block': [4, 32, 16, 16], 'warp': [2, 16, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-3.7244925498962402
+3.9139328002929688
 {<Node, ladder_matmul>: {'block': [32, 4, 16, 16], 'warp': [16, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-3.6915199756622314
+3.9911422729492188
 {<Node, ladder_matmul>: {'block': [2, 8, 16, 16], 'warp': [1, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-5.391359806060791
+6.041190147399902
 {<Node, ladder_matmul>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-4.987135887145996
+6.029107093811035
 {<Node, ladder_matmul>: {'block': [8, 32, 16, 16], 'warp': [4, 16, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-4.9821696281433105
+5.099315166473389
 {<Node, ladder_matmul>: {'block': [32, 8, 16, 16], 'warp': [16, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-5.0313215255737305
+5.104640007019043
 {<Node, ladder_matmul>: {'block': [2, 4, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-5.995929718017578
+7.141581058502197
 {<Node, ladder_matmul>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-6.194790363311768
+7.198925018310547
 {<Node, ladder_matmul>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-8.093900680541992
-top1: 2.4197120666503906 	top10: 2.4197120666503906
+9.583616256713867
+top1: 2.6808319091796875 	top10: 2.6808319091796875
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_matmul>: {'block': [8, 8, 16, 16], 'warp': [4, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-best latency: 2.4197120666503906
+best latency: 2.6808319091796875
 {<Node, ladder_matmul>: {'block': [8, 8, 16, 16], 'warp': [4, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-27.784805297851562
+9.447833061218262
 {<Node, ladder_matmul>: {'block': [8, 7, 16, 16], 'warp': [2, 7, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-11.500748634338379
+11.065138816833496
 {<Node, ladder_matmul>: {'block': [16, 4, 16, 16], 'warp': [8, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-22.88619613647461
+12.547277450561523
 {<Node, ladder_matmul>: {'block': [4, 16, 16, 16], 'warp': [2, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-30.147174835205078
+12.190924644470215
 {<Node, ladder_matmul>: {'block': [4, 14, 16, 16], 'warp': [2, 7, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-34.559383392333984
+12.082176208496094
 {<Node, ladder_matmul>: {'block': [8, 4, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-31.65736961364746
+13.926809310913086
 {<Node, ladder_matmul>: {'block': [4, 8, 16, 16], 'warp': [2, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-31.92299461364746
+14.578279495239258
 {<Node, ladder_matmul>: {'block': [16, 8, 16, 16], 'warp': [8, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-29.183795928955078
+9.574399948120117
 {<Node, ladder_matmul>: {'block': [8, 16, 16, 16], 'warp': [4, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-29.288244247436523
+9.831628799438477
 {<Node, ladder_matmul>: {'block': [4, 7, 16, 16], 'warp': [1, 7, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-40.4619255065918
+15.972352981567383
 {<Node, ladder_matmul>: {'block': [8, 14, 16, 16], 'warp': [4, 7, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-16.99102783203125
+9.014066696166992
 {<Node, ladder_matmul>: {'block': [16, 7, 16, 16], 'warp': [4, 7, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-31.789260864257812
+10.276453971862793
 {<Node, ladder_matmul>: {'block': [4, 4, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-46.96248245239258
+17.34103012084961
 {<Node, ladder_matmul>: {'block': [16, 16, 16, 16], 'warp': [8, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-49.39263916015625
+17.65703773498535
 {<Node, ladder_matmul>: {'block': [16, 14, 16, 16], 'warp': [8, 7, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-22.314802169799805
+10.423501014709473
 {<Node, ladder_matmul>: {'block': [2, 14, 16, 16], 'warp': [1, 7, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-49.35700225830078
+19.946701049804688
 {<Node, ladder_matmul>: {'block': [4, 28, 16, 16], 'warp': [2, 14, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-11.776410102844238
+12.673843383789062
 {<Node, ladder_matmul>: {'block': [2, 16, 16, 16], 'warp': [1, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-18.005401611328125
+20.234241485595703
 {<Node, ladder_matmul>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-18.02239990234375
+20.28482437133789
 {<Node, ladder_matmul>: {'block': [32, 4, 16, 16], 'warp': [16, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-12.905062675476074
-top1: 27.784805297851562 	top10: 11.500748634338379
+13.678387641906738
+top1: 9.447833061218262 	top10: 9.014066696166992
 --------------------------------------------------------------------------------
-best config: {<Node, ladder_matmul>: {'block': [8, 7, 16, 16], 'warp': [2, 7, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-best latency: 11.500748634338379
+best config: {<Node, ladder_matmul>: {'block': [8, 14, 16, 16], 'warp': [4, 7, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+best latency: 9.014066696166992
 {<Node, ladder_matmul>: {'block': [8, 8, 16, 16], 'warp': [4, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-8.798617362976074
+9.766502380371094
 {<Node, ladder_matmul>: {'block': [4, 16, 16, 16], 'warp': [2, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-11.640421867370605
+12.825803756713867
 {<Node, ladder_matmul>: {'block': [16, 4, 16, 16], 'warp': [8, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-12.721357345581055
+13.342924118041992
 {<Node, ladder_matmul>: {'block': [4, 8, 16, 16], 'warp': [2, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-14.783282279968262
+16.00511932373047
 {<Node, ladder_matmul>: {'block': [8, 4, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-44.52433776855469
+15.266406059265137
 {<Node, ladder_matmul>: {'block': [8, 16, 16, 16], 'warp': [4, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-30.45949363708496
+10.177536010742188
 {<Node, ladder_matmul>: {'block': [16, 8, 16, 16], 'warp': [8, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-30.264318466186523
+9.882009506225586
 {<Node, ladder_matmul>: {'block': [4, 4, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-48.43171691894531
+18.3721981048584
 {<Node, ladder_matmul>: {'block': [16, 16, 16, 16], 'warp': [8, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-59.041587829589844
+19.595264434814453
 {<Node, ladder_matmul>: {'block': [2, 16, 16, 16], 'warp': [1, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-56.8967170715332
+21.23366355895996
 {<Node, ladder_matmul>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-65.40000915527344
+23.351091384887695
 {<Node, ladder_matmul>: {'block': [4, 32, 16, 16], 'warp': [2, 16, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-39.50632858276367
+13.925786018371582
 {<Node, ladder_matmul>: {'block': [32, 4, 16, 16], 'warp': [16, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-38.940670013427734
+14.122802734375
 {<Node, ladder_matmul>: {'block': [2, 8, 16, 16], 'warp': [1, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-58.194122314453125
+22.66501235961914
 {<Node, ladder_matmul>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-67.97230529785156
+22.46348762512207
 {<Node, ladder_matmul>: {'block': [8, 32, 16, 16], 'warp': [4, 16, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-52.381492614746094
+17.970584869384766
 {<Node, ladder_matmul>: {'block': [32, 8, 16, 16], 'warp': [16, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-54.99945068359375
+17.38711166381836
 {<Node, ladder_matmul>: {'block': [2, 4, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-69.11426544189453
+26.109542846679688
 {<Node, ladder_matmul>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-63.235069274902344
+26.76141929626465
 {<Node, ladder_matmul>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-30.827930450439453
-top1: 8.798617362976074 	top10: 8.798617362976074
+34.3543815612793
+top1: 9.766502380371094 	top10: 9.766502380371094
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_matmul>: {'block': [8, 8, 16, 16], 'warp': [4, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-best latency: 8.798617362976074
-4096_1024_8192	0.4169727861881256
-4096_8192_8192	2.4197120666503906
-4096_28672_8192	11.500748634338379
-4096_8192_28672	8.798617362976074
+best latency: 9.766502380371094
+4096_1024_8192	0.46448642015457153
+4096_8192_8192	2.6808319091796875
+4096_28672_8192	9.014066696166992
+4096_8192_28672	9.766502380371094

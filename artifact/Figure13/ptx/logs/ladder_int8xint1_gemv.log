@@ -1,10 +1,10 @@
-2024-05-06 16:24:32 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:32 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:33 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:33 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:33 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
-2024-05-06 16:24:33 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:33 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:33:52 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:33:52 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:33:53 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-07 03:33:53 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:53 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -108,9 +108,9 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*8), ext=8) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:33 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
-2024-05-06 16:24:33 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:33 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:33:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-07 03:33:53 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:53 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -214,9 +214,9 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*4), ext=4) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:33 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
-2024-05-06 16:24:33 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:33 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:33:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-07 03:33:53 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:53 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -321,20 +321,20 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*2), ext=2) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:34 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:34 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:34 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:34 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:33:53 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:33:53 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
 {<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
 0.005324800033122301
 {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-0.0066559999249875546
+0.006371555849909782
 {<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
-0.012174222618341446
+0.01228800043463707
 {<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
-0.04164266586303711
+0.041471999138593674
 {<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
-0.09169454872608185
+0.09197381138801575
 {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
 0.0047786664217710495
 {<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
@@ -383,9 +383,9 @@ best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, 
 }
 
 
-2024-05-06 16:24:38 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
-2024-05-06 16:24:38 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:38 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:33:57 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-07 03:33:57 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:57 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -489,9 +489,9 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*4), ext=4) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:38 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
-2024-05-06 16:24:38 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:38 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:33:57 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-07 03:33:57 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:57 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -596,9 +596,9 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*2), ext=2) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:38 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
-2024-05-06 16:24:38 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:38 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:33:57 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-07 03:33:57 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:57 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -702,32 +702,32 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*8), ext=8) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:38 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:38 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:38 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:38 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:38 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:38 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:38 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:38 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:57 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:33:57 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:57 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:33:57 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:57 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:33:57 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:33:57 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:33:57 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
 {<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
-0.051711998879909515
+0.04835555702447891
 {<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
-0.13370513916015625
+0.12744145095348358
 {<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
-0.025087999179959297
+0.02252800017595291
 {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-0.011264000087976456
+0.010239999741315842
 {<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-0.011776000261306763
+0.010495999827980995
 {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-0.011995428241789341
+0.011264000087976456
 {<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-0.01365333329886198
-top1: 0.051711998879909515 	top10: 0.011264000087976456
+0.013311999849975109
+top1: 0.04835555702447891 	top10: 0.010239999741315842
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-best latency: 0.011264000087976456
+best latency: 0.010239999741315842
 best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
   
   int in_thread_B_local[1];
@@ -761,11 +761,11 @@ best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, 
 }
 
 
-2024-05-06 16:24:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 56], 'thread': [1, 56], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
-2024-05-06 16:24:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
-2024-05-06 16:24:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:43 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:34:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 56], 'thread': [1, 56], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-07 03:34:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-07 03:34:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:01 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -870,11 +870,11 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*2), ext=2) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 28], 'thread': [1, 28], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
-2024-05-06 16:24:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
-2024-05-06 16:24:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:43 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:34:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 28], 'thread': [1, 28], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-07 03:34:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-07 03:34:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:01 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -978,11 +978,11 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*4), ext=4) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 14], 'thread': [1, 14], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
-2024-05-06 16:24:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
-2024-05-06 16:24:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:43 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:34:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 14], 'thread': [1, 14], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-07 03:34:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-07 03:34:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:01 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -1086,42 +1086,42 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*8), ext=8) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 7], 'thread': [1, 7], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
-2024-05-06 16:24:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:34:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 7], 'thread': [1, 7], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-07 03:34:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:34:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:34:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:34:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
 {<Node, ladder_matmul>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
-0.06988800317049026
+0.0688355565071106
 {<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
-0.6330879926681519
+0.287231981754303
 {<Node, ladder_matmul>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
-0.08135110884904861
+0.04423680156469345
 {<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
-0.13255111873149872
+0.1338368058204651
 {<Node, ladder_matmul>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
-0.040228571742773056
+0.03697777912020683
 {<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
-0.07086079567670822
+0.07111111283302307
 {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-0.030208000913262367
+0.02901333197951317
 {<Node, ladder_matmul>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
-0.030848000198602676
+0.02935466542840004
 {<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-0.027818666771054268
+0.025855999439954758
 {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-0.030592000111937523
+0.029809776693582535
 {<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-0.03814399987459183
-top1: 0.06988800317049026 	top10: 0.027818666771054268
+0.03723636269569397
+top1: 0.0688355565071106 	top10: 0.025855999439954758
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-best latency: 0.027818666771054268
+best latency: 0.025855999439954758
 best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
   
   int in_thread_B_local[1];
@@ -1157,9 +1157,9 @@ best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, 
 }
 
 
-2024-05-06 16:24:47 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
-2024-05-06 16:24:47 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:47 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:34:06 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-07 03:34:06 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:06 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -1263,9 +1263,9 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*4), ext=4) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*4):((v1_o*4) + 4)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:47 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
-2024-05-06 16:24:47 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:47 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:34:06 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-07 03:34:06 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:06 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -1370,9 +1370,9 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*2), ext=2) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*2):((v1_o*2) + 2)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:47 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
-2024-05-06 16:24:47 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:47 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:34:06 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-07 03:34:06 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:06 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -1476,13 +1476,13 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*8), ext=8) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:47 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:47 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:47 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
-2024-05-06 16:24:47 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:47 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [7168], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
-2024-05-06 16:24:47 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:47 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:34:06 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:34:06 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:06 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-07 03:34:06 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:06 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [7168], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-07 03:34:06 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:06 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -1586,9 +1586,9 @@ block root() {
 CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v1_o*8), ext=8) vs rhs->region[i]=range(min=0, ext=16)
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
 
-2024-05-06 16:24:47 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [7168], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8, 'A': 8}}
-2024-05-06 16:24:47 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 16:24:48 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
+2024-05-07 03:34:06 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [7168], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8, 'A': 8}}
+2024-05-07 03:34:06 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-07 03:34:06 [ladder:DEBUG]: tensorize decode block failed: Traceback (most recent call last):
   3: TVMFuncCall
   2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<void (tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)>::AssignTypedLambda<tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}>(tvm::tir::{lambda(tvm::tir::Schedule, tvm::runtime::ObjectRef, tvm::runtime::String, bool)#13}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
   1: tvm::tir::TracedScheduleNode::Tensorize(tvm::tir::LoopRV const&, tvm::runtime::String const&, bool)
@@ -1693,20 +1693,20 @@ CompareBufferRegion buffer extent mismatch: lhs->region[i + offset]=range(min=(v
 BlockNode write buffers do not match: op->writes=[B_decode_local[v0, (v1_o*8):((v1_o*8) + 8)]] vs rhs->writes=[Decompressed[0:16]]
 
 {<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
-0.17484800517559052
+0.1764693409204483
 {<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
-0.4604927897453308
+0.46458879113197327
 {<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
-0.08760888874530792
+0.08499199897050858
 {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
 0.028330666944384575
 {<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
-0.030822400003671646
+0.030924800783395767
 {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [7168], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
-0.06164480000734329
+0.06236159801483154
 {<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [7168], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8, 'A': 8}}}
-0.059801600873470306
-top1: 0.17484800517559052 	top10: 0.028330666944384575
+0.05990399792790413
+top1: 0.1764693409204483 	top10: 0.028330666944384575
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
 best latency: 0.028330666944384575
@@ -1744,6 +1744,6 @@ best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, 
 
 
 1_1024_8192	0.0047786664217710495
-1_8192_8192	0.011264000087976456
-1_28672_8192	0.027818666771054268
+1_8192_8192	0.010239999741315842
+1_28672_8192	0.025855999439954758
 1_8192_28672	0.028330666944384575

@@ -130,11 +130,8 @@ for M, N, K in shapes:
     node = IRNode([None for _ in input_args], args, "ladder_matmul")
     node.add_tag("tensorCoreConfig", [2, 3])
     node.add_tag("consistent_config", (False, False))
-    pipeline_stage = 2
-    if arch.platform == 'CUDA':
-        if arch.compute_capability == '80':
-            pipeline_stage = 2
-    node.add_tag("ladder_config", (True, True, pipeline_stage))
+    pipeline_stage = 1
+    node.add_tag("ladder_config", (True, True, 1))
     output_nodes = [OutputNode(node)]
     policy = LadderPolicy(output_nodes, arch)
     start = time.time()

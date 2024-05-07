@@ -134,6 +134,8 @@ for label, times in b1s4096_llama2_times_data:
     speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
     speed_up_data.append((label, speed_up))
 
+print(speed_up_data)
+
 ax1 = fig.add_subplot(gs[0, 1])
 # Create bars using a loop
 for i, (label, speedup) in enumerate(speed_up_data):
@@ -168,7 +170,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
 ax1.set_xticks(x + len(speed_up_data) * bar_width / 2)
 ax1.set_xticklabels(b1s4096_llama2_providers, fontsize=14)
 # set ylabels font size
-ax1.set_yticklabels(ax1.get_yticks(), fontsize=10)
+# ax1.set_yticklabels(ax1.get_yticks(), fontsize=10)
 
 # 调整图例位置和大小
 legend_fontsize = 16

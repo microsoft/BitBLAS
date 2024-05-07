@@ -109,7 +109,7 @@ for M, N, K in shapes:
     input_args = [A, B]
     output_args = [C]
     node = IRNode([None for _ in input_args], input_args+output_args, "ladder_matmul")
-    node.add_tag("ladder_config", (False, False))
+    node.add_tag("ladder_config", (True, True))
     node.add_tag("consistent_config", (True, False))
     output_nodes = [OutputNode(node)]
     policy = DefaultPolicy(output_nodes, arch)

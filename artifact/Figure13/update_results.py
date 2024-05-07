@@ -9,7 +9,7 @@ from reproduce_result import (
 )
 
 llama_b1s1_fp16xfp16_roller_latency = 1.206272
-llama_b1s4096_fp16xfp16_roller_latency = 124
+llama_b1s4096_fp16xfp16_roller_latency = 60.127214
 
 # welder_roller
 

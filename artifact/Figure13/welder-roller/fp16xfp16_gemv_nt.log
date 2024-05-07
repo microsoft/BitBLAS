@@ -1,21 +1,21 @@
 {<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.08790016174316406
+0.08776059746742249
 {<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.09336580336093903
+0.09358582645654678
 {<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.0868438333272934
+0.08669335395097733
 {<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B': 8}}}
-0.19845296442508698
+0.20014674961566925
 {<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 8}}}
-0.11323264241218567
+0.11448170244693756
 {<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.08464178442955017
+0.08476672321557999
 {<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.46544212102890015
+0.4673355221748352
 {<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.31616151332855225
+0.31767913699150085
 {<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B': 8}}}
-0.5772117376327515
+0.5765119791030884
 best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
   
   half normal_reduce_temp0[1];
@@ -66,40 +66,40 @@ best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, hal
 }
 
 
-top1: 0.08790016174316406 	top10: 0.08464178442955017
+top1: 0.08776059746742249 	top10: 0.08476672321557999
 --------------------------------------------------------------------------------
 best config: {<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-best latency: 0.08464178442955017
+best latency: 0.08476672321557999
 {<Node, roller_matmul>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.3493806719779968
+0.34982556104660034
 {<Node, roller_matmul>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.3035636246204376
+0.30388370156288147
 {<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.2993558645248413
+0.2992984652519226
 {<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 8}}}
-0.34951233863830566
+0.3525749444961548
 {<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.28901809453964233
+0.28866851329803467
 {<Node, roller_matmul>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.5727793574333191
+0.5781410932540894
 {<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B': 8}}}
-0.5586909651756287
+0.5596030950546265
 {<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.2895945906639099
+0.28938859701156616
 {<Node, roller_matmul>: {'block': [1, 112], 'thread': [1, 112], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.6673704385757446
+0.670030951499939
 {<Node, roller_matmul>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-1.011738896369934
+1.0080711841583252
 {<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.7119981050491333
+0.7124264240264893
 {<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-1.102543592453003
+1.097108244895935
 {<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.28497689962387085
+0.2853948175907135
 {<Node, roller_matmul>: {'block': [1, 224], 'thread': [1, 112], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B': 8}}}
-0.8918575048446655
+0.8927324414253235
 {<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B': 8}}}
-1.0027520656585693
+1.002291202545166
 best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
   
   half normal_reduce_temp0[1];
@@ -150,28 +150,28 @@ best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, hal
 }
 
 
-top1: 0.3493806719779968 	top10: 0.28497689962387085
+top1: 0.34982556104660034 	top10: 0.2853948175907135
 --------------------------------------------------------------------------------
 best config: {<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-best latency: 0.28497689962387085
+best latency: 0.2853948175907135
 {<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.29207760095596313
+0.29280880093574524
 {<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.30334463715553284
+0.30395564436912537
 {<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.29315730929374695
+0.29377368092536926
 {<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B': 8}}}
-0.6939977407455444
+0.6929579973220825
 {<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 8}}}
-0.37404516339302063
+0.3734002113342285
 {<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.330645889043808
+0.332830548286438
 {<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-1.6082789897918701
+1.613252878189087
 {<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-1.1047416925430298
+1.1001856327056885
 {<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B': 8}}}
-2.0325491428375244
+2.0367586612701416
 best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
   
   half normal_reduce_temp0[1];
@@ -215,28 +215,28 @@ best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, hal
 }
 
 
-top1: 0.29207760095596313 	top10: 0.29207760095596313
+top1: 0.29280880093574524 	top10: 0.29280880093574524
 --------------------------------------------------------------------------------
 best config: {<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-best latency: 0.29207760095596313
+best latency: 0.29280880093574524
 {<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.01252787932753563
+0.012600671499967575
 {<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.012005114927887917
+0.012113506905734539
 {<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.012970666401088238
+0.012999110855162144
 {<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.018240129575133324
+0.018359005451202393
 {<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 8}}}
-0.026312164962291718
+0.026619158685207367
 {<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B': 8}}}
-0.07126376032829285
+0.07133958488702774
 {<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.23314465582370758
+0.23331774771213531
 {<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.2596151530742645
+0.25980857014656067
 {<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B': 8}}}
-0.4847562313079834
+0.4825994074344635
 best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
   
   half normal_reduce_temp0[1];
@@ -287,11 +287,11 @@ best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, hal
 }
 
 
-top1: 0.01252787932753563 	top10: 0.012005114927887917
+top1: 0.012600671499967575 	top10: 0.012113506905734539
 --------------------------------------------------------------------------------
 best config: {<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-best latency: 0.012005114927887917
-1_8192_8192	0.08464178442955017
-1_28672_8192	0.28497689962387085
-1_8192_28672	0.29207760095596313
-1_1024_8192	0.012005114927887917
+best latency: 0.012113506905734539
+1_8192_8192	0.08476672321557999
+1_28672_8192	0.2853948175907135
+1_8192_28672	0.29280880093574524
+1_1024_8192	0.012113506905734539
