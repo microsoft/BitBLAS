@@ -42,7 +42,3 @@ ENV CPLUS_INCLUDE_PATH /root/Ladder/3rdparty/cutlass/include:$CPLUS_INCLUDE_PATH
 ENV PYTHONPATH /root/Ladder/python:$PYTHONPATH
 
 CMD bash
-
-# install benchmark dependencies
-
-RUN cd /root/Ladder/artifact && ./scripts/install_nvidia_environments.sh
