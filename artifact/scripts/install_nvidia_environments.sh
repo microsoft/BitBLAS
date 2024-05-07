@@ -7,12 +7,6 @@
 pip install prettytable
 pip install matplotlib
 
-# install torch inductor
-pip install torch>=2.0.0
-
-# install onnxruntime
-pip install onnx
-
 # install tensor ir
 ./scripts/install_tensorir.sh
 
