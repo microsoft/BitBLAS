@@ -107,6 +107,9 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         sch.compute_inline(B_decode_block)
 
         j, k = sch.get_loops(block_b)[-2:]
+        if len(sch.get_loops(block_b)) == 3:
+            i = sch.get_loops(block_b)[0]
+            sch.bind(i, "blockIdx.z")
 
         # get target dequantize buffer's idx
         def get_idx(weight_decode_info: Dict):
@@ -268,6 +271,9 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         sch.compute_inline(B_decode_block)
 
         j, k = sch.get_loops(block_b)[-2:]
+        if len(sch.get_loops(block_b)) == 3:
+            i = sch.get_loops(block_b)[0]
+            sch.bind(i, "blockIdx.z")
 
         # get target dequantize buffer's idx
         def get_idx(weight_decode_info: Dict):

@@ -148,7 +148,7 @@ class MatmulConfig:
         if "int" not in self.W_dtype or self.W_dtype == self.A_dtype:
             object.__setattr__(self, "fast_decoding", False)
         else:
-            object.__setattr__(self, "fast_decoding", self.fast_decoding)
+            object.__setattr__(self, "fast_decoding", True)
         if fast_decoding is not None:
             object.__setattr__(self, "fast_decoding", fast_decoding)
 
