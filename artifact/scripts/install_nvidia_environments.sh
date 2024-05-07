@@ -13,8 +13,6 @@ pip install torch>=2.0.0
 # install onnxruntime
 pip install onnx
 
-pip install onnxruntime-gpu==1.16.1
-
 # install tensor ir
 ./scripts/install_tensorir.sh
 
