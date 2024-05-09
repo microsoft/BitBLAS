@@ -2,6 +2,15 @@
 # Licensed under the MIT License.
 import argparse
 import os
+import subprocess
+
+def run_command(command):
+    result = subprocess.run(command, shell=True, executable='/bin/bash', text=True)
+    
+    if result.returncode == 0:
+        print("Command executed successfully")
+    else:
+        print(f"Command failed with error: {result.stderr}")
 
 CHECKPOINT_PATH = os.path.join(os.getcwd(), "../../checkpoints/Figure11")
 os.environ["CHECKPOINT_PATH"] = CHECKPOINT_PATH
@@ -27,11 +36,11 @@ else:
     print("Reproducing the results")
     # initialize the checkpoints
     # initialize tensorrt engine
-    os.system(f"cd tensorrt-benchmark; ./initialize_tensorrt.sh")
+    run_command(f"cd tensorrt-benchmark; ./initialize_tensorrt.sh")
     # initialize welder
-    os.system(f"cd welder-benchmark; ./initialize_welder.sh")
+    run_command(f"cd welder-benchmark; ./initialize_welder.sh")
     # initialize ladder
-    os.system(f"cd ladder-benchmark; ./initialize_ladder.sh")
+    run_command(f"cd ladder-benchmark; ./initialize_ladder.sh")
     # initialize vllm
     for model in ["llama", "bloom"]:
         for batch_size, seq_len in [
