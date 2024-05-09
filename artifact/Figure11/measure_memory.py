@@ -201,14 +201,11 @@ find_process_and_kill()
 # measure the memory usage
 memory_usage = 0
 if os.path.exists(path):
-    with pushd(path):
-        print('Measure the memory for {} batch {} seq {} under {}'.format(model, batch_size, seq_len, framework))
-        if os.path.exists('prepare_mem.sh'):
-            os.system('bash prepare_mem.sh')
-        # here start the inference process at the same time and
-        # measure the memory at the same time
-        inference_func = model_inference_mapping[framework]
-        target_process = inference_func(model, batch_size, seq_len)
+    print('Measure the memory for {} batch {} seq {} under {}'.format(model, batch_size, seq_len, framework))
+    # here start the inference process at the same time and
+    # measure the memory at the same time
+    inference_func = model_inference_mapping[framework]
+    target_process = inference_func(model, batch_size, seq_len)
     sleep(30) # wait the memory to be steady (this large laguange model need more time to be steady)
     monitor_process = subprocess.Popen('bash nvidia_measure_memory.sh > run.log', shell=True)
     try:
