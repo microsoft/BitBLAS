@@ -14,4 +14,9 @@ python -u ladder_fp16xint4_gemv.py | tee logs/ladder_fp16xint4_gemv.log
 python -u ladder_int8xint1_gemm.py | tee logs/ladder_int8xint1_gemm.log
 python -u ladder_int8xint1_gemv.py | tee logs/ladder_int8xint1_gemv.log
 python -u ladder_mxfp8xmxfp8_gemm.py | tee logs/ladder_mxfp8xmxfp8_gemm.log
+
+export TVM_HOME=$(pwd)/../../baseline_framework/roller_tvm
+export PYTHONPATH=$TVM_HOME/python
+export PYTHONPATH=$(pwd)/../../baseline_framework/Roller/python:$PYTHONPATH
+
 python -u ladder_mxfp8xmxfp8_gemv.py | tee logs/ladder_mxfp8xmxfp8_gemv.log

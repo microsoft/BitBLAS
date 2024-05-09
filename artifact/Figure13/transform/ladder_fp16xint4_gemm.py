@@ -353,7 +353,8 @@ for M, N, K in shapes:
 
     node = IRNode([None for _ in input_args], args, "ladder_matmul")
     node.add_tag("tensorCoreConfig", [2, 3])
-    node.add_tag("ladder_config", (True, True))
+    node.add_tag("consistent_config", (True, False))
+    node.add_tag("ladder_config", (False, True, 1))
     output_nodes = [OutputNode(node)]
     policy = LadderPolicy(output_nodes, arch)
     configs = policy.emit_config(20)

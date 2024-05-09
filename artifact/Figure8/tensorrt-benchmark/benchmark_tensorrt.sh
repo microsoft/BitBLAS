@@ -5,7 +5,7 @@
 
 MODEL_PATH=$(pwd)/../../models
 TRT_EXEC_PATH=$(pwd)/../../baseline_framework/TensorRT-9.0.1.4/bin
-LD_LIBRARY_PATH=$TRT_EXEC_PATH/../lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$TRT_EXEC_PATH/../lib:$LD_LIBRARY_PATH
 echo "[TENSORRT] Using checkpoint path: $CHECKPOINT_PATH"
 LADDER_LOG_PATH="$CHECKPOINT_PATH/onnxruntime/logs"
 

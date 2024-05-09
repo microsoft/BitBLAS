@@ -59,7 +59,7 @@ def onnxruntime_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.onnx'
     else:
-        model_file = f'{model_path}/bloom-176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
+        model_file = f'{model_path}/bloom_176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
     target_process = subprocess.Popen(f'cd {pwd}/onnxruntime-benchmark; python {run_file} --file {model_file} --iters 10000 ; cd ..', shell=True)
     return target_process
 
@@ -69,7 +69,7 @@ def tensorrt_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.trt'
     else:
-        model_file = f'{model_path}/bloom-176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.trt'
+        model_file = f'{model_path}/bloom_176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.trt'
     target_process = subprocess.Popen(f'{trt_exec_path} --loadEngine {model_file} --fp16 --workspace=8192 --iterations=10000 ;', shell=True)
     return target_process
 
@@ -92,7 +92,7 @@ def welder_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.onnx'
     else:
-        model_file = f'{model_path}/bloom-176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
+        model_file = f'{model_path}/bloom_176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
     target_process = subprocess.Popen(f'cd {pwd}/onnxruntime-benchmark; python {run_file} --file {model_file} --iters 10000 ; cd ..', shell=True)
     return target_process
 
@@ -181,6 +181,24 @@ path = './logs/{}_{}_{}_{}'.format(model, framework, batch_size, seq_len)
 if not os.path.exists(path):
     os.makedirs(path)
 
+def find_process_and_kill():
+    process_keywords = [
+        'nvidia_measure_memory.sh',
+        'llama_70b.py',
+        'bloom-176b.py',
+        'ort_runtime.py',
+        'trtexec',
+        'benchmark_llama.py',
+        'benchmark_bloom.py',
+        'ladder_with_fake_dense_dequantize.py'
+    ]
+    # if the process is this script, we should not kill it
+    for keyword in process_keywords:
+        os.system(f'pkill -f {keyword}')
+
+# clean the process
+find_process_and_kill()
+# measure the memory usage
 memory_usage = 0
 if os.path.exists(path):
     with pushd(path):
@@ -205,5 +223,5 @@ if os.path.exists(path):
     memory_usage = analyze_log('run.log')
 data['{}_{}_{}_{}'.format(model, framework, batch_size, seq_len)] = memory_usage
 print(data)
-with open(f'{args.model}_data.json', 'w') as f:
+with open(f'logs/{model}_{framework}_b{batch_size}_s{seq_len}_data.json', 'w') as f:
     json.dump(data, f)

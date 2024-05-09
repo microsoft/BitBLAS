@@ -39,6 +39,7 @@ else:
     run_command("./benchmark_ptx.sh", working_dir="ptx")
     # reproduce the results for holistic
     run_command("./benchmark_holistic.sh", working_dir="holistic")
-    
+    # update the results
+    os.system(f"python3 update_results.py")
     # plot from the reproduced results
     os.system(f"python3 plot_optimization_breakdown.py --reproduce")

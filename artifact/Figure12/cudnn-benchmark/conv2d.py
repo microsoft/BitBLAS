@@ -100,7 +100,7 @@ def mixed_precision_conv2d_cuda(N, C, H, W, K, R, S, stride, padding, dilation, 
                 mean_cost = np.mean(time_record)
     # print("conv2d_cuda, dtype = %s, A: %s, B: %s, C:%s" % (dtype, A_torch.dtype, B_torch.dtype, C_torch.dtype))
     # print(",".join(map(str, [N, C, H, W, K, R, S, stride, padding, dilation, dtype, mean_cost])))
-    print(mean_cost)
+    print(",".join(map(str, [N, C, H, W, K, R, S, stride, padding, dilation, dtype, mean_cost])))
 
 
 def conv2d_llvm(N, C, H, W, K, R, S, stride, padding, dilation, dtype):
@@ -267,6 +267,10 @@ benchmark_shapes = [
     # resnet-18
     # (N, C, H, W, K, _, R, S, _, stride, padding, dilation, _)
     # (N, C, H, W, F, -1, K, K, -1, S, P, D, -1),
+    (1, 64, 56, 56, 64, -1, 3, 3, -1, 1, 1, 1, -1),
+    (1, 64, 56, 56, 64, -1, 1, 1, -1, 1, 0, 1, -1),
+    (1, 128, 28, 28, 128, -1, 3, 3, -1, 1, 1, 1, -1),
+    (1, 512, 28, 28, 128, -1, 1, 1, -1, 1, 0, 1, -1),
     (128, 64, 56, 56, 64, -1, 3, 3, -1, 1, 1, 1, -1),
     (128, 64, 56, 56, 64, -1, 1, 1, -1, 1, 0, 1, -1),
     (128, 128, 28, 28, 128, -1, 3, 3, -1, 1, 1, 1, -1),

@@ -1,4 +1,11 @@
-export CUDA_VISIBLE_DEVICES=1
+#!/bin/bash
 
-export PYTHONPATH=/root/unity/python
-python -u /workspace/v-leiwang3/lowbit-benchmark/1.matmul_bench/tvm_cublas_invokation/cutlass_fpa_intb.py 2>&1 | tee cutlass_fpa_intb.log
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+export TVM_HOME=$(pwd)/../../baseline_framework/faster_transformer_tvm
+export PYTHONPATH=$TVM_HOME/python
+
+mkdir -p tmp
+
+python -u ./cutlass_fpa_intb.py 2>&1 | tee logs/cutlass_fpa_intb.log

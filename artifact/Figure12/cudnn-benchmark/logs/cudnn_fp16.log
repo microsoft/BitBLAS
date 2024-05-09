@@ -1,0 +1,12 @@
+/root/Ladder/artifact/Figure12/cudnn-benchmark/conv2d.py:149: SyntaxWarning: assertion is always true, perhaps remove parentheses?
+  assert(stride == 1, "stride must be 1 when padding is SAME")
+N, C, H, W, K, R, S, stride, padding, dilation, type, cost
+0.06615040153264999
+0.05079040080308914
+0.06205439940094948
+0.05693440064787865
+0.3426304042339325
+0.13414399921894074
+0.24391679763793944
+0.11591680198907853
+cudnn: enabled

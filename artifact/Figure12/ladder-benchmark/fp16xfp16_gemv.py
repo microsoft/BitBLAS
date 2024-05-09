@@ -71,7 +71,11 @@ bloom_shapes = [
     [1, 57344, 14336],
     [1, 14336, 57344],
 ]
-shapes = llama2_shapes + bloom_shapes
+shapes = [
+    [1, 14336, 57344],
+    [1, 8192, 28672],
+]
+
 perf_map = []
 for M, N, K in shapes:
     A = te.placeholder((M, K), name='A', dtype='float16')

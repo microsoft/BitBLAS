@@ -96,7 +96,7 @@ def mapping_tensorcore(
     return cost
 
 
-shapes = llm_sizes
+shapes = operators_shape
 
 supported_dtypes = set(
     [

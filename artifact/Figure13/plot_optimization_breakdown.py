@@ -3,6 +3,15 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--reproduce", action="store_true", help="reproduce, otherwise use the paper results", default=False)
+
+args = parser.parse_args()
+
+reproduce = args.reproduce
 
 colers_sets = [
     # nilu
@@ -29,10 +38,16 @@ colers_sets = [
 ]
 hatch_patterns = ["-", "+", "x", "\\", "*", "o", "O", "."]
 
-from paper_result import (
-    b1s1_llama2_providers,
-    b1s1_llama2_times_data,
-)
+if not reproduce:
+    from paper_result import (
+        b1s1_llama2_providers,
+        b1s1_llama2_times_data,
+    )
+else:
+    from reproduce_result import (
+        b1s1_llama2_providers,
+        b1s1_llama2_times_data,
+    )
 
 # 创建一个figure实例
 fig = plt.figure(figsize=(12, 3.8))
@@ -97,11 +112,17 @@ ax0.set_xticklabels(b1s1_llama2_providers, fontsize=14)
 # set y axis range
 ax0.set_ylim(0, 2.3)
 
+if not reproduce:
+    from paper_result import (
+        b1s4096_llama2_providers,
+        b1s4096_llama2_times_data,
+    )
+else:
+    from reproduce_result import (
+        b1s4096_llama2_providers,
+        b1s4096_llama2_times_data,
+    )
 
-from paper_result import (
-    b1s4096_llama2_providers,
-    b1s4096_llama2_times_data,
-)
 _1x_baseline = "+Transform"
 
 # draw for bs1_seq1
@@ -112,6 +133,8 @@ for label, times in b1s4096_llama2_times_data:
     # if label != _1x_baseline:
     speed_up = [p_i / t if t != 0 else 0 for p_i, t in zip(_1x_baseline_times, times)]
     speed_up_data.append((label, speed_up))
+
+print(speed_up_data)
 
 ax1 = fig.add_subplot(gs[0, 1])
 # Create bars using a loop
@@ -147,7 +170,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
 ax1.set_xticks(x + len(speed_up_data) * bar_width / 2)
 ax1.set_xticklabels(b1s4096_llama2_providers, fontsize=14)
 # set ylabels font size
-ax1.set_yticklabels(ax1.get_yticks(), fontsize=10)
+# ax1.set_yticklabels(ax1.get_yticks(), fontsize=10)
 
 # 调整图例位置和大小
 legend_fontsize = 16

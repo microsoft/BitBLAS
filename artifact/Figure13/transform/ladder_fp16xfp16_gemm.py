@@ -39,10 +39,7 @@ n_float_per_i8 = 8 // bit
 mask = (1 << bit) - 1
 llama2_shapes = [
     [4096, 1024, 8192],
-    [4096, 1024, 8192],
     [4096, 8192, 8192],
-    [4096, 8192, 8192],
-    [4096, 28672, 8192],
     [4096, 28672, 8192],
     [4096, 8192, 28672],
 ]
@@ -110,7 +107,7 @@ for M, N, K in shapes:
 
     node = IRNode([None for _ in input_args], args, "ladder_matmul")
     node.add_tag("tensorCoreConfig", [2, 3])
-    node.add_tag("ladder_config", (True, True))
+    node.add_tag("ladder_config", (False, False, 1))
     output_nodes = [OutputNode(node)]
     policy = LadderPolicy(output_nodes, arch)
     configs = policy.emit_config(20)

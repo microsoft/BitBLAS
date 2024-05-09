@@ -33,6 +33,11 @@ nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --gpus all --cap-add=SY
 # cd the artifact folder
 cd /root/Ladder
 ```
+### Prepare Baseline Software
+
+```bash
+cd /root/Ladder/artifact && ./scripts/install_nvidia_environments.sh
+```
 
 ### Prepare Model ONNX Files
 
@@ -45,7 +50,7 @@ bash export.sh
 
 ## 2. Reproducing Individual Experiement Results
 
-Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Google Drive](https://drive.google.com/file/d/1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c/view?usp=sharing) or [Checkpoints.tar.gz - Microsoft OneDrive](https://drive.google.com/file/d/1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c/view?usp=sharing)
+Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Google Drive](https://drive.google.com/file/d/1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c/view?usp=sharing) or [Checkpoints.tar.gz - Microsoft OneDrive](https://onedrive.live.com/?redeem=aHR0cHM6Ly8xZHJ2Lm1zL3UvYy80YzE1MTFiMjQyNTRkNTI1L0VZNHVOUFBiWEVGQW9yVXl0djMxdXkwQk8zV2hTQk04T3lRdG9UM0h6RjNkZWc&cid=4C1511B24254D525&id=4C1511B24254D525%21sf3342e8e5cdb4041a2b532b6fdf5bb2d&parId=root&o=OneUp)
 
 To use the checkpoints, you can download the checkpoints and extract it to the root/artifact of the project.
 
@@ -86,12 +91,12 @@ Run the following command to generate the results of Figure 8:
 cd /root/Ladder/artifact/Figure8
 # draw figures with paper results
 python3 run_all.py
-mv png paper_result/
-mv pdf paper_result/
+mv png/* paper_result/
+mv pdf/* paper_result/
 # reproduce results and draw figures
 python3 run_all.py --reproduce
-mv png reproduce_result/
-mv pdf reproduce_result/
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -131,12 +136,12 @@ Run the following command to generate the results of Figure 8:
 cd /root/Ladder/artifact/Figure9
 # draw figures with paper results
 python3 run_all.py
-mv png paper_result/
-mv pdf paper_result/
+mv png/* paper_result/
+mv pdf/* paper_result/
 # reproduce results and draw figures
 python3 run_all.py --reproduce
-mv png reproduce_result/
-mv pdf reproduce_result/
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -164,12 +169,12 @@ Run the following command to generate the results of Figure 8:
 cd /root/Ladder/artifact/Figure10
 # draw figures with paper results
 python3 run_all.py
-mv png paper_result/
-mv pdf paper_result/
+mv png/* paper_result/
+mv pdf/* paper_result/
 # reproduce results and draw figures
 python3 run_all.py --reproduce
-mv png reproduce_result/
-mv pdf reproduce_result/
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:

@@ -7,14 +7,6 @@
 pip install prettytable
 pip install matplotlib
 
-# install torch inductor
-pip install torch>=2.0.0
-
-# install onnxruntime
-pip install onnx
-
-pip install onnxruntime-gpu==1.16.1
-
 # install tensor ir
 ./scripts/install_tensorir.sh
 
@@ -32,3 +24,6 @@ pip install onnxruntime-gpu==1.16.1
 
 # install tenosrrt
 ./scripts/install_tensorrt.sh
+
+# install faster transformer byoc
+./scripts/install_faster_transformer_tvm.sh

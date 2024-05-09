@@ -1,0 +1,282 @@
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.006758400239050388
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.006290285848081112
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.006399999838322401
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.006271999794989824
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_rescale': 8}}}
+0.007314285729080439
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_rescale': 8}}}
+0.006290285848081112
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.006399999838322401
+{<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.006436571478843689
+{<Node, ladder_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B_rescale': 8}}}
+0.006582857109606266
+top1: 0.006758400239050388 	top10: 0.006271999794989824
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+best latency: 0.006271999794989824
+best code: __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, int8_t* __restrict__ B, half* __restrict__ C) {
+  
+  half in_thread_C_local[1];
+  half A_local[8];
+  int B_local[1];
+  half B_decode_local[8];
+  __shared__ half red_buf0[128];
+  in_thread_C_local[0] = __float2half_rn(0.000000e+00f);
+  for (int k_0 = 0; k_0 < 8; ++k_0) {
+    *(uint4*)(A_local + 0) = *(uint4*)(A + ((k_0 * 1024) + (((int)threadIdx.x) * 8)));
+    B_local[0] = *(int*)(B + (((((int)blockIdx.x) * 4096) + (k_0 * 512)) + (((int)threadIdx.x) * 4)));
+    decode_i4s_to_f16(B_local, B_decode_local, 8);
+    for (int k_2 = 0; k_2 < 8; ++k_2) {
+      in_thread_C_local[0] = (in_thread_C_local[0] + (A_local[k_2] * B_decode_local[k_2]));
+    }
+  }
+  __syncthreads();
+  ((volatile half*)red_buf0)[((int)threadIdx.x)] = in_thread_C_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 64) {
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 64)]));
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 32)]));
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    half w_16_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 16)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_16_0;
+    half w_8_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 8)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_8_0;
+    half w_4_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 4)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_4_0;
+    half w_2_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 2)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_2_0;
+    half w_1_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 1)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_1_0;
+  }
+  __syncthreads();
+  C[((int)blockIdx.x)] = (half)(((volatile half*)red_buf0)[0]);
+}
+
+
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.02311314269900322
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.02311314269900322
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_rescale': 8}}}
+0.02311314269900322
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_rescale': 8}}}
+0.02311314269900322
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.02311314269900322
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.02311314269900322
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.02325942926108837
+{<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.022966857999563217
+{<Node, ladder_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B_rescale': 8}}}
+0.023698285222053528
+top1: 0.02311314269900322 	top10: 0.022966857999563217
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+best latency: 0.022966857999563217
+best code: __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, int8_t* __restrict__ B, half* __restrict__ C) {
+  
+  half in_thread_C_local[1];
+  half A_local[8];
+  int B_local[1];
+  half B_decode_local[8];
+  __shared__ half red_buf0[128];
+  in_thread_C_local[0] = __float2half_rn(0.000000e+00f);
+  for (int k_0 = 0; k_0 < 8; ++k_0) {
+    *(uint4*)(A_local + 0) = *(uint4*)(A + ((k_0 * 1024) + (((int)threadIdx.x) * 8)));
+    B_local[0] = *(int*)(B + (((((int)blockIdx.x) * 4096) + (k_0 * 512)) + (((int)threadIdx.x) * 4)));
+    decode_i4s_to_f16(B_local, B_decode_local, 8);
+    for (int k_2 = 0; k_2 < 8; ++k_2) {
+      in_thread_C_local[0] = (in_thread_C_local[0] + (A_local[k_2] * B_decode_local[k_2]));
+    }
+  }
+  __syncthreads();
+  ((volatile half*)red_buf0)[((int)threadIdx.x)] = in_thread_C_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 64) {
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 64)]));
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 32)]));
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    half w_16_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 16)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_16_0;
+    half w_8_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 8)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_8_0;
+    half w_4_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 4)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_4_0;
+    half w_2_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 2)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_2_0;
+    half w_1_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 1)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_1_0;
+  }
+  __syncthreads();
+  C[((int)blockIdx.x)] = (half)(((volatile half*)red_buf0)[0]);
+}
+
+
+{<Node, ladder_matmul>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.25838935375213623
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_rescale': 8}}}
+0.07840914279222488
+{<Node, ladder_matmul>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.25838935375213623
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.07826285809278488
+{<Node, ladder_matmul>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.25835520029067993
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_rescale': 8}}}
+0.07694628089666367
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.07753143459558487
+{<Node, ladder_matmul>: {'block': [1, 112], 'thread': [1, 112], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.2582527995109558
+{<Node, ladder_matmul>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.25804799795150757
+{<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.07665371149778366
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.07705599814653397
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.07654400169849396
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+0.07753143459558487
+{<Node, ladder_matmul>: {'block': [1, 224], 'thread': [1, 112], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B_rescale': 8}}}
+0.2656814754009247
+{<Node, ladder_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B_rescale': 8}}}
+0.07679999619722366
+{<Node, ladder_matmul>: {'block': [1, 448], 'thread': [1, 112], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B_rescale': 8}}}
+0.27080145478248596
+top1: 0.25838935375213623 	top10: 0.07654400169849396
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B_rescale': 8}}}
+best latency: 0.07654400169849396
+best code: __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, int8_t* __restrict__ B, half* __restrict__ C) {
+  
+  half in_thread_C_local[1];
+  half A_local[8];
+  int B_local[1];
+  half B_decode_local[8];
+  __shared__ half red_buf0[128];
+  in_thread_C_local[0] = __float2half_rn(0.000000e+00f);
+  for (int k_0 = 0; k_0 < 8; ++k_0) {
+    *(uint4*)(A_local + 0) = *(uint4*)(A + ((k_0 * 1024) + (((int)threadIdx.x) * 8)));
+    B_local[0] = *(int*)(B + (((((int)blockIdx.x) * 4096) + (k_0 * 512)) + (((int)threadIdx.x) * 4)));
+    decode_i4s_to_f16(B_local, B_decode_local, 8);
+    for (int k_2 = 0; k_2 < 8; ++k_2) {
+      in_thread_C_local[0] = (in_thread_C_local[0] + (A_local[k_2] * B_decode_local[k_2]));
+    }
+  }
+  __syncthreads();
+  ((volatile half*)red_buf0)[((int)threadIdx.x)] = in_thread_C_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 64) {
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 64)]));
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 32)]));
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    half w_16_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 16)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_16_0;
+    half w_8_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 8)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_8_0;
+    half w_4_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 4)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_4_0;
+    half w_2_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 2)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_2_0;
+    half w_1_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 1)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_1_0;
+  }
+  __syncthreads();
+  C[((int)blockIdx.x)] = (half)(((volatile half*)red_buf0)[0]);
+}
+
+
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [896], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.07897599786520004
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [1792], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_rescale': 8}}}
+0.07884799689054489
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [224], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.07884799689054489
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [448], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.07896177470684052
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [3584], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_rescale': 8}}}
+0.07896177470684052
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [3584], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_rescale': 4}}}
+0.1117440015077591
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [112], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.07884799689054489
+{<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+0.07873421907424927
+{<Node, ladder_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [112], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B_rescale': 8}}}
+0.0798719972372055
+top1: 0.07897599786520004 	top10: 0.07873421907424927
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_rescale': 8}}}
+best latency: 0.07873421907424927
+best code: __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, int8_t* __restrict__ B, half* __restrict__ C) {
+  
+  half in_thread_C_local[1];
+  half A_local[8];
+  int B_local[1];
+  half B_decode_local[8];
+  __shared__ half red_buf0[128];
+  in_thread_C_local[0] = __float2half_rn(0.000000e+00f);
+  for (int k_0 = 0; k_0 < 28; ++k_0) {
+    *(uint4*)(A_local + 0) = *(uint4*)(A + ((k_0 * 1024) + (((int)threadIdx.x) * 8)));
+    B_local[0] = *(int*)(B + (((((int)blockIdx.x) * 14336) + (k_0 * 512)) + (((int)threadIdx.x) * 4)));
+    decode_i4s_to_f16(B_local, B_decode_local, 8);
+    for (int k_2 = 0; k_2 < 8; ++k_2) {
+      in_thread_C_local[0] = (in_thread_C_local[0] + (A_local[k_2] * B_decode_local[k_2]));
+    }
+  }
+  __syncthreads();
+  ((volatile half*)red_buf0)[((int)threadIdx.x)] = in_thread_C_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 64) {
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 64)]));
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 32)]));
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    half w_16_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 16)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_16_0;
+    half w_8_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 8)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_8_0;
+    half w_4_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 4)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_4_0;
+    half w_2_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 2)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_2_0;
+    half w_1_0 = ((half)(((volatile half*)red_buf0)[((int)threadIdx.x)]) + (half)(((volatile half*)red_buf0)[(((int)threadIdx.x) + 1)]));
+    ((volatile half*)red_buf0)[((int)threadIdx.x)] = w_1_0;
+  }
+  __syncthreads();
+  C[((int)blockIdx.x)] = (half)(((volatile half*)red_buf0)[0]);
+}
+
+
+1_1024_8192	0.006271999794989824
+1_8192_8192	0.022966857999563217
+1_28672_8192	0.07654400169849396
+1_8192_28672	0.07873421907424927

@@ -1,8 +1,8 @@
 import tvm
-import ladder
-from ladder.graph import IRNode, OutputNode
-from ladder.policy import *
-from ladder.te_utils import connect_tensor_graph
+import roller
+from roller.graph import IRNode, OutputNode
+from roller.policy import *
+from roller.te_utils import connect_tensor_graph
 from tvm import relay
 import os.path as osp
 from tvm.contrib.target.onnx import to_onnx
@@ -13,7 +13,7 @@ from tvm.script import tir as T
 from tvm import te
 import torch
 import logging
-ladder.set_log_level(logging.DEBUG)
+roller.set_log_level(logging.DEBUG)
 # get file name and remove the suffix
 fname = os.path.basename(__file__)
 fname = os.path.splitext(fname)[0]
@@ -21,7 +21,7 @@ fname = os.path.splitext(fname)[0]
 log_path = "progress/" + fname
 
 arch = "cuda"
-arch = ladder.arch.__getattribute__(arch)()
+arch = roller.arch.__getattribute__(arch)()
 dtype="float32"
 
 ft_shapes = [
@@ -41,7 +41,7 @@ bit = 8
 n_float_per_i8 = 8 // bit
 mask = (1 << bit) - 1
 shapes = ft_shapes
-# shapes = llm_shapes
+shapes = llm_shapes
 perf_map = {}
 for M, N, K in shapes:
     group_size = 32
@@ -59,10 +59,10 @@ for M, N, K in shapes:
         return tvm.tir.reinterpret(dtype, (e_f16 | (s << tvm.tir.const(8, "uint32"))) << tvm.tir.const(23, "uint32") | m_f8)
         
         
-    def ladder_gemm(M, N, K):
+    def roller_gemm(M, N, K):
         A = te.placeholder((M, K // 8 * bit), name='A', dtype='int8')
         B = te.placeholder((N, K // 8 * bit), name='B', dtype='int8')
-        Scales = te.placeholder((K // group_size, N), name='Scales', dtype='uint8')
+        Scales = te.placeholder((K // group_size, N), name='Scales', dtype='int8')
         
         def A_decode_func(n, k):
             w = _tir_u8_to_f8_to_float(bit, A[n, k // n_float_per_i8], k % n_float_per_i8, "float32", Scales[k // group_size, n])
@@ -94,24 +94,24 @@ for M, N, K in shapes:
 
         return A, B, Scales, C
 
-    arg1 = ladder_gemm(M, N, K)
+    arg1 = roller_gemm(M, N, K)
     args = arg1
 
     input_args = args[:-1]
     output_args = [args[-1]]
 
-    node = IRNode([None for _ in input_args], args, "ladder_matmul")
+    node = IRNode([None for _ in input_args], args, "roller_matmul")
     node.add_tag("consistent_config", (False, False))
     output_nodes = [OutputNode(node)]
     policy = DefaultPolicy(output_nodes, arch)
     configs = policy.emit_config(20)
 
     compile_results = []
-    cgen = ladder.CodeGenerator()
+    cgen = roller.CodeGenerator()
     for config in configs:
         cpresult = cgen.compile(output_nodes, config, "cuda", kernel_name="Fused")
         compile_results.append(cpresult)
-    ladder.utils.compile_and_load_parallel(compile_results, arch)
+    roller.utils.compile_and_load_parallel(compile_results, arch)
     best_latency = 10000
     best = None
     values = []

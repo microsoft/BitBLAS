@@ -1,565 +1,270 @@
 import os
 import json
 import re
-from reproduce_result.data_a100 import (
-    llama2_providers,
-    llama2_times_data,
-    bloom_providers,
-    bloom_times_data,
-    resnet_providers,
-    resnet_times_data,
-    shufflenet_providers,
-    shufflenet_times_data,
-    conformer_providers,
-    conformer_times_data,
-    vit_providers,
-    vit_times_data,
+from reproduce_result import (
+    b1s1_llama2_providers,
+    b1s1_llama2_times_data,
+    b1s4096_llama2_providers,
+    b1s4096_llama2_times_data,
 )
-## update pytorch Inductor results
-resnet_50_b1_logs = './pytorch-inductor-benchmark/logs/resnet-50-b1.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(resnet_50_b1_logs, 'r') as f:
-    lines = f.readlines()
+
+llama_b1s1_fp16xfp16_roller_latency = 1.206272
+llama_b1s4096_fp16xfp16_roller_latency = 60.127214
+
+# welder_roller
+
+def extract_floats(line):
+    pattern = r"\b\d+\.\d+\b"
+    return re.findall(pattern, line)
+
+def get_result_from_file(m, n, k, format="fp16xfp16", KERNEL_LOG_PATH="./welder-roller/"):
+    suffix = "gemm" if m != 1 else "gemv"
+    if "welder" in KERNEL_LOG_PATH:
+        log_path = f"{KERNEL_LOG_PATH}{format}_{suffix}_nt.log"
+    else:
+        log_path = f"{KERNEL_LOG_PATH}ladder_{format}_{suffix}.log"
+    # read log_path
+    latency = None
+    with open(log_path, "r") as f:
+        lines = f.readlines()
     for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b1 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b1)
-
-resnet_50_b128_logs = './pytorch-inductor-benchmark/logs/resnet-50-b128.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(resnet_50_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b128 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b128)
-
-resnet_times_data[0] = ('Pytorch Inductor', [pytorch_time_b1, pytorch_time_b128])
-
-shufflenet_b1_logs = './pytorch-inductor-benchmark/logs/shufflenet-b1.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(shufflenet_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b1 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b1)
-
-shufflenet_b128_logs = './pytorch-inductor-benchmark/logs/shufflenet-b128.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(shufflenet_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b128 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b128)
-
-shufflenet_times_data[0] = ('Pytorch Inductor', [pytorch_time_b1, pytorch_time_b128])
-
-Conformer_b1_logs = './pytorch-inductor-benchmark/logs/Conformer-b1.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(Conformer_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b1 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b1)
-
-Conformer_b128_logs = './pytorch-inductor-benchmark/logs/Conformer-b128.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(Conformer_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b128 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b128)
-
-conformer_times_data[0] = ('Pytorch Inductor', [pytorch_time_b1, pytorch_time_b128])
-
-vit_b1_logs = './pytorch-inductor-benchmark/logs/vit-b1.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(vit_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b1 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b1)
-
-vit_b128_logs = './pytorch-inductor-benchmark/logs/vit-b128.log'
-
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(vit_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b128 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b128)
-
-vit_times_data[0] = ('Pytorch Inductor', [pytorch_time_b1, pytorch_time_b128])
-
-llama_70b_b1s1_logs = './pytorch-inductor-benchmark/logs/llama-70b-layer1-seq1-bs1.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(llama_70b_b1s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b1 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b1)
-
-llama_70b_b32s1_logs = './pytorch-inductor-benchmark/logs/llama-70b-layer1-seq1-bs32.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(llama_70b_b32s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b32 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b32)
-
-llama_70b_b1s4096_logs = './pytorch-inductor-benchmark/logs/llama-70b-layer1-seq4096-bs1.log'
-
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(llama_70b_b1s4096_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b4096 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b4096)
-
-llama2_times_data[0] = ('Pytorch Inductor', [pytorch_time_b1, pytorch_time_b32, pytorch_time_b4096])
-
-bloom_176b_b1s1_logs = './pytorch-inductor-benchmark/logs/bloom-176b-layer1-seq1-bs1.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(bloom_176b_b1s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b1 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b1)
-
-bloom_176b_b32s1_logs = './pytorch-inductor-benchmark/logs/bloom-176b-layer1-seq1-bs32.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(bloom_176b_b32s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b32 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b32)
-
-bloom_176b_b1s4096_logs = './pytorch-inductor-benchmark/logs/bloom-176b-layer1-seq4096-bs1.log'
-pattern = r"avg: [\d]+\.[\d]+ ms"
-with open(bloom_176b_b1s4096_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            pytorch_time_b4096 = float(matches[0].split(' ')[-2])
-print(pytorch_time_b4096)
-
-bloom_times_data[0] = ('Pytorch Inductor', [pytorch_time_b1, pytorch_time_b32, pytorch_time_b4096])
-
-## update onnxruntime results
-resnet_50_b1_logs = './onnxruntime-benchmark/logs/resnet-50-b1.log'
-### match x(float) from Average time for each run: x ms 
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(resnet_50_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Average time for each run' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                onnx_time_b1 = float(matches[0].split(' ')[-2])
-print(onnx_time_b1)
-
-resnet_50_b128_logs = './onnxruntime-benchmark/logs/resnet-50-b128.log'
-### match x(float) from Average time for each run: x ms
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(resnet_50_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Average time for each run' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                onnx_time_b128 = float(matches[0].split(' ')[-2])
-print(onnx_time_b128)
-
-resnet_times_data[1] = ('ONNXRuntime', [onnx_time_b1, onnx_time_b128])
-
-shufflenet_b1_logs = './onnxruntime-benchmark/logs/shufflenet-b1.log'
-### match x(float) from Average time for each run: x ms
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(shufflenet_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Average time for each run' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                onnx_time_b1 = float(matches[0].split(' ')[-2])
-print(onnx_time_b1)
-
-shufflenet_b128_logs = './onnxruntime-benchmark/logs/shufflenet-b128.log'
-### match x(float) from Average time for each run: x ms
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(shufflenet_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Average time for each run' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                onnx_time_b128 = float(matches[0].split(' ')[-2])
-print(onnx_time_b128)
-
-shufflenet_times_data[1] = ('ONNXRuntime', [onnx_time_b1, onnx_time_b128])
-
-Conformer_b1_logs = './onnxruntime-benchmark/logs/Conformer-b1.log'
-### match x(float) from Average time for each run: x ms
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(Conformer_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Average time for each run' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                onnx_time_b1 = float(matches[0].split(' ')[-2])
-print(onnx_time_b1)
-
-Conformer_b128_logs = './onnxruntime-benchmark/logs/Conformer-b128.log'
-### match x(float) from Average time for each run: x ms
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(Conformer_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Average time for each run' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                onnx_time_b128 = float(matches[0].split(' ')[-2])
-print(onnx_time_b128)
-conformer_times_data[1] = ('ONNXRuntime', [onnx_time_b1, onnx_time_b128])
-
-vit_b1_logs = './onnxruntime-benchmark/logs/vit-b1.log'
-### match x(float) from Average time for each run: x ms
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(vit_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Average time for each run' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                onnx_time_b1 = float(matches[0].split(' ')[-2])
-print(onnx_time_b1)
-
-vit_b128_logs = './onnxruntime-benchmark/logs/vit-b128.log'
-### match x(float) from Average time for each run: x ms
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(vit_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Average time for each run' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                onnx_time_b128 = float(matches[0].split(' ')[-2])
-print(onnx_time_b128)
-
-vit_times_data[1] = ('ONNXRuntime', [onnx_time_b1, onnx_time_b128])
-
-llama_70b_b1s1_logs = './onnxruntime-benchmark/logs/llama-70b-layer1-seq1-bs1.log'
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(llama_70b_b1s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            onnx_time_b1 = float(matches[0].split(' ')[-2])
-print(onnx_time_b1)
-
-llama_70b_b32s1_logs = './onnxruntime-benchmark/logs/llama-70b-layer1-seq1-bs32.log'
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(llama_70b_b32s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            onnx_time_b32 = float(matches[0].split(' ')[-2])
-print(onnx_time_b32)
-
-llama_70b_b1s4096_logs = './onnxruntime-benchmark/logs/llama-70b-layer1-seq4096-bs1.log'
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(llama_70b_b1s4096_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            onnx_time_b4096 = float(matches[0].split(' ')[-2])
-print(onnx_time_b4096)
-
-llama2_times_data[1] = ('ONNXRuntime', [onnx_time_b1, onnx_time_b32, onnx_time_b4096])
-
-bloom_176b_b1s1_logs = './onnxruntime-benchmark/logs/bloom-176b-layer1-seq1-bs1.log'
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(bloom_176b_b1s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            onnx_time_b1 = float(matches[0].split(' ')[-2])
-print(onnx_time_b1)
-
-bloom_176b_b32s1_logs = './onnxruntime-benchmark/logs/bloom-176b-layer1-seq1-bs32.log'
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(bloom_176b_b32s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            onnx_time_b32 = float(matches[0].split(' ')[-2])
-print(onnx_time_b32)
-
-bloom_176b_b1s4096_logs = './onnxruntime-benchmark/logs/bloom-176b-layer1-seq4096-bs1.log'
-pattern = r"Average time for each run: [\d]+\.[\d]+ ms"
-with open(bloom_176b_b1s4096_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        matches = re.findall(pattern, line)
-        if matches:
-            onnx_time_b4096 = float(matches[0].split(' ')[-2])
-print(onnx_time_b4096)
-
-bloom_times_data[1] = ('ONNXRuntime', [onnx_time_b1, onnx_time_b32, onnx_time_b4096])
-
-## update tensorrt results
-resnet_50_b1_logs = './tensorrt-benchmark/logs/resnet-50-b1.log'
-### parse x(float) mean = x ms
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(resnet_50_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b1 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b1)
-
-resnet_50_b128_logs = './tensorrt-benchmark/logs/resnet-50-b128.log'
-### parse x(float) mean = x ms
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(resnet_50_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b128 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b128)
-
-resnet_times_data[2] = ('TensorRT', [tensorrt_time_b1, tensorrt_time_b128])
-
-shufflenet_b1_logs = './tensorrt-benchmark/logs/shufflenet-b1.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(shufflenet_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b1 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b1)
-
-shufflenet_b128_logs = './tensorrt-benchmark/logs/shufflenet-b128.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(shufflenet_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b128 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b128)
-
-shufflenet_times_data[2] = ('TensorRT', [tensorrt_time_b1, tensorrt_time_b128])
-
-Conformer_b1_logs = './tensorrt-benchmark/logs/Conformer-b1.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(Conformer_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b1 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b1)
-
-Conformer_b128_logs = './tensorrt-benchmark/logs/Conformer-b128.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(Conformer_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b128 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b128)
-
-conformer_times_data[2] = ('TensorRT', [tensorrt_time_b1, tensorrt_time_b128])
-
-vit_b1_logs = './tensorrt-benchmark/logs/vit-b1.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(vit_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b1 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b1)
-
-vit_b128_logs = './tensorrt-benchmark/logs/vit-b128.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(vit_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b128 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b128)
-
-vit_times_data[2] = ('TensorRT', [tensorrt_time_b1, tensorrt_time_b128])
-
-llama_70b_b1s1_logs = './tensorrt-benchmark/logs/llama-70b-layer1-seq1-bs1.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(llama_70b_b1s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b1 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b1)
-
-llama_70b_b32s1_logs = './tensorrt-benchmark/logs/llama-70b-layer1-seq1-bs32.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(llama_70b_b32s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b32 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b32)
-
-llama_70b_b1s4096_logs = './tensorrt-benchmark/logs/llama-70b-layer1-seq4096-bs1.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(llama_70b_b1s4096_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b4096 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b4096)
-
-llama2_times_data[2] = ('TensorRT', [tensorrt_time_b1, tensorrt_time_b32, tensorrt_time_b4096])
-
-bloom_176b_b1s1_logs = './tensorrt-benchmark/logs/bloom-176b-layer1-seq1-bs1.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(bloom_176b_b1s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b1 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b1)
-
-bloom_176b_b32s1_logs = './tensorrt-benchmark/logs/bloom-176b-layer1-seq1-bs32.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(bloom_176b_b32s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b32 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b32)
-
-bloom_176b_b1s4096_logs = './tensorrt-benchmark/logs/bloom-176b-layer1-seq4096-bs1.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(bloom_176b_b1s4096_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b4096 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b4096)
-
-bloom_times_data[2] = ('TensorRT', [tensorrt_time_b1, tensorrt_time_b32, tensorrt_time_b4096])
-
-## update welder results
-## not tuned yet.
-
-## update ladder results
-## not tuned yet
-
-
-## update amos results
-resnet_50_b1_logs = './amos-benchmark/logs/resnet50_b1.log'
-### match x(float) from Whole graph cost is x ms 
-pattern = r"Whole graph cost is [\d]+\.[\d]+ ms"
-with open(resnet_50_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Whole graph cost is' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                amos_time_b1 = float(matches[0].split(' ')[-2])
-print(amos_time_b1)
-
-resnet_50_b128_logs = './amos-benchmark/logs/resnet50_b128.log'
-### match x(float) from Whole graph cost is x ms
-pattern = r"Whole graph cost is [\d]+\.[\d]+ ms"
-with open(resnet_50_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Whole graph cost is' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                amos_time_b128 = float(matches[0].split(' ')[-2])
-print(amos_time_b128)
-resnet_times_data[3] = ('AMOS', [amos_time_b1, amos_time_b128])
-
-shufflenet_b1_logs = './amos-benchmark/logs/shufflenet_v2_b1.log'
-### match x(float) from Whole graph cost is x ms
-pattern = r"Whole graph cost is [\d]+\.[\d]+ ms"
-with open(shufflenet_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Whole graph cost is' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                amos_time_b1 = float(matches[0].split(' ')[-2])
-print(amos_time_b1)
-
-shufflenet_b128_logs = './amos-benchmark/logs/shufflenet_v2_b128.log'
-### match x(float) from Whole graph cost is x ms
-pattern = r"Whole graph cost is [\d]+\.[\d]+ ms"
-with open(shufflenet_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Whole graph cost is' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                amos_time_b128 = float(matches[0].split(' ')[-2])
-print(amos_time_b128)
+        if f"{m}_{n}_{k}" in line:
+            print(line)
+            matches = extract_floats(line)
+            if len(matches) == 0:
+                raise ValueError(f"Could not find latency in line: {line}")
+            latency = float(matches[-1])
+            break
+    if latency is None:
+        raise ValueError(f"Could not find latency for {m}-{n}-{k}-{format}")
+    else:
+        print(f"Found latency for {m}-{n}-{k}-{format}: {latency}")
+    return latency
+
+def get_latency(batch_size=1, format="float16xfloat16", KERNEL_LOG_PATH="./welder-roller/"):
+    n1024k8192 = get_result_from_file(batch_size, 1024, 8192, format, KERNEL_LOG_PATH)
+    n8192k8192 = get_result_from_file(batch_size, 8192, 8192, format, KERNEL_LOG_PATH)
+    n28672k8192 = get_result_from_file(batch_size, 28672, 8192, format, KERNEL_LOG_PATH)
+    n8192k28672 = get_result_from_file(batch_size, 8192, 28672, format, KERNEL_LOG_PATH)
+    return n1024k8192 * 2 + n8192k8192 * 2 + n28672k8192 * 2 + n8192k28672
+
+welder_roller_latency = get_latency(1, "fp16xfp16")
+
+print(f"llama_b1s1_fp16xfp16_roller_latency: {llama_b1s1_fp16xfp16_roller_latency}")
+
+
+# transform
+transform_fp16_latency = get_latency(1, "fp16xfp16", "./transform/logs/")
+
+print(f"transform_fp16_latency: {transform_fp16_latency}")
+
+transform_int4_latency = get_latency(1, "fp16xint4", "./transform/logs/")
+
+print(f"transform_fp16xint4_latency: {transform_int4_latency}")
+
+transform_int1_latency = get_latency(1, "int8xint1", "./transform/logs/")
+
+print(f"transform_int8xint1_latency: {transform_int1_latency}")
+
+transform_mxfp8_latency = get_latency(1, "mxfp8xmxfp8", "./transform/logs/")
+
+print(f"transform_mxfp8xmxfp8_latency: {transform_mxfp8_latency}")
+
+# ptx
+
+ptx_fp16_latency = get_latency(1, "fp16xfp16", "./ptx/logs/")
+
+print(f"ptx_fp16_latency: {ptx_fp16_latency}")
+
+ptx_int4_latency = get_latency(1, "fp16xint4", "./ptx/logs/")
+
+print(f"ptx_fp16xint4_latency: {ptx_int4_latency}")
+
+ptx_int1_latency = get_latency(1, "int8xint1", "./ptx/logs/")
+
+print(f"ptx_int8xint1_latency: {ptx_int1_latency}")
+
+ptx_mxfp8_latency = get_latency(1, "mxfp8xmxfp8", "./ptx/logs/")
+
+print(f"ptx_mxfp8xmxfp8_latency: {ptx_mxfp8_latency}")
+
+
+# holistic
+
+holistic_fp16_latency = get_latency(1, "fp16xfp16", "./holistic/logs/")
+
+print(f"holistic_fp16_latency: {holistic_fp16_latency}")
+
+holistic_int4_latency = get_latency(1, "fp16xint4", "./holistic/logs/")
+
+print(f"holistic_fp16xint4_latency: {holistic_int4_latency}")
+
+holistic_int1_latency = get_latency(1, "int8xint1", "./holistic/logs/")
+
+print(f"holistic_int8xint1_latency: {holistic_int1_latency}")
+
+
+holistic_mxfp8_latency = get_latency(1, "mxfp8xmxfp8", "./holistic/logs/")
+
+print(f"holistic_mxfp8xmxfp8_latency: {holistic_mxfp8_latency}")
+
+b1s1_fp16xfp16_welder_roller = llama_b1s1_fp16xfp16_roller_latency
+b1s1_fp16xfp16_transform = b1s1_fp16xfp16_welder_roller - welder_roller_latency + transform_fp16_latency
+b1s1_fp16xfp16_ptx = b1s1_fp16xfp16_welder_roller - welder_roller_latency + ptx_fp16_latency
+b1s1_fp16xfp16_holistic = b1s1_fp16xfp16_welder_roller - welder_roller_latency + holistic_fp16_latency
+
+print(f"b1s1_fp16xfp16_welder_roller: {b1s1_fp16xfp16_welder_roller}")
+print(f"b1s1_fp16xfp16_transform: {b1s1_fp16xfp16_transform}")
+print(f"b1s1_fp16xfp16_ptx: {b1s1_fp16xfp16_ptx}")
+print(f"b1s1_fp16xfp16_holistic: {b1s1_fp16xfp16_holistic}")
+
+
+b1s1_fp16xint4_transform = b1s1_fp16xfp16_welder_roller - welder_roller_latency + transform_int4_latency
+b1s1_fp16xint4_ptx = b1s1_fp16xfp16_welder_roller - welder_roller_latency + ptx_int4_latency
+b1s1_fp16xint4_holistic = b1s1_fp16xfp16_welder_roller - welder_roller_latency + holistic_int4_latency
+b1s1_mxfp8xmxfp8_holistic = b1s1_fp16xfp16_welder_roller - welder_roller_latency + holistic_mxfp8_latency
+
+print(f"b1s1_fp16xint4_transform: {b1s1_fp16xint4_transform}")
+print(f"b1s1_fp16xint4_ptx: {b1s1_fp16xint4_ptx}")
+print(f"b1s1_fp16xint4_holistic: {b1s1_fp16xint4_holistic}")
+print(f"b1s1_mxfp8xmxfp8_holistic: {b1s1_mxfp8xmxfp8_holistic}")
+
+
+b1s1_int8xint1_transform = b1s1_fp16xfp16_welder_roller - welder_roller_latency + transform_int1_latency
+b1s1_int8xint1_ptx = b1s1_fp16xfp16_welder_roller - welder_roller_latency + ptx_int1_latency
+b1s1_int8xint1_holistic = b1s1_fp16xfp16_welder_roller - welder_roller_latency + holistic_int1_latency
+
+print(f"b1s1_int8xint1_transform: {b1s1_int8xint1_transform}")
+print(f"b1s1_int8xint1_ptx: {b1s1_int8xint1_ptx}")
+print(f"b1s1_int8xint1_holistic: {b1s1_int8xint1_holistic}")
+
+b1s1_mxfp8xmxfp8_transform = b1s1_fp16xfp16_welder_roller - welder_roller_latency + transform_mxfp8_latency
+b1s1_mxfp8xmxfp8_ptx = b1s1_fp16xfp16_welder_roller - welder_roller_latency + ptx_mxfp8_latency
+b1s1_mxfp8xmxfp8_holistic = b1s1_fp16xfp16_welder_roller - welder_roller_latency + holistic_mxfp8_latency
+
+print(f"b1s1_mxfp8xmxfp8_transform: {b1s1_mxfp8xmxfp8_transform}")
+print(f"b1s1_mxfp8xmxfp8_ptx: {b1s1_mxfp8xmxfp8_ptx}")
+print(f"b1s1_mxfp8xmxfp8_holistic: {b1s1_mxfp8xmxfp8_holistic}")
+
+b1s1_llama2_times_data[0] = ("Welder-Roller", [b1s1_fp16xfp16_welder_roller, 0, 0, 0])
+b1s1_llama2_times_data[1] = ("+Transform", [b1s1_fp16xfp16_transform, b1s1_fp16xint4_transform, b1s1_mxfp8xmxfp8_transform, b1s1_int8xint1_transform])
+b1s1_llama2_times_data[2] = ("+PTX", [b1s1_fp16xfp16_ptx, b1s1_fp16xint4_ptx, b1s1_mxfp8xmxfp8_ptx, b1s1_int8xint1_ptx])
+b1s1_llama2_times_data[3] = ("+Holistic Schedule", [b1s1_fp16xfp16_holistic, b1s1_fp16xint4_holistic, b1s1_mxfp8xmxfp8_holistic, b1s1_int8xint1_holistic])
+
+welder_roller_latency = get_latency(4096, "fp16xfp16")
+
+print(f"llama_b1s4096_fp16xfp16_roller_latency: {llama_b1s4096_fp16xfp16_roller_latency}")
+
+
+# transform
+transform_fp16_latency = get_latency(4096, "fp16xfp16", "./transform/logs/")
+
+print(f"transform_fp16_latency: {transform_fp16_latency}")
+
+transform_int4_latency = get_latency(4096, "fp16xint4", "./transform/logs/")
+
+print(f"transform_fp16xint4_latency: {transform_int4_latency}")
+
+transform_int1_latency = get_latency(4096, "int8xint1", "./transform/logs/")
+
+print(f"transform_int8xint1_latency: {transform_int1_latency}")
+
+transform_mxfp8_latency = get_latency(4096, "mxfp8xmxfp8", "./transform/logs/")
+
+print(f"transform_mxfp8xmxfp8_latency: {transform_mxfp8_latency}")
+
+# ptx
+
+ptx_fp16_latency = get_latency(4096, "fp16xfp16", "./ptx/logs/")
+
+print(f"ptx_fp16_latency: {ptx_fp16_latency}")
+
+ptx_int4_latency = get_latency(4096, "fp16xint4", "./ptx/logs/")
+
+print(f"ptx_fp16xint4_latency: {ptx_int4_latency}")
+
+ptx_int1_latency = get_latency(4096, "int8xint1", "./ptx/logs/")
+
+print(f"ptx_int8xint1_latency: {ptx_int1_latency}")
+
+ptx_mxfp8_latency = get_latency(4096, "mxfp8xmxfp8", "./ptx/logs/")
+
+print(f"ptx_mxfp8xmxfp8_latency: {ptx_mxfp8_latency}")
+
+
+# holistic
+
+holistic_fp16_latency = get_latency(4096, "fp16xfp16", "./holistic/logs/")
+
+print(f"holistic_fp16_latency: {holistic_fp16_latency}")
+
+holistic_int4_latency = get_latency(4096, "fp16xint4", "./holistic/logs/")
+
+print(f"holistic_fp16xint4_latency: {holistic_int4_latency}")
+
+holistic_int1_latency = get_latency(4096, "int8xint1", "./holistic/logs/")
+
+print(f"holistic_int8xint1_latency: {holistic_int1_latency}")
+
+
+holistic_mxfp8_latency = get_latency(4096, "mxfp8xmxfp8", "./holistic/logs/")
+
+print(f"holistic_mxfp8xmxfp8_latency: {holistic_mxfp8_latency}")
+
+b1s4096_fp16xfp16_welder_roller = llama_b1s4096_fp16xfp16_roller_latency
+b1s4096_fp16xfp16_transform = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + transform_fp16_latency
+b1s4096_fp16xfp16_ptx = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + ptx_fp16_latency
+b1s4096_fp16xfp16_holistic = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + holistic_fp16_latency
+
+print(f"b1s4096_fp16xfp16_welder_roller: {b1s4096_fp16xfp16_welder_roller}")
+print(f"b1s4096_fp16xfp16_transform: {b1s4096_fp16xfp16_transform}")
+print(f"b1s4096_fp16xfp16_ptx: {b1s4096_fp16xfp16_ptx}")
+print(f"b1s4096_fp16xfp16_holistic: {b1s4096_fp16xfp16_holistic}")
+
+
+b1s4096_fp16xint4_transform = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + transform_int4_latency
+b1s4096_fp16xint4_ptx = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + ptx_int4_latency
+b1s4096_fp16xint4_holistic = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + holistic_int4_latency
+b1s4096_mxfp8xmxfp8_holistic = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + holistic_mxfp8_latency
+
+print(f"b1s4096_fp16xint4_transform: {b1s4096_fp16xint4_transform}")
+print(f"b1s4096_fp16xint4_ptx: {b1s4096_fp16xint4_ptx}")
+print(f"b1s4096_fp16xint4_holistic: {b1s4096_fp16xint4_holistic}")
+print(f"b1s4096_mxfp8xmxfp8_holistic: {b1s4096_mxfp8xmxfp8_holistic}")
+
+
+b1s4096_int8xint1_transform = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + transform_int1_latency
+b1s4096_int8xint1_ptx = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + ptx_int1_latency
+b1s4096_int8xint1_holistic = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + holistic_int1_latency
+
+print(f"b1s4096_int8xint1_transform: {b1s4096_int8xint1_transform}")
+print(f"b1s4096_int8xint1_ptx: {b1s4096_int8xint1_ptx}")
+print(f"b1s4096_int8xint1_holistic: {b1s4096_int8xint1_holistic}")
+
+b1s4096_mxfp8xmxfp8_transform = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + transform_mxfp8_latency
+b1s4096_mxfp8xmxfp8_ptx = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + ptx_mxfp8_latency
+b1s4096_mxfp8xmxfp8_holistic = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + holistic_mxfp8_latency
+
+print(f"b1s4096_mxfp8xmxfp8_transform: {b1s4096_mxfp8xmxfp8_transform}")
+print(f"b1s4096_mxfp8xmxfp8_ptx: {b1s4096_mxfp8xmxfp8_ptx}")
+print(f"b1s4096_mxfp8xmxfp8_holistic: {b1s4096_mxfp8xmxfp8_holistic}")
+
+b1s4096_llama2_times_data[0] = ("Welder-Roller", [b1s4096_fp16xfp16_welder_roller, 0, 0, 0])
+b1s4096_llama2_times_data[1] = ("+Transform", [b1s4096_fp16xfp16_transform, b1s4096_fp16xint4_transform, b1s4096_mxfp8xmxfp8_transform, b1s4096_int8xint1_transform])
+b1s4096_llama2_times_data[2] = ("+PTX", [b1s4096_fp16xfp16_ptx, b1s4096_fp16xint4_ptx, b1s4096_mxfp8xmxfp8_ptx, b1s4096_int8xint1_ptx])
+b1s4096_llama2_times_data[3] = ("+Holistic Schedule", [b1s4096_fp16xfp16_holistic, b1s4096_fp16xint4_holistic, b1s4096_mxfp8xmxfp8_holistic, b1s4096_int8xint1_holistic])
+
+# write the results to back
+reproduced_results = f"""
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
+b1s1_llama2_providers = {b1s1_llama2_providers}
+b1s1_llama2_times_data = {b1s1_llama2_times_data}
+
+b1s4096_llama2_providers = {b1s4096_llama2_providers}
+b1s4096_llama2_times_data = {b1s4096_llama2_times_data}
+"""
+
+with open("reproduce_result/__init__.py", "w") as f:
+    f.write(reproduced_results)
