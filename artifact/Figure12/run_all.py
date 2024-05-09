@@ -49,4 +49,5 @@ else:
     # reproduce the results for ladder
     run_command("./benchmark_ladder.sh", working_dir="ladder-benchmark")
     # plot from the reproduced results
+    os.system(f"python3 update_results.py")
     os.system(f"python3 plot_operator_performance.py --reproduce")

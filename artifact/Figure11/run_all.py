@@ -68,4 +68,5 @@ else:
             # reproduce the results for ladder_fp16_int8xint1
             os.system(f"python -u measure_memory.py --framework ladder_int8_int1 --model {model} --batch_size {batch_size} --seq_len {seq_len} 2>&1 | tee logs/{model}_ladder_fp16_int8xint1_{batch_size}_{seq_len}.log")
     
+    os.system(f"python3 update_results.py")
     os.system(f"python3 plot_memory_usage.py --reproduce")
