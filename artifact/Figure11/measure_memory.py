@@ -60,7 +60,7 @@ def onnxruntime_inference(model='llama', batch_size=1, seq_len=1):
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.onnx'
     else:
         model_file = f'{model_path}/bloom_176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
-    target_process = subprocess.Popen(f'cd {pwd}/onnxruntime-benchmark; python {run_file} --file {model_file} --iters 10000 ; cd ..', shell=False)
+    target_process = subprocess.Popen(f'cd {pwd}/onnxruntime-benchmark; python {run_file} --file {model_file} --iters 10000 ; cd ..', shell=True)
     return target_process
 
 def tensorrt_inference(model='llama', batch_size=1, seq_len=1):
@@ -71,7 +71,7 @@ def tensorrt_inference(model='llama', batch_size=1, seq_len=1):
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.trt'
     else:
         model_file = f'{model_path}/bloom_176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.trt'
-    target_process = subprocess.Popen(f'LD_LIBRARY_PATH={ld_library_path} {trt_exec_path} --loadEngine={model_file} --fp16 --workspace=8192 --iterations=10000 ;', shell=False)
+    target_process = subprocess.Popen(f'LD_LIBRARY_PATH={ld_library_path} {trt_exec_path} --loadEngine={model_file} --fp16 --workspace=8192 --iterations=10000 ;', shell=True)
     return target_process
 
 def vllm_inference(model='llama', batch_size=1, seq_len=1):
@@ -80,12 +80,12 @@ def vllm_inference(model='llama', batch_size=1, seq_len=1):
     VLLM_HOME = f'{pwd}/../baseline_framework/vLLM'
     PYTHONPATH = f'{VLLM_HOME}'
     run_file = 'benchmark_llama.py' if model == 'llama' else 'benchmark_bloom.py'
-    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; PYTHONPATH={PYTHONPATH} python {run_file}  --batch_size {batch_size} --seq_len {seq_len}; cd ..', shell=False)
+    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; PYTHONPATH={PYTHONPATH} python {run_file}  --batch_size {batch_size} --seq_len {seq_len}; cd ..', shell=True)
     return target_process
 
 def vllm_fp16_int4_inference(model='llama', batch_size=1, seq_len=1):
     run_file = 'benchmark_llama.py' if model == 'llama' else 'benchmark_bloom.py'
-    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; python {run_file}  --batch_size {batch_size} --seq_len {seq_len}; cd ..', shell=False)
+    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; python {run_file}  --batch_size {batch_size} --seq_len {seq_len}; cd ..', shell=True)
     return target_process
 
 def welder_inference(model='llama', batch_size=1, seq_len=1):
@@ -94,7 +94,7 @@ def welder_inference(model='llama', batch_size=1, seq_len=1):
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.onnx'
     else:
         model_file = f'{model_path}/bloom_176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
-    target_process = subprocess.Popen(f'cd {pwd}/onnxruntime-benchmark; python {run_file} --file {model_file} --iters 10000 ; cd ..', shell=False)
+    target_process = subprocess.Popen(f'cd {pwd}/onnxruntime-benchmark; python {run_file} --file {model_file} --iters 10000 ; cd ..', shell=True)
     return target_process
 
 def ladder_inference(model='llama', batch_size=1, seq_len=1):
@@ -104,7 +104,7 @@ def ladder_inference(model='llama', batch_size=1, seq_len=1):
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_bs{batch_size}_seq{seq_len}_async'
     else:
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_bs{batch_size}_seq{seq_len}_async'
-    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=False)
+    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
 def ladder_fp16_int4_inference(model='llama', batch_size=1, seq_len=1):
@@ -113,7 +113,7 @@ def ladder_fp16_int4_inference(model='llama', batch_size=1, seq_len=1):
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_fq_0_int_4_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     else:
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_fq_0_int_4_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
-    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=False)
+    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
 def ladder_fp16_nf4_inference(model='llama', batch_size=1, seq_len=1):
@@ -122,7 +122,7 @@ def ladder_fp16_nf4_inference(model='llama', batch_size=1, seq_len=1):
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_fq_0_nf_4_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     else:
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_fq_0_nf_4_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
-    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=False)
+    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
 def ladder_fp8_fp8_inference(model='llama', batch_size=1, seq_len=1):
@@ -131,7 +131,7 @@ def ladder_fp8_fp8_inference(model='llama', batch_size=1, seq_len=1):
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_fq_0_fp_e5m2_8_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     else:
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_fq_0_fp_e5m2_8_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
-    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=False)
+    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
 def ladder_mxfp8_mxfp8_inference(model='llama', batch_size=1, seq_len=1):
@@ -140,7 +140,7 @@ def ladder_mxfp8_mxfp8_inference(model='llama', batch_size=1, seq_len=1):
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_fq_0_mxfp_8_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
     else:
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_fq_0_mxfp_8_-1_bs{batch_size}_seq{seq_len}_ci_False_async'
-    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=False)
+    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
 def ladder_int8_int1_inference(model='llama', batch_size=1, seq_len=1):
@@ -149,7 +149,7 @@ def ladder_int8_int1_inference(model='llama', batch_size=1, seq_len=1):
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/llama2-70b/llama2_fq_0_int_1_-1_bs{batch_size}_seq{seq_len}_ci_True_async'
     else:
         model_file = f'{CHECKPOINT_PATH}/ladder/checkpoints/bloom-176b/llama2_fq_0_int_1_-1_bs{batch_size}_seq{seq_len}_ci_True_async'
-    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=False)
+    target_process = subprocess.Popen(f'cd {pwd}/ladder-benchmark; PYTHONPATH={PYTHONPATH} CPLUS_INCLUDE_PATH={CPLUS_INCLUDE_PATH} python {run_file} --prebuilt_path {model_file} ; cd ..', shell=True)
     return target_process
 
 model_inference_mapping = {
@@ -208,11 +208,11 @@ if os.path.exists(path):
     inference_func = model_inference_mapping[framework]
     target_process = inference_func(model, batch_size, seq_len)
     sleep(30) # wait the memory to be steady (this large laguange model need more time to be steady)
-    monitor_process = subprocess.Popen('bash nvidia_measure_memory.sh > run.log', shell=False)
+    monitor_process = subprocess.Popen('bash nvidia_measure_memory.sh > run.log', shell=True)
     try:
         target_process.wait(timeout=10)
     except Exception as err:
-        os.kill(os.getpgid(target_process.pid), signal.SIGKILL)
+        find_process_and_kill()
     monitor_process.terminate()
     memory_usage = analyze_log('run.log')
 data['{}_{}_{}_{}'.format(model, framework, batch_size, seq_len)] = memory_usage
