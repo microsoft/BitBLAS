@@ -55,8 +55,6 @@ else:
         run_command(f"cd tensorir-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_tensorir.sh; cd ..")
     # reproduce the results for tensorrt
     run_command(f"cd tensorrt-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_tensorrt.sh; cd ..")
-    # reproduce the results for vllm
-    run_command(f"cd vllm-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_vllm.sh; cd ..")
     # reproduce the results for welder
     if force_tune_welder:
         run_command(f"cd welder-benchmark;CHECKPOINT_PATH={CHECKPOINT_PATH} ./benchmark_welder.sh --force_tune; cd ..")

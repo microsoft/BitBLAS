@@ -46,8 +46,6 @@ else:
     run_command("./compile_and_run.sh", working_dir="cublas-benchmark")
     # reproduce the results for cudnn
     run_command("./benchmark_cudnn_conv2d.sh", working_dir="cudnn-benchmark")
-    # reproduce the results for vllm
-    run_command("./benchmark_vllm.sh", working_dir="vllm-benchmark")
     # reproduce the results for ladder
     run_command("./benchmark_ladder.sh", working_dir="ladder-benchmark")
     # plot from the reproduced results

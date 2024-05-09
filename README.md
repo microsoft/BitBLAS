@@ -88,8 +88,15 @@ cd /root/Ladder/artifact/Figure8
 python3 run_all.py
 mv png/* paper_result/
 mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
 # reproduce results and draw figures
 python3 run_all.py --reproduce
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
 mv png/* reproduce_result/
 mv pdf/* reproduce_result/
 ```
@@ -133,8 +140,15 @@ cd /root/Ladder/artifact/Figure9
 python3 run_all.py
 mv png/* paper_result/
 mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
 # reproduce results and draw figures
 python3 run_all.py --reproduce
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
 mv png/* reproduce_result/
 mv pdf/* reproduce_result/
 ```
@@ -166,8 +180,15 @@ cd /root/Ladder/artifact/Figure10
 python3 run_all.py
 mv png/* paper_result/
 mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
 # reproduce results and draw figures
 python3 run_all.py --reproduce
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
 mv png/* reproduce_result/
 mv pdf/* reproduce_result/
 ```
@@ -232,7 +253,21 @@ Figure 12 showcases the performance speedup of various computational kernels acr
 Run the following command to generate the results of Figure 12:
 
 ```bash
+# use the paper result
 python3 run_all.py
+mv png/* paper_result/
+mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
+# reproduce results and draw figures
+python3 run_all.py --reproduce
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -255,10 +290,21 @@ Figure 13 illustrates the normalized speedup of various optimization techniques 
 Run the following command to generate the results of Figure 13:
 
 ```bash
-# to use the paper result
+# use the paper result
 python3 run_all.py
-# to reproduce
-python3 run_all.py --reproduce # This may take 1 hour to finish the ladder tuning process, if you enable --force_tune, it may take 1 day to finish the tuning process.
+mv png/* paper_result/
+mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
+# reproduce results and draw figures
+python3 run_all.py --reproduce
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -279,10 +325,21 @@ Figure 14 depicts the end-to-end performance comparison of various baseline conf
 Run the following command to generate the results of Figure 14:
 
 ```bash
-# to use the paper result
+# use the paper result
 python3 run_all.py
-# to reproduce
-python3 run_all.py --reproduce # This may take 1 hour to finish the ladder tuning process, if you enable --force_tune, it may take 1 day to finish the tuning process.
+mv png/* paper_result/
+mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
+# reproduce results and draw figures
+python3 run_all.py --reproduce
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:

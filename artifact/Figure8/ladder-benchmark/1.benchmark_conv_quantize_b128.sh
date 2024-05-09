@@ -71,8 +71,6 @@ else
     python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/resnet-50_fq_0_int4b_4_ci_False 2>&1 | tee logs/resnet-50-b128_int4b.log
     python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/resnet-50_fq_0_mxfp_8_ci_False 2>&1 | tee logs/resnet-50-b128_mxfp8_e5m2.log
     python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/shufflenet_fq_0_fp_e5m2_8_ci_False 2>&1 | tee logs/shufflenet-b128_fp8_e5m2.log
-    python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/shufflenet_fq_0_int4b_1_ci_False 2>&1 | tee logs/shufflenet-b128_int4bxint1.log
-    python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/shufflenet_fq_0_int4b_4_ci_False 2>&1 | tee logs/shufflenet-b128_int4b.log
     python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/shufflenet_fq_0_mxfp_8_ci_False 2>&1 | tee logs/shufflenet-b128_mxfp8_e5m2.log
     python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/vit_fq_0_fp_e5m2_8_ci_False 2>&1 | tee logs/vit-b128_fp8_e5m2.log
     python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/vit_fq_0_int4b_1_ci_False 2>&1 | tee logs/vit-b128_int4bxint1.log
