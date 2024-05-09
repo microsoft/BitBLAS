@@ -212,7 +212,7 @@ if os.path.exists(path):
     try:
         target_process.wait(timeout=10)
     except Exception as err:
-        os.kill(os.getpgid(target_process.pid))
+        os.kill(os.getpgid(target_process.pid), signal.SIGKILL)
     monitor_process.terminate()
     memory_usage = analyze_log('run.log')
 data['{}_{}_{}_{}'.format(model, framework, batch_size, seq_len)] = memory_usage
