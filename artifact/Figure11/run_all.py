@@ -52,12 +52,8 @@ else:
             os.system(f"python -u measure_memory.py --framework pytorch --model {model} --batch_size {batch_size} --seq_len {seq_len} 2>&1 | tee logs/{model}_pytorch_{batch_size}_{seq_len}.log")
             # reproduce the results for onnxruntime
             os.system(f"python -u measure_memory.py --framework onnxruntime --model {model} --batch_size {batch_size} --seq_len {seq_len} 2>&1 | tee logs/{model}_onnxruntime_{batch_size}_{seq_len}.log")
-            # reproduce the results for tensorrt
-            os.system(f"python -u measure_memory.py --framework tensorrt --model {model} --batch_size {batch_size} --seq_len {seq_len} 2>&1 | tee logs/{model}_tensorrt_{batch_size}_{seq_len}.log")
             # reproduce the results for welder
             os.system(f"python -u measure_memory.py --framework welder --model {model} --batch_size {batch_size} --seq_len {seq_len} 2>&1 | tee logs/{model}_welder_{batch_size}_{seq_len}.log")
-            # reproduce the results for vllm
-            os.system(f"python -u measure_memory.py --framework vllm --model {model} --batch_size {batch_size} --seq_len {seq_len} 2>&1 | tee logs/{model}_vllm_{batch_size}_{seq_len}.log")
             # reproduce the results for ladder
             os.system(f"python -u measure_memory.py --framework ladder --model {model} --batch_size {batch_size} --seq_len {seq_len} 2>&1 | tee logs/{model}_ladder_{batch_size}_{seq_len}.log")
             # reproduce the results for ladder_fp16_int4
