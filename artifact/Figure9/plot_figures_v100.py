@@ -922,11 +922,11 @@ plt.subplots_adjust(top=0.85, bottom=0.15)
 
 # 保存图形
 plt.savefig(
-    "pdf/end2end_v100.pdf",
+    "pdf/figure9_end2end_v100.pdf",
     bbox_inches="tight",
 )
 plt.savefig(
-    "png/end2end_v100.png",
+    "png/figure9_end2end_v100.png",
     bbox_inches="tight",
     transparent=False,
     dpi=255,    

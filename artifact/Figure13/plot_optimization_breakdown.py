@@ -214,11 +214,11 @@ plt.subplots_adjust(top=0.75, bottom=0.2, left=0.13, right=0.94)
 
 # 保存图形
 plt.savefig(
-    "pdf/optimization_breakdown.pdf",
+    "pdf/figure13_optimization_breakdown.pdf",
     bbox_inches="tight",
 )
 plt.savefig(
-    "png/optimization_breakdown.png",
+    "png/figure13_optimization_breakdown.png",
     bbox_inches="tight",
     transparent=False,
     dpi=255,

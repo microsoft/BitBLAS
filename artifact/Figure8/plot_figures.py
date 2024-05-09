@@ -898,11 +898,11 @@ fig.legend(
 plt.subplots_adjust(top=0.85, bottom=0.15)
 
 plt.savefig(
-    "pdf/end2end_a100.pdf",
+    "pdf/figure8_end2end_a100.pdf",
     bbox_inches="tight",
 )
 plt.savefig(
-    "png/end2end_a100.png",
+    "png/figure8_end2end_a100.png",
     bbox_inches="tight",
     transparent=False,
     dpi=255,

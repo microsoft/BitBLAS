@@ -313,11 +313,11 @@ plt.subplots_adjust(top=0.9, bottom=0.15, right=0.75)
 
 # 保存图形
 plt.savefig(
-    "pdf/operator_performance_a100.pdf",
+    "pdf/figure12_operator_performance_a100.pdf",
     bbox_inches="tight",
 )
 plt.savefig(
-    "png/operator_performance_a100.png",
+    "png/figure12_operator_performance_a100.png",
     bbox_inches="tight",
     transparent=False,
     dpi=255,

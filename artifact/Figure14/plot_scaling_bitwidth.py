@@ -404,11 +404,11 @@ plt.subplots_adjust(top=0.75, bottom=0.15)
 
 # 保存图形
 plt.savefig(
-    "pdf/different_bits.pdf",
+    "pdf/figure14_different_bits.pdf",
     bbox_inches="tight",
 )
 plt.savefig(
-    "png/different_bits.png",
+    "png/figure14_different_bits.png",
     bbox_inches="tight",
     transparent=False,
     dpi=255,

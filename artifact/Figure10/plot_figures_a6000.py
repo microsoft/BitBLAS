@@ -920,11 +920,11 @@ plt.subplots_adjust(top=0.85, bottom=0.15)
 
 # 保存图形
 plt.savefig(
-    "pdf/end2end_a6000.pdf",
+    "pdf/figure10_end2end_a6000.pdf",
     bbox_inches="tight",
 )
 plt.savefig(
-    "png/end2end_a6000.png",
+    "png/figure10_end2end_a6000.png",
     bbox_inches="tight",
     transparent=False,
     dpi=255,
