@@ -33,11 +33,6 @@ nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --gpus all --cap-add=SY
 # cd the artifact folder
 cd /root/Ladder
 ```
-### Prepare Baseline Software
-
-```bash
-cd /root/Ladder/artifact && ./scripts/install_nvidia_environments.sh
-```
 
 ### Prepare Model ONNX Files
 
