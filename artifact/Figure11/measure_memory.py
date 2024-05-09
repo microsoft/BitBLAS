@@ -217,5 +217,9 @@ if os.path.exists(path):
     memory_usage = analyze_log('run.log')
 data['{}_{}_{}_{}'.format(model, framework, batch_size, seq_len)] = memory_usage
 print(data)
+find_process_and_kill()
+
 with open(f'logs/{model}_{framework}_b{batch_size}_s{seq_len}_data.json', 'w') as f:
     json.dump(data, f)
+
+find_process_and_kill()
