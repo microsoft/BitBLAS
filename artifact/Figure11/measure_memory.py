@@ -70,7 +70,7 @@ def tensorrt_inference(model='llama', batch_size=1, seq_len=1):
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.trt'
     else:
         model_file = f'{model_path}/bloom_176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.trt'
-    target_process = subprocess.Popen(f'{trt_exec_path} --loadEngine={model_file} --fp16 --workspace=8192 --iterations=10000 ;', shell=True)
+    target_process = subprocess.Popen(f'LD_LIBRARY_PATH={trt_exec_path}../lib {trt_exec_path} --loadEngine={model_file} --fp16 --workspace=8192 --iterations=10000 ;', shell=True)
     return target_process
 
 def vllm_inference(model='llama', batch_size=1, seq_len=1):
