@@ -210,7 +210,7 @@ if os.path.exists(path):
     sleep(15) # wait the memory to be steady (this large laguange model need more time to be steady)
     monitor_process = subprocess.Popen('bash nvidia_measure_memory.sh > run.log', shell=True)
     try:
-        target_process.wait(timeout=10)
+        target_process.wait(timeout=20)
     except Exception as err:
         find_process_and_kill()
     monitor_process.terminate()
