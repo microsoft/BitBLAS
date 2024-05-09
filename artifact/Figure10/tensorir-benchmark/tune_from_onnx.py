@@ -1,5 +1,3 @@
-# Copyright (c) Microsoft Corporation.
-# Licensed under the MIT License.
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -27,16 +25,14 @@ from tvm.meta_schedule.testing.custom_builder_runner import run_module_via_rpc
 from tvm.meta_schedule import extract_task_from_relay
 from tvm.meta_schedule.tune import tune_extracted_tasks
 import os
-
 # We use fp16-16-32 intrinsic for e2e workloads
 from tvm.meta_schedule.testing import tir_tensor_intrin_fp16
 from utils import *
 import onnx
 import time
 import logging
-from configs import onnx_files, input_shape_dict
-
 logging.basicConfig(level=logging.INFO)
+from configs import onnx_files, input_shape_dict
 
 
 def f_measurement(rt_mod: runtime.Module, device: runtime.ndarray.Device, input_data):
@@ -59,21 +55,23 @@ def tune(workload, input_shape, num_trials=1000):
         os.makedirs("benchmark/caches/relay")
     _workload = onnx_files[workload]
     # input_name = _workload['input_name']
-    input_dtype = _workload["input_dtype"]
-    onnx_model = _workload["path"]
+    input_dtype = _workload['input_dtype']
+    onnx_model = _workload['path']
     onnx_model = onnx.load(onnx_model)
     # from onnx_model get input_name
     input_name = onnx_model.graph.input[0].name
-    relay_mod, params = relay.frontend.from_onnx(onnx_model)
-
+    relay_mod, params = relay.frontend.from_onnx(
+        onnx_model)
+    
     target = os.environ.get("TVM_TARGET")
     target = Target(target)
-
+    
     # relay_mod = convert_conv2d_layout(
-    # relay_mod, {"nn.conv2d": ["NHWC", "default"]})
+    #     relay_mod, {"nn.conv2d": ["NHWC", "default"]})
     relay_mod = relay.transform.ToMixedPrecision("float16")(relay_mod)
     relay_mod = rewrite_reshape_gelu(relay_mod)
-    tasks = extract_task_from_relay(relay_mod, target=target, params=params)
+    tasks = extract_task_from_relay(
+        relay_mod, target=target, params=params)
 
     # run tuning tasks
     print("Tuning...")
@@ -98,36 +96,33 @@ def tune(workload, input_shape, num_trials=1000):
     )
     workdir = f"./logs/{workload}-{input_shape}"
     start = time.time()
-    database = tune_extracted_tasks(
-        memhammer_tasks,
-        config=search_config,
-        sch_rules=sch_rules_tensor_core,
-        postprocs=postprocs_tensor_core,
-        work_dir=workdir,
-        runner=runner,
-    )
+    # database = tune_extracted_tasks(
+    #     memhammer_tasks,
+    #     config=search_config,
+    #     sch_rules=sch_rules_tensor_core,
+    #     postprocs=postprocs_tensor_core,
+    #     work_dir=workdir,
+    #     runner=runner,
+    # )
 
     database = tune_extracted_tasks(
         other_tasks,
         config=search_config,
         # use default CUDA rules
         work_dir=workdir,
-        database=database,
+        # database=database,
         runner=runner,
     )
 
-    end = time.time()
-    cost = end - start
-    print("Cost time: ", cost)
-    with open(f"{workdir}/cost_time.txt", "w") as f:
-        f.write(str(cost))
+
     with ms.ApplyHistoryBest(database):
         with tvm.transform.PassContext(
             opt_level=3,
-            config={"relay.backend.use_meta_schedule": True, "tir.predicate_opt": True},
+            config={"relay.backend.use_meta_schedule": True,
+                    "tir.predicate_opt": True},
         ):
             mod = tvm.relay.build(relay_mod, target=target, params=params)
-
+    end = time.time()
     if input_dtype.startswith("float"):
         input_data = {
             input_name: np.random.uniform(size=input_shape).astype(input_dtype)
@@ -141,14 +136,18 @@ def tune(workload, input_shape, num_trials=1000):
 
     dev = tvm.device(target.kind.name)
     input_data = {
-        key: tvm.runtime.ndarray.array(value, dev) for key, value in input_data.items()
+        key: tvm.runtime.ndarray.array(value, dev)
+        for key, value in input_data.items()
     }
+    cost = end - start
+    print("Cost time: ", cost)
+    with open(f"{workdir}/cost_time.txt", "w") as f:
+        f.write(str(cost))
 
     latency = f_measurement(mod, dev, input_data)
     print("Latency: ", latency)
     with open(f"{workdir}/latency.txt", "w") as f:
         f.write(str(latency))
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
