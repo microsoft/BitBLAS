@@ -45,7 +45,6 @@ else:
     for model in ["llama", "bloom"]:
         for batch_size, seq_len in [
                 (1, 1),
-                (32, 1),
                 (1, 4096)
             ]:
             # reproduce the results for inductor
