@@ -929,3 +929,14 @@ plt.savefig(
     transparent=False,
     dpi=255,
 )
+
+plt.savefig(
+    "reproduce_result/figure10_end2end_a6000.pdf",
+    bbox_inches="tight",
+)
+plt.savefig(
+    "reproduce_result/figure10_end2end_a6000.png",
+    bbox_inches="tight",
+    transparent=False,
+    dpi=255,
+)
