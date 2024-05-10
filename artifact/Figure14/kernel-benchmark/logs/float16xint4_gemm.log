@@ -1,18 +1,18 @@
-[BitBLAS] The best latency of top 1 is 0.436 ms
-[BitBLAS] The best latency of top 20 is 0.342 ms
-Time cost of Dlight default schedule: 0.389 ms
-[BitBLAS] The best latency of top 1 is 2.135 ms
-[BitBLAS] The best latency of top 20 is 2.070 ms
-Time cost of Dlight default schedule: 2.282 ms
-[BitBLAS] The best latency of top 1 is 7.232 ms
-[BitBLAS] The best latency of top 20 is 7.120 ms
-Time cost of Dlight default schedule: 7.839 ms
-[BitBLAS] The best latency of top 1 is 14.718 ms
-[BitBLAS] The best latency of top 20 is 7.342 ms
-Time cost of Dlight default schedule: 7.908 ms
+[BitBLAS] The best latency of top 1 is 0.360 ms
+[BitBLAS] The best latency of top 20 is 0.343 ms
+Time cost of Dlight default schedule: 0.388 ms
+[BitBLAS] The best latency of top 1 is 2.486 ms
+[BitBLAS] The best latency of top 20 is 2.074 ms
+Time cost of Dlight default schedule: 2.277 ms
+[BitBLAS] The best latency of top 1 is 8.499 ms
+[BitBLAS] The best latency of top 20 is 7.023 ms
+Time cost of Dlight default schedule: 7.840 ms
+[BitBLAS] The best latency of top 1 is 7.350 ms
+[BitBLAS] The best latency of top 20 is 7.350 ms
+Time cost of Dlight default schedule: 7.891 ms
 PrimFunc                     Input Arguments              BitBLAS Top20 Tune Time      BitBLAS Top1 Latency         BitBLAS Top20 Latency        DefaultDLight Tune Time      DefaultDLight Latency        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-matmul_nt_dequantize_b_propagate_a_propagate_b4096-1024-8192-float16-float16-float16-4-int8-uint-False-False--2-True-False 34.96835660934448 s         0.436 ms                     0.342 ms                     0.5851082801818848           3.887e-01 ms                 
-matmul_nt_dequantize_b_propagate_a_propagate_b4096-8192-8192-float16-float16-float16-4-int8-uint-False-False--2-True-False 33.471816539764404 s        2.135 ms                     2.070 ms                     0.5859682559967041           2.282e+00 ms                 
-matmul_nt_dequantize_b_propagate_a_propagate_b4096-28672-8192-float16-float16-float16-4-int8-uint-False-False--2-True-False 32.94312143325806 s         7.232 ms                     7.120 ms                     0.5798003673553467           7.839e+00 ms                 
-matmul_nt_dequantize_b_propagate_a_propagate_b4096-8192-28672-float16-float16-float16-4-int8-uint-False-False--2-True-False 34.547672510147095 s        14.718 ms                    7.342 ms                     0.5795168876647949           7.908e+00 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-1024-8192-float16-float16-float16-4-int8-uint-False-False--2-True-False 35.353246212005615 s        0.360 ms                     0.343 ms                     0.5649533271789551           3.877e-01 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-8192-8192-float16-float16-float16-4-int8-uint-False-False--2-True-False 32.990131855010986 s        2.486 ms                     2.074 ms                     0.560234785079956            2.277e+00 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-28672-8192-float16-float16-float16-4-int8-uint-False-False--2-True-False 35.394957542419434 s        8.499 ms                     7.023 ms                     0.5600202083587646           7.840e+00 ms                 
+matmul_nt_dequantize_b_propagate_a_propagate_b4096-8192-28672-float16-float16-float16-4-int8-uint-False-False--2-True-False 35.173556089401245 s        7.350 ms                     7.350 ms                     0.5735111236572266           7.891e+00 ms                 

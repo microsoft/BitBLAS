@@ -1,0 +1,117 @@
+Measure the memory for llama batch 1 seq 4096 under ladder_int8_int1
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #0 tvmgen_welder_cast_multiply_0_mean_add_sqrt_divide_1:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 142.643 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #1 tvmgen_welder_multiply_cast_multiply_reshape_cast_cast_layout_transform_ladder_layout_transform_2:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 89.344 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #2 tvmgen_welder_ladder_perfect_quant_linear_3_layout_transform_reshape_cast_reshape_reshape_transpose_4:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 1249.69 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #3 tvmgen_welder_multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 103.296 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #4 tvmgen_welder_ladder_perfect_quant_linear_6_layout_transform_reshape_cast_reshape_reshape_transpose_7:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 205.926 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #5 tvmgen_welder_multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 62.3435 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #6 tvmgen_welder_nn_batch_matmul_9_reshape_divide_10:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 3375.92 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #7 tvmgen_welder_max_11_subtract_exp_12:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 2047.39 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #8 tvmgen_welder_sum_13_divide_cast_cast_reshape_14:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 83.2 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #9 tvmgen_welder_ladder_perfect_quant_linear_15:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 242.483 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #10 tvmgen_welder_layout_transform_reshape_cast_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 67.2639 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #11 tvmgen_welder_nn_batch_matmul_17:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 1502.92 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #12 tvmgen_welder_reshape_transpose_reshape_reshape_cast_cast_layout_transform_ladder_layout_transform_18:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 88.7679 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #13 tvmgen_welder_ladder_perfect_quant_linear_19_layout_transform_reshape_cast_reshape_add_20:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 1416.29 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #14 tvmgen_welder_cast_multiply_21_mean_add_sqrt_divide_22:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 141.926 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #15 tvmgen_welder_multiply_cast_multiply_23:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 132.096 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #16 tvmgen_welder_reshape_cast_cast_layout_transform_ladder_layout_transform_24:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 90.432 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #17 tvmgen_welder_ladder_perfect_quant_linear_25_layout_transform_reshape_cast_reshape_26:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 4328.24 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #18 tvmgen_welder_ladder_perfect_quant_linear_27:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 4769.07 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #19 tvmgen_welder_sigmoid_multiply_layout_transform_reshape_cast_reshape_multiply_reshape_cast_cast_layout_transform_ladder_layout_transform_28:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 440.217 us/iter
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #20 tvmgen_welder_ladder_perfect_quant_linear_29_layout_transform_reshape_cast_reshape_add_30:
+[19:33:09] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 4757.91 us/iter
+Testing model: llama2-70b
+Running from prebuilt model: /root/Ladder/artifact/Figure11/../checkpoints/Figure11/ladder/checkpoints/llama2-70b/llama2_fq_0_int_1_-1_bs1_seq4096_ci_True_async
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+  25.1883      25.1946      25.1960      25.1607       0.0138   
+               
+Node Name                                                                                                                                            Ops                                                                                                                                                  Time(us)   Time(%)  Shape                Inputs  Outputs  Measurements(us)  
+---------                                                                                                                                            ---                                                                                                                                                  --------   -------  -----                ------  -------  ----------------  
+tvmgen_welder_ladder_perfect_quant_linear_27                                                                                                         tvmgen_welder_ladder_perfect_quant_linear_27                                                                                                         4769.075   18.822   (256, 1792, 16, 16)  2       1        [4769.075]        
+tvmgen_welder_ladder_perfect_quant_linear_29_layout_transform_reshape_cast_reshape_add_30                                                            tvmgen_welder_ladder_perfect_quant_linear_29_layout_transform_reshape_cast_reshape_add_30                                                            4757.914   18.778   (1, 4096, 8192)      3       1        [4757.914]        
+tvmgen_welder_ladder_perfect_quant_linear_25_layout_transform_reshape_cast_reshape_26                                                                tvmgen_welder_ladder_perfect_quant_linear_25_layout_transform_reshape_cast_reshape_26                                                                4328.243   17.082   (1, 4096, 28672)     2       1        [4328.243]        
+tvmgen_welder_nn_batch_matmul_9_reshape_divide_10                                                                                                    tvmgen_welder_nn_batch_matmul_9_reshape_divide_10                                                                                                    3375.923   13.324   (1, 64, 4096, 4096)  2       1        [3375.923]        
+tvmgen_welder_max_11_subtract_exp_12                                                                                                                 tvmgen_welder_max_11_subtract_exp_12                                                                                                                 2047.385   8.08     (1, 64, 4096, 4096)  2       1        [2047.385]        
+tvmgen_welder_nn_batch_matmul_17                                                                                                                     tvmgen_welder_nn_batch_matmul_17                                                                                                                     1502.925   5.932    (64, 4096, 128)      2       1        [1502.925]        
+tvmgen_welder_ladder_perfect_quant_linear_19_layout_transform_reshape_cast_reshape_add_20                                                            tvmgen_welder_ladder_perfect_quant_linear_19_layout_transform_reshape_cast_reshape_add_20                                                            1416.294   5.59     (1, 4096, 8192)      3       1        [1416.294]        
+tvmgen_welder_ladder_perfect_quant_linear_3_layout_transform_reshape_cast_reshape_reshape_transpose_4                                                tvmgen_welder_ladder_perfect_quant_linear_3_layout_transform_reshape_cast_reshape_reshape_transpose_4                                                1249.69    4.932    (1, 64, 4096, 128)   2       1        [1249.69]         
+tvmgen_welder_sigmoid_multiply_layout_transform_reshape_cast_reshape_multiply_reshape_cast_cast_layout_transform_ladder_layout_transform_28          tvmgen_welder_sigmoid_multiply_layout_transform_reshape_cast_reshape_multiply_reshape_cast_cast_layout_transform_ladder_layout_transform_28          440.218    1.737    (256, 896, 16, 32)   2       1        [440.217]         
+tvmgen_welder_ladder_perfect_quant_linear_15                                                                                                         tvmgen_welder_ladder_perfect_quant_linear_15                                                                                                         242.483    0.957    (256, 64, 16, 16)    2       1        [242.483]         
+tvmgen_welder_ladder_perfect_quant_linear_6_layout_transform_reshape_cast_reshape_reshape_transpose_7                                                tvmgen_welder_ladder_perfect_quant_linear_6_layout_transform_reshape_cast_reshape_reshape_transpose_7                                                205.926    0.813    (1, 8, 4096, 128)    2       1        [205.926]         
+tvmgen_welder_cast_multiply_0_mean_add_sqrt_divide_1                                                                                                 tvmgen_welder_cast_multiply_0_mean_add_sqrt_divide_1                                                                                                 142.643    0.563    (1, 4096, 8192)      1       2        [142.643]         
+tvmgen_welder_cast_multiply_0_mean_add_sqrt_divide_1                                                                                                 tvmgen_welder_cast_multiply_0_mean_add_sqrt_divide_1                                                                                                 142.643    0.563    (1, 4096, 1)         1       2        [142.643]         
+tvmgen_welder_cast_multiply_21_mean_add_sqrt_divide_22                                                                                               tvmgen_welder_cast_multiply_21_mean_add_sqrt_divide_22                                                                                               141.926    0.56     (1, 4096, 8192)      1       2        [141.926]         
+tvmgen_welder_cast_multiply_21_mean_add_sqrt_divide_22                                                                                               tvmgen_welder_cast_multiply_21_mean_add_sqrt_divide_22                                                                                               141.926    0.56     (1, 4096, 1)         1       2        [141.926]         
+tvmgen_welder_multiply_cast_multiply_23                                                                                                              tvmgen_welder_multiply_cast_multiply_23                                                                                                              132.096    0.521    (1, 4096, 8192)      3       1        [132.096]         
+tvmgen_welder_multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5                                                       tvmgen_welder_multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5                                                       103.296    0.408    (64, 4096, 128)      3       1        [103.296]         
+tvmgen_welder_reshape_cast_cast_layout_transform_ladder_layout_transform_24                                                                          tvmgen_welder_reshape_cast_cast_layout_transform_ladder_layout_transform_24                                                                          90.432     0.357    (256, 256, 16, 32)   1       1        [90.432]          
+tvmgen_welder_multiply_cast_multiply_reshape_cast_cast_layout_transform_ladder_layout_transform_2                                                    tvmgen_welder_multiply_cast_multiply_reshape_cast_cast_layout_transform_ladder_layout_transform_2                                                    89.344     0.353    (256, 256, 16, 32)   3       1        [89.344]          
+tvmgen_welder_reshape_transpose_reshape_reshape_cast_cast_layout_transform_ladder_layout_transform_18                                                tvmgen_welder_reshape_transpose_reshape_reshape_cast_cast_layout_transform_ladder_layout_transform_18                                                88.768     0.35     (256, 256, 16, 32)   1       1        [88.768]          
+tvmgen_welder_sum_13_divide_cast_cast_reshape_14                                                                                                     tvmgen_welder_sum_13_divide_cast_cast_reshape_14                                                                                                     83.2       0.328    (64, 4096, 4096)     2       1        [83.2]            
+tvmgen_welder_layout_transform_reshape_cast_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16                          tvmgen_welder_layout_transform_reshape_cast_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16                          67.264     0.265    (64, 128, 4096)      1       1        [67.264]          
+tvmgen_welder_multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8  tvmgen_welder_multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8  62.343     0.246    (64, 4096, 128)      3       1        [62.343]          
+Total_time                                                                                                                                           -                                                                                                                                                    25337.389  -        -                    -       -        -                 [19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #0 tvmgen_welder_cast_multiply_0_mean_add_sqrt_divide_1:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 142.029 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #1 tvmgen_welder_multiply_cast_multiply_reshape_cast_cast_layout_transform_ladder_layout_transform_2:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 89.344 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #2 tvmgen_welder_ladder_perfect_quant_linear_3_layout_transform_reshape_cast_reshape_reshape_transpose_4:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 1251.53 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #3 tvmgen_welder_multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 103.424 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #4 tvmgen_welder_ladder_perfect_quant_linear_6_layout_transform_reshape_cast_reshape_reshape_transpose_7:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 206.029 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #5 tvmgen_welder_multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 62.1628 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #6 tvmgen_welder_nn_batch_matmul_9_reshape_divide_10:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 3377.15 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #7 tvmgen_welder_max_11_subtract_exp_12:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 2047.18 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #8 tvmgen_welder_sum_13_divide_cast_cast_reshape_14:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 83.1359 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #9 tvmgen_welder_ladder_perfect_quant_linear_15:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 242.79 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #10 tvmgen_welder_layout_transform_reshape_cast_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 67.008 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #11 tvmgen_welder_nn_batch_matmul_17:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 1501.39 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #12 tvmgen_welder_reshape_transpose_reshape_reshape_cast_cast_layout_transform_ladder_layout_transform_18:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 89.088 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #13 tvmgen_welder_ladder_perfect_quant_linear_19_layout_transform_reshape_cast_reshape_add_20:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 1417.01 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #14 tvmgen_welder_cast_multiply_21_mean_add_sqrt_divide_22:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 142.643 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #15 tvmgen_welder_multiply_cast_multiply_23:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 132.198 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #16 tvmgen_welder_reshape_cast_cast_layout_transform_ladder_layout_transform_24:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 90.5599 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #17 tvmgen_welder_ladder_perfect_quant_linear_25_layout_transform_reshape_cast_reshape_26:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 4329.68 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #18 tvmgen_welder_ladder_perfect_quant_linear_27:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 4768.77 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #19 tvmgen_welder_sigmoid_multiply_layout_transform_reshape_cast_reshape_multiply_reshape_cast_cast_layout_transform_ladder_layout_transform_28:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 438.784 us/iter
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:95: Op #20 tvmgen_welder_ladder_perfect_quant_linear_29_layout_transform_reshape_cast_reshape_add_30:
+[19:33:24] /root/Ladder/3rdparty/tvm/src/runtime/graph_executor/debug/graph_executor_debug.cc:98: Iteration: 0: 4757.61 us/iter
+{'llama_ladder_int8_int1_1_4096': 4934}

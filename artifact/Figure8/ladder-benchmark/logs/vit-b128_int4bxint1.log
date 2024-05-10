@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/Figure8/../checkpoints/Figure8/ladder/checkpoints/vit_fq_0_int4b_1_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   4.4910       4.4910       4.4913       4.4907       0.0002   
+               

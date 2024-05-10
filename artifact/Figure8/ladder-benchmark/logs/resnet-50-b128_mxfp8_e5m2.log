@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/Figure8/../checkpoints/Figure8/ladder/checkpoints/resnet-50_fq_0_mxfp_8_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   9.2206       9.2206       9.2212       9.2203       0.0003   
+               

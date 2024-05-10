@@ -1,56 +1,56 @@
 fp32xmxfp8_gemv.py
-2024-05-06 13:25:24 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 7], 'thread': [1, 7], 'rstep': [448], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}
-2024-05-06 13:25:25 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:25 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 14], 'thread': [1, 14], 'rstep': [224], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}
-2024-05-06 13:25:25 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:25 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [448], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:25 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:25 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [224], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:25 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:25 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [896], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:25 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:25 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 56], 'thread': [1, 56], 'rstep': [112], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:25 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 28], 'thread': [1, 28], 'rstep': [112], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [112], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [112], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [1792], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}
-2024-05-06 13:25:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [1792], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 2}}
-2024-05-06 13:25:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [1, 112], 'thread': [1, 112], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:26 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [1, 128], 'thread': [1, 128], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:26 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:39 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 7], 'thread': [1, 7], 'rstep': [448], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}
+2024-05-09 20:03:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 14], 'thread': [1, 14], 'rstep': [224], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}
+2024-05-09 20:03:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [448], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [224], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [896], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 56], 'thread': [1, 56], 'rstep': [112], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 28], 'thread': [1, 28], 'rstep': [112], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [112], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [112], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [1792], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}
+2024-05-09 20:03:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [1792], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 2}}
+2024-05-09 20:03:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [1, 112], 'thread': [1, 112], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:41 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [1, 128], 'thread': [1, 128], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:41 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
 {<Node, ladder_matmul>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [448], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
-0.7930880188941956
+0.7959893345832825
 {<Node, ladder_matmul>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [224], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}}
-1.035377860069275
+1.0365155935287476
 {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [448], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.8009955883026123
+0.8013824224472046
 {<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [224], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-1.0335232019424438
+1.0327609777450562
 {<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [896], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.7459374070167542
+0.7384064197540283
 {<Node, ladder_matmul>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [112], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-1.8187263011932373
+1.823061466217041
 {<Node, ladder_matmul>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [112], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-1.3715455532073975
+1.373070240020752
 {<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [112], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-1.8678783178329468
+1.8695167303085327
 {<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [112], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-1.3827072381973267
+1.3842204809188843
 {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [1792], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}}
-0.6994850635528564
+0.6980608105659485
 {<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [1792], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 2}}}
-1.020416021347046
+1.0138736963272095
 {<Node, ladder_matmul>: {'block': [1, 112], 'thread': [1, 112], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.7443549633026123
+0.7456768155097961
 {<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.6517294645309448
+0.6529024243354797
 __global__ void __launch_bounds__(128) Fused(float* __restrict__ A, int8_t* __restrict__ B, uint8_t* __restrict__ Scales, float* __restrict__ C) {
   
   float in_thread_C_local[1];
@@ -98,42 +98,42 @@ __global__ void __launch_bounds__(128) Fused(float* __restrict__ A, int8_t* __re
 }
 
 
-top1: 0.7930880188941956 	top10: 0.6517294645309448
+top1: 0.7959893345832825 	top10: 0.6529024243354797
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-best latency: 0.6517294645309448
-2024-05-06 13:25:30 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [448], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:30 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:30 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [896], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:30 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:30 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [112], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:30 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:30 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [224], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:30 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:30 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [1792], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}
-2024-05-06 13:25:30 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:30 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [1792], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 2}}
-2024-05-06 13:25:30 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:30 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [112], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:30 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
-2024-05-06 13:25:30 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [1, 128], 'thread': [1, 128], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
-2024-05-06 13:25:30 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+best latency: 0.6529024243354797
+2024-05-09 20:03:45 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [448], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:45 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:45 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [896], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:45 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:45 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [112], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:45 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:45 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [224], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:45 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:45 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [1792], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}
+2024-05-09 20:03:45 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:45 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [1792], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 2}}
+2024-05-09 20:03:45 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:45 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [112], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:45 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-09 20:03:45 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [1, 128], 'thread': [1, 128], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-09 20:03:45 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
 {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [448], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
 0.2247679978609085
 {<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [896], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.2457600086927414
+0.2433023899793625
 {<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [112], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.6034432053565979
+0.6045695543289185
 {<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [224], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.370005339384079
+0.3695616126060486
 {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [1792], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 4}}}
-0.21381120383739471
+0.21382981538772583
 {<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [1792], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B_decode': 2}}}
-0.24657920002937317
+0.24596479535102844
 {<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [112], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.8891391754150391
+0.8895487785339355
 {<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.1927168071269989
+0.19446691870689392
 __global__ void __launch_bounds__(128) Fused(float* __restrict__ A, int8_t* __restrict__ B, uint8_t* __restrict__ Scales, float* __restrict__ C) {
   
   float in_thread_C_local[1];
@@ -181,9 +181,9 @@ __global__ void __launch_bounds__(128) Fused(float* __restrict__ A, int8_t* __re
 }
 
 
-top1: 0.2247679978609085 	top10: 0.1927168071269989
+top1: 0.2247679978609085 	top10: 0.19446691870689392
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [112], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-best latency: 0.1927168071269989
-1_14336_57344	0.6517294645309448
-1_8192_28672	0.1927168071269989
+best latency: 0.19446691870689392
+1_14336_57344	0.6529024243354797
+1_8192_28672	0.19446691870689392

@@ -1,8 +1,2208 @@
-./conv_nhwc_nhwc_int4xint1.py
-/root/Ladder/artifact/Figure12/ladder-benchmark/././conv_nhwc_nhwc_int4xint1.py:323: SyntaxWarning: list indices must be integers or slices, not tuple; perhaps you missed a comma?
-  [128, 64, 56, 56, 64, 3, 3, 1, 1, 1]
+conv_nhwc_nhwc_int4xint1.py
+n: 128, f: 64, h: 56, w: 56, c: 64, kh: 3, kw: 3, s: 1, d: 1, p: 0, oh: 54, ow: 54
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10670080035924911
+{<Node, ladder_conv2d_reshape_bias>: {'block': [6, 4, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.12134400010108948
+{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 4, 16, 16], 'warp': [9, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10362879931926727
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10465279966592789
+{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 2, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.11212799698114395
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.14847999811172485
+{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 2, 16, 16], 'warp': [3, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.09907200187444687
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.13332480192184448
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10485760122537613
+{<Node, ladder_conv2d_reshape_bias>: {'block': [3, 4, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1773568093776703
+{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 2, 16, 16], 'warp': [9, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10833920538425446
+{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 4, 16, 16], 'warp': [12, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10342399775981903
+{<Node, ladder_conv2d_reshape_bias>: {'block': [6, 2, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.15769599378108978
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.20213758945465088
+{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 1, 16, 16], 'warp': [9, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.12595200538635254
+{<Node, ladder_conv2d_reshape_bias>: {'block': [24, 1, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.12236800044775009
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 1, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1271807998418808
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.23705600202083588
+{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 1, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.12160000205039978
+{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 2, 16, 16], 'warp': [9, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10178560018539429
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.11653120815753937
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 2, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10792960226535797
+{<Node, ladder_conv2d_reshape_bias>: {'block': [24, 2, 16, 16], 'warp': [12, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10895359516143799
+{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 1, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.11837439239025116
+{<Node, ladder_conv2d_reshape_bias>: {'block': [3, 2, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1740799993276596
+{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 1, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.11735039949417114
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1154559999704361
+{<Node, ladder_conv2d_reshape_bias>: {'block': [36, 1, 16, 16], 'warp': [9, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.12267520278692245
+{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 4, 16, 16], 'warp': [27, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.2801664173603058
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 4, 16, 16], 'warp': [32, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.5017600059509277
+{<Node, ladder_conv2d_reshape_bias>: {'block': [24, 4, 16, 16], 'warp': [24, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.19312641024589539
+{<Node, ladder_conv2d_reshape_bias>: {'block': [6, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.11724799871444702
+{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 4, 16, 16], 'warp': [18, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10731519758701324
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.3461120128631592
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.15385599434375763
+{<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.4194986820220947
+{<Node, ladder_conv2d_reshape_bias>: {'block': [3, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1599999964237213
+{<Node, ladder_conv2d_reshape_bias>: {'block': [54, 1, 16, 16], 'warp': [18, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [48, 1, 16, 16], 'warp': [12, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [54, 2, 16, 16], 'warp': [27, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+code:  __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int T_conv_warp[216];
+  __shared__ signed char data_shared[55296];
+  __shared__ signed char weight_shared[512];
+  __shared__ signed char B_decode_shared[1024];
+  signed char weight_shared_local[2];
+  signed char B_decode_local[16];
+  signed char data_shared_warp[432];
+  signed char B_decode_shared_warp[16];
+  signed char weight_shared_local_1[2];
+  signed char B_decode_local_1[16];
+  signed char data_shared_warp_1[432];
+  signed char B_decode_shared_warp_1[16];
+
+  const int MAX_BLOCK_N = 10;
+  const auto baseBlockIdx = blockIdx.x + gridDim.x *blockIdx.y;
+  const auto totalPanel = (gridDim.x * gridDim.y +MAX_BLOCK_N * gridDim.x - 1) / (MAX_BLOCK_N * gridDim.x);
+  const auto totalBlock = gridDim.x * gridDim.y;
+  const auto panelIdx = baseBlockIdx / (MAX_BLOCK_N *gridDim.x);
+  const auto strideLd = panelIdx + 1 < totalPanel ?MAX_BLOCK_N : (totalBlock - panelIdx * (MAX_BLOCK_N *gridDim.x)) / gridDim.x;
+  const auto bx = (panelIdx & 1) ? gridDim.x -(baseBlockIdx - panelIdx * MAX_BLOCK_N * gridDim.x) /strideLd - 1 : (baseBlockIdx - panelIdx * MAX_BLOCK_N *gridDim.x) / strideLd;
+  const auto by = (baseBlockIdx - panelIdx * MAX_BLOCK_N *gridDim.x) % strideLd + panelIdx * MAX_BLOCK_N;
+  const auto bz = blockIdx.z;
+  const dim3 blockIdx(bx, by, bz);
+  
+  for (int i_2_init = 0; i_2_init < 27; ++i_2_init) {
+    for (int j_2_init = 0; j_2_init < 1; ++j_2_init) {
+      for (int i = 0; i < 8; ++i) {
+T_conv_warp[(i_2_init * 8) + i] = 0.0;}
+;
+    }
+  }
+  #pragma unroll
+  for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 14; ++ax0_ax1_ax2_ax3_0_fused_0) {
+    if (((((ax0_ax1_ax2_ax3_0_fused_0 * 128) + (((int)threadIdx.y) * 64)) + (((int)threadIdx.z) * 32)) + ((int)threadIdx.x)) < 1728) {
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + ((((ax0_ax1_ax2_ax3_0_fused_0 * 2048) + (((int)threadIdx.y) * 1024)) + (((int)threadIdx.z) * 512)) + (((int)threadIdx.x) * 16)))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)(data_shared + ((((ax0_ax1_ax2_ax3_0_fused_0 * 2048) + (((int)threadIdx.y) * 1024)) + (((int)threadIdx.z) * 512)) + (((int)threadIdx.x) * 16))))
+    );
+#endif
+    __asm__ __volatile__(
+      #if TVM_ENABLE_L2_PREFETCH
+        "cp.async.cg.shared.global.L2::128B [%0], [%1], %2;"
+      #else
+        "cp.async.cg.shared.global [%0], [%1], %2;"
+      #endif
+        :: "r"(addr), "l"((void*)(input + (((((((((((int)blockIdx.y) * 54) + (ax0_ax1_ax2_ax3_0_fused_0 * 4)) + (((int)threadIdx.y) * 2)) + ((int)threadIdx.z)) / 2916) * 1605632) + (((((((ax0_ax1_ax2_ax3_0_fused_0 * 4) + (((int)threadIdx.y) * 2)) + ((int)threadIdx.z)) / 54) + ((int)blockIdx.y)) % 54) * 28672)) + (((((ax0_ax1_ax2_ax3_0_fused_0 * 4) + (((int)threadIdx.y) * 2)) + ((int)threadIdx.z)) % 54) * 512)) + (((int)threadIdx.x) * 16)))), "n"(16)
+    );
+  }
+    }
+  }
+  for (int ax0_ax1_ax2_ax3_fused_2 = 0; ax0_ax1_ax2_ax3_fused_2 < 8; ++ax0_ax1_ax2_ax3_fused_2) {
+    if (((((int)threadIdx.x) >> 4) + ((int)blockIdx.x)) < 2) {
+      weight_shared[((((int)threadIdx.x) * 8) + ax0_ax1_ax2_ax3_fused_2)] = weight[(((((((int)blockIdx.x) * 2304) + ((((int)threadIdx.x) >> 3) * 1152)) + ((((int)threadIdx.x) & 7) * 16)) + ((ax0_ax1_ax2_ax3_fused_2 >> 2) * 8)) + (ax0_ax1_ax2_ax3_fused_2 & 3))];
+    }
+  }
+__asm__ __volatile__("cp.async.commit_group;");
+
+  for (int k_0 = 0; k_0 < 8; ++k_0) {
+    #pragma unroll
+    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 14; ++ax0_ax1_ax2_ax3_0_fused_0_1) {
+      if (((((ax0_ax1_ax2_ax3_0_fused_0_1 * 128) + (((int)threadIdx.y) * 64)) + (((int)threadIdx.z) * 32)) + ((int)threadIdx.x)) < 1728) {
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + (((((((k_0 + 1) & 1) * 27648) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 2048)) + (((int)threadIdx.y) * 1024)) + (((int)threadIdx.z) * 512)) + (((int)threadIdx.x) * 16)))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)(data_shared + (((((((k_0 + 1) & 1) * 27648) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 2048)) + (((int)threadIdx.y) * 1024)) + (((int)threadIdx.z) * 512)) + (((int)threadIdx.x) * 16))))
+    );
+#endif
+    __asm__ __volatile__(
+      #if TVM_ENABLE_L2_PREFETCH
+        "cp.async.cg.shared.global.L2::128B [%0], [%1], %2;"
+      #else
+        "cp.async.cg.shared.global [%0], [%1], %2;"
+      #endif
+        :: "r"(addr), "l"((void*)(input + (((((((((((((((int)blockIdx.y) * 54) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 4)) + (((int)threadIdx.y) * 2)) + ((int)threadIdx.z)) / 2916) * 1605632) + (((k_0 + 1) / 3) * 28672)) + (((((((ax0_ax1_ax2_ax3_0_fused_0_1 * 4) + (((int)threadIdx.y) * 2)) + ((int)threadIdx.z)) / 54) + ((int)blockIdx.y)) % 54) * 28672)) + (k_0 * 512)) + (((((ax0_ax1_ax2_ax3_0_fused_0_1 * 4) + (((int)threadIdx.y) * 2)) + ((int)threadIdx.z)) % 54) * 512)) + (((k_0 + 1) % 3) * 512)) + (((int)threadIdx.x) * 16)) + 512))), "n"(16)
+    );
+  }
+      }
+    }
+    for (int ax0_ax1_ax2_ax3_fused_2_1 = 0; ax0_ax1_ax2_ax3_fused_2_1 < 8; ++ax0_ax1_ax2_ax3_fused_2_1) {
+      if (((((int)threadIdx.x) >> 4) + ((int)blockIdx.x)) < 2) {
+        weight_shared[(((((k_0 + 1) & 1) * 256) + (((int)threadIdx.x) * 8)) + ax0_ax1_ax2_ax3_fused_2_1)] = weight[(((((((((int)blockIdx.x) * 2304) + ((((int)threadIdx.x) >> 3) * 1152)) + (k_0 * 128)) + ((((int)threadIdx.x) & 7) * 16)) + ((ax0_ax1_ax2_ax3_fused_2_1 >> 2) * 8)) + (ax0_ax1_ax2_ax3_fused_2_1 & 3)) + 128)];
+      }
+    }
+__asm__ __volatile__("cp.async.commit_group;");
+
+__asm__ __volatile__("cp.async.wait_group 1;");
+
+    __syncthreads();
+    if (((int)threadIdx.y) < 1) {
+      *(char2*)(weight_shared_local + 0) = *(char2*)(weight_shared + (((((k_0 & 1) * 256) + (((int)threadIdx.y) * 128)) + (((int)threadIdx.z) * 64)) + (((int)threadIdx.x) * 2)));
+    }
+    for (int ax0 = 0; ax0 < 16; ++ax0) {
+      if (((int)threadIdx.y) < 1) {
+        B_decode_local[ax0] = (((weight_shared_local[(ax0 >> 3)] >> ((signed char)((ax0 & 3) * 2))) & (signed char)1) + (((weight_shared_local[(ax0 >> 3)] >> ((signed char)(((ax0 & 3) * 2) + 1))) & (signed char)1) << (signed char)4));
+      }
+    }
+    if (((int)threadIdx.y) < 1) {
+      *(int4*)(B_decode_shared + (((((int)threadIdx.y) * 1024) + (((int)threadIdx.z) * 512)) + (((int)threadIdx.x) * 16))) = *(int4*)(B_decode_local + 0);
+    }
+    for (int ax0_1 = 0; ax0_1 < 27; ++ax0_1) {
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[((((k_0 & 1) * 27648) + (((int)threadIdx.y) * 13824)) + (ax0_1 * 512))])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(data_shared[((((k_0 & 1) * 27648) + (((int)threadIdx.y) * 13824)) + (ax0_1 * 512))])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 16)))[0]), "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 16)))[1]), "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 16)))[2]), "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 16)))[3])
+      : "r"(addr)
+    );
+  }
+    }
+    __syncthreads();
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(B_decode_shared[(((int)threadIdx.z) * 512)])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(B_decode_shared[(((int)threadIdx.z) * 512)])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[2]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[3])
+      : "r"(addr)
+    );
+  }
+    for (int i_2 = 0; i_2 < 27; ++i_2) {
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + (i_2 * 8)))[0]), "=r"(((int *)(T_conv_warp + (i_2 * 8)))[1]), "=r"(((int *)(T_conv_warp + (i_2 * 8)))[2]), "=r"(((int *)(T_conv_warp + (i_2 * 8)))[3])
+      : "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[0]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[1]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[2]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[3]), "r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "r"(((int *)(T_conv_warp + (i_2 * 8)))[0]), "r"(((int *)(T_conv_warp + (i_2 * 8)))[1]), "r"(((int *)(T_conv_warp + (i_2 * 8)))[2]), "r"(((int *)(T_conv_warp + (i_2 * 8)))[3]));
+  }
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[0]), "=r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[1]), "=r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[2]), "=r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[3])
+      : "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[0]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[1]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[2]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[3]), "r"(((unsigned *)(B_decode_shared_warp + 8))[0]), "r"(((unsigned *)(B_decode_shared_warp + 8))[1]), "r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[0]), "r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[1]), "r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[2]), "r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[3]));
+  }
+    }
+  }
+__asm__ __volatile__("cp.async.wait_group 0;");
+
+  __syncthreads();
+  if (((int)threadIdx.y) < 1) {
+    *(char2*)(weight_shared_local_1 + 0) = *(char2*)(weight_shared + (((((int)threadIdx.y) * 128) + (((int)threadIdx.z) * 64)) + (((int)threadIdx.x) * 2)));
+  }
+  for (int ax0_2 = 0; ax0_2 < 16; ++ax0_2) {
+    if (((int)threadIdx.y) < 1) {
+      B_decode_local_1[ax0_2] = (((weight_shared_local_1[(ax0_2 >> 3)] >> ((signed char)((ax0_2 & 3) * 2))) & (signed char)1) + (((weight_shared_local_1[(ax0_2 >> 3)] >> ((signed char)(((ax0_2 & 3) * 2) + 1))) & (signed char)1) << (signed char)4));
+    }
+  }
+  if (((int)threadIdx.y) < 1) {
+    *(int4*)(B_decode_shared + (((((int)threadIdx.y) * 1024) + (((int)threadIdx.z) * 512)) + (((int)threadIdx.x) * 16))) = *(int4*)(B_decode_local_1 + 0);
+  }
+  for (int ax0_3 = 0; ax0_3 < 27; ++ax0_3) {
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[((((int)threadIdx.y) * 13824) + (ax0_3 * 512))])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(data_shared[((((int)threadIdx.y) * 13824) + (ax0_3 * 512))])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(data_shared_warp_1 + (ax0_3 * 16)))[0]), "=r"(((unsigned *)(data_shared_warp_1 + (ax0_3 * 16)))[1]), "=r"(((unsigned *)(data_shared_warp_1 + (ax0_3 * 16)))[2]), "=r"(((unsigned *)(data_shared_warp_1 + (ax0_3 * 16)))[3])
+      : "r"(addr)
+    );
+  }
+  }
+  __syncthreads();
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(B_decode_shared[(((int)threadIdx.z) * 512)])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(B_decode_shared[(((int)threadIdx.z) * 512)])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[0]), "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[1]), "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[2]), "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[3])
+      : "r"(addr)
+    );
+  }
+  for (int i_2_1 = 0; i_2_1 < 27; ++i_2_1) {
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + (i_2_1 * 8)))[0]), "=r"(((int *)(T_conv_warp + (i_2_1 * 8)))[1]), "=r"(((int *)(T_conv_warp + (i_2_1 * 8)))[2]), "=r"(((int *)(T_conv_warp + (i_2_1 * 8)))[3])
+      : "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 16)))[0]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 16)))[1]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 16)))[2]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 16)))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[1]), "r"(((int *)(T_conv_warp + (i_2_1 * 8)))[0]), "r"(((int *)(T_conv_warp + (i_2_1 * 8)))[1]), "r"(((int *)(T_conv_warp + (i_2_1 * 8)))[2]), "r"(((int *)(T_conv_warp + (i_2_1 * 8)))[3]));
+  }
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + ((i_2_1 * 8) + 4)))[0]), "=r"(((int *)(T_conv_warp + ((i_2_1 * 8) + 4)))[1]), "=r"(((int *)(T_conv_warp + ((i_2_1 * 8) + 4)))[2]), "=r"(((int *)(T_conv_warp + ((i_2_1 * 8) + 4)))[3])
+      : "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 16)))[0]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 16)))[1]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 16)))[2]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 16)))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 8))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 8))[1]), "r"(((int *)(T_conv_warp + ((i_2_1 * 8) + 4)))[0]), "r"(((int *)(T_conv_warp + ((i_2_1 * 8) + 4)))[1]), "r"(((int *)(T_conv_warp + ((i_2_1 * 8) + 4)))[2]), "r"(((int *)(T_conv_warp + ((i_2_1 * 8) + 4)))[3]));
+  }
+  }
+  for (int ax0_4 = 0; ax0_4 < 27; ++ax0_4) {
+    for (int local_id = 0; local_id < 8; ++local_id) {
+(&(T_conv[(((((((int)blockIdx.y) * 55296) + (((int)threadIdx.y) * 27648)) + (ax0_4 * 1024)) + (((int)blockIdx.x) * 512)) + (((int)threadIdx.z) * 256))]))[((((((local_id % 4) / 2) * 8) + (threadIdx.x / 4)) * 16) + ((((local_id / 4) * 8) + ((threadIdx.x % 4) * 2)) + (local_id % 2)))] = T_conv_warp[(ax0_4 * 8) + local_id];
+}
+;
+  }
+}
+
+
+n: 128, f: 64, h: 56, w: 56, c: 64, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 56, ow: 56
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 2, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07536640018224716
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07782400399446487
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07441066950559616
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07594666630029678
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07811657339334488
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 2, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07816532999277115
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.08016456663608551
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07519085705280304
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07846400141716003
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 1, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07611732929944992
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 1, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07560533285140991
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.0791039988398552
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07691378146409988
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07720959931612015
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07669760286808014
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07948800176382065
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07850667089223862
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07710719853639603
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07434239983558655
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [8, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07434239983558655
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 2, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07598079741001129
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 2, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07526399940252304
+{<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07975821942090988
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 1, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [1, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07823359966278076
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 1, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [1, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07864320278167725
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 1, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 4, 16, 16], 'warp': [14, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.07761920243501663
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 4, 16, 16], 'warp': [16, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.20213758945465088
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 2, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 2, 16, 16], 'warp': [28, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 2, 16, 16], 'warp': [32, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 1, 16, 16], 'warp': [28, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 1, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 1, 16, 16], 'warp': [32, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+code:  __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int T_conv_warp[256];
+  __shared__ signed char data_shared[131072];
+  __shared__ signed char weight_shared[128];
+  signed char weight_shared_local[2];
+  signed char B_decode_local[16];
+  __shared__ signed char B_decode_shared[512];
+  signed char data_shared_warp[512];
+  signed char B_decode_shared_warp[16];
+
+  const int MAX_BLOCK_N = 10;
+  const auto baseBlockIdx = blockIdx.x + gridDim.x *blockIdx.y;
+  const auto totalPanel = (gridDim.x * gridDim.y +MAX_BLOCK_N * gridDim.x - 1) / (MAX_BLOCK_N * gridDim.x);
+  const auto totalBlock = gridDim.x * gridDim.y;
+  const auto panelIdx = baseBlockIdx / (MAX_BLOCK_N *gridDim.x);
+  const auto strideLd = panelIdx + 1 < totalPanel ?MAX_BLOCK_N : (totalBlock - panelIdx * (MAX_BLOCK_N *gridDim.x)) / gridDim.x;
+  const auto bx = (panelIdx & 1) ? gridDim.x -(baseBlockIdx - panelIdx * MAX_BLOCK_N * gridDim.x) /strideLd - 1 : (baseBlockIdx - panelIdx * MAX_BLOCK_N *gridDim.x) / strideLd;
+  const auto by = (baseBlockIdx - panelIdx * MAX_BLOCK_N *gridDim.x) % strideLd + panelIdx * MAX_BLOCK_N;
+  const auto bz = blockIdx.z;
+  const dim3 blockIdx(bx, by, bz);
+  
+  for (int i_2_init = 0; i_2_init < 32; ++i_2_init) {
+    for (int j_2_init = 0; j_2_init < 1; ++j_2_init) {
+      for (int i = 0; i < 8; ++i) {
+T_conv_warp[(i_2_init * 8) + i] = 0.0;}
+;
+    }
+  }
+  #pragma unroll
+  for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 32; ++ax0_ax1_ax2_ax3_0_fused_0) {
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + (((ax0_ax1_ax2_ax3_0_fused_0 * 2048) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 16)))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)(data_shared + (((ax0_ax1_ax2_ax3_0_fused_0 * 2048) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 16))))
+    );
+#endif
+    __asm__ __volatile__(
+      #if TVM_ENABLE_L2_PREFETCH
+        "cp.async.cg.shared.global.L2::128B [%0], [%1], %2;"
+      #else
+        "cp.async.cg.shared.global [%0], [%1], %2;"
+      #endif
+        :: "r"(addr), "l"((void*)(input + ((((((int)blockIdx.y) * 65536) + (ax0_ax1_ax2_ax3_0_fused_0 * 2048)) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 16)))), "n"(16)
+    );
+  }
+  }
+  for (int ax0_ax1_ax2_ax3_fused_2 = 0; ax0_ax1_ax2_ax3_fused_2 < 2; ++ax0_ax1_ax2_ax3_fused_2) {
+    weight_shared[((((int)threadIdx.x) * 2) + ax0_ax1_ax2_ax3_fused_2)] = weight[((((((int)blockIdx.x) * 128) + ((((int)threadIdx.x) >> 1) * 8)) + ((((int)threadIdx.x) & 1) * 2)) + ax0_ax1_ax2_ax3_fused_2)];
+  }
+__asm__ __volatile__("cp.async.commit_group;");
+
+__asm__ __volatile__("cp.async.wait_group 0;");
+
+  __syncthreads();
+  if (((int)threadIdx.y) < 1) {
+    *(char2*)(weight_shared_local + 0) = *(char2*)(weight_shared + ((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 2)));
+  }
+  for (int ax0 = 0; ax0 < 16; ++ax0) {
+    if (((int)threadIdx.y) < 1) {
+      B_decode_local[ax0] = (((weight_shared_local[(ax0 >> 3)] >> ((signed char)((ax0 & 3) * 2))) & (signed char)1) + (((weight_shared_local[(ax0 >> 3)] >> ((signed char)(((ax0 & 3) * 2) + 1))) & (signed char)1) << (signed char)4));
+    }
+  }
+  if (((int)threadIdx.y) < 1) {
+    *(int4*)(B_decode_shared + ((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 16))) = *(int4*)(B_decode_local + 0);
+  }
+  for (int ax0_1 = 0; ax0_1 < 32; ++ax0_1) {
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[((((int)threadIdx.y) * 16384) + (ax0_1 * 512))])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(data_shared[((((int)threadIdx.y) * 16384) + (ax0_1 * 512))])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 16)))[0]), "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 16)))[1]), "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 16)))[2]), "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 16)))[3])
+      : "r"(addr)
+    );
+  }
+  }
+  __syncthreads();
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(B_decode_shared[0])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(B_decode_shared[0])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[2]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[3])
+      : "r"(addr)
+    );
+  }
+  for (int i_2 = 0; i_2 < 32; ++i_2) {
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + (i_2 * 8)))[0]), "=r"(((int *)(T_conv_warp + (i_2 * 8)))[1]), "=r"(((int *)(T_conv_warp + (i_2 * 8)))[2]), "=r"(((int *)(T_conv_warp + (i_2 * 8)))[3])
+      : "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[0]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[1]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[2]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[3]), "r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "r"(((int *)(T_conv_warp + (i_2 * 8)))[0]), "r"(((int *)(T_conv_warp + (i_2 * 8)))[1]), "r"(((int *)(T_conv_warp + (i_2 * 8)))[2]), "r"(((int *)(T_conv_warp + (i_2 * 8)))[3]));
+  }
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[0]), "=r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[1]), "=r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[2]), "=r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[3])
+      : "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[0]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[1]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[2]), "r"(((unsigned *)(data_shared_warp + (i_2 * 16)))[3]), "r"(((unsigned *)(B_decode_shared_warp + 8))[0]), "r"(((unsigned *)(B_decode_shared_warp + 8))[1]), "r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[0]), "r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[1]), "r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[2]), "r"(((int *)(T_conv_warp + ((i_2 * 8) + 4)))[3]));
+  }
+  }
+  for (int ax0_2 = 0; ax0_2 < 32; ++ax0_2) {
+    for (int local_id = 0; local_id < 8; ++local_id) {
+(&(T_conv[((((((int)blockIdx.y) * 131072) + (((int)threadIdx.y) * 32768)) + (ax0_2 * 1024)) + (((int)blockIdx.x) * 256))]))[((((((local_id % 4) / 2) * 8) + (threadIdx.x / 4)) * 16) + ((((local_id / 4) * 8) + ((threadIdx.x % 4) * 2)) + (local_id % 2)))] = T_conv_warp[(ax0_2 * 8) + local_id];
+}
+;
+  }
+}
+
+
+n: 128, f: 128, h: 28, w: 28, c: 128, kh: 3, kw: 3, s: 1, d: 1, p: 0, oh: 26, ow: 26
 Traceback (most recent call last):
-  File "/root/Ladder/artifact/Figure12/ladder-benchmark/././conv_nhwc_nhwc_int4xint1.py", line 323, in <module>
-    [128, 64, 56, 56, 64, 3, 3, 1, 1, 1]
-TypeError: list indices must be integers or slices, not tuple
-Error in executing ./conv_nhwc_nhwc_int4xint1.py
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.0970752015709877
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 2, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.08458240330219269
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.13025280833244324
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.09441279619932175
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 4, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.0942080020904541
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.12226559966802597
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.0999424010515213
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.19353599846363068
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 1, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10629119724035263
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.21213866770267487
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 2, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.09338880330324173
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.14189714193344116
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1016319990158081
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 4, 16, 16], 'warp': [26, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.19578880071640015
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.0989866629242897
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 1, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.10977280139923096
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 1, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 2, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.0942080020904541
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 2, 16, 16], 'warp': [26, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.34116268157958984
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 4, 16, 16], 'warp': [32, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.350822389125824
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.13443657755851746
+{<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.3776853382587433
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1511131376028061
+{<Node, ladder_conv2d_reshape_bias>: {'block': [1, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.20421485602855682
+{<Node, ladder_conv2d_reshape_bias>: {'block': [1, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.18900112807750702
+code:  __global__ void __launch_bounds__(32) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int T_conv_warp[8];
+  __shared__ signed char data_shared[1024];
+  __shared__ signed char weight_shared[128];
+  __shared__ signed char B_decode_shared[512];
+  signed char weight_shared_local[2];
+  signed char B_decode_local[16];
+  signed char data_shared_warp[16];
+  signed char B_decode_shared_warp[16];
+  signed char weight_shared_local_1[2];
+  signed char B_decode_local_1[16];
+  signed char data_shared_warp_1[16];
+  signed char B_decode_shared_warp_1[16];
+
+  const int MAX_BLOCK_N = 10;
+  const auto baseBlockIdx = blockIdx.x + gridDim.x *blockIdx.y;
+  const auto totalPanel = (gridDim.x * gridDim.y +MAX_BLOCK_N * gridDim.x - 1) / (MAX_BLOCK_N * gridDim.x);
+  const auto totalBlock = gridDim.x * gridDim.y;
+  const auto panelIdx = baseBlockIdx / (MAX_BLOCK_N *gridDim.x);
+  const auto strideLd = panelIdx + 1 < totalPanel ?MAX_BLOCK_N : (totalBlock - panelIdx * (MAX_BLOCK_N *gridDim.x)) / gridDim.x;
+  const auto bx = (panelIdx & 1) ? gridDim.x -(baseBlockIdx - panelIdx * MAX_BLOCK_N * gridDim.x) /strideLd - 1 : (baseBlockIdx - panelIdx * MAX_BLOCK_N *gridDim.x) / strideLd;
+  const auto by = (baseBlockIdx - panelIdx * MAX_BLOCK_N *gridDim.x) % strideLd + panelIdx * MAX_BLOCK_N;
+  const auto bz = blockIdx.z;
+  const dim3 blockIdx(bx, by, bz);
+  
+  for (int i_2_init = 0; i_2_init < 1; ++i_2_init) {
+    for (int j_2_init = 0; j_2_init < 1; ++j_2_init) {
+      for (int i = 0; i < 8; ++i) {
+T_conv_warp[0 + i] = 0.0;}
+;
+    }
+  }
+  #pragma unroll
+  for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 1; ++ax0_ax1_ax2_ax3_0_fused_0) {
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)(data_shared + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      #if TVM_ENABLE_L2_PREFETCH
+        "cp.async.cg.shared.global.L2::128B [%0], [%1], %2;"
+      #else
+        "cp.async.cg.shared.global [%0], [%1], %2;"
+      #endif
+        :: "r"(addr), "l"((void*)(input + (((((((int)blockIdx.y) / 676) * 802816) + (((((int)blockIdx.y) % 676) / 26) * 28672)) + ((((int)blockIdx.y) % 26) * 1024)) + (((int)threadIdx.x) * 16)))), "n"(16)
+    );
+  }
+  }
+  for (int ax0_ax1_ax2_ax3_fused_2 = 0; ax0_ax1_ax2_ax3_fused_2 < 2; ++ax0_ax1_ax2_ax3_fused_2) {
+    weight_shared[((((int)threadIdx.x) * 2) + ax0_ax1_ax2_ax3_fused_2)] = weight[((((((int)blockIdx.x) * 2304) + ((((int)threadIdx.x) >> 1) * 8)) + ((((int)threadIdx.x) & 1) * 2)) + ax0_ax1_ax2_ax3_fused_2)];
+  }
+__asm__ __volatile__("cp.async.commit_group;");
+
+  for (int k_0 = 0; k_0 < 17; ++k_0) {
+    #pragma unroll
+    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 1; ++ax0_ax1_ax2_ax3_0_fused_0_1) {
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + ((((k_0 + 1) & 1) * 512) + (((int)threadIdx.x) * 16)))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)(data_shared + ((((k_0 + 1) & 1) * 512) + (((int)threadIdx.x) * 16))))
+    );
+#endif
+    __asm__ __volatile__(
+      #if TVM_ENABLE_L2_PREFETCH
+        "cp.async.cg.shared.global.L2::128B [%0], [%1], %2;"
+      #else
+        "cp.async.cg.shared.global [%0], [%1], %2;"
+      #endif
+        :: "r"(addr), "l"((void*)(input + (((((((((((int)blockIdx.y) / 676) * 802816) + (((((int)blockIdx.y) % 676) / 26) * 28672)) + (((k_0 + 1) / 6) * 28672)) + ((((k_0 + 1) % 6) >> 1) * 1024)) + ((((int)blockIdx.y) % 26) * 1024)) + (k_0 * 512)) + (((int)threadIdx.x) * 16)) + 512))), "n"(16)
+    );
+  }
+    }
+    for (int ax0_ax1_ax2_ax3_fused_2_1 = 0; ax0_ax1_ax2_ax3_fused_2_1 < 2; ++ax0_ax1_ax2_ax3_fused_2_1) {
+      weight_shared[(((((k_0 + 1) & 1) * 64) + (((int)threadIdx.x) * 2)) + ax0_ax1_ax2_ax3_fused_2_1)] = weight[((((((((int)blockIdx.x) * 2304) + (k_0 * 128)) + ((((int)threadIdx.x) >> 1) * 8)) + ((((int)threadIdx.x) & 1) * 2)) + ax0_ax1_ax2_ax3_fused_2_1) + 128)];
+    }
+__asm__ __volatile__("cp.async.commit_group;");
+
+__asm__ __volatile__("cp.async.wait_group 1;");
+
+    __syncthreads();
+    *(char2*)(weight_shared_local + 0) = *(char2*)(weight_shared + (((k_0 & 1) * 64) + (((int)threadIdx.x) * 2)));
+    for (int ax0 = 0; ax0 < 16; ++ax0) {
+      B_decode_local[ax0] = (((weight_shared_local[(ax0 >> 3)] >> ((signed char)((ax0 & 3) * 2))) & (signed char)1) + (((weight_shared_local[(ax0 >> 3)] >> ((signed char)(((ax0 & 3) * 2) + 1))) & (signed char)1) << (signed char)4));
+    }
+    *(int4*)(B_decode_shared + (((int)threadIdx.x) * 16)) = *(int4*)(B_decode_local + 0);
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[((k_0 & 1) * 512)])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(data_shared[((k_0 & 1) * 512)])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(data_shared_warp + 0))[0]), "=r"(((unsigned *)(data_shared_warp + 0))[1]), "=r"(((unsigned *)(data_shared_warp + 0))[2]), "=r"(((unsigned *)(data_shared_warp + 0))[3])
+      : "r"(addr)
+    );
+  }
+    __syncthreads();
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(B_decode_shared[0])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(B_decode_shared[0])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[2]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[3])
+      : "r"(addr)
+    );
+  }
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + 0))[0]), "=r"(((int *)(T_conv_warp + 0))[1]), "=r"(((int *)(T_conv_warp + 0))[2]), "=r"(((int *)(T_conv_warp + 0))[3])
+      : "r"(((unsigned *)(data_shared_warp + 0))[0]), "r"(((unsigned *)(data_shared_warp + 0))[1]), "r"(((unsigned *)(data_shared_warp + 0))[2]), "r"(((unsigned *)(data_shared_warp + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "r"(((int *)(T_conv_warp + 0))[0]), "r"(((int *)(T_conv_warp + 0))[1]), "r"(((int *)(T_conv_warp + 0))[2]), "r"(((int *)(T_conv_warp + 0))[3]));
+  }
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + 4))[0]), "=r"(((int *)(T_conv_warp + 4))[1]), "=r"(((int *)(T_conv_warp + 4))[2]), "=r"(((int *)(T_conv_warp + 4))[3])
+      : "r"(((unsigned *)(data_shared_warp + 0))[0]), "r"(((unsigned *)(data_shared_warp + 0))[1]), "r"(((unsigned *)(data_shared_warp + 0))[2]), "r"(((unsigned *)(data_shared_warp + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp + 8))[0]), "r"(((unsigned *)(B_decode_shared_warp + 8))[1]), "r"(((int *)(T_conv_warp + 4))[0]), "r"(((int *)(T_conv_warp + 4))[1]), "r"(((int *)(T_conv_warp + 4))[2]), "r"(((int *)(T_conv_warp + 4))[3]));
+  }
+  }
+__asm__ __volatile__("cp.async.wait_group 0;");
+
+  __syncthreads();
+  *(char2*)(weight_shared_local_1 + 0) = *(char2*)(weight_shared + ((((int)threadIdx.x) * 2) + 64));
+  for (int ax0_1 = 0; ax0_1 < 16; ++ax0_1) {
+    B_decode_local_1[ax0_1] = (((weight_shared_local_1[(ax0_1 >> 3)] >> ((signed char)((ax0_1 & 3) * 2))) & (signed char)1) + (((weight_shared_local_1[(ax0_1 >> 3)] >> ((signed char)(((ax0_1 & 3) * 2) + 1))) & (signed char)1) << (signed char)4));
+  }
+  *(int4*)(B_decode_shared + (((int)threadIdx.x) * 16)) = *(int4*)(B_decode_local_1 + 0);
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[512])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(data_shared[512])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[3])
+      : "r"(addr)
+    );
+  }
+  __syncthreads();
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(B_decode_shared[0])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(B_decode_shared[0])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[0]), "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[1]), "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[2]), "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[3])
+      : "r"(addr)
+    );
+  }
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + 0))[0]), "=r"(((int *)(T_conv_warp + 0))[1]), "=r"(((int *)(T_conv_warp + 0))[2]), "=r"(((int *)(T_conv_warp + 0))[3])
+      : "r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "r"(((unsigned *)(data_shared_warp_1 + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[1]), "r"(((int *)(T_conv_warp + 0))[0]), "r"(((int *)(T_conv_warp + 0))[1]), "r"(((int *)(T_conv_warp + 0))[2]), "r"(((int *)(T_conv_warp + 0))[3]));
+  }
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + 4))[0]), "=r"(((int *)(T_conv_warp + 4))[1]), "=r"(((int *)(T_conv_warp + 4))[2]), "=r"(((int *)(T_conv_warp + 4))[3])
+      : "r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "r"(((unsigned *)(data_shared_warp_1 + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 8))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 8))[1]), "r"(((int *)(T_conv_warp + 4))[0]), "r"(((int *)(T_conv_warp + 4))[1]), "r"(((int *)(T_conv_warp + 4))[2]), "r"(((int *)(T_conv_warp + 4))[3]));
+  }
+  for (int local_id = 0; local_id < 8; ++local_id) {
+(&(T_conv[((((int)blockIdx.y) * 2048) + (((int)blockIdx.x) * 256))]))[((((((local_id % 4) / 2) * 8) + (threadIdx.x / 4)) * 16) + ((((local_id / 4) * 8) + ((threadIdx.x % 4) * 2)) + (local_id % 2)))] = T_conv_warp[0 + local_id];
+}
+;
+}
+
+
+n: 128, f: 512, h: 28, w: 28, c: 128, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 28, ow: 28
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  63: TVMFuncCall
+  62: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  61: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  60: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  58: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  57: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  56: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  55: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  54: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  51: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  50: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  49: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  48: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  47: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  46: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  45: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  44: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  43: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  42: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  41: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  40: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  39: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  38: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  37: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  36: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  35: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  34: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  33: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  32: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  31: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  30: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  29: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  28: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  27: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  15: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::ForNode const*)
+  11: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::ForNode const*)
+  10: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+Traceback (most recent call last):
+  60: TVMFuncCall
+  59: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  58: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  57: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  56: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  55: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  54: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  53: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  52: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  51: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  50: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  49: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  48: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  47: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  46: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  45: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  44: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  43: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  42: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  41: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  40: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  39: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  38: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  37: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  34: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  33: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  21: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  19: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  17: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  16: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  15: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  14: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  13: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  12: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  8: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  7: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  6: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  5: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  4: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  3: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  2: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::AddNode const*, std::ostream&)
+  1: tvm::codegen::CodeGenCUDA::PrintVecBinaryOp(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tvm::runtime::DataType, tvm::PrimExpr, tvm::PrimExpr, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::PrintType(tvm::runtime::DataType, std::ostream&)
+  File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
+TVMError: Cannot convert type int32x16 to CUDA type
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.13414399325847626
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1303039938211441
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 2, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1305599957704544
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.13271039724349976
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1325055956840515
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 2, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1744896024465561
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 1, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.12774400413036346
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.13352960348129272
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1343146711587906
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.14899200201034546
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1578666716814041
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1382399946451187
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1515520066022873
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 1, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.12492799758911133
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.14271999895572662
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [8, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1314816027879715
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.13168640434741974
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.16237713396549225
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 2, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.1271807998418808
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.2456137090921402
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.15065599977970123
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 2, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.12636159360408783
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 1, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 1, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 1, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.24722285568714142
+{<Node, ladder_conv2d_reshape_bias>: {'block': [1, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.16076800227165222
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 4, 16, 16], 'warp': [14, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.13271039724349976
+{<Node, ladder_conv2d_reshape_bias>: {'block': [1, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
+0.15530666708946228
+code:  __global__ void __launch_bounds__(32) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int T_conv_warp[8];
+  __shared__ signed char data_shared[1024];
+  __shared__ signed char weight_shared[128];
+  signed char weight_shared_local[2];
+  signed char B_decode_local[16];
+  __shared__ signed char B_decode_shared[512];
+  signed char data_shared_warp[16];
+  signed char B_decode_shared_warp[16];
+  signed char weight_shared_local_1[2];
+  signed char B_decode_local_1[16];
+  signed char data_shared_warp_1[16];
+  signed char B_decode_shared_warp_1[16];
+
+  const int MAX_BLOCK_N = 10;
+  const auto baseBlockIdx = blockIdx.x + gridDim.x *blockIdx.y;
+  const auto totalPanel = (gridDim.x * gridDim.y +MAX_BLOCK_N * gridDim.x - 1) / (MAX_BLOCK_N * gridDim.x);
+  const auto totalBlock = gridDim.x * gridDim.y;
+  const auto panelIdx = baseBlockIdx / (MAX_BLOCK_N *gridDim.x);
+  const auto strideLd = panelIdx + 1 < totalPanel ?MAX_BLOCK_N : (totalBlock - panelIdx * (MAX_BLOCK_N *gridDim.x)) / gridDim.x;
+  const auto bx = (panelIdx & 1) ? gridDim.x -(baseBlockIdx - panelIdx * MAX_BLOCK_N * gridDim.x) /strideLd - 1 : (baseBlockIdx - panelIdx * MAX_BLOCK_N *gridDim.x) / strideLd;
+  const auto by = (baseBlockIdx - panelIdx * MAX_BLOCK_N *gridDim.x) % strideLd + panelIdx * MAX_BLOCK_N;
+  const auto bz = blockIdx.z;
+  const dim3 blockIdx(bx, by, bz);
+  
+  for (int i_2_init = 0; i_2_init < 1; ++i_2_init) {
+    for (int j_2_init = 0; j_2_init < 1; ++j_2_init) {
+      for (int i = 0; i < 8; ++i) {
+T_conv_warp[0 + i] = 0.0;}
+;
+    }
+  }
+  #pragma unroll
+  for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 1; ++ax0_ax1_ax2_ax3_0_fused_0) {
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)(data_shared + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      #if TVM_ENABLE_L2_PREFETCH
+        "cp.async.cg.shared.global.L2::128B [%0], [%1], %2;"
+      #else
+        "cp.async.cg.shared.global [%0], [%1], %2;"
+      #endif
+        :: "r"(addr), "l"((void*)(input + ((((int)blockIdx.y) * 1024) + (((int)threadIdx.x) * 16)))), "n"(16)
+    );
+  }
+  }
+  for (int ax0_ax1_ax2_ax3_fused_2 = 0; ax0_ax1_ax2_ax3_fused_2 < 2; ++ax0_ax1_ax2_ax3_fused_2) {
+    weight_shared[((((int)threadIdx.x) * 2) + ax0_ax1_ax2_ax3_fused_2)] = weight[((((((int)blockIdx.x) * 256) + ((((int)threadIdx.x) >> 1) * 8)) + ((((int)threadIdx.x) & 1) * 2)) + ax0_ax1_ax2_ax3_fused_2)];
+  }
+__asm__ __volatile__("cp.async.commit_group;");
+
+  #pragma unroll
+  for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 1; ++ax0_ax1_ax2_ax3_0_fused_0_1) {
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + ((((int)threadIdx.x) * 16) + 512))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)(data_shared + ((((int)threadIdx.x) * 16) + 512)))
+    );
+#endif
+    __asm__ __volatile__(
+      #if TVM_ENABLE_L2_PREFETCH
+        "cp.async.cg.shared.global.L2::128B [%0], [%1], %2;"
+      #else
+        "cp.async.cg.shared.global [%0], [%1], %2;"
+      #endif
+        :: "r"(addr), "l"((void*)(input + (((((int)blockIdx.y) * 1024) + (((int)threadIdx.x) * 16)) + 512))), "n"(16)
+    );
+  }
+  }
+  for (int ax0_ax1_ax2_ax3_fused_2_1 = 0; ax0_ax1_ax2_ax3_fused_2_1 < 2; ++ax0_ax1_ax2_ax3_fused_2_1) {
+    weight_shared[(((((int)threadIdx.x) * 2) + ax0_ax1_ax2_ax3_fused_2_1) + 64)] = weight[(((((((int)blockIdx.x) * 256) + ((((int)threadIdx.x) >> 1) * 8)) + ((((int)threadIdx.x) & 1) * 2)) + ax0_ax1_ax2_ax3_fused_2_1) + 128)];
+  }
+__asm__ __volatile__("cp.async.commit_group;");
+
+__asm__ __volatile__("cp.async.wait_group 1;");
+
+  __syncthreads();
+  *(char2*)(weight_shared_local + 0) = *(char2*)(weight_shared + (((int)threadIdx.x) * 2));
+  for (int ax0 = 0; ax0 < 16; ++ax0) {
+    B_decode_local[ax0] = (((weight_shared_local[(ax0 >> 3)] >> ((signed char)((ax0 & 3) * 2))) & (signed char)1) + (((weight_shared_local[(ax0 >> 3)] >> ((signed char)(((ax0 & 3) * 2) + 1))) & (signed char)1) << (signed char)4));
+  }
+  *(int4*)(B_decode_shared + (((int)threadIdx.x) * 16)) = *(int4*)(B_decode_local + 0);
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[0])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(data_shared[0])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(data_shared_warp + 0))[0]), "=r"(((unsigned *)(data_shared_warp + 0))[1]), "=r"(((unsigned *)(data_shared_warp + 0))[2]), "=r"(((unsigned *)(data_shared_warp + 0))[3])
+      : "r"(addr)
+    );
+  }
+  __syncthreads();
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(B_decode_shared[0])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(B_decode_shared[0])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[2]), "=r"(((unsigned *)(B_decode_shared_warp + 0))[3])
+      : "r"(addr)
+    );
+  }
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + 0))[0]), "=r"(((int *)(T_conv_warp + 0))[1]), "=r"(((int *)(T_conv_warp + 0))[2]), "=r"(((int *)(T_conv_warp + 0))[3])
+      : "r"(((unsigned *)(data_shared_warp + 0))[0]), "r"(((unsigned *)(data_shared_warp + 0))[1]), "r"(((unsigned *)(data_shared_warp + 0))[2]), "r"(((unsigned *)(data_shared_warp + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "r"(((int *)(T_conv_warp + 0))[0]), "r"(((int *)(T_conv_warp + 0))[1]), "r"(((int *)(T_conv_warp + 0))[2]), "r"(((int *)(T_conv_warp + 0))[3]));
+  }
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + 4))[0]), "=r"(((int *)(T_conv_warp + 4))[1]), "=r"(((int *)(T_conv_warp + 4))[2]), "=r"(((int *)(T_conv_warp + 4))[3])
+      : "r"(((unsigned *)(data_shared_warp + 0))[0]), "r"(((unsigned *)(data_shared_warp + 0))[1]), "r"(((unsigned *)(data_shared_warp + 0))[2]), "r"(((unsigned *)(data_shared_warp + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp + 8))[0]), "r"(((unsigned *)(B_decode_shared_warp + 8))[1]), "r"(((int *)(T_conv_warp + 4))[0]), "r"(((int *)(T_conv_warp + 4))[1]), "r"(((int *)(T_conv_warp + 4))[2]), "r"(((int *)(T_conv_warp + 4))[3]));
+  }
+__asm__ __volatile__("cp.async.wait_group 0;");
+
+  __syncthreads();
+  *(char2*)(weight_shared_local_1 + 0) = *(char2*)(weight_shared + ((((int)threadIdx.x) * 2) + 64));
+  for (int ax0_1 = 0; ax0_1 < 16; ++ax0_1) {
+    B_decode_local_1[ax0_1] = (((weight_shared_local_1[(ax0_1 >> 3)] >> ((signed char)((ax0_1 & 3) * 2))) & (signed char)1) + (((weight_shared_local_1[(ax0_1 >> 3)] >> ((signed char)(((ax0_1 & 3) * 2) + 1))) & (signed char)1) << (signed char)4));
+  }
+  *(int4*)(B_decode_shared + (((int)threadIdx.x) * 16)) = *(int4*)(B_decode_local_1 + 0);
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[512])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(data_shared[512])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[3])
+      : "r"(addr)
+    );
+  }
+  __syncthreads();
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(B_decode_shared[0])) + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)((&(B_decode_shared[0])) + (((int)threadIdx.x) * 16)))
+    );
+#endif
+    __asm__ __volatile__(
+      "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
+      "{%0, %1, %2, %3}, [%4];\n"
+      : "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[0]), "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[1]), "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[2]), "=r"(((unsigned *)(B_decode_shared_warp_1 + 0))[3])
+      : "r"(addr)
+    );
+  }
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + 0))[0]), "=r"(((int *)(T_conv_warp + 0))[1]), "=r"(((int *)(T_conv_warp + 0))[2]), "=r"(((int *)(T_conv_warp + 0))[3])
+      : "r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "r"(((unsigned *)(data_shared_warp_1 + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[1]), "r"(((int *)(T_conv_warp + 0))[0]), "r"(((int *)(T_conv_warp + 0))[1]), "r"(((int *)(T_conv_warp + 0))[2]), "r"(((int *)(T_conv_warp + 0))[3]));
+  }
+
+  {
+    __asm__ __volatile__(
+      "mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32"
+      "{%0, %1, %2, %3}, {%4, %5, %6, %7}, {%8, %9}, {%10, %11, %12, %13};\n"
+      :  "=r"(((int *)(T_conv_warp + 4))[0]), "=r"(((int *)(T_conv_warp + 4))[1]), "=r"(((int *)(T_conv_warp + 4))[2]), "=r"(((int *)(T_conv_warp + 4))[3])
+      : "r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "r"(((unsigned *)(data_shared_warp_1 + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 8))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 8))[1]), "r"(((int *)(T_conv_warp + 4))[0]), "r"(((int *)(T_conv_warp + 4))[1]), "r"(((int *)(T_conv_warp + 4))[2]), "r"(((int *)(T_conv_warp + 4))[3]));
+  }
+  for (int local_id = 0; local_id < 8; ++local_id) {
+(&(T_conv[((((int)blockIdx.y) * 8192) + (((int)blockIdx.x) * 256))]))[((((((local_id % 4) / 2) * 8) + (threadIdx.x / 4)) * 16) + ((((local_id / 4) * 8) + ((threadIdx.x % 4) * 2)) + (local_id % 2)))] = T_conv_warp[0 + local_id];
+}
+;
+}
+
+
+128_64_56_56_64_3_3_1_1_0	0.09907200187444687
+128_64_56_56_64_1_1_1_1_0	0.07434239983558655
+128_128_28_28_128_3_3_1_1_0	0.08458240330219269
+128_512_28_28_128_1_1_1_1_0	0.12492799758911133

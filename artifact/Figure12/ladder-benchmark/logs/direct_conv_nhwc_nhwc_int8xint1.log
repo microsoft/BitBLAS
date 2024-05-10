@@ -1,0 +1,896 @@
+direct_conv_nhwc_nhwc_int8xint1.py
+n: 1, f: 64, h: 56, w: 56, c: 64, kh: 3, kw: 3, s: 1, d: 1, p: 0, oh: 54, ow: 54
+{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 16], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.049561597406864166
+{<Node, ladder_conv2d_reshape_bias>: {'block': [54, 8], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.04546559974551201
+{<Node, ladder_conv2d_reshape_bias>: {'block': [36, 16], 'thread': [9, 16], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.05877760052680969
+{<Node, ladder_conv2d_reshape_bias>: {'block': [108, 4], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.11379200220108032
+{<Node, ladder_conv2d_reshape_bias>: {'block': [81, 8], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.08007679879665375
+{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 8], 'thread': [27, 4], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.10726399719715118
+{<Node, ladder_conv2d_reshape_bias>: {'block': [108, 8], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.06621866673231125
+{<Node, ladder_conv2d_reshape_bias>: {'block': [54, 16], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.04034560173749924
+{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 32], 'thread': [9, 16], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.07188479602336884
+{<Node, ladder_conv2d_reshape_bias>: {'block': [162, 4], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.0682239979505539
+{<Node, ladder_conv2d_reshape_bias>: {'block': [36, 8], 'thread': [18, 8], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.061849601566791534
+{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 8], 'thread': [18, 8], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.15539200603961945
+{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 32], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.042393602430820465
+{<Node, ladder_conv2d_reshape_bias>: {'block': [162, 8], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.049664001911878586
+{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 16], 'thread': [9, 16], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.1379474252462387
+{<Node, ladder_conv2d_reshape_bias>: {'block': [81, 16], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.06988800317049026
+{<Node, ladder_conv2d_reshape_bias>: {'block': [54, 4], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.06963200122117996
+{<Node, ladder_conv2d_reshape_bias>: {'block': [36, 32], 'thread': [4, 32], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8}}}
+0.07045120000839233
+{<Node, ladder_conv2d_reshape_bias>: {'block': [108, 16], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.043776001781225204
+{<Node, ladder_conv2d_reshape_bias>: {'block': [36, 4], 'thread': [36, 4], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.14963200688362122
+{<Node, ladder_conv2d_reshape_bias>: {'block': [243, 2], 'thread': [81, 1], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.14376959204673767
+{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 4], 'thread': [27, 4], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.15479466319084167
+{<Node, ladder_conv2d_reshape_bias>: {'block': [243, 4], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.06699885427951813
+{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 16], 'thread': [9, 16], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.2388480007648468
+{<Node, ladder_conv2d_reshape_bias>: {'block': [54, 32], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.05406720191240311
+{<Node, ladder_conv2d_reshape_bias>: {'block': [243, 8], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.04648960009217262
+{<Node, ladder_conv2d_reshape_bias>: {'block': [162, 16], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.039423998445272446
+{<Node, ladder_conv2d_reshape_bias>: {'block': [108, 2], 'thread': [54, 2], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.20400355756282806
+{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 16], 'thread': [6, 16], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.12697599828243256
+{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 8], 'thread': [12, 8], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.14760228991508484
+{<Node, ladder_conv2d_reshape_bias>: {'block': [81, 4], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.07290880382061005
+{<Node, ladder_conv2d_reshape_bias>: {'block': [324, 2], 'thread': [54, 2], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.12300799787044525
+{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 64], 'thread': [9, 16], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 16}}}
+0.121446393430233
+{<Node, ladder_conv2d_reshape_bias>: {'block': [324, 4], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.08601599931716919
+{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 64], 'thread': [4, 32], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.1114111989736557
+{<Node, ladder_conv2d_reshape_bias>: {'block': [81, 32], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.053043197840452194
+{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 32], 'thread': [9, 16], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.2275327891111374
+{<Node, ladder_conv2d_reshape_bias>: {'block': [324, 8], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.04915199801325798
+code:  __global__ void __launch_bounds__(108) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int T_conv_local[24];
+  __shared__ signed char data_shared[31104];
+  __shared__ signed char B_decode_shared[768];
+  T_conv_local[0] = 0;
+  T_conv_local[12] = 0;
+  T_conv_local[1] = 0;
+  T_conv_local[13] = 0;
+  T_conv_local[2] = 0;
+  T_conv_local[14] = 0;
+  T_conv_local[3] = 0;
+  T_conv_local[15] = 0;
+  T_conv_local[4] = 0;
+  T_conv_local[16] = 0;
+  T_conv_local[5] = 0;
+  T_conv_local[17] = 0;
+  T_conv_local[6] = 0;
+  T_conv_local[18] = 0;
+  T_conv_local[7] = 0;
+  T_conv_local[19] = 0;
+  T_conv_local[8] = 0;
+  T_conv_local[20] = 0;
+  T_conv_local[9] = 0;
+  T_conv_local[21] = 0;
+  T_conv_local[10] = 0;
+  T_conv_local[22] = 0;
+  T_conv_local[11] = 0;
+  T_conv_local[23] = 0;
+  for (int k_0 = 0; k_0 < 6; ++k_0) {
+    __syncthreads();
+    *(int4*)(data_shared + (((int)threadIdx.x) * 16)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 1728)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 1152));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 3456)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 2304));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 5184)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 3584));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 6912)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 4736));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 8640)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 5888));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 10368)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 7168));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 12096)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 8320));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 13824)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 9472));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 15552)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 10752));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 17280)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 11904));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 19008)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 13056));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 20736)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 14336));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 22464)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 15488));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 24192)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 16640));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 25920)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 17920));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 27648)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 19072));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 29376)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 20224));
+    B_decode_shared[((int)threadIdx.x)] = ((weight[(((((((int)blockIdx.x) & 7) * 576) + ((((int)threadIdx.x) / 96) * 72)) + (k_0 * 12)) + ((((int)threadIdx.x) % 96) >> 3))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 108)] = ((weight[(((((((int)blockIdx.x) & 7) * 576) + (((((int)threadIdx.x) + 108) / 96) * 72)) + (k_0 * 12)) + ((((((int)threadIdx.x) >> 2) + 3) % 24) >> 1))] >> ((signed char)((((int)threadIdx.x) + 4) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 216)] = ((weight[(((((((int)blockIdx.x) & 7) * 576) + (((((int)threadIdx.x) + 216) / 96) * 72)) + (k_0 * 12)) + (((((int)threadIdx.x) >> 3) + 3) % 12))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 324)] = ((weight[(((((((int)blockIdx.x) & 7) * 576) + (((((int)threadIdx.x) + 324) / 96) * 72)) + (k_0 * 12)) + ((((((int)threadIdx.x) >> 2) + 9) % 24) >> 1))] >> ((signed char)((((int)threadIdx.x) + 4) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 432)] = ((weight[(((((((int)blockIdx.x) & 7) * 576) + (((((int)threadIdx.x) + 432) / 96) * 72)) + (k_0 * 12)) + (((((int)threadIdx.x) >> 3) + 6) % 12))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 540)] = ((weight[(((((((int)blockIdx.x) & 7) * 576) + (((((int)threadIdx.x) + 540) / 96) * 72)) + (k_0 * 12)) + ((((((int)threadIdx.x) >> 2) + 15) % 24) >> 1))] >> ((signed char)((((int)threadIdx.x) + 4) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 648)] = ((weight[(((((((int)blockIdx.x) & 7) * 576) + (((((int)threadIdx.x) + 648) / 96) * 72)) + (k_0 * 12)) + (((((int)threadIdx.x) >> 3) + 9) % 12))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    if (((int)threadIdx.x) < 12) {
+      B_decode_shared[(((int)threadIdx.x) + 756)] = ((weight[(((((((int)blockIdx.x) & 7) * 576) + (k_0 * 12)) + ((((int)threadIdx.x) + 84) >> 3)) + 504)] >> ((signed char)((((int)threadIdx.x) + 4) & 7))) & (signed char)1);
+    }
+    __syncthreads();
+    for (int k_1 = 0; k_1 < 96; ++k_1) {
+      T_conv_local[0] = (T_conv_local[0] + (((int)data_shared[(((((int)threadIdx.x) >> 2) * 96) + k_1)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[12] = (T_conv_local[12] + (((int)data_shared[(((((int)threadIdx.x) >> 2) * 96) + k_1)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[1] = (T_conv_local[1] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 2592)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[13] = (T_conv_local[13] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 2592)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[2] = (T_conv_local[2] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 5184)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[14] = (T_conv_local[14] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 5184)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[3] = (T_conv_local[3] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 7776)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[15] = (T_conv_local[15] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 7776)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[4] = (T_conv_local[4] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 10368)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[16] = (T_conv_local[16] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 10368)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[5] = (T_conv_local[5] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 12960)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[17] = (T_conv_local[17] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 12960)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[6] = (T_conv_local[6] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 15552)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[18] = (T_conv_local[18] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 15552)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[7] = (T_conv_local[7] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 18144)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[19] = (T_conv_local[19] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 18144)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[8] = (T_conv_local[8] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 20736)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[20] = (T_conv_local[20] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 20736)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[9] = (T_conv_local[9] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 23328)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[21] = (T_conv_local[21] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 23328)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[10] = (T_conv_local[10] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 25920)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[22] = (T_conv_local[22] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 25920)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[11] = (T_conv_local[11] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 28512)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[23] = (T_conv_local[23] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 28512)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 4)] = T_conv_local[12];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 1728)] = T_conv_local[1];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 1732)] = T_conv_local[13];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 3456)] = T_conv_local[2];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 3460)] = T_conv_local[14];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 5184)] = T_conv_local[3];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 5188)] = T_conv_local[15];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 6912)] = T_conv_local[4];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 6916)] = T_conv_local[16];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 8640)] = T_conv_local[5];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 8644)] = T_conv_local[17];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 10368)] = T_conv_local[6];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 10372)] = T_conv_local[18];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 12096)] = T_conv_local[7];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 12100)] = T_conv_local[19];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 13824)] = T_conv_local[8];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 13828)] = T_conv_local[20];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 15552)] = T_conv_local[9];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 15556)] = T_conv_local[21];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 17280)] = T_conv_local[10];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 17284)] = T_conv_local[22];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 19008)] = T_conv_local[11];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 19012)] = T_conv_local[23];
+}
+
+
+top1: 0.049561597406864166 	top10: 0.039423998445272446
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [162, 16], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+best latency: 0.039423998445272446
+4.959746471609259 tflops, 3.4205148080063856 %
+n: 1, f: 64, h: 56, w: 56, c: 64, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 56, ow: 56
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 8}}}
+0.01238109078258276
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.017314909026026726
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 8}}}
+0.018510770052671432
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 4}}}
+0.01543876901268959
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.012629333883523941
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 8}}}
+0.01228800043463707
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 16}}}
+0.017715198919177055
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 32], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.011077817529439926
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 4}}}
+0.012603076174855232
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 4}}}
+0.0205653328448534
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.029900800436735153
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.01621333323419094
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 16], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.01443840004503727
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.02969599887728691
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.012939635664224625
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 8], 'thread': [49, 2], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.014522180892527103
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 16], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.02001454494893551
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 4}}}
+0.013738666661083698
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.021930666640400887
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 8}}}
+0.02881828509271145
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.01822720095515251
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.013909333385527134
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.01666327193379402
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 8}}}
+0.009386667050421238
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.012873142957687378
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.020735999569296837
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 4], 'thread': [32, 4], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 2}}}
+0.020716307684779167
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.03276799991726875
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.012697599828243256
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 8], 'thread': [7, 8], 'rstep': [64], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.020864000543951988
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 16], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.011605333536863327
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 4], 'thread': [49, 2], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.020107636228203773
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 4], 'thread': [28, 4], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.021410910412669182
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.03262171521782875
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 8}}}
+0.011776000261306763
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4], 'thread': [16, 4], 'rstep': [64], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 2}}}
+0.015744000673294067
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4], 'thread': [14, 4], 'rstep': [64], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.017023999243974686
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 16}}}
+0.019046399742364883
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 4], 'thread': [28, 4], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.019114667549729347
+code:  __global__ void __launch_bounds__(112) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int T_conv_local[2];
+  __shared__ signed char data_shared[3584];
+  __shared__ signed char B_decode_shared[256];
+  T_conv_local[0] = 0;
+  T_conv_local[1] = 0;
+  *(int4*)(data_shared + (((int)threadIdx.x) * 16)) = *(int4*)(input + (((((int)blockIdx.x) >> 4) * 3584) + (((int)threadIdx.x) * 16)));
+  *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 1792)) = *(int4*)(input + ((((((int)blockIdx.x) >> 4) * 3584) + (((int)threadIdx.x) * 16)) + 1792));
+  B_decode_shared[((int)threadIdx.x)] = ((weight[(((((int)blockIdx.x) & 15) * 32) + (((int)threadIdx.x) >> 3))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+  B_decode_shared[(((int)threadIdx.x) + 112)] = ((weight[((((((int)blockIdx.x) & 15) * 32) + (((((int)threadIdx.x) + 112) >> 6) * 8)) + (((((int)threadIdx.x) >> 3) + 6) & 7))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+  if (((int)threadIdx.x) < 32) {
+    B_decode_shared[(((int)threadIdx.x) + 224)] = ((weight[(((((((int)blockIdx.x) & 15) * 32) + (((((int)threadIdx.x) + 224) >> 6) * 8)) + (((int)threadIdx.x) >> 3)) + 4)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+  }
+  __syncthreads();
+  for (int k_1 = 0; k_1 < 64; ++k_1) {
+    T_conv_local[0] = (T_conv_local[0] + (((int)data_shared[(((((int)threadIdx.x) >> 2) * 64) + k_1)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 64) + k_1)])));
+    T_conv_local[1] = (T_conv_local[1] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 64) + k_1) + 1792)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 64) + k_1)])));
+  }
+  T_conv[(((((((int)blockIdx.x) >> 4) * 3584) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 15) * 4)) + (((int)threadIdx.x) & 3))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 4) * 3584) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 15) * 4)) + (((int)threadIdx.x) & 3)) + 1792)] = T_conv_local[1];
+}
+
+
+top1: 0.01238109078258276 	top10: 0.009386667050421238
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [64, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 8}}}
+best latency: 0.009386667050421238
+2.4891711431167245 tflops, 1.7166697538736029 %
+n: 1, f: 128, h: 28, w: 28, c: 128, kh: 3, kw: 3, s: 1, d: 1, p: 0, oh: 26, ow: 26
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 4], 'thread': [26, 4], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.23306241631507874
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 8], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.2019840031862259
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 16], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.2664448022842407
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 8], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.15334400534629822
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 8], 'thread': [13, 8], 'rstep': [1152], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.30679041147232056
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 16], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.15912958979606628
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 4], 'thread': [26, 4], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.29201066493988037
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 16], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.11485866457223892
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 2], 'thread': [52, 2], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.40799087285995483
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 2], 'thread': [169, 1], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.4767743945121765
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 4], 'thread': [169, 1], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.34918397665023804
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 4], 'thread': [13, 4], 'rstep': [1152], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.20377600193023682
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 32], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.24371199309825897
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 8], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.17756161093711853
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 32], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.14049279689788818
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 2], 'thread': [26, 2], 'rstep': [384], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.23961599171161652
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.18145279586315155
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 16], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.23296000063419342
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 2], 'thread': [169, 1], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.6461440324783325
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 2], 'thread': [13, 2], 'rstep': [1152], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.1515519917011261
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 1], 'thread': [52, 1], 'rstep': [384], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.392192006111145
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 4], 'thread': [26, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.3044205605983734
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 8], 'thread': [26, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.3256320059299469
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [2, 64], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.48373761773109436
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 1], 'thread': [169, 1], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.7563263773918152
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 32], 'thread': [4, 32], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.7907328009605408
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 64], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.24698880314826965
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 32], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.3233792185783386
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 64], 'thread': [2, 64], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 16}}}
+0.18227200210094452
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 16], 'thread': [26, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.3701759874820709
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 64], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.3824640214443207
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 1], 'thread': [26, 1], 'rstep': [384], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.21483519673347473
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 1], 'thread': [13, 1], 'rstep': [1152], 'reduce_thread': [9], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.13557758927345276
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2], 'thread': [4, 2], 'rstep': [1152], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+0.0813056007027626
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 1], 'thread': [169, 1], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.9461759328842163
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 32], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.44830718636512756
+code:  __global__ void __launch_bounds__(104) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int T_conv_local[104];
+  __shared__ signed char data_shared[43264];
+  __shared__ signed char B_decode_shared[4096];
+  T_conv_local[0] = 0;
+  T_conv_local[26] = 0;
+  T_conv_local[52] = 0;
+  T_conv_local[78] = 0;
+  T_conv_local[1] = 0;
+  T_conv_local[27] = 0;
+  T_conv_local[53] = 0;
+  T_conv_local[79] = 0;
+  T_conv_local[2] = 0;
+  T_conv_local[28] = 0;
+  T_conv_local[54] = 0;
+  T_conv_local[80] = 0;
+  T_conv_local[3] = 0;
+  T_conv_local[29] = 0;
+  T_conv_local[55] = 0;
+  T_conv_local[81] = 0;
+  T_conv_local[4] = 0;
+  T_conv_local[30] = 0;
+  T_conv_local[56] = 0;
+  T_conv_local[82] = 0;
+  T_conv_local[5] = 0;
+  T_conv_local[31] = 0;
+  T_conv_local[57] = 0;
+  T_conv_local[83] = 0;
+  T_conv_local[6] = 0;
+  T_conv_local[32] = 0;
+  T_conv_local[58] = 0;
+  T_conv_local[84] = 0;
+  T_conv_local[7] = 0;
+  T_conv_local[33] = 0;
+  T_conv_local[59] = 0;
+  T_conv_local[85] = 0;
+  T_conv_local[8] = 0;
+  T_conv_local[34] = 0;
+  T_conv_local[60] = 0;
+  T_conv_local[86] = 0;
+  T_conv_local[9] = 0;
+  T_conv_local[35] = 0;
+  T_conv_local[61] = 0;
+  T_conv_local[87] = 0;
+  T_conv_local[10] = 0;
+  T_conv_local[36] = 0;
+  T_conv_local[62] = 0;
+  T_conv_local[88] = 0;
+  T_conv_local[11] = 0;
+  T_conv_local[37] = 0;
+  T_conv_local[63] = 0;
+  T_conv_local[89] = 0;
+  T_conv_local[12] = 0;
+  T_conv_local[38] = 0;
+  T_conv_local[64] = 0;
+  T_conv_local[90] = 0;
+  T_conv_local[13] = 0;
+  T_conv_local[39] = 0;
+  T_conv_local[65] = 0;
+  T_conv_local[91] = 0;
+  T_conv_local[14] = 0;
+  T_conv_local[40] = 0;
+  T_conv_local[66] = 0;
+  T_conv_local[92] = 0;
+  T_conv_local[15] = 0;
+  T_conv_local[41] = 0;
+  T_conv_local[67] = 0;
+  T_conv_local[93] = 0;
+  T_conv_local[16] = 0;
+  T_conv_local[42] = 0;
+  T_conv_local[68] = 0;
+  T_conv_local[94] = 0;
+  T_conv_local[17] = 0;
+  T_conv_local[43] = 0;
+  T_conv_local[69] = 0;
+  T_conv_local[95] = 0;
+  T_conv_local[18] = 0;
+  T_conv_local[44] = 0;
+  T_conv_local[70] = 0;
+  T_conv_local[96] = 0;
+  T_conv_local[19] = 0;
+  T_conv_local[45] = 0;
+  T_conv_local[71] = 0;
+  T_conv_local[97] = 0;
+  T_conv_local[20] = 0;
+  T_conv_local[46] = 0;
+  T_conv_local[72] = 0;
+  T_conv_local[98] = 0;
+  T_conv_local[21] = 0;
+  T_conv_local[47] = 0;
+  T_conv_local[73] = 0;
+  T_conv_local[99] = 0;
+  T_conv_local[22] = 0;
+  T_conv_local[48] = 0;
+  T_conv_local[74] = 0;
+  T_conv_local[100] = 0;
+  T_conv_local[23] = 0;
+  T_conv_local[49] = 0;
+  T_conv_local[75] = 0;
+  T_conv_local[101] = 0;
+  T_conv_local[24] = 0;
+  T_conv_local[50] = 0;
+  T_conv_local[76] = 0;
+  T_conv_local[102] = 0;
+  T_conv_local[25] = 0;
+  T_conv_local[51] = 0;
+  T_conv_local[77] = 0;
+  T_conv_local[103] = 0;
+  for (int k_0 = 0; k_0 < 9; ++k_0) {
+    __syncthreads();
+    *(int4*)(data_shared + (((int)threadIdx.x) * 16)) = *(int4*)(input + (((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 1664)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 1664));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 3328)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 3584));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 4992)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 5248));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 6656)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 7168));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 8320)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 8832));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 9984)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 10752));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 11648)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 12416));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 13312)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 14336));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 14976)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 16000));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 16640)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 17920));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 18304)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 19584));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 19968)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 21504));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 21632)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 23168));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 23296)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 25088));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 24960)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 26752));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 26624)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 28672));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 28288)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 30336));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 29952)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 32256));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 31616)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 33920));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 33280)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 35840));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 34944)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 37504));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 36608)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 39424));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 38272)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 41088));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 39936)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 43008));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 41600)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 2) * 46592) + ((k_0 / 3) * 3584)) + ((k_0 % 3) * 128)) + (((int)threadIdx.x) * 16)) + 44672));
+    B_decode_shared[((int)threadIdx.x)] = ((weight[((((((int)blockIdx.x) & 3) * 4608) + (k_0 * 16)) + (((int)threadIdx.x) >> 3))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 104)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 104) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 13) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 208)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 208) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 10) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 312)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 312) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 7) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 416)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 416) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 4) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 520)] = ((weight[((((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 520) >> 7) * 144)) + (k_0 * 16)) + (((int)threadIdx.x) >> 3)) + 1)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 624)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 624) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 14) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 728)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 728) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 11) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 832)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 832) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 8) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 936)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 936) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 5) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 1040)] = ((weight[((((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 1040) >> 7) * 144)) + (k_0 * 16)) + (((int)threadIdx.x) >> 3)) + 2)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 1144)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 1144) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 15) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 1248)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 1248) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 12) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 1352)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 1352) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 9) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 1456)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 1456) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 6) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 1560)] = ((weight[((((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 1560) >> 7) * 144)) + (k_0 * 16)) + (((int)threadIdx.x) >> 3)) + 3)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 1664)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (k_0 * 16)) + (((int)threadIdx.x) >> 3)) + 1872)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 1768)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 1768) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 13) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 1872)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 1872) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 10) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 1976)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 1976) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 7) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 2080)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 2080) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 4) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 2184)] = ((weight[((((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 2184) >> 7) * 144)) + (k_0 * 16)) + (((int)threadIdx.x) >> 3)) + 1)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 2288)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 2288) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 14) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 2392)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 2392) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 11) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 2496)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 2496) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 8) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 2600)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 2600) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 5) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 2704)] = ((weight[((((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 2704) >> 7) * 144)) + (k_0 * 16)) + (((int)threadIdx.x) >> 3)) + 2)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 2808)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 2808) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 15) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 2912)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 2912) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 12) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 3016)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 3016) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 9) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 3120)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 3120) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 6) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 3224)] = ((weight[((((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 3224) >> 7) * 144)) + (k_0 * 16)) + (((int)threadIdx.x) >> 3)) + 3)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 3328)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (k_0 * 16)) + (((int)threadIdx.x) >> 3)) + 3744)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 3432)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 3432) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 13) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 3536)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 3536) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 10) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 3640)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 3640) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 7) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 3744)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 3744) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 4) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 3848)] = ((weight[((((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 3848) >> 7) * 144)) + (k_0 * 16)) + (((int)threadIdx.x) >> 3)) + 1)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 3952)] = ((weight[(((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 3952) >> 7) * 144)) + (k_0 * 16)) + (((((int)threadIdx.x) >> 3) + 14) & 15))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    if (((int)threadIdx.x) < 40) {
+      B_decode_shared[(((int)threadIdx.x) + 4056)] = ((weight[((((((((int)blockIdx.x) & 3) * 4608) + (((((int)threadIdx.x) + 4056) >> 7) * 144)) + (k_0 * 16)) + (((int)threadIdx.x) >> 3)) + 11)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    }
+    __syncthreads();
+    for (int k_1 = 0; k_1 < 128; ++k_1) {
+      T_conv_local[0] = (T_conv_local[0] + (((int)data_shared[(((((int)threadIdx.x) >> 3) * 128) + k_1)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[26] = (T_conv_local[26] + (((int)data_shared[(((((int)threadIdx.x) >> 3) * 128) + k_1)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[52] = (T_conv_local[52] + (((int)data_shared[(((((int)threadIdx.x) >> 3) * 128) + k_1)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[78] = (T_conv_local[78] + (((int)data_shared[(((((int)threadIdx.x) >> 3) * 128) + k_1)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[1] = (T_conv_local[1] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 1664)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[27] = (T_conv_local[27] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 1664)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[53] = (T_conv_local[53] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 1664)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[79] = (T_conv_local[79] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 1664)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[2] = (T_conv_local[2] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 3328)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[28] = (T_conv_local[28] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 3328)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[54] = (T_conv_local[54] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 3328)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[80] = (T_conv_local[80] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 3328)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[3] = (T_conv_local[3] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 4992)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[29] = (T_conv_local[29] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 4992)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[55] = (T_conv_local[55] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 4992)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[81] = (T_conv_local[81] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 4992)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[4] = (T_conv_local[4] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 6656)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[30] = (T_conv_local[30] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 6656)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[56] = (T_conv_local[56] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 6656)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[82] = (T_conv_local[82] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 6656)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[5] = (T_conv_local[5] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 8320)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[31] = (T_conv_local[31] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 8320)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[57] = (T_conv_local[57] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 8320)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[83] = (T_conv_local[83] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 8320)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[6] = (T_conv_local[6] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 9984)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[32] = (T_conv_local[32] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 9984)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[58] = (T_conv_local[58] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 9984)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[84] = (T_conv_local[84] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 9984)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[7] = (T_conv_local[7] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 11648)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[33] = (T_conv_local[33] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 11648)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[59] = (T_conv_local[59] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 11648)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[85] = (T_conv_local[85] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 11648)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[8] = (T_conv_local[8] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 13312)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[34] = (T_conv_local[34] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 13312)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[60] = (T_conv_local[60] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 13312)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[86] = (T_conv_local[86] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 13312)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[9] = (T_conv_local[9] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 14976)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[35] = (T_conv_local[35] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 14976)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[61] = (T_conv_local[61] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 14976)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[87] = (T_conv_local[87] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 14976)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[10] = (T_conv_local[10] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 16640)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[36] = (T_conv_local[36] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 16640)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[62] = (T_conv_local[62] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 16640)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[88] = (T_conv_local[88] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 16640)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[11] = (T_conv_local[11] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 18304)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[37] = (T_conv_local[37] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 18304)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[63] = (T_conv_local[63] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 18304)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[89] = (T_conv_local[89] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 18304)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[12] = (T_conv_local[12] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 19968)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[38] = (T_conv_local[38] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 19968)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[64] = (T_conv_local[64] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 19968)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[90] = (T_conv_local[90] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 19968)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[13] = (T_conv_local[13] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 21632)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[39] = (T_conv_local[39] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 21632)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[65] = (T_conv_local[65] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 21632)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[91] = (T_conv_local[91] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 21632)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[14] = (T_conv_local[14] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 23296)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[40] = (T_conv_local[40] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 23296)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[66] = (T_conv_local[66] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 23296)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[92] = (T_conv_local[92] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 23296)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[15] = (T_conv_local[15] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 24960)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[41] = (T_conv_local[41] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 24960)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[67] = (T_conv_local[67] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 24960)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[93] = (T_conv_local[93] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 24960)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[16] = (T_conv_local[16] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 26624)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[42] = (T_conv_local[42] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 26624)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[68] = (T_conv_local[68] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 26624)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[94] = (T_conv_local[94] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 26624)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[17] = (T_conv_local[17] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 28288)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[43] = (T_conv_local[43] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 28288)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[69] = (T_conv_local[69] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 28288)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[95] = (T_conv_local[95] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 28288)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[18] = (T_conv_local[18] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 29952)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[44] = (T_conv_local[44] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 29952)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[70] = (T_conv_local[70] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 29952)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[96] = (T_conv_local[96] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 29952)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[19] = (T_conv_local[19] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 31616)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[45] = (T_conv_local[45] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 31616)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[71] = (T_conv_local[71] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 31616)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[97] = (T_conv_local[97] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 31616)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[20] = (T_conv_local[20] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 33280)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[46] = (T_conv_local[46] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 33280)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[72] = (T_conv_local[72] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 33280)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[98] = (T_conv_local[98] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 33280)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[21] = (T_conv_local[21] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 34944)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[47] = (T_conv_local[47] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 34944)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[73] = (T_conv_local[73] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 34944)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[99] = (T_conv_local[99] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 34944)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[22] = (T_conv_local[22] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 36608)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[48] = (T_conv_local[48] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 36608)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[74] = (T_conv_local[74] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 36608)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[100] = (T_conv_local[100] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 36608)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[23] = (T_conv_local[23] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 38272)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[49] = (T_conv_local[49] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 38272)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[75] = (T_conv_local[75] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 38272)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[101] = (T_conv_local[101] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 38272)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[24] = (T_conv_local[24] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 39936)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[50] = (T_conv_local[50] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 39936)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[76] = (T_conv_local[76] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 39936)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[102] = (T_conv_local[102] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 39936)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+      T_conv_local[25] = (T_conv_local[25] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 41600)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 7) * 128) + k_1)])));
+      T_conv_local[51] = (T_conv_local[51] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 41600)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 1024)])));
+      T_conv_local[77] = (T_conv_local[77] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 41600)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 2048)])));
+      T_conv_local[103] = (T_conv_local[103] + (((int)data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_1) + 41600)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 7) * 128) + k_1) + 3072)])));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 8)] = T_conv_local[26];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 16)] = T_conv_local[52];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 24)] = T_conv_local[78];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 1664)] = T_conv_local[1];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 1672)] = T_conv_local[27];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 1680)] = T_conv_local[53];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 1688)] = T_conv_local[79];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 3328)] = T_conv_local[2];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 3336)] = T_conv_local[28];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 3344)] = T_conv_local[54];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 3352)] = T_conv_local[80];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 4992)] = T_conv_local[3];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 5000)] = T_conv_local[29];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 5008)] = T_conv_local[55];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 5016)] = T_conv_local[81];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 6656)] = T_conv_local[4];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 6664)] = T_conv_local[30];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 6672)] = T_conv_local[56];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 6680)] = T_conv_local[82];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 8320)] = T_conv_local[5];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 8328)] = T_conv_local[31];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 8336)] = T_conv_local[57];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 8344)] = T_conv_local[83];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 9984)] = T_conv_local[6];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 9992)] = T_conv_local[32];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 10000)] = T_conv_local[58];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 10008)] = T_conv_local[84];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 11648)] = T_conv_local[7];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 11656)] = T_conv_local[33];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 11664)] = T_conv_local[59];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 11672)] = T_conv_local[85];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 13312)] = T_conv_local[8];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 13320)] = T_conv_local[34];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 13328)] = T_conv_local[60];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 13336)] = T_conv_local[86];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 14976)] = T_conv_local[9];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 14984)] = T_conv_local[35];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 14992)] = T_conv_local[61];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 15000)] = T_conv_local[87];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 16640)] = T_conv_local[10];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 16648)] = T_conv_local[36];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 16656)] = T_conv_local[62];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 16664)] = T_conv_local[88];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 18304)] = T_conv_local[11];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 18312)] = T_conv_local[37];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 18320)] = T_conv_local[63];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 18328)] = T_conv_local[89];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 19968)] = T_conv_local[12];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 19976)] = T_conv_local[38];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 19984)] = T_conv_local[64];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 19992)] = T_conv_local[90];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 21632)] = T_conv_local[13];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 21640)] = T_conv_local[39];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 21648)] = T_conv_local[65];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 21656)] = T_conv_local[91];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 23296)] = T_conv_local[14];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 23304)] = T_conv_local[40];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 23312)] = T_conv_local[66];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 23320)] = T_conv_local[92];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 24960)] = T_conv_local[15];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 24968)] = T_conv_local[41];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 24976)] = T_conv_local[67];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 24984)] = T_conv_local[93];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 26624)] = T_conv_local[16];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 26632)] = T_conv_local[42];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 26640)] = T_conv_local[68];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 26648)] = T_conv_local[94];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 28288)] = T_conv_local[17];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 28296)] = T_conv_local[43];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 28304)] = T_conv_local[69];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 28312)] = T_conv_local[95];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 29952)] = T_conv_local[18];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 29960)] = T_conv_local[44];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 29968)] = T_conv_local[70];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 29976)] = T_conv_local[96];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 31616)] = T_conv_local[19];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 31624)] = T_conv_local[45];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 31632)] = T_conv_local[71];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 31640)] = T_conv_local[97];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 33280)] = T_conv_local[20];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 33288)] = T_conv_local[46];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 33296)] = T_conv_local[72];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 33304)] = T_conv_local[98];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 34944)] = T_conv_local[21];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 34952)] = T_conv_local[47];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 34960)] = T_conv_local[73];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 34968)] = T_conv_local[99];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 36608)] = T_conv_local[22];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 36616)] = T_conv_local[48];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 36624)] = T_conv_local[74];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 36632)] = T_conv_local[100];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 38272)] = T_conv_local[23];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 38280)] = T_conv_local[49];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 38288)] = T_conv_local[75];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 38296)] = T_conv_local[101];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 39936)] = T_conv_local[24];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 39944)] = T_conv_local[50];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 39952)] = T_conv_local[76];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 39960)] = T_conv_local[102];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 41600)] = T_conv_local[25];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 41608)] = T_conv_local[51];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 41616)] = T_conv_local[77];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 43264) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 7)) + 41624)] = T_conv_local[103];
+}
+
+
+top1: 0.23306241631507874 	top10: 0.0813056007027626
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2], 'thread': [4, 2], 'rstep': [1152], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+best latency: 0.0813056007027626
+2.2300718257970815 tflops, 1.5379805695152287 %
+n: 1, f: 128, h: 28, w: 28, c: 512, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 28, ow: 28
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 16], 'thread': [16, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.12463543564081192
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 32], 'thread': [8, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.21012480556964874
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 16], 'thread': [14, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.1090560033917427
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.1630208045244217
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 16], 'thread': [8, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.22169600427150726
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 8], 'thread': [16, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.14837759733200073
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.11325440555810928
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 16], 'thread': [14, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.14924800395965576
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.1297554224729538
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 8], 'thread': [49, 2], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.10117119550704956
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 8], 'thread': [14, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.1037653312087059
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 8], 'thread': [14, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.158720001578331
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [4, 32], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.397926390171051
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 16], 'thread': [7, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.2433023899793625
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 32], 'thread': [4, 32], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.40427517890930176
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.30146560072898865
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 8], 'thread': [14, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.11746742576360703
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.20480000972747803
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 8], 'thread': [7, 8], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.13021866977214813
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.09574399888515472
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.09807644039392471
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 32], 'thread': [7, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.25599998235702515
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.13388800621032715
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.10690560191869736
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4], 'thread': [14, 4], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.1012297123670578
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.08355839550495148
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 4], 'thread': [28, 4], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.15143822133541107
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.08060342818498611
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4], 'thread': [7, 4], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.08162742853164673
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.11827199906110764
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 4], 'thread': [49, 2], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.13478399813175201
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 4], 'thread': [28, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.1482751965522766
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.1045759990811348
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 4], 'thread': [49, 2], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.12668342888355255
+code:  __global__ void __launch_bounds__(98) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int T_conv_local[2];
+  __shared__ signed char data_shared[12544];
+  __shared__ signed char B_decode_shared[1024];
+  T_conv_local[0] = 0;
+  T_conv_local[1] = 0;
+  for (int k_0 = 0; k_0 < 2; ++k_0) {
+    __syncthreads();
+    *(int4*)(data_shared + (((int)threadIdx.x) * 16)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((int)threadIdx.x) >> 4) * 512)) + (k_0 * 256)) + ((((int)threadIdx.x) & 15) * 16)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 1568)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 1568) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 32) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 3136)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 3136) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 64) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 4704)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 4704) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 96) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 6272)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 6272) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 128) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 7840)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 7840) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 160) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 9408)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 9408) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 192) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 10976)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 10976) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 224) & 255)));
+    B_decode_shared[((int)threadIdx.x)] = ((weight[((((((int)blockIdx.x) & 31) * 256) + (k_0 * 32)) + (((int)threadIdx.x) >> 3))] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 98)] = ((weight[((((((int)blockIdx.x) & 31) * 256) + (k_0 * 32)) + ((((int)threadIdx.x) + 98) >> 3))] >> ((signed char)((((int)threadIdx.x) + 2) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 196)] = ((weight[(((((((int)blockIdx.x) & 31) * 256) + (((((int)threadIdx.x) + 196) >> 8) * 64)) + (k_0 * 32)) + ((((((int)threadIdx.x) >> 1) + 98) & 127) >> 2))] >> ((signed char)((((int)threadIdx.x) + 4) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 294)] = ((weight[(((((((int)blockIdx.x) & 31) * 256) + (((((int)threadIdx.x) + 294) >> 8) * 64)) + (k_0 * 32)) + (((((int)threadIdx.x) >> 1) + 19) >> 2))] >> ((signed char)((((int)threadIdx.x) + 6) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 392)] = ((weight[((((((((int)blockIdx.x) & 31) * 256) + (((((int)threadIdx.x) + 392) >> 8) * 64)) + (k_0 * 32)) + (((int)threadIdx.x) >> 3)) + 17)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 490)] = ((weight[(((((((int)blockIdx.x) & 31) * 256) + (((((int)threadIdx.x) + 490) >> 8) * 64)) + (k_0 * 32)) + ((((((int)threadIdx.x) >> 1) + 117) & 127) >> 2))] >> ((signed char)((((int)threadIdx.x) + 2) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 588)] = ((weight[(((((((int)blockIdx.x) & 31) * 256) + (((((int)threadIdx.x) + 588) >> 8) * 64)) + (k_0 * 32)) + (((((int)threadIdx.x) >> 1) + 38) >> 2))] >> ((signed char)((((int)threadIdx.x) + 4) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 686)] = ((weight[(((((((int)blockIdx.x) & 31) * 256) + (((((int)threadIdx.x) + 686) >> 8) * 64)) + (k_0 * 32)) + ((((((int)threadIdx.x) >> 1) + 87) & 127) >> 2))] >> ((signed char)((((int)threadIdx.x) + 6) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 784)] = ((weight[((((((((int)blockIdx.x) & 31) * 256) + (((((int)threadIdx.x) + 784) >> 8) * 64)) + (k_0 * 32)) + (((int)threadIdx.x) >> 3)) + 2)] >> ((signed char)(((int)threadIdx.x) & 7))) & (signed char)1);
+    B_decode_shared[(((int)threadIdx.x) + 882)] = ((weight[(((((((int)blockIdx.x) & 31) * 256) + (((((int)threadIdx.x) + 882) >> 8) * 64)) + (k_0 * 32)) + (((((int)threadIdx.x) >> 1) + 57) >> 2))] >> ((signed char)((((int)threadIdx.x) + 2) & 7))) & (signed char)1);
+    if (((int)threadIdx.x) < 44) {
+      B_decode_shared[(((int)threadIdx.x) + 980)] = ((weight[(((((((int)blockIdx.x) & 31) * 256) + (((((int)threadIdx.x) + 980) >> 8) * 64)) + (k_0 * 32)) + (((((int)threadIdx.x) >> 1) + 106) >> 2))] >> ((signed char)((((int)threadIdx.x) + 4) & 7))) & (signed char)1);
+    }
+    __syncthreads();
+    for (int k_1 = 0; k_1 < 256; ++k_1) {
+      T_conv_local[0] = (T_conv_local[0] + (((int)data_shared[(((((int)threadIdx.x) >> 1) * 256) + k_1)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 1) * 256) + k_1)])));
+      T_conv_local[1] = (T_conv_local[1] + (((int)data_shared[(((((int)threadIdx.x) >> 1) * 256) + k_1)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 1) * 256) + k_1) + 512)])));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 5) * 6272) + ((((int)threadIdx.x) >> 1) * 128)) + ((((int)blockIdx.x) & 31) * 4)) + (((int)threadIdx.x) & 1))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 5) * 6272) + ((((int)threadIdx.x) >> 1) * 128)) + ((((int)blockIdx.x) & 31) * 4)) + (((int)threadIdx.x) & 1)) + 2)] = T_conv_local[1];
+}
+
+
+top1: 0.12463543564081192 	top10: 0.08060342818498611
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+best latency: 0.08060342818498611
+1.1595050621584007 tflops, 0.7996586635575178 %
+1_64_56_56_64_3_3_1_1_0	0.039423998445272446
+1_64_56_56_64_1_1_1_1_0	0.009386667050421238
+1_128_28_28_128_3_3_1_1_0	0.0813056007027626
+1_128_28_28_512_1_1_1_1_0	0.08060342818498611

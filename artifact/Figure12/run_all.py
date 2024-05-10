@@ -31,22 +31,6 @@ if not reproduce:
 else:
     print("Reproducing the results")
     # reproduce the results for amos
-    if force_tune_amos:
-        run_command("./benchmark_amos_conv2d.sh --force_tune;", working_dir="amos-benchmark")
-        run_command("./benchmark_amos_gemm.sh --force_tune;", working_dir="amos-benchmark")
-    else:
-        run_command("./benchmark_amos_conv2d.sh", working_dir="amos-benchmark")
-        run_command("./benchmark_amos_gemm.sh", working_dir="amos-benchmark")
-    # reproduce the results for tensorir
-    if force_tune_tensorir:
-        run_command("./benchmark_tensorir.sh --force_tune;", working_dir="tensorir-benchmark")
-    else:
-        run_command("./benchmark_tensorir.sh", working_dir="tensorir-benchmark")
-    # reproduce the results for cublas
-    run_command("./compile_and_run.sh", working_dir="cublas-benchmark")
-    # reproduce the results for cudnn
-    run_command("./benchmark_cudnn_conv2d.sh", working_dir="cudnn-benchmark")
-    # reproduce the results for ladder
     run_command("./benchmark_ladder.sh", working_dir="ladder-benchmark")
     # plot from the reproduced results
     os.system(f"python3 update_results.py")

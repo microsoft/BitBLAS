@@ -1,18 +1,18 @@
 [BitBLAS] The best latency of top 1 is 0.011 ms
 [BitBLAS] The best latency of top 20 is 0.010 ms
 Time cost of Dlight default schedule: 5200.000 ms
-[BitBLAS] The best latency of top 1 is 0.048 ms
-[BitBLAS] The best latency of top 20 is 0.048 ms
+[BitBLAS] The best latency of top 1 is 0.047 ms
+[BitBLAS] The best latency of top 20 is 0.047 ms
 Time cost of Dlight default schedule: 5200.000 ms
 [BitBLAS] The best latency of top 1 is 0.154 ms
-[BitBLAS] The best latency of top 20 is 0.148 ms
+[BitBLAS] The best latency of top 20 is 0.147 ms
 Time cost of Dlight default schedule: 5200.000 ms
-[BitBLAS] The best latency of top 1 is 0.158 ms
-[BitBLAS] The best latency of top 20 is 0.145 ms
+[BitBLAS] The best latency of top 1 is 0.144 ms
+[BitBLAS] The best latency of top 20 is 0.144 ms
 Time cost of Dlight default schedule: 5200.000 ms
 PrimFunc                     Input Arguments              BitBLAS Top20 Tune Time      BitBLAS Top1 Latency         BitBLAS Top20 Latency        DefaultDLight Tune Time      DefaultDLight Latency        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-matmul_nt                    1-1024-8192-int8-int8-int32   7.066440105438232 s         0.011 ms                     0.010 ms                     13.14                        5.200e+03 ms                 
-matmul_nt                    1-8192-8192-int8-int8-int32   7.3941969871521 s           0.048 ms                     0.048 ms                     13.14                        5.200e+03 ms                 
-matmul_nt                    1-28672-8192-int8-int8-int32  11.653989791870117 s        0.154 ms                     0.148 ms                     13.14                        5.200e+03 ms                 
-matmul_nt                    1-8192-28672-int8-int8-int32  8.206190824508667 s         0.158 ms                     0.145 ms                     13.14                        5.200e+03 ms                 
+matmul_nt                    1-1024-8192-int8-int8-int32   6.873282432556152 s         0.011 ms                     0.010 ms                     13.14                        5.200e+03 ms                 
+matmul_nt                    1-8192-8192-int8-int8-int32   6.945530891418457 s         0.047 ms                     0.047 ms                     13.14                        5.200e+03 ms                 
+matmul_nt                    1-28672-8192-int8-int8-int32  10.393444538116455 s        0.154 ms                     0.147 ms                     13.14                        5.200e+03 ms                 
+matmul_nt                    1-8192-28672-int8-int8-int32  7.868313550949097 s         0.144 ms                     0.144 ms                     13.14                        5.200e+03 ms                 

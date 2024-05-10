@@ -1,18 +1,18 @@
-[BitBLAS] The best latency of top 1 is 0.204 ms
-[BitBLAS] The best latency of top 20 is 0.204 ms
+[BitBLAS] The best latency of top 1 is 0.207 ms
+[BitBLAS] The best latency of top 20 is 0.207 ms
 Time cost of Dlight default schedule: 5200.000 ms
 [BitBLAS] The best latency of top 1 is 1.342 ms
-[BitBLAS] The best latency of top 20 is 1.329 ms
+[BitBLAS] The best latency of top 20 is 1.333 ms
 Time cost of Dlight default schedule: 5200.000 ms
-[BitBLAS] The best latency of top 1 is 4.544 ms
-[BitBLAS] The best latency of top 20 is 4.544 ms
+[BitBLAS] The best latency of top 1 is 3.941 ms
+[BitBLAS] The best latency of top 20 is 3.941 ms
 Time cost of Dlight default schedule: 5200.000 ms
-[BitBLAS] The best latency of top 1 is 4.664 ms
-[BitBLAS] The best latency of top 20 is 4.664 ms
+[BitBLAS] The best latency of top 1 is 4.654 ms
+[BitBLAS] The best latency of top 20 is 4.654 ms
 Time cost of Dlight default schedule: 5200.000 ms
 PrimFunc                     Input Arguments              BitBLAS Top20 Tune Time      BitBLAS Top1 Latency         BitBLAS Top20 Latency        DefaultDLight Tune Time      DefaultDLight Latency        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-matmul_nt_propagate_a_propagate_b4096-1024-8192-int8-int8-int32 37.31504559516907 s         0.204 ms                     0.204 ms                     13.14                        5.200e+03 ms                 
-matmul_nt_propagate_a_propagate_b4096-8192-8192-int8-int8-int32 37.71017408370972 s         1.342 ms                     1.329 ms                     13.14                        5.200e+03 ms                 
-matmul_nt_propagate_a_propagate_b4096-28672-8192-int8-int8-int32 34.90378165245056 s         4.544 ms                     4.544 ms                     13.14                        5.200e+03 ms                 
-matmul_nt_propagate_a_propagate_b4096-8192-28672-int8-int8-int32 38.61574625968933 s         4.664 ms                     4.664 ms                     13.14                        5.200e+03 ms                 
+matmul_nt_propagate_a_propagate_b4096-1024-8192-int8-int8-int32 37.91273212432861 s         0.207 ms                     0.207 ms                     13.14                        5.200e+03 ms                 
+matmul_nt_propagate_a_propagate_b4096-8192-8192-int8-int8-int32 42.829416275024414 s        1.342 ms                     1.333 ms                     13.14                        5.200e+03 ms                 
+matmul_nt_propagate_a_propagate_b4096-28672-8192-int8-int8-int32 44.521920680999756 s        3.941 ms                     3.941 ms                     13.14                        5.200e+03 ms                 
+matmul_nt_propagate_a_propagate_b4096-8192-28672-int8-int8-int32 39.56156921386719 s         4.654 ms                     4.654 ms                     13.14                        5.200e+03 ms                 

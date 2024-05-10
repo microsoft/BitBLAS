@@ -1,0 +1,2 @@
+Measure the memory for llama batch 1 seq 1 under onnxruntime
+{'llama_onnxruntime_1_1': 2520}
