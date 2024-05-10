@@ -111,7 +111,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 8](./artifact/Figure8/png/end2end_a100.png)
+![Figure 8](./artifact/Figure8/paper_result/end2end_a100.png)
 
 #### Notes for Reproducing the Results
 
@@ -225,7 +225,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 11](./artifact/Figure11/png/memory_usage_a100.png)
+![Figure 11](./artifact/Figure11/paper_result/memory_usage_a100.png)
 
 #### Notes on Reproducing the Results
 
@@ -277,7 +277,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 12](./artifact/Figure12/png/operator_performance_a100.png)
+![Figure 12](./artifact/Figure12/paper_result/operator_performance_a100.png)
 
 For TensorIR Conv2d, we directly extract the operator performance form the end2end traces. So we do not provide the script to reproduce the result from single tensor ir expression. 
 
@@ -314,7 +314,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 13](./artifact/Figure13/png/optimization_breakdown.png)
+![Figure 13](./artifact/Figure13/paper_result/optimization_breakdown.png)
 
 ### <a id="Figure14">Figure14</a>
 
@@ -349,7 +349,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 14](./artifact/Figure14/png/different_bits.png)
+![Figure 14](./artifact/Figure14/paper_result/different_bits.png)
 
 ### <a id="Figure15">Figure15</a>
 
