@@ -31,6 +31,7 @@ fi
 
 # if not force_tune, skip tuning
 
+mkdir -p logs
 
 echo "[LADDER] Running benchmark..."
 
