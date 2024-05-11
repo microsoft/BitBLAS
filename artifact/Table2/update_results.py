@@ -16,7 +16,7 @@ with open(resnet_50_b1_logs, 'r') as f:
         if matches:
             amos_time_b1 = float(matches[0].split(' ')[-1])
 print(amos_time_b1)
-compilation_cost["ResNet(1)"]["AMOS"] = amos_time_b1 / 3600
+compilation_cost["ResNet(1)"]["AMOS"] = amos_time_b1 / 60
 
 resnet_50_b128_logs = './amos-benchmark/logs/resnet50_b128.log'
 ### match x(float) from Time taken:  231111.167464733124
@@ -28,7 +28,7 @@ with open(resnet_50_b128_logs, 'r') as f:
         if matches:
             amos_time_b128 = float(matches[0].split(' ')[-1])
 print(amos_time_b128)
-compilation_cost["ResNet(128)"]["AMOS"] = amos_time_b128 / 3600
+compilation_cost["ResNet(128)"]["AMOS"] = amos_time_b128 / 60
 
 shufflenet_b1_logs = './amos-benchmark/logs/shufflenet_v2_b1.log'
 ### match x(float) from Time taken:  231111.167464733124
@@ -40,7 +40,7 @@ with open(shufflenet_b1_logs, 'r') as f:
         if matches:
             amos_time_b1 = float(matches[0].split(' ')[-1])
 print(amos_time_b1)
-compilation_cost["ShuffleNet(1)"]["AMOS"] = amos_time_b1
+compilation_cost["ShuffleNet(1)"]["AMOS"] = amos_time_b1 / 60
 
 shufflenet_b128_logs = './amos-benchmark/logs/shufflenet_v2_b128.log'
 ### match x(float) from Time taken:  231111.167464733124
@@ -53,7 +53,7 @@ with open(shufflenet_b128_logs, 'r') as f:
             amos_time_b128 = float(matches[0].split(' ')[-1])
 print(amos_time_b128)
 
-compilation_cost["ShuffleNet(128)"]["AMOS"] = amos_time_b128 / 3600
+compilation_cost["ShuffleNet(128)"]["AMOS"] = amos_time_b128 / 60
 
 # update tensorir tune time
 resnet_50_b1_logs = './tensorir-benchmark/logs/resnet-50-b1-(1, 3, 224, 224)/cost_time.txt'
@@ -67,7 +67,7 @@ with open(resnet_50_b1_logs, 'r') as f:
             tensorir_time_b1 = float(matches[0])
 print(tensorir_time_b1)
 
-compilation_cost["ResNet(1)"]["TensorIR"] = tensorir_time_b1 / 3600
+compilation_cost["ResNet(1)"]["TensorIR"] = tensorir_time_b1 / 60
 
 resnet_50_b128_logs = './tensorir-benchmark/logs/resnet-50-b128-(128, 3, 224, 224)/cost_time.txt'
 ### match x(float) from 231111.167464733124
@@ -80,7 +80,7 @@ with open(resnet_50_b128_logs, 'r') as f:
             tensorir_time_b128 = float(matches[0])
 print(tensorir_time_b128)
 
-compilation_cost["ResNet(128)"]["TensorIR"] = tensorir_time_b128 / 3600
+compilation_cost["ResNet(128)"]["TensorIR"] = tensorir_time_b128 / 60
 
 shufflenet_b1_logs = './tensorir-benchmark/logs/shufflenet-b1-(1, 3, 224, 224)/cost_time.txt'
 ### match x(float) from 231111.167464733124
@@ -93,7 +93,7 @@ with open(shufflenet_b1_logs, 'r') as f:
             tensorir_time_b1 = float(matches[0])
 print(tensorir_time_b1)
 
-compilation_cost["ShuffleNet(1)"]["TensorIR"] = tensorir_time_b1 / 3600
+compilation_cost["ShuffleNet(1)"]["TensorIR"] = tensorir_time_b1 / 60
 
 shufflenet_b128_logs = './tensorir-benchmark/logs/shufflenet-b128-(128, 3, 224, 224)/cost_time.txt'
 ### match x(float) from 231111.167464733124
@@ -106,7 +106,7 @@ with open(shufflenet_b128_logs, 'r') as f:
             tensorir_time_b128 = float(matches[0])
 print(tensorir_time_b128)
 
-compilation_cost["ShuffleNet(128)"]["TensorIR"] = tensorir_time_b128 / 3600
+compilation_cost["ShuffleNet(128)"]["TensorIR"] = tensorir_time_b128 / 60
 
 
 # update welder tune time
@@ -161,6 +161,61 @@ with open(shufflenet_b128_logs, 'r') as f:
 print(welder_time_b128)
 
 compilation_cost["ShuffleNet(128)"]["Welder"] = welder_time_b128 / 60
+
+
+# Ladder Tune Time update
+shufflenet_b128_logs = './ladder-benchmark/logs/shufflenet-b128.log'
+### match x(float) Compiler tuning time: x seconds
+pattern = r"Tune time: [\d]+\.[\d]+"
+with open(shufflenet_b128_logs, 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        matches = re.findall(pattern, line)
+        if matches:
+            ladder_time_b128 = float(matches[0].split(' ')[-1])
+print(ladder_time_b128)
+
+compilation_cost["ShuffleNet(128)"]["LADDER"] = ladder_time_b128 / 60
+
+shufflenet_b1_logs = './ladder-benchmark/logs/shufflenet-b1.log'
+### match x(float) Compiler tuning time: x seconds
+pattern = r"Tune time: [\d]+\.[\d]+"
+with open(shufflenet_b1_logs, 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        matches = re.findall(pattern, line)
+        if matches:
+            ladder_time_b1 = float(matches[0].split(' ')[-1])
+print(ladder_time_b1)
+
+compilation_cost["ShuffleNet(1)"]["LADDER"] = ladder_time_b1 / 60
+
+resnet_b128_logs = './ladder-benchmark/logs/resnet-50-b128.log'
+### match x(float) Compiler tuning time: x seconds
+pattern = r"Tune time: [\d]+\.[\d]+"
+with open(resnet_b128_logs, 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        matches = re.findall(pattern, line)
+        if matches:
+            ladder_time_b128 = float(matches[0].split(' ')[-1])
+print(ladder_time_b128)
+
+compilation_cost["ResNet(128)"]["LADDER"] = ladder_time_b128 / 60
+
+resnet_b1_logs = './ladder-benchmark/logs/resnet-50-b1.log'
+### match x(float) Compiler tuning time: x seconds
+pattern = r"Tune time: [\d]+\.[\d]+"
+with open(resnet_b1_logs, 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+        matches = re.findall(pattern, line)
+        if matches:
+            ladder_time_b1 = float(matches[0].split(' ')[-1])
+print(ladder_time_b1)
+
+compilation_cost["ResNet(1)"]["LADDER"] = ladder_time_b1 / 60
+
 
 # write the results to back
 reproduced_results = f"""

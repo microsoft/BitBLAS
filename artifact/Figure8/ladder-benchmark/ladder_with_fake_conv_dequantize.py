@@ -85,7 +85,8 @@ def run(prefix, arch, quant_type, quant_config, convert_int=False):
     write_mod(mod, log_path, "LadderConvImplicitGemm")
     mod = ladder.relay.transform.WelderConvImplicitGemm()(mod)
     write_mod(mod, log_path, "WelderConvImplicitGemm")
-    mod = ladder.relay.transform.LadderFakeQuantConv(quant_config=quant_config, quant_type=quant_type, convert_int=convert_int)(mod)
+    if args.fake_quant > -1:
+        mod = ladder.relay.transform.LadderFakeQuantConv(quant_config=quant_config, quant_type=quant_type, convert_int=convert_int)(mod)
     write_mod(mod, log_path, "LadderFakeQuantConv")
     mod = relay.transform.FoldConstant()(mod)
     write_mod(mod, log_path, "FoldConstant")

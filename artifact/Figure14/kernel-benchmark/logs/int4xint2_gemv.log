@@ -1,18 +1,18 @@
-[BitBLAS] The best latency of top 1 is 0.006 ms
+[BitBLAS] The best latency of top 1 is 0.007 ms
 [BitBLAS] The best latency of top 20 is 0.006 ms
 Time cost of Dlight default schedule: 0.008 ms
-[BitBLAS] The best latency of top 1 is 0.014 ms
+[BitBLAS] The best latency of top 1 is 0.012 ms
 [BitBLAS] The best latency of top 20 is 0.011 ms
 Time cost of Dlight default schedule: 0.027 ms
 [BitBLAS] The best latency of top 1 is 0.039 ms
 [BitBLAS] The best latency of top 20 is 0.038 ms
 Time cost of Dlight default schedule: 0.085 ms
-[BitBLAS] The best latency of top 1 is 0.039 ms
+[BitBLAS] The best latency of top 1 is 0.045 ms
 [BitBLAS] The best latency of top 20 is 0.039 ms
 Time cost of Dlight default schedule: 0.089 ms
 PrimFunc                     Input Arguments              BitBLAS Top20 Tune Time      BitBLAS Top1 Latency         BitBLAS Top20 Latency        DefaultDLight Tune Time      DefaultDLight Latency        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-matmul_nt_dequantize_b       1-1024-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 8.161246538162231 s         0.006 ms                     0.006 ms                     0.5677454471588135           8.192e-03 ms                 
-matmul_nt_dequantize_b       1-8192-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 4.876726388931274 s         0.014 ms                     0.011 ms                     0.389049768447876            2.724e-02 ms                 
-matmul_nt_dequantize_b       1-28672-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 5.798514127731323 s         0.039 ms                     0.038 ms                     0.3934636116027832           8.520e-02 ms                 
-matmul_nt_dequantize_b       1-8192-28672-int8-int8-int32-2-int8-uint-False-False--1-True-False 5.5244410037994385 s        0.039 ms                     0.039 ms                     0.38382959365844727          8.929e-02 ms                 
+matmul_nt_dequantize_b       1-1024-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 7.128488540649414 s         0.007 ms                     0.006 ms                     0.35959911346435547          8.192e-03 ms                 
+matmul_nt_dequantize_b       1-8192-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 4.163978338241577 s         0.012 ms                     0.011 ms                     0.3551154136657715           2.744e-02 ms                 
+matmul_nt_dequantize_b       1-28672-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 5.09026575088501 s          0.039 ms                     0.038 ms                     0.35697388648986816          8.520e-02 ms                 
+matmul_nt_dequantize_b       1-8192-28672-int8-int8-int32-2-int8-uint-False-False--1-True-False 4.4047346115112305 s        0.045 ms                     0.039 ms                     0.34864211082458496          8.888e-02 ms                 
