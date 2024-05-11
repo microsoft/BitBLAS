@@ -163,7 +163,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 9](./artifact/Figure9/png/end2end_v100.png)
+![Figure 9](./artifact/Figure9/png/figure9_end2end_v100.png)
 
 
 ### <a id="Figure10">Figure10</a>
