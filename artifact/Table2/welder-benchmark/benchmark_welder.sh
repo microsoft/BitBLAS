@@ -17,6 +17,8 @@ if [ -d "$WELDER_LOG_PATH" ] && [ $force_tune -eq 0 ]; then
         rm -r "./compiled_models"
     fi
     cp "$WELDER_LOG_PATH" "./compiled_models" -r
+else
+    rm -r "./compiled_models"
 fi
 
 python nnfusion_benchmark_cudnn.py
