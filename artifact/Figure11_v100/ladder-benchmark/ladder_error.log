@@ -1,0 +1,11 @@
+['ladder_perfect_matmul_3', 'layout_transform_reshape_reshape_reshape_transpose_4']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_perfect_matmul_3>: {'block': [1, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': (((floordiv(floormod(block_idx, 2048), 8)*512) + (floordiv(block_idx, 2048)*8)) + floormod(block_idx, 8)), 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}, <Node, layout_transform_reshape_reshape_reshape_transpose_4>: {'block': [1, 1, 16, 16], 'thread': [1, 1, 4, 8], 'rstep': [], 'step': [1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/home/t-leiwang/ladder_workspace/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/home/t-leiwang/ladder_workspace/Ladder/python/ladder/code_generator.py", line 190, in compile
+    assert (
+AssertionError
+
