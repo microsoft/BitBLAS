@@ -23,6 +23,7 @@ if [ -d "$FP16_LOG_PATH" ] && [ $force_tune -eq 0 ]; then
         rm -r "./logs"
     fi
     cp "$FP16_LOG_PATH" "./logs" -r
+    exit 0
 fi
 
 echo "[TensorIR] Running benchmark..."

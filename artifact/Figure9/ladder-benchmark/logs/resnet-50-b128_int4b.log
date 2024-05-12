@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/root/Ladder/artifact/Figure9/ladder-benchmark/ladder_with_fake_conv_dequantize.py", line 149, in <module>
+    run_from_prebuilt(prebuilt_path, arch)
+  File "/root/Ladder/artifact/Figure9/ladder-benchmark/ladder_with_fake_conv_dequantize.py", line 128, in run_from_prebuilt
+    loaded_lib = tvm.runtime.load_module(path_lib)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/runtime/module.py", line 592, in load_module
+    raise ValueError("cannot find file %s" % path)
+ValueError: cannot find file /root/Ladder/artifact/Figure9/../checkpoints/Figure9/ladder/checkpoints/resnet-50_fq_0_int4b_4_ci_False/model.so

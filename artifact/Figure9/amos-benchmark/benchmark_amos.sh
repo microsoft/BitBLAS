@@ -7,6 +7,7 @@ export AMOS_HOME=$(pwd)/../../baseline_framework/AMOS
 export PYTHONPATH=$AMOS_HOME/python
 pip install xgboost==1.5.0
 
+mkdir -p logs
 force_tune=0
 if [[ "$1" == "--force_tune" ]]; then
     force_tune=1
