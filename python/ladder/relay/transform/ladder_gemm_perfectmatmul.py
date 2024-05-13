@@ -76,7 +76,7 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
     def visit_call(self, call):
         if isinstance(call.op, ir.Op) and call.op.name in ["welder.matmul", "nn.matmul", "nn.dense"]:
             for type in call.type_args:
-                if type.dtype != "float16":
+                if type.dtype not in ["float16", "float32"]:
                     return super().visit_call(call)
 
             input_shape = call.args[0].checked_type.shape
