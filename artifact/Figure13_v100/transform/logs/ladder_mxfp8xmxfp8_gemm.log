@@ -1,0 +1,500 @@
+2024-05-13 08:13:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:49 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:49 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:49 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:49 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:49 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:49 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:49 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:49 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:50 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:50 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:50 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:50 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:50 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:50 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:50 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:50 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:50 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:50 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:50 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:50 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:51 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:51 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:51 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:51 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:51 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:51 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 8], 'thread': [16, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:51 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:51 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:51 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 8], 'thread': [16, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:51 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 64], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:51 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:51 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:51 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 64], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:51 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 8], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:51 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:51 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:51 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 8], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:51 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [8, 8], 'thread': [8, 8], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:52 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:52 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:52 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [8, 8], 'thread': [8, 8], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:52 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [4, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:52 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:52 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:52 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [4, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 4], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:53 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:53 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 4], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 16], 'thread': [4, 16], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:53 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:53 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 16], 'thread': [4, 16], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [16, 4], 'thread': [16, 4], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:53 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:53 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [16, 4], 'thread': [16, 4], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 8], 'thread': [4, 8], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:13:53 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:13:53 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:13:53 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 8], 'thread': [4, 8], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+{<Node, ladder_matmul>: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+48.316001892089844
+{<Node, ladder_matmul>: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+23.673036575317383
+{<Node, ladder_matmul>: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+24.79738998413086
+{<Node, ladder_matmul>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+45.30073547363281
+{<Node, ladder_matmul>: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+47.67395782470703
+{<Node, ladder_matmul>: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+87.89893341064453
+{<Node, ladder_matmul>: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+44.62100601196289
+{<Node, ladder_matmul>: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+28.46453857421875
+{<Node, ladder_matmul>: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+86.49502563476562
+{<Node, ladder_matmul>: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+54.4862174987793
+{<Node, ladder_matmul>: {'block': [8, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+89.39048767089844
+{<Node, ladder_matmul>: {'block': [16, 8], 'thread': [16, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+94.16478729248047
+{<Node, ladder_matmul>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+49.409637451171875
+{<Node, ladder_matmul>: {'block': [64, 8], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+37.24226760864258
+{<Node, ladder_matmul>: {'block': [8, 8], 'thread': [8, 8], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+105.1805648803711
+{<Node, ladder_matmul>: {'block': [4, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+92.48255920410156
+{<Node, ladder_matmul>: {'block': [32, 4], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+67.88792419433594
+{<Node, ladder_matmul>: {'block': [4, 16], 'thread': [4, 16], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+175.92587280273438
+{<Node, ladder_matmul>: {'block': [16, 4], 'thread': [16, 4], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+88.22456359863281
+{<Node, ladder_matmul>: {'block': [4, 8], 'thread': [4, 8], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+100.55557250976562
+top1: 48.316001892089844 	top10: 23.673036575317383
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+best latency: 23.673036575317383
+2024-05-13 08:14:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:13 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:13 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:13 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:13 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:13 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:13 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:14 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:14 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:14 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:14 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:14 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:14 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:14 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:14 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:14 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:14 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:14 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:14 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:14 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:14 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:14 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:14 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:14 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:14 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:14 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:14 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:15 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:15 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:15 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 8], 'thread': [16, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:15 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 8], 'thread': [16, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 64], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:15 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 64], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 8], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:15 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:15 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:15 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 8], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [8, 8], 'thread': [8, 8], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:16 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [8, 8], 'thread': [8, 8], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [4, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:16 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [4, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 4], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:16 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 4], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 16], 'thread': [4, 16], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:16 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 16], 'thread': [4, 16], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [16, 4], 'thread': [16, 4], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:16 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [16, 4], 'thread': [16, 4], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 8], 'thread': [4, 8], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:14:16 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:14:16 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:14:16 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 8], 'thread': [4, 8], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+{<Node, ladder_matmul>: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+349.55120849609375
+{<Node, ladder_matmul>: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+186.63485717773438
+{<Node, ladder_matmul>: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+194.81927490234375
+{<Node, ladder_matmul>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+356.91497802734375
+{<Node, ladder_matmul>: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+375.81414794921875
+{<Node, ladder_matmul>: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+693.5015869140625
+{<Node, ladder_matmul>: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+354.44549560546875
+{<Node, ladder_matmul>: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+224.92733764648438
+{<Node, ladder_matmul>: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+688.7012329101562
+{<Node, ladder_matmul>: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+432.9398498535156
+{<Node, ladder_matmul>: {'block': [8, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+713.135498046875
+{<Node, ladder_matmul>: {'block': [16, 8], 'thread': [16, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+751.2327880859375
+{<Node, ladder_matmul>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+395.0688171386719
+{<Node, ladder_matmul>: {'block': [64, 8], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+294.349609375
+{<Node, ladder_matmul>: {'block': [8, 8], 'thread': [8, 8], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+839.6814575195312
+{<Node, ladder_matmul>: {'block': [4, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+737.98388671875
+{<Node, ladder_matmul>: {'block': [32, 4], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+540.8655395507812
+{<Node, ladder_matmul>: {'block': [4, 16], 'thread': [4, 16], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1404.944091796875
+{<Node, ladder_matmul>: {'block': [16, 4], 'thread': [16, 4], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+704.1132202148438
+{<Node, ladder_matmul>: {'block': [4, 8], 'thread': [4, 8], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+803.3450317382812
+top1: 349.55120849609375 	top10: 186.63485717773438
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+best latency: 186.63485717773438
+2024-05-13 08:15:34 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:34 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:34 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:34 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:34 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 28], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:34 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:34 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:34 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 28], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:34 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:34 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:34 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:34 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:35 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:35 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:35 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:35 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:35 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:35 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:35 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:35 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:35 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:35 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:35 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:35 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:35 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 56], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:35 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:35 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:35 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 56], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:35 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 28], 'thread': [8, 14], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-13 08:15:35 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:35 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:35 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 28], 'thread': [8, 14], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-13 08:15:36 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 28], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:36 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:36 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:36 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 28], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:36 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 14], 'thread': [16, 7], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-13 08:15:36 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:36 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:36 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 14], 'thread': [16, 7], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-13 08:15:36 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:36 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:36 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:36 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:36 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 14], 'thread': [8, 14], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-13 08:15:36 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:36 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:36 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 14], 'thread': [8, 14], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:37 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:37 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 56], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:37 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 56], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:37 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:37 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 28], 'thread': [8, 14], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-13 08:15:37 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:37 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:37 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 28], 'thread': [8, 14], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-13 08:15:38 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 14], 'thread': [64, 2], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 2}}
+2024-05-13 08:15:38 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:38 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:38 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 14], 'thread': [64, 2], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 2}}
+2024-05-13 08:15:38 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 7], 'thread': [16, 7], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+2024-05-13 08:15:38 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:15:38 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:15:38 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 7], 'thread': [16, 7], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}
+{<Node, ladder_matmul>: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1226.685302734375
+{<Node, ladder_matmul>: {'block': [32, 28], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1243.345703125
+{<Node, ladder_matmul>: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+683.564453125
+{<Node, ladder_matmul>: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+654.3216552734375
+{<Node, ladder_matmul>: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1318.6121826171875
+{<Node, ladder_matmul>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1252.1748046875
+{<Node, ladder_matmul>: {'block': [32, 56], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1209.4404296875
+{<Node, ladder_matmul>: {'block': [16, 28], 'thread': [8, 14], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1348.78662109375
+{<Node, ladder_matmul>: {'block': [64, 28], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+692.4705810546875
+{<Node, ladder_matmul>: {'block': [32, 14], 'thread': [16, 7], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1368.56884765625
+{<Node, ladder_matmul>: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+2432.47021484375
+{<Node, ladder_matmul>: {'block': [16, 14], 'thread': [8, 14], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1527.1246337890625
+{<Node, ladder_matmul>: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+782.5082397460938
+{<Node, ladder_matmul>: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1235.0880126953125
+{<Node, ladder_matmul>: {'block': [16, 56], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+2351.574462890625
+{<Node, ladder_matmul>: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1515.8201904296875
+{<Node, ladder_matmul>: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+2411.82958984375
+{<Node, ladder_matmul>: {'block': [8, 28], 'thread': [8, 14], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+2509.15771484375
+{<Node, ladder_matmul>: {'block': [64, 14], 'thread': [64, 2], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 2}}}
+555.54150390625
+{<Node, ladder_matmul>: {'block': [32, 7], 'thread': [16, 7], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1795.140380859375
+top1: 1226.685302734375 	top10: 555.54150390625
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [64, 14], 'thread': [64, 2], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 2}}}
+best latency: 555.54150390625
+2024-05-13 08:18:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:40 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:40 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:40 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:40 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:40 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:40 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:41 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:41 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:41 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:41 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:41 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:41 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:41 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:41 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:41 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 8], 'thread': [16, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:42 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [16, 8], 'thread': [16, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 64], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:42 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [8, 64], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 8], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:42 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [64, 8], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [8, 8], 'thread': [8, 8], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:42 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [8, 8], 'thread': [8, 8], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [4, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:42 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [4, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 4], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:42 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:42 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:42 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [32, 4], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 16], 'thread': [4, 16], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:43 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 16], 'thread': [4, 16], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [16, 4], 'thread': [16, 4], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:43 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [16, 4], 'thread': [16, 4], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 8], 'thread': [4, 8], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+2024-05-13 08:18:43 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: False, is_b_consistent: False
+2024-05-13 08:18:43 [ladder:DEBUG]: Tir template failed because inconsistent computation only support gemv case, fallback to te
+2024-05-13 08:18:43 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [4, 8], 'thread': [4, 8], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}
+{<Node, ladder_matmul>: {'block': [32, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1227.501220703125
+{<Node, ladder_matmul>: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+654.5885009765625
+{<Node, ladder_matmul>: {'block': [64, 32], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+683.7649536132812
+{<Node, ladder_matmul>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1253.3360595703125
+{<Node, ladder_matmul>: {'block': [32, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1319.493896484375
+{<Node, ladder_matmul>: {'block': [16, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+2433.70263671875
+{<Node, ladder_matmul>: {'block': [16, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1238.43212890625
+{<Node, ladder_matmul>: {'block': [64, 16], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+787.6415405273438
+{<Node, ladder_matmul>: {'block': [8, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+2410.95166015625
+{<Node, ladder_matmul>: {'block': [32, 8], 'thread': [16, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1514.28857421875
+{<Node, ladder_matmul>: {'block': [8, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+2495.11181640625
+{<Node, ladder_matmul>: {'block': [16, 8], 'thread': [16, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+2627.6171875
+{<Node, ladder_matmul>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1383.8502197265625
+{<Node, ladder_matmul>: {'block': [64, 8], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1028.47509765625
+{<Node, ladder_matmul>: {'block': [8, 8], 'thread': [8, 8], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+2935.51318359375
+{<Node, ladder_matmul>: {'block': [4, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+2581.23681640625
+{<Node, ladder_matmul>: {'block': [32, 4], 'thread': [32, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+1891.995849609375
+{<Node, ladder_matmul>: {'block': [4, 16], 'thread': [4, 16], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+4912.69482421875
+{<Node, ladder_matmul>: {'block': [16, 4], 'thread': [16, 4], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+2459.99072265625
+{<Node, ladder_matmul>: {'block': [4, 8], 'thread': [4, 8], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+2804.99072265625
+top1: 1227.501220703125 	top10: 654.5885009765625
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [32, 64], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+best latency: 654.5885009765625
+4096_1024_8192	23.673036575317383
+4096_8192_8192	186.63485717773438
+4096_28672_8192	555.54150390625
+4096_8192_28672	654.5885009765625

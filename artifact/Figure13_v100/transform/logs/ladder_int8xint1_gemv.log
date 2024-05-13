@@ -1,0 +1,320 @@
+2024-05-13 05:34:48 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:34:48 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:34:49 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-13 05:34:49 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-13 05:34:49 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-13 05:34:49 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:34:49 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:49 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:34:49 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.008698666468262672
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.009596000425517559
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.01296711154282093
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
+0.046307556331157684
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
+0.10956480354070663
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.007782399654388428
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.008484571240842342
+top1: 0.008698666468262672 	top10: 0.007782399654388428
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+best latency: 0.007782399654388428
+best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
+  
+  int in_thread_B_local[1];
+  signed char B_local[2];
+  signed char B_decode_local[16];
+  signed char A_local[16];
+  __shared__ int red_buf0[128];
+  in_thread_B_local[0] = 0;
+  for (int k_0 = 0; k_0 < 8; ++k_0) {
+    *(char2*)(B_local + 0) = *(char2*)(B + ((((((int)blockIdx.x) * 2048) + (((int)threadIdx.y) * 1024)) + (k_0 * 128)) + (((int)threadIdx.x) * 2)));
+    for (int ax1 = 0; ax1 < 16; ++ax1) {
+      B_decode_local[ax1] = ((B_local[(ax1 >> 3)] >> ((signed char)(ax1 & 7))) & (signed char)1);
+    }
+    *(int4*)(A_local + 0) = *(int4*)(A + ((k_0 * 1024) + (((int)threadIdx.x) * 16)));
+    for (int k_2_0 = 0; k_2_0 < 4; ++k_2_0) {
+      in_thread_B_local[0] = __dp4a(*(int *)&A_local[((k_2_0 * 4))],*(int *)&B_decode_local[((k_2_0 * 4))], in_thread_B_local[0]);
+    }
+  }
+  __syncthreads();
+  ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = in_thread_B_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 32)]);
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    int w_16_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 16)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_16_0;
+    int w_8_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 8)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_8_0;
+    int w_4_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 4)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_4_0;
+    int w_2_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 2)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_2_0;
+    int w_1_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 1)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_1_0;
+  }
+  __syncthreads();
+  dtype_transform[((((int)blockIdx.x) * 2) + ((int)threadIdx.y))] = ((signed char)((volatile int*)red_buf0)[(((int)threadIdx.y) * 64)]);
+}
+
+
+2024-05-13 05:34:55 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-13 05:34:55 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:55 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-13 05:34:55 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:55 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-13 05:34:55 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:55 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:34:55 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:55 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:34:55 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:55 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:34:55 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:34:55 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:34:55 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
+0.07104399800300598
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
+0.14366719126701355
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.0353848896920681
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.03197510913014412
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.030460000038146973
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.02887040004134178
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.032041143625974655
+top1: 0.07104399800300598 	top10: 0.02887040004134178
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+best latency: 0.02887040004134178
+best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
+  
+  int in_thread_B_local[1];
+  signed char B_local[2];
+  signed char B_decode_local[16];
+  signed char A_local[16];
+  __shared__ int red_buf0[128];
+  in_thread_B_local[0] = 0;
+  for (int k_0 = 0; k_0 < 8; ++k_0) {
+    *(char2*)(B_local + 0) = *(char2*)(B + ((((((int)blockIdx.x) * 2048) + (((int)threadIdx.y) * 1024)) + (k_0 * 128)) + (((int)threadIdx.x) * 2)));
+    for (int ax1 = 0; ax1 < 16; ++ax1) {
+      B_decode_local[ax1] = ((B_local[(ax1 >> 3)] >> ((signed char)(ax1 & 7))) & (signed char)1);
+    }
+    *(int4*)(A_local + 0) = *(int4*)(A + ((k_0 * 1024) + (((int)threadIdx.x) * 16)));
+    for (int k_2_0 = 0; k_2_0 < 4; ++k_2_0) {
+      in_thread_B_local[0] = __dp4a(*(int *)&A_local[((k_2_0 * 4))],*(int *)&B_decode_local[((k_2_0 * 4))], in_thread_B_local[0]);
+    }
+  }
+  __syncthreads();
+  ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = in_thread_B_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 32)]);
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    int w_16_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 16)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_16_0;
+    int w_8_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 8)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_8_0;
+    int w_4_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 4)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_4_0;
+    int w_2_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 2)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_2_0;
+    int w_1_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 1)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_1_0;
+  }
+  __syncthreads();
+  dtype_transform[((((int)blockIdx.x) * 2) + ((int)threadIdx.y))] = ((signed char)((volatile int*)red_buf0)[(((int)threadIdx.y) * 64)]);
+}
+
+
+2024-05-13 05:35:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-13 05:35:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-13 05:35:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 56], 'thread': [1, 56], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-13 05:35:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 28], 'thread': [1, 28], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-13 05:35:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-13 05:35:01 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:01 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 14], 'thread': [1, 14], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-13 05:35:02 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:02 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:35:02 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:02 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 7], 'thread': [1, 7], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-13 05:35:02 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:02 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:35:02 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:02 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:35:02 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:02 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:35:02 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
+0.36615315079689026
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
+0.19285333156585693
+{<Node, ladder_matmul>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.12141714245080948
+{<Node, ladder_matmul>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.10444799810647964
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.09201371669769287
+{<Node, ladder_matmul>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.10283885896205902
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.09267199784517288
+{<Node, ladder_matmul>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.09786057472229004
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.09049200266599655
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.08723840117454529
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.09756799787282944
+top1: 0.36615315079689026 	top10: 0.08723840117454529
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+best latency: 0.08723840117454529
+best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
+  
+  int in_thread_B_local[1];
+  signed char B_local[2];
+  signed char B_decode_local[16];
+  signed char A_local[16];
+  __shared__ int red_buf0[128];
+  in_thread_B_local[0] = 0;
+  for (int k_0 = 0; k_0 < 8; ++k_0) {
+    *(char2*)(B_local + 0) = *(char2*)(B + ((((((int)blockIdx.x) * 2048) + (((int)threadIdx.y) * 1024)) + (k_0 * 128)) + (((int)threadIdx.x) * 2)));
+    for (int ax1 = 0; ax1 < 16; ++ax1) {
+      B_decode_local[ax1] = ((B_local[(ax1 >> 3)] >> ((signed char)(ax1 & 7))) & (signed char)1);
+    }
+    *(int4*)(A_local + 0) = *(int4*)(A + ((k_0 * 1024) + (((int)threadIdx.x) * 16)));
+    for (int k_2_0 = 0; k_2_0 < 4; ++k_2_0) {
+      in_thread_B_local[0] = __dp4a(*(int *)&A_local[((k_2_0 * 4))],*(int *)&B_decode_local[((k_2_0 * 4))], in_thread_B_local[0]);
+    }
+  }
+  __syncthreads();
+  ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = in_thread_B_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 32)]);
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    int w_16_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 16)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_16_0;
+    int w_8_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 8)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_8_0;
+    int w_4_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 4)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_4_0;
+    int w_2_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 2)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_2_0;
+    int w_1_0 = (((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] + ((volatile int*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 1)]);
+    ((volatile int*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_1_0;
+  }
+  __syncthreads();
+  dtype_transform[((((int)blockIdx.x) * 2) + ((int)threadIdx.y))] = ((signed char)((volatile int*)red_buf0)[(((int)threadIdx.y) * 64)]);
+}
+
+
+2024-05-13 05:35:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-13 05:35:13 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}
+2024-05-13 05:35:13 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-13 05:35:13 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:35:13 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-13 05:35:13 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [7168], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-13 05:35:13 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+2024-05-13 05:35:13 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [7168], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8, 'A': 8}}
+2024-05-13 05:35:13 [ladder:DEBUG]: the computation is inconsistent, is_a_consistent: True, is_b_consistent: False
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
+0.24794000387191772
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'A': 2}}}
+0.4924199879169464
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.11030399799346924
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.10035199671983719
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.09552457183599472
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [7168], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.0870399996638298
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [7168], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8, 'A': 8}}}
+0.08626800030469894
+top1: 0.24794000387191772 	top10: 0.08626800030469894
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [7168], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8, 'A': 8}}}
+best latency: 0.08626800030469894
+best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
+  
+  int in_thread_B_local[1];
+  signed char B_local[1];
+  signed char B_decode_local[8];
+  signed char A_local[8];
+  __shared__ int red_buf0[128];
+  in_thread_B_local[0] = 0;
+  for (int k_0 = 0; k_0 < 28; ++k_0) {
+    B_local[0] = B[(((((int)blockIdx.x) * 3584) + (k_0 * 128)) + ((int)threadIdx.x))];
+    for (int ax1 = 0; ax1 < 8; ++ax1) {
+      B_decode_local[ax1] = ((B_local[0] >> ((signed char)ax1)) & (signed char)1);
+    }
+    *(int2*)(A_local + 0) = *(int2*)(A + ((k_0 * 1024) + (((int)threadIdx.x) * 8)));
+    for (int k_2_0 = 0; k_2_0 < 2; ++k_2_0) {
+      in_thread_B_local[0] = __dp4a(*(int *)&A_local[((k_2_0 * 4))],*(int *)&B_decode_local[((k_2_0 * 4))], in_thread_B_local[0]);
+    }
+  }
+  __syncthreads();
+  ((volatile int*)red_buf0)[((int)threadIdx.x)] = in_thread_B_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 64) {
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 64)]);
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 32)]);
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    int w_16_0 = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 16)]);
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = w_16_0;
+    int w_8_0 = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 8)]);
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = w_8_0;
+    int w_4_0 = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 4)]);
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = w_4_0;
+    int w_2_0 = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 2)]);
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = w_2_0;
+    int w_1_0 = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 1)]);
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = w_1_0;
+  }
+  __syncthreads();
+  dtype_transform[((int)blockIdx.x)] = ((signed char)((volatile int*)red_buf0)[0]);
+}
+
+
+1_1024_8192	0.007782399654388428
+1_8192_8192	0.02887040004134178
+1_28672_8192	0.08723840117454529
+1_8192_28672	0.08626800030469894

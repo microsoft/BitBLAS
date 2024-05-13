@@ -1,0 +1,262 @@
+Tuning ['Reshape_28']
+result: 0.00284444447606802
+Fusion group created:  0 ['Reshape_28']
+Tuning ['Convert_27', 'Broadcast_Power_152', 'Sum_Reshape_Broadcast_Divide_151', 'Reshape_45', 'Reshape_37', 'Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Broadcast_Multiply_154']
+Tuning ['Convert_27']
+result: 0.2540780007839203
+Fusion group created:  1 ['Convert_27']
+Tuning ['Broadcast_Power_152', 'Sum_Reshape_Broadcast_Divide_151']
+result: 1.1274240016937256
+Tuning ['Broadcast_Power_152']
+result: 0.35942399501800537
+Tuning ['Sum_Reshape_Broadcast_Divide_151']
+result: 0.15605118870735168
+Tuning ['Broadcast_Power_152']
+Found in cache
+Fusion group created:  2 ['Broadcast_Power_152']
+Tuning ['Sum_Reshape_Broadcast_Divide_151', 'Reshape_45', 'Reshape_37', 'Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Broadcast_Multiply_154']
+result: 0.8919360041618347
+Tuning ['Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Broadcast_Multiply_154']
+result: 0.42577919363975525
+Tuning ['Sum_Reshape_Broadcast_Divide_151']
+Found in cache
+Fusion group created:  3 ['Sum_Reshape_Broadcast_Divide_151']
+Tuning ['Reshape_45', 'Reshape_37', 'Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Broadcast_Multiply_154']
+Found in cache
+Tuning ['Reshape_45', 'Reshape_37', 'Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Broadcast_Multiply_154', 'Dot_68', 'Dot_48', 'Dot_92']
+result: 166.05491638183594
+Tuning ['Dot_68']
+result: 7.754784107208252
+Tuning ['Dot_48']
+result: 1.0127359628677368
+Tuning ['Dot_92']
+Found in cache
+Fusion group created:  4 ['Reshape_45', 'Reshape_37', 'Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Broadcast_Multiply_154']
+Tuning ['Dot_68', 'Reshape_Reshape_Reshape_Broadcast_Multiply_147']
+result: 9.165823936462402
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_147']
+result: 0.40373528003692627
+Tuning ['Dot_68']
+Found in cache
+Fusion group created:  5 ['Dot_68']
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_147', 'Slice_Negative_155', 'Slice_73']
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_147', 'Slice_Negative_155', 'Slice_73', 'Concat_Reshape_Broadcast_Multiply_153', 'Add_Reshape_Broadcast_156']
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_147']
+Found in cache
+Fusion group created:  6 ['Reshape_Reshape_Reshape_Broadcast_Multiply_147']
+Tuning ['Slice_Negative_155', 'Slice_73', 'Concat_Reshape_Broadcast_Multiply_153']
+result: 0.2292829006910324
+Tuning ['Slice_Negative_155']
+result: 0.09577599912881851
+Tuning ['Slice_73']
+result: 0.09684715420007706
+Tuning ['Concat_Reshape_Broadcast_Multiply_153']
+result: 0.23819568753242493
+Tuning ['Slice_Negative_155', 'Slice_73', 'Concat_Reshape_Broadcast_Multiply_153', 'Add_Reshape_Broadcast_156']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Fusion group created:  7 ['Slice_Negative_155', 'Slice_73', 'Concat_Reshape_Broadcast_Multiply_153']
+Tuning ['Add_Reshape_Broadcast_156', 'Dot_48', 'Reshape_Reshape_Reshape_Broadcast_Multiply_157', 'Slice_Negative_159', 'Slice_53', 'Concat_Reshape_Broadcast_Multiply_158', 'Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_150', 'BatchMatMul_Reshape_Reshape_Broadcast_Divide_149']
+Tuning ['Add_Reshape_Broadcast_156']
+result: 0.27575716376304626
+Fusion group created:  8 ['Add_Reshape_Broadcast_156']
+Tuning ['Dot_48', 'Reshape_Reshape_Reshape_Broadcast_Multiply_157']
+result: 1.4376640319824219
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_157']
+result: 0.05324508994817734
+Tuning ['Dot_48']
+Found in cache
+Fusion group created:  9 ['Dot_48']
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_157', 'Slice_Negative_159', 'Slice_53']
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_157', 'Slice_Negative_159', 'Slice_53', 'Concat_Reshape_Broadcast_Multiply_158', 'Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_150']
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_157']
+Found in cache
+Fusion group created:  10 ['Reshape_Reshape_Reshape_Broadcast_Multiply_157']
+Tuning ['Slice_Negative_159', 'Slice_53', 'Concat_Reshape_Broadcast_Multiply_158']
+result: 0.030404923483729362
+Tuning ['Slice_Negative_159']
+result: 0.01487811654806137
+Tuning ['Slice_53']
+result: 0.014620444737374783
+Tuning ['Concat_Reshape_Broadcast_Multiply_158']
+result: 0.029764266684651375
+Tuning ['Slice_Negative_159', 'Slice_53', 'Concat_Reshape_Broadcast_Multiply_158', 'Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_150']
+
+
+
+
+Fusion group created:  11 ['Slice_Negative_159', 'Slice_53', 'Concat_Reshape_Broadcast_Multiply_158']
+Tuning ['Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_150', 'BatchMatMul_Reshape_Reshape_Broadcast_Divide_149']
+Tuning ['Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_150']
+result: 0.2520720064640045
+Fusion group created:  12 ['Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_150']
+Tuning ['BatchMatMul_Reshape_Reshape_Broadcast_Divide_149', 'SoftmaxBasic_139', 'SoftmaxBasic_140']
+Tuning ['BatchMatMul_Reshape_Reshape_Broadcast_Divide_149']
+result: 5.966847896575928
+Fusion group created:  13 ['BatchMatMul_Reshape_Reshape_Broadcast_Divide_149']
+Tuning ['SoftmaxBasic_139', 'SoftmaxBasic_140']
+result: 10.995743751525879
+Tuning ['SoftmaxBasic_139']
+result: 2.4017350673675537
+Tuning ['SoftmaxBasic_140']
+result: 8.795647621154785
+Tuning ['SoftmaxBasic_139', 'SoftmaxBasic_140', 'SoftmaxBasic_141', 'Reshape_Broadcast_SoftmaxBasic_161']
+result: 10.046463966369629
+Tuning ['SoftmaxBasic_141']
+result: 2.4015870094299316
+Tuning ['Reshape_Broadcast_SoftmaxBasic_161']
+result: 9.864704132080078
+Tuning ['SoftmaxBasic_139', 'SoftmaxBasic_140', 'SoftmaxBasic_141', 'Reshape_Broadcast_SoftmaxBasic_161', 'Dot_92', 'Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_148', 'BatchMatMul_Reshape_162']
+Fusion group created:  14 ['SoftmaxBasic_139', 'SoftmaxBasic_140', 'SoftmaxBasic_141', 'Reshape_Broadcast_SoftmaxBasic_161']
+Tuning ['Dot_92', 'Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_148']
+Tuning ['Dot_92']
+Found in cache
+Fusion group created:  15 ['Dot_92']
+Tuning ['Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_148', 'BatchMatMul_Reshape_162']
+Tuning ['Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_148']
+result: 0.10410666465759277
+Fusion group created:  16 ['Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_148']
+Tuning ['BatchMatMul_Reshape_162', 'Reshape_Reshape_160']
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 18432, 36608)
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 9216, 18304)
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 20480, 80384)
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 36864, 73216)
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 10240, 40192)
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 4608, 9152)
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 5120, 20096)
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 40960, 160768)
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 2304, 4576)
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 12288, 71168)
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 2560, 10048)
+('Shared memory mismatched', <Node, Reshape_Reshape_160>, Tensor(shape=[1, 64, 4096, 128], op.name=input0), 6144, 35584)
+result: 6.868480205535889
+Tuning ['BatchMatMul_Reshape_162']
+result: 4.30131196975708
+Tuning ['Reshape_Reshape_160']
+result: 0.20337599515914917
+Tuning ['BatchMatMul_Reshape_162']
+Found in cache
+Fusion group created:  17 ['BatchMatMul_Reshape_162']
+Tuning ['Reshape_Reshape_160', 'Dot_Add_Convert_Reshape_Broadcast_Power_163']
+result: 139.28857421875
+/tmp/tmpn5f3fvr3.cu(340): error: too many arguments in function call
+
+1 error detected in the compilation of "/tmp/tmpn5f3fvr3.cu".
+/tmp/tmp5vmor3om.cu(344): error: too many arguments in function call
+
+/tmp/tmpyctm9in4.cu(340): error: too many arguments in function call
+
+1 error detected in the compilation of "/tmp/tmp5vmor3om.cu".
+1 error detected in the compilation of "/tmp/tmpyctm9in4.cu".
+/tmp/tmpbm996wsf.cu(352): error: too many arguments in function call
+
+/tmp/tmple9djhi5.cu(344): error: too many arguments in function call
+
+/tmp/tmpamyxlpk8.cu(346): error: too many arguments in function call
+
+/tmp/tmp3k36ii35.cu(350): error: too many arguments in function call
+
+1 error detected in the compilation of "/tmp/tmpbm996wsf.cu".
+1 error detected in the compilation of "/tmp/tmple9djhi5.cu".
+/tmp/tmpddi8nxiq.cu(342): error: too many arguments in function call
+
+1 error detected in the compilation of "/tmp/tmpamyxlpk8.cu".
+1 error detected in the compilation of "/tmp/tmp3k36ii35.cu".
+/tmp/tmp2qyqmzv9.cu(351): error: too many arguments in function call
+
+1 error detected in the compilation of "/tmp/tmpddi8nxiq.cu".
+/tmp/tmpku5f6lzs.cu(332): error: too many arguments in function call
+
+1 error detected in the compilation of "/tmp/tmp2qyqmzv9.cu".
+/tmp/tmp9yvzwnyh.cu(343): error: too many arguments in function call
+
+/tmp/tmpklo76qh_.cu(352): error: too many arguments in function call
+
+1 error detected in the compilation of "/tmp/tmpku5f6lzs.cu".
+1 error detected in the compilation of "/tmp/tmp9yvzwnyh.cu".
+1 error detected in the compilation of "/tmp/tmpklo76qh_.cu".
+/tmp/tmpv9elhkkv.cu(343): error: too many arguments in function call
+
+/tmp/tmpwztl9jmk.cu(342): error: too many arguments in function call
+
+/tmp/tmpshz56njb.cu(344): error: too many arguments in function call
+
+1 error detected in the compilation of "/tmp/tmpv9elhkkv.cu".
+1 error detected in the compilation of "/tmp/tmpwztl9jmk.cu".
+/tmp/tmp3qxg5ubj.cu(344): error: too many arguments in function call
+
+1 error detected in the compilation of "/tmp/tmpshz56njb.cu".
+1 error detected in the compilation of "/tmp/tmp3qxg5ubj.cu".
+/tmp/tmp_gywhx6e.cu(354): error: too many arguments in function call
+
+/tmp/tmpk6dn1xy4.cu(346): error: too many arguments in function call
+
+/tmp/tmp61hwabbi.cu(339): error: too many arguments in function call
+
+1 error detected in the compilation of "/tmp/tmpk6dn1xy4.cu".
+1 error detected in the compilation of "/tmp/tmp_gywhx6e.cu".
+1 error detected in the compilation of "/tmp/tmp61hwabbi.cu".
+/tmp/tmpr1jm7x2o.cu(332): error: too many arguments in function call
+
+1 error detected in the compilation of "/tmp/tmpr1jm7x2o.cu".
+Tuning ['Dot_Add_Convert_Reshape_Broadcast_Power_163']
+Tuning ['Reshape_Reshape_160', 'Dot_Add_Convert_Reshape_Broadcast_Power_163', 'Sum_Reshape_Broadcast_Divide_145', 'Reshape_Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Broadcast_Multiply_146', 'Dot_Sigmoid_Multiply_144', 'Dot_131', 'Multiply_135', 'Dot_Add_143']
+Tuning ['Reshape_Reshape_160', 'Dot_Add_Convert_Reshape_Broadcast_Power_163', 'Sum_Reshape_Broadcast_Divide_145', 'Reshape_Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Broadcast_Multiply_146']
+Tuning ['Reshape_Reshape_160', 'Dot_Add_Convert_Reshape_Broadcast_Power_163', 'Sum_Reshape_Broadcast_Divide_145']
+Fusion group created:  18 ['Reshape_Reshape_160', 'Dot_Add_Convert_Reshape_Broadcast_Power_163']
+Tuning ['Sum_Reshape_Broadcast_Divide_145', 'Reshape_Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Broadcast_Multiply_146']
+result: 0.8893439769744873
+Tuning ['Sum_Reshape_Broadcast_Divide_145']
+Found in cache
+Tuning ['Reshape_Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Broadcast_Multiply_146']
+result: 0.4618239998817444
+Tuning ['Sum_Reshape_Broadcast_Divide_145']
+Found in cache
+Fusion group created:  19 ['Sum_Reshape_Broadcast_Divide_145']
+Tuning ['Reshape_Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Broadcast_Multiply_146', 'Dot_Sigmoid_Multiply_144', 'Dot_131']
+Tuning ['Reshape_Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Broadcast_Multiply_146']
+Found in cache
+Fusion group created:  20 ['Reshape_Reshape_Broadcast_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Broadcast_Multiply_146']
+Tuning ['Dot_Sigmoid_Multiply_144', 'Dot_131', 'Multiply_135']
+result: 63.17465591430664
+Tuning ['Dot_Sigmoid_Multiply_144']
+result: 28.604415893554688
+Tuning ['Dot_131']
+result: 22.962175369262695
+Tuning ['Multiply_135']
+result: 0.8364031910896301
+Tuning ['Dot_Sigmoid_Multiply_144']
+Found in cache
+Fusion group created:  21 ['Dot_Sigmoid_Multiply_144']
+Tuning ['Dot_131', 'Multiply_135']
+result: 29.35193634033203
+Tuning ['Dot_131']
+Found in cache
+Fusion group created:  22 ['Dot_131']
+Tuning ['Multiply_135', 'Dot_Add_143']
+Tuning ['Multiply_135']
+Found in cache
+Fusion group created:  23 ['Multiply_135']
+Tuning ['Dot_Add_143']
+result: 29.611007690429688
+Fusion group created:  24 ['Dot_Add_143']
+Fusion gain: 9874.562405484729ms
+Total run time:  595.7695479393005

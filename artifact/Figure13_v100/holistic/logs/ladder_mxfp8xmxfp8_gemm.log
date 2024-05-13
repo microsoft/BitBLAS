@@ -1,0 +1,1060 @@
+{<Node, ladder_matmul>: {'block': [4, 8, 16, 16], 'thread': [4, 2, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+9.720626831054688
+{<Node, ladder_matmul>: {'block': [8, 4, 16, 16], 'thread': [8, 1, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+9.530976295471191
+{<Node, ladder_matmul>: {'block': [8, 8, 8, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+10.05117416381836
+{<Node, ladder_matmul>: {'block': [16, 4, 8, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+10.298989295959473
+{<Node, ladder_matmul>: {'block': [4, 16, 16, 8], 'thread': [4, 2, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+9.576652526855469
+{<Node, ladder_matmul>: {'block': [8, 8, 16, 8], 'thread': [8, 1, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+9.735167503356934
+{<Node, ladder_matmul>: {'block': [8, 16, 8, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+10.089062690734863
+{<Node, ladder_matmul>: {'block': [16, 8, 8, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+10.514835357666016
+{<Node, ladder_matmul>: {'block': [16, 8, 4, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+9.658988952636719
+{<Node, ladder_matmul>: {'block': [32, 4, 4, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+10.515047073364258
+{<Node, ladder_matmul>: {'block': [16, 16, 4, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+10.398521423339844
+{<Node, ladder_matmul>: {'block': [32, 8, 4, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+10.417970657348633
+{<Node, ladder_matmul>: {'block': [32, 8, 2, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+9.753798484802246
+{<Node, ladder_matmul>: {'block': [64, 4, 2, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+10.156448364257812
+{<Node, ladder_matmul>: {'block': [32, 16, 2, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+10.037248611450195
+{<Node, ladder_matmul>: {'block': [64, 8, 2, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+10.906828880310059
+{<Node, ladder_matmul>: {'block': [4, 32, 16, 4], 'thread': [4, 4, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+8.502265930175781
+{<Node, ladder_matmul>: {'block': [8, 16, 16, 4], 'thread': [8, 2, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+8.522137641906738
+{<Node, ladder_matmul>: {'block': [8, 32, 8, 4], 'thread': [8, 4, 1, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+9.883647918701172
+{<Node, ladder_matmul>: {'block': [16, 16, 8, 4], 'thread': [16, 2, 1, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+10.511558532714844
+__global__ void __launch_bounds__(128) Fused(float* __restrict__ A, float* __restrict__ B, float* __restrict__ C) {
+  
+  float C_local[64];
+  __shared__ float A_shared[2048];
+  __shared__ float B_shared[4096];
+  C_local[0] = 0.000000e+00f;
+  C_local[8] = 0.000000e+00f;
+  C_local[16] = 0.000000e+00f;
+  C_local[24] = 0.000000e+00f;
+  C_local[32] = 0.000000e+00f;
+  C_local[40] = 0.000000e+00f;
+  C_local[48] = 0.000000e+00f;
+  C_local[56] = 0.000000e+00f;
+  C_local[1] = 0.000000e+00f;
+  C_local[9] = 0.000000e+00f;
+  C_local[17] = 0.000000e+00f;
+  C_local[25] = 0.000000e+00f;
+  C_local[33] = 0.000000e+00f;
+  C_local[41] = 0.000000e+00f;
+  C_local[49] = 0.000000e+00f;
+  C_local[57] = 0.000000e+00f;
+  C_local[2] = 0.000000e+00f;
+  C_local[10] = 0.000000e+00f;
+  C_local[18] = 0.000000e+00f;
+  C_local[26] = 0.000000e+00f;
+  C_local[34] = 0.000000e+00f;
+  C_local[42] = 0.000000e+00f;
+  C_local[50] = 0.000000e+00f;
+  C_local[58] = 0.000000e+00f;
+  C_local[3] = 0.000000e+00f;
+  C_local[11] = 0.000000e+00f;
+  C_local[19] = 0.000000e+00f;
+  C_local[27] = 0.000000e+00f;
+  C_local[35] = 0.000000e+00f;
+  C_local[43] = 0.000000e+00f;
+  C_local[51] = 0.000000e+00f;
+  C_local[59] = 0.000000e+00f;
+  C_local[4] = 0.000000e+00f;
+  C_local[12] = 0.000000e+00f;
+  C_local[20] = 0.000000e+00f;
+  C_local[28] = 0.000000e+00f;
+  C_local[36] = 0.000000e+00f;
+  C_local[44] = 0.000000e+00f;
+  C_local[52] = 0.000000e+00f;
+  C_local[60] = 0.000000e+00f;
+  C_local[5] = 0.000000e+00f;
+  C_local[13] = 0.000000e+00f;
+  C_local[21] = 0.000000e+00f;
+  C_local[29] = 0.000000e+00f;
+  C_local[37] = 0.000000e+00f;
+  C_local[45] = 0.000000e+00f;
+  C_local[53] = 0.000000e+00f;
+  C_local[61] = 0.000000e+00f;
+  C_local[6] = 0.000000e+00f;
+  C_local[14] = 0.000000e+00f;
+  C_local[22] = 0.000000e+00f;
+  C_local[30] = 0.000000e+00f;
+  C_local[38] = 0.000000e+00f;
+  C_local[46] = 0.000000e+00f;
+  C_local[54] = 0.000000e+00f;
+  C_local[62] = 0.000000e+00f;
+  C_local[7] = 0.000000e+00f;
+  C_local[15] = 0.000000e+00f;
+  C_local[23] = 0.000000e+00f;
+  C_local[31] = 0.000000e+00f;
+  C_local[39] = 0.000000e+00f;
+  C_local[47] = 0.000000e+00f;
+  C_local[55] = 0.000000e+00f;
+  C_local[63] = 0.000000e+00f;
+  for (int k_0 = 0; k_0 < 256; ++k_0) {
+    __syncthreads();
+    *(float4*)(A_shared + (((int)threadIdx.x) * 4)) = *(float4*)(A + ((((((int)blockIdx.x) >> 3) * 524288) + (k_0 * 512)) + (((int)threadIdx.x) * 4)));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(A + (((((((int)blockIdx.x) >> 3) * 524288) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 131072));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(A + (((((((int)blockIdx.x) >> 3) * 524288) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 262144));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(A + (((((((int)blockIdx.x) >> 3) * 524288) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 393216));
+    *(float4*)(B_shared + (((int)threadIdx.x) * 4)) = *(float4*)(B + ((((((((((int)blockIdx.x) & 7) >> 2) * 4194304) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 7) >> 2) * 4194304) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 524288));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 7) >> 2) * 4194304) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 1048576));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 7) >> 2) * 4194304) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 1572864));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 2048)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 7) >> 2) * 4194304) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 2097152));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 2560)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 7) >> 2) * 4194304) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 2621440));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 3072)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 7) >> 2) * 4194304) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 3145728));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 3584)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 7) >> 2) * 4194304) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 3670016));
+    __syncthreads();
+    for (int k_1 = 0; k_1 < 2; ++k_1) {
+      for (int kk_1 = 0; kk_1 < 16; ++kk_1) {
+        C_local[0] = (C_local[0] + (A_shared[(((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[8] = (C_local[8] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[16] = (C_local[16] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[24] = (C_local[24] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[32] = (C_local[32] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[40] = (C_local[40] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[48] = (C_local[48] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[56] = (C_local[56] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[1] = (C_local[1] + (A_shared[(((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[9] = (C_local[9] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[17] = (C_local[17] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[25] = (C_local[25] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[33] = (C_local[33] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[41] = (C_local[41] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[49] = (C_local[49] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[57] = (C_local[57] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[2] = (C_local[2] + (A_shared[(((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[10] = (C_local[10] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[18] = (C_local[18] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[26] = (C_local[26] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[34] = (C_local[34] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[42] = (C_local[42] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[50] = (C_local[50] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[58] = (C_local[58] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[3] = (C_local[3] + (A_shared[(((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[11] = (C_local[11] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[19] = (C_local[19] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[27] = (C_local[27] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[35] = (C_local[35] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[43] = (C_local[43] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[51] = (C_local[51] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[59] = (C_local[59] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[4] = (C_local[4] + (A_shared[(((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2048)]));
+        C_local[12] = (C_local[12] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2048)]));
+        C_local[20] = (C_local[20] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2048)]));
+        C_local[28] = (C_local[28] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2048)]));
+        C_local[36] = (C_local[36] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2048)]));
+        C_local[44] = (C_local[44] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2048)]));
+        C_local[52] = (C_local[52] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2048)]));
+        C_local[60] = (C_local[60] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2048)]));
+        C_local[5] = (C_local[5] + (A_shared[(((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2560)]));
+        C_local[13] = (C_local[13] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2560)]));
+        C_local[21] = (C_local[21] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2560)]));
+        C_local[29] = (C_local[29] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2560)]));
+        C_local[37] = (C_local[37] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2560)]));
+        C_local[45] = (C_local[45] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2560)]));
+        C_local[53] = (C_local[53] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2560)]));
+        C_local[61] = (C_local[61] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 2560)]));
+        C_local[6] = (C_local[6] + (A_shared[(((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3072)]));
+        C_local[14] = (C_local[14] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3072)]));
+        C_local[22] = (C_local[22] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3072)]));
+        C_local[30] = (C_local[30] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3072)]));
+        C_local[38] = (C_local[38] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3072)]));
+        C_local[46] = (C_local[46] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3072)]));
+        C_local[54] = (C_local[54] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3072)]));
+        C_local[62] = (C_local[62] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3072)]));
+        C_local[7] = (C_local[7] + (A_shared[(((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3584)]));
+        C_local[15] = (C_local[15] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3584)]));
+        C_local[23] = (C_local[23] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3584)]));
+        C_local[31] = (C_local[31] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3584)]));
+        C_local[39] = (C_local[39] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3584)]));
+        C_local[47] = (C_local[47] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3584)]));
+        C_local[55] = (C_local[55] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3584)]));
+        C_local[63] = (C_local[63] + (A_shared[((((((((int)threadIdx.x) >> 5) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 31) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 3584)]));
+      }
+    }
+  }
+  C[((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3))] = C_local[0];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 32)] = C_local[8];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 64)] = C_local[16];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 96)] = C_local[24];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 128)] = C_local[32];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 160)] = C_local[40];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 192)] = C_local[48];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 224)] = C_local[56];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1024)] = C_local[1];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1056)] = C_local[9];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1088)] = C_local[17];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1120)] = C_local[25];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1152)] = C_local[33];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1184)] = C_local[41];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1216)] = C_local[49];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1248)] = C_local[57];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2048)] = C_local[2];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2080)] = C_local[10];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2112)] = C_local[18];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2144)] = C_local[26];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2176)] = C_local[34];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2208)] = C_local[42];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2240)] = C_local[50];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2272)] = C_local[58];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3072)] = C_local[3];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3104)] = C_local[11];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3136)] = C_local[19];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3168)] = C_local[27];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3200)] = C_local[35];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3232)] = C_local[43];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3264)] = C_local[51];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3296)] = C_local[59];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 4096)] = C_local[4];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 4128)] = C_local[12];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 4160)] = C_local[20];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 4192)] = C_local[28];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 4224)] = C_local[36];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 4256)] = C_local[44];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 4288)] = C_local[52];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 4320)] = C_local[60];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 5120)] = C_local[5];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 5152)] = C_local[13];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 5184)] = C_local[21];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 5216)] = C_local[29];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 5248)] = C_local[37];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 5280)] = C_local[45];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 5312)] = C_local[53];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 5344)] = C_local[61];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 6144)] = C_local[6];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 6176)] = C_local[14];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 6208)] = C_local[22];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 6240)] = C_local[30];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 6272)] = C_local[38];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 6304)] = C_local[46];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 6336)] = C_local[54];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 6368)] = C_local[62];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 7168)] = C_local[7];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 7200)] = C_local[15];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 7232)] = C_local[23];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 7264)] = C_local[31];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 7296)] = C_local[39];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 7328)] = C_local[47];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 7360)] = C_local[55];
+  C[(((((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 5) * 16384)) + (((((int)blockIdx.x) & 7) >> 2) * 8192)) + (((((int)threadIdx.x) & 31) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 7392)] = C_local[63];
+}
+
+
+top1: 9.720626831054688 	top10: 8.502265930175781
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [4, 32, 16, 4], 'thread': [4, 4, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+best latency: 8.502265930175781
+{<Node, ladder_matmul>: {'block': [4, 8, 16, 16], 'thread': [4, 2, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+56.40436935424805
+{<Node, ladder_matmul>: {'block': [8, 4, 16, 16], 'thread': [8, 1, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+53.48577117919922
+{<Node, ladder_matmul>: {'block': [8, 8, 8, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+55.03017044067383
+{<Node, ladder_matmul>: {'block': [16, 4, 8, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+56.91658401489258
+{<Node, ladder_matmul>: {'block': [4, 16, 16, 8], 'thread': [4, 2, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+53.77802276611328
+{<Node, ladder_matmul>: {'block': [8, 8, 16, 8], 'thread': [8, 1, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+53.545982360839844
+{<Node, ladder_matmul>: {'block': [8, 16, 8, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+55.3377799987793
+{<Node, ladder_matmul>: {'block': [16, 8, 8, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+57.03147506713867
+{<Node, ladder_matmul>: {'block': [16, 8, 4, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+55.11475372314453
+{<Node, ladder_matmul>: {'block': [32, 4, 4, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+56.7066650390625
+{<Node, ladder_matmul>: {'block': [16, 16, 4, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+58.02516555786133
+{<Node, ladder_matmul>: {'block': [32, 8, 4, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+59.854644775390625
+{<Node, ladder_matmul>: {'block': [32, 8, 2, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+53.7657356262207
+{<Node, ladder_matmul>: {'block': [64, 4, 2, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+56.68495559692383
+{<Node, ladder_matmul>: {'block': [32, 16, 2, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+58.26805877685547
+{<Node, ladder_matmul>: {'block': [64, 8, 2, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+59.859352111816406
+{<Node, ladder_matmul>: {'block': [4, 32, 16, 4], 'thread': [4, 4, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+48.435401916503906
+{<Node, ladder_matmul>: {'block': [8, 16, 16, 4], 'thread': [8, 2, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+48.405914306640625
+{<Node, ladder_matmul>: {'block': [8, 32, 8, 4], 'thread': [8, 4, 1, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+55.393280029296875
+{<Node, ladder_matmul>: {'block': [16, 16, 8, 4], 'thread': [16, 2, 1, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+57.79271697998047
+__global__ void __launch_bounds__(128) Fused(float* __restrict__ A, float* __restrict__ B, float* __restrict__ C) {
+  
+  float C_local[64];
+  __shared__ float A_shared[4096];
+  __shared__ float B_shared[2048];
+  C_local[0] = 0.000000e+00f;
+  C_local[8] = 0.000000e+00f;
+  C_local[16] = 0.000000e+00f;
+  C_local[24] = 0.000000e+00f;
+  C_local[32] = 0.000000e+00f;
+  C_local[40] = 0.000000e+00f;
+  C_local[48] = 0.000000e+00f;
+  C_local[56] = 0.000000e+00f;
+  C_local[1] = 0.000000e+00f;
+  C_local[9] = 0.000000e+00f;
+  C_local[17] = 0.000000e+00f;
+  C_local[25] = 0.000000e+00f;
+  C_local[33] = 0.000000e+00f;
+  C_local[41] = 0.000000e+00f;
+  C_local[49] = 0.000000e+00f;
+  C_local[57] = 0.000000e+00f;
+  C_local[2] = 0.000000e+00f;
+  C_local[10] = 0.000000e+00f;
+  C_local[18] = 0.000000e+00f;
+  C_local[26] = 0.000000e+00f;
+  C_local[34] = 0.000000e+00f;
+  C_local[42] = 0.000000e+00f;
+  C_local[50] = 0.000000e+00f;
+  C_local[58] = 0.000000e+00f;
+  C_local[3] = 0.000000e+00f;
+  C_local[11] = 0.000000e+00f;
+  C_local[19] = 0.000000e+00f;
+  C_local[27] = 0.000000e+00f;
+  C_local[35] = 0.000000e+00f;
+  C_local[43] = 0.000000e+00f;
+  C_local[51] = 0.000000e+00f;
+  C_local[59] = 0.000000e+00f;
+  C_local[4] = 0.000000e+00f;
+  C_local[12] = 0.000000e+00f;
+  C_local[20] = 0.000000e+00f;
+  C_local[28] = 0.000000e+00f;
+  C_local[36] = 0.000000e+00f;
+  C_local[44] = 0.000000e+00f;
+  C_local[52] = 0.000000e+00f;
+  C_local[60] = 0.000000e+00f;
+  C_local[5] = 0.000000e+00f;
+  C_local[13] = 0.000000e+00f;
+  C_local[21] = 0.000000e+00f;
+  C_local[29] = 0.000000e+00f;
+  C_local[37] = 0.000000e+00f;
+  C_local[45] = 0.000000e+00f;
+  C_local[53] = 0.000000e+00f;
+  C_local[61] = 0.000000e+00f;
+  C_local[6] = 0.000000e+00f;
+  C_local[14] = 0.000000e+00f;
+  C_local[22] = 0.000000e+00f;
+  C_local[30] = 0.000000e+00f;
+  C_local[38] = 0.000000e+00f;
+  C_local[46] = 0.000000e+00f;
+  C_local[54] = 0.000000e+00f;
+  C_local[62] = 0.000000e+00f;
+  C_local[7] = 0.000000e+00f;
+  C_local[15] = 0.000000e+00f;
+  C_local[23] = 0.000000e+00f;
+  C_local[31] = 0.000000e+00f;
+  C_local[39] = 0.000000e+00f;
+  C_local[47] = 0.000000e+00f;
+  C_local[55] = 0.000000e+00f;
+  C_local[63] = 0.000000e+00f;
+  for (int k_0 = 0; k_0 < 256; ++k_0) {
+    __syncthreads();
+    *(float4*)(A_shared + (((int)threadIdx.x) * 4)) = *(float4*)(A + ((((((int)blockIdx.x) >> 7) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 131072));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 262144));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 393216));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 2048)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 524288));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 2560)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 655360));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 3072)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 786432));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 3584)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 917504));
+    *(float4*)(B_shared + (((int)threadIdx.x) * 4)) = *(float4*)(B + ((((((((((int)blockIdx.x) & 127) >> 2) * 2097152) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 127) >> 2) * 2097152) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 524288));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 127) >> 2) * 2097152) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 1048576));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 127) >> 2) * 2097152) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 1572864));
+    __syncthreads();
+    for (int k_1 = 0; k_1 < 2; ++k_1) {
+      for (int kk_1 = 0; kk_1 < 16; ++kk_1) {
+        C_local[0] = (C_local[0] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[8] = (C_local[8] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[16] = (C_local[16] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[24] = (C_local[24] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[32] = (C_local[32] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[40] = (C_local[40] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[48] = (C_local[48] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[56] = (C_local[56] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[1] = (C_local[1] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[9] = (C_local[9] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[17] = (C_local[17] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[25] = (C_local[25] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[33] = (C_local[33] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[41] = (C_local[41] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[49] = (C_local[49] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[57] = (C_local[57] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[2] = (C_local[2] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[10] = (C_local[10] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[18] = (C_local[18] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[26] = (C_local[26] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[34] = (C_local[34] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[42] = (C_local[42] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[50] = (C_local[50] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[58] = (C_local[58] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[3] = (C_local[3] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[11] = (C_local[11] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[19] = (C_local[19] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[27] = (C_local[27] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[35] = (C_local[35] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[43] = (C_local[43] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[51] = (C_local[51] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[59] = (C_local[59] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[4] = (C_local[4] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[12] = (C_local[12] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[20] = (C_local[20] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[28] = (C_local[28] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[36] = (C_local[36] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[44] = (C_local[44] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[52] = (C_local[52] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[60] = (C_local[60] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[5] = (C_local[5] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[13] = (C_local[13] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[21] = (C_local[21] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[29] = (C_local[29] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[37] = (C_local[37] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[45] = (C_local[45] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[53] = (C_local[53] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[61] = (C_local[61] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[6] = (C_local[6] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[14] = (C_local[14] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[22] = (C_local[22] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[30] = (C_local[30] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[38] = (C_local[38] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[46] = (C_local[46] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[54] = (C_local[54] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[62] = (C_local[62] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[7] = (C_local[7] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[15] = (C_local[15] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[23] = (C_local[23] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[31] = (C_local[31] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[39] = (C_local[39] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[47] = (C_local[47] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[55] = (C_local[55] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[63] = (C_local[63] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+      }
+    }
+  }
+  C[((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3))] = C_local[0];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 32)] = C_local[8];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 64)] = C_local[16];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 96)] = C_local[24];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 128)] = C_local[32];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 160)] = C_local[40];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 192)] = C_local[48];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 224)] = C_local[56];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 512)] = C_local[1];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 544)] = C_local[9];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 576)] = C_local[17];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 608)] = C_local[25];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 640)] = C_local[33];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 672)] = C_local[41];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 704)] = C_local[49];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 736)] = C_local[57];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1024)] = C_local[2];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1056)] = C_local[10];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1088)] = C_local[18];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1120)] = C_local[26];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1152)] = C_local[34];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1184)] = C_local[42];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1216)] = C_local[50];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1248)] = C_local[58];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1536)] = C_local[3];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1568)] = C_local[11];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1600)] = C_local[19];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1632)] = C_local[27];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1664)] = C_local[35];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1696)] = C_local[43];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1728)] = C_local[51];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1760)] = C_local[59];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2048)] = C_local[4];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2080)] = C_local[12];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2112)] = C_local[20];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2144)] = C_local[28];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2176)] = C_local[36];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2208)] = C_local[44];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2240)] = C_local[52];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2272)] = C_local[60];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2560)] = C_local[5];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2592)] = C_local[13];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2624)] = C_local[21];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2656)] = C_local[29];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2688)] = C_local[37];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2720)] = C_local[45];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2752)] = C_local[53];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2784)] = C_local[61];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3072)] = C_local[6];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3104)] = C_local[14];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3136)] = C_local[22];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3168)] = C_local[30];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3200)] = C_local[38];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3232)] = C_local[46];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3264)] = C_local[54];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3296)] = C_local[62];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3584)] = C_local[7];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3616)] = C_local[15];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3648)] = C_local[23];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3680)] = C_local[31];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3712)] = C_local[39];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3744)] = C_local[47];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3776)] = C_local[55];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3808)] = C_local[63];
+}
+
+
+top1: 56.40436935424805 	top10: 48.405914306640625
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [8, 16, 16, 4], 'thread': [8, 2, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+best latency: 48.405914306640625
+{<Node, ladder_matmul>: {'block': [8, 4, 16, 16], 'thread': [8, 1, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+188.3273162841797
+{<Node, ladder_matmul>: {'block': [4, 8, 16, 16], 'thread': [4, 2, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+187.98756408691406
+{<Node, ladder_matmul>: {'block': [16, 4, 8, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+197.46795654296875
+{<Node, ladder_matmul>: {'block': [8, 8, 8, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+187.39773559570312
+{<Node, ladder_matmul>: {'block': [8, 8, 16, 8], 'thread': [8, 1, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+186.00857543945312
+{<Node, ladder_matmul>: {'block': [4, 16, 16, 8], 'thread': [4, 2, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+186.5097198486328
+{<Node, ladder_matmul>: {'block': [16, 8, 8, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+197.65882873535156
+{<Node, ladder_matmul>: {'block': [8, 16, 8, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+186.8494873046875
+{<Node, ladder_matmul>: {'block': [32, 4, 4, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+187.66294860839844
+{<Node, ladder_matmul>: {'block': [16, 8, 4, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+186.98670959472656
+{<Node, ladder_matmul>: {'block': [32, 8, 4, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+198.84194946289062
+{<Node, ladder_matmul>: {'block': [16, 16, 4, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+200.93173217773438
+{<Node, ladder_matmul>: {'block': [64, 4, 2, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+188.09036254882812
+{<Node, ladder_matmul>: {'block': [32, 8, 2, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+186.189208984375
+{<Node, ladder_matmul>: {'block': [64, 8, 2, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+199.576171875
+{<Node, ladder_matmul>: {'block': [32, 16, 2, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+203.34263610839844
+{<Node, ladder_matmul>: {'block': [8, 16, 16, 4], 'thread': [8, 2, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+169.48141479492188
+{<Node, ladder_matmul>: {'block': [4, 32, 16, 4], 'thread': [4, 4, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+169.87893676757812
+{<Node, ladder_matmul>: {'block': [16, 16, 8, 4], 'thread': [16, 2, 1, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+198.194580078125
+{<Node, ladder_matmul>: {'block': [8, 32, 8, 4], 'thread': [8, 4, 1, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+189.16229248046875
+__global__ void __launch_bounds__(128) Fused(float* __restrict__ A, float* __restrict__ B, float* __restrict__ C) {
+  
+  float C_local[64];
+  __shared__ float A_shared[4096];
+  __shared__ float B_shared[2048];
+  C_local[0] = 0.000000e+00f;
+  C_local[8] = 0.000000e+00f;
+  C_local[16] = 0.000000e+00f;
+  C_local[24] = 0.000000e+00f;
+  C_local[32] = 0.000000e+00f;
+  C_local[40] = 0.000000e+00f;
+  C_local[48] = 0.000000e+00f;
+  C_local[56] = 0.000000e+00f;
+  C_local[1] = 0.000000e+00f;
+  C_local[9] = 0.000000e+00f;
+  C_local[17] = 0.000000e+00f;
+  C_local[25] = 0.000000e+00f;
+  C_local[33] = 0.000000e+00f;
+  C_local[41] = 0.000000e+00f;
+  C_local[49] = 0.000000e+00f;
+  C_local[57] = 0.000000e+00f;
+  C_local[2] = 0.000000e+00f;
+  C_local[10] = 0.000000e+00f;
+  C_local[18] = 0.000000e+00f;
+  C_local[26] = 0.000000e+00f;
+  C_local[34] = 0.000000e+00f;
+  C_local[42] = 0.000000e+00f;
+  C_local[50] = 0.000000e+00f;
+  C_local[58] = 0.000000e+00f;
+  C_local[3] = 0.000000e+00f;
+  C_local[11] = 0.000000e+00f;
+  C_local[19] = 0.000000e+00f;
+  C_local[27] = 0.000000e+00f;
+  C_local[35] = 0.000000e+00f;
+  C_local[43] = 0.000000e+00f;
+  C_local[51] = 0.000000e+00f;
+  C_local[59] = 0.000000e+00f;
+  C_local[4] = 0.000000e+00f;
+  C_local[12] = 0.000000e+00f;
+  C_local[20] = 0.000000e+00f;
+  C_local[28] = 0.000000e+00f;
+  C_local[36] = 0.000000e+00f;
+  C_local[44] = 0.000000e+00f;
+  C_local[52] = 0.000000e+00f;
+  C_local[60] = 0.000000e+00f;
+  C_local[5] = 0.000000e+00f;
+  C_local[13] = 0.000000e+00f;
+  C_local[21] = 0.000000e+00f;
+  C_local[29] = 0.000000e+00f;
+  C_local[37] = 0.000000e+00f;
+  C_local[45] = 0.000000e+00f;
+  C_local[53] = 0.000000e+00f;
+  C_local[61] = 0.000000e+00f;
+  C_local[6] = 0.000000e+00f;
+  C_local[14] = 0.000000e+00f;
+  C_local[22] = 0.000000e+00f;
+  C_local[30] = 0.000000e+00f;
+  C_local[38] = 0.000000e+00f;
+  C_local[46] = 0.000000e+00f;
+  C_local[54] = 0.000000e+00f;
+  C_local[62] = 0.000000e+00f;
+  C_local[7] = 0.000000e+00f;
+  C_local[15] = 0.000000e+00f;
+  C_local[23] = 0.000000e+00f;
+  C_local[31] = 0.000000e+00f;
+  C_local[39] = 0.000000e+00f;
+  C_local[47] = 0.000000e+00f;
+  C_local[55] = 0.000000e+00f;
+  C_local[63] = 0.000000e+00f;
+  for (int k_0 = 0; k_0 < 256; ++k_0) {
+    __syncthreads();
+    *(float4*)(A_shared + (((int)threadIdx.x) * 4)) = *(float4*)(A + ((((((int)blockIdx.x) / 448) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(A + (((((((int)blockIdx.x) / 448) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 131072));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(A + (((((((int)blockIdx.x) / 448) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 262144));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(A + (((((((int)blockIdx.x) / 448) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 393216));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 2048)) = *(float4*)(A + (((((((int)blockIdx.x) / 448) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 524288));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 2560)) = *(float4*)(A + (((((((int)blockIdx.x) / 448) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 655360));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 3072)) = *(float4*)(A + (((((((int)blockIdx.x) / 448) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 786432));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 3584)) = *(float4*)(A + (((((((int)blockIdx.x) / 448) * 1048576) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 917504));
+    *(float4*)(B_shared + (((int)threadIdx.x) * 4)) = *(float4*)(B + ((((((((((int)blockIdx.x) % 448) >> 2) * 2097152) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(B + (((((((((((int)blockIdx.x) % 448) >> 2) * 2097152) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 524288));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(B + (((((((((((int)blockIdx.x) % 448) >> 2) * 2097152) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 1048576));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(B + (((((((((((int)blockIdx.x) % 448) >> 2) * 2097152) + ((((int)threadIdx.x) >> 5) * 131072)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 1572864));
+    __syncthreads();
+    for (int k_1 = 0; k_1 < 2; ++k_1) {
+      for (int kk_1 = 0; kk_1 < 16; ++kk_1) {
+        C_local[0] = (C_local[0] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[8] = (C_local[8] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[16] = (C_local[16] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[24] = (C_local[24] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[32] = (C_local[32] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[40] = (C_local[40] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[48] = (C_local[48] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[56] = (C_local[56] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[1] = (C_local[1] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[9] = (C_local[9] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[17] = (C_local[17] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[25] = (C_local[25] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[33] = (C_local[33] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[41] = (C_local[41] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[49] = (C_local[49] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[57] = (C_local[57] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[2] = (C_local[2] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[10] = (C_local[10] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[18] = (C_local[18] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[26] = (C_local[26] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[34] = (C_local[34] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[42] = (C_local[42] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[50] = (C_local[50] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[58] = (C_local[58] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[3] = (C_local[3] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[11] = (C_local[11] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[19] = (C_local[19] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[27] = (C_local[27] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[35] = (C_local[35] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[43] = (C_local[43] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[51] = (C_local[51] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[59] = (C_local[59] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[4] = (C_local[4] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[12] = (C_local[12] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[20] = (C_local[20] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[28] = (C_local[28] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[36] = (C_local[36] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[44] = (C_local[44] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[52] = (C_local[52] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[60] = (C_local[60] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[5] = (C_local[5] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[13] = (C_local[13] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[21] = (C_local[21] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[29] = (C_local[29] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[37] = (C_local[37] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[45] = (C_local[45] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[53] = (C_local[53] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[61] = (C_local[61] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[6] = (C_local[6] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[14] = (C_local[14] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[22] = (C_local[22] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[30] = (C_local[30] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[38] = (C_local[38] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[46] = (C_local[46] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[54] = (C_local[54] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[62] = (C_local[62] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[7] = (C_local[7] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[15] = (C_local[15] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[23] = (C_local[23] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[31] = (C_local[31] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[39] = (C_local[39] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[47] = (C_local[47] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[55] = (C_local[55] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[63] = (C_local[63] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+      }
+    }
+  }
+  C[((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3))] = C_local[0];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 32)] = C_local[8];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 64)] = C_local[16];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 96)] = C_local[24];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 128)] = C_local[32];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 160)] = C_local[40];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 192)] = C_local[48];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 224)] = C_local[56];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 512)] = C_local[1];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 544)] = C_local[9];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 576)] = C_local[17];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 608)] = C_local[25];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 640)] = C_local[33];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 672)] = C_local[41];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 704)] = C_local[49];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 736)] = C_local[57];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1024)] = C_local[2];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1056)] = C_local[10];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1088)] = C_local[18];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1120)] = C_local[26];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1152)] = C_local[34];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1184)] = C_local[42];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1216)] = C_local[50];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1248)] = C_local[58];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1536)] = C_local[3];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1568)] = C_local[11];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1600)] = C_local[19];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1632)] = C_local[27];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1664)] = C_local[35];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1696)] = C_local[43];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1728)] = C_local[51];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1760)] = C_local[59];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2048)] = C_local[4];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2080)] = C_local[12];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2112)] = C_local[20];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2144)] = C_local[28];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2176)] = C_local[36];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2208)] = C_local[44];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2240)] = C_local[52];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2272)] = C_local[60];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2560)] = C_local[5];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2592)] = C_local[13];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2624)] = C_local[21];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2656)] = C_local[29];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2688)] = C_local[37];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2720)] = C_local[45];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2752)] = C_local[53];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2784)] = C_local[61];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3072)] = C_local[6];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3104)] = C_local[14];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3136)] = C_local[22];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3168)] = C_local[30];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3200)] = C_local[38];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3232)] = C_local[46];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3264)] = C_local[54];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3296)] = C_local[62];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3584)] = C_local[7];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3616)] = C_local[15];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3648)] = C_local[23];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3680)] = C_local[31];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3712)] = C_local[39];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3744)] = C_local[47];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3776)] = C_local[55];
+  C[(((((((((((int)blockIdx.x) / 448) * 3670016) + ((((int)threadIdx.x) >> 4) * 458752)) + (((((int)blockIdx.x) % 448) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3808)] = C_local[63];
+}
+
+
+top1: 188.3273162841797 	top10: 169.48141479492188
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [8, 16, 16, 4], 'thread': [8, 2, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+best latency: 169.48141479492188
+{<Node, ladder_matmul>: {'block': [4, 8, 16, 16], 'thread': [4, 2, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+192.59165954589844
+{<Node, ladder_matmul>: {'block': [8, 4, 16, 16], 'thread': [8, 1, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+187.13128662109375
+{<Node, ladder_matmul>: {'block': [8, 8, 8, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+193.68161010742188
+{<Node, ladder_matmul>: {'block': [16, 4, 8, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+198.5513458251953
+{<Node, ladder_matmul>: {'block': [4, 16, 16, 8], 'thread': [4, 2, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+188.9796142578125
+{<Node, ladder_matmul>: {'block': [8, 8, 16, 8], 'thread': [8, 1, 2, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+187.5398712158203
+{<Node, ladder_matmul>: {'block': [8, 16, 8, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+192.90931701660156
+{<Node, ladder_matmul>: {'block': [16, 8, 8, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+199.11639404296875
+{<Node, ladder_matmul>: {'block': [16, 8, 4, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+193.2910614013672
+{<Node, ladder_matmul>: {'block': [32, 4, 4, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+198.87144470214844
+{<Node, ladder_matmul>: {'block': [16, 16, 4, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+203.59310913085938
+{<Node, ladder_matmul>: {'block': [32, 8, 4, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+208.49520874023438
+{<Node, ladder_matmul>: {'block': [32, 8, 2, 16], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+188.62059020996094
+{<Node, ladder_matmul>: {'block': [64, 4, 2, 16], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+199.07952880859375
+{<Node, ladder_matmul>: {'block': [32, 16, 2, 8], 'thread': [8, 2, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+216.1090545654297
+{<Node, ladder_matmul>: {'block': [64, 8, 2, 8], 'thread': [16, 1, 1, 8], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+207.7227020263672
+{<Node, ladder_matmul>: {'block': [4, 32, 16, 4], 'thread': [4, 4, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+170.7198486328125
+{<Node, ladder_matmul>: {'block': [8, 16, 16, 4], 'thread': [8, 2, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+168.74229431152344
+{<Node, ladder_matmul>: {'block': [8, 32, 8, 4], 'thread': [8, 4, 1, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+194.63290405273438
+{<Node, ladder_matmul>: {'block': [16, 16, 8, 4], 'thread': [16, 2, 1, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+202.04891967773438
+__global__ void __launch_bounds__(128) Fused(float* __restrict__ A, float* __restrict__ B, float* __restrict__ C) {
+  
+  float C_local[64];
+  __shared__ float A_shared[4096];
+  __shared__ float B_shared[2048];
+  C_local[0] = 0.000000e+00f;
+  C_local[8] = 0.000000e+00f;
+  C_local[16] = 0.000000e+00f;
+  C_local[24] = 0.000000e+00f;
+  C_local[32] = 0.000000e+00f;
+  C_local[40] = 0.000000e+00f;
+  C_local[48] = 0.000000e+00f;
+  C_local[56] = 0.000000e+00f;
+  C_local[1] = 0.000000e+00f;
+  C_local[9] = 0.000000e+00f;
+  C_local[17] = 0.000000e+00f;
+  C_local[25] = 0.000000e+00f;
+  C_local[33] = 0.000000e+00f;
+  C_local[41] = 0.000000e+00f;
+  C_local[49] = 0.000000e+00f;
+  C_local[57] = 0.000000e+00f;
+  C_local[2] = 0.000000e+00f;
+  C_local[10] = 0.000000e+00f;
+  C_local[18] = 0.000000e+00f;
+  C_local[26] = 0.000000e+00f;
+  C_local[34] = 0.000000e+00f;
+  C_local[42] = 0.000000e+00f;
+  C_local[50] = 0.000000e+00f;
+  C_local[58] = 0.000000e+00f;
+  C_local[3] = 0.000000e+00f;
+  C_local[11] = 0.000000e+00f;
+  C_local[19] = 0.000000e+00f;
+  C_local[27] = 0.000000e+00f;
+  C_local[35] = 0.000000e+00f;
+  C_local[43] = 0.000000e+00f;
+  C_local[51] = 0.000000e+00f;
+  C_local[59] = 0.000000e+00f;
+  C_local[4] = 0.000000e+00f;
+  C_local[12] = 0.000000e+00f;
+  C_local[20] = 0.000000e+00f;
+  C_local[28] = 0.000000e+00f;
+  C_local[36] = 0.000000e+00f;
+  C_local[44] = 0.000000e+00f;
+  C_local[52] = 0.000000e+00f;
+  C_local[60] = 0.000000e+00f;
+  C_local[5] = 0.000000e+00f;
+  C_local[13] = 0.000000e+00f;
+  C_local[21] = 0.000000e+00f;
+  C_local[29] = 0.000000e+00f;
+  C_local[37] = 0.000000e+00f;
+  C_local[45] = 0.000000e+00f;
+  C_local[53] = 0.000000e+00f;
+  C_local[61] = 0.000000e+00f;
+  C_local[6] = 0.000000e+00f;
+  C_local[14] = 0.000000e+00f;
+  C_local[22] = 0.000000e+00f;
+  C_local[30] = 0.000000e+00f;
+  C_local[38] = 0.000000e+00f;
+  C_local[46] = 0.000000e+00f;
+  C_local[54] = 0.000000e+00f;
+  C_local[62] = 0.000000e+00f;
+  C_local[7] = 0.000000e+00f;
+  C_local[15] = 0.000000e+00f;
+  C_local[23] = 0.000000e+00f;
+  C_local[31] = 0.000000e+00f;
+  C_local[39] = 0.000000e+00f;
+  C_local[47] = 0.000000e+00f;
+  C_local[55] = 0.000000e+00f;
+  C_local[63] = 0.000000e+00f;
+  for (int k_0 = 0; k_0 < 896; ++k_0) {
+    __syncthreads();
+    *(float4*)(A_shared + (((int)threadIdx.x) * 4)) = *(float4*)(A + ((((((int)blockIdx.x) >> 7) * 3670016) + (k_0 * 512)) + (((int)threadIdx.x) * 4)));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 3670016) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 458752));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 3670016) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 917504));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 3670016) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 1376256));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 2048)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 3670016) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 1835008));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 2560)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 3670016) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 2293760));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 3072)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 3670016) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 2752512));
+    *(float4*)(A_shared + ((((int)threadIdx.x) * 4) + 3584)) = *(float4*)(A + (((((((int)blockIdx.x) >> 7) * 3670016) + (k_0 * 512)) + (((int)threadIdx.x) * 4)) + 3211264));
+    *(float4*)(B_shared + (((int)threadIdx.x) * 4)) = *(float4*)(B + ((((((((((int)blockIdx.x) & 127) >> 2) * 7340032) + ((((int)threadIdx.x) >> 5) * 458752)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 127) >> 2) * 7340032) + ((((int)threadIdx.x) >> 5) * 458752)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 1835008));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 127) >> 2) * 7340032) + ((((int)threadIdx.x) >> 5) * 458752)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 3670016));
+    *(float4*)(B_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(B + (((((((((((int)blockIdx.x) & 127) >> 2) * 7340032) + ((((int)threadIdx.x) >> 5) * 458752)) + (k_0 * 512)) + (((((int)threadIdx.x) & 31) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 4)) + 5505024));
+    __syncthreads();
+    for (int k_1 = 0; k_1 < 2; ++k_1) {
+      for (int kk_1 = 0; kk_1 < 16; ++kk_1) {
+        C_local[0] = (C_local[0] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[8] = (C_local[8] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[16] = (C_local[16] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[24] = (C_local[24] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[32] = (C_local[32] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[40] = (C_local[40] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[48] = (C_local[48] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[56] = (C_local[56] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1)]));
+        C_local[1] = (C_local[1] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[9] = (C_local[9] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[17] = (C_local[17] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[25] = (C_local[25] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[33] = (C_local[33] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[41] = (C_local[41] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[49] = (C_local[49] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[57] = (C_local[57] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 256)]));
+        C_local[2] = (C_local[2] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[10] = (C_local[10] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[18] = (C_local[18] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[26] = (C_local[26] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[34] = (C_local[34] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[42] = (C_local[42] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[50] = (C_local[50] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[58] = (C_local[58] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 512)]));
+        C_local[3] = (C_local[3] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[11] = (C_local[11] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[19] = (C_local[19] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[27] = (C_local[27] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[35] = (C_local[35] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[43] = (C_local[43] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[51] = (C_local[51] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[59] = (C_local[59] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 768)]));
+        C_local[4] = (C_local[4] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[12] = (C_local[12] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[20] = (C_local[20] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[28] = (C_local[28] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[36] = (C_local[36] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[44] = (C_local[44] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[52] = (C_local[52] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[60] = (C_local[60] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1024)]));
+        C_local[5] = (C_local[5] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[13] = (C_local[13] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[21] = (C_local[21] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[29] = (C_local[29] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[37] = (C_local[37] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[45] = (C_local[45] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[53] = (C_local[53] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[61] = (C_local[61] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1280)]));
+        C_local[6] = (C_local[6] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[14] = (C_local[14] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[22] = (C_local[22] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[30] = (C_local[30] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[38] = (C_local[38] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[46] = (C_local[46] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[54] = (C_local[54] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[62] = (C_local[62] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1536)]));
+        C_local[7] = (C_local[7] + (A_shared[(((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[15] = (C_local[15] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 32)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[23] = (C_local[23] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 64)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[31] = (C_local[31] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 96)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[39] = (C_local[39] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 128)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[47] = (C_local[47] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 160)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[55] = (C_local[55] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 192)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+        C_local[63] = (C_local[63] + (A_shared[((((((((int)threadIdx.x) >> 4) * 512) + (k_1 * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + kk_1) + 224)] * B_shared[(((((((((int)threadIdx.x) & 15) >> 3) * 128) + (k_1 * 64)) + ((((int)threadIdx.x) & 3) * 16)) + kk_1) + 1792)]));
+      }
+    }
+  }
+  C[((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3))] = C_local[0];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 32)] = C_local[8];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 64)] = C_local[16];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 96)] = C_local[24];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 128)] = C_local[32];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 160)] = C_local[40];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 192)] = C_local[48];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 224)] = C_local[56];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 512)] = C_local[1];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 544)] = C_local[9];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 576)] = C_local[17];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 608)] = C_local[25];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 640)] = C_local[33];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 672)] = C_local[41];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 704)] = C_local[49];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 736)] = C_local[57];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1024)] = C_local[2];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1056)] = C_local[10];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1088)] = C_local[18];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1120)] = C_local[26];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1152)] = C_local[34];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1184)] = C_local[42];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1216)] = C_local[50];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1248)] = C_local[58];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1536)] = C_local[3];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1568)] = C_local[11];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1600)] = C_local[19];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1632)] = C_local[27];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1664)] = C_local[35];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1696)] = C_local[43];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1728)] = C_local[51];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 1760)] = C_local[59];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2048)] = C_local[4];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2080)] = C_local[12];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2112)] = C_local[20];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2144)] = C_local[28];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2176)] = C_local[36];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2208)] = C_local[44];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2240)] = C_local[52];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2272)] = C_local[60];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2560)] = C_local[5];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2592)] = C_local[13];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2624)] = C_local[21];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2656)] = C_local[29];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2688)] = C_local[37];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2720)] = C_local[45];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2752)] = C_local[53];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 2784)] = C_local[61];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3072)] = C_local[6];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3104)] = C_local[14];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3136)] = C_local[22];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3168)] = C_local[30];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3200)] = C_local[38];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3232)] = C_local[46];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3264)] = C_local[54];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3296)] = C_local[62];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3584)] = C_local[7];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3616)] = C_local[15];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3648)] = C_local[23];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3680)] = C_local[31];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3712)] = C_local[39];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3744)] = C_local[47];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3776)] = C_local[55];
+  C[(((((((((((int)blockIdx.x) >> 7) * 1048576) + ((((int)threadIdx.x) >> 4) * 131072)) + (((((int)blockIdx.x) & 127) >> 2) * 4096)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)threadIdx.x) & 7) >> 2) * 16)) + ((((int)blockIdx.x) & 3) * 4)) + (((int)threadIdx.x) & 3)) + 3808)] = C_local[63];
+}
+
+
+top1: 192.59165954589844 	top10: 168.74229431152344
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [8, 16, 16, 4], 'thread': [8, 2, 2, 4], 'rstep': [2, 16], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 4}}}
+best latency: 168.74229431152344
+4096_1024_8192	8.502265930175781
+4096_8192_8192	48.405914306640625
+4096_28672_8192	169.48141479492188
+4096_8192_28672	168.74229431152344
