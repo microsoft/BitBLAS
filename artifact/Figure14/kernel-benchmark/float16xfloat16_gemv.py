@@ -50,8 +50,6 @@ for benchmark_set in args.benchmark_sets:
     benchmark_sets.extend(eval(benchmark_set))
 benchmark_results = {}
 
-target = tvm.target.Target(auto_detect_nvidia_target())
-
 benchmark_results = {}
 for get_prim_func, input_args in benchmark_sets:
     ir_module = get_prim_func(*input_args)

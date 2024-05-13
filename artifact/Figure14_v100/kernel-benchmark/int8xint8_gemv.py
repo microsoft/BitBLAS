@@ -15,7 +15,7 @@ from bitblas.ops.impl.matmul_impl import (
 )
 import time
 import argparse
-
+bitblas.set_log_level("Debug")
 parser = argparse.ArgumentParser(
     description="Benchmark BitBLAS int4 on a specific target."
 )
@@ -27,7 +27,7 @@ parser.add_argument(
 parser.add_argument(
     "--benchmark_sets",
     nargs="+",
-    default=["llm_shape_fp16xfp16"],
+    default=["llm_shape"],
     help="List of benchmark sets, e.g., llm_int8xint1_bs4096",
 )
 
@@ -36,11 +36,11 @@ args = parser.parse_args()
 
 # fmt:off
 
-llm_shape_fp16xfp16 = [    
-    (matmul_nt_propagate_a_propagate_b, (4096, 1024, 8192, "int8", "int8", "int32")),
-    (matmul_nt_propagate_a_propagate_b, (4096, 8192, 8192, "int8", "int8", "int32")),
-    (matmul_nt_propagate_a_propagate_b, (4096, 28672, 8192, "int8", "int8", "int32")),
-    (matmul_nt_propagate_a_propagate_b, (4096, 8192, 28672, "int8", "int8", "int32")),
+llm_shape = [    
+    (matmul_nt, (1, 1024, 8192, "int8", "int8", "int32")),
+    (matmul_nt, (1, 8192, 8192, "int8", "int8", "int32")),
+    (matmul_nt, (1, 28672, 8192, "int8", "int8", "int32")),
+    (matmul_nt, (1, 8192, 28672, "int8", "int8", "int32")),
 ]
 # fmt:on
 

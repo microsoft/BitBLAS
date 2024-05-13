@@ -1,23 +1,24 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
-import tvm
-from tvm.script import tir as T
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.arch import CUDA
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.gpu import Matmul
 from bitblas.utils import auto_detect_nvidia_target
 from bitblas.base.utils import apply_and_build
-from bitblas.ops.impl.matmul_impl import (
-    matmul_nt,
-    matmul_nt_propagate_a_propagate_b,
+from bitblas.ops.impl.matmul_dequantize_impl import (
+    matmul_nt_dequantize_b,
+    matmul_nt_dequantize_b_propagate_a_propagate_b,
 )
+import tvm
 import time
 import argparse
 
+# append a parser for the benchmark set
+
 parser = argparse.ArgumentParser(
-    description="Benchmark BitBLAS int4 on a specific target."
+    description="Benchmark BitBLAS int8xint1 on a specific target."
 )
 parser.add_argument(
     "--target",
@@ -25,35 +26,46 @@ parser.add_argument(
     default=auto_detect_nvidia_target(),
 )
 parser.add_argument(
+    "--batch_seq",
+    type=int,
+    default=1,
+    help="The batch size of the sequence",
+)
+parser.add_argument(
+    "--group_size",
+    type=int,
+    default=-1,
+    help="The group size of the sequence",
+)
+parser.add_argument(
     "--benchmark_sets",
     nargs="+",
-    default=["llm_shape_fp16xfp16"],
-    help="List of benchmark sets, e.g., llm_int8xint1_bs4096",
+    default=["llm_float16xint4"],
+    help="List of benchmark sets, e.g., llm_float16xint2_bs4096",
 )
 
 args = parser.parse_args()
-
+batch_seq = args.batch_seq
+group_size = args.group_size
 
 # fmt:off
 
-llm_shape_fp16xfp16 = [    
-    (matmul_nt_propagate_a_propagate_b, (4096, 1024, 8192, "int8", "int8", "int32")),
-    (matmul_nt_propagate_a_propagate_b, (4096, 8192, 8192, "int8", "int8", "int32")),
-    (matmul_nt_propagate_a_propagate_b, (4096, 28672, 8192, "int8", "int8", "int32")),
-    (matmul_nt_propagate_a_propagate_b, (4096, 8192, 28672, "int8", "int8", "int32")),
+llm_float16xint4 = [
+    (matmul_nt_dequantize_b, (1, 1024, 8192, "float16", "float16", "float16", 4, "int8", "uint", False, False, group_size, True, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 8192, 8192, "float16", "float16", "float16", 4, "int8", "uint", False, False, group_size, True, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 28672, 8192, "float16", "float16", "float16", 4, "int8", "uint", False, False, group_size, True, False), Matmul),
+    (matmul_nt_dequantize_b, (1, 8192, 28672, "float16", "float16", "float16", 4, "int8", "uint", False, False, group_size, True, False), Matmul),
 ]
+
 # fmt:on
 
 target = tvm.target.Target(args.target)
 benchmark_sets = []
 for benchmark_set in args.benchmark_sets:
     benchmark_sets.extend(eval(benchmark_set))
-benchmark_results = {}
-
-
 
 benchmark_results = {}
-for get_prim_func, input_args in benchmark_sets:
+for get_prim_func, input_args, d_schedule in benchmark_sets:
     ir_module = get_prim_func(*input_args)
     func = ir_module["main"]
     arch = CUDA(target)
@@ -68,7 +80,7 @@ for get_prim_func, input_args in benchmark_sets:
     configs = policy.emit_config(20)
 
     tune_start = time.time()
-    cpresults, best = apply_and_build(func, configs, arch, parallel_build=False)
+    cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
     fast_tune_time = time.time() - tune_start
     print(
         "[BitBLAS] The best latency of top 1 is {:.3f} ms".format(
@@ -80,8 +92,35 @@ for get_prim_func, input_args in benchmark_sets:
     )
 
     # evaluate the performance of the default schedule
-    default_tune_time = 13.14
-    t = 5.20
+
+    rule = d_schedule()
+    default_tune_start = time.time()
+    with arch.target:
+        mod = bitblas.ApplyDefaultSchedule(  # pylint: disable=not-callable
+            bitblas.gpu.Matmul(),
+            bitblas.gpu.GEMV(),
+            bitblas.gpu.Reduction(),
+            bitblas.gpu.GeneralReduction(),
+            bitblas.gpu.Fallback(),
+        )(ir_module)
+    try:
+        with tvm.transform.PassContext(config={"tir.use_async_copy": True}):
+            mod_default = tvm.build(mod, target="cuda")
+    except Exception:
+        mod_default = None
+
+    default_tune_time = time.time() - default_tune_start
+
+    args = func.buffer_map.values()
+
+    profile_tensors = best.profile_tensors
+    if mod_default is not None:
+        timer_cuda_mod = mod_default.time_evaluator(
+            mod_default.entry_name, arch.device, number=5
+        )
+        t = timer_cuda_mod(*profile_tensors).mean
+    else:
+        t = 1e4 - 1
 
     print("Time cost of Dlight default schedule: {:.3f} ms".format(t * 1e3))
 

@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 @relay.transform.function_pass(opt_level=0, required=["InferType"])
 class LadderFakeQuant(relay.ExprMutator):
-    def __init__(self, quant_weight_candidate=None, quant_config=None, quant_type=0, convert_int=False):
+    def __init__(self, quant_weight_candidate=None, quant_config=None, quant_type=0, convert_int=False, convert_float=False):
         super().__init__()
         """
         quant_gemm_candidate: list of weight candidates
@@ -39,6 +39,7 @@ class LadderFakeQuant(relay.ExprMutator):
         self.quant_type = quant_type
         self.quant_config = quant_config
         self.convert_int = convert_int
+        self.convert_float = convert_float
 
     def transform_function(self, func, mod, ctx):
         return self.visit(func)
@@ -148,20 +149,58 @@ class LadderFakeQuant(relay.ExprMutator):
                 other_inputs.append(quant_zero)
 
             if self.quant_config['format'] == 'mxfp':
-                attrs = ir.make_node(
-                    "DictAttrs",
-                    out_dtype='float32',
-                    transpose_a=transpose_a,
-                    transpose_b=transpose_b,
-                    **self.quant_config
-                )
-                q_matmul = relay.Call(
-                    relay.op.get("ladder.quant_linear"),
-                    [data, quant_kernel, *other_inputs],
-                    attrs,
-                )
-                q_matmul = relay.cast(q_matmul, out_dtype)
-                return q_matmul
+                if self.convert_float:
+                    # quant_data = relay.cast(data, "float32")
+                    # attrs = ir.make_node(
+                    #     "DictAttrs",
+                    #     out_dtype='float32',
+                    #     transpose_a=transpose_a,
+                    #     transpose_b=transpose_b,
+                    #     **self.quant_config
+                    # )
+                    # q_matmul = relay.Call(
+                    #     relay.op.get("ladder.quant_linear"),
+                    #     [quant_data, quant_kernel, *other_inputs],
+                    #     attrs,
+                    # )
+                    quant_data = relay.cast(data, "float32")
+                    quant_kernel_shape = (
+                        (int(N), int(K))
+                        if transpose_b
+                        else (int(K), int(N))
+                    )
+                    quant_kernel_data = tvm.nd.array(
+                        np.random.rand(*quant_kernel_shape).astype(np.float32)
+                    )
+                    attrs = ir.make_node(
+                        "DictAttrs",
+                        out_dtype='float32',
+                        transpose_a=transpose_a,
+                        transpose_b=transpose_b,
+                    )
+                    quant_kernel = relay.const(quant_kernel_data)
+                    q_matmul_ = relay.Call(
+                        relay.op.get("welder.matmul"),
+                        [quant_data, quant_kernel],
+                        attrs,
+                    ) 
+                    q_matmul = relay.cast(q_matmul_, out_dtype)
+                    return q_matmul
+                else:
+                    attrs = ir.make_node(
+                        "DictAttrs",
+                        out_dtype='float32',
+                        transpose_a=transpose_a,
+                        transpose_b=transpose_b,
+                        **self.quant_config
+                    )
+                    q_matmul = relay.Call(
+                        relay.op.get("ladder.quant_linear"),
+                        [data, quant_kernel, *other_inputs],
+                        attrs,
+                    )
+                    q_matmul = relay.cast(q_matmul, out_dtype)
+                    return q_matmul
 
             if self.convert_int:
                 quant_data = relay.cast(data, "float32")
@@ -181,6 +220,23 @@ class LadderFakeQuant(relay.ExprMutator):
                 )
                 q_matmul = relay.cast(q_matmul, out_dtype)
             
+            elif self.convert_float:
+                quant_data = relay.cast(data, "float32")
+                other_inputs = [relay.cast(input, "float32") for input in other_inputs]
+                attrs = ir.make_node(
+                    "DictAttrs",
+                    out_dtype='float32',
+                    transpose_a=transpose_a,
+                    transpose_b=transpose_b,
+                )
+                quant_kernel = relay.cast(quant_kernel, "float32")
+                q_matmul = relay.Call(
+                    relay.op.get("welder.matmul"),
+                    [quant_data, quant_kernel, *other_inputs],
+                    attrs,
+                )
+                q_matmul = relay.cast(q_matmul, out_dtype)
+    
             else:
                 attrs = ir.make_node(
                     "DictAttrs",

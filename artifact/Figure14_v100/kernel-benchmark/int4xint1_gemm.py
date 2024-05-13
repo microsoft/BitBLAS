@@ -15,7 +15,7 @@ from bitblas.ops.impl.matmul_impl import (
 )
 import time
 import argparse
-
+bitblas.set_log_level("Debug")
 parser = argparse.ArgumentParser(
     description="Benchmark BitBLAS int4 on a specific target."
 )
@@ -37,10 +37,10 @@ args = parser.parse_args()
 # fmt:off
 
 llm_shape_fp16xfp16 = [    
-    (matmul_nt_propagate_a_propagate_b, (4096, 1024, 8192, "int8", "int8", "int32")),
-    (matmul_nt_propagate_a_propagate_b, (4096, 8192, 8192, "int8", "int8", "int32")),
-    (matmul_nt_propagate_a_propagate_b, (4096, 28672, 8192, "int8", "int8", "int32")),
-    (matmul_nt_propagate_a_propagate_b, (4096, 8192, 28672, "int8", "int8", "int32")),
+    (matmul_nt, (4096, 1024, 8192, "int8", "int8", "int32")),
+    (matmul_nt, (4096, 8192, 8192, "int8", "int8", "int32")),
+    (matmul_nt, (4096, 28672, 8192, "int8", "int8", "int32")),
+    (matmul_nt, (4096, 8192, 28672, "int8", "int8", "int32")),
 ]
 # fmt:on
 
@@ -50,21 +50,12 @@ for benchmark_set in args.benchmark_sets:
     benchmark_sets.extend(eval(benchmark_set))
 benchmark_results = {}
 
-
-
 benchmark_results = {}
 for get_prim_func, input_args in benchmark_sets:
     ir_module = get_prim_func(*input_args)
     func = ir_module["main"]
     arch = CUDA(target)
     policy = DefaultPolicy(func=func, arch=arch)
-    try:
-        tensorized_func, tags = get_tensorized_func_and_tags(func, arch.target)
-    except:
-        tags = None
-    if tags:
-        policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
-
     configs = policy.emit_config(20)
 
     tune_start = time.time()
