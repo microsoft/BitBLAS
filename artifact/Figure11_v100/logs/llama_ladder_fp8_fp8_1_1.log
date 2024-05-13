@@ -1,0 +1,10 @@
+Measure the memory for llama batch 1 seq 1 under ladder_fp8_fp8
+Testing model: llama2-70b
+Running from prebuilt model: /root/Ladder/artifact/Figure11_v100/../checkpoints/Figure11_v100/ladder/checkpoints/llama2-70b/ladder_with_fake_dense_dequantize_fq_0_fp_e5m2_8_-1_bs1_seq1_ci_False
+Traceback (most recent call last):
+  File "/root/Ladder/artifact/Figure11_v100/ladder-benchmark/ladder_with_fake_dense_dequantize.py", line 185, in <module>
+    run_from_prebuilt(prebuilt_path, arch)
+  File "/root/Ladder/artifact/Figure11_v100/ladder-benchmark/ladder_with_fake_dense_dequantize.py", line 151, in run_from_prebuilt
+    with open(os.path.join(prefix, "graph.json")) as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/root/Ladder/artifact/Figure11_v100/../checkpoints/Figure11_v100/ladder/checkpoints/llama2-70b/ladder_with_fake_dense_dequantize_fq_0_fp_e5m2_8_-1_bs1_seq1_ci_False/graph.json'
+{'llama_ladder_fp8_fp8_1_1': 719}

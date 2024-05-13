@@ -1,0 +1,2 @@
+Measure the memory for llama batch 32 seq 1 under welder
+{'llama_welder_32_1': 2379}

@@ -1,0 +1,2 @@
+torch.float16
+Inductor avg: 1.477034091949463 ms
