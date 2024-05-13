@@ -84,7 +84,7 @@ class MultiProcTunner(Tunner):
         num_procs = min(topk, os.cpu_count(), 10)
         self.pool = PopenPoolExecutor(
             max_workers=num_procs,
-            timeout=10,
+            timeout=20,
             initializer=init_server,
             initargs=[save_tile_graph(ordered_nodes)],
         )
