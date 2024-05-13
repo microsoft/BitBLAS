@@ -1,0 +1,353 @@
+[WARNING] 2024-05-13T08:15:24z src/contrib/custom_op/custom_op.h 27	$NNFUSION_HOME was not set, use /root/.nnfusion.
+[WARNING] 2024-05-13T08:15:24z src/contrib/custom_op/custom_op.h 27	$NNFUSION_HOME was not set, use /root/.nnfusion.
+
+============================================================================
+---- Processing '/root/Ladder/artifact/Figure13/welder-roller-end2end/../../models/llama_70b/llama2_70b_layer1_seq4096_bs1/model.onnx'
+============================================================================
+[WARNING] 2024-05-13T08:15:24z src/nnfusion/common/util.cpp 47	$NNFUSION_HOME was not set, use /root/.nnfusion.
+[WARNING] 2024-05-13T08:15:24z src/nnfusion/common/util.cpp 47	$NNFUSION_HOME was not set, use /root/.nnfusion.
+[INFO] 2024-05-13T08:15:24z src/nnfusion/frontend/onnx_import/onnx.cpp 93	Optimizing ONNX Graph with External Tool (models/pytorch2onnx/ort_run_frozen.py)
+ONNX model check passed!
+Importing ONNX model into ONNX Runtime...
+Execution Providers: ['CUDAExecutionProvider', 'CPUExecutionProvider']
+240
+[-13.805    5.785    3.922   -3.713    0.504   -6.86     3.531   -0.3418
+   7.305   -6.832 ] ...(size= 33554432 end with -9.13 )
+[INFO] 2024-05-13T08:15:49z src/nnfusion/frontend/onnx_import/onnx.cpp 48	Import ONNX Graph Size: [1715495811]
+[INFO] 2024-05-13T08:15:49z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 320	Converting Onnx Graph
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Cast
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /input_layernorm/Cast
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Cast domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /input_layernorm/Cast, output /input_layernorm/Cast_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Pow
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /input_layernorm/Pow
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Pow domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /input_layernorm/Pow_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /input_layernorm/Cast_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: Broadcast_3_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /input_layernorm/Pow, output /input_layernorm/Pow_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : ReduceMean
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /input_layernorm/ReduceMean
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: ReduceMean domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /input_layernorm/ReduceMean, output /input_layernorm/ReduceMean_output_0, shape Shape{1, 4096, 1}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Add
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /input_layernorm/Add
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Add domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /input_layernorm/Add_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /input_layernorm/ReduceMean_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: Broadcast_11_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /input_layernorm/Add, output /input_layernorm/Add_output_0, shape Shape{1, 4096, 1}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Sqrt
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /input_layernorm/Sqrt
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Sqrt domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /input_layernorm/Sqrt, output /input_layernorm/Sqrt_output_0, shape Shape{1, 4096, 1}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Div
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /input_layernorm/Div
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Div domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /input_layernorm/Mul_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /input_layernorm/Cast_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: Broadcast_15_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /input_layernorm/Div, output /input_layernorm/Mul_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Cast
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /input_layernorm/Cast_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Cast domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /input_layernorm/Cast_1, output /input_layernorm/Cast_1_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Mul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /input_layernorm/Mul_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Mul domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /input_layernorm/Mul_1_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: Broadcast_19_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: /input_layernorm/Cast_1_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /input_layernorm/Mul_1, output /input_layernorm/Mul_1_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : MatMul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/k_proj/MatMul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: MatMul domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/k_proj/MatMul, output /self_attn/k_proj/MatMul_output_0, shape Shape{1, 4096, 1024}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Reshape
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Reshape_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Reshape domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/reshape.cpp 48	Reshape Name /self_attn/Reshape_1/self_attn/Reshape_1_output_0 1, 4096, 1024 -> 1, 4096, 8, 128
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Reshape_1, output /self_attn/Reshape_1_output_0, shape Shape{1, 4096, 8, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Transpose
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Transpose_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Transpose domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 54	Transpose: /self_attn/Transpose_1_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 55	Transpose: /self_attn/Transpose_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 57	/self_attn/Reshape_1_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 58	Shape{1, 4096, 8, 128}
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Transpose_1, output /self_attn/Transpose_1_output_0, shape Shape{1, 8, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Slice
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Slice_3
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Slice domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Slice_3, output /self_attn/Slice_3_output_0, shape Shape{1, 8, 4096, 64}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Neg
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Neg_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Neg domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Neg_1, output /self_attn/Neg_1_output_0, shape Shape{1, 8, 4096, 64}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Slice
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Slice_2
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Slice domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Slice_2, output /self_attn/Slice_2_output_0, shape Shape{1, 8, 4096, 64}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Concat
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Concat_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Concat domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Concat_1, output /self_attn/Concat_1_output_0, shape Shape{1, 8, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Mul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Mul_3
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Mul domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /self_attn/Mul_3_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /self_attn/Concat_1_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: Broadcast_29_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Mul_3, output /self_attn/Mul_3_output_0, shape Shape{1, 8, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Mul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Mul_2
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Mul domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /self_attn/Mul_2_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /self_attn/Transpose_1_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: Broadcast_32_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Mul_2, output /self_attn/Mul_2_output_0, shape Shape{1, 8, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Add
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Add_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Add domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /self_attn/Add_1_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /self_attn/Mul_2_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: /self_attn/Mul_3_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Add_1, output /self_attn/Add_1_output_0, shape Shape{1, 8, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Unsqueeze
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Unsqueeze
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Unsqueeze domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Unsqueeze, output /self_attn/Unsqueeze_output_0, shape Shape{1, 8, 1, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Expand
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Expand
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Expand domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Expand, output /self_attn/Expand_output_0, shape Shape{1, 8, 8, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Reshape
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Reshape_3
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Reshape domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/reshape.cpp 48	Reshape Name /self_attn/Reshape_3/self_attn/Reshape_3_output_0 1, 8, 8, 4096, 128 -> 1, 64, 4096, 128
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Reshape_3, output /self_attn/Reshape_3_output_0, shape Shape{1, 64, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Transpose
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Transpose_3
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Transpose domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 54	Transpose: /self_attn/Transpose_3_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 55	Transpose: /self_attn/Transpose_3
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 57	/self_attn/Reshape_3_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 58	Shape{1, 64, 4096, 128}
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Transpose_3, output /self_attn/Transpose_3_output_0, shape Shape{1, 64, 128, 4096}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : MatMul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/q_proj/MatMul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: MatMul domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/q_proj/MatMul, output /self_attn/q_proj/MatMul_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Reshape
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Reshape
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Reshape domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/reshape.cpp 48	Reshape Name /self_attn/Reshape/self_attn/Reshape_output_0 1, 4096, 8192 -> 1, 4096, 64, 128
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Reshape, output /self_attn/Reshape_output_0, shape Shape{1, 4096, 64, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Transpose
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Transpose
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Transpose domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 54	Transpose: /self_attn/Transpose_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 55	Transpose: /self_attn/Transpose
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 57	/self_attn/Reshape_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 58	Shape{1, 4096, 64, 128}
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Transpose, output /self_attn/Transpose_output_0, shape Shape{1, 64, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Slice
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Slice_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Slice domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Slice_1, output /self_attn/Slice_1_output_0, shape Shape{1, 64, 4096, 64}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Neg
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Neg
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Neg domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Neg, output /self_attn/Neg_output_0, shape Shape{1, 64, 4096, 64}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Slice
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Slice
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Slice domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Slice, output /self_attn/Slice_output_0, shape Shape{1, 64, 4096, 64}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Concat
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Concat
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Concat domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Concat, output /self_attn/Concat_output_0, shape Shape{1, 64, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Mul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Mul_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Mul domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /self_attn/Mul_1_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /self_attn/Concat_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: Broadcast_48_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Mul_1, output /self_attn/Mul_1_output_0, shape Shape{1, 64, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Mul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Mul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Mul domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /self_attn/Mul_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /self_attn/Transpose_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: Broadcast_51_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Mul, output /self_attn/Mul_output_0, shape Shape{1, 64, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Add
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Add
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Add domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /self_attn/Add_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /self_attn/Mul_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: /self_attn/Mul_1_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Add, output /self_attn/Add_output_0, shape Shape{1, 64, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : MatMul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/MatMul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: MatMul domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/MatMul, output /self_attn/MatMul_output_0, shape Shape{1, 64, 4096, 4096}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Div
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Div
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Div domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /self_attn/Div_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: Reshape_59_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: Broadcast_61_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Div, output /self_attn/Div_output_0, shape Shape{1, 64, 4096, 4096}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Softmax
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Softmax
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Softmax domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Softmax, output /self_attn/Softmax_output_0, shape Shape{1, 64, 4096, 4096}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : MatMul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/v_proj/MatMul
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: MatMul domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/v_proj/MatMul, output /self_attn/v_proj/MatMul_output_0, shape Shape{1, 4096, 1024}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Reshape
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Reshape_2
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Reshape domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/reshape.cpp 48	Reshape Name /self_attn/Reshape_2/self_attn/Reshape_2_output_0 1, 4096, 1024 -> 1, 4096, 8, 128
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Reshape_2, output /self_attn/Reshape_2_output_0, shape Shape{1, 4096, 8, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Transpose
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Transpose_2
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Transpose domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 54	Transpose: /self_attn/Transpose_2_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 55	Transpose: /self_attn/Transpose_2
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 57	/self_attn/Reshape_2_output_0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/op/transpose.cpp 58	Shape{1, 4096, 8, 128}
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Transpose_2, output /self_attn/Transpose_2_output_0, shape Shape{1, 8, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Unsqueeze
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Unsqueeze_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Unsqueeze domain: 
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Unsqueeze_1, output /self_attn/Unsqueeze_1_output_0, shape Shape{1, 8, 1, 4096, 128}0
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Expand
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Expand_1
+[INFO] 2024-05-13T08:16:13z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Expand domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Expand_1, output /self_attn/Expand_1_output_0, shape Shape{1, 8, 8, 4096, 128}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Reshape
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Reshape_4
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Reshape domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/reshape.cpp 48	Reshape Name /self_attn/Reshape_4/self_attn/Reshape_4_output_0 1, 8, 8, 4096, 128 -> 1, 64, 4096, 128
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Reshape_4, output /self_attn/Reshape_4_output_0, shape Shape{1, 64, 4096, 128}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : MatMul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/MatMul_1
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: MatMul domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/MatMul_1, output /self_attn/MatMul_1_output_0, shape Shape{1, 64, 4096, 128}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Transpose
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Transpose_4
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Transpose domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/transpose.cpp 54	Transpose: /self_attn/Transpose_4_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/transpose.cpp 55	Transpose: /self_attn/Transpose_4
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/transpose.cpp 57	Reshape_76_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/transpose.cpp 58	Shape{1, 64, 4096, 128}
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Transpose_4, output /self_attn/Transpose_4_output_0, shape Shape{1, 4096, 64, 128}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Reshape
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/Reshape_5
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Reshape domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/reshape.cpp 48	Reshape Name /self_attn/Reshape_5/self_attn/Reshape_5_output_0 1, 4096, 64, 128 -> 1, 4096, 8192
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/Reshape_5, output /self_attn/Reshape_5_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : MatMul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /self_attn/o_proj/MatMul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: MatMul domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /self_attn/o_proj/MatMul, output /self_attn/o_proj/MatMul_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Add
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /Add
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Add domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /Add_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: onnx::Cast_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: /self_attn/o_proj/MatMul_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /Add, output /Add_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Cast
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /post_attention_layernorm/Cast
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Cast domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /post_attention_layernorm/Cast, output /post_attention_layernorm/Cast_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Pow
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /post_attention_layernorm/Pow
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Pow domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /post_attention_layernorm/Pow_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /post_attention_layernorm/Cast_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: Broadcast_83_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /post_attention_layernorm/Pow, output /post_attention_layernorm/Pow_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : ReduceMean
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /post_attention_layernorm/ReduceMean
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: ReduceMean domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /post_attention_layernorm/ReduceMean, output /post_attention_layernorm/ReduceMean_output_0, shape Shape{1, 4096, 1}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Add
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /post_attention_layernorm/Add
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Add domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /post_attention_layernorm/Add_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /post_attention_layernorm/ReduceMean_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: Broadcast_91_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /post_attention_layernorm/Add, output /post_attention_layernorm/Add_output_0, shape Shape{1, 4096, 1}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Sqrt
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /post_attention_layernorm/Sqrt
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Sqrt domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /post_attention_layernorm/Sqrt, output /post_attention_layernorm/Sqrt_output_0, shape Shape{1, 4096, 1}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Div
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /post_attention_layernorm/Div
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Div domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /post_attention_layernorm/Mul_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /post_attention_layernorm/Cast_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: Broadcast_95_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /post_attention_layernorm/Div, output /post_attention_layernorm/Mul_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Cast
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /post_attention_layernorm/Cast_1
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Cast domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /post_attention_layernorm/Cast_1, output /post_attention_layernorm/Cast_1_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Mul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /post_attention_layernorm/Mul_1
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Mul domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /post_attention_layernorm/Mul_1_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: Broadcast_99_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: /post_attention_layernorm/Cast_1_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /post_attention_layernorm/Mul_1, output /post_attention_layernorm/Mul_1_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : MatMul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /mlp/up_proj/MatMul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: MatMul domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /mlp/up_proj/MatMul, output /mlp/up_proj/MatMul_output_0, shape Shape{1, 4096, 28672}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : MatMul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /mlp/gate_proj/MatMul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: MatMul domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /mlp/gate_proj/MatMul, output /mlp/gate_proj/MatMul_output_0, shape Shape{1, 4096, 28672}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Sigmoid
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /mlp/act_fn/Sigmoid
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Sigmoid domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /mlp/act_fn/Sigmoid, output /mlp/act_fn/Sigmoid_output_0, shape Shape{1, 4096, 28672}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Mul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /mlp/act_fn/Mul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Mul domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /mlp/act_fn/Mul_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /mlp/gate_proj/MatMul_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: /mlp/act_fn/Sigmoid_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /mlp/act_fn/Mul, output /mlp/act_fn/Mul_output_0, shape Shape{1, 4096, 28672}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Mul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /mlp/Mul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Mul domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: /mlp/Mul_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /mlp/act_fn/Mul_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: /mlp/up_proj/MatMul_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /mlp/Mul, output /mlp/Mul_output_0, shape Shape{1, 4096, 28672}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : MatMul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /mlp/down_proj/MatMul
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: MatMul domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /mlp/down_proj/MatMul, output /mlp/down_proj/MatMul_output_0, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 485	Convert Node Type : Add
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 524	convert node: /Add_1
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 526	op_type: Add domain: 
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 137	op name: 240
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 140	lhs_index: /Add_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/op/binaryop.hpp 141	rhs_index: /mlp/down_proj/MatMul_output_0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 547	node /Add_1, output 240, shape Shape{1, 4096, 8192}0
+[INFO] 2024-05-13T08:16:14z src/nnfusion/frontend/onnx_import/util/graph_convert.cpp 519	convert graph done
+[INFO] 2024-05-13T08:16:14z src/nnfusion/engine/engine.cpp 37	Graph Passes count:32
+[INFO] 2024-05-13T08:16:14z src/nnfusion/engine/engine.cpp 38	Interpreter Passes count:6
+[INFO] 2024-05-13T08:16:14z src/nnfusion/engine/pass/graph/batchnorm_inference_folding_pass.cpp 889	batchnorm inference folding Pass starts up for Graph: Graph_1
+[INFO] 2024-05-13T08:16:14z src/nnfusion/engine/pass/graph/batchnorm_inference_folding_pass.cpp 901	batchnorm inference folding Pass ends for Graph: Graph_1
+[INFO] 2024-05-13T08:16:14z src/nnfusion/engine/cache/manager.cpp 52	Open kernel cache from: /root/.cache/nnfusion/kernel_cache.db
+[INFO] 2024-05-13T08:16:14z src/nnfusion/engine/pass/graph/tensor_core_rewrite_pass.cpp 64	TensorCoreRewritePass Start
+[INFO] 2024-05-13T08:16:14z src/nnfusion/engine/pass/graph/tensor_core_rewrite_pass.cpp 154	TensorCoreRewritePass End
+[INFO] 2024-05-13T08:16:14z src/nnfusion/engine/pass/graph/register_fusion_pass.cpp 488	RegisterFusionPass Start

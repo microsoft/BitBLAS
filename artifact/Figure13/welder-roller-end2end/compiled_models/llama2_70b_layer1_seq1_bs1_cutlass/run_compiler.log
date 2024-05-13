@@ -1,0 +1,553 @@
+Tuning ['Reshape_28']
+result: 0.002730666659772396
+Fusion group created:  0 ['Reshape_28']
+Tuning ['Convert_27', 'Broadcast_Power_148', 'Sum_Reshape_Divide_147', 'Reshape_36', 'Reshape_43', 'Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Multiply_144']
+Tuning ['Convert_27']
+result: 0.002730666659772396
+Fusion group created:  1 ['Convert_27']
+Tuning ['Broadcast_Power_148', 'Sum_Reshape_Divide_147']
+result: 0.03379200026392937
+Tuning ['Broadcast_Power_148']
+result: 0.003145142924040556
+Tuning ['Sum_Reshape_Divide_147']
+result: 0.00426666671410203
+Tuning ['Broadcast_Power_148']
+Found in cache
+Fusion group created:  2 ['Broadcast_Power_148']
+Tuning ['Sum_Reshape_Divide_147', 'Reshape_36', 'Reshape_43', 'Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Multiply_144']
+result: 0.01894400082528591
+Tuning ['Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Multiply_144']
+result: 0.003299555741250515
+Tuning ['Sum_Reshape_Divide_147']
+Found in cache
+Fusion group created:  3 ['Sum_Reshape_Divide_147']
+Tuning ['Reshape_36', 'Reshape_43', 'Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Multiply_144']
+Found in cache
+Tuning ['Reshape_36', 'Reshape_43', 'Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Multiply_144', 'Dot_65', 'Dot_45', 'Dot_89']
+result: 10.147839546203613
+Tuning ['Dot_65']
+Traceback (most recent call last):
+  42: TVMFuncCall
+  41: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  40: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  39: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  38: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  37: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  36: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  35: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  34: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  33: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  26: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  25: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  24: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  22: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  21: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  19: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  17: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::ForNode const*)
+  16: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::ForNode const*)
+  15: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  14: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  13: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  12: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  8: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  7: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  6: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  5: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  4: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  3: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  2: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  1: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::RampNode const*, std::ostream&)
+  File "/root/Ladder/artifact/baseline_framework/welder_tvm/src/target/source/codegen_cuda.cc", line 1058
+ValueError: Check failed: op->lanes <= 4 (8 vs. 4) : Ramp of more than 4 lanes is not allowed.
+result: 0.13090133666992188
+Tuning ['Dot_45']
+Traceback (most recent call last):
+  42: TVMFuncCall
+  41: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  40: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  39: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  38: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  37: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  36: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  35: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  34: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  33: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  26: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  25: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  24: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  22: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  21: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  19: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  17: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::ForNode const*)
+  16: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::ForNode const*)
+  15: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  14: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  13: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  12: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  8: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  7: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  6: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  5: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  4: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  3: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  2: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  1: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::RampNode const*, std::ostream&)
+  File "/root/Ladder/artifact/baseline_framework/welder_tvm/src/target/source/codegen_cuda.cc", line 1058
+ValueError: Check failed: op->lanes <= 4 (8 vs. 4) : Ramp of more than 4 lanes is not allowed.
+result: 0.02457600086927414
+Tuning ['Dot_89']
+Found in cache
+Fusion group created:  4 ['Reshape_36', 'Reshape_43', 'Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Multiply_144']
+Tuning ['Dot_65', 'Reshape_Reshape_Reshape_Broadcast_Multiply_141']
+Traceback (most recent call last):
+  35: TVMFuncCall
+  34: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  33: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  32: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  31: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  30: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  29: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  26: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  25: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  24: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  23: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  21: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  19: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  17: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::ForNode const*)
+  16: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::ForNode const*)
+  15: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  14: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  13: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  12: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  8: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  7: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  6: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  5: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  4: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  3: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  2: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  1: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::RampNode const*, std::ostream&)
+  File "/root/Ladder/artifact/baseline_framework/welder_tvm/src/target/source/codegen_cuda.cc", line 1058
+ValueError: Check failed: op->lanes <= 4 (8 vs. 4) : Ramp of more than 4 lanes is not allowed.
+result: 0.11509759724140167
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_141']
+result: 0.0027033600490540266
+Tuning ['Dot_65', 'Reshape_Reshape_Reshape_Broadcast_Multiply_141', 'Slice_Negative_149', 'Slice_70']
+Tuning ['Dot_65', 'Reshape_Reshape_Reshape_Broadcast_Multiply_141', 'Slice_Negative_149', 'Slice_70', 'Concat_Reshape_Broadcast_Multiply_143', 'Add_Reshape_Broadcast_150']
+Fusion group created:  5 ['Dot_65', 'Reshape_Reshape_Reshape_Broadcast_Multiply_141']
+Tuning ['Slice_Negative_149', 'Slice_70', 'Concat_Reshape_Broadcast_Multiply_143']
+result: 0.0030719998758286238
+Tuning ['Slice_Negative_149']
+result: 0.0026781538035720587
+Tuning ['Slice_70']
+result: 0.0027033600490540266
+Tuning ['Concat_Reshape_Broadcast_Multiply_143']
+result: 0.002730666659772396
+Tuning ['Slice_Negative_149', 'Slice_70', 'Concat_Reshape_Broadcast_Multiply_143', 'Add_Reshape_Broadcast_150']
+result: 0.003252705791965127
+Tuning ['Add_Reshape_Broadcast_150']
+result: 0.002746181795373559
+Tuning ['Slice_Negative_149', 'Slice_70', 'Concat_Reshape_Broadcast_Multiply_143', 'Add_Reshape_Broadcast_150', 'Dot_45', 'Reshape_Reshape_Reshape_Broadcast_Multiply_151', 'Slice_Negative_153', 'Slice_50', 'Concat_Reshape_Broadcast_Multiply_152', 'Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_146', 'BatchMatMul_Reshape_Reshape_Broadcast_Divide_145']
+Fusion group created:  6 ['Slice_Negative_149', 'Slice_70', 'Concat_Reshape_Broadcast_Multiply_143', 'Add_Reshape_Broadcast_150']
+Tuning ['Dot_45', 'Reshape_Reshape_Reshape_Broadcast_Multiply_151']
+Traceback (most recent call last):
+  35: TVMFuncCall
+  34: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  33: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  32: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  31: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  30: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  29: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  26: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  25: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  24: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  23: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  21: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  19: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  17: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::ForNode const*)
+  16: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::ForNode const*)
+  15: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  14: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  13: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  12: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  8: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  7: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  6: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  5: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  4: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  3: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  2: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  1: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::RampNode const*, std::ostream&)
+  File "/root/Ladder/artifact/baseline_framework/welder_tvm/src/target/source/codegen_cuda.cc", line 1058
+ValueError: Check failed: op->lanes <= 4 (8 vs. 4) : Ramp of more than 4 lanes is not allowed.
+result: 0.0578560009598732
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_151']
+result: 0.0026387693360447884
+Tuning ['Dot_45']
+Found in cache
+Fusion group created:  7 ['Dot_45']
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_151', 'Slice_Negative_153', 'Slice_50']
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_151', 'Slice_Negative_153', 'Slice_50', 'Concat_Reshape_Broadcast_Multiply_152', 'Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_146']
+Tuning ['Reshape_Reshape_Reshape_Broadcast_Multiply_151']
+Found in cache
+Fusion group created:  8 ['Reshape_Reshape_Reshape_Broadcast_Multiply_151']
+Tuning ['Slice_Negative_153', 'Slice_50', 'Concat_Reshape_Broadcast_Multiply_152']
+result: 0.0029642104636877775
+Tuning ['Slice_Negative_153']
+result: 0.0026453332975506783
+Tuning ['Slice_50']
+result: 0.0026453332975506783
+Tuning ['Concat_Reshape_Broadcast_Multiply_152']
+result: 0.0026819047052413225
+Tuning ['Slice_Negative_153', 'Slice_50', 'Concat_Reshape_Broadcast_Multiply_152', 'Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_146']
+result: 0.005324800033122301
+Tuning ['Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_146']
+result: 0.0027033600490540266
+Tuning ['Slice_Negative_153', 'Slice_50', 'Concat_Reshape_Broadcast_Multiply_152', 'Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_146', 'BatchMatMul_Reshape_Reshape_Broadcast_Divide_145']
+result: 0.011264000087976456
+Tuning ['BatchMatMul_Reshape_Reshape_Broadcast_Divide_145']
+result: 0.0030719998758286238
+Fusion group created:  9 ['Slice_Negative_153', 'Slice_50', 'Concat_Reshape_Broadcast_Multiply_152', 'Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_146']
+Tuning ['BatchMatMul_Reshape_Reshape_Broadcast_Divide_145', 'SoftmaxBasic_133', 'SoftmaxBasic_134']
+result: 0.004505599848926067
+Tuning ['SoftmaxBasic_133']
+result: 0.0026267827488482
+Tuning ['SoftmaxBasic_134']
+result: 0.0026530909817665815
+Tuning ['BatchMatMul_Reshape_Reshape_Broadcast_Divide_145', 'SoftmaxBasic_133', 'SoftmaxBasic_134', 'SoftmaxBasic_135', 'Reshape_Broadcast_SoftmaxBasic_155']
+result: 0.004505599848926067
+Tuning ['SoftmaxBasic_135']
+result: 0.002671304391697049
+Tuning ['Reshape_Broadcast_SoftmaxBasic_155']
+result: 0.002713599940761924
+Tuning ['BatchMatMul_Reshape_Reshape_Broadcast_Divide_145', 'SoftmaxBasic_133', 'SoftmaxBasic_134', 'SoftmaxBasic_135', 'Reshape_Broadcast_SoftmaxBasic_155', 'Dot_89', 'Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_142', 'BatchMatMul_Reshape_156']
+Fusion group created:  10 ['BatchMatMul_Reshape_Reshape_Broadcast_Divide_145', 'SoftmaxBasic_133', 'SoftmaxBasic_134', 'SoftmaxBasic_135', 'Reshape_Broadcast_SoftmaxBasic_155']
+Tuning ['Dot_89', 'Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_142']
+Tuning ['Dot_89']
+Found in cache
+Fusion group created:  11 ['Dot_89']
+Tuning ['Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_142', 'BatchMatMul_Reshape_156']
+result: 0.0029323636554181576
+Tuning ['Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_142']
+result: 0.002687999978661537
+Tuning ['BatchMatMul_Reshape_156']
+result: 0.0027927272021770477
+Tuning ['Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_142', 'BatchMatMul_Reshape_156', 'Reshape_Reshape_154']
+('Shared memory mismatched', <Node, Reshape_Reshape_154>, Tensor(shape=[1, 64, 1, 128], op.name=input0), 64, 256)
+('Shared memory mismatched', <Node, Reshape_Reshape_154>, Tensor(shape=[1, 64, 1, 128], op.name=input0), 128, 256)
+('Shared memory mismatched', <Node, Reshape_Reshape_154>, Tensor(shape=[1, 64, 1, 128], op.name=input0), 32, 256)
+('Shared memory mismatched', <Node, Reshape_Reshape_154>, Tensor(shape=[1, 64, 1, 128], op.name=input0), 32, 256)
+('Shared memory mismatched', <Node, Reshape_Reshape_154>, Tensor(shape=[1, 64, 1, 128], op.name=input0), 32, 256)
+('Shared memory mismatched', <Node, Reshape_Reshape_154>, Tensor(shape=[1, 64, 1, 128], op.name=input0), 32, 256)
+result: 0.0030151112005114555
+Tuning ['Reshape_Reshape_154']
+result: 0.002730666659772396
+Tuning ['Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_142', 'BatchMatMul_Reshape_156', 'Reshape_Reshape_154', 'Dot_Add_Convert_Reshape_Broadcast_Power_157']
+result: 8.474623680114746
+Tuning ['Dot_Add_Convert_Reshape_Broadcast_Power_157']
+Traceback (most recent call last):
+  43: TVMFuncCall
+  42: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  41: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  40: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  39: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  38: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  37: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  34: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  33: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  32: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  27: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  21: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  19: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  17: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::ForNode const*)
+  16: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::ForNode const*)
+  15: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  14: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  13: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  12: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  8: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  7: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  6: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  5: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  4: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  3: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  2: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  1: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::RampNode const*, std::ostream&)
+  File "/root/Ladder/artifact/baseline_framework/welder_tvm/src/target/source/codegen_cuda.cc", line 1058
+ValueError: Check failed: op->lanes <= 4 (8 vs. 4) : Ramp of more than 4 lanes is not allowed.
+result: 0.13066241145133972
+Fusion group created:  12 ['Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_142', 'BatchMatMul_Reshape_156', 'Reshape_Reshape_154']
+Tuning ['Dot_Add_Convert_Reshape_Broadcast_Power_157', 'Sum_Reshape_Divide_139', 'Reshape_Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Multiply_140', 'Dot_Sigmoid_Multiply_138', 'Dot_125', 'Multiply_129', 'Dot_Add_137']
+Tuning ['Dot_Add_Convert_Reshape_Broadcast_Power_157', 'Sum_Reshape_Divide_139', 'Reshape_Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Multiply_140']
+Tuning ['Dot_Add_Convert_Reshape_Broadcast_Power_157', 'Sum_Reshape_Divide_139']
+Tuning ['Dot_Add_Convert_Reshape_Broadcast_Power_157']
+Found in cache
+Fusion group created:  13 ['Dot_Add_Convert_Reshape_Broadcast_Power_157']
+Tuning ['Sum_Reshape_Divide_139', 'Reshape_Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Multiply_140']
+result: 0.017920000478625298
+Tuning ['Sum_Reshape_Divide_139']
+Found in cache
+Tuning ['Reshape_Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Multiply_140']
+result: 0.003276800038293004
+Tuning ['Sum_Reshape_Divide_139']
+Found in cache
+Fusion group created:  14 ['Sum_Reshape_Divide_139']
+Tuning ['Reshape_Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Multiply_140', 'Dot_Sigmoid_Multiply_138', 'Dot_125']
+Tuning ['Reshape_Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Multiply_140']
+Found in cache
+Fusion group created:  15 ['Reshape_Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Multiply_140']
+Tuning ['Dot_Sigmoid_Multiply_138', 'Dot_125', 'Multiply_129']
+Traceback (most recent call last):
+  35: TVMFuncCall
+  34: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  33: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  32: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  31: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  30: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  29: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  28: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  26: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  25: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  24: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  23: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  22: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  21: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  19: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  17: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::ForNode const*)
+  16: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::ForNode const*)
+  15: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  14: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  13: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  12: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  8: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  7: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  6: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  5: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  4: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  3: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  2: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  1: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::RampNode const*, std::ostream&)
+  File "/root/Ladder/artifact/baseline_framework/welder_tvm/src/target/source/codegen_cuda.cc", line 1058
+ValueError: Check failed: op->lanes <= 4 (8 vs. 4) : Ramp of more than 4 lanes is not allowed.
+result: 0.6406826376914978
+Tuning ['Dot_Sigmoid_Multiply_138']
+Traceback (most recent call last):
+  43: TVMFuncCall
+  42: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  41: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  40: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  39: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  38: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  37: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  34: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  33: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  32: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  27: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  21: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  19: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  17: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::ForNode const*)
+  16: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::ForNode const*)
+  15: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  14: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  13: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  12: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  8: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  7: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  6: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  5: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  4: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  3: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  2: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  1: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::RampNode const*, std::ostream&)
+  File "/root/Ladder/artifact/baseline_framework/welder_tvm/src/target/source/codegen_cuda.cc", line 1058
+ValueError: Check failed: op->lanes <= 4 (8 vs. 4) : Ramp of more than 4 lanes is not allowed.
+result: 0.3456000089645386
+Tuning ['Dot_125']
+Traceback (most recent call last):
+  42: TVMFuncCall
+  41: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  40: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  39: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  38: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  37: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  36: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  35: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  34: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  33: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  32: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  27: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  26: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  25: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  24: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  22: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  21: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  19: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  17: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::ForNode const*)
+  16: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::ForNode const*)
+  15: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  14: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  13: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  12: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  8: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  7: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  6: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  5: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  4: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  3: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  2: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  1: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::RampNode const*, std::ostream&)
+  File "/root/Ladder/artifact/baseline_framework/welder_tvm/src/target/source/codegen_cuda.cc", line 1058
+ValueError: Check failed: op->lanes <= 4 (8 vs. 4) : Ramp of more than 4 lanes is not allowed.
+result: 0.34594133496284485
+Tuning ['Multiply_129']
+result: 0.0028048695530742407
+Tuning ['Dot_Sigmoid_Multiply_138', 'Dot_125', 'Multiply_129', 'Dot_Add_137']
+Fusion group created:  16 ['Dot_Sigmoid_Multiply_138', 'Dot_125', 'Multiply_129']
+Tuning ['Dot_Add_137']
+Traceback (most recent call last):
+  43: TVMFuncCall
+  42: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)>::AssignTypedLambda<tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}>(tvm::{lambda(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target)#6}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  41: tvm::TIRToRuntime(tvm::runtime::Map<tvm::Target, tvm::IRModule, void, void> const&, tvm::Target const&)
+  40: tvm::codegen::Build(tvm::IRModule, tvm::Target)
+  39: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::runtime::Module (tvm::IRModule, tvm::Target)>::AssignTypedLambda<tvm::runtime::Module (*)(tvm::IRModule, tvm::Target)>(tvm::runtime::Module (*)(tvm::IRModule, tvm::Target), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  38: tvm::codegen::BuildCUDA(tvm::IRModule, tvm::Target)
+  37: tvm::codegen::CodeGenC::AddFunction(tvm::tir::PrimFunc const&)
+  36: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  35: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  34: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  33: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  32: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  31: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  30: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  29: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AllocateNode const*)
+  28: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  27: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  26: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  25: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  24: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  23: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  22: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  21: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  20: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  19: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  18: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  17: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::ForNode const*)
+  16: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::ForNode const*)
+  15: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  14: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::SeqStmtNode const*)
+  13: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  12: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  11: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  10: tvm::codegen::CodeGenCUDA::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  9: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::AttrStmtNode const*)
+  8: tvm::tir::StmtFunctor<void (tvm::tir::Stmt const&)>::VisitStmt(tvm::tir::Stmt const&)
+  7: tvm::codegen::CodeGenC::VisitStmt_(tvm::tir::BufferStoreNode const*)
+  6: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  5: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  4: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  3: tvm::codegen::CodeGenC::VisitExpr_(tvm::tir::BufferLoadNode const*, std::ostream&)
+  2: tvm::codegen::CodeGenC::PrintExpr[abi:cxx11](tvm::PrimExpr const&)
+  1: tvm::codegen::CodeGenC::PrintExpr(tvm::PrimExpr const&, std::ostream&)
+  0: tvm::codegen::CodeGenCUDA::VisitExpr_(tvm::tir::RampNode const*, std::ostream&)
+  File "/root/Ladder/artifact/baseline_framework/welder_tvm/src/target/source/codegen_cuda.cc", line 1058
+ValueError: Check failed: op->lanes <= 4 (8 vs. 4) : Ramp of more than 4 lanes is not allowed.
+result: 0.4375893175601959
+Fusion group created:  17 ['Dot_Add_137']
+Fusion gain: 0.09955492382869124ms
+Total run time:  222.87934374809265

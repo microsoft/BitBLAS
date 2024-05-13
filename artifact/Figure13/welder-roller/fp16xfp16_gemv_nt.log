@@ -1,23 +1,22 @@
-{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.08376319706439972
-{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.09011200070381165
-{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.08268799632787704
-{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B': 8}}}
-0.19909486174583435
-{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 8}}}
-0.11366400122642517
-{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.08455313742160797
-{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.46006855368614197
-{<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.3152639865875244
-{<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B': 8}}}
-0.5771946310997009
+{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'vectorize': {'A': 8, 'B': 8}}}
+0.08320000022649765
+{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'A': 8, 'B': 8}}}
+0.08994133025407791
+{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'A': 8, 'B': 8}}}
+0.08243200182914734
+{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'A': 2, 'B': 8}}}
+0.19865600764751434
+{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'A': 4, 'B': 8}}}
+0.11417599767446518
+{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'A': 8, 'B': 8}}}
+0.0846506655216217
+{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'B': 8}}}
+0.4589226543903351
+{<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B': 8}}}
+0.31480687856674194
+{<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B': 8}}}
+0.576853334903717
 best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
-  
   half normal_reduce_temp0[1];
   __shared__ half A_shared[4096];
   __shared__ half B_shared[8192];
@@ -66,42 +65,41 @@ best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, hal
 }
 
 
-top1: 0.08376319706439972 	top10: 0.08268799632787704
+top1: 0.08320000022649765 	top10: 0.08243200182914734
 --------------------------------------------------------------------------------
-best config: {<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-best latency: 0.08268799632787704
-{<Node, roller_matmul>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.3524608016014099
-{<Node, roller_matmul>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.3012607991695404
-{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.29713067412376404
-{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 8}}}
-0.3500373363494873
-{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.289792001247406
-{<Node, roller_matmul>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.5658624172210693
-{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B': 8}}}
-0.5589333176612854
-{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.289792001247406
-{<Node, roller_matmul>: {'block': [1, 112], 'thread': [1, 112], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.6562560200691223
-{<Node, roller_matmul>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-1.0067626237869263
-{<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.7174400091171265
-{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-1.1033600568771362
-{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.2821120023727417
-{<Node, roller_matmul>: {'block': [1, 224], 'thread': [1, 112], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B': 8}}}
-0.8722773194313049
-{<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B': 8}}}
-1.0007892847061157
+best config: {<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'A': 8, 'B': 8}}}
+best latency: 0.08243200182914734
+{<Node, roller_matmul>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'B': 8}}}
+0.3530240058898926
+{<Node, roller_matmul>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'B': 8}}}
+0.30182400345802307
+{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'A': 8, 'B': 8}}}
+0.29818880558013916
+{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'A': 4, 'B': 8}}}
+0.3495253324508667
+{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'vectorize': {'A': 8, 'B': 8}}}
+0.2889386713504791
+{<Node, roller_matmul>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'B': 8}}}
+0.5660672187805176
+{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'A': 2, 'B': 8}}}
+0.5585920214653015
+{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'A': 8, 'B': 8}}}
+0.28945067524909973
+{<Node, roller_matmul>: {'block': [1, 112], 'thread': [1, 112], 'rstep': [64], 'vectorize': {'B': 8}}}
+0.6560913920402527
+{<Node, roller_matmul>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'B': 8}}}
+1.00437331199646
+{<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B': 8}}}
+0.7147520184516907
+{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'B': 8}}}
+1.1016533374786377
+{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'A': 8, 'B': 8}}}
+0.28194132447242737
+{<Node, roller_matmul>: {'block': [1, 224], 'thread': [1, 112], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B': 8}}}
+0.8702293038368225
+{<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B': 8}}}
+0.9994239807128906
 best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
-  
   half normal_reduce_temp0[1];
   __shared__ half A_shared[4096];
   __shared__ half B_shared[4096];
@@ -150,30 +148,29 @@ best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, hal
 }
 
 
-top1: 0.3524608016014099 	top10: 0.2821120023727417
+top1: 0.3530240058898926 	top10: 0.28194132447242737
 --------------------------------------------------------------------------------
-best config: {<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-best latency: 0.2821120023727417
-{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.2918400168418884
-{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.3031040132045746
-{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.28910931944847107
-{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B': 8}}}
-0.6835200190544128
-{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 8}}}
-0.37324798107147217
-{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.32307198643684387
-{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
+best config: {<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'A': 8, 'B': 8}}}
+best latency: 0.28194132447242737
+{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'vectorize': {'A': 8, 'B': 8}}}
+0.29286399483680725
+{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'A': 8, 'B': 8}}}
+0.3020800054073334
+{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'A': 8, 'B': 8}}}
+0.2877439856529236
+{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'A': 2, 'B': 8}}}
+0.6816427111625671
+{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'A': 4, 'B': 8}}}
+0.372565358877182
+{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'A': 8, 'B': 8}}}
+0.323199987411499
+{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'B': 8}}}
 1.5889066457748413
-{<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-1.1037256717681885
-{<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B': 8}}}
-2.0334932804107666
+{<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B': 8}}}
+1.1007999181747437
+{<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B': 8}}}
+2.0303871631622314
 best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
-  
   half normal_reduce_temp0[1];
   __shared__ half A_shared[4096];
   __shared__ half B_shared[8192];
@@ -222,76 +219,82 @@ best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, hal
 }
 
 
-top1: 0.2918400168418884 	top10: 0.28910931944847107
+top1: 0.29286399483680725 	top10: 0.2877439856529236
 --------------------------------------------------------------------------------
-best config: {<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-best latency: 0.28910931944847107
-{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
+best config: {<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'A': 8, 'B': 8}}}
+best latency: 0.2877439856529236
+{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'vectorize': {'A': 8, 'B': 8}}}
+0.013516800478100777
+{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'A': 8, 'B': 8}}}
 0.013311999849975109
-{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.013311999849975109
-{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
-0.013311999849975109
-{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
+{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'A': 8, 'B': 8}}}
+0.013482666574418545
+{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'A': 8, 'B': 8}}}
 0.01860266737639904
-{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B': 8}}}
+{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'A': 4, 'B': 8}}}
 0.02730666659772396
-{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'A': 2, 'B': 8}}}
-0.0721919983625412
-{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
+{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'A': 2, 'B': 8}}}
+0.07185066491365433
+{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'B': 8}}}
 0.23500800132751465
-{<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B': 8}}}
-0.2613759934902191
-{<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': <NoRasterization>, 'step': [1, 2], 'vectorize': {'B': 8}}}
-0.48657068610191345
+{<Node, roller_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B': 8}}}
+0.2605348527431488
+{<Node, roller_matmul>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B': 8}}}
+0.4848639965057373
 best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
-  
   half normal_reduce_temp0[1];
-  __shared__ half A_shared[2048];
+  __shared__ half A_shared[4096];
   __shared__ half B_shared[8192];
-  half red_buf0[1];
+  __shared__ half red_buf0[128];
   normal_reduce_temp0[0] = __float2half_rn(0.000000e+00f);
-  for (int k_outer = 0; k_outer < 4; ++k_outer) {
+  for (int k_outer = 0; k_outer < 2; ++k_outer) {
     __syncthreads();
-    *(uint4*)(A_shared + ((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8))) = *(uint4*)(A + (((k_outer * 2048) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)));
-    *(uint4*)(A_shared + (((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 1024)) = *(uint4*)(A + ((((k_outer * 2048) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)) + 1024));
-    *(uint4*)(B_shared + ((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8))) = *(uint4*)(B + ((((((int)blockIdx.x) * 32768) + (k_outer * 2048)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)));
-    *(uint4*)(B_shared + (((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 1024)) = *(uint4*)(B + (((((((int)blockIdx.x) * 32768) + (k_outer * 2048)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)) + 1024));
-    *(uint4*)(B_shared + (((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 2048)) = *(uint4*)(B + (((((((int)blockIdx.x) * 32768) + (k_outer * 2048)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)) + 8192));
-    *(uint4*)(B_shared + (((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 3072)) = *(uint4*)(B + ((((((((int)blockIdx.x) * 32768) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 3072) >> 11) * 8192)) + (k_outer * 2048)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)) + 1024));
-    *(uint4*)(B_shared + (((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 4096)) = *(uint4*)(B + (((((((int)blockIdx.x) * 32768) + (k_outer * 2048)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)) + 16384));
-    *(uint4*)(B_shared + (((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 5120)) = *(uint4*)(B + ((((((((int)blockIdx.x) * 32768) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 5120) >> 11) * 8192)) + (k_outer * 2048)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)) + 1024));
-    *(uint4*)(B_shared + (((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 6144)) = *(uint4*)(B + (((((((int)blockIdx.x) * 32768) + (k_outer * 2048)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)) + 24576));
-    *(uint4*)(B_shared + (((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 7168)) = *(uint4*)(B + ((((((((int)blockIdx.x) * 32768) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 7168) >> 11) * 8192)) + (k_outer * 2048)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)) + 1024));
+    *(uint4*)(A_shared + ((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8))) = *(uint4*)(A + (((k_outer * 4096) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)));
+    *(uint4*)(A_shared + (((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 1024)) = *(uint4*)(A + ((((k_outer * 4096) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)) + 1024));
+    *(uint4*)(A_shared + (((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 2048)) = *(uint4*)(A + ((((k_outer * 4096) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)) + 2048));
+    *(uint4*)(A_shared + (((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 3072)) = *(uint4*)(A + ((((k_outer * 4096) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)) + 3072));
+    *(uint4*)(B_shared + ((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8))) = *(uint4*)(B + ((((((int)blockIdx.x) * 16384) + (k_outer * 4096)) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)));
+    *(uint4*)(B_shared + (((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 1024)) = *(uint4*)(B + (((((((int)blockIdx.x) * 16384) + (k_outer * 4096)) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)) + 1024));
+    *(uint4*)(B_shared + (((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 2048)) = *(uint4*)(B + (((((((int)blockIdx.x) * 16384) + (k_outer * 4096)) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)) + 2048));
+    *(uint4*)(B_shared + (((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 3072)) = *(uint4*)(B + (((((((int)blockIdx.x) * 16384) + (k_outer * 4096)) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)) + 3072));
+    *(uint4*)(B_shared + (((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 4096)) = *(uint4*)(B + (((((((int)blockIdx.x) * 16384) + (k_outer * 4096)) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)) + 8192));
+    *(uint4*)(B_shared + (((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 5120)) = *(uint4*)(B + ((((((((int)blockIdx.x) * 16384) + (((((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 5120) >> 12) * 8192)) + (k_outer * 4096)) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)) + 1024));
+    *(uint4*)(B_shared + (((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 6144)) = *(uint4*)(B + ((((((((int)blockIdx.x) * 16384) + (((((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 6144) >> 12) * 8192)) + (k_outer * 4096)) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)) + 2048));
+    *(uint4*)(B_shared + (((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 7168)) = *(uint4*)(B + ((((((((int)blockIdx.x) * 16384) + (((((((int)threadIdx.y) * 512) + (((int)threadIdx.x) * 8)) + 7168) >> 12) * 8192)) + (k_outer * 4096)) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.x) * 8)) + 3072));
     __syncthreads();
     for (int k_inner_outer = 0; k_inner_outer < 64; ++k_inner_outer) {
-      normal_reduce_temp0[0] = (normal_reduce_temp0[0] + (A_shared[((k_inner_outer * 32) + ((int)threadIdx.x))] * B_shared[(((((int)threadIdx.y) * 2048) + (k_inner_outer * 32)) + ((int)threadIdx.x))]));
+      normal_reduce_temp0[0] = (normal_reduce_temp0[0] + (A_shared[((k_inner_outer * 64) + ((int)threadIdx.x))] * B_shared[(((((int)threadIdx.y) * 4096) + (k_inner_outer * 64)) + ((int)threadIdx.x))]));
     }
   }
-  uint mask[1];
-  half t0[1];
-  red_buf0[0] = normal_reduce_temp0[0];
-  mask[0] = (__activemask() & ((uint)0 << ((uint)32 * ((uint)((int)threadIdx.y)))));
-  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 16, 32);
-  red_buf0[0] = (red_buf0[0] + t0[0]);
-  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 8, 32);
-  red_buf0[0] = (red_buf0[0] + t0[0]);
-  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 4, 32);
-  red_buf0[0] = (red_buf0[0] + t0[0]);
-  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 2, 32);
-  red_buf0[0] = (red_buf0[0] + t0[0]);
-  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 1, 32);
-  red_buf0[0] = (red_buf0[0] + t0[0]);
-  red_buf0[0] = __shfl_sync(mask[0], red_buf0[0], (((int)threadIdx.y) * 32), 32);
-  C[((((int)blockIdx.x) * 4) + ((int)threadIdx.y))] = red_buf0[0];
+  __syncthreads();
+  ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = normal_reduce_temp0[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 32)]));
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    half w_16_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 16)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_16_0;
+    half w_8_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 8)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_8_0;
+    half w_4_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 4)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_4_0;
+    half w_2_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 2)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_2_0;
+    half w_1_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 1)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_1_0;
+  }
+  __syncthreads();
+  C[((((int)blockIdx.x) * 2) + ((int)threadIdx.y))] = (half)(((volatile half*)red_buf0)[(((int)threadIdx.y) * 64)]);
 }
 
 
-top1: 0.013311999849975109 	top10: 0.013311999849975109
+top1: 0.013516800478100777 	top10: 0.013311999849975109
 --------------------------------------------------------------------------------
-best config: {<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A': 8, 'B': 8}}}
+best config: {<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'A': 8, 'B': 8}}}
 best latency: 0.013311999849975109
-1_8192_8192	0.08268799632787704
-1_28672_8192	0.2821120023727417
-1_8192_28672	0.28910931944847107
+1_8192_8192	0.08243200182914734
+1_28672_8192	0.28194132447242737
+1_8192_28672	0.2877439856529236
 1_1024_8192	0.013311999849975109

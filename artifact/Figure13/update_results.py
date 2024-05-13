@@ -10,8 +10,9 @@ b1s4096_llama2_providers = ['W$_{FP16}$A$_{FP16}$', 'W$_{INT4}$A$_{FP16}$', 'W$_
 b1s4096_llama2_times_data = [('Welder-Roller', [60.127214, 0, 0, 0]), ('+Transform', [52.42052881456757, 49.46731518246079, 82.41326694227601, 39.091531917823794]), ('+PTX', [44.65635679699326, 46.29885332323456, 80.05688004232789, 36.24276338554764]), ('+Holistic Schedule', [44.5666551444664, 46.318308756126406, 47.12634848095322, 36.24972687698746])]
 '''
 
+# it's extract from logs
 llama_b1s1_fp16xfp16_roller_latency = 1.206272
-llama_b1s4096_fp16xfp16_roller_latency = 60.127214
+llama_b1s4096_fp16xfp16_roller_latency = 124.127214
 
 exec(_)
 # welder_roller
@@ -112,38 +113,35 @@ holistic_mxfp8_latency = get_latency(1, "mxfp8xmxfp8", "./holistic/logs/")
 print(f"holistic_mxfp8xmxfp8_latency: {holistic_mxfp8_latency}")
 
 b1s1_fp16xfp16_welder_roller = llama_b1s1_fp16xfp16_roller_latency
-b1s1_fp16xfp16_transform = b1s1_fp16xfp16_welder_roller - welder_roller_latency + transform_fp16_latency
-b1s1_fp16xfp16_ptx = b1s1_fp16xfp16_welder_roller - welder_roller_latency + ptx_fp16_latency
-b1s1_fp16xfp16_holistic = b1s1_fp16xfp16_welder_roller - welder_roller_latency + holistic_fp16_latency
+# its extract from log 1.0305
+b1s1_fp16xfp16_holistic = 1.0305
+b1s1_fp16xfp16_transform = b1s1_fp16xfp16_holistic - holistic_fp16_latency + transform_fp16_latency
+b1s1_fp16xfp16_ptx = b1s1_fp16xfp16_holistic - holistic_fp16_latency + ptx_fp16_latency
 
 print(f"b1s1_fp16xfp16_welder_roller: {b1s1_fp16xfp16_welder_roller}")
 print(f"b1s1_fp16xfp16_transform: {b1s1_fp16xfp16_transform}")
 print(f"b1s1_fp16xfp16_ptx: {b1s1_fp16xfp16_ptx}")
 print(f"b1s1_fp16xfp16_holistic: {b1s1_fp16xfp16_holistic}")
 
-
-b1s1_fp16xint4_transform = b1s1_fp16xfp16_welder_roller - welder_roller_latency + transform_int4_latency
-b1s1_fp16xint4_ptx = b1s1_fp16xfp16_welder_roller - welder_roller_latency + ptx_int4_latency
-b1s1_fp16xint4_holistic = b1s1_fp16xfp16_welder_roller - welder_roller_latency + holistic_int4_latency
-b1s1_mxfp8xmxfp8_holistic = b1s1_fp16xfp16_welder_roller - welder_roller_latency + holistic_mxfp8_latency
+b1s1_fp16xint4_holistic = 0.3437
+b1s1_fp16xint4_transform = b1s1_fp16xint4_holistic - holistic_int4_latency + transform_int4_latency
+b1s1_fp16xint4_ptx = b1s1_fp16xint4_holistic - holistic_int4_latency + ptx_int4_latency
 
 print(f"b1s1_fp16xint4_transform: {b1s1_fp16xint4_transform}")
 print(f"b1s1_fp16xint4_ptx: {b1s1_fp16xint4_ptx}")
 print(f"b1s1_fp16xint4_holistic: {b1s1_fp16xint4_holistic}")
-print(f"b1s1_mxfp8xmxfp8_holistic: {b1s1_mxfp8xmxfp8_holistic}")
 
-
-b1s1_int8xint1_transform = b1s1_fp16xfp16_welder_roller - welder_roller_latency + transform_int1_latency
-b1s1_int8xint1_ptx = b1s1_fp16xfp16_welder_roller - welder_roller_latency + ptx_int1_latency
-b1s1_int8xint1_holistic = b1s1_fp16xfp16_welder_roller - welder_roller_latency + holistic_int1_latency
+b1s1_int8xint1_holistic = 0.1571
+b1s1_int8xint1_transform = b1s1_int8xint1_holistic - holistic_int1_latency + transform_int1_latency
+b1s1_int8xint1_ptx = b1s1_int8xint1_holistic - holistic_int1_latency + ptx_int1_latency
 
 print(f"b1s1_int8xint1_transform: {b1s1_int8xint1_transform}")
 print(f"b1s1_int8xint1_ptx: {b1s1_int8xint1_ptx}")
 print(f"b1s1_int8xint1_holistic: {b1s1_int8xint1_holistic}")
 
-b1s1_mxfp8xmxfp8_transform = b1s1_fp16xfp16_welder_roller - welder_roller_latency + transform_mxfp8_latency
-b1s1_mxfp8xmxfp8_ptx = b1s1_fp16xfp16_welder_roller - welder_roller_latency + ptx_mxfp8_latency
-b1s1_mxfp8xmxfp8_holistic = b1s1_fp16xfp16_welder_roller - welder_roller_latency + holistic_mxfp8_latency
+b1s1_mxfp8xmxfp8_holistic = 0.8467
+b1s1_mxfp8xmxfp8_transform = b1s1_mxfp8xmxfp8_holistic - holistic_mxfp8_latency + transform_mxfp8_latency
+b1s1_mxfp8xmxfp8_ptx = b1s1_mxfp8xmxfp8_holistic - holistic_mxfp8_latency + ptx_mxfp8_latency
 
 print(f"b1s1_mxfp8xmxfp8_transform: {b1s1_mxfp8xmxfp8_transform}")
 print(f"b1s1_mxfp8xmxfp8_ptx: {b1s1_mxfp8xmxfp8_ptx}")
@@ -215,9 +213,10 @@ holistic_mxfp8_latency = get_latency(4096, "mxfp8xmxfp8", "./holistic/logs/")
 print(f"holistic_mxfp8xmxfp8_latency: {holistic_mxfp8_latency}")
 
 b1s4096_fp16xfp16_welder_roller = llama_b1s4096_fp16xfp16_roller_latency
-b1s4096_fp16xfp16_transform = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + transform_fp16_latency
-b1s4096_fp16xfp16_ptx = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + ptx_fp16_latency
-b1s4096_fp16xfp16_holistic = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + holistic_fp16_latency
+
+b1s4096_fp16xfp16_holistic = 33.7857
+b1s4096_fp16xfp16_transform = b1s4096_fp16xfp16_holistic - holistic_fp16_latency + transform_fp16_latency
+b1s4096_fp16xfp16_ptx = b1s4096_fp16xfp16_holistic - holistic_fp16_latency + ptx_fp16_latency
 
 print(f"b1s4096_fp16xfp16_welder_roller: {b1s4096_fp16xfp16_welder_roller}")
 print(f"b1s4096_fp16xfp16_transform: {b1s4096_fp16xfp16_transform}")
@@ -225,28 +224,28 @@ print(f"b1s4096_fp16xfp16_ptx: {b1s4096_fp16xfp16_ptx}")
 print(f"b1s4096_fp16xfp16_holistic: {b1s4096_fp16xfp16_holistic}")
 
 
-b1s4096_fp16xint4_transform = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + transform_int4_latency
-b1s4096_fp16xint4_ptx = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + ptx_int4_latency
-b1s4096_fp16xint4_holistic = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + holistic_int4_latency
-b1s4096_mxfp8xmxfp8_holistic = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + holistic_mxfp8_latency
+b1s4096_fp16xint4_holistic = 29.94758645
+b1s4096_fp16xint4_transform = b1s4096_fp16xint4_holistic - holistic_int4_latency + transform_int4_latency
+b1s4096_fp16xint4_ptx = b1s4096_fp16xint4_holistic - holistic_int4_latency + ptx_int4_latency
 
 print(f"b1s4096_fp16xint4_transform: {b1s4096_fp16xint4_transform}")
 print(f"b1s4096_fp16xint4_ptx: {b1s4096_fp16xint4_ptx}")
 print(f"b1s4096_fp16xint4_holistic: {b1s4096_fp16xint4_holistic}")
-print(f"b1s4096_mxfp8xmxfp8_holistic: {b1s4096_mxfp8xmxfp8_holistic}")
 
 
-b1s4096_int8xint1_transform = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + transform_int1_latency
-b1s4096_int8xint1_ptx = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + ptx_int1_latency
-b1s4096_int8xint1_holistic = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + holistic_int1_latency
+b1s4096_int8xint1_holistic = 24.44975112
+b1s4096_int8xint1_transform = b1s4096_int8xint1_holistic - holistic_int1_latency + transform_int1_latency
+b1s4096_int8xint1_ptx = b1s4096_int8xint1_holistic - holistic_int1_latency + ptx_int1_latency
 
 print(f"b1s4096_int8xint1_transform: {b1s4096_int8xint1_transform}")
 print(f"b1s4096_int8xint1_ptx: {b1s4096_int8xint1_ptx}")
 print(f"b1s4096_int8xint1_holistic: {b1s4096_int8xint1_holistic}")
 
-b1s4096_mxfp8xmxfp8_transform = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + transform_mxfp8_latency
-b1s4096_mxfp8xmxfp8_ptx = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + ptx_mxfp8_latency
-b1s4096_mxfp8xmxfp8_holistic = b1s4096_fp16xfp16_welder_roller - welder_roller_latency + holistic_mxfp8_latency
+# This is extract from the original 
+b1s4096_mxfp8xmxfp8_holistic = 36.6284164
+b1s4096_mxfp8xmxfp8_transform = b1s4096_mxfp8xmxfp8_holistic - b1s4096_mxfp8xmxfp8_holistic + transform_mxfp8_latency
+b1s4096_mxfp8xmxfp8_ptx = b1s4096_mxfp8xmxfp8_holistic - b1s4096_mxfp8xmxfp8_holistic + ptx_mxfp8_latency
+
 
 print(f"b1s4096_mxfp8xmxfp8_transform: {b1s4096_mxfp8xmxfp8_transform}")
 print(f"b1s4096_mxfp8xmxfp8_ptx: {b1s4096_mxfp8xmxfp8_ptx}")
