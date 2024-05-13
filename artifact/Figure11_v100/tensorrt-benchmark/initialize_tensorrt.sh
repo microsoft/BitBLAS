@@ -27,8 +27,6 @@ convert $MODEL_PATH/bloom_176b/bloom-176b_layer1_seq1_bs1/model.onnx $MODEL_PATH
 
 convert $MODEL_PATH/bloom_176b/bloom-176b_layer1_seq1_bs32/model.onnx $MODEL_PATH/bloom_176b/bloom-176b_layer1_seq1_bs32/model.trt
 
-convert $MODEL_PATH/bloom_176b/bloom-176b_layer1_seq4096_bs1/model.onnx $MODEL_PATH/bloom_176b/bloom-176b_layer1_seq4096_bs1/model.trt
-
 convert $MODEL_PATH/llama_70b/llama2_70b_layer1_seq1_bs1/model.onnx $MODEL_PATH/llama_70b/llama2_70b_layer1_seq1_bs1/model.trt
 
 convert $MODEL_PATH/llama_70b/llama2_70b_layer1_seq1_bs32/model.onnx $MODEL_PATH/llama_70b/llama2_70b_layer1_seq1_bs32/model.trt

@@ -1,0 +1,2 @@
+Measure the memory for llama batch 32 seq 1 under pytorch
+{'llama_pytorch_32_1': 2521}
