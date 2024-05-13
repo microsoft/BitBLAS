@@ -214,6 +214,7 @@ def compute_ladder_quant_linear_mxfp(attrs, inputs, output_type):
     bits = int(attrs["bits"])
     format = str(attrs["format"])
     assert format == "mxfp"
+    A_dtype = A.dtype
 
     n_float_per_i8 = 8 // bits
     K_size = A.shape[-2] if transpose_a else A.shape[-1]
@@ -248,7 +249,7 @@ def compute_ladder_quant_linear_mxfp(attrs, inputs, output_type):
         m_f8 = e_f8 & tir.const(2, "uint32")
         return tir.reinterpret('float16', (e_f16 | (s << tir.const(8, "uint32"))) << tir.const(7, "uint32") | m_f8)
 
-    if M == 1:
+    if A_dtype == "float32":
         decode_func = _tir_u8_to_f8_to_float32
     else:
         decode_func = _tir_u8_to_f8_to_bfloat
