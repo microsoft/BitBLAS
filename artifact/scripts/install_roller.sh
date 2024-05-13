@@ -10,7 +10,7 @@ pip3 install --user numpy decorator attrs
 
 apt-get install -y llvm-10
 
-git clone --branch roller https://github.com/LeiWang1999/tvm ./baseline_framework/roller_tvm --recursive
+git clone --branch welder https://github.com/nox-410/tvm ./baseline_framework/roller_tvm --recursive
 
 cd ./baseline_framework/roller_tvm
 mkdir build
