@@ -1,0 +1,258 @@
+2024-05-13 10:27:54 [BitBLAS:DEBUG]: Apply config {'block': [64, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:54 [BitBLAS:DEBUG]: Apply config {'block': [128, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:54 [BitBLAS:DEBUG]: Apply config {'block': [128, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:54 [BitBLAS:DEBUG]: Apply config {'block': [256, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [64, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [128, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [32, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [128, 32], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [64, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [256, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [32, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [64, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [32, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [16, 128], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [128, 16], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [16, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [64, 16], 'thread': [16, 8], 'rstep': [256], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [32, 256], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [256, 32], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:27:55 [BitBLAS:DEBUG]: Apply config {'block': [16, 32], 'thread': [8, 16], 'rstep': [512], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:17 [BitBLAS:INFO]: Evaluation with config {'block': [64, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:17 [BitBLAS:INFO]: Time cost of this config: 31.451 ms
+2024-05-13 10:28:17 [BitBLAS:INFO]: Evaluation with config {'block': [128, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:17 [BitBLAS:INFO]: Time cost of this config: 47.801 ms
+2024-05-13 10:28:18 [BitBLAS:INFO]: Evaluation with config {'block': [128, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:18 [BitBLAS:INFO]: Time cost of this config: 20.674 ms
+2024-05-13 10:28:18 [BitBLAS:INFO]: Evaluation with config {'block': [256, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:18 [BitBLAS:INFO]: Time cost of this config: 43.003 ms
+2024-05-13 10:28:18 [BitBLAS:INFO]: Evaluation with config {'block': [64, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:18 [BitBLAS:INFO]: Time cost of this config: 30.270 ms
+2024-05-13 10:28:18 [BitBLAS:INFO]: Evaluation with config {'block': [128, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:18 [BitBLAS:INFO]: Time cost of this config: 22.767 ms
+2024-05-13 10:28:18 [BitBLAS:INFO]: Evaluation with config {'block': [32, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:18 [BitBLAS:INFO]: Time cost of this config: 55.736 ms
+2024-05-13 10:28:18 [BitBLAS:INFO]: Evaluation with config {'block': [128, 32], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:18 [BitBLAS:INFO]: Time cost of this config: 15.604 ms
+2024-05-13 10:28:18 [BitBLAS:INFO]: Evaluation with config {'block': [64, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:18 [BitBLAS:INFO]: Time cost of this config: 13.025 ms
+2024-05-13 10:28:18 [BitBLAS:INFO]: Evaluation with config {'block': [256, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:18 [BitBLAS:INFO]: Time cost of this config: 33.166 ms
+2024-05-13 10:28:19 [BitBLAS:INFO]: Evaluation with config {'block': [32, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:19 [BitBLAS:INFO]: Time cost of this config: 50.604 ms
+2024-05-13 10:28:19 [BitBLAS:INFO]: Evaluation with config {'block': [64, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:19 [BitBLAS:INFO]: Time cost of this config: 30.099 ms
+2024-05-13 10:28:19 [BitBLAS:INFO]: Evaluation with config {'block': [32, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:19 [BitBLAS:INFO]: Time cost of this config: 51.712 ms
+2024-05-13 10:28:19 [BitBLAS:INFO]: Evaluation with config {'block': [16, 128], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:19 [BitBLAS:INFO]: Time cost of this config: 96.043 ms
+2024-05-13 10:28:19 [BitBLAS:INFO]: Evaluation with config {'block': [128, 16], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:19 [BitBLAS:INFO]: Time cost of this config: 32.318 ms
+2024-05-13 10:28:20 [BitBLAS:INFO]: Evaluation with config {'block': [16, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:20 [BitBLAS:INFO]: Time cost of this config: 91.120 ms
+2024-05-13 10:28:20 [BitBLAS:INFO]: Evaluation with config {'block': [64, 16], 'thread': [16, 8], 'rstep': [256], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:20 [BitBLAS:INFO]: Time cost of this config: 41.125 ms
+2024-05-13 10:28:20 [BitBLAS:INFO]: Evaluation with config {'block': [32, 256], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:20 [BitBLAS:INFO]: Time cost of this config: 56.213 ms
+2024-05-13 10:28:20 [BitBLAS:INFO]: Evaluation with config {'block': [256, 32], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:20 [BitBLAS:INFO]: Time cost of this config: 18.384 ms
+2024-05-13 10:28:21 [BitBLAS:INFO]: Evaluation with config {'block': [16, 32], 'thread': [8, 16], 'rstep': [512], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:21 [BitBLAS:INFO]: Time cost of this config: 92.318 ms
+[BitBLAS] The best latency of top 1 is 31.451 ms
+[BitBLAS] The best latency of top 20 is 13.025 ms
+Time cost of Dlight default schedule: 5200.000 ms
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [128, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [64, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [128, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [128, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [256, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [64, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [32, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [128, 32], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [64, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [256, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [32, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [64, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [32, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [16, 128], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [32, 256], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [256, 32], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [128, 16], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [16, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:23 [BitBLAS:DEBUG]: Apply config {'block': [64, 16], 'thread': [16, 8], 'rstep': [256], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:24 [BitBLAS:DEBUG]: Apply config {'block': [16, 32], 'thread': [8, 16], 'rstep': [512], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:47 [BitBLAS:INFO]: Evaluation with config {'block': [128, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:47 [BitBLAS:INFO]: Time cost of this config: 257.492 ms
+2024-05-13 10:28:51 [BitBLAS:INFO]: Evaluation with config {'block': [64, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:51 [BitBLAS:INFO]: Time cost of this config: 1096.706 ms
+2024-05-13 10:28:53 [BitBLAS:INFO]: Evaluation with config {'block': [128, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:53 [BitBLAS:INFO]: Time cost of this config: 431.403 ms
+2024-05-13 10:28:56 [BitBLAS:INFO]: Evaluation with config {'block': [128, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:56 [BitBLAS:INFO]: Time cost of this config: 649.139 ms
+2024-05-13 10:28:58 [BitBLAS:INFO]: Evaluation with config {'block': [256, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:28:58 [BitBLAS:INFO]: Time cost of this config: 528.947 ms
+2024-05-13 10:29:01 [BitBLAS:INFO]: Evaluation with config {'block': [64, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:01 [BitBLAS:INFO]: Time cost of this config: 631.091 ms
+2024-05-13 10:29:01 [BitBLAS:INFO]: Evaluation with config {'block': [32, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:01 [BitBLAS:INFO]: Time cost of this config: 159.631 ms
+2024-05-13 10:29:08 [BitBLAS:INFO]: Evaluation with config {'block': [128, 32], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:08 [BitBLAS:INFO]: Time cost of this config: 1776.130 ms
+2024-05-13 10:29:09 [BitBLAS:INFO]: Evaluation with config {'block': [64, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:09 [BitBLAS:INFO]: Time cost of this config: 83.271 ms
+2024-05-13 10:29:13 [BitBLAS:INFO]: Evaluation with config {'block': [256, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:13 [BitBLAS:INFO]: Time cost of this config: 979.583 ms
+2024-05-13 10:29:14 [BitBLAS:INFO]: Evaluation with config {'block': [32, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:14 [BitBLAS:INFO]: Time cost of this config: 414.052 ms
+2024-05-13 10:29:15 [BitBLAS:INFO]: Evaluation with config {'block': [64, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:15 [BitBLAS:INFO]: Time cost of this config: 236.212 ms
+2024-05-13 10:29:17 [BitBLAS:INFO]: Evaluation with config {'block': [32, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:17 [BitBLAS:INFO]: Time cost of this config: 391.525 ms
+2024-05-13 10:29:25 [BitBLAS:INFO]: Evaluation with config {'block': [16, 128], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:25 [BitBLAS:INFO]: Time cost of this config: 1984.018 ms
+2024-05-13 10:29:37 [BitBLAS:INFO]: Evaluation with config {'block': [32, 256], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:37 [BitBLAS:INFO]: Time cost of this config: 3019.356 ms
+2024-05-13 10:29:37 [BitBLAS:INFO]: Evaluation with config {'block': [256, 32], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:37 [BitBLAS:INFO]: Time cost of this config: 129.853 ms
+2024-05-13 10:29:38 [BitBLAS:INFO]: Evaluation with config {'block': [128, 16], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:38 [BitBLAS:INFO]: Time cost of this config: 240.086 ms
+2024-05-13 10:29:41 [BitBLAS:INFO]: Evaluation with config {'block': [16, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:41 [BitBLAS:INFO]: Time cost of this config: 667.733 ms
+2024-05-13 10:29:42 [BitBLAS:INFO]: Evaluation with config {'block': [64, 16], 'thread': [16, 8], 'rstep': [256], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:42 [BitBLAS:INFO]: Time cost of this config: 312.542 ms
+2024-05-13 10:29:45 [BitBLAS:INFO]: Evaluation with config {'block': [16, 32], 'thread': [8, 16], 'rstep': [512], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:45 [BitBLAS:INFO]: Time cost of this config: 704.677 ms
+[BitBLAS] The best latency of top 1 is 257.492 ms
+[BitBLAS] The best latency of top 20 is 83.271 ms
+Time cost of Dlight default schedule: 5200.000 ms
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [128, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [128, 112], 'thread': [16, 8], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [128, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [64, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [256, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [128, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [64, 112], 'thread': [8, 16], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [128, 224], 'thread': [8, 16], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [128, 56], 'thread': [16, 8], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 8}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [256, 112], 'thread': [16, 8], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [64, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [64, 56], 'thread': [16, 8], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 8}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [128, 32], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [32, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:50 [BitBLAS:DEBUG]: Apply config {'block': [256, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:51 [BitBLAS:DEBUG]: Apply config {'block': [64, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:51 [BitBLAS:DEBUG]: Apply config {'block': [32, 112], 'thread': [8, 16], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:51 [BitBLAS:DEBUG]: Apply config {'block': [64, 224], 'thread': [8, 16], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:29:51 [BitBLAS:DEBUG]: Apply config {'block': [128, 28], 'thread': [32, 4], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 4}}
+2024-05-13 10:29:51 [BitBLAS:DEBUG]: Apply config {'block': [256, 56], 'thread': [32, 4], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 8}}
+2024-05-13 10:30:20 [BitBLAS:INFO]: Evaluation with config {'block': [128, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:30:20 [BitBLAS:INFO]: Time cost of this config: 855.728 ms
+2024-05-13 10:30:22 [BitBLAS:INFO]: Evaluation with config {'block': [128, 112], 'thread': [16, 8], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:30:22 [BitBLAS:INFO]: Time cost of this config: 358.141 ms
+2024-05-13 10:30:23 [BitBLAS:INFO]: Evaluation with config {'block': [128, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:30:23 [BitBLAS:INFO]: Time cost of this config: 342.801 ms
+2024-05-13 10:30:25 [BitBLAS:INFO]: Evaluation with config {'block': [64, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:30:25 [BitBLAS:INFO]: Time cost of this config: 413.897 ms
+2024-05-13 10:30:32 [BitBLAS:INFO]: Evaluation with config {'block': [256, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:30:32 [BitBLAS:INFO]: Time cost of this config: 1918.609 ms
+2024-05-13 10:30:42 [BitBLAS:INFO]: Evaluation with config {'block': [128, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:30:42 [BitBLAS:INFO]: Time cost of this config: 2506.863 ms
+2024-05-13 10:30:46 [BitBLAS:INFO]: Evaluation with config {'block': [64, 112], 'thread': [8, 16], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:30:46 [BitBLAS:INFO]: Time cost of this config: 991.672 ms
+2024-05-13 10:30:57 [BitBLAS:INFO]: Evaluation with config {'block': [128, 224], 'thread': [8, 16], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:30:57 [BitBLAS:INFO]: Time cost of this config: 2616.594 ms
+2024-05-13 10:30:59 [BitBLAS:INFO]: Evaluation with config {'block': [128, 56], 'thread': [16, 8], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 8}}
+2024-05-13 10:30:59 [BitBLAS:INFO]: Time cost of this config: 531.940 ms
+2024-05-13 10:31:02 [BitBLAS:INFO]: Evaluation with config {'block': [256, 112], 'thread': [16, 8], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:31:02 [BitBLAS:INFO]: Time cost of this config: 704.136 ms
+2024-05-13 10:31:03 [BitBLAS:INFO]: Evaluation with config {'block': [64, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:31:03 [BitBLAS:INFO]: Time cost of this config: 314.681 ms
+2024-05-13 10:31:15 [BitBLAS:INFO]: Evaluation with config {'block': [64, 56], 'thread': [16, 8], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 8}}
+2024-05-13 10:31:15 [BitBLAS:INFO]: Time cost of this config: 2956.822 ms
+2024-05-13 10:31:17 [BitBLAS:INFO]: Evaluation with config {'block': [128, 32], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:31:17 [BitBLAS:INFO]: Time cost of this config: 547.926 ms
+2024-05-13 10:31:44 [BitBLAS:INFO]: Evaluation with config {'block': [32, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:31:44 [BitBLAS:INFO]: Time cost of this config: 6857.896 ms
+2024-05-13 10:31:45 [BitBLAS:INFO]: Evaluation with config {'block': [256, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:31:45 [BitBLAS:INFO]: Time cost of this config: 277.812 ms
+2024-05-13 10:31:48 [BitBLAS:INFO]: Evaluation with config {'block': [64, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:31:48 [BitBLAS:INFO]: Time cost of this config: 654.669 ms
+2024-05-13 10:31:53 [BitBLAS:INFO]: Evaluation with config {'block': [32, 112], 'thread': [8, 16], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:31:53 [BitBLAS:INFO]: Time cost of this config: 1182.553 ms
+2024-05-13 10:31:55 [BitBLAS:INFO]: Evaluation with config {'block': [64, 224], 'thread': [8, 16], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:31:55 [BitBLAS:INFO]: Time cost of this config: 596.311 ms
+2024-05-13 10:31:58 [BitBLAS:INFO]: Evaluation with config {'block': [128, 28], 'thread': [32, 4], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 4}}
+2024-05-13 10:31:58 [BitBLAS:INFO]: Time cost of this config: 588.400 ms
+2024-05-13 10:31:59 [BitBLAS:INFO]: Evaluation with config {'block': [256, 56], 'thread': [32, 4], 'rstep': [128], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 8}}
+2024-05-13 10:31:59 [BitBLAS:INFO]: Time cost of this config: 300.275 ms
+[BitBLAS] The best latency of top 1 is 855.728 ms
+[BitBLAS] The best latency of top 20 is 277.812 ms
+Time cost of Dlight default schedule: 5200.000 ms
+2024-05-13 10:32:03 [BitBLAS:DEBUG]: Apply config {'block': [128, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:03 [BitBLAS:DEBUG]: Apply config {'block': [64, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:03 [BitBLAS:DEBUG]: Apply config {'block': [128, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:03 [BitBLAS:DEBUG]: Apply config {'block': [128, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [256, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [64, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [32, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [128, 32], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [64, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [256, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [32, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [64, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [32, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [16, 128], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [32, 256], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [256, 32], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [128, 16], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [16, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [64, 16], 'thread': [16, 8], 'rstep': [256], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:04 [BitBLAS:DEBUG]: Apply config {'block': [16, 32], 'thread': [8, 16], 'rstep': [512], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:30 [BitBLAS:INFO]: Evaluation with config {'block': [128, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:30 [BitBLAS:INFO]: Time cost of this config: 834.963 ms
+2024-05-13 10:32:36 [BitBLAS:INFO]: Evaluation with config {'block': [64, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:36 [BitBLAS:INFO]: Time cost of this config: 1648.813 ms
+2024-05-13 10:32:40 [BitBLAS:INFO]: Evaluation with config {'block': [128, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:40 [BitBLAS:INFO]: Time cost of this config: 863.655 ms
+2024-05-13 10:32:58 [BitBLAS:INFO]: Evaluation with config {'block': [128, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:32:58 [BitBLAS:INFO]: Time cost of this config: 4587.701 ms
+2024-05-13 10:33:13 [BitBLAS:INFO]: Evaluation with config {'block': [256, 128], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:33:13 [BitBLAS:INFO]: Time cost of this config: 3807.315 ms
+2024-05-13 10:33:17 [BitBLAS:INFO]: Evaluation with config {'block': [64, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:33:17 [BitBLAS:INFO]: Time cost of this config: 1015.349 ms
+2024-05-13 10:33:32 [BitBLAS:INFO]: Evaluation with config {'block': [32, 128], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:33:32 [BitBLAS:INFO]: Time cost of this config: 3583.917 ms
+2024-05-13 10:34:10 [BitBLAS:INFO]: Evaluation with config {'block': [128, 32], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:34:10 [BitBLAS:INFO]: Time cost of this config: 9636.996 ms
+2024-05-13 10:34:22 [BitBLAS:INFO]: Evaluation with config {'block': [64, 256], 'thread': [8, 16], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:34:22 [BitBLAS:INFO]: Time cost of this config: 2863.379 ms
+2024-05-13 10:34:23 [BitBLAS:INFO]: Evaluation with config {'block': [256, 64], 'thread': [16, 8], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:34:23 [BitBLAS:INFO]: Time cost of this config: 310.178 ms
+2024-05-13 10:34:34 [BitBLAS:INFO]: Evaluation with config {'block': [32, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:34:34 [BitBLAS:INFO]: Time cost of this config: 2657.825 ms
+2024-05-13 10:34:58 [BitBLAS:INFO]: Evaluation with config {'block': [64, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:34:58 [BitBLAS:INFO]: Time cost of this config: 6022.641 ms
+2024-05-13 10:35:03 [BitBLAS:INFO]: Evaluation with config {'block': [32, 32], 'thread': [16, 8], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:35:03 [BitBLAS:INFO]: Time cost of this config: 1389.799 ms
+2024-05-13 10:35:57 [BitBLAS:INFO]: Evaluation with config {'block': [16, 128], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:35:57 [BitBLAS:INFO]: Time cost of this config: 13453.307 ms
+2024-05-13 10:36:40 [BitBLAS:INFO]: Evaluation with config {'block': [32, 256], 'thread': [4, 32], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:36:40 [BitBLAS:INFO]: Time cost of this config: 10621.981 ms
+2024-05-13 10:36:43 [BitBLAS:INFO]: Evaluation with config {'block': [256, 32], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:36:43 [BitBLAS:INFO]: Time cost of this config: 772.489 ms
+2024-05-13 10:36:48 [BitBLAS:INFO]: Evaluation with config {'block': [128, 16], 'thread': [32, 4], 'rstep': [128], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:36:48 [BitBLAS:INFO]: Time cost of this config: 1252.898 ms
+2024-05-13 10:37:29 [BitBLAS:INFO]: Evaluation with config {'block': [16, 64], 'thread': [8, 16], 'rstep': [256], 'step': [1, 4], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:37:29 [BitBLAS:INFO]: Time cost of this config: 10189.889 ms
+2024-05-13 10:37:33 [BitBLAS:INFO]: Evaluation with config {'block': [64, 16], 'thread': [16, 8], 'rstep': [256], 'step': [4, 1], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:37:33 [BitBLAS:INFO]: Time cost of this config: 1112.119 ms
+2024-05-13 10:37:43 [BitBLAS:INFO]: Evaluation with config {'block': [16, 32], 'thread': [8, 16], 'rstep': [512], 'vectorize': {'A': 16, 'B': 16}}
+2024-05-13 10:37:43 [BitBLAS:INFO]: Time cost of this config: 2482.148 ms
+[BitBLAS] The best latency of top 1 is 834.963 ms
+[BitBLAS] The best latency of top 20 is 310.178 ms
+Time cost of Dlight default schedule: 5200.000 ms
+PrimFunc                     Input Arguments              BitBLAS Top20 Tune Time      BitBLAS Top1 Latency         BitBLAS Top20 Latency        DefaultDLight Tune Time      DefaultDLight Latency        
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+matmul_nt                    4096-1024-8192-int8-int8-int32 27.353771448135376 s        31.451 ms                    13.025 ms                    13.14                        5.200e+03 ms                 
+matmul_nt                    4096-8192-8192-int8-int8-int32 83.67056846618652 s         257.492 ms                   83.271 ms                    13.14                        5.200e+03 ms                 
+matmul_nt                    4096-28672-8192-int8-int8-int32 132.67596578598022 s        855.728 ms                   277.812 ms                   13.14                        5.200e+03 ms                 
+matmul_nt                    4096-8192-28672-int8-int8-int32 343.5226619243622 s         834.963 ms                   310.178 ms                   13.14                        5.200e+03 ms                 

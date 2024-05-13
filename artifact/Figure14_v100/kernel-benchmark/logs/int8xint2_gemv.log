@@ -1,0 +1,18 @@
+[BitBLAS] The best latency of top 1 is 0.008 ms
+[BitBLAS] The best latency of top 20 is 0.007 ms
+Time cost of Dlight default schedule: 0.011 ms
+[BitBLAS] The best latency of top 1 is 0.025 ms
+[BitBLAS] The best latency of top 20 is 0.024 ms
+Time cost of Dlight default schedule: 0.040 ms
+[BitBLAS] The best latency of top 1 is 0.072 ms
+[BitBLAS] The best latency of top 20 is 0.071 ms
+Time cost of Dlight default schedule: 0.122 ms
+[BitBLAS] The best latency of top 1 is 0.072 ms
+[BitBLAS] The best latency of top 20 is 0.072 ms
+Time cost of Dlight default schedule: 0.126 ms
+PrimFunc                     Input Arguments              BitBLAS Top20 Tune Time      BitBLAS Top1 Latency         BitBLAS Top20 Latency        DefaultDLight Tune Time      DefaultDLight Latency        
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+matmul_nt_dequantize_b       1-1024-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 11.136311292648315 s        0.008 ms                     0.007 ms                     0.6795487403869629           1.065e-02 ms                 
+matmul_nt_dequantize_b       1-8192-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 6.724746465682983 s         0.025 ms                     0.024 ms                     0.6989235877990723           4.034e-02 ms                 
+matmul_nt_dequantize_b       1-28672-8192-int8-int8-int32-2-int8-uint-False-False--1-True-False 8.411926031112671 s         0.072 ms                     0.071 ms                     0.6972360610961914           1.225e-01 ms                 
+matmul_nt_dequantize_b       1-8192-28672-int8-int8-int32-2-int8-uint-False-False--1-True-False 6.970301628112793 s         0.072 ms                     0.072 ms                     0.700249433517456            1.264e-01 ms                 

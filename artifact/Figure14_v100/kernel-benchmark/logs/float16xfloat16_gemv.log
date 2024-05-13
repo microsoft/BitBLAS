@@ -1,0 +1,18 @@
+[BitBLAS] The best latency of top 1 is 0.027 ms
+[BitBLAS] The best latency of top 20 is 0.024 ms
+Time cost of Dlight default schedule: 5200.000 ms
+[BitBLAS] The best latency of top 1 is 0.158 ms
+[BitBLAS] The best latency of top 20 is 0.155 ms
+Time cost of Dlight default schedule: 5200.000 ms
+[BitBLAS] The best latency of top 1 is 0.542 ms
+[BitBLAS] The best latency of top 20 is 0.530 ms
+Time cost of Dlight default schedule: 5200.000 ms
+[BitBLAS] The best latency of top 1 is 0.539 ms
+[BitBLAS] The best latency of top 20 is 0.535 ms
+Time cost of Dlight default schedule: 5200.000 ms
+PrimFunc                     Input Arguments              BitBLAS Top20 Tune Time      BitBLAS Top1 Latency         BitBLAS Top20 Latency        DefaultDLight Tune Time      DefaultDLight Latency        
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+matmul_nt                    1-1024-8192-float16-float16   11.724999189376831 s        0.027 ms                     0.024 ms                     13.14                        5.200e+03 ms                 
+matmul_nt                    1-8192-8192-float16-float16   12.406925916671753 s        0.158 ms                     0.155 ms                     13.14                        5.200e+03 ms                 
+matmul_nt                    1-28672-8192-float16-float16  20.12600016593933 s         0.542 ms                     0.530 ms                     13.14                        5.200e+03 ms                 
+matmul_nt                    1-8192-28672-float16-float16  15.028173208236694 s        0.539 ms                     0.535 ms                     13.14                        5.200e+03 ms                 

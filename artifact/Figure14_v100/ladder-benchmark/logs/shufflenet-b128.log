@@ -1,0 +1,5 @@
+Running from prebuilt model: /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/../checkpoints/Figure8/ladder/checkpoints/shufflenet
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   3.3418       3.3411       3.3449       3.3407       0.0016   
+               
