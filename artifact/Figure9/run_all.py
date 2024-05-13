@@ -12,7 +12,7 @@ def run_command(command):
     else:
         print(f"Command failed with error: {result.stderr}")
 
-CHECKPOINT_PATH = os.path.join(os.getcwd(), "../checkpoints/Figure8")
+CHECKPOINT_PATH = os.path.join(os.getcwd(), "../checkpoints/Figure9")
 
 parser = argparse.ArgumentParser()
 

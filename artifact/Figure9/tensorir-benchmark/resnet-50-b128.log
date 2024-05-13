@@ -1,0 +1,86 @@
+/root/Ladder/artifact/baseline_framework/tvm_v0.14.0/python/tvm/driver/build_module.py:263: UserWarning: target_host parameter is going to be deprecated. Please pass in tvm.target.Target(target, host=target_host) instead.
+  warnings.warn(
+2024-05-10 09:09:05.279 INFO LocalRunner: max_workers = 1
+Tuning...
+fused_nn_conv2d_add non-memhammer
+fused_nn_conv2d_add_1 non-memhammer
+fused_nn_conv2d_add_2 non-memhammer
+fused_nn_conv2d_add_3 non-memhammer
+fused_nn_conv2d_add_nn_relu memhammer
+fused_nn_max_pool2d non-memhammer
+fused_nn_conv2d_add_nn_relu_1 non-memhammer
+fused_nn_conv2d_add_nn_relu_2 non-memhammer
+fused_nn_conv2d_add_nn_relu_3 memhammer
+fused_nn_conv2d_add_add_nn_relu non-memhammer
+fused_nn_conv2d_add_nn_relu_4 non-memhammer
+fused_nn_conv2d_add_nn_relu_5 memhammer
+fused_nn_conv2d_add_nn_relu_6 non-memhammer
+fused_nn_conv2d_add_nn_relu_7 memhammer
+fused_nn_conv2d_add_add_nn_relu_1 non-memhammer
+fused_nn_conv2d_add_nn_relu_8 non-memhammer
+fused_nn_conv2d_add_nn_relu_9 memhammer
+fused_nn_conv2d_add_nn_relu_10 non-memhammer
+fused_nn_conv2d_add_nn_relu_11 memhammer
+fused_nn_conv2d_add_add_nn_relu_2 non-memhammer
+fused_nn_conv2d_add_nn_relu_12 non-memhammer
+fused_nn_conv2d_add_nn_relu_13 memhammer
+fused_nn_conv2d_add_add_nn_relu_3 non-memhammer
+fused_nn_conv2d_add_nn_relu_14 non-memhammer
+fused_nn_conv2d_add_nn_relu_15 memhammer
+fused_nn_conv2d_add_add_nn_relu_cast non-memhammer
+fused_nn_global_avg_pool2d non-memhammer
+fused_nn_batch_flatten_cast non-memhammer
+fused_nn_dense_add memhammer
+2024-05-10 09:09:06.038 INFO Logging directory: ./logs/resnet-50-b128-(128, 3, 224, 224)/logs
+2024-05-10 09:09:06.039 INFO Working directory: ./logs/resnet-50-b128-(128, 3, 224, 224)
+2024-05-10 09:09:06.039 INFO Creating JSONDatabase. Workload at: ./logs/resnet-50-b128-(128, 3, 224, 224)/database_workload.json. Tuning records at: ./logs/resnet-50-b128-(128, 3, 224, 224)/database_tuning_record.json
+2024-05-10 09:09:06.039 INFO LocalBuilder: max_workers = 24
+2024-05-10 09:09:06.794 INFO Initializing Task #0: "fused_nn_conv2d_add"
+2024-05-10 09:09:06.938 INFO Initializing Task #1: "fused_nn_conv2d_add_1"
+2024-05-10 09:09:07.082 INFO Initializing Task #2: "fused_nn_conv2d_add_2"
+2024-05-10 09:09:07.226 INFO Initializing Task #3: "fused_nn_conv2d_add_3"
+2024-05-10 09:09:07.367 INFO Initializing Task #4: "fused_nn_max_pool2d"
+2024-05-10 09:09:07.462 INFO Initializing Task #5: "fused_nn_conv2d_add_nn_relu_1"
+2024-05-10 09:09:07.633 INFO Initializing Task #6: "fused_nn_conv2d_add_nn_relu_2"
+2024-05-10 09:09:07.801 INFO Initializing Task #7: "fused_nn_conv2d_add_add_nn_relu"
+2024-05-10 09:09:08.004 INFO Initializing Task #8: "fused_nn_conv2d_add_nn_relu_4"
+2024-05-10 09:09:08.179 INFO Initializing Task #9: "fused_nn_conv2d_add_nn_relu_6"
+2024-05-10 09:09:08.351 INFO Initializing Task #10: "fused_nn_conv2d_add_add_nn_relu_1"
+2024-05-10 09:09:08.554 INFO Initializing Task #11: "fused_nn_conv2d_add_nn_relu_8"
+2024-05-10 09:09:08.726 INFO Initializing Task #12: "fused_nn_conv2d_add_nn_relu_10"
+2024-05-10 09:09:08.897 INFO Initializing Task #13: "fused_nn_conv2d_add_add_nn_relu_2"
+2024-05-10 09:09:09.103 INFO Initializing Task #14: "fused_nn_conv2d_add_nn_relu_12"
+2024-05-10 09:09:09.275 INFO Initializing Task #15: "fused_nn_conv2d_add_add_nn_relu_3"
+2024-05-10 09:09:09.496 INFO Initializing Task #16: "fused_nn_conv2d_add_nn_relu_14"
+2024-05-10 09:09:09.672 INFO Initializing Task #17: "fused_nn_conv2d_add_add_nn_relu_cast"
+2024-05-10 09:09:09.911 INFO Initializing Task #18: "fused_nn_global_avg_pool2d"
+2024-05-10 09:09:09.996 INFO Initializing Task #19: "fused_nn_batch_flatten_cast"
+2024-05-10 09:09:10.047 INFO 
+ ID |                                 Name |        FLOP | Weight | Speed (GFLOPS) | Latency (us) | Weighted Latency (us) | Trials | Terminated 
+------------------------------------------------------------------------------------------------------------------------------------------------
+  0 |                  fused_nn_conv2d_add | 26319519744 |      1 |            N/A |          N/A |                   N/A |      0 |            
+  1 |                fused_nn_conv2d_add_1 | 26332364800 |      1 |            N/A |          N/A |                   N/A |      0 |            
+  2 |                fused_nn_conv2d_add_2 | 26358054912 |      1 |            N/A |          N/A |                   N/A |      0 |            
+  3 |                fused_nn_conv2d_add_3 | 13256097792 |      1 |            N/A |          N/A |                   N/A |      0 |            
+  4 |                  fused_nn_max_pool2d |   231211008 |      1 |            N/A |          N/A |                   N/A |      0 |            
+  5 |        fused_nn_conv2d_add_nn_relu_1 |  3339714560 |      1 |            N/A |          N/A |                   N/A |      0 |            
+  6 |        fused_nn_conv2d_add_nn_relu_2 | 13204717568 |      2 |            N/A |          N/A |                   N/A |      0 |            
+  7 |      fused_nn_conv2d_add_add_nn_relu | 13461618688 |      3 |            N/A |          N/A |                   N/A |      0 |            
+  8 |        fused_nn_conv2d_add_nn_relu_4 | 26409435136 |      1 |            N/A |          N/A |                   N/A |      0 |            
+  9 |        fused_nn_conv2d_add_nn_relu_6 | 13179027456 |      3 |            N/A |          N/A |                   N/A |      0 |            
+ 10 |    fused_nn_conv2d_add_add_nn_relu_1 | 13307478016 |      4 |            N/A |          N/A |                   N/A |      0 |            
+ 11 |        fused_nn_conv2d_add_nn_relu_8 | 26358054912 |      1 |            N/A |          N/A |                   N/A |      0 |            
+ 12 |       fused_nn_conv2d_add_nn_relu_10 | 13166182400 |      5 |            N/A |          N/A |                   N/A |      0 |            
+ 13 |    fused_nn_conv2d_add_add_nn_relu_2 | 13230407680 |      6 |            N/A |          N/A |                   N/A |      0 |            
+ 14 |       fused_nn_conv2d_add_nn_relu_12 | 26332364800 |      1 |            N/A |          N/A |                   N/A |      0 |            
+ 15 |    fused_nn_conv2d_add_add_nn_relu_3 | 13191872512 |      2 |            N/A |          N/A |                   N/A |      0 |            
+ 16 |       fused_nn_conv2d_add_nn_relu_14 | 13159759872 |      2 |            N/A |          N/A |                   N/A |      0 |            
+ 17 | fused_nn_conv2d_add_add_nn_relu_cast | 13191872512 |      1 |            N/A |          N/A |                   N/A |      0 |            
+ 18 |           fused_nn_global_avg_pool2d |    13107200 |      1 |            N/A |          N/A |                   N/A |      0 |            
+ 19 |          fused_nn_batch_flatten_cast |           1 |      1 |            N/A |          N/A |                   N/A |      0 |            
+------------------------------------------------------------------------------------------------------------------------------------------------
+Total trials: 0
+Total latency (us): 0
+
+2024-05-10 09:09:10.048 INFO Scheduler picks Task #0: "fused_nn_conv2d_add"
+2024-05-10 09:09:38.887 INFO Sending 63 sample(s) to builder
