@@ -74,6 +74,10 @@ ax_bloom = fig.add_subplot(gs[0, 1])
 providers = bloom_providers
 times_data = bloom_times_data
 
+providers = [providers[0], providers[1]]
+for i, (provider, times) in enumerate(times_data):
+    times_data[i] = (provider, [times[0], times[1]])
+
 for i, (provider, times) in enumerate(times_data):
     ax_bloom.plot(
         providers,
@@ -112,11 +116,11 @@ plt.grid(False)
 
 # 保存图形
 plt.savefig(
-    "pdf/figure11_memory_usage_a100.pdf",
+    "pdf/figure11_memory_usage_v100.pdf",
     bbox_inches="tight",
 )
 plt.savefig(
-    "png/figure11_memory_usage_a100.png",
+    "png/figure11_memory_usage_v100.png",
     bbox_inches="tight",
     transparent=False,
     dpi=255,
