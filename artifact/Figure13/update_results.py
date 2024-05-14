@@ -10,16 +10,34 @@ b1s4096_llama2_providers = ['W$_{FP16}$A$_{FP16}$', 'W$_{INT4}$A$_{FP16}$', 'W$_
 b1s4096_llama2_times_data = [('Welder-Roller', [60.127214, 0, 0, 0]), ('+Transform', [52.42052881456757, 49.46731518246079, 82.41326694227601, 39.091531917823794]), ('+PTX', [44.65635679699326, 46.29885332323456, 80.05688004232789, 36.24276338554764]), ('+Holistic Schedule', [44.5666551444664, 46.318308756126406, 47.12634848095322, 36.24972687698746])]
 '''
 
-# it's extract from logs
-llama_b1s1_fp16xfp16_roller_latency = 1.206272
-llama_b1s4096_fp16xfp16_roller_latency = 124.127214
-
-exec(_)
-# welder_roller
 
 def extract_floats(line):
     pattern = r"\b\d+\.\d+\b"
     return re.findall(pattern, line)
+
+# it's extract from logs
+def get_latency(log):
+    with open(log, "r") as f:
+        lines = f.readlines()
+    for line in lines:
+        if "Summary:" in line:
+            matches = extract_floats(line)
+            if len(matches) == 0:
+                raise ValueError(f"Could not find latency in line: {line}")
+            latency = float(matches[-1])
+            break
+    if latency is None:
+        raise ValueError(f"Could not find latency for {log}")
+    else:
+        print(f"Found latency for {log}: {latency}")
+    return latency
+
+llama_b1s1_fp16xfp16_roller_latency = get_latency('./welder-roller-end2end/compiled_models/llama2_70b_layer1_seq1_bs1_cutlass/run.log')
+llama_b1s4096_fp16xfp16_roller_latency = get_latency('./welder-roller-end2end/compiled_models/llama2_70b_layer1_seq4096_bs1_cutlass/run.log')
+
+exec(_)
+# welder_roller
+
 
 def get_result_from_file(m, n, k, format="fp16xfp16", KERNEL_LOG_PATH="./welder-roller/"):
     suffix = "gemm" if m != 1 else "gemv"
@@ -112,9 +130,33 @@ holistic_mxfp8_latency = get_latency(1, "mxfp8xmxfp8", "./holistic/logs/")
 
 print(f"holistic_mxfp8xmxfp8_latency: {holistic_mxfp8_latency}")
 
+## update ladder results
+def parse_ladder_logs(log, default=None):
+    pattern = r"[\d]+\.[\d]+"
+    data = default
+    if not os.path.exists(log):
+        return data
+    with open(log, 'r') as f:
+        lines = f.readlines()
+        is_next_line=False
+        for line in lines:
+            if 'mean (ms)' in line:
+                is_next_line = True
+            if is_next_line:
+                matches = re.findall(pattern, line)
+                if matches:
+                    data = float(matches[0])
+                    is_next_line = False
+    if data is not None:
+        print(f"Ladder data from {log} is {data}")
+    else:
+        print(f"Could not find ladder data in {log}")
+    return data
+
+
 b1s1_fp16xfp16_welder_roller = llama_b1s1_fp16xfp16_roller_latency
 # its extract from log 1.0305
-b1s1_fp16xfp16_holistic = 1.0305
+b1s1_fp16xfp16_holistic = parse_ladder_logs('./ladder_logs/llama2-70b_b1_s1_q-1.log', 1.0424)
 b1s1_fp16xfp16_transform = b1s1_fp16xfp16_holistic - holistic_fp16_latency + transform_fp16_latency
 b1s1_fp16xfp16_ptx = b1s1_fp16xfp16_holistic - holistic_fp16_latency + ptx_fp16_latency
 
@@ -123,7 +165,7 @@ print(f"b1s1_fp16xfp16_transform: {b1s1_fp16xfp16_transform}")
 print(f"b1s1_fp16xfp16_ptx: {b1s1_fp16xfp16_ptx}")
 print(f"b1s1_fp16xfp16_holistic: {b1s1_fp16xfp16_holistic}")
 
-b1s1_fp16xint4_holistic = 0.3437
+b1s1_fp16xint4_holistic = parse_ladder_logs('./ladder_logs/llama2-70b_b1_s1_q0_b4.log', 0.3423)
 b1s1_fp16xint4_transform = b1s1_fp16xint4_holistic - holistic_int4_latency + transform_int4_latency
 b1s1_fp16xint4_ptx = b1s1_fp16xint4_holistic - holistic_int4_latency + ptx_int4_latency
 
@@ -131,7 +173,7 @@ print(f"b1s1_fp16xint4_transform: {b1s1_fp16xint4_transform}")
 print(f"b1s1_fp16xint4_ptx: {b1s1_fp16xint4_ptx}")
 print(f"b1s1_fp16xint4_holistic: {b1s1_fp16xint4_holistic}")
 
-b1s1_int8xint1_holistic = 0.1571
+b1s1_int8xint1_holistic = parse_ladder_logs('./ladder_logs/llama2-70b_b1_s1_q0_b1_int.log', 0.1571)
 b1s1_int8xint1_transform = b1s1_int8xint1_holistic - holistic_int1_latency + transform_int1_latency
 b1s1_int8xint1_ptx = b1s1_int8xint1_holistic - holistic_int1_latency + ptx_int1_latency
 
@@ -139,7 +181,7 @@ print(f"b1s1_int8xint1_transform: {b1s1_int8xint1_transform}")
 print(f"b1s1_int8xint1_ptx: {b1s1_int8xint1_ptx}")
 print(f"b1s1_int8xint1_holistic: {b1s1_int8xint1_holistic}")
 
-b1s1_mxfp8xmxfp8_holistic = 0.8467
+b1s1_mxfp8xmxfp8_holistic = parse_ladder_logs('./ladder_logs/llama2-70b_b1_s1_q0_mxfp8.log', 0.8467)
 b1s1_mxfp8xmxfp8_transform = b1s1_mxfp8xmxfp8_holistic - holistic_mxfp8_latency + transform_mxfp8_latency
 b1s1_mxfp8xmxfp8_ptx = b1s1_mxfp8xmxfp8_holistic - holistic_mxfp8_latency + ptx_mxfp8_latency
 
@@ -214,7 +256,7 @@ print(f"holistic_mxfp8xmxfp8_latency: {holistic_mxfp8_latency}")
 
 b1s4096_fp16xfp16_welder_roller = llama_b1s4096_fp16xfp16_roller_latency
 
-b1s4096_fp16xfp16_holistic = 33.7857
+b1s4096_fp16xfp16_holistic = parse_ladder_logs('./ladder_logs/llama2-70b_b1_s4096_q-1.log', 33.7857)
 b1s4096_fp16xfp16_transform = b1s4096_fp16xfp16_holistic - holistic_fp16_latency + transform_fp16_latency
 b1s4096_fp16xfp16_ptx = b1s4096_fp16xfp16_holistic - holistic_fp16_latency + ptx_fp16_latency
 
@@ -224,7 +266,7 @@ print(f"b1s4096_fp16xfp16_ptx: {b1s4096_fp16xfp16_ptx}")
 print(f"b1s4096_fp16xfp16_holistic: {b1s4096_fp16xfp16_holistic}")
 
 
-b1s4096_fp16xint4_holistic = 29.94758645
+b1s4096_fp16xint4_holistic = parse_ladder_logs('./ladder_logs/llama2-70b_b1_s4096_q0_b4.log', 29.94758645)
 b1s4096_fp16xint4_transform = b1s4096_fp16xint4_holistic - holistic_int4_latency + transform_int4_latency
 b1s4096_fp16xint4_ptx = b1s4096_fp16xint4_holistic - holistic_int4_latency + ptx_int4_latency
 
@@ -233,7 +275,7 @@ print(f"b1s4096_fp16xint4_ptx: {b1s4096_fp16xint4_ptx}")
 print(f"b1s4096_fp16xint4_holistic: {b1s4096_fp16xint4_holistic}")
 
 
-b1s4096_int8xint1_holistic = 24.44975112
+b1s4096_int8xint1_holistic = parse_ladder_logs('./ladder_logs/llama2-70b_b1_s4096_q0_b1_int.log', 24.44975112)
 b1s4096_int8xint1_transform = b1s4096_int8xint1_holistic - holistic_int1_latency + transform_int1_latency
 b1s4096_int8xint1_ptx = b1s4096_int8xint1_holistic - holistic_int1_latency + ptx_int1_latency
 
@@ -242,7 +284,7 @@ print(f"b1s4096_int8xint1_ptx: {b1s4096_int8xint1_ptx}")
 print(f"b1s4096_int8xint1_holistic: {b1s4096_int8xint1_holistic}")
 
 # This is extract from the original 
-b1s4096_mxfp8xmxfp8_holistic = 36.6284164
+b1s4096_mxfp8xmxfp8_holistic = parse_ladder_logs('./ladder_logs/llama2-70b_b1_s4096_q0_mxfp8.log', 37.62118231)
 b1s4096_mxfp8xmxfp8_transform = b1s4096_mxfp8xmxfp8_holistic - b1s4096_mxfp8xmxfp8_holistic + transform_mxfp8_latency
 b1s4096_mxfp8xmxfp8_ptx = b1s4096_mxfp8xmxfp8_holistic - b1s4096_mxfp8xmxfp8_holistic + ptx_mxfp8_latency
 
