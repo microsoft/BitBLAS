@@ -191,7 +191,7 @@ def find_process_and_kill():
         'trtexec',
         'benchmark_llama.py',
         'benchmark_bloom.py',
-        'ladder_with_fake_dense_dequantize.py'
+        'ladder_with_fake_dense_dequantize.py',
         'nvidia-smi'
     ]
     # if the process is this script, we should not kill it
@@ -209,7 +209,7 @@ if os.path.exists(path):
     inference_func = model_inference_mapping[framework]
     target_process = inference_func(model, batch_size, seq_len)
     sleep(15) # wait the memory to be steady (this large laguange model need more time to be steady)
-    monitor_process = subprocess.Popen('./nvidia_measure_memory.sh > run.log', shell=False)
+    monitor_process = subprocess.Popen('./nvidia_measure_memory.sh > run.log', shell=True)
     try:
         target_process.wait(timeout=20)
     except Exception as err:

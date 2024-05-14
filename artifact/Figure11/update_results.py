@@ -9,36 +9,36 @@ llama_providers = ["BS1 SEQ1", "BS32 SEQ1", "BS1 SEQ4096"]
 bloom_providers = ["BS1 SEQ1", "BS32 SEQ1", "BS1 SEQ4096"]
 
 _ = """
-llama_providers = ["BS1 SEQ1", "BS32 SEQ1", "BS1 SEQ4096"]
+llama_providers = ['BS1 SEQ1', 'BS32 SEQ1', 'BS1 SEQ4096']
 llama_times_data = [
-    ("PyTorch-Inductor", [2660, 2642, 6754]),
-    ("ONNXRuntime", [2748, 2780, 16206]),
-    ("TensorRT", [5140, 5148, 6260]),
-    ("vLLM", [0, 0, 0]),
-    ("vLLM-W$_{INT4}$A$_{FP16}$", [0, 0, 0]),
-    ("Welder", [2076, 2084, 6626]),
-    ("Bitter", [2064, 2070, 6580]),
-    ("Bitter-W$_{INT4}$A$_{FP16}$", [840, 846, 5356]),
-    ("Bitter-W$_{NF4}$A$_{FP16}$", [852, 853, 5364]),
-    ("Bitter-W$_{FP8}$A$_{FP8}$", [1248, 1254, 5764]),
-    ("Bitter-W$_{MXFP8}$A$_{MXFP8}$", [1361, 1370, 5877]),
-    ("Bitter-W$_{INT1}$A$_{INT8}$", [534, 540, 5050]),
+    ('PyTorch-Inductor', [2700, 2624, 6878]),
+    ('ONNXRuntime', [2716, 2803, 16078]),
+    ('TensorRT', [5187, 4954, 6342]),
+    ('vLLM', [5008, 4763, 5034]),
+    ('vLLM-W$_{INT4}$A$_{FP16}$', [1123, 1100, 6128]),
+    ('Welder', [2106, 2139, 6790]),
+    ('Bitter', [2075, 2121, 6460]),
+    ('Bitter-W$_{INT4}$A$_{FP16}$', [879, 817, 5216]),
+    ('Bitter-W$_{NF4}$A$_{FP16}$', [866, 852, 5313]),
+    ('Bitter-W$_{FP8}$A$_{FP8}$', [1306, 1192, 5769]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [1305, 1299, 5947]),
+    ('Bitter-W$_{INT1}$A$_{INT8}$', [522, 532, 5300]),
 ]
 
-bloom_providers = ["BS1 SEQ1", "BS32 SEQ1", "BS1 SEQ4096"]
+bloom_providers = ['BS1 SEQ1', 'BS32 SEQ1', 'BS1 SEQ4096']
 bloom_times_data = [
-    ("PyTorch-Inductor", [12088, 12072, 0]),
-    ("ONNXRuntime", [7356, 6844, 0]),
-    ("TensorRT", [5771, 5783, 0]),
-    ("vLLM", [0, 0, 0]),
-    ("vLLM-W$_{INT4}$A$_{FP16}$", [0, 0, 0]),
-    ("Welder", [5148, 5160, 0]),
-    ("Bitter", [5136, 5156, 0]),
-    ("Bitter-W$_{INT4}$A$_{FP16}$", [3372, 3392, 0]),
-    ("Bitter-W$_{NF4}$A$_{FP16}$", [3382, 3384, 0]),
-    ("Bitter-W$_{FP8}$A$_{FP8}$", [3960, 3980, 0]),
-    ("Bitter-W$_{MXFP8}$A$_{MXFP8}$", [4654, 4755, 0]),
-    ("Bitter-W$_{INT1}$A$_{INT8}$", [2931, 2951, 0]),
+    ('PyTorch-Inductor', [11503, 12257, 15383]),
+    ('ONNXRuntime', [7540, 7038, 62636]),
+    ('TensorRT', [5566, 5875, 21209]),
+    ('vLLM', [29011, 31764, 29199]),
+    ('vLLM-W$_{INT4}$A$_{FP16}$', [22327, 21910, 21931]),
+    ('Welder', [5130, 5036, 20109]),
+    ('Bitter', [5169, 5117, 20977]),
+    ('Bitter-W$_{INT4}$A$_{FP16}$', [3277, 3391, 18891]),
+    ('Bitter-W$_{NF4}$A$_{FP16}$', [3374, 3374, 19772]),
+    ('Bitter-W$_{FP8}$A$_{FP8}$', [4052, 3846, 18649]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [4037, 3944, 20280]),
+    ('Bitter-W$_{INT1}$A$_{INT8}$', [3006, 3032, 17854]),
 ]
 """
 
@@ -54,6 +54,7 @@ for model in ["llama", "bloom"]:
         log_path = f"./logs/{model}_pytorch_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
             continue
+        print(log_path)
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
             llama_times_data[0][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data

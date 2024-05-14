@@ -1,2 +1,0 @@
-Measure the memory for bloom batch 1 seq 4096 under pytorch
-python: can't open file '/root/Ladder/artifact/Figure11/pytorch-inductor-benchmark/bloom-176b.py': [Errno 2] No such file or directory

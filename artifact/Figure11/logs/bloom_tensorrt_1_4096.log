@@ -1,0 +1,116 @@
+Measure the memory for bloom batch 1 seq 4096 under tensorrt
+&&&& RUNNING TensorRT.trtexec [TensorRT v9001] # /root/Ladder/artifact/Figure11/../baseline_framework/TensorRT-9.0.1.4/bin/trtexec --loadEngine=/root/Ladder/artifact/Figure11/../models/bloom_176b/bloom-176b_layer1_seq4096_bs1/model.trt --fp16 --workspace=8192 --iterations=10000
+[05/14/2024-07:44:43] [W] --workspace flag has been deprecated by --memPoolSize flag.
+[05/14/2024-07:44:43] [I] === Model Options ===
+[05/14/2024-07:44:43] [I] Format: *
+[05/14/2024-07:44:43] [I] Model: 
+[05/14/2024-07:44:43] [I] Output:
+[05/14/2024-07:44:43] [I] === Build Options ===
+[05/14/2024-07:44:43] [I] Max batch: 1
+[05/14/2024-07:44:43] [I] Memory Pools: workspace: 8192 MiB, dlaSRAM: default, dlaLocalDRAM: default, dlaGlobalDRAM: default
+[05/14/2024-07:44:43] [I] minTiming: 1
+[05/14/2024-07:44:43] [I] avgTiming: 8
+[05/14/2024-07:44:43] [I] Precision: FP32+FP16
+[05/14/2024-07:44:43] [I] LayerPrecisions: 
+[05/14/2024-07:44:43] [I] Layer Device Types: 
+[05/14/2024-07:44:43] [I] Calibration: 
+[05/14/2024-07:44:43] [I] Refit: Disabled
+[05/14/2024-07:44:43] [I] Version Compatible: Disabled
+[05/14/2024-07:44:43] [I] ONNX Native InstanceNorm: Disabled
+[05/14/2024-07:44:43] [I] TensorRT runtime: full
+[05/14/2024-07:44:43] [I] Lean DLL Path: 
+[05/14/2024-07:44:43] [I] Tempfile Controls: { in_memory: allow, temporary: allow }
+[05/14/2024-07:44:43] [I] Exclude Lean Runtime: Disabled
+[05/14/2024-07:44:43] [I] Sparsity: Disabled
+[05/14/2024-07:44:43] [I] Safe mode: Disabled
+[05/14/2024-07:44:43] [I] Build DLA standalone loadable: Disabled
+[05/14/2024-07:44:43] [I] Allow GPU fallback for DLA: Disabled
+[05/14/2024-07:44:43] [I] DirectIO mode: Disabled
+[05/14/2024-07:44:43] [I] Restricted mode: Disabled
+[05/14/2024-07:44:43] [I] Skip inference: Disabled
+[05/14/2024-07:44:43] [I] Save engine: 
+[05/14/2024-07:44:43] [I] Load engine: /root/Ladder/artifact/Figure11/../models/bloom_176b/bloom-176b_layer1_seq4096_bs1/model.trt
+[05/14/2024-07:44:43] [I] Profiling verbosity: 0
+[05/14/2024-07:44:43] [I] Tactic sources: Using default tactic sources
+[05/14/2024-07:44:43] [I] timingCacheMode: local
+[05/14/2024-07:44:43] [I] timingCacheFile: 
+[05/14/2024-07:44:43] [I] Enable Compilation Cache: Enabled
+[05/14/2024-07:44:43] [I] errorOnTimingCacheMiss: Disabled
+[05/14/2024-07:44:43] [I] Heuristic: Disabled
+[05/14/2024-07:44:43] [I] Preview Features: Use default preview flags.
+[05/14/2024-07:44:43] [I] MaxAuxStreams: -1
+[05/14/2024-07:44:43] [I] BuilderOptimizationLevel: -1
+[05/14/2024-07:44:43] [I] Calibration Profile Index: 0
+[05/14/2024-07:44:43] [I] Input(s)s format: fp32:CHW
+[05/14/2024-07:44:43] [I] Output(s)s format: fp32:CHW
+[05/14/2024-07:44:43] [I] Input build shapes: model
+[05/14/2024-07:44:43] [I] Input calibration shapes: model
+[05/14/2024-07:44:43] [I] === System Options ===
+[05/14/2024-07:44:43] [I] Device: 0
+[05/14/2024-07:44:43] [I] DLACore: 
+[05/14/2024-07:44:43] [I] Plugins:
+[05/14/2024-07:44:43] [I] setPluginsToSerialize:
+[05/14/2024-07:44:43] [I] dynamicPlugins:
+[05/14/2024-07:44:43] [I] ignoreParsedPluginLibs: 0
+[05/14/2024-07:44:43] [I] 
+[05/14/2024-07:44:43] [I] === Inference Options ===
+[05/14/2024-07:44:43] [I] Batch: 1
+[05/14/2024-07:44:43] [I] Input inference shapes: model
+[05/14/2024-07:44:43] [I] Iterations: 10000
+[05/14/2024-07:44:43] [I] Duration: 3s (+ 200ms warm up)
+[05/14/2024-07:44:43] [I] Sleep time: 0ms
+[05/14/2024-07:44:43] [I] Idle time: 0ms
+[05/14/2024-07:44:43] [I] Inference Streams: 1
+[05/14/2024-07:44:43] [I] ExposeDMA: Disabled
+[05/14/2024-07:44:43] [I] Data transfers: Enabled
+[05/14/2024-07:44:43] [I] Spin-wait: Disabled
+[05/14/2024-07:44:43] [I] Multithreading: Disabled
+[05/14/2024-07:44:43] [I] CUDA Graph: Disabled
+[05/14/2024-07:44:43] [I] Separate profiling: Disabled
+[05/14/2024-07:44:43] [I] Time Deserialize: Disabled
+[05/14/2024-07:44:43] [I] Time Refit: Disabled
+[05/14/2024-07:44:43] [I] NVTX verbosity: 0
+[05/14/2024-07:44:43] [I] Persistent Cache Ratio: 0
+[05/14/2024-07:44:43] [I] Optimization Profile Index: 0
+[05/14/2024-07:44:43] [I] Inputs:
+[05/14/2024-07:44:43] [I] === Reporting Options ===
+[05/14/2024-07:44:43] [I] Verbose: Disabled
+[05/14/2024-07:44:43] [I] Averages: 10 inferences
+[05/14/2024-07:44:43] [I] Percentiles: 90,95,99
+[05/14/2024-07:44:43] [I] Dump refittable layers:Disabled
+[05/14/2024-07:44:43] [I] Dump output: Disabled
+[05/14/2024-07:44:43] [I] Profile: Disabled
+[05/14/2024-07:44:43] [I] Export timing to JSON file: 
+[05/14/2024-07:44:43] [I] Export output to JSON file: 
+[05/14/2024-07:44:43] [I] Export profile to JSON file: 
+[05/14/2024-07:44:43] [I] 
+[05/14/2024-07:44:44] [I] === Device Information ===
+[05/14/2024-07:44:44] [I] Selected Device: NVIDIA A100 80GB PCIe
+[05/14/2024-07:44:44] [I] Compute Capability: 8.0
+[05/14/2024-07:44:44] [I] SMs: 108
+[05/14/2024-07:44:44] [I] Device Global Memory: 81037 MiB
+[05/14/2024-07:44:44] [I] Shared Memory per SM: 164 KiB
+[05/14/2024-07:44:44] [I] Memory Bus Width: 5120 bits (ECC enabled)
+[05/14/2024-07:44:44] [I] Application Compute Clock Rate: 1.41 GHz
+[05/14/2024-07:44:44] [I] Application Memory Clock Rate: 1.512 GHz
+[05/14/2024-07:44:44] [I] 
+[05/14/2024-07:44:44] [I] Note: The application clock rates do not reflect the actual clock rates that the GPU is currently running at.
+[05/14/2024-07:44:44] [I] 
+[05/14/2024-07:44:44] [I] TensorRT version: 9.0.1
+[05/14/2024-07:44:44] [I] Loading standard plugins
+[05/14/2024-07:45:04] [I] Loaded engine with size: 4704.83 MiB
+[05/14/2024-07:45:04] [I] Engine loaded in 20.2095 sec.
+[05/14/2024-07:45:04] [I] [TRT] Loaded engine size: 4704 MiB
+[05/14/2024-07:45:05] [I] [TRT] [MemUsageChange] TensorRT-managed allocation in engine deserialization: CPU +0, GPU +4704, now: CPU 0, GPU 4704 (MiB)
+[05/14/2024-07:45:05] [I] Engine deserialized in 1.11981 sec.
+[05/14/2024-07:45:05] [I] [TRT] [MemUsageChange] TensorRT-managed allocation in IExecutionContext creation: CPU +0, GPU +896, now: CPU 0, GPU 5600 (MiB)
+[05/14/2024-07:45:05] [I] Setting persistentCacheLimit to 0 bytes.
+[05/14/2024-07:45:05] [I] Created execution context with device memory size: 896 MiB
+[05/14/2024-07:45:05] [I] Using random values for input input.1
+[05/14/2024-07:45:06] [I] Input binding for input.1 with dimensions 1x4096x14336 is created.
+[05/14/2024-07:45:06] [I] Using random values for input onnx::Mul_1
+[05/14/2024-07:45:06] [I] Input binding for onnx::Mul_1 with dimensions 112x1x4096 is created.
+[05/14/2024-07:45:06] [I] Using random values for input onnx::Cast_2
+[05/14/2024-07:45:06] [I] Input binding for onnx::Cast_2 with dimensions 1x4096 is created.
+[05/14/2024-07:45:06] [I] Output binding for 180 with dimensions 1x4096x14336 is created.
+[05/14/2024-07:45:06] [I] Starting inference

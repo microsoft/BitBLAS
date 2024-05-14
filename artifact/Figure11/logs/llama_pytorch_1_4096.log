@@ -1,2 +1,0 @@
-Measure the memory for llama batch 1 seq 4096 under pytorch
-{'llama_pytorch_1_4096': 19182}

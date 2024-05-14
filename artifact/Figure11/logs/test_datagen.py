@@ -1,36 +1,38 @@
 import json
 
-llama_providers = ["BS1 SEQ1", "BS32 SEQ1", "BS1 SEQ4096"]
+
+llama_providers = ['BS1 SEQ1', 'BS32 SEQ1', 'BS1 SEQ4096']
 llama_times_data = [
-    ('PyTorch-Inductor', [2551, 2668, 6584]),
-    ('ONNXRuntime', [2753, 2896, 15994]),
-    ('TensorRT', [5199, 5241, 6437]),
-    ('vLLM', [5013, 4928, 4850]),
-    ('vLLM-W$_{INT4}$A$_{FP16}$', [1088, 1088, 6180]),
-    ('Welder', [2135, 2159, 6900]),
-    ('Bitter', [2087, 2067, 6844]),
-    ('Bitter-W$_{INT4}$A$_{FP16}$', [840, 842, 5500]),
-    ('Bitter-W$_{NF4}$A$_{FP16}$', [861, 847, 5418]),
-    ('Bitter-W$_{FP8}$A$_{FP8}$', [1259, 1262, 5821]),
-    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [1399, 1315, 5609]),
-    ('Bitter-W$_{INT1}$A$_{INT8}$', [529, 547, 5060]),
+    ('PyTorch-Inductor', [2700, 2624, 6878]),
+    ('ONNXRuntime', [2716, 2803, 16078]),
+    ('TensorRT', [5187, 4954, 6342]),
+    ('vLLM', [5008, 4763, 5034]),
+    ('vLLM-W$_{INT4}$A$_{FP16}$', [1123, 1100, 6128]),
+    ('Welder', [2106, 2139, 6790]),
+    ('Bitter', [2075, 2121, 6460]),
+    ('Bitter-W$_{INT4}$A$_{FP16}$', [879, 817, 5216]),
+    ('Bitter-W$_{NF4}$A$_{FP16}$', [866, 852, 5313]),
+    ('Bitter-W$_{FP8}$A$_{FP8}$', [1306, 1192, 5769]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [1305, 1299, 5947]),
+    ('Bitter-W$_{INT1}$A$_{INT8}$', [522, 532, 5300]),
 ]
 
-bloom_providers = ["BS1 SEQ1", "BS32 SEQ1", "BS1 SEQ4096"]
+bloom_providers = ['BS1 SEQ1', 'BS32 SEQ1', 'BS1 SEQ4096']
 bloom_times_data = [
-    ('PyTorch-Inductor', [12312, 12206, 15288]),
-    ('ONNXRuntime', [7371, 6739, 67442]),
-    ('TensorRT', [5799, 5864, 22172]),
-    ('vLLM', [29095, 30514, 29659]),
-    ('vLLM-W$_{INT4}$A$_{FP16}$', [23052, 22029, 21488]),
-    ('Welder', [5228, 5090, 19250]),
-    ('Bitter', [5219, 4928, 19958]),
-    ('Bitter-W$_{INT4}$A$_{FP16}$', [3483, 3486, 19068]),
-    ('Bitter-W$_{NF4}$A$_{FP16}$', [3266, 3479, 19645]),
-    ('Bitter-W$_{FP8}$A$_{FP8}$', [3832, 4130, 18597]),
-    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [4515, 4833, 24467]),
-    ('Bitter-W$_{INT1}$A$_{INT8}$', [2947, 2966, 18060]),
+    ('PyTorch-Inductor', [11503, 12257, 15383]),
+    ('ONNXRuntime', [7540, 7038, 62636]),
+    ('TensorRT', [5566, 5875, 21209]),
+    ('vLLM', [29011, 31764, 29199]),
+    ('vLLM-W$_{INT4}$A$_{FP16}$', [22327, 21910, 21931]),
+    ('Welder', [5130, 5036, 20109]),
+    ('Bitter', [5169, 5117, 20977]),
+    ('Bitter-W$_{INT4}$A$_{FP16}$', [3277, 3391, 18891]),
+    ('Bitter-W$_{NF4}$A$_{FP16}$', [3374, 3374, 19772]),
+    ('Bitter-W$_{FP8}$A$_{FP8}$', [4052, 3846, 18649]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [4037, 3944, 20280]),
+    ('Bitter-W$_{INT1}$A$_{INT8}$', [3006, 3032, 17854]),
 ]
+
 
 import json
 import os
@@ -42,7 +44,7 @@ if not os.path.exists(directory):
 
 
 name_mapping = {
-    "PyTorch-Inductor": "pytorch_inductor",
+    "PyTorch-Inductor": "pytorch",
     "ONNXRuntime": "onnxruntime",
     "TensorRT": "tensorrt",
     "vLLM": "vllm",

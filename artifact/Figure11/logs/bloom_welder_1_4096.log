@@ -1,2 +1,0 @@
-Measure the memory for bloom batch 1 seq 4096 under welder
-The specified file does not exist: /root/Ladder/artifact/Figure11/../models/bloom_176b/bloom-176b_seq4096_bs1/model.onnx
