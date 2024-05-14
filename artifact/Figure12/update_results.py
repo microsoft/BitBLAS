@@ -10,6 +10,10 @@ matmul_times_data = [
         "cuTLASS-W$_{INT4}$A$_{FP16}$",
         [0.674009323, 1.186704636, 33.67717266, 0.153660774, 0.259065628, 12.6046657],
     ),
+    (
+        "vLLM-W$_{INT4}$A$_{FP16}$",
+        [0.484972, 0.972840786, 123.6705709, 0.18430233, 0.27905941, 29.32891846],
+    ),
     ('Bitter', [0.9405568846412276, 1.0551276457642045, 27.429847626938027, 0.2771763573698525, 0.37289717979611964, 7.4194252736607105]),
     ('Bitter-W$_{INT4}$A$_{FP16}$', [0.25010346697898184, 1.0387403257520407, 24.396201991737335, 0.08182817299037373, 0.3599448964549887, 6.908026137726486]),
     ('Bitter-W$_{NF4}$A$_{FP16}$', [0.4349415730022948, 1.076610324314873, 29.317079643679847, 0.1302926846604392, 0.4114702888693471, 8.07674323812536]),
@@ -138,37 +142,32 @@ for m, n, k in [
                 if f"{m}_{n}_{k}" in line:
                     data = float(re.findall(r"\d+\.\d+", line)[-1])
                     print(data)
-                    
+
 # parse the results from cublas
-for m, n, k in [
+cublas_data = [1.0265737319667645, 1.090096979579753, 32.19012415077543, 0.23601211538704653, 0.3087000088622984, 8.437653349759566]
+def get_and_print_cublas(m, n, k, log):
+    data = None
+    with open(log) as f:
+        lines = f.readlines()
+        for line in lines:
+            if f"{m},{n},{k}" in line:
+                data = float(re.findall(r"\d+\.\d+", line)[-2])
+                print(data)
+    return data
+for i, (m, n, k) in enumerate([
         [1,14336,57344],
         [32,14336,57344],
         [4096,14336,57344],
         [1,8192,28672],
         [32,8192,28672],
         [4096,8192,28672],
-    ]:
-    log_path = f"./cublasgemm-benchmark/build/cublas_shape_{m}_{k}_{n}_performance.csv"
+    ]):
+    log_path = f"./cublas-benchmark/build/cublas_benchmark.log"
     if not os.path.exists(log_path):
         continue
-    data = get_and_print(log_path, "min_fp16_tensorcore_runtime")
-    print(data)
-
-# parse the results from ladder
-for m, n, k in [
-        [1,14336,57344],
-        [32,14336,57344],
-        [4096,14336,57344],
-        [1,8192,28672],
-        [32,8192,28672],
-        [4096,8192,28672],
-    ]:
-    log_path = f"./ladder-benchmark/build/ladder_shape_{m}_{k}_{n}_performance.csv"
-    if not os.path.exists(log_path):
-        continue
-    data = get_and_print(log_path, "min_fp16_tensorcore_runtime")
-    print(data)
-
+    data = get_and_print_cublas(m, n, k, log_path)
+    cublas_data[i] = data
+matmul_times_data[0] = ("cuBLAS", cublas_data)
 
 # parse the results from cudnn
 for m, n, k in [
@@ -185,6 +184,33 @@ for m, n, k in [
     data = get_and_print(log_path, "min_fp16_tensorcore_runtime")
     print(data)
 
+# parse the results from vllm
+vllm_data = [0.484972, 0.972840786, 123.6705709, 168.7941933, 124.1296554, 168.415212]
+vllm_logs = "./vllm-benchmark/logs/vllm_benchmark_kernel.log"
+def get_and_print_vllm(m, n, k):
+    data = None
+    with open(vllm_logs) as f:
+        lines = f.readlines()
+        for line in lines:
+            if f"{m} {n} {k}" in line:
+                data = float(re.findall(r"\d+\.\d+", line)[-1])
+                print(data)
+    return data
+
+for i, (m, n, k) in enumerate([
+        [1,14336,57344],
+        [32,14336,57344],
+        [4096,14336,57344],
+        [1,8192,28672],
+        [32,8192,28672],
+        [4096,8192,28672],
+    ]):
+    if not os.path.exists(vllm_logs):
+        continue
+    data = get_and_print_vllm(m, n, k)
+    vllm_data[i] = data
+matmul_times_data[2] = ("vLLM-W$_{INT4}$A$_{FP16}$", vllm_data)
+    
 # write the results to back
 reproduced_results = f"""
 # Copyright (c) Microsoft Corporation.

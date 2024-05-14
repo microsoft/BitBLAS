@@ -99,6 +99,8 @@ for M, N, K in shapes:
     input_args = [A, B]
     output_args = [D]
     node = IRNode([None for _ in input_args], input_args+output_args, "ladder_matmul")
+    node.add_tag("consistent_config", (True, False))
+    node.add_tag("fast_decoding", True)
     output_nodes = [OutputNode(node)]
     policy = DefaultPolicy(output_nodes, arch)
     configs = policy.emit_config(20)

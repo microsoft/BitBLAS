@@ -15,14 +15,13 @@ run_python_script() {
 }
 
 scripts=(
-    "fp16xfp16_gemv.py"
-    "fp16xint4_gemv.py"
-    "fp16xnf4_gemv.py"
-    "fp16xfp8_gemv.py"
-    "int8xint8_gemv.py"
-    "int8xint1_gemv.py"
-    "fp32xmxfp8_gemv.py"
-    "fp32xfp32_gemv.py"
+    fp16xfp16_gemv.py
+    fp16xfp8_gemv.py
+    fp16xint4_gemv.py
+    fp16xnf4_gemv.py
+    fp32xmxfp8_gemv.py
+    int4xint4_gemv.py
+    int8xint1_gemv.py
 )
 
 for script in "${scripts[@]}"; do

@@ -15,7 +15,13 @@ run_python_script() {
 }
 
 scripts=(
-    "int8xint1_gemm.py"
+    fp16xfp16_gemm.py
+    fp16xfp8_gemm.py
+    fp16xint4_gemm.py
+    fp16xnf4_gemm.py
+    fp32xmxfp8_gemm.py
+    int4xint4_gemm.py
+    int8xint1_gemm.py
 )
 
 for script in "${scripts[@]}"; do

@@ -30,7 +30,21 @@ if not reproduce:
     os.system(f"python3 plot_operator_performance.py")
 else:
     print("Reproducing the results")
-    # reproduce the results for amos
+    # reproduce the results for cublas
+    print("Reproducing cublas")
+    run_command("./compile_and_run.sh", working_dir="cublas-benchmark")
+    # reproduce for cudnn
+    print("Reproducing cudnn")
+    run_command("./benchmark_cudnn_conv2d.sh", working_dir="cudnn-benchmark")
+    # skip cutlass/amos/tensorir fp16 tuning as it takes a long time
+    # reproduce for cutlass dequantize
+    print("Reproducing cutlass dequantize")
+    run_command("./benchmark.sh", working_dir="cutlass-dequantize-benchmark")
+    # vllm benchmark
+    print("Reproducing vllm")
+    run_command("./benchmark_vllm.sh", working_dir="vllm-benchmark")
+    # reproduce for ladder
+    print("Reproducing ladder")
     run_command("./benchmark_ladder.sh", working_dir="ladder-benchmark")
     # plot from the reproduced results
     os.system(f"python3 update_results.py")
