@@ -32,8 +32,6 @@ if [ $force_tune -eq 1 ]; then
 
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 1 --seq_len 1 --fake_quant 0 --bits 1 --convert_int  2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_b1_int.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 1 --seq_len 1 --fake_quant 0 --bits 8 --convert_int 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_b8_int.log
-
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 32 --seq_len 1 --fake_quant 0 --bits 4  2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_b4.log
 
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 32 --seq_len 1 --fake_quant 0 --bits 1 --convert_int  2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_b1_int.log

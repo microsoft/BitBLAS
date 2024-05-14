@@ -1,0 +1,411 @@
+/root/Ladder/3rdparty/tvm/python/tvm/target/target.py:397: UserWarning: Try specifying cuda arch by adding 'arch=sm_xx' to your target.
+  warnings.warn("Try specifying cuda arch by adding 'arch=sm_xx' to your target.")
+310
+Output718, 
+add717, 
+Opaque716, 
+take715, add713, Constant714, multiply712, divide711, 
+sqrt710, Constant708, add709, mean707, 
+multiply706, subtract705, 
+mean704, 
+add703, 
+add702, welder.matmul701, 
+multiply700, Constant699, 
+multiply698, add697, erf695, Constant693, Constant696, add692, divide694, welder.matmul691, 
+add690, multiply689, divide688, 
+sqrt687, add686, Constant685, mean684, 
+multiply683, subtract682, 
+mean681, 
+add680, 
+add679, welder.matmul678, 
+reshape677, transpose676, 
+welder.matmul675, squeeze674, strided_slice673, 
+divide672, 
+sum671, 
+exp670, subtract669, 
+max668, 
+welder.matmul667, 
+multiply666, transpose665, squeeze664, strided_slice663, 
+multiply662, squeeze661, strided_slice660, 
+transpose659, reshape658, 
+add657, welder.matmul656, 
+add655, multiply654, divide653, 
+sqrt652, add651, Constant650, mean649, 
+multiply648, subtract647, 
+mean646, 
+add645, 
+add644, welder.matmul643, 
+multiply642, Constant641, 
+add639, Constant638, erf637, Constant635, divide636, add634, multiply640, welder.matmul633, 
+add632, multiply631, divide630, 
+sqrt629, add628, Constant627, mean626, 
+multiply625, subtract624, 
+mean623, 
+add622, 
+add621, welder.matmul620, 
+reshape619, transpose618, 
+welder.matmul617, squeeze616, strided_slice615, 
+divide614, 
+sum613, 
+exp612, subtract611, 
+max610, 
+welder.matmul609, 
+multiply608, transpose607, squeeze606, strided_slice605, 
+multiply604, squeeze603, strided_slice602, 
+transpose601, reshape600, 
+add599, welder.matmul598, 
+multiply294, Constant293, 
+multiply292, add291, erf289, Constant290, divide288, Constant287, add286, welder.matmul285, 
+add284, multiply283, divide282, 
+multiply277, subtract276, 
+add274, 
+reshape271, transpose270, 
+divide266, 
+exp264, subtract263, 
+multiply260, transpose259, squeeze258, strided_slice257, 
+squeeze255, multiply256, strided_slice254, 
+transpose253, reshape252, 
+add249, multiply248, divide247, 
+multiply242, subtract241, 
+add239, 
+multiply236, Constant235, 
+add226, multiply225, divide224, 
+multiply219, subtract218, 
+mean217, 
+add216, 
+reshape213, transpose212, 
+divide208, 
+exp206, subtract205, 
+multiply202, transpose201, squeeze200, strided_slice199, 
+multiply198, squeeze197, strided_slice196, 
+transpose195, reshape194, 
+add191, multiply190, divide189, 
+multiply184, subtract183, 
+add181, 
+multiply178, Constant177, 
+add168, multiply167, divide166, 
+multiply161, subtract160, 
+add158, 
+add296, welder.matmul295, 
+reshape155, transpose154, 
+welder.matmul153, squeeze152, strided_slice151, 
+add574, multiply573, divide572, 
+sqrt281, add280, Constant279, mean278, 
+divide150, 
+mean275, 
+exp148, subtract147, 
+add273, welder.matmul272, 
+transpose143, multiply144, squeeze142, strided_slice141, 
+welder.matmul269, squeeze268, strided_slice267, 
+multiply140, squeeze139, strided_slice138, 
+mean66, 
+mean182, 
+add65, 
+add180, welder.matmul179, 
+multiply62, Constant61, 
+multiply176, add175, Constant174, erf173, divide172, Constant171, add170, welder.matmul169, 
+add597, multiply596, divide595, 
+add52, multiply51, divide50, 
+sqrt165, add164, Constant163, mean162, 
+multiply590, subtract589, 
+multiply45, subtract44, 
+mean159, 
+add587, 
+add42, 
+add157, welder.matmul156, 
+multiply584, Constant583, 
+reshape39, transpose38, 
+add64, welder.matmul63, 
+divide498, 
+sum149, 
+multiply567, subtract566, 
+divide34, 
+multiply60, Constant58, erf57, add59, Constant55, divide56, add54, welder.matmul53, 
+exp496, subtract495, 
+max146, 
+add564, 
+exp32, subtract31, 
+add2, nn.conv2d1, 
+reshape445, transpose444, 
+sqrt246, add245, Constant244, mean243, 
+multiply120, Constant119, 
+mean8, 
+add448, 
+add251, welder.matmul250, 
+add123, 
+sum33, 
+multiply474, subtract473, 
+sqrt14, add13, Constant12, mean11, 
+multiply451, subtract450, 
+welder.matmul261, 
+multiply126, subtract125, 
+welder.matmul37, squeeze36, strided_slice35, 
+add481, multiply480, divide479, 
+add19, welder.matmul18, 
+multiply457, add458, divide456, 
+max262, 
+add133, multiply132, divide131, 
+add41, welder.matmul40, 
+transpose485, reshape484, 
+mean43, 
+multiply488, squeeze487, strided_slice486, 
+sqrt49, add48, Constant47, mean46, 
+multiply492, transpose491, squeeze490, strided_slice489, 
+welder.matmul145, 
+reshape561, transpose560, 
+multiply28, transpose27, squeeze26, strided_slice25, 
+welder.matmul29, 
+multiply468, Constant467, 
+sum265, 
+transpose137, reshape136, 
+max30, 
+add471, 
+sqrt188, add187, Constant186, mean185, 
+multiply68, subtract67, 
+sqrt72, add71, Constant70, mean69, 
+reshape503, transpose502, 
+add193, welder.matmul192, 
+add75, multiply74, divide73, 
+add77, welder.matmul76, 
+add506, 
+welder.matmul203, 
+transpose79, reshape78, 
+max204, 
+multiply82, squeeze81, strided_slice80, 
+sum207, 
+multiply86, transpose85, squeeze84, strided_slice83, 
+welder.matmul87, 
+multiply509, subtract508, 
+max88, 
+add516, multiply515, divide514, 
+welder.matmul211, squeeze210, strided_slice209, 
+exp90, subtract89, 
+sum91, 
+multiply526, Constant525, 
+add215, welder.matmul214, 
+divide92, 
+squeeze94, welder.matmul95, strided_slice93, 
+add529, 
+sqrt223, add222, Constant221, mean220, 
+reshape97, transpose96, 
+add99, welder.matmul98, 
+multiply532, subtract531, 
+Constant232, multiply234, erf231, divide230, Constant229, add233, add228, welder.matmul227, 
+add100, 
+mean101, 
+add539, multiply538, divide537, 
+add238, welder.matmul237, 
+multiply103, subtract102, 
+layout_transform0, 
+sqrt107, add106, Constant105, mean104, 
+transpose543, reshape542, 
+mean240, 
+add110, multiply109, divide108, 
+add7, concatenate6, transpose5, reshape4, layout_transform3, 
+multiply118, Constant116, erf115, divide114, Constant113, add117, add112, welder.matmul111, 
+multiply546, squeeze545, strided_slice544, 
+multiply10, subtract9, 
+add122, welder.matmul121, 
+transpose549, squeeze548, multiply550, strided_slice547, 
+add17, multiply16, divide15, 
+mean124, 
+exp554, subtract553, 
+transpose21, reshape20, 
+sqrt130, Constant128, add129, mean127, 
+divide556, 
+multiply24, squeeze23, strided_slice22, 
+add135, welder.matmul134, 
+add297, 
+mean298, 
+multiply300, subtract299, 
+sqrt304, add303, Constant302, mean301, 
+add307, multiply306, divide305, 
+add309, welder.matmul308, 
+transpose311, reshape310, 
+multiply314, squeeze313, strided_slice312, 
+transpose317, squeeze316, multiply318, strided_slice315, 
+welder.matmul319, 
+max320, 
+exp322, subtract321, 
+sum323, 
+divide324, 
+welder.matmul327, squeeze326, strided_slice325, 
+reshape329, transpose328, 
+add331, welder.matmul330, 
+add332, 
+mean333, 
+multiply335, subtract334, 
+sqrt339, add338, Constant337, mean336, 
+add342, multiply341, divide340, 
+multiply350, add349, erf347, Constant348, divide346, Constant345, add344, welder.matmul343, 
+multiply352, Constant351, 
+add354, welder.matmul353, 
+add355, 
+mean356, 
+multiply358, subtract357, 
+sqrt362, add361, Constant360, mean359, 
+add365, multiply364, divide363, 
+add367, welder.matmul366, 
+transpose369, reshape368, 
+multiply372, squeeze371, strided_slice370, 
+multiply376, transpose375, squeeze374, strided_slice373, 
+welder.matmul377, 
+max378, 
+exp380, subtract379, 
+sum381, 
+divide382, 
+welder.matmul385, squeeze384, strided_slice383, 
+reshape387, transpose386, 
+add389, welder.matmul388, 
+add390, 
+mean391, 
+multiply393, subtract392, 
+sqrt397, add396, Constant395, mean394, 
+add400, multiply399, divide398, 
+multiply408, Constant406, erf405, divide404, Constant403, add407, add402, welder.matmul401, 
+multiply410, Constant409, 
+add412, welder.matmul411, 
+add413, 
+mean414, 
+multiply416, subtract415, 
+sqrt420, add419, Constant418, mean417, 
+multiply422, add423, divide421, 
+add425, welder.matmul424, 
+transpose427, reshape426, 
+multiply430, squeeze429, strided_slice428, 
+multiply434, transpose433, squeeze432, strided_slice431, 
+welder.matmul435, 
+max436, 
+exp438, subtract437, 
+sum439, 
+divide440, 
+welder.matmul443, squeeze442, strided_slice441, 
+add447, welder.matmul446, 
+mean449, 
+sqrt455, add454, Constant453, mean452, 
+multiply466, add465, erf463, divide462, Constant461, Constant464, add460, welder.matmul459, 
+add470, welder.matmul469, 
+mean472, 
+sqrt478, Constant476, add477, mean475, 
+add483, welder.matmul482, 
+welder.matmul493, 
+max494, 
+sum497, 
+welder.matmul501, squeeze500, strided_slice499, 
+add505, welder.matmul504, 
+mean507, 
+sqrt513, add512, Constant511, mean510, 
+multiply524, Constant522, erf521, add523, divide520, Constant519, add518, welder.matmul517, 
+add528, welder.matmul527, 
+mean530, 
+add535, sqrt536, Constant534, mean533, 
+add541, welder.matmul540, 
+welder.matmul551, 
+max552, 
+sum555, 
+welder.matmul559, squeeze558, strided_slice557, 
+add563, welder.matmul562, 
+mean565, 
+sqrt571, add570, Constant569, mean568, 
+Constant580, erf579, divide578, add576, multiply582, add581, Constant577, welder.matmul575, 
+add586, welder.matmul585, 
+mean588, 
+sqrt594, add593, Constant592, mean591, 
+conv2d is not optimized for this platform.
+Processing:   0%|          | 0/487 [00:00<?, ?it/s]                                                   2024-05-14 01:28:42 [ladder:INFO]: Tuning ['layout_transform_0', 'nn_conv2d_add_1']
+Processing:   0%|          | 0/487 [00:00<?, ?it/s]                                                   2024-05-14 01:28:55 [ladder:INFO]: result: 0.3008511960506439
+Processing:   0%|          | 0/487 [00:12<?, ?it/s]                                                   2024-05-14 01:28:55 [ladder:INFO]: Tuning ['layout_transform_0']
+Processing:   0%|          | 0/487 [00:12<?, ?it/s]                                                   2024-05-14 01:29:25 [ladder:INFO]: result: 0.0033582220785319805
+Processing:   0%|          | 0/487 [00:42<?, ?it/s]                                                   2024-05-14 01:29:25 [ladder:INFO]: Tuning ['nn_conv2d_add_1']
+Processing:   0%|          | 0/487 [00:42<?, ?it/s]                                                   2024-05-14 01:29:54 [ladder:INFO]: result: 0.05836799740791321
+Processing:   0%|          | 0/487 [01:11<?, ?it/s]                                                   2024-05-14 01:29:54 [ladder:INFO]: Tuning ['layout_transform_0']
+Processing:   0%|          | 0/487 [01:11<?, ?it/s]                                                   2024-05-14 01:29:54 [ladder:INFO]: Fusion group created: 0 ['layout_transform_0']
+Processing:   0%|          | 0/487 [01:11<?, ?it/s]Processing:   0%|          | 2/487 [01:11<4:50:04, 35.89s/it]                                                             2024-05-14 01:29:54 [ladder:INFO]: Tuning ['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+Processing:   0%|          | 2/487 [01:11<4:50:04, 35.89s/it]                                                             2024-05-14 01:29:54 [ladder:INFO]: Tuning ['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+Processing:   0%|          | 2/487 [01:11<4:50:04, 35.89s/it]                                                             2024-05-14 01:30:48 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpqjzydq_a.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpqjzydq_a.so']
+Processing:   0%|          | 2/487 [02:05<4:50:04, 35.89s/it]                                                             2024-05-14 01:30:48 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpa1_rntfz.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpa1_rntfz.so']
+Processing:   0%|          | 2/487 [02:05<4:50:04, 35.89s/it]                                                             2024-05-14 01:30:48 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpqe0_5ltq.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpqe0_5ltq.so']
+Processing:   0%|          | 2/487 [02:05<4:50:04, 35.89s/it]                                                             2024-05-14 01:30:48 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmphlp9fytl.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmphlp9fytl.so']
+Processing:   0%|          | 2/487 [02:05<4:50:04, 35.89s/it]                                                             2024-05-14 01:30:48 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp5vqq_bml.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp5vqq_bml.so']
+Processing:   0%|          | 2/487 [02:05<4:50:04, 35.89s/it]                                                             2024-05-14 01:30:48 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpnx2ie3pk.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpnx2ie3pk.so']
+Processing:   0%|          | 2/487 [02:05<4:50:04, 35.89s/it]                                                             2024-05-14 01:31:02 [ladder:INFO]: result: 0.03352800011634827
+Processing:   0%|          | 2/487 [02:19<4:50:04, 35.89s/it]                                                             2024-05-14 01:31:02 [ladder:INFO]: Tuning ['layout_transform_reshape_transpose_concatenate_add_2']
+Processing:   0%|          | 2/487 [02:19<4:50:04, 35.89s/it]                                                             2024-05-14 01:31:30 [ladder:INFO]: result: 0.0026781538035720587
+Processing:   0%|          | 2/487 [02:47<4:50:04, 35.89s/it]                                                             2024-05-14 01:31:30 [ladder:INFO]: Fusion group created: 1 ['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+Processing:   0%|          | 2/487 [02:47<4:50:04, 35.89s/it]Processing:   1%|          | 5/487 [02:47<4:26:40, 33.20s/it]                                                             2024-05-14 01:31:30 [ladder:INFO]: Tuning ['mean_3', 'subtract_multiply_4']
+Processing:   1%|          | 5/487 [02:47<4:26:40, 33.20s/it]                                                             2024-05-14 01:31:30 [ladder:INFO]: Tuning ['mean_3', 'subtract_multiply_4']
+Processing:   1%|          | 5/487 [02:47<4:26:40, 33.20s/it]                                                             2024-05-14 01:31:30 [ladder:INFO]: Tuning ['mean_3']
+Processing:   1%|          | 5/487 [02:47<4:26:40, 33.20s/it]                                                             2024-05-14 01:31:35 [ladder:INFO]: result: 0.002898666774854064
+Processing:   1%|          | 5/487 [02:53<4:26:40, 33.20s/it]                                                             2024-05-14 01:31:35 [ladder:INFO]: Fusion group created: 2 ['mean_3']
+Processing:   1%|          | 5/487 [02:53<4:26:40, 33.20s/it]Processing:   2%|▏         | 9/487 [02:53<2:01:16, 15.22s/it]                                                             2024-05-14 01:31:35 [ladder:INFO]: Tuning ['subtract_multiply_4', 'mean_add_sqrt_5', 'divide_multiply_add_6']
+Processing:   2%|▏         | 9/487 [02:53<2:01:16, 15.22s/it]                                                             2024-05-14 01:31:35 [ladder:INFO]: Tuning ['subtract_multiply_4', 'mean_add_sqrt_5']
+Processing:   2%|▏         | 9/487 [02:53<2:01:16, 15.22s/it]                                                             2024-05-14 01:31:43 [ladder:INFO]: result: 0.003413333324715495
+Processing:   2%|▏         | 9/487 [03:00<2:01:16, 15.22s/it]                                                             2024-05-14 01:31:43 [ladder:INFO]: Tuning ['subtract_multiply_4']
+Processing:   2%|▏         | 9/487 [03:00<2:01:16, 15.22s/it]                                                             2024-05-14 01:32:07 [ladder:INFO]: result: 0.0025298823602497578
+Processing:   2%|▏         | 9/487 [03:24<2:01:16, 15.22s/it]                                                             2024-05-14 01:32:07 [ladder:INFO]: Tuning ['mean_add_sqrt_5']
+Processing:   2%|▏         | 9/487 [03:24<2:01:16, 15.22s/it]                                                             2024-05-14 01:32:13 [ladder:INFO]: result: 0.0030720001086592674
+Processing:   2%|▏         | 9/487 [03:30<2:01:16, 15.22s/it]                                                             2024-05-14 01:32:13 [ladder:INFO]: Tuning ['subtract_multiply_4', 'mean_add_sqrt_5', 'divide_multiply_add_6']
+Processing:   2%|▏         | 9/487 [03:30<2:01:16, 15.22s/it]                                                             2024-05-14 01:32:13 [ladder:INFO]: Fusion group created: 3 ['subtract_multiply_4', 'mean_add_sqrt_5']
+Processing:   2%|▏         | 9/487 [03:30<2:01:16, 15.22s/it]Processing:   2%|▏         | 10/487 [03:30<2:30:55, 18.98s/it]                                                              2024-05-14 01:32:13 [ladder:INFO]: Tuning ['divide_multiply_add_6', 'welder_matmul_add_7']
+Processing:   2%|▏         | 10/487 [03:30<2:30:55, 18.98s/it]                                                              2024-05-14 01:32:25 [ladder:INFO]: result: 0.057096000760793686
+Processing:   2%|▏         | 10/487 [03:43<2:30:55, 18.98s/it]                                                              2024-05-14 01:32:25 [ladder:INFO]: Tuning ['divide_multiply_add_6']
+Processing:   2%|▏         | 10/487 [03:43<2:30:55, 18.98s/it]                                                              2024-05-14 01:32:49 [ladder:INFO]: result: 0.0027544614858925343
+Processing:   2%|▏         | 10/487 [04:06<2:30:55, 18.98s/it]                                                              2024-05-14 01:32:49 [ladder:INFO]: Tuning ['welder_matmul_add_7']
+Processing:   2%|▏         | 10/487 [04:06<2:30:55, 18.98s/it]                                                              2024-05-14 01:33:15 [ladder:INFO]: result: 0.015558399260044098
+Processing:   2%|▏         | 10/487 [04:32<2:30:55, 18.98s/it]                                                              2024-05-14 01:33:15 [ladder:INFO]: Tuning ['divide_multiply_add_6']
+Processing:   2%|▏         | 10/487 [04:32<2:30:55, 18.98s/it]                                                              2024-05-14 01:33:15 [ladder:INFO]: Fusion group created: 4 ['divide_multiply_add_6']
+Processing:   2%|▏         | 10/487 [04:32<2:30:55, 18.98s/it]Processing:   3%|▎         | 14/487 [04:32<2:16:05, 17.26s/it]                                                              2024-05-14 01:33:15 [ladder:INFO]: Tuning ['welder_matmul_add_7', 'reshape_transpose_8']
+Processing:   3%|▎         | 14/487 [04:32<2:16:05, 17.26s/it]                                                              2024-05-14 01:33:21 [ladder:INFO]: Tuning ['welder_matmul_add_7', 'reshape_transpose_8']
+Processing:   3%|▎         | 14/487 [04:39<2:16:05, 17.26s/it]                                                              2024-05-14 01:33:48 [ladder:INFO]: result: 0.012486400082707405
+Processing:   3%|▎         | 14/487 [05:06<2:16:05, 17.26s/it]                                                              2024-05-14 01:33:48 [ladder:INFO]: Tuning ['reshape_transpose_8']
+Processing:   3%|▎         | 14/487 [05:06<2:16:05, 17.26s/it]                                                              2024-05-14 01:34:14 [ladder:INFO]: result: 0.0026168888434767723
+Processing:   3%|▎         | 14/487 [05:31<2:16:05, 17.26s/it]                                                              2024-05-14 01:34:14 [ladder:INFO]: Tuning ['welder_matmul_add_7', 'reshape_transpose_8', 'strided_slice_squeeze_multiply_9', 'strided_slice_squeeze_transpose_multiply_10', 'welder_matmul_11', 'max_12', 'subtract_exp_13', 'sum_14', 'divide_15', 'strided_slice_squeeze_welder_matmul_16']
+Processing:   3%|▎         | 14/487 [05:31<2:16:05, 17.26s/it]                                                              2024-05-14 01:34:14 [ladder:INFO]: Fusion group created: 5 ['welder_matmul_add_7', 'reshape_transpose_8']
+Processing:   3%|▎         | 14/487 [05:31<2:16:05, 17.26s/it]Processing:   3%|▎         | 17/487 [05:31<2:22:00, 18.13s/it]                                                              2024-05-14 01:34:14 [ladder:INFO]: Tuning ['strided_slice_squeeze_multiply_9', 'strided_slice_squeeze_transpose_multiply_10', 'welder_matmul_11']
+Processing:   3%|▎         | 17/487 [05:31<2:22:00, 18.13s/it]                                                              2024-05-14 01:34:20 [ladder:INFO]: result: 0.013824000023305416
+Processing:   3%|▎         | 17/487 [05:37<2:22:00, 18.13s/it]                                                              2024-05-14 01:34:20 [ladder:INFO]: Tuning ['strided_slice_squeeze_multiply_9']
+Processing:   3%|▎         | 17/487 [05:37<2:22:00, 18.13s/it]                                                              2024-05-14 01:34:45 [ladder:INFO]: result: 0.0025279999244958162
+Processing:   3%|▎         | 17/487 [06:02<2:22:00, 18.13s/it]                                                              2024-05-14 01:34:45 [ladder:INFO]: Tuning ['strided_slice_squeeze_transpose_multiply_10']
+Processing:   3%|▎         | 17/487 [06:02<2:22:00, 18.13s/it]                                                              2024-05-14 01:35:10 [ladder:INFO]: result: 0.002623999956995249
+Processing:   3%|▎         | 17/487 [06:27<2:22:00, 18.13s/it]                                                              2024-05-14 01:35:10 [ladder:INFO]: Tuning ['welder_matmul_11']
+Processing:   3%|▎         | 17/487 [06:27<2:22:00, 18.13s/it]                                                              2024-05-14 01:35:36 [ladder:INFO]: result: 0.0037159998901188374
+Processing:   3%|▎         | 17/487 [06:53<2:22:00, 18.13s/it]                                                              2024-05-14 01:35:36 [ladder:INFO]: Tuning ['strided_slice_squeeze_multiply_9']
+Processing:   3%|▎         | 17/487 [06:53<2:22:00, 18.13s/it]                                                              2024-05-14 01:35:36 [ladder:INFO]: Fusion group created: 6 ['strided_slice_squeeze_multiply_9']
+Processing:   3%|▎         | 17/487 [06:53<2:22:00, 18.13s/it]Processing:   4%|▍         | 20/487 [06:53<2:44:12, 21.10s/it]                                                              2024-05-14 01:35:36 [ladder:INFO]: Tuning ['strided_slice_squeeze_transpose_multiply_10', 'welder_matmul_11']
+Processing:   4%|▍         | 20/487 [06:53<2:44:12, 21.10s/it]                                                              2024-05-14 01:35:53 [ladder:INFO]: result: 0.010438399389386177
+Processing:   4%|▍         | 20/487 [07:10<2:44:12, 21.10s/it]                                                              2024-05-14 01:35:53 [ladder:INFO]: Tuning ['strided_slice_squeeze_transpose_multiply_10']
+Processing:   4%|▍         | 20/487 [07:10<2:44:12, 21.10s/it]                                                              2024-05-14 01:35:53 [ladder:INFO]: Fusion group created: 7 ['strided_slice_squeeze_transpose_multiply_10']
+Processing:   4%|▍         | 20/487 [07:10<2:44:12, 21.10s/it]Processing:   5%|▍         | 22/487 [07:10<2:20:28, 18.13s/it]                                                              2024-05-14 01:35:53 [ladder:INFO]: Tuning ['welder_matmul_11', 'max_12', 'subtract_exp_13']
+Processing:   5%|▍         | 22/487 [07:10<2:20:28, 18.13s/it]                                                              2024-05-14 01:35:53 [ladder:INFO]: Tuning ['welder_matmul_11']
+Processing:   5%|▍         | 22/487 [07:11<2:20:28, 18.13s/it]                                                              2024-05-14 01:35:53 [ladder:INFO]: Fusion group created: 8 ['welder_matmul_11']
+Processing:   5%|▍         | 22/487 [07:11<2:20:28, 18.13s/it]Processing:   5%|▍         | 23/487 [07:11<2:00:07, 15.53s/it]                                                              2024-05-14 01:35:53 [ladder:INFO]: Tuning ['max_12', 'subtract_exp_13']
+Processing:   5%|▍         | 23/487 [07:11<2:00:07, 15.53s/it]                                                              2024-05-14 01:35:55 [ladder:INFO]: Tuning ['max_12', 'subtract_exp_13']
+Processing:   5%|▍         | 23/487 [07:12<2:00:07, 15.53s/it]                                                              2024-05-14 01:36:01 [ladder:INFO]: result: 0.00426666671410203
+Processing:   5%|▍         | 23/487 [07:18<2:00:07, 15.53s/it]                                                              2024-05-14 01:36:01 [ladder:INFO]: Tuning ['max_12']
+Processing:   5%|▍         | 23/487 [07:18<2:00:07, 15.53s/it]                                                              2024-05-14 01:36:16 [ladder:INFO]: result: 0.0029866667464375496
+Processing:   5%|▍         | 23/487 [07:34<2:00:07, 15.53s/it]                                                              2024-05-14 01:36:16 [ladder:INFO]: Tuning ['subtract_exp_13']
+Processing:   5%|▍         | 23/487 [07:34<2:00:07, 15.53s/it]                                                              2024-05-14 01:36:39 [ladder:INFO]: result: 0.002560000168159604
+Processing:   5%|▍         | 23/487 [07:57<2:00:07, 15.53s/it]                                                              2024-05-14 01:36:39 [ladder:INFO]: Tuning ['max_12', 'subtract_exp_13', 'sum_14', 'divide_15']
+Processing:   5%|▍         | 23/487 [07:57<2:00:07, 15.53s/it]                                                              2024-05-14 01:36:40 [ladder:INFO]: Fusion group created: 9 ['max_12', 'subtract_exp_13']
+Processing:   5%|▍         | 23/487 [07:57<2:00:07, 15.53s/it]Processing:   5%|▍         | 24/487 [07:57<2:41:10, 20.89s/it]                                                              2024-05-14 01:36:40 [ladder:INFO]: Tuning ['sum_14', 'divide_15']
+Processing:   5%|▍         | 24/487 [07:57<2:41:10, 20.89s/it]                                                              2024-05-14 01:36:40 [ladder:INFO]: Tuning ['sum_14', 'divide_15']
+Processing:   5%|▍         | 24/487 [07:57<2:41:10, 20.89s/it]                                                              2024-05-14 01:36:45 [ladder:INFO]: result: 0.0036617142613977194
+Processing:   5%|▍         | 24/487 [08:03<2:41:10, 20.89s/it]                                                              2024-05-14 01:36:45 [ladder:INFO]: Tuning ['sum_14']
+Processing:   5%|▍         | 24/487 [08:03<2:41:10, 20.89s/it]                                                              2024-05-14 01:37:00 [ladder:INFO]: result: 0.002835692372173071
+Processing:   5%|▍         | 24/487 [08:18<2:41:10, 20.89s/it]                                                              2024-05-14 01:37:00 [ladder:INFO]: Tuning ['divide_15']
+Processing:   5%|▍         | 24/487 [08:18<2:41:10, 20.89s/it]                                                              2024-05-14 01:37:26 [ladder:INFO]: result: 0.0025941331405192614
+Processing:   5%|▍         | 24/487 [08:43<2:41:10, 20.89s/it]                                                              2024-05-14 01:37:26 [ladder:INFO]: Tuning ['sum_14', 'divide_15', 'strided_slice_squeeze_welder_matmul_16']
+Processing:   5%|▍         | 24/487 [08:43<2:41:10, 20.89s/it]                                                              2024-05-14 01:37:26 [ladder:INFO]: Fusion group created: 10 ['sum_14', 'divide_15']
+Processing:   5%|▍         | 24/487 [08:44<2:41:10, 20.89s/it]Processing:   5%|▌         | 26/487 [08:44<2:46:26, 21.66s/it]                                                              2024-05-14 01:37:26 [ladder:INFO]: Tuning ['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+Processing:   5%|▌         | 26/487 [08:44<2:46:26, 21.66s/it]                                                              2024-05-14 01:37:32 [ladder:INFO]: result: 0.004778666887432337
+Processing:   5%|▌         | 26/487 [08:49<2:46:26, 21.66s/it]                                                              2024-05-14 01:37:32 [ladder:INFO]: Tuning ['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+Processing:   5%|▌         | 26/487 [08:49<2:46:26, 21.66s/it]                                                              2024-05-14 01:37:51 [ladder:INFO]: result: 0.003456000005826354
+Processing:   5%|▌         | 26/487 [09:08<2:46:26, 21.66s/it]                                                              2024-05-14 01:37:51 [ladder:INFO]: Tuning ['strided_slice_squeeze_welder_matmul_16']
+Processing:   5%|▌         | 26/487 [09:08<2:46:26, 21.66s/it]                                                              2024-05-14 01:38:16 [ladder:INFO]: result: 0.0033279999624937773
+Processing:   5%|▌         | 26/487 [09:34<2:46:26, 21.66s/it]                                                              2024-05-14 01:38:16 [ladder:INFO]: Tuning ['transpose_reshape_17']
+Processing:   5%|▌         | 26/487 [09:34<2:46:26, 21.66s/it]                                                              2024-05-14 01:38:39 [ladder:INFO]: result: 0.0023893332108855247
+Processing:   5%|▌         | 26/487 [09:56<2:46:26, 21.66s/it]                                                              2024-05-14 01:38:39 [ladder:INFO]: Tuning ['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17', 'welder_matmul_add_18']
+Processing:   5%|▌         | 26/487 [09:56<2:46:26, 21.66s/it]                                                              2024-05-14 01:38:39 [ladder:INFO]: Fusion group created: 11 ['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+Processing:   5%|▌         | 26/487 [09:56<2:46:26, 21.66s/it]Processing:   6%|▌         | 28/487 [09:56<3:21:32, 26.34s/it]                                                              2024-05-14 01:38:39 [ladder:INFO]: Tuning ['welder_matmul_add_18', 'add_19']
+Processing:   6%|▌         | 28/487 [09:56<3:21:32, 26.34s/it]                                                              2024-05-14 01:39:13 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpb_r_80q8.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpb_r_80q8.so']
+Processing:   6%|▌         | 28/487 [10:30<3:21:32, 26.34s/it]
