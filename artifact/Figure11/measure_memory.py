@@ -85,7 +85,7 @@ def vllm_inference(model='llama', batch_size=1, seq_len=1):
 
 def vllm_fp16_int4_inference(model='llama', batch_size=1, seq_len=1):
     run_file = 'benchmark_llama.py' if model == 'llama' else 'benchmark_bloom.py'
-    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; python {run_file}  --batch_size {batch_size} --seq_len {seq_len}; cd ..', shell=True)
+    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; python {run_file}  --batch_size {batch_size} --seq_len {seq_len} --int4; cd ..', shell=True)
     return target_process
 
 def welder_inference(model='llama', batch_size=1, seq_len=1):
