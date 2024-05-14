@@ -1,0 +1,2 @@
+Measure the memory for bloom batch 32 seq 1 under pytorch
+The compilation of Torch Conductor may take a while Wait for 120 seconds

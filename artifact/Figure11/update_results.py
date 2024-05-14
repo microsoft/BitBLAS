@@ -148,11 +148,30 @@ for model in ["llama", "bloom"]:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
-            llama_times_data[4][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(llama_times_data[4][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            llama_times_data[5][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[5][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
         elif model == "bloom":
-            bloom_times_data[4][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(bloom_times_data[4][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            bloom_times_data[5][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[5][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+
+
+# update the ladder_fp16 results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_ladder_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[7][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[7][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[7][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[7][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
 # update the ladder_fp16_int4 results
 for model in ["llama", "bloom"]:
@@ -166,11 +185,11 @@ for model in ["llama", "bloom"]:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
-            llama_times_data[6][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(llama_times_data[6][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            llama_times_data[7][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[7][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
         elif model == "bloom":
-            bloom_times_data[6][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(bloom_times_data[6][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            bloom_times_data[7][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[7][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
 # update the ladder_fp16_nf4 results
 for model in ["llama", "bloom"]:
@@ -184,11 +203,11 @@ for model in ["llama", "bloom"]:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
-            llama_times_data[7][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(llama_times_data[7][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            llama_times_data[8][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[8][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
         elif model == "bloom":
-            bloom_times_data[7][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(bloom_times_data[7][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            bloom_times_data[8][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[8][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
 # update the ladder_fp8_fp8 results
 for model in ["llama", "bloom"]:
@@ -202,11 +221,11 @@ for model in ["llama", "bloom"]:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
-            llama_times_data[8][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(llama_times_data[8][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            llama_times_data[9][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[9][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
         elif model == "bloom":
-            bloom_times_data[8][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(bloom_times_data[8][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            bloom_times_data[9][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[9][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
 # update the ladder_fp16_mxfp8xmxfp8 results
 for model in ["llama", "bloom"]:
@@ -220,11 +239,11 @@ for model in ["llama", "bloom"]:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
-            llama_times_data[9][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(llama_times_data[9][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            llama_times_data[10][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[10][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
         elif model == "bloom":
-            bloom_times_data[9][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(bloom_times_data[9][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            bloom_times_data[10][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[10][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
             
 # update the ladder_fp16_int8xint1 results
 for model in ["llama", "bloom"]:
@@ -238,11 +257,11 @@ for model in ["llama", "bloom"]:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
-            llama_times_data[10][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(llama_times_data[10][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            llama_times_data[11][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[11][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
         elif model == "bloom":
-            bloom_times_data[10][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(bloom_times_data[10][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            bloom_times_data[11][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[11][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
 
 # write the results to back

@@ -187,6 +187,7 @@ def find_process_and_kill():
         'nvidia_measure_memory.sh',
         'llama_70b.py',
         'bloom-176b.py',
+        'bloom_176b.py',
         'ort_runtime.py',
         'trtexec',
         'benchmark_llama.py',
@@ -208,7 +209,14 @@ if os.path.exists(path):
     # measure the memory at the same time
     inference_func = model_inference_mapping[framework]
     target_process = inference_func(model, batch_size, seq_len)
-    sleep(15) # wait the memory to be steady (this large laguange model need more time to be steady)
+    if framework == 'pytorch' and model =='bloom':
+        # append a sleep to wait the memory to be steady
+        for i in range(120, 0, -1):
+            sys.stdout.write(f'\rThe compilation of Torch Conductor may take a while Wait for {i} seconds')
+            sys.stdout.flush()
+            time.sleep(1)
+    else:
+        sleep(15) # wait the memory to be steady (this large laguange model need more time to be steady)
     monitor_process = subprocess.Popen('./nvidia_measure_memory.sh > run.log', shell=True)
     try:
         target_process.wait(timeout=20)

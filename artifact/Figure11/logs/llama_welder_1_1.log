@@ -1,23 +1,2 @@
 Measure the memory for llama batch 1 seq 1 under welder
-ONNX model check passed!
-Importing ONNX model into ONNX Runtime...
-Execution Providers: ['CUDAExecutionProvider', 'CPUExecutionProvider']
-tensor_name onnx::Cast_0, shape [1, 1, 8192], dtype float16
-240
-[-5.97    5.625  -3.145  -4.098  12.33   -3.184  -0.1875  4.82    2.15
- -6.93  ] ...(size= 8192 end with 11.23 )
-240
-[-5.97    5.625  -3.145  -4.098  12.33   -3.184  -0.1875  4.82    2.15
- -6.93  ] ...(size= 8192 end with 11.23 )
-240
-[-5.97    5.625  -3.145  -4.098  12.33   -3.184  -0.1875  4.82    2.15
- -6.93  ] ...(size= 8192 end with 11.23 )
-240
-[-5.97    5.625  -3.145  -4.098  12.33   -3.184  -0.1875  4.82    2.15
- -6.93  ] ...(size= 8192 end with 11.23 )
-240
-[-5.97    5.625  -3.145  -4.098  12.33   -3.184  -0.1875  4.82    2.15
- -6.93  ] ...(size= 8192 end with 11.23 )
->> Evaluating Benchmark ...
->> Average time for each run: 1.3520 ms;
-{'llama_welder_1_1': 2776}
+{'llama_welder_1_1': 2536}

@@ -1,10 +1,21 @@
-memory.used [MiB]
-17060 MiB
-17060 MiB
-17060 MiB
-17060 MiB
-17060 MiB
-17060 MiB
-17060 MiB
-17060 MiB
-17060 MiB
+[TENSORRT] Using checkpoint path: /root/Ladder/artifact/Figure11/../../checkpoints/Figure11
+[TENSORRT] Engine file /root/Ladder/artifact/Figure11/tensorrt-benchmark/../../models/bloom_176b/bloom-176b_layer1_seq1_bs1/model.trt exists, skip conversion
+[TENSORRT] Engine file /root/Ladder/artifact/Figure11/tensorrt-benchmark/../../models/bloom_176b/bloom-176b_layer1_seq1_bs32/model.trt exists, skip conversion
+[TENSORRT] Engine file /root/Ladder/artifact/Figure11/tensorrt-benchmark/../../models/bloom_176b/bloom-176b_layer1_seq4096_bs1/model.trt exists, skip conversion
+[TENSORRT] Engine file /root/Ladder/artifact/Figure11/tensorrt-benchmark/../../models/llama_70b/llama2_70b_layer1_seq1_bs1/model.trt exists, skip conversion
+[TENSORRT] Engine file /root/Ladder/artifact/Figure11/tensorrt-benchmark/../../models/llama_70b/llama2_70b_layer1_seq1_bs32/model.trt exists, skip conversion
+[TENSORRT] Engine file /root/Ladder/artifact/Figure11/tensorrt-benchmark/../../models/llama_70b/llama2_70b_layer1_seq4096_bs1/model.trt exists, skip conversion
+Folder ./compiled_models/llama2_70b_layer1_seq1_bs1_cutlass already exists.
+Folder ./compiled_models/llama2_70b_layer1_seq1_bs32_cutlass already exists.
+Folder ./compiled_models/llama2_70b_layer1_seq4096_bs1_cutlass already exists.
+Folder ./compiled_models/bloom-176b_layer1_seq1_bs1_cutlass already exists.
+Folder ./compiled_models/bloom-176b_layer1_seq1_bs32_cutlass already exists.
+Folder ./compiled_models/bloom-176b_layer1_seq4096_bs1_cutlass already exists.
+Measure the memory for bloom batch 1 seq 1 under pytorch
+The compilation of Torch Conductor may take a while Wait for 120 secondsThe compilation of Torch Conductor may take a while Wait for 119 seconds/opt/conda/lib/python3.10/site-packages/transformers/utils/generic.py:441: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
+  _torch_pytree._register_pytree_node(
+/opt/conda/lib/python3.10/site-packages/transformers/utils/generic.py:309: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
+  _torch_pytree._register_pytree_node(
+The compilation of Torch Conductor may take a while Wait for 118 seconds/opt/conda/lib/python3.10/site-packages/transformers/utils/generic.py:309: UserWarning: torch.utils._pytree._register_pytree_node is deprecated. Please use torch.utils._pytree.register_pytree_node instead.
+  _torch_pytree._register_pytree_node(
+The compilation of Torch Conductor may take a while Wait for 117 secondsThe compilation of Torch Conductor may take a while Wait for 116 secondsThe compilation of Torch Conductor may take a while Wait for 115 secondsThe compilation of Torch Conductor may take a while Wait for 114 secondsThe compilation of Torch Conductor may take a while Wait for 113 secondsThe compilation of Torch Conductor may take a while Wait for 112 secondsThe compilation of Torch Conductor may take a while Wait for 111 secondsThe compilation of Torch Conductor may take a while Wait for 110 secondsThe compilation of Torch Conductor may take a while Wait for 109 secondsThe compilation of Torch Conductor may take a while Wait for 108 secondsThe compilation of Torch Conductor may take a while Wait for 107 secondsThe compilation of Torch Conductor may take a while Wait for 106 secondsThe compilation of Torch Conductor may take a while Wait for 105 secondsThe compilation of Torch Conductor may take a while Wait for 104 secondsThe compilation of Torch Conductor may take a while Wait for 103 seconds

@@ -1,0 +1,2 @@
+Measure the memory for bloom batch 1 seq 4096 under welder
+{'bloom_welder_1_4096': 66678}
