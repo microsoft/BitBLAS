@@ -21,7 +21,7 @@ log_path = "progress/" + fname
 
 arch = "cuda"
 arch = ladder.arch.__getattribute__(arch)()
-dtype="float32"
+dtype="float16"
 
 shapes = [
     [16384, 16384, 16384],
@@ -137,12 +137,12 @@ for M, N, K in shapes:
         return tvm.tir.reinterpret(dtype, (e_f16 | (s << tvm.tir.const(8, "uint32"))) << tvm.tir.const(7, "uint32") | m_f8)
         
     def ladder_gemm(M, N, K, wmma_m, wmma_n, wmma_k):
-        A = te.placeholder((M // wmma_m, K // wmma_k, wmma_m ,wmma_k), name='A', dtype='float32')
+        A = te.placeholder((M // wmma_m, K // wmma_k, wmma_m ,wmma_k), name='A', dtype='float16')
         B = te.placeholder((N // wmma_n, K // wmma_k, wmma_n, wmma_k // 8 * bit), name='B', dtype='int8')
         Scales = te.placeholder((K // group_size, N), name='Scales', dtype='uint8')
 
         def B_decode_func(n, k, nn, kk):
-            w = _tir_u8_to_f8_to_float(bit, B[n, k, nn, kk // n_float_per_i8], kk % n_float_per_i8, "float32", Scales[(k * wmma_k + kk) // group_size, n * wmma_n + nn])
+            w = _tir_u8_to_f8_to_float(bit, B[n, k, nn, kk // n_float_per_i8], kk % n_float_per_i8, "float16", Scales[(k * wmma_k + kk) // group_size, n * wmma_n + nn])
             return w
         
         B_decode = te.compute(
@@ -156,14 +156,14 @@ for M, N, K in shapes:
         kk = te.reduce_axis((0, wmma_k), name='kk')
         C = te.compute(
             (M // wmma_m, N // wmma_n, wmma_m, wmma_n),
-            lambda i, j, ii, jj: te.sum(A[i, k, ii, kk].astype('float32') * B_decode[j, k, jj, kk].astype('float32'), axis=[k, kk]),
+            lambda i, j, ii, jj: te.sum(A[i, k, ii, kk].astype('float16') * B_decode[j, k, jj, kk].astype('float16'), axis=[k, kk]),
             name='C'
         )
         return A, B, Scales, C
 
 
     def reshape(M, N, wmma_m, wmma_n):
-        C = te.placeholder((M // wmma_m, N // wmma_n, wmma_m, wmma_n), name='C', dtype='float32')
+        C = te.placeholder((M // wmma_m, N // wmma_n, wmma_m, wmma_n), name='C', dtype='float16')
         C_reshape = te.compute(
             (M, N),
             lambda i, j: C[i // wmma_m, j // wmma_n, i % wmma_m, j % wmma_n],
@@ -179,10 +179,14 @@ for M, N, K in shapes:
     input_args = args[:3]
     output_args = [args[-1]]
     node = IRNode([None for _ in input_args], args, "ladder_matmul")
+    node.add_tag("tensorCoreConfig", [2, 3])
+    node.add_tag("consistent_config", (True, False))
+    node.add_tag("ladder_compute_type", "mxfp")
+    node.add_tag("ladder_config", (True, True))
     output_nodes = [OutputNode(node)]
-    policy = DefaultPolicy(output_nodes, arch)
+    policy = LadderPolicy(output_nodes, arch)
     start = time.time()
-    configs = policy.emit_config(40)
+    configs = policy.emit_config(20)
 
     compile_results = []
     cgen = ladder.CodeGenerator()
@@ -192,33 +196,30 @@ for M, N, K in shapes:
         except:
             continue
         compile_results.append(cpresult)
-    if len(compile_results) == 0:
-            best_latency = 10000
-    else:
-        ladder.utils.compile_and_load_parallel(compile_results, arch)
-        cost = time.time() - start
-        best_latency = 10000
-        best = None
-        values = []
-        for cpresult in compile_results:
-            print(cpresult.config)
-            code = cpresult.code
-            if cpresult.lib is None:
-                latency = 10000
-            else:
-                latency = cpresult.profile()
-            values.append(latency)
-            if latency < best_latency:
-                best_latency = latency
-                best = cpresult
-            print(latency)
-        # with open("best_code.cu", "w+") as f:
-        #     f.write(code)
-        # print(best.code)
-        # print("top1: {} \ttop10: {}".format(values[0], min(values)))
-        # print("-" * 80, flush=True)
-        # print("best config: {}".format(best.config))
-        print("best latency: {}".format(best_latency))
+    ladder.utils.compile_and_load_parallel(compile_results, arch)
+    cost = time.time() - start
+    best_latency = 10000
+    best = None
+    values = []
+    for cpresult in compile_results:
+        print(cpresult.config)
+        code = cpresult.code
+        if cpresult.lib is None:
+            latency = 10000
+        else:
+            latency = cpresult.profile()
+        values.append(latency)
+        if latency < best_latency:
+            best_latency = latency
+            best = cpresult
+        print(latency)
+    with open("best_code.cu", "w+") as f:
+        f.write(code)
+    print(best.code)
+    print("top1: {} \ttop10: {}".format(values[0], min(values)))
+    print("-" * 80, flush=True)
+    print("best config: {}".format(best.config))
+    print("best latency: {}".format(best_latency))
     key = "{}_{}_{}".format(M, N, K)
     perf_map.append((key, best_latency))
 

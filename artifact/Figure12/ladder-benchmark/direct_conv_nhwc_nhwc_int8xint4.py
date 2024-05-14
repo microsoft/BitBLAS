@@ -354,7 +354,7 @@ shapes = [
 perf_map = []
 diff_map = {}
 for n, c, h, w, f, kh, kw, s, d, p, g in shapes:
-    key = f'{n}_{f}_{h}_{w}_{c}_{kh}_{kw}_{s}_{d}_{p}'
+    key = f'{n}_{c}_{h}_{w}_{f}_{kh}_{kw}_{s}_{d}_{p}'
 
     oh = (h + 2 * p - kh) // s + 1
     ow = (w + 2 * p - kw) // s + 1

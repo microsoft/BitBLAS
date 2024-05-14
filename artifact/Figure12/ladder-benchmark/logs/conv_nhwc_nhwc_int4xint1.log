@@ -3,75 +3,75 @@ n: 128, f: 64, h: 56, w: 56, c: 64, kh: 3, kw: 3, s: 1, d: 1, p: 0, oh: 54, ow: 
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.10670080035924911
 {<Node, ladder_conv2d_reshape_bias>: {'block': [6, 4, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.12134400010108948
+0.12160000205039978
 {<Node, ladder_conv2d_reshape_bias>: {'block': [9, 4, 16, 16], 'warp': [9, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.10362879931926727
+0.10383360087871552
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.10465279966592789
 {<Node, ladder_conv2d_reshape_bias>: {'block': [12, 2, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.11212799698114395
+0.11238399893045425
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.14847999811172485
+0.1486847996711731
 {<Node, ladder_conv2d_reshape_bias>: {'block': [9, 2, 16, 16], 'warp': [3, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.09907200187444687
+0.09932799637317657
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.13332480192184448
+0.13363200426101685
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.10485760122537613
 {<Node, ladder_conv2d_reshape_bias>: {'block': [3, 4, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.1773568093776703
 {<Node, ladder_conv2d_reshape_bias>: {'block': [18, 2, 16, 16], 'warp': [9, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.10833920538425446
+0.10792960226535797
 {<Node, ladder_conv2d_reshape_bias>: {'block': [12, 4, 16, 16], 'warp': [12, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.10342399775981903
+0.1028095930814743
 {<Node, ladder_conv2d_reshape_bias>: {'block': [6, 2, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.15769599378108978
+0.15692800283432007
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.20213758945465088
+0.20193281769752502
 {<Node, ladder_conv2d_reshape_bias>: {'block': [27, 1, 16, 16], 'warp': [9, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.12595200538635254
+0.1253376007080078
 {<Node, ladder_conv2d_reshape_bias>: {'block': [24, 1, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.12236800044775009
+0.12390400469303131
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 1, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1271807998418808
+0.12820479273796082
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.23705600202083588
+0.23688532412052155
 {<Node, ladder_conv2d_reshape_bias>: {'block': [18, 1, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.12160000205039978
 {<Node, ladder_conv2d_reshape_bias>: {'block': [27, 2, 16, 16], 'warp': [9, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.10178560018539429
+0.10240000486373901
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.11653120815753937
+0.11632640659809113
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 2, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.10792960226535797
+0.10751999914646149
 {<Node, ladder_conv2d_reshape_bias>: {'block': [24, 2, 16, 16], 'warp': [12, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.10895359516143799
+0.10956799983978271
 {<Node, ladder_conv2d_reshape_bias>: {'block': [12, 1, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.11837439239025116
 {<Node, ladder_conv2d_reshape_bias>: {'block': [3, 2, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1740799993276596
+0.1744896024465561
 {<Node, ladder_conv2d_reshape_bias>: {'block': [9, 1, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.11735039949417114
+0.11694079637527466
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1154559999704361
+0.11530239880084991
 {<Node, ladder_conv2d_reshape_bias>: {'block': [36, 1, 16, 16], 'warp': [9, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.12267520278692245
 {<Node, ladder_conv2d_reshape_bias>: {'block': [27, 4, 16, 16], 'warp': [27, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.2801664173603058
+0.27955201268196106
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 4, 16, 16], 'warp': [32, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.5017600059509277
+0.507699191570282
 {<Node, ladder_conv2d_reshape_bias>: {'block': [24, 4, 16, 16], 'warp': [24, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.19312641024589539
+0.1927168071269989
 {<Node, ladder_conv2d_reshape_bias>: {'block': [6, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.11724799871444702
+0.11673600226640701
 {<Node, ladder_conv2d_reshape_bias>: {'block': [18, 4, 16, 16], 'warp': [18, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.10731519758701324
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.3461120128631592
+0.3452928066253662
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.15385599434375763
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.4194986820220947
+0.4188160002231598
 {<Node, ladder_conv2d_reshape_bias>: {'block': [3, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.1599999964237213
 {<Node, ladder_conv2d_reshape_bias>: {'block': [54, 1, 16, 16], 'warp': [18, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
@@ -338,65 +338,65 @@ __asm__ __volatile__("cp.async.wait_group 0;");
 
 n: 128, f: 64, h: 56, w: 56, c: 64, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 56, ow: 56
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 2, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07536640018224716
+0.07516159862279892
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07782400399446487
+0.07946239411830902
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07441066950559616
+0.07389866560697556
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07594666630029678
+0.07650743424892426
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07811657339334488
+0.0797257199883461
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 2, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07816532999277115
+0.07884799689054489
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.08016456663608551
+0.08025600016117096
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07519085705280304
+0.0759039968252182
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07846400141716003
+0.078392893075943
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 1, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07611732929944992
+0.0750933364033699
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 1, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07560533285140991
+0.07492266595363617
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.0791039988398552
+0.07884799689054489
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.07691378146409988
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07720959931612015
+0.07588978111743927
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07669760286808014
+0.07680000364780426
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07948800176382065
+0.08038400113582611
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07850667089223862
+0.07769600301980972
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07710719853639603
+0.07691378146409988
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07434239983558655
+0.07536640018224716
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [8, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07434239983558655
+0.07372800260782242
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 2, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07598079741001129
+0.07475200295448303
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 2, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07526399940252304
+0.07475200295448303
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07975821942090988
+0.07964444160461426
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 1, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07823359966278076
+0.07702755182981491
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 1, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07864320278167725
+0.07854080200195312
 {<Node, ladder_conv2d_reshape_bias>: {'block': [64, 1, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 4, 16, 16], 'warp': [14, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.07761920243501663
+0.07639040052890778
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 4, 16, 16], 'warp': [16, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.20213758945465088
+0.2013184130191803
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 2, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 2, 16, 16], 'warp': [28, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
@@ -935,57 +935,57 @@ Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
 TVMError: Cannot convert type int32x16 to CUDA type
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.0970752015709877
+0.09666560590267181
 {<Node, ladder_conv2d_reshape_bias>: {'block': [13, 2, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.08458240330219269
+0.08396799862384796
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.13025280833244324
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.09441279619932175
+0.09461759775876999
 {<Node, ladder_conv2d_reshape_bias>: {'block': [13, 4, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.0942080020904541
+0.09379839897155762
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.12226559966802597
+0.12160000205039978
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.0999424010515213
+0.09932799637317657
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.19353599846363068
+0.19374080002307892
 {<Node, ladder_conv2d_reshape_bias>: {'block': [26, 1, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.10629119724035263
+0.1056767925620079
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.21213866770267487
+0.21217279136180878
 {<Node, ladder_conv2d_reshape_bias>: {'block': [26, 2, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.09338880330324173
+0.09379839897155762
 {<Node, ladder_conv2d_reshape_bias>: {'block': [13, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.14189714193344116
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1016319990158081
+0.10291200131177902
 {<Node, ladder_conv2d_reshape_bias>: {'block': [26, 4, 16, 16], 'warp': [26, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.19578880071640015
+0.19517439603805542
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.0989866629242897
+0.09912319481372833
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 1, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.10977280139923096
+0.11038719117641449
 {<Node, ladder_conv2d_reshape_bias>: {'block': [52, 1, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 2, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.0942080020904541
+0.09482239931821823
 {<Node, ladder_conv2d_reshape_bias>: {'block': [52, 2, 16, 16], 'warp': [26, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.34116268157958984
+0.3409920036792755
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 4, 16, 16], 'warp': [32, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.350822389125824
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.13443657755851746
+0.13472914695739746
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.3776853382587433
+0.3766613304615021
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1511131376028061
+0.1509668529033661
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.20421485602855682
+0.20394666492938995
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.18900112807750702
+0.1888548582792282
 code:  __global__ void __launch_bounds__(32) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
   
   int T_conv_warp[8];
@@ -1921,47 +1921,47 @@ Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/src/target/source/codegen_cuda.cc", line 547
 TVMError: Cannot convert type int32x16 to CUDA type
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.13414399325847626
+0.13286399841308594
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.1303039938211441
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 2, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1305599957704544
+0.13184000551700592
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.13271039724349976
+0.132915198802948
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1325055956840515
+0.13312000036239624
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 2, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.1744896024465561
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 1, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.12774400413036346
+0.12922880053520203
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.13352960348129272
+0.1348266750574112
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1343146711587906
+0.13260799646377563
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.14899200201034546
+0.14877256751060486
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1578666716814041
+0.15769599378108978
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1382399946451187
+0.13882514834403992
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1515520066022873
+0.1516982764005661
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 1, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.12492799758911133
+0.12671999633312225
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.14271999895572662
+0.14259199798107147
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [8, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1314816027879715
+0.13045760989189148
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.13168640434741974
+0.131071999669075
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.16237713396549225
+0.16230399906635284
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 2, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.1271807998418808
+0.12636159360408783
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.2456137090921402
+0.2451748549938202
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.15065599977970123
+0.15082058310508728
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 2, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 0.12636159360408783
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 1, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
@@ -1971,13 +1971,13 @@ TVMError: Cannot convert type int32x16 to CUDA type
 {<Node, ladder_conv2d_reshape_bias>: {'block': [64, 1, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.24722285568714142
+0.2469302862882614
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.16076800227165222
+0.16153599321842194
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 4, 16, 16], 'warp': [14, 2, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.13271039724349976
+0.132915198802948
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 32], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {2: <Stride, 2, 16>}}}
-0.15530666708946228
+0.15520915389060974
 code:  __global__ void __launch_bounds__(32) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
   
   int T_conv_warp[8];
@@ -2202,7 +2202,7 @@ __asm__ __volatile__("cp.async.wait_group 0;");
 }
 
 
-128_64_56_56_64_3_3_1_1_0	0.09907200187444687
-128_64_56_56_64_1_1_1_1_0	0.07434239983558655
-128_128_28_28_128_3_3_1_1_0	0.08458240330219269
-128_512_28_28_128_1_1_1_1_0	0.12492799758911133
+128_64_56_56_64_3_3_1_1_0	0.09932799637317657
+128_64_56_56_64_1_1_1_1_0	0.07372800260782242
+128_128_28_28_128_3_3_1_1_0	0.08396799862384796
+128_512_28_28_128_1_1_1_1_0	0.12636159360408783

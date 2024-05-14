@@ -126,8 +126,11 @@ for M, N, K in shapes:
     compile_results = []
     cgen = ladder.CodeGenerator()
     for config in configs:
-        cpresult = cgen.compile(output_nodes, config, "cuda", kernel_name="Fused")
-        compile_results.append(cpresult)
+        try:
+            cpresult = cgen.compile(output_nodes, config, "cuda", kernel_name="Fused")
+            compile_results.append(cpresult)
+        except:
+            pass
 
     ladder.utils.compile_and_load_parallel(compile_results, arch)
     best_latency = 10000

@@ -1,85 +1,61 @@
 conv_nhwc_nhwc_bfp16xmxfp8_e5m2.py
-n: 128, f: 64, h: 56, w: 56, c: 64, kh: 3, kw: 3, s: 1, d: 1, p: 0, oh: 54, ow: 54
-{<Node, ladder_conv2d_reshape_bias>: {'block': [6, 4, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.20480000972747803
+n: 128, f: 64, h: 56, w: 56, c: 64, kh: 3, kw: 3, s: 1, d: 1, p: 1, oh: 56, ow: 56
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.23879680037498474
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.2306559979915619
-{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 4, 16, 16], 'warp': [9, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.1802240014076233
+0.2672640085220337
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.184524804353714
-{<Node, ladder_conv2d_reshape_bias>: {'block': [3, 4, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.27187201380729675
-{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 4, 16, 16], 'warp': [18, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.1740799993276596
+0.22609920799732208
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.34877440333366394
+0.404992014169693
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.17428480088710785
-{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 4, 16, 16], 'warp': [12, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.18227200210094452
-{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 2, 16, 16], 'warp': [3, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.240025594830513
+0.20766720175743103
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.20582398772239685
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.22988800704479218
-{<Node, ladder_conv2d_reshape_bias>: {'block': [6, 2, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.24473600089550018
+0.27852800488471985
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 2, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.3832319974899292
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.28815358877182007
-{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 2, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.22604799270629883
-{<Node, ladder_conv2d_reshape_bias>: {'block': [3, 2, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.33484798669815063
+0.3504127860069275
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.6328319907188416
+0.6684671640396118
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.4428800046443939
-{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 2, 16, 16], 'warp': [9, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.21872639656066895
+0.5251412987709045
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.22077438235282898
-{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 1, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.40243199467658997
+0.25640958547592163
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 2, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.2553855776786804
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.41758719086647034
-{<Node, ladder_conv2d_reshape_bias>: {'block': [6, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.4395520091056824
+0.44416001439094543
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.7864320278167725
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.49602562189102173
-{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 1, 16, 16], 'warp': [3, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.4108799993991852
+0.5840896368026733
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.5534719824790955
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.6307839751243591
-{<Node, ladder_conv2d_reshape_bias>: {'block': [3, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.6399999856948853
+0.7002111673355103
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.497322678565979
-{<Node, ladder_conv2d_reshape_bias>: {'block': [24, 2, 16, 16], 'warp': [12, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-100000000.0
-{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 1, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.4177919924259186
+0.6207488179206848
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.40386563539505005
+0.4155392050743103
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.6799359917640686
-{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 1, 16, 16], 'warp': [9, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-100000000.0
-{<Node, ladder_conv2d_reshape_bias>: {'block': [24, 1, 16, 16], 'warp': [6, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-100000000.0
-code:  __global__ void __launch_bounds__(128) Fused(half* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, half* __restrict__ T_conv) {
+0.791756808757782
+code:  __global__ void __launch_bounds__(32) Fused(half* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, half* __restrict__ T_conv) {
   
-  half T_conv_warp[48];
-  __shared__ half data_shared[24576];
-  __shared__ signed char weight_shared[2048];
-  __shared__ uchar Scales_shared[64];
+  half T_conv_warp[8];
+  __shared__ half data_shared[1024];
+  __shared__ signed char weight_shared[1024];
+  __shared__ uchar Scales_shared[32];
   __shared__ half B_decode_shared[512];
   signed char weight_shared_local[8];
   half B_decode_local[8];
-  half data_shared_warp[48];
+  half data_shared_warp[8];
   half B_decode_shared_warp[8];
   signed char weight_shared_local_1[8];
   half B_decode_local_1[8];
-  half data_shared_warp_1[48];
+  half data_shared_warp_1[8];
   half B_decode_shared_warp_1[8];
 
   const int MAX_BLOCK_N = 10;
@@ -93,25 +69,51 @@ code:  __global__ void __launch_bounds__(128) Fused(half* __restrict__ input, in
   const auto bz = blockIdx.z;
   const dim3 blockIdx(bx, by, bz);
   
-  for (int i_2_init = 0; i_2_init < 6; ++i_2_init) {
+  for (int i_2_init = 0; i_2_init < 1; ++i_2_init) {
     for (int j_2_init = 0; j_2_init < 1; ++j_2_init) {
       for (int i = 0; i < 8; ++i) {
-T_conv_warp[(i_2_init * 8) + i] = 0.0;}
+T_conv_warp[0 + i] = 0.0;}
 ;
     }
   }
   #pragma unroll
-  for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 12; ++ax0_ax1_ax2_ax3_0_fused_0) {
+  for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 2; ++ax0_ax1_ax2_ax3_0_fused_0) {
 
   {
     unsigned int addr;
 #if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
-    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + (((ax0_ax1_ax2_ax3_0_fused_0 * 1024) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)))));
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + ((ax0_ax1_ax2_ax3_0_fused_0 * 256) + (((int)threadIdx.x) * 8)))));
 #else
     __asm__ __volatile__(
       "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
       : "=r"(addr)
-      : "l"((void *)(data_shared + (((ax0_ax1_ax2_ax3_0_fused_0 * 1024) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8))))
+      : "l"((void *)(data_shared + ((ax0_ax1_ax2_ax3_0_fused_0 * 256) + (((int)threadIdx.x) * 8))))
+    );
+#endif
+    int pred_guard = (int)((56 <= (((int)blockIdx.y) % 3136)) && (1 <= (((int)blockIdx.y) % 56)));
+    __asm__ __volatile__(
+        "{  .reg .pred p;"
+        "  setp.ne.b32 p, %0, 0;"
+      #if TVM_ENABLE_L2_PREFETCH
+        " @p cp.async.cg.shared.global.L2::128B [%1], [%2], %3;"
+      #else
+        " @p cp.async.cg.shared.global [%1], [%2], %3;"
+      #endif
+      "  @!p st.shared.v4.u32 [%1], {%4, %5, %6, %7};}"
+        :: "r"(pred_guard), "r"(addr), "l"((void*)(input + ((((((int)blockIdx.y) * 1024) + (ax0_ax1_ax2_ax3_0_fused_0 * 256)) + (((int)threadIdx.x) * 8)) - 58368))), "n"(16), "r"(0), "r"(0), "r"(0),"r"(0)
+    );
+  }
+  }
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(weight_shared + (((int)threadIdx.x) * 16))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)(weight_shared + (((int)threadIdx.x) * 16)))
     );
 #endif
     __asm__ __volatile__(
@@ -120,54 +122,54 @@ T_conv_warp[(i_2_init * 8) + i] = 0.0;}
       #else
         "cp.async.cg.shared.global [%0], [%1], %2;"
       #endif
-        :: "r"(addr), "l"((void*)(input + ((((((((((int)blockIdx.y) * 2) + (ax0_ax1_ax2_ax3_0_fused_0 / 6)) / 243) * 3211264) + (((((((int)blockIdx.y) * 4) + (ax0_ax1_ax2_ax3_0_fused_0 / 3)) % 486) / 9) * 57344)) + (((((((int)blockIdx.y) * 24) + (ax0_ax1_ax2_ax3_0_fused_0 * 2)) + (((int)threadIdx.y) >> 1)) % 54) * 1024)) + ((((int)threadIdx.y) & 1) * 256)) + (((int)threadIdx.x) * 8)))), "n"(16)
+        :: "r"(addr), "l"((void*)(weight + ((((int)blockIdx.x) * 9216) + (((int)threadIdx.x) * 16)))), "n"(16)
     );
   }
-  }
-  for (int ax0_ax1_ax2_ax3_fused_0_0_0 = 0; ax0_ax1_ax2_ax3_fused_0_0_0 < 2; ++ax0_ax1_ax2_ax3_fused_0_0_0) {
-
-  {
-    unsigned int addr;
-#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
-    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(weight_shared + ((ax0_ax1_ax2_ax3_fused_0_0_0 * 512) + (((int)threadIdx.x) * 16)))));
-#else
-    __asm__ __volatile__(
-      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
-      : "=r"(addr)
-      : "l"((void *)(weight_shared + ((ax0_ax1_ax2_ax3_fused_0_0_0 * 512) + (((int)threadIdx.x) * 16))))
-    );
-#endif
-    __asm__ __volatile__(
-      #if TVM_ENABLE_L2_PREFETCH
-        "cp.async.cg.shared.global.L2::128B [%0], [%1], %2;"
-      #else
-        "cp.async.cg.shared.global [%0], [%1], %2;"
-      #endif
-        :: "r"(addr), "l"((void*)(weight + (((((int)blockIdx.x) * 9216) + (ax0_ax1_ax2_ax3_fused_0_0_0 * 512)) + (((int)threadIdx.x) * 16)))), "n"(16)
-    );
-  }
-  }
-  for (int ax0 = 0; ax0 < 2; ++ax0) {
-    if (((int)threadIdx.x) < 16) {
-      Scales_shared[((ax0 * 16) + ((int)threadIdx.x))] = Scales[(((ax0 * 64) + (((int)blockIdx.x) * 16)) + ((int)threadIdx.x))];
-    }
+  if (((int)threadIdx.x) < 16) {
+    Scales_shared[((int)threadIdx.x)] = Scales[((((int)blockIdx.x) * 16) + ((int)threadIdx.x))];
   }
 __asm__ __volatile__("cp.async.commit_group;");
 
   for (int k_0 = 0; k_0 < 17; ++k_0) {
     __syncthreads();
     #pragma unroll
-    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 12; ++ax0_ax1_ax2_ax3_0_fused_0_1) {
+    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 2; ++ax0_ax1_ax2_ax3_0_fused_0_1) {
 
   {
     unsigned int addr;
 #if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
-    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + ((((((k_0 + 1) & 1) * 12288) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 1024)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)))));
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + (((((k_0 + 1) & 1) * 512) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 256)) + (((int)threadIdx.x) * 8)))));
 #else
     __asm__ __volatile__(
       "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
       : "=r"(addr)
-      : "l"((void *)(data_shared + ((((((k_0 + 1) & 1) * 12288) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 1024)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8))))
+      : "l"((void *)(data_shared + (((((k_0 + 1) & 1) * 512) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 256)) + (((int)threadIdx.x) * 8))))
+    );
+#endif
+    int pred_guard = (int)((((1 <= (((((int)blockIdx.y) % 3136) / 56) + ((k_0 + 1) / 6))) && (1 <= ((((k_0 + 1) % 6) >> 1) + (((int)blockIdx.y) % 56)))) && ((((((int)blockIdx.y) % 3136) / 56) + ((k_0 + 1) / 6)) < 57)) && (((((k_0 + 1) % 6) >> 1) + (((int)blockIdx.y) % 56)) < 57));
+    __asm__ __volatile__(
+        "{  .reg .pred p;"
+        "  setp.ne.b32 p, %0, 0;"
+      #if TVM_ENABLE_L2_PREFETCH
+        " @p cp.async.cg.shared.global.L2::128B [%1], [%2], %3;"
+      #else
+        " @p cp.async.cg.shared.global [%1], [%2], %3;"
+      #endif
+      "  @!p st.shared.v4.u32 [%1], {%4, %5, %6, %7};}"
+        :: "r"(pred_guard), "r"(addr), "l"((void*)(input + (((((((((k_0 + 1) / 6) * 57344) + ((((k_0 + 1) % 6) >> 1) * 1024)) + (((int)blockIdx.y) * 1024)) + (k_0 * 512)) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 256)) + (((int)threadIdx.x) * 8)) - 57856))), "n"(16), "r"(0), "r"(0), "r"(0),"r"(0)
+    );
+  }
+    }
+
+  {
+    unsigned int addr;
+#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(weight_shared + ((((k_0 + 1) & 1) * 512) + (((int)threadIdx.x) * 16)))));
+#else
+    __asm__ __volatile__(
+      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
+      : "=r"(addr)
+      : "l"((void *)(weight_shared + ((((k_0 + 1) & 1) * 512) + (((int)threadIdx.x) * 16))))
     );
 #endif
     __asm__ __volatile__(
@@ -176,80 +178,46 @@ __asm__ __volatile__("cp.async.commit_group;");
       #else
         "cp.async.cg.shared.global [%0], [%1], %2;"
       #endif
-        :: "r"(addr), "l"((void*)(input + ((((((((((((((int)blockIdx.y) * 2) + (ax0_ax1_ax2_ax3_0_fused_0_1 / 6)) / 243) * 3211264) + (((((((int)blockIdx.y) * 4) + (ax0_ax1_ax2_ax3_0_fused_0_1 / 3)) % 486) / 9) * 57344)) + (((k_0 + 1) / 6) * 57344)) + ((((k_0 + 1) % 6) >> 1) * 1024)) + (((((((int)blockIdx.y) * 24) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 2)) + (((int)threadIdx.y) >> 1)) % 54) * 1024)) + (k_0 * 512)) + ((((int)threadIdx.y) & 1) * 256)) + (((int)threadIdx.x) * 8)) + 512))), "n"(16)
+        :: "r"(addr), "l"((void*)(weight + ((((((int)blockIdx.x) * 9216) + (k_0 * 512)) + (((int)threadIdx.x) * 16)) + 512))), "n"(16)
     );
   }
-    }
-    for (int ax0_ax1_ax2_ax3_fused_0_0_0_1 = 0; ax0_ax1_ax2_ax3_fused_0_0_0_1 < 2; ++ax0_ax1_ax2_ax3_fused_0_0_0_1) {
-      if ((k_0 + ax0_ax1_ax2_ax3_fused_0_0_0_1) < 17) {
-
-  {
-    unsigned int addr;
-#if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
-    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(weight_shared + (((((k_0 + 1) & 1) * 1024) + (ax0_ax1_ax2_ax3_fused_0_0_0_1 * 512)) + (((int)threadIdx.x) * 16)))));
-#else
-    __asm__ __volatile__(
-      "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
-      : "=r"(addr)
-      : "l"((void *)(weight_shared + (((((k_0 + 1) & 1) * 1024) + (ax0_ax1_ax2_ax3_fused_0_0_0_1 * 512)) + (((int)threadIdx.x) * 16))))
-    );
-#endif
-    __asm__ __volatile__(
-      #if TVM_ENABLE_L2_PREFETCH
-        "cp.async.cg.shared.global.L2::128B [%0], [%1], %2;"
-      #else
-        "cp.async.cg.shared.global [%0], [%1], %2;"
-      #endif
-        :: "r"(addr), "l"((void*)(weight + (((((((int)blockIdx.x) * 9216) + (k_0 * 512)) + (ax0_ax1_ax2_ax3_fused_0_0_0_1 * 512)) + (((int)threadIdx.x) * 16)) + 512))), "n"(16)
-    );
-  }
-      }
-    }
-    for (int ax0_1 = 0; ax0_1 < 2; ++ax0_1) {
-      if (((k_0 + ax0_1) < 17) && (((int)threadIdx.x) < 16)) {
-        Scales_shared[(((((k_0 + 1) & 1) * 32) + (ax0_1 * 16)) + ((int)threadIdx.x))] = Scales[(((((ax0_1 * 64) + (k_0 * 64)) + (((int)blockIdx.x) * 16)) + ((int)threadIdx.x)) + 64)];
-      }
+    if (((int)threadIdx.x) < 16) {
+      Scales_shared[((((k_0 + 1) & 1) * 16) + ((int)threadIdx.x))] = Scales[((((k_0 * 64) + (((int)blockIdx.x) * 16)) + ((int)threadIdx.x)) + 64)];
     }
 __asm__ __volatile__("cp.async.commit_group;");
 
 __asm__ __volatile__("cp.async.wait_group 1;");
 
     __syncthreads();
-    if (((int)threadIdx.y) < 2) {
-      *(int2*)(weight_shared_local + 0) = *(int2*)(weight_shared + ((((k_0 & 1) * 1024) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)));
-    }
-    for (int ax0_2 = 0; ax0_2 < 8; ++ax0_2) {
-      if (((int)threadIdx.y) < 2) {
-          uint __1 = (((max((((((((uint)weight_shared_local[ax0_2]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales_shared[(((k_0 & 1) * 32) + (((int)threadIdx.x) >> 1))])), (uint)63) | ((((((uint)weight_shared_local[ax0_2]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight_shared_local[ax0_2]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
-        B_decode_local[ax0_2] = (*(half *)(&(__1)));
+    for (int ax0_ax1_ax2_ax3_0_fused_0_2 = 0; ax0_ax1_ax2_ax3_0_fused_0_2 < 2; ++ax0_ax1_ax2_ax3_0_fused_0_2) {
+      *(int2*)(weight_shared_local + 0) = *(int2*)(weight_shared + ((((k_0 & 1) * 512) + (ax0_ax1_ax2_ax3_0_fused_0_2 * 256)) + (((int)threadIdx.x) * 8)));
+      for (int ax0 = 0; ax0 < 8; ++ax0) {
+          uint __1 = (((max((((((((uint)weight_shared_local[ax0]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales_shared[(((k_0 & 1) * 16) + (((int)threadIdx.x) >> 1))])), (uint)63) | ((((((uint)weight_shared_local[ax0]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight_shared_local[ax0]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+        B_decode_local[ax0] = (*(half *)(&(__1)));
       }
-    }
-    if (((int)threadIdx.y) < 2) {
-      *(uint4*)(B_decode_shared + ((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8))) = *(uint4*)(B_decode_local + 0);
+      *(uint4*)(B_decode_shared + ((ax0_ax1_ax2_ax3_0_fused_0_2 * 256) + (((int)threadIdx.x) * 8))) = *(uint4*)(B_decode_local + 0);
     }
     __syncthreads();
     for (int k_1 = 0; k_1 < 2; ++k_1) {
-      for (int ax0_3 = 0; ax0_3 < 6; ++ax0_3) {
 
   {
     unsigned int addr;
 #if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
-    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[(((((k_0 & 1) * 12288) + (((int)threadIdx.y) * 3072)) + (ax0_3 * 512)) + (k_1 * 256))])) + (((int)threadIdx.x) * 8))));
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[(((k_0 & 1) * 512) + (k_1 * 256))])) + (((int)threadIdx.x) * 8))));
 #else
     __asm__ __volatile__(
       "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
       : "=r"(addr)
-      : "l"((void *)((&(data_shared[(((((k_0 & 1) * 12288) + (((int)threadIdx.y) * 3072)) + (ax0_3 * 512)) + (k_1 * 256))])) + (((int)threadIdx.x) * 8)))
+      : "l"((void *)((&(data_shared[(((k_0 & 1) * 512) + (k_1 * 256))])) + (((int)threadIdx.x) * 8)))
     );
 #endif
     __asm__ __volatile__(
       "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
       "{%0, %1, %2, %3}, [%4];\n"
-      : "=r"(((unsigned *)(data_shared_warp + (ax0_3 * 8)))[0]), "=r"(((unsigned *)(data_shared_warp + (ax0_3 * 8)))[1]), "=r"(((unsigned *)(data_shared_warp + (ax0_3 * 8)))[2]), "=r"(((unsigned *)(data_shared_warp + (ax0_3 * 8)))[3])
+      : "=r"(((unsigned *)(data_shared_warp + 0))[0]), "=r"(((unsigned *)(data_shared_warp + 0))[1]), "=r"(((unsigned *)(data_shared_warp + 0))[2]), "=r"(((unsigned *)(data_shared_warp + 0))[3])
       : "r"(addr)
     );
   }
-      }
 
   {
     unsigned int addr;
@@ -269,64 +237,56 @@ __asm__ __volatile__("cp.async.wait_group 1;");
       : "r"(addr)
     );
   }
-      for (int i_2 = 0; i_2 < 6; ++i_2) {
 
   {
     __asm__ __volatile__(
       "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16"
       "{%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
-      :  "=r"(((unsigned *)(T_conv_warp + (i_2 * 8)))[0]), "=r"(((unsigned *)(T_conv_warp + (i_2 * 8)))[1])
-      : "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[0]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[1]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[2]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[3]), "r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "r"(((unsigned *)(T_conv_warp + (i_2 * 8)))[0]), "r"(((unsigned *)(T_conv_warp + (i_2 * 8)))[1]));
+      :  "=r"(((unsigned *)(T_conv_warp + 0))[0]), "=r"(((unsigned *)(T_conv_warp + 0))[1])
+      : "r"(((unsigned *)(data_shared_warp + 0))[0]), "r"(((unsigned *)(data_shared_warp + 0))[1]), "r"(((unsigned *)(data_shared_warp + 0))[2]), "r"(((unsigned *)(data_shared_warp + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "r"(((unsigned *)(T_conv_warp + 0))[0]), "r"(((unsigned *)(T_conv_warp + 0))[1]));
   }
 
   {
     __asm__ __volatile__(
       "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16"
       "{%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
-      :  "=r"(((unsigned *)(T_conv_warp + ((i_2 * 8) + 4)))[0]), "=r"(((unsigned *)(T_conv_warp + ((i_2 * 8) + 4)))[1])
-      : "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[0]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[1]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[2]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[3]), "r"(((unsigned *)(B_decode_shared_warp + 4))[0]), "r"(((unsigned *)(B_decode_shared_warp + 4))[1]), "r"(((unsigned *)(T_conv_warp + ((i_2 * 8) + 4)))[0]), "r"(((unsigned *)(T_conv_warp + ((i_2 * 8) + 4)))[1]));
+      :  "=r"(((unsigned *)(T_conv_warp + 4))[0]), "=r"(((unsigned *)(T_conv_warp + 4))[1])
+      : "r"(((unsigned *)(data_shared_warp + 0))[0]), "r"(((unsigned *)(data_shared_warp + 0))[1]), "r"(((unsigned *)(data_shared_warp + 0))[2]), "r"(((unsigned *)(data_shared_warp + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp + 4))[0]), "r"(((unsigned *)(B_decode_shared_warp + 4))[1]), "r"(((unsigned *)(T_conv_warp + 4))[0]), "r"(((unsigned *)(T_conv_warp + 4))[1]));
   }
-      }
     }
   }
 __asm__ __volatile__("cp.async.wait_group 0;");
 
   __syncthreads();
-  if (((int)threadIdx.y) < 2) {
-    *(int2*)(weight_shared_local_1 + 0) = *(int2*)(weight_shared + (((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 1024));
-  }
-  for (int ax0_4 = 0; ax0_4 < 8; ++ax0_4) {
-    if (((int)threadIdx.y) < 2) {
-        uint __2 = (((max((((((((uint)weight_shared_local_1[ax0_4]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales_shared[((((int)threadIdx.x) >> 1) + 32)])), (uint)63) | ((((((uint)weight_shared_local_1[ax0_4]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight_shared_local_1[ax0_4]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
-      B_decode_local_1[ax0_4] = (*(half *)(&(__2)));
+  for (int ax0_ax1_ax2_ax3_0_fused_0_3 = 0; ax0_ax1_ax2_ax3_0_fused_0_3 < 2; ++ax0_ax1_ax2_ax3_0_fused_0_3) {
+    *(int2*)(weight_shared_local_1 + 0) = *(int2*)(weight_shared + (((ax0_ax1_ax2_ax3_0_fused_0_3 * 256) + (((int)threadIdx.x) * 8)) + 512));
+    for (int ax0_1 = 0; ax0_1 < 8; ++ax0_1) {
+        uint __2 = (((max((((((((uint)weight_shared_local_1[ax0_1]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales_shared[((((int)threadIdx.x) >> 1) + 16)])), (uint)63) | ((((((uint)weight_shared_local_1[ax0_1]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight_shared_local_1[ax0_1]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+      B_decode_local_1[ax0_1] = (*(half *)(&(__2)));
     }
-  }
-  if (((int)threadIdx.y) < 2) {
-    *(uint4*)(B_decode_shared + ((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8))) = *(uint4*)(B_decode_local_1 + 0);
+    *(uint4*)(B_decode_shared + ((ax0_ax1_ax2_ax3_0_fused_0_3 * 256) + (((int)threadIdx.x) * 8))) = *(uint4*)(B_decode_local_1 + 0);
   }
   __syncthreads();
   for (int k_1_1 = 0; k_1_1 < 2; ++k_1_1) {
-    for (int ax0_5 = 0; ax0_5 < 6; ++ax0_5) {
 
   {
     unsigned int addr;
 #if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
-    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[((((((int)threadIdx.y) * 3072) + (ax0_5 * 512)) + (k_1_1 * 256)) + 12288)])) + (((int)threadIdx.x) * 8))));
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[((k_1_1 * 256) + 512)])) + (((int)threadIdx.x) * 8))));
 #else
     __asm__ __volatile__(
       "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
       : "=r"(addr)
-      : "l"((void *)((&(data_shared[((((((int)threadIdx.y) * 3072) + (ax0_5 * 512)) + (k_1_1 * 256)) + 12288)])) + (((int)threadIdx.x) * 8)))
+      : "l"((void *)((&(data_shared[((k_1_1 * 256) + 512)])) + (((int)threadIdx.x) * 8)))
     );
 #endif
     __asm__ __volatile__(
       "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
       "{%0, %1, %2, %3}, [%4];\n"
-      : "=r"(((unsigned *)(data_shared_warp_1 + (ax0_5 * 8)))[0]), "=r"(((unsigned *)(data_shared_warp_1 + (ax0_5 * 8)))[1]), "=r"(((unsigned *)(data_shared_warp_1 + (ax0_5 * 8)))[2]), "=r"(((unsigned *)(data_shared_warp_1 + (ax0_5 * 8)))[3])
+      : "=r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[3])
       : "r"(addr)
     );
   }
-    }
 
   {
     unsigned int addr;
@@ -346,84 +306,80 @@ __asm__ __volatile__("cp.async.wait_group 0;");
       : "r"(addr)
     );
   }
-    for (int i_2_1 = 0; i_2_1 < 6; ++i_2_1) {
 
   {
     __asm__ __volatile__(
       "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16"
       "{%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
-      :  "=r"(((unsigned *)(T_conv_warp + (i_2_1 * 8)))[0]), "=r"(((unsigned *)(T_conv_warp + (i_2_1 * 8)))[1])
-      : "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[0]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[1]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[2]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[1]), "r"(((unsigned *)(T_conv_warp + (i_2_1 * 8)))[0]), "r"(((unsigned *)(T_conv_warp + (i_2_1 * 8)))[1]));
+      :  "=r"(((unsigned *)(T_conv_warp + 0))[0]), "=r"(((unsigned *)(T_conv_warp + 0))[1])
+      : "r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "r"(((unsigned *)(data_shared_warp_1 + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[1]), "r"(((unsigned *)(T_conv_warp + 0))[0]), "r"(((unsigned *)(T_conv_warp + 0))[1]));
   }
 
   {
     __asm__ __volatile__(
       "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16"
       "{%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
-      :  "=r"(((unsigned *)(T_conv_warp + ((i_2_1 * 8) + 4)))[0]), "=r"(((unsigned *)(T_conv_warp + ((i_2_1 * 8) + 4)))[1])
-      : "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[0]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[1]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[2]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 4))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 4))[1]), "r"(((unsigned *)(T_conv_warp + ((i_2_1 * 8) + 4)))[0]), "r"(((unsigned *)(T_conv_warp + ((i_2_1 * 8) + 4)))[1]));
+      :  "=r"(((unsigned *)(T_conv_warp + 4))[0]), "=r"(((unsigned *)(T_conv_warp + 4))[1])
+      : "r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "r"(((unsigned *)(data_shared_warp_1 + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 4))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 4))[1]), "r"(((unsigned *)(T_conv_warp + 4))[0]), "r"(((unsigned *)(T_conv_warp + 4))[1]));
   }
-    }
   }
-  for (int ax0_6 = 0; ax0_6 < 6; ++ax0_6) {
-    for (int local_id = 0; local_id < 8; local_id+=2) {
-*((uint *)&(&(T_conv[((((((int)blockIdx.y) * 24576) + (((int)threadIdx.y) * 6144)) + (ax0_6 * 1024)) + (((int)blockIdx.x) * 256))]))[((((((local_id % 4) / 2) * 8) + (threadIdx.x / 4)) * 16) + ((((local_id / 4) * 8) + ((threadIdx.x % 4) * 2)) + (local_id % 2)))]) = *((uint *)&T_conv_warp[(ax0_6 * 8) + local_id]);
+  for (int local_id = 0; local_id < 8; local_id+=2) {
+*((uint *)&(&(T_conv[((((int)blockIdx.y) * 1024) + (((int)blockIdx.x) * 256))]))[((((((local_id % 4) / 2) * 8) + (threadIdx.x / 4)) * 16) + ((((local_id / 4) * 8) + ((threadIdx.x % 4) * 2)) + (local_id % 2)))]) = *((uint *)&T_conv_warp[0 + local_id]);
 }
 ;
-  }
 }
 
 
-top1: 0.20480000972747803 	top10: 0.1740799993276596
+top1: 0.23879680037498474 	top10: 0.20582398772239685
 --------------------------------------------------------------------------------
-best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [18, 4, 16, 16], 'warp': [18, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-best latency: 0.1740799993276596
-143.77429260357817 tflops, 99.15468455419185 %
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+best latency: 0.20582398772239685
+130.77437768115433 tflops, 90.18922598700298 %
 n: 128, f: 64, h: 56, w: 56, c: 64, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 56, ow: 56
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [8, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.06737919896841049
+0.06799359619617462
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.06784000247716904
-{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 0.06758400052785873
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.06809599697589874
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.07024639844894409
+0.07106559723615646
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.06696959584951401
+0.06737919896841049
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.0684031993150711
+0.0679253339767456
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 2, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.06676480174064636
+0.06696959584951401
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 2, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.07082666456699371
+0.07045120000839233
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 2, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.06732799857854843
+0.06784000247716904
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.06732799857854843
+0.06681600213050842
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.06743771582841873
+0.06673067063093185
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 2, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.10205867141485214
+0.10199040174484253
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.07592228800058365
+0.07548342645168304
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 4, 16, 16], 'warp': [16, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 4, 16, 16], 'warp': [14, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.11059200018644333
+0.11059199273586273
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.08744959533214569
+0.08785919845104218
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 1, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.07086079567670822
+0.07106559723615646
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.07099733501672745
+0.07004160434007645
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 0.09011200070381165
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 1, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
@@ -431,17 +387,17 @@ n: 128, f: 64, h: 56, w: 56, c: 64, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 56, ow: 
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 1, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.08221256732940674
+0.08243200182914734
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 1, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.09040457010269165
+0.09096533060073853
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 2, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 2, 16, 16], 'warp': [28, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.1257813423871994
+0.12636159360408783
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 4, 16, 16], 'warp': [49, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [64, 1, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
@@ -739,78 +695,82 @@ __asm__ __volatile__("cp.async.wait_group 0;");
 }
 
 
-top1: 0.06737919896841049 	top10: 0.06676480174064636
+top1: 0.06799359619617462 	top10: 0.06673067063093185
 --------------------------------------------------------------------------------
-best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-best latency: 0.06676480174064636
-44.794900580514266 tflops, 30.893034883113284 %
-n: 128, f: 128, h: 28, w: 28, c: 128, kh: 3, kw: 3, s: 1, d: 1, p: 0, oh: 26, ow: 26
-{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 8, 16, 16], 'warp': [13, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.1386495977640152
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+best latency: 0.06673067063093185
+44.81781207910867 tflops, 30.90883591662667 %
+n: 128, f: 128, h: 28, w: 28, c: 128, kh: 3, kw: 3, s: 1, d: 1, p: 1, oh: 28, ow: 28
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 8, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.19025918841362
+0.2357248067855835
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 8, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.29977598786354065
+0.38067200779914856
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 8, 16, 16], 'warp': [8, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.16486400365829468
+0.19763199985027313
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.2310144007205963
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 8, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.21831679344177246
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 8, 16, 16], 'warp': [14, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.19476480782032013
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.2165759950876236
+0.27008000016212463
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.17817600071430206
+0.21790719032287598
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 8, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.5209599733352661
+0.6202880144119263
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.3309567868709564
-{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 4, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.16383999586105347
-{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.2104319930076599
+0.404992014169693
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [16, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.16957440972328186
+0.2099200040102005
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 8, 16, 16], 'warp': [16, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.2810879945755005
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4, 16, 16], 'warp': [14, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.21790719032287598
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 2, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.3898879885673523
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.26705920696258545
-{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 2, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.21524479985237122
+0.350822389125824
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.5859327912330627
+0.6699007749557495
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.40721067786216736
+0.5230591893196106
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.2166784107685089
+0.2514944076538086
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 2, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.25026559829711914
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.38707199692726135
+0.43673598766326904
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.7900159955024719
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.4360533058643341
-{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.707584023475647
+0.5828608274459839
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.5611519813537598
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.5806080102920532
+0.6947839856147766
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.44390401244163513
-{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 2, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-100000000.0
+0.622592031955719
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.37299200892448425
+0.4151296019554138
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.6023167967796326
-{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 1, 16, 16], 'warp': [13, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-100000000.0
-code:  __global__ void __launch_bounds__(64) Fused(half* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, half* __restrict__ T_conv) {
+0.7931903600692749
+code:  __global__ void __launch_bounds__(32) Fused(half* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, half* __restrict__ T_conv) {
   
-  half T_conv_warp[104];
-  __shared__ half data_shared[26624];
+  half T_conv_warp[8];
+  __shared__ half data_shared[1024];
   __shared__ signed char weight_shared[1024];
   __shared__ uchar Scales_shared[32];
   __shared__ half B_decode_shared[512];
   signed char weight_shared_local[8];
   half B_decode_local[8];
-  half data_shared_warp[104];
+  half data_shared_warp[8];
   half B_decode_shared_warp[8];
   signed char weight_shared_local_1[8];
   half B_decode_local_1[8];
-  half data_shared_warp_1[104];
+  half data_shared_warp_1[8];
   half B_decode_shared_warp_1[8];
 
   const int MAX_BLOCK_N = 10;
@@ -824,34 +784,38 @@ code:  __global__ void __launch_bounds__(64) Fused(half* __restrict__ input, int
   const auto bz = blockIdx.z;
   const dim3 blockIdx(bx, by, bz);
   
-  for (int i_2_init = 0; i_2_init < 13; ++i_2_init) {
+  for (int i_2_init = 0; i_2_init < 1; ++i_2_init) {
     for (int j_2_init = 0; j_2_init < 1; ++j_2_init) {
       for (int i = 0; i < 8; ++i) {
-T_conv_warp[(i_2_init * 8) + i] = 0.0;}
+T_conv_warp[0 + i] = 0.0;}
 ;
     }
   }
   #pragma unroll
-  for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 26; ++ax0_ax1_ax2_ax3_0_fused_0) {
+  for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 2; ++ax0_ax1_ax2_ax3_0_fused_0) {
 
   {
     unsigned int addr;
 #if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
-    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + (((ax0_ax1_ax2_ax3_0_fused_0 * 512) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)))));
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + ((ax0_ax1_ax2_ax3_0_fused_0 * 256) + (((int)threadIdx.x) * 8)))));
 #else
     __asm__ __volatile__(
       "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
       : "=r"(addr)
-      : "l"((void *)(data_shared + (((ax0_ax1_ax2_ax3_0_fused_0 * 512) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8))))
+      : "l"((void *)(data_shared + ((ax0_ax1_ax2_ax3_0_fused_0 * 256) + (((int)threadIdx.x) * 8))))
     );
 #endif
+    int pred_guard = (int)((28 <= (((int)blockIdx.y) % 784)) && (1 <= (((int)blockIdx.y) % 28)));
     __asm__ __volatile__(
+        "{  .reg .pred p;"
+        "  setp.ne.b32 p, %0, 0;"
       #if TVM_ENABLE_L2_PREFETCH
-        "cp.async.cg.shared.global.L2::128B [%0], [%1], %2;"
+        " @p cp.async.cg.shared.global.L2::128B [%1], [%2], %3;"
       #else
-        "cp.async.cg.shared.global [%0], [%1], %2;"
+        " @p cp.async.cg.shared.global [%1], [%2], %3;"
       #endif
-        :: "r"(addr), "l"((void*)(input + ((((((((int)blockIdx.y) / 26) * 1605632) + ((((int)blockIdx.y) % 26) * 57344)) + (ax0_ax1_ax2_ax3_0_fused_0 * 2048)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)))), "n"(16)
+      "  @!p st.shared.v4.u32 [%1], {%4, %5, %6, %7};}"
+        :: "r"(pred_guard), "r"(addr), "l"((void*)(input + ((((((int)blockIdx.y) * 2048) + (ax0_ax1_ax2_ax3_0_fused_0 * 256)) + (((int)threadIdx.x) * 8)) - 59392))), "n"(16), "r"(0), "r"(0), "r"(0),"r"(0)
     );
   }
   }
@@ -884,26 +848,30 @@ __asm__ __volatile__("cp.async.commit_group;");
   for (int k_0 = 0; k_0 < 35; ++k_0) {
     __syncthreads();
     #pragma unroll
-    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 26; ++ax0_ax1_ax2_ax3_0_fused_0_1) {
+    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 2; ++ax0_ax1_ax2_ax3_0_fused_0_1) {
 
   {
     unsigned int addr;
 #if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
-    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + ((((((k_0 + 1) & 1) * 13312) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 512)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)))));
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)(data_shared + (((((k_0 + 1) & 1) * 512) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 256)) + (((int)threadIdx.x) * 8)))));
 #else
     __asm__ __volatile__(
       "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
       : "=r"(addr)
-      : "l"((void *)(data_shared + ((((((k_0 + 1) & 1) * 13312) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 512)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8))))
+      : "l"((void *)(data_shared + (((((k_0 + 1) & 1) * 512) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 256)) + (((int)threadIdx.x) * 8))))
     );
 #endif
+    int pred_guard = (int)((((1 <= (((((int)blockIdx.y) % 784) / 28) + ((k_0 + 1) / 12))) && (1 <= ((((k_0 + 1) % 12) >> 2) + (((int)blockIdx.y) % 28)))) && ((((((int)blockIdx.y) % 784) / 28) + ((k_0 + 1) / 12)) < 29)) && (((((k_0 + 1) % 12) >> 2) + (((int)blockIdx.y) % 28)) < 29));
     __asm__ __volatile__(
+        "{  .reg .pred p;"
+        "  setp.ne.b32 p, %0, 0;"
       #if TVM_ENABLE_L2_PREFETCH
-        "cp.async.cg.shared.global.L2::128B [%0], [%1], %2;"
+        " @p cp.async.cg.shared.global.L2::128B [%1], [%2], %3;"
       #else
-        "cp.async.cg.shared.global [%0], [%1], %2;"
+        " @p cp.async.cg.shared.global [%1], [%2], %3;"
       #endif
-        :: "r"(addr), "l"((void*)(input + ((((((((((((int)blockIdx.y) / 26) * 1605632) + (((k_0 + 1) / 12) * 57344)) + ((((int)blockIdx.y) % 26) * 57344)) + ((((k_0 + 1) % 12) >> 2) * 2048)) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 2048)) + (k_0 * 512)) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)) + 512))), "n"(16)
+      "  @!p st.shared.v4.u32 [%1], {%4, %5, %6, %7};}"
+        :: "r"(pred_guard), "r"(addr), "l"((void*)(input + (((((((((k_0 + 1) / 12) * 57344) + ((((k_0 + 1) % 12) >> 2) * 2048)) + (((int)blockIdx.y) * 2048)) + (k_0 * 512)) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 256)) + (((int)threadIdx.x) * 8)) - 58880))), "n"(16), "r"(0), "r"(0), "r"(0),"r"(0)
     );
   }
     }
@@ -936,35 +904,35 @@ __asm__ __volatile__("cp.async.commit_group;");
 __asm__ __volatile__("cp.async.wait_group 1;");
 
     __syncthreads();
-    *(int2*)(weight_shared_local + 0) = *(int2*)(weight_shared + ((((k_0 & 1) * 512) + (((int)threadIdx.y) * 256)) + (((int)threadIdx.x) * 8)));
-    for (int ax0 = 0; ax0 < 8; ++ax0) {
-        uint __1 = (((max((((((((uint)weight_shared_local[ax0]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales_shared[(((k_0 & 1) * 16) + (((int)threadIdx.x) >> 1))])), (uint)63) | ((((((uint)weight_shared_local[ax0]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight_shared_local[ax0]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
-      B_decode_local[ax0] = (*(half *)(&(__1)));
+    for (int ax0_ax1_ax2_ax3_0_fused_0_2 = 0; ax0_ax1_ax2_ax3_0_fused_0_2 < 2; ++ax0_ax1_ax2_ax3_0_fused_0_2) {
+      *(int2*)(weight_shared_local + 0) = *(int2*)(weight_shared + ((((k_0 & 1) * 512) + (ax0_ax1_ax2_ax3_0_fused_0_2 * 256)) + (((int)threadIdx.x) * 8)));
+      for (int ax0 = 0; ax0 < 8; ++ax0) {
+          uint __1 = (((max((((((((uint)weight_shared_local[ax0]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales_shared[(((k_0 & 1) * 16) + (((int)threadIdx.x) >> 1))])), (uint)63) | ((((((uint)weight_shared_local[ax0]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight_shared_local[ax0]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+        B_decode_local[ax0] = (*(half *)(&(__1)));
+      }
+      *(uint4*)(B_decode_shared + ((ax0_ax1_ax2_ax3_0_fused_0_2 * 256) + (((int)threadIdx.x) * 8))) = *(uint4*)(B_decode_local + 0);
     }
-    *(uint4*)(B_decode_shared + ((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8))) = *(uint4*)(B_decode_local + 0);
     __syncthreads();
     for (int k_1 = 0; k_1 < 2; ++k_1) {
-      for (int ax0_1 = 0; ax0_1 < 13; ++ax0_1) {
 
   {
     unsigned int addr;
 #if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
-    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[(((((k_0 & 1) * 13312) + (((int)threadIdx.y) * 6656)) + (ax0_1 * 512)) + (k_1 * 256))])) + (((int)threadIdx.x) * 8))));
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[(((k_0 & 1) * 512) + (k_1 * 256))])) + (((int)threadIdx.x) * 8))));
 #else
     __asm__ __volatile__(
       "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
       : "=r"(addr)
-      : "l"((void *)((&(data_shared[(((((k_0 & 1) * 13312) + (((int)threadIdx.y) * 6656)) + (ax0_1 * 512)) + (k_1 * 256))])) + (((int)threadIdx.x) * 8)))
+      : "l"((void *)((&(data_shared[(((k_0 & 1) * 512) + (k_1 * 256))])) + (((int)threadIdx.x) * 8)))
     );
 #endif
     __asm__ __volatile__(
       "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
       "{%0, %1, %2, %3}, [%4];\n"
-      : "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 8)))[0]), "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 8)))[1]), "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 8)))[2]), "=r"(((unsigned *)(data_shared_warp + (ax0_1 * 8)))[3])
+      : "=r"(((unsigned *)(data_shared_warp + 0))[0]), "=r"(((unsigned *)(data_shared_warp + 0))[1]), "=r"(((unsigned *)(data_shared_warp + 0))[2]), "=r"(((unsigned *)(data_shared_warp + 0))[3])
       : "r"(addr)
     );
   }
-      }
 
   {
     unsigned int addr;
@@ -984,58 +952,56 @@ __asm__ __volatile__("cp.async.wait_group 1;");
       : "r"(addr)
     );
   }
-      for (int i_2 = 0; i_2 < 13; ++i_2) {
 
   {
     __asm__ __volatile__(
       "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16"
       "{%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
-      :  "=r"(((unsigned *)(T_conv_warp + (i_2 * 8)))[0]), "=r"(((unsigned *)(T_conv_warp + (i_2 * 8)))[1])
-      : "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[0]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[1]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[2]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[3]), "r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "r"(((unsigned *)(T_conv_warp + (i_2 * 8)))[0]), "r"(((unsigned *)(T_conv_warp + (i_2 * 8)))[1]));
+      :  "=r"(((unsigned *)(T_conv_warp + 0))[0]), "=r"(((unsigned *)(T_conv_warp + 0))[1])
+      : "r"(((unsigned *)(data_shared_warp + 0))[0]), "r"(((unsigned *)(data_shared_warp + 0))[1]), "r"(((unsigned *)(data_shared_warp + 0))[2]), "r"(((unsigned *)(data_shared_warp + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp + 0))[1]), "r"(((unsigned *)(T_conv_warp + 0))[0]), "r"(((unsigned *)(T_conv_warp + 0))[1]));
   }
 
   {
     __asm__ __volatile__(
       "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16"
       "{%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
-      :  "=r"(((unsigned *)(T_conv_warp + ((i_2 * 8) + 4)))[0]), "=r"(((unsigned *)(T_conv_warp + ((i_2 * 8) + 4)))[1])
-      : "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[0]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[1]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[2]), "r"(((unsigned *)(data_shared_warp + (i_2 * 8)))[3]), "r"(((unsigned *)(B_decode_shared_warp + 4))[0]), "r"(((unsigned *)(B_decode_shared_warp + 4))[1]), "r"(((unsigned *)(T_conv_warp + ((i_2 * 8) + 4)))[0]), "r"(((unsigned *)(T_conv_warp + ((i_2 * 8) + 4)))[1]));
+      :  "=r"(((unsigned *)(T_conv_warp + 4))[0]), "=r"(((unsigned *)(T_conv_warp + 4))[1])
+      : "r"(((unsigned *)(data_shared_warp + 0))[0]), "r"(((unsigned *)(data_shared_warp + 0))[1]), "r"(((unsigned *)(data_shared_warp + 0))[2]), "r"(((unsigned *)(data_shared_warp + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp + 4))[0]), "r"(((unsigned *)(B_decode_shared_warp + 4))[1]), "r"(((unsigned *)(T_conv_warp + 4))[0]), "r"(((unsigned *)(T_conv_warp + 4))[1]));
   }
-      }
     }
   }
 __asm__ __volatile__("cp.async.wait_group 0;");
 
   __syncthreads();
-  *(int2*)(weight_shared_local_1 + 0) = *(int2*)(weight_shared + (((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 512));
-  for (int ax0_2 = 0; ax0_2 < 8; ++ax0_2) {
-      uint __2 = (((max((((((((uint)weight_shared_local_1[ax0_2]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales_shared[((((int)threadIdx.x) >> 1) + 16)])), (uint)63) | ((((((uint)weight_shared_local_1[ax0_2]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight_shared_local_1[ax0_2]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
-    B_decode_local_1[ax0_2] = (*(half *)(&(__2)));
+  for (int ax0_ax1_ax2_ax3_0_fused_0_3 = 0; ax0_ax1_ax2_ax3_0_fused_0_3 < 2; ++ax0_ax1_ax2_ax3_0_fused_0_3) {
+    *(int2*)(weight_shared_local_1 + 0) = *(int2*)(weight_shared + (((ax0_ax1_ax2_ax3_0_fused_0_3 * 256) + (((int)threadIdx.x) * 8)) + 512));
+    for (int ax0_1 = 0; ax0_1 < 8; ++ax0_1) {
+        uint __2 = (((max((((((((uint)weight_shared_local_1[ax0_1]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales_shared[((((int)threadIdx.x) >> 1) + 16)])), (uint)63) | ((((((uint)weight_shared_local_1[ax0_1]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight_shared_local_1[ax0_1]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+      B_decode_local_1[ax0_1] = (*(half *)(&(__2)));
+    }
+    *(uint4*)(B_decode_shared + ((ax0_ax1_ax2_ax3_0_fused_0_3 * 256) + (((int)threadIdx.x) * 8))) = *(uint4*)(B_decode_local_1 + 0);
   }
-  *(uint4*)(B_decode_shared + ((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8))) = *(uint4*)(B_decode_local_1 + 0);
   __syncthreads();
   for (int k_1_1 = 0; k_1_1 < 2; ++k_1_1) {
-    for (int ax0_3 = 0; ax0_3 < 13; ++ax0_3) {
 
   {
     unsigned int addr;
 #if TVM_ENBALE_EFFICIENT_SMEM_PTR_CAST
-    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[((((((int)threadIdx.y) * 6656) + (ax0_3 * 512)) + (k_1_1 * 256)) + 13312)])) + (((int)threadIdx.x) * 8))));
+    addr = static_cast<unsigned int>(__cvta_generic_to_shared((void *)((&(data_shared[((k_1_1 * 256) + 512)])) + (((int)threadIdx.x) * 8))));
 #else
     __asm__ __volatile__(
       "{ .reg .u64 addr; cvta.to.shared.u64 addr, %1; cvt.u32.u64 %0, addr; }\n"
       : "=r"(addr)
-      : "l"((void *)((&(data_shared[((((((int)threadIdx.y) * 6656) + (ax0_3 * 512)) + (k_1_1 * 256)) + 13312)])) + (((int)threadIdx.x) * 8)))
+      : "l"((void *)((&(data_shared[((k_1_1 * 256) + 512)])) + (((int)threadIdx.x) * 8)))
     );
 #endif
     __asm__ __volatile__(
       "ldmatrix.sync.aligned.m8n8.x4.shared.b16"
       "{%0, %1, %2, %3}, [%4];\n"
-      : "=r"(((unsigned *)(data_shared_warp_1 + (ax0_3 * 8)))[0]), "=r"(((unsigned *)(data_shared_warp_1 + (ax0_3 * 8)))[1]), "=r"(((unsigned *)(data_shared_warp_1 + (ax0_3 * 8)))[2]), "=r"(((unsigned *)(data_shared_warp_1 + (ax0_3 * 8)))[3])
+      : "=r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "=r"(((unsigned *)(data_shared_warp_1 + 0))[3])
       : "r"(addr)
     );
   }
-    }
 
   {
     unsigned int addr;
@@ -1055,96 +1021,92 @@ __asm__ __volatile__("cp.async.wait_group 0;");
       : "r"(addr)
     );
   }
-    for (int i_2_1 = 0; i_2_1 < 13; ++i_2_1) {
 
   {
     __asm__ __volatile__(
       "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16"
       "{%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
-      :  "=r"(((unsigned *)(T_conv_warp + (i_2_1 * 8)))[0]), "=r"(((unsigned *)(T_conv_warp + (i_2_1 * 8)))[1])
-      : "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[0]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[1]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[2]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[1]), "r"(((unsigned *)(T_conv_warp + (i_2_1 * 8)))[0]), "r"(((unsigned *)(T_conv_warp + (i_2_1 * 8)))[1]));
+      :  "=r"(((unsigned *)(T_conv_warp + 0))[0]), "=r"(((unsigned *)(T_conv_warp + 0))[1])
+      : "r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "r"(((unsigned *)(data_shared_warp_1 + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 0))[1]), "r"(((unsigned *)(T_conv_warp + 0))[0]), "r"(((unsigned *)(T_conv_warp + 0))[1]));
   }
 
   {
     __asm__ __volatile__(
       "mma.sync.aligned.m16n8k16.row.col.f16.f16.f16.f16"
       "{%0, %1}, {%2, %3, %4, %5}, {%6, %7}, {%8, %9};\n"
-      :  "=r"(((unsigned *)(T_conv_warp + ((i_2_1 * 8) + 4)))[0]), "=r"(((unsigned *)(T_conv_warp + ((i_2_1 * 8) + 4)))[1])
-      : "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[0]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[1]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[2]), "r"(((unsigned *)(data_shared_warp_1 + (i_2_1 * 8)))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 4))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 4))[1]), "r"(((unsigned *)(T_conv_warp + ((i_2_1 * 8) + 4)))[0]), "r"(((unsigned *)(T_conv_warp + ((i_2_1 * 8) + 4)))[1]));
+      :  "=r"(((unsigned *)(T_conv_warp + 4))[0]), "=r"(((unsigned *)(T_conv_warp + 4))[1])
+      : "r"(((unsigned *)(data_shared_warp_1 + 0))[0]), "r"(((unsigned *)(data_shared_warp_1 + 0))[1]), "r"(((unsigned *)(data_shared_warp_1 + 0))[2]), "r"(((unsigned *)(data_shared_warp_1 + 0))[3]), "r"(((unsigned *)(B_decode_shared_warp_1 + 4))[0]), "r"(((unsigned *)(B_decode_shared_warp_1 + 4))[1]), "r"(((unsigned *)(T_conv_warp + 4))[0]), "r"(((unsigned *)(T_conv_warp + 4))[1]));
   }
-    }
   }
-  for (int ax0_4 = 0; ax0_4 < 13; ++ax0_4) {
-    for (int local_id = 0; local_id < 8; local_id+=2) {
-*((uint *)&(&(T_conv[((((((int)blockIdx.y) * 53248) + (((int)threadIdx.y) * 26624)) + (ax0_4 * 2048)) + (((int)blockIdx.x) * 256))]))[((((((local_id % 4) / 2) * 8) + (threadIdx.x / 4)) * 16) + ((((local_id / 4) * 8) + ((threadIdx.x % 4) * 2)) + (local_id % 2)))]) = *((uint *)&T_conv_warp[(ax0_4 * 8) + local_id]);
+  for (int local_id = 0; local_id < 8; local_id+=2) {
+*((uint *)&(&(T_conv[((((int)blockIdx.y) * 2048) + (((int)blockIdx.x) * 256))]))[((((((local_id % 4) / 2) * 8) + (threadIdx.x / 4)) * 16) + ((((local_id / 4) * 8) + ((threadIdx.x % 4) * 2)) + (local_id % 2)))]) = *((uint *)&T_conv_warp[0 + local_id]);
 }
 ;
-  }
 }
 
 
-top1: 0.1386495977640152 	top10: 0.1386495977640152
+top1: 0.2357248067855835 	top10: 0.19476480782032013
 --------------------------------------------------------------------------------
-best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [13, 8, 16, 16], 'warp': [13, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-best latency: 0.1386495977640152
-167.39044712963468 tflops, 115.44168767561011 %
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 8, 16, 16], 'warp': [14, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+best latency: 0.19476480782032013
+138.20003833075307 tflops, 95.31037126258832 %
 n: 128, f: 128, h: 28, w: 28, c: 512, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 28, ow: 28
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 8, 16, 16], 'warp': [2, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.10117119550704956
-{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.10874880850315094
-{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 8, 16, 16], 'warp': [1, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.15615999698638916
-{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.11417599767446518
-{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.10403840243816376
-{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 8, 16, 16], 'warp': [4, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.09482239931821823
-{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 8, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 0.10096640884876251
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.10792960226535797
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 8, 16, 16], 'warp': [1, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.15641599893569946
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4, 16, 16], 'warp': [2, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.11315199732780457
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4, 16, 16], 'warp': [4, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.1056767925620079
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 8, 16, 16], 'warp': [4, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.09666560590267181
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 8, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+0.10199040174484253
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 8, 16, 16], 'warp': [7, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.11182080209255219
+0.1114111989736557
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 4, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.17182719707489014
+0.1726464033126831
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 2, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.13189120590686798
+0.1305599957704544
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 2, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.1572864055633545
+0.15769599378108978
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4, 16, 16], 'warp': [8, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.10465279966592789
+0.10383360087871552
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 8, 16, 16], 'warp': [1, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 0.27084800601005554
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.14472533762454987
+0.1443839967250824
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4, 16, 16], 'warp': [7, 2, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.11161600053310394
+0.11120639741420746
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 8, 16, 16], 'warp': [8, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 100000000.0
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 4, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.299212783575058
+0.2994175851345062
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.21562515199184418
+0.216063991189003
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.29576534032821655
+0.29614078998565674
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.2199552059173584
+0.22118398547172546
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.33402878046035767
+0.3332096040248871
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.2495146542787552
+0.24883200228214264
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 2, 16, 16], 'warp': [7, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.12800000607967377
+0.12723200023174286
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 2, 16, 16], 'warp': [8, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.12472319602966309
+0.1243136078119278
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.2510506808757782
+0.25122132897377014
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 1, 16, 16], 'warp': [2, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.2396160066127777
+0.24089600145816803
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 1, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
 0.32440319657325745
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 1, 16, 16], 'warp': [4, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-0.22015999257564545
+0.21913599967956543
 code:  __global__ void __launch_bounds__(128) Fused(half* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, half* __restrict__ T_conv) {
   
   half T_conv_warp[32];
@@ -1453,12 +1415,12 @@ __asm__ __volatile__("cp.async.wait_group 0;");
 }
 
 
-top1: 0.10117119550704956 	top10: 0.09482239931821823
+top1: 0.10096640884876251 	top10: 0.09666560590267181
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 8, 16, 16], 'warp': [4, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'block_order': <NoRasterization>, 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
-best latency: 0.09482239931821823
-126.16102008612188 tflops, 87.00760005939439 %
-128_64_56_56_64_3_3_1_1_0	0.1740799993276596
-128_64_56_56_64_1_1_1_1_0	0.06676480174064636
-128_128_28_28_128_3_3_1_1_0	0.1386495977640152
-128_128_28_28_512_1_1_1_1_0	0.09482239931821823
+best latency: 0.09666560590267181
+123.75539896832477 tflops, 85.34855101263777 %
+128_64_56_56_64_3_3_1_1_1	0.20582398772239685
+128_64_56_56_64_1_1_1_1_0	0.06673067063093185
+128_128_28_28_128_3_3_1_1_1	0.19476480782032013
+128_512_28_28_128_1_1_1_1_0	0.09666560590267181

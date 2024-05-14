@@ -16,13 +16,10 @@ scripts=(
     "conv_nhwc_nhwc_fp16xfp16.py"
     "conv_nhwc_nhwc_fp16xfp8_e5m2.py"
     "conv_nhwc_nhwc_bfp16xmxfp8_e5m2.py"
-    "conv_nhwc_nhwc_int8xint8.py"
     "conv_nhwc_nhwc_int4xint4.py"
-    "conv_nhwc_nhwc_int4xint1.py"
     "direct_conv_nhwc_nhwc_fp16xfp16.py"
     "direct_conv_nhwc_nhwc_fp16xfp8_e5m2.py"
     "direct_conv_nhwc_nhwc_fp32xmxfp8_e5m2.py"
-    "direct_conv_nhwc_nhwc_int8xint1.py"
     "direct_conv_nhwc_nhwc_int8xint4.py"
 )
 

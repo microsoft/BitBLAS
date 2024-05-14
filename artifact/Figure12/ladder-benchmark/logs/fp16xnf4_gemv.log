@@ -41,10 +41,10 @@ __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, int8_t* __res
 }
 
 
-top1: 0.7086080312728882 	top10: 0.4183039963245392
+top1: 0.7092224359512329 	top10: 0.41817599534988403
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [3584], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
-best latency: 0.4183039963245392
+best latency: 0.41817599534988403
 __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, int8_t* __restrict__ B, half* __restrict__ LUT, half* __restrict__ C) {
   
   half in_thread_C_local[1];
@@ -87,9 +87,9 @@ __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, int8_t* __res
 }
 
 
-top1: 0.1897813230752945 	top10: 0.12507428228855133
+top1: 0.1892693191766739 	top10: 0.12536685168743134
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [3584], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 4}}}
-best latency: 0.12507428228855133
-1_14336_57344	0.4183039963245392
-1_8192_28672	0.12507428228855133
+best latency: 0.12536685168743134
+1_14336_57344	0.41817599534988403
+1_8192_28672	0.12536685168743134

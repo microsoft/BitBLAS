@@ -61,8 +61,7 @@ def conv2d_cuda(N, C, H, W, K, R, S, stride, padding, dilation, dtype):
         if i == repeats - 1:
             mean_cost = np.mean(time_record)
     # print("conv2d_cuda, dtype = %s, A: %s, B: %s, C:%s" % (dtype, A_torch.dtype, B_torch.dtype, C_torch.dtype))
-    # print(",".join(map(str, [N, C, H, W, K, R, S, stride, padding, dilation, dtype, mean_cost])))
-    print(mean_cost)
+    print(",".join(map(str, [N, C, H, W, K, R, stride, padding, dtype, mean_cost])))
 
 
 def mixed_precision_conv2d_cuda(N, C, H, W, K, R, S, stride, padding, dilation, dtype):

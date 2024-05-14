@@ -8,4 +8,6 @@ export PYTHONPATH=$TVM_HOME/python
 
 mkdir -p tmp
 
+echo "Running cutlass_fpa_intb.py benchmark scripts"
+
 python -u ./cutlass_fpa_intb.py 2>&1 | tee logs/cutlass_fpa_intb.log
