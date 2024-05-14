@@ -1,329 +1,5 @@
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_4>: {'block': [1, 1, 1, 32], 'thread': [1, 1, 1, 32], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_4>: {'block': [1, 1, 1, 16], 'thread': [1, 1, 1, 16], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_4>: {'block': [1, 1, 1, 8], 'thread': [1, 1, 1, 8], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_4>: {'block': [1, 1, 1, 4], 'thread': [1, 1, 1, 4], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_4>: {'block': [1, 1, 1, 2], 'thread': [1, 1, 1, 2], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'vectorize': {'p0': 2, 'B_decode': 8}}, <Node, reshape_reshape_transpose_4>: {'block': [1, 1, 1, 64], 'thread': [1, 1, 1, 64], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_4>: {'block': [1, 1, 1, 128], 'thread': [1, 1, 1, 128], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_4>: {'block': [1, 2, 1, 128], 'thread': [1, 2, 1, 64], 'rstep': [], 'step': [1, 1, 1, 2]}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3__reshape_reshape_transpose_4>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'input0': 2, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3__reshape_reshape_transpose_4>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'input0': 4, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3__reshape_reshape_transpose_4>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'input0': 8, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3__reshape_reshape_transpose_4>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'vectorize': {'input0': 8, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3__reshape_reshape_transpose_4>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'input0': 8, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3__reshape_reshape_transpose_4>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3__reshape_reshape_transpose_4>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'input0': 8, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': int32(int64(block_idx)), 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_4>: {'block': [1, 1, 1, 128], 'thread': [1, 1, 1, 128], 'rstep': [], 'block_order': int64(block_idx)}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5>: {'block': [1, 1, 128], 'thread': [1, 1, 128], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_3', 'reshape_reshape_transpose_4', 'multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_3>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': int32(int64(block_idx)), 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_4>: {'block': [1, 2, 1, 128], 'thread': [1, 2, 1, 64], 'rstep': [], 'block_order': int64(block_idx), 'step': [1, 1, 1, 2]}, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5>: {'block': [2, 1, 128], 'thread': [2, 1, 64], 'rstep': [], 'step': [1, 1, 2]}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_7>: {'block': [1, 1, 1, 4], 'thread': [1, 1, 1, 4], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_7>: {'block': [1, 1, 1, 2], 'thread': [1, 1, 1, 2], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_7>: {'block': [1, 1, 1, 8], 'thread': [1, 1, 1, 8], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_7>: {'block': [1, 1, 1, 16], 'thread': [1, 1, 1, 16], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_7>: {'block': [1, 1, 1, 32], 'thread': [1, 1, 1, 32], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'vectorize': {'p0': 2, 'B_decode': 8}}, <Node, reshape_reshape_transpose_7>: {'block': [1, 1, 1, 64], 'thread': [1, 1, 1, 64], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_7>: {'block': [1, 1, 1, 128], 'thread': [1, 1, 1, 128], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_7>: {'block': [1, 2, 1, 128], 'thread': [1, 2, 1, 64], 'rstep': [], 'step': [1, 1, 1, 2]}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6__reshape_reshape_transpose_7>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'vectorize': {'input0': 8, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6__reshape_reshape_transpose_7>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'input0': 8, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6__reshape_reshape_transpose_7>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'input0': 8, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6__reshape_reshape_transpose_7>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'input0': 8, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6__reshape_reshape_transpose_7>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'input0': 4, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6__reshape_reshape_transpose_7>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'input0': 2, 'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_6', 'reshape_reshape_transpose_7']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_6__reshape_reshape_transpose_7>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
-    cpresult.code,
-AttributeError: 'NoneType' object has no attribute 'code'
-
-['ladder_quant_linear_15', 'reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_15>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [8], 'block_order': int32(int64(block_idx)), 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [8, 4, 1], 'thread': [8, 4, 1], 'rstep': []}}
+['layout_transform_0', 'nn_conv2d_add_1']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, layout_transform_0>: {'block': [1, 32, 32, 3], 'thread': [1, 32, 4, 1], 'rstep': [], 'step': [1, 1, 2, 1]}, <Node, nn_conv2d_add_1>: {'block': [1, 1, 1, 384], 'thread': [1, 1, 1, 128], 'rstep': [1, 4, 3], 'vectorize': {'p1': 4}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -331,10 +7,214 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>, Tensor(shape=[1, 1024], op.name=p0), 32, 256)
+Exception: ('Shared memory mismatched', <Node, nn_conv2d_add_1>, Tensor(shape=[1, 224, 224, 3], op.name=p0), 6144, 13632)
 
-['ladder_quant_linear_15', 'reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_15>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [8], 'block_order': int32(int64(block_idx)), 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [8, 2, 1], 'thread': [8, 2, 1], 'rstep': []}}
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 1, 1, 64], 'thread': [1, 1, 1, 64], 'rstep': [1, 32, 3], 'reduce_thread': [1, 2, 1], 'vectorize': {'input1': 8}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 7, 1, 12], 'thread': [1, 7, 1, 12], 'rstep': [1, 16, 3]}}
+Compiler timeout.
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 7, 1, 24], 'thread': [1, 7, 1, 12], 'rstep': [1, 16, 3], 'step': [1, 1, 1, 2]}}
+Compiler timeout.
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 1, 1, 32], 'thread': [1, 1, 1, 32], 'rstep': [2, 32, 3], 'reduce_thread': [1, 4, 1], 'vectorize': {'input1': 8}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 1, 1, 48], 'thread': [1, 1, 1, 48], 'rstep': [2, 32, 3], 'reduce_thread': [1, 1, 3], 'vectorize': {'input1': 8}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 1, 7, 6], 'thread': [1, 1, 7, 6], 'rstep': [8, 32, 3], 'reduce_thread': [1, 1, 3]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 1, 7, 8], 'thread': [1, 1, 7, 8], 'rstep': [8, 32, 3], 'reduce_thread': [1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 7, 1, 6], 'thread': [1, 7, 1, 6], 'rstep': [1, 16, 3], 'reduce_thread': [1, 1, 3]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 7, 1, 8], 'thread': [1, 7, 1, 8], 'rstep': [1, 16, 3], 'reduce_thread': [1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 1, 1, 24], 'thread': [1, 1, 1, 24], 'rstep': [4, 32, 3], 'reduce_thread': [1, 2, 3], 'vectorize': {'input1': 8}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 1, 7, 3], 'thread': [1, 1, 7, 3], 'rstep': [8, 32, 3], 'reduce_thread': [1, 2, 3]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 1, 7, 4], 'thread': [1, 1, 7, 4], 'rstep': [8, 32, 3], 'reduce_thread': [1, 4, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 7, 1, 3], 'thread': [1, 7, 1, 3], 'rstep': [1, 16, 3], 'reduce_thread': [1, 2, 3]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 7, 1, 4], 'thread': [1, 7, 1, 4], 'rstep': [1, 16, 3], 'reduce_thread': [1, 4, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 1, 1, 16], 'thread': [1, 1, 1, 16], 'rstep': [4, 32, 3], 'reduce_thread': [1, 8, 1], 'vectorize': {'input1': 8}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 1, 1, 12], 'thread': [1, 1, 1, 12], 'rstep': [8, 32, 3], 'reduce_thread': [1, 4, 3], 'vectorize': {'input1': 4}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 1, 7, 2], 'thread': [1, 1, 7, 2], 'rstep': [8, 32, 3], 'reduce_thread': [1, 8, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['nn_conv2d_add_1', 'layout_transform_reshape_transpose_concatenate_add_2']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_conv2d_add_1__layout_transform_reshape_transpose_concatenate_add_2>: {'block': [1, 7, 1, 2], 'thread': [1, 7, 1, 2], 'rstep': [1, 16, 3], 'reduce_thread': [1, 8, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['mean_3', 'subtract_multiply_4']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, mean_3__subtract_multiply_4>: {'block': [1, 1, 1], 'thread': [1, 1, 1], 'rstep': [384], 'reduce_thread': [128]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['mean_3', 'subtract_multiply_4']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, mean_3__subtract_multiply_4>: {'block': [1, 2, 1], 'thread': [1, 2, 1], 'rstep': [384], 'reduce_thread': [64], 'vectorize': {'mediate0': 2}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['mean_3', 'subtract_multiply_4']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, mean_3__subtract_multiply_4>: {'block': [1, 5, 1], 'thread': [1, 5, 1], 'rstep': [384], 'reduce_thread': [24], 'vectorize': {'mediate0': 4}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['mean_3', 'subtract_multiply_4']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, mean_3__subtract_multiply_4>: {'block': [1, 10, 1], 'thread': [1, 10, 1], 'rstep': [384], 'reduce_thread': [12], 'vectorize': {'mediate0': 4}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['mean_3', 'subtract_multiply_4']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, mean_3__subtract_multiply_4>: {'block': [1, 25, 1], 'thread': [1, 25, 1], 'rstep': [192], 'reduce_thread': [4], 'vectorize': {'mediate0': 4}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['mean_3', 'subtract_multiply_4']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, mean_3__subtract_multiply_4>: {'block': [1, 50, 1], 'thread': [1, 50, 1], 'rstep': [64], 'reduce_thread': [2], 'vectorize': {'mediate0': 4}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 4, 64], 'thread': [1, 2, 64], 'rstep': [128], 'block_order': ((floormod(block_idx, 13)*18) + floordiv(block_idx, 13)), 'step': [1, 2, 1], 'vectorize': {'p0': 4, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 4, 64], 'thread': [1, 1, 1, 4, 32], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -342,10 +222,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>, Tensor(shape=[1, 1024], op.name=p0), 32, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 512, 115200)
 
-['ladder_quant_linear_15', 'reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_15>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [8], 'block_order': int32(int64(block_idx)), 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [8, 8, 1], 'thread': [8, 8, 1], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 5, 64], 'thread': [1, 5, 32], 'rstep': [128], 'block_order': ((floormod(block_idx, 10)*18) + floordiv(block_idx, 10)), 'step': [1, 1, 2], 'vectorize': {'p0': 4}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 5, 64], 'thread': [1, 1, 1, 5, 32], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -353,10 +233,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>, Tensor(shape=[1, 1024], op.name=p0), 32, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 640, 11520)
 
-['ladder_quant_linear_15', 'reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_15>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [8], 'block_order': int32(int64(block_idx)), 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [8, 1, 1], 'thread': [8, 1, 1], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 8, 32], 'thread': [1, 4, 32], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 14), 2)*36) + (floordiv(block_idx, 14)*2)) + floormod(block_idx, 2)), 'step': [1, 2, 1], 'vectorize': {'p0': 4, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 8, 32], 'thread': [1, 1, 1, 8, 16], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -364,10 +244,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>, Tensor(shape=[1, 1024], op.name=p0), 32, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 512, 115200)
 
-['ladder_quant_linear_15', 'reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_15>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'block_order': int32(int64(block_idx)), 'vectorize': {'p0': 4, 'B_decode': 8}}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [8, 16, 1], 'thread': [8, 16, 1], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 8, 64], 'thread': [1, 4, 32], 'rstep': [128], 'block_order': ((floormod(block_idx, 7)*18) + floordiv(block_idx, 7)), 'step': [1, 1, 2], 'vectorize': {'p0': 8, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 8, 64], 'thread': [1, 1, 1, 8, 16], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -375,10 +255,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>, Tensor(shape=[1, 1024], op.name=p0), 32, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 1024, 115200)
 
-['ladder_quant_linear_15', 'reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_15>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'block_order': int32(int64(block_idx)), 'vectorize': {'p0': 2, 'B_decode': 8}}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [8, 32, 1], 'thread': [4, 32, 1], 'rstep': [], 'step': [2, 1, 1]}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 10, 32], 'thread': [1, 5, 32], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 10), 2)*36) + (floordiv(block_idx, 10)*2)) + floormod(block_idx, 2)), 'step': [1, 2, 1], 'vectorize': {'p0': 4}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 10, 32], 'thread': [1, 1, 1, 10, 16], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -386,10 +266,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>, Tensor(shape=[1, 1024], op.name=p0), 64, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 640, 23040)
 
-['ladder_quant_linear_15', 'reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_15>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': int32(int64(block_idx)), 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [8, 64, 1], 'thread': [2, 64, 1], 'rstep': [], 'step': [2, 1, 1]}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 10, 64], 'thread': [1, 2, 64], 'rstep': [128], 'block_order': ((floormod(block_idx, 5)*18) + floordiv(block_idx, 5)), 'vectorize': {'p0': 2, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 10, 64], 'thread': [1, 1, 1, 2, 64], 'rstep': []}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -397,32 +277,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>, Tensor(shape=[1, 1024], op.name=p0), 128, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 1280, 23040)
 
-['ladder_quant_linear_15', 'reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_15>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'block_order': int32(int64(block_idx)), 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [8, 128, 1], 'thread': [1, 128, 1], 'rstep': [], 'step': [2, 1, 1]}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_15', 'reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_15>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'block_order': int32(int64(block_idx)), 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [16, 128, 1], 'thread': [2, 64, 1], 'rstep': [], 'step': [1, 2, 1]}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16', 'nn_batch_matmul_17', 'reshape_transpose_reshape_reshape_18']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [1, 32, 1], 'thread': [1, 32, 1], 'rstep': []}, <Node, nn_batch_matmul_17>: {'block': [1, 1, 32], 'thread': [1, 1, 32], 'rstep': [1]}, <Node, reshape_transpose_reshape_reshape_18>: {'block': [1, 32], 'thread': [1, 32], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 16, 16], 'thread': [1, 8, 16], 'rstep': [384], 'block_order': (((floordiv(floormod(block_idx, 16), 4)*72) + (floordiv(block_idx, 16)*4)) + floormod(block_idx, 4)), 'step': [1, 2, 1], 'vectorize': {'p0': 8, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 16, 16], 'thread': [1, 1, 1, 16, 8], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -430,10 +288,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_transpose_reshape_reshape_18>, Tensor(shape=[64, 1, 128], op.name=p0), 64, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 512, 115200)
 
-['reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16', 'nn_batch_matmul_17', 'reshape_transpose_reshape_reshape_18']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [1, 64, 1], 'thread': [1, 64, 1], 'rstep': []}, <Node, nn_batch_matmul_17>: {'block': [1, 1, 64], 'thread': [1, 1, 64], 'rstep': [1]}, <Node, reshape_transpose_reshape_reshape_18>: {'block': [1, 64], 'thread': [1, 64], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 16, 32], 'thread': [1, 8, 16], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 8), 2)*36) + (floordiv(block_idx, 8)*2)) + floormod(block_idx, 2)), 'step': [1, 1, 2], 'vectorize': {'p0': 8, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 16, 32], 'thread': [1, 1, 1, 16, 8], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -441,10 +299,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_transpose_reshape_reshape_18>, Tensor(shape=[64, 1, 128], op.name=p0), 128, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 1024, 115200)
 
-['reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16', 'nn_batch_matmul_17', 'reshape_transpose_reshape_reshape_18']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [1, 16, 1], 'thread': [1, 16, 1], 'rstep': []}, <Node, nn_batch_matmul_17>: {'block': [1, 1, 16], 'thread': [1, 1, 16], 'rstep': [1]}, <Node, reshape_transpose_reshape_reshape_18>: {'block': [1, 16], 'thread': [1, 16], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 16, 64], 'thread': [1, 4, 32], 'rstep': [128], 'block_order': ((floormod(block_idx, 4)*18) + floordiv(block_idx, 4)), 'step': [1, 1, 2], 'vectorize': {'p0': 8, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 16, 64], 'thread': [1, 1, 1, 16, 8], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -452,10 +310,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_transpose_reshape_reshape_18>, Tensor(shape=[64, 1, 128], op.name=p0), 32, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 2048, 115200)
 
-['reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16', 'nn_batch_matmul_17', 'reshape_transpose_reshape_reshape_18']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [1, 8, 1], 'thread': [1, 8, 1], 'rstep': []}, <Node, nn_batch_matmul_17>: {'block': [1, 1, 8], 'thread': [1, 1, 8], 'rstep': [1]}, <Node, reshape_transpose_reshape_reshape_18>: {'block': [1, 8], 'thread': [1, 8], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 25, 16], 'thread': [1, 25, 4], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 8), 4)*72) + (floordiv(block_idx, 8)*4)) + floormod(block_idx, 4)), 'step': [1, 1, 2], 'vectorize': {'p0': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 25, 16], 'thread': [1, 1, 1, 25, 4], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -463,10 +321,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_transpose_reshape_reshape_18>, Tensor(shape=[64, 1, 128], op.name=p0), 32, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 800, 57600)
 
-['reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16', 'nn_batch_matmul_17', 'reshape_transpose_reshape_reshape_18']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [1, 4, 1], 'thread': [1, 4, 1], 'rstep': []}, <Node, nn_batch_matmul_17>: {'block': [1, 1, 4], 'thread': [1, 1, 4], 'rstep': [1]}, <Node, reshape_transpose_reshape_reshape_18>: {'block': [1, 4], 'thread': [1, 4], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 25, 8], 'thread': [1, 25, 4], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 16), 8)*144) + (floordiv(block_idx, 16)*8)) + floormod(block_idx, 8)), 'step': [1, 1, 2], 'vectorize': {'p0': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 25, 8], 'thread': [1, 1, 1, 25, 4], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -474,10 +332,10 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_transpose_reshape_reshape_18>, Tensor(shape=[64, 1, 128], op.name=p0), 32, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 416, 57600)
 
-['reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16', 'nn_batch_matmul_17', 'reshape_transpose_reshape_reshape_18']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>: {'block': [1, 2, 1], 'thread': [1, 2, 1], 'rstep': []}, <Node, nn_batch_matmul_17>: {'block': [1, 1, 2], 'thread': [1, 1, 2], 'rstep': [1]}, <Node, reshape_transpose_reshape_reshape_18>: {'block': [1, 2], 'thread': [1, 2], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 25, 32], 'thread': [1, 25, 4], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 4), 2)*36) + (floordiv(block_idx, 4)*2)) + floormod(block_idx, 2)), 'step': [1, 1, 2], 'vectorize': {'p0': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 25, 32], 'thread': [1, 1, 1, 25, 4], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -485,98 +343,318 @@ Traceback (most recent call last):
     cpresult = cgen.compile(
   File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
     raise Exception(
-Exception: ('Shared memory mismatched', <Node, reshape_transpose_reshape_reshape_18>, Tensor(shape=[64, 1, 128], op.name=p0), 32, 256)
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 1600, 57600)
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_add_20>: {'block': [1, 1, 32], 'thread': [1, 1, 32], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 25, 64], 'thread': [1, 25, 4], 'rstep': [128], 'block_order': ((floormod(block_idx, 2)*18) + floordiv(block_idx, 2)), 'step': [1, 1, 2], 'vectorize': {'p0': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 25, 64], 'thread': [1, 1, 1, 25, 4], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 3200, 57600)
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_add_20>: {'block': [1, 1, 16], 'thread': [1, 1, 16], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 32, 16], 'thread': [1, 16, 8], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 8), 4)*72) + (floordiv(block_idx, 8)*4)) + floormod(block_idx, 4)), 'step': [1, 1, 2], 'vectorize': {'p0': 8, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 32, 16], 'thread': [1, 1, 1, 16, 8], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 1024, 115200)
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_add_20>: {'block': [1, 1, 8], 'thread': [1, 1, 8], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 32, 8], 'thread': [1, 16, 8], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 16), 8)*144) + (floordiv(block_idx, 16)*8)) + floormod(block_idx, 8)), 'step': [1, 2, 1], 'vectorize': {'p0': 8, 'p1': 4}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 32, 8], 'thread': [1, 1, 1, 16, 8], 'rstep': [], 'step': [1, 1, 1, 2, 1]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 512, 115200)
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_add_20>: {'block': [1, 1, 4], 'thread': [1, 1, 4], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 32, 32], 'thread': [1, 8, 16], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 4), 2)*36) + (floordiv(block_idx, 4)*2)) + floormod(block_idx, 2)), 'step': [1, 1, 2], 'vectorize': {'p0': 8, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 32, 32], 'thread': [1, 1, 1, 16, 8], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 2048, 115200)
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_add_20>: {'block': [1, 1, 2], 'thread': [1, 1, 2], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 32, 64], 'thread': [1, 8, 16], 'rstep': [128], 'block_order': ((floormod(block_idx, 2)*18) + floordiv(block_idx, 2)), 'step': [1, 1, 2], 'vectorize': {'p0': 8, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 32, 64], 'thread': [1, 1, 1, 16, 8], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 4096, 115200)
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'vectorize': {'p0': 2, 'B_decode': 8}}, <Node, reshape_add_20>: {'block': [1, 1, 64], 'thread': [1, 1, 64], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 50, 16], 'thread': [1, 25, 4], 'rstep': [128], 'step': [1, 1, 2], 'vectorize': {'p0': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 50, 16], 'thread': [1, 1, 1, 25, 4], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 1600, 115200)
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, reshape_add_20>: {'block': [1, 1, 128], 'thread': [1, 1, 128], 'rstep': []}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 50, 8], 'thread': [1, 25, 4], 'rstep': [192], 'step': [1, 1, 2], 'vectorize': {'p0': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 50, 8], 'thread': [1, 1, 1, 25, 4], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 800, 115200)
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_add_20>: {'block': [1, 1, 256], 'thread': [1, 1, 128], 'rstep': [], 'step': [1, 1, 2]}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 50, 4], 'thread': [1, 25, 4], 'rstep': [192], 'step': [1, 2, 1], 'vectorize': {'p0': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 50, 4], 'thread': [1, 1, 1, 25, 4], 'rstep': [], 'step': [1, 1, 1, 2, 1]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 416, 115200)
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19__reshape_add_20>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'input0': 2, 'mediate0': 8}}}
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 50, 32], 'thread': [1, 25, 4], 'rstep': [128], 'step': [1, 1, 2], 'vectorize': {'p0': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 50, 32], 'thread': [1, 1, 1, 25, 4], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 3200, 115200)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 50, 64], 'thread': [1, 2, 64], 'rstep': [64], 'vectorize': {'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 50, 64], 'thread': [1, 1, 1, 2, 64], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 6400, 115200)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 2, 128], 'thread': [1, 1, 128], 'rstep': [64], 'block_order': ((floormod(block_idx, 25)*9) + floordiv(block_idx, 25)), 'step': [1, 2, 1], 'vectorize': {'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 2, 2, 64], 'thread': [1, 1, 2, 2, 32], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 512, 4608)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 2, 64], 'thread': [1, 2, 64], 'rstep': [128], 'block_order': ((floormod(block_idx, 25)*18) + floordiv(block_idx, 25)), 'vectorize': {'p0': 2, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 2, 64], 'thread': [1, 1, 1, 2, 64], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 256, 4608)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 4, 128], 'thread': [1, 2, 64], 'rstep': [64], 'block_order': ((floormod(block_idx, 13)*9) + floordiv(block_idx, 13)), 'step': [1, 1, 2], 'vectorize': {'p0': 2, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 2, 4, 64], 'thread': [1, 1, 2, 4, 16], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 1024, 115200)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 5, 128], 'thread': [1, 1, 128], 'rstep': [64], 'block_order': ((floormod(block_idx, 10)*9) + floordiv(block_idx, 10)), 'vectorize': {'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 2, 5, 64], 'thread': [1, 1, 2, 1, 64], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 1280, 11520)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 4, 32], 'thread': [1, 4, 32], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 26), 2)*36) + (floordiv(block_idx, 26)*2)) + floormod(block_idx, 2)), 'vectorize': {'p0': 2, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 4, 32], 'thread': [1, 1, 1, 4, 32], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 256, 115200)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 8, 128], 'thread': [1, 2, 64], 'rstep': [64], 'block_order': ((floormod(block_idx, 7)*9) + floordiv(block_idx, 7)), 'step': [1, 1, 2], 'vectorize': {'p0': 4, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 2, 8, 64], 'thread': [1, 1, 2, 8, 8], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 2048, 115200)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 5, 32], 'thread': [1, 5, 32], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 20), 2)*36) + (floordiv(block_idx, 20)*2)) + floormod(block_idx, 2)), 'vectorize': {'p0': 2}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 5, 32], 'thread': [1, 1, 1, 5, 32], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 320, 11520)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 10, 128], 'thread': [1, 2, 64], 'rstep': [64], 'block_order': ((floormod(block_idx, 5)*9) + floordiv(block_idx, 5)), 'step': [1, 1, 2], 'vectorize': {'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 2, 10, 64], 'thread': [1, 1, 2, 2, 32], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 2560, 23040)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 8, 16], 'thread': [1, 8, 16], 'rstep': [384], 'block_order': (((floordiv(floormod(block_idx, 28), 4)*72) + (floordiv(block_idx, 28)*4)) + floormod(block_idx, 4)), 'vectorize': {'p0': 8, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 8, 16], 'thread': [1, 1, 1, 8, 16], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 256, 115200)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 10, 16], 'thread': [1, 10, 16], 'rstep': [384], 'block_order': (((floordiv(floormod(block_idx, 20), 4)*72) + (floordiv(block_idx, 20)*4)) + floormod(block_idx, 4)), 'vectorize': {'p0': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 10, 16], 'thread': [1, 1, 1, 10, 16], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 320, 23040)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 16, 128], 'thread': [1, 4, 32], 'rstep': [64], 'block_order': ((floormod(block_idx, 4)*9) + floordiv(block_idx, 4)), 'step': [1, 1, 2], 'vectorize': {'p0': 8, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 2, 16, 64], 'thread': [1, 1, 2, 8, 8], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 4096, 115200)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 25, 128], 'thread': [1, 1, 128], 'rstep': [64], 'block_order': ((floormod(block_idx, 2)*9) + floordiv(block_idx, 2)), 'vectorize': {'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 2, 25, 64], 'thread': [1, 1, 2, 1, 64], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 6400, 57600)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 16, 8], 'thread': [1, 16, 8], 'rstep': [384], 'block_order': (((floordiv(floormod(block_idx, 32), 8)*144) + (floordiv(block_idx, 32)*8)) + floormod(block_idx, 8)), 'vectorize': {'p0': 8, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 16, 8], 'thread': [1, 1, 1, 16, 8], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 256, 115200)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 32, 128], 'thread': [1, 4, 32], 'rstep': [64], 'block_order': ((floormod(block_idx, 2)*9) + floordiv(block_idx, 2)), 'step': [1, 1, 2], 'vectorize': {'p0': 8, 'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 2, 32, 64], 'thread': [1, 1, 2, 8, 8], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 8192, 115200)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 25, 4], 'thread': [1, 25, 4], 'rstep': [384], 'block_order': (((floordiv(floormod(block_idx, 32), 16)*288) + (floordiv(block_idx, 32)*16)) + floormod(block_idx, 16)), 'vectorize': {'p0': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 25, 4], 'thread': [1, 1, 1, 25, 4], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 224, 57600)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 50, 128], 'thread': [1, 2, 64], 'rstep': [64], 'step': [1, 1, 2], 'vectorize': {'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 2, 50, 64], 'thread': [1, 1, 2, 2, 32], 'rstep': [], 'step': [1, 1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 12800, 115200)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 32, 4], 'thread': [1, 32, 4], 'rstep': [192], 'block_order': (((floordiv(floormod(block_idx, 32), 16)*288) + (floordiv(block_idx, 32)*16)) + floormod(block_idx, 16)), 'vectorize': {'p0': 8, 'p1': 2}}, <Node, reshape_transpose_8>: {'block': [1, 1, 1, 32, 4], 'thread': [1, 1, 1, 32, 4], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 256, 115200)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7>: {'block': [1, 2, 192], 'thread': [1, 2, 64], 'rstep': [64], 'block_order': ((floormod(block_idx, 25)*6) + floordiv(block_idx, 25)), 'vectorize': {'p1': 8}}, <Node, reshape_transpose_8>: {'block': [1, 1, 3, 2, 64], 'thread': [1, 1, 1, 2, 64], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_transpose_8>, Tensor(shape=[1, 50, 1152], op.name=p0), 768, 4608)
+
+['welder_matmul_add_7', 'reshape_transpose_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_matmul_add_7__reshape_transpose_8>: {'block': [1, 1, 64], 'thread': [1, 1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'input1': 8}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -584,8 +662,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19__reshape_add_20>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'input0': 4, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 1, 1, 1], 'thread': [1, 1, 1, 1], 'rstep': [50], 'reduce_thread': [50]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -593,8 +671,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19__reshape_add_20>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 1, 2, 1], 'thread': [1, 1, 2, 1], 'rstep': [50], 'reduce_thread': [50]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -602,8 +680,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19__reshape_add_20>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 2, 1, 1], 'thread': [1, 2, 1, 1], 'rstep': [50], 'reduce_thread': [50]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -611,8 +689,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19__reshape_add_20>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 3, 1, 1], 'thread': [1, 3, 1, 1], 'rstep': [50], 'reduce_thread': [50]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -620,8 +698,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19__reshape_add_20>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 2, 2, 1], 'thread': [1, 2, 2, 1], 'rstep': [50], 'reduce_thread': [25], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -629,8 +707,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_19', 'reshape_add_20']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_19__reshape_add_20>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 1, 5, 1], 'thread': [1, 1, 5, 1], 'rstep': [50], 'reduce_thread': [25], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -638,8 +716,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25__reshape_26>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'input0': 2, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 3, 2, 1], 'thread': [1, 3, 2, 1], 'rstep': [50], 'reduce_thread': [25], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -647,8 +725,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25__reshape_26>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'input0': 4, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 6, 1, 1], 'thread': [1, 6, 1, 1], 'rstep': [50], 'reduce_thread': [25], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -656,8 +734,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25__reshape_26>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 2, 5, 1], 'thread': [1, 2, 5, 1], 'rstep': [50], 'reduce_thread': [10]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -665,8 +743,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25__reshape_26>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 1, 10, 1], 'thread': [1, 1, 10, 1], 'rstep': [50], 'reduce_thread': [10]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -674,8 +752,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25__reshape_26>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 6, 2, 1], 'thread': [1, 6, 2, 1], 'rstep': [50], 'reduce_thread': [10]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -683,8 +761,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25__reshape_26>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 3, 5, 1], 'thread': [1, 3, 5, 1], 'rstep': [50], 'reduce_thread': [10]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -692,8 +770,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25__reshape_26>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 2, 10, 1], 'thread': [1, 2, 10, 1], 'rstep': [50], 'reduce_thread': [5], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -701,8 +779,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25__reshape_26>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 1, 25, 1], 'thread': [1, 1, 25, 1], 'rstep': [50], 'reduce_thread': [5], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -710,8 +788,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25__reshape_26>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 3, 10, 1], 'thread': [1, 3, 10, 1], 'rstep': [50], 'reduce_thread': [5], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -719,8 +797,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25__reshape_26>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 6, 5, 1], 'thread': [1, 6, 5, 1], 'rstep': [50], 'reduce_thread': [5], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -728,8 +806,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25__reshape_26>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 2, 25, 1], 'thread': [1, 2, 25, 1], 'rstep': [50], 'reduce_thread': [2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -737,338 +815,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 32], 'thread': [1, 1, 32], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 32], 'thread': [1, 32], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 16], 'thread': [1, 1, 16], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 16], 'thread': [1, 16], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [512], 'vectorize': {'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 14], 'thread': [1, 1, 14], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [512], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 14], 'thread': [1, 14], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 112], 'thread': [1, 112], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 112], 'thread': [1, 1, 112], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 112], 'thread': [1, 112], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 112], 'thread': [1, 112], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [128], 'vectorize': {'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 56], 'thread': [1, 1, 56], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [128], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 56], 'thread': [1, 56], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [1024], 'vectorize': {'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 7], 'thread': [1, 1, 7], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [1024], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 7], 'thread': [1, 7], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [256], 'vectorize': {'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 28], 'thread': [1, 1, 28], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [256], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 28], 'thread': [1, 28], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 8], 'thread': [1, 1, 8], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 8], 'thread': [1, 8], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 128], 'thread': [1, 1, 128], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 128], 'thread': [1, 128], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'vectorize': {'p0': 2, 'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 64], 'thread': [1, 1, 64], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'vectorize': {'p0': 2, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 64], 'thread': [1, 64], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 4], 'thread': [1, 1, 4], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 4], 'thread': [1, 4], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 2], 'thread': [1, 1, 2], 'rstep': []}, <Node, ladder_quant_linear_27>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [2048], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 2], 'thread': [1, 2], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 224], 'thread': [1, 112], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 224], 'thread': [1, 1, 112], 'rstep': [], 'step': [1, 1, 2]}, <Node, ladder_quant_linear_27>: {'block': [1, 224], 'thread': [1, 112], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 224], 'thread': [1, 112], 'rstep': [], 'step': [1, 2]}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 256], 'thread': [1, 1, 128], 'rstep': [], 'step': [1, 1, 2]}, <Node, ladder_quant_linear_27>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [], 'step': [1, 2]}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_25', 'reshape_26', 'ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_25>: {'block': [1, 448], 'thread': [1, 112], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_26>: {'block': [1, 1, 448], 'thread': [1, 1, 112], 'rstep': [], 'step': [1, 1, 2]}, <Node, ladder_quant_linear_27>: {'block': [1, 448], 'thread': [1, 112], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 448], 'thread': [1, 112], 'rstep': [], 'step': [1, 2]}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 32], 'thread': [1, 32], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 16], 'thread': [1, 16], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [512], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 14], 'thread': [1, 14], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 112], 'thread': [1, 112], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 112], 'thread': [1, 112], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [128], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 56], 'thread': [1, 56], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [1024], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 7], 'thread': [1, 7], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [256], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 28], 'thread': [1, 28], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 8], 'thread': [1, 8], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [64], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 128], 'thread': [1, 128], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'vectorize': {'p0': 2, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 64], 'thread': [1, 64], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 4], 'thread': [1, 4], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 2], 'thread': [1, 2], 'rstep': []}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 224], 'thread': [1, 112], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 224], 'thread': [1, 112], 'rstep': [], 'step': [1, 2]}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [], 'step': [1, 2]}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27>: {'block': [1, 448], 'thread': [1, 112], 'rstep': [64], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 448], 'thread': [1, 112], 'rstep': [], 'step': [1, 2]}}
-Traceback (most recent call last):
-  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
-    result = fn(*args, **kwargs)
-  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
-    cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
-
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27__sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'input0': 2, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 1, 50, 1], 'thread': [1, 1, 50, 1], 'rstep': [50], 'reduce_thread': [2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1076,8 +824,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27__sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'input0': 4, 'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 6, 10, 1], 'thread': [1, 6, 10, 1], 'rstep': [50], 'reduce_thread': [2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1085,8 +833,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27__sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [512], 'reduce_thread': [8], 'vectorize': {'mediate0': 8}}}
+['max_12', 'subtract_exp_13']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, max_12__subtract_exp_13>: {'block': [1, 3, 25, 1], 'thread': [1, 3, 25, 1], 'rstep': [50], 'reduce_thread': [2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1094,8 +842,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27__sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 1, 1, 1], 'thread': [1, 1, 1, 1], 'rstep': [50], 'reduce_thread': [50]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1103,8 +851,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27__sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'mediate0': 8}}}
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 1, 2, 1], 'thread': [1, 1, 2, 1], 'rstep': [50], 'reduce_thread': [50]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1112,8 +860,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27__sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [256], 'reduce_thread': [4], 'vectorize': {'mediate0': 8}}}
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 2, 1, 1], 'thread': [1, 2, 1, 1], 'rstep': [50], 'reduce_thread': [50]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1121,8 +869,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27__sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [1024], 'reduce_thread': [16], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 3, 1, 1], 'thread': [1, 3, 1, 1], 'rstep': [50], 'reduce_thread': [50]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1130,8 +878,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27__sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 2, 2, 1], 'thread': [1, 2, 2, 1], 'rstep': [50], 'reduce_thread': [25], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1139,8 +887,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27__sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [2048], 'reduce_thread': [32], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 1, 5, 1], 'thread': [1, 1, 5, 1], 'rstep': [50], 'reduce_thread': [25], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1148,8 +896,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27__sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [4096], 'reduce_thread': [64], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 3, 2, 1], 'thread': [1, 3, 2, 1], 'rstep': [50], 'reduce_thread': [25], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1157,8 +905,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_27', 'sigmoid_multiply_reshape_multiply_reshape_28']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_27__sigmoid_multiply_reshape_multiply_reshape_28>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'input0': 8, 'mediate0': 8}}}
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 6, 1, 1], 'thread': [1, 6, 1, 1], 'rstep': [50], 'reduce_thread': [25], 'vectorize': {'input0': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1166,96 +914,259 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [224], 'vectorize': {'B_decode': 8}}, <Node, reshape_add_30>: {'block': [1, 1, 32], 'thread': [1, 1, 32], 'rstep': []}}
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 2, 5, 1], 'thread': [1, 2, 5, 1], 'rstep': [50], 'reduce_thread': [10]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 1, 10, 1], 'thread': [1, 1, 10, 1], 'rstep': [50], 'reduce_thread': [10]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 6, 2, 1], 'thread': [1, 6, 2, 1], 'rstep': [50], 'reduce_thread': [10]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 3, 5, 1], 'thread': [1, 3, 5, 1], 'rstep': [50], 'reduce_thread': [10]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 2, 10, 1], 'thread': [1, 2, 10, 1], 'rstep': [50], 'reduce_thread': [5], 'vectorize': {'input0': 2}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 1, 25, 1], 'thread': [1, 1, 25, 1], 'rstep': [50], 'reduce_thread': [5], 'vectorize': {'input0': 2}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 3, 10, 1], 'thread': [1, 3, 10, 1], 'rstep': [50], 'reduce_thread': [5], 'vectorize': {'input0': 2}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 6, 5, 1], 'thread': [1, 6, 5, 1], 'rstep': [50], 'reduce_thread': [5], 'vectorize': {'input0': 2}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 2, 25, 1], 'thread': [1, 2, 25, 1], 'rstep': [50], 'reduce_thread': [2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 1, 50, 1], 'thread': [1, 1, 50, 1], 'rstep': [50], 'reduce_thread': [2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 6, 10, 1], 'thread': [1, 6, 10, 1], 'rstep': [50], 'reduce_thread': [2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['sum_14', 'divide_15']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, sum_14__divide_15>: {'block': [1, 3, 25, 1], 'thread': [1, 3, 25, 1], 'rstep': [50], 'reduce_thread': [2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 2, 1, 32], 'thread': [1, 2, 1, 32], 'rstep': [50], 'block_order': (((floordiv(floormod(block_idx, 12), 4)*100) + (floordiv(block_idx, 12)*4)) + floormod(block_idx, 2)), 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 2, 32], 'thread': [1, 2, 32], 'rstep': []}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 128, 1536)
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [448], 'vectorize': {'p0': 4, 'B_decode': 8}}, <Node, reshape_add_30>: {'block': [1, 1, 16], 'thread': [1, 1, 16], 'rstep': []}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 1, 1, 32], 'thread': [1, 1, 1, 32], 'rstep': [50], 'block_order': (((floordiv(floormod(block_idx, 12), 2)*100) + (floordiv(block_idx, 12)*2)) + floormod(block_idx, 2)), 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 1, 32], 'thread': [1, 1, 32], 'rstep': []}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 64, 128)
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [896], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_add_30>: {'block': [1, 1, 8], 'thread': [1, 1, 8], 'rstep': []}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 2, 1, 64], 'thread': [1, 2, 1, 64], 'rstep': [50], 'block_order': ((floordiv(floormod(block_idx, 6), 2)*50) + (floordiv(block_idx, 6)*2)), 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 2, 64], 'thread': [1, 2, 64], 'rstep': []}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 256, 1536)
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [1792], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_add_30>: {'block': [1, 1, 4], 'thread': [1, 1, 4], 'rstep': []}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 2, 2, 64], 'thread': [1, 2, 2, 32], 'rstep': [50], 'block_order': ((floormod(block_idx, 3)*25) + floordiv(block_idx, 3)), 'step': [1, 1, 1, 2], 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 2, 128], 'thread': [1, 2, 64], 'rstep': [], 'step': [1, 1, 2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 512, 1536)
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [3584], 'vectorize': {'p0': 8, 'B_decode': 8}}, <Node, reshape_add_30>: {'block': [1, 1, 2], 'thread': [1, 1, 2], 'rstep': []}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 2, 1, 16], 'thread': [1, 2, 1, 16], 'rstep': [50], 'block_order': (((floordiv(floormod(block_idx, 24), 8)*200) + (floordiv(block_idx, 24)*8)) + floormod(block_idx, 4)), 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 2, 16], 'thread': [1, 2, 16], 'rstep': []}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 64, 1536)
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [112], 'vectorize': {'B_decode': 8}}, <Node, reshape_add_30>: {'block': [1, 1, 64], 'thread': [1, 1, 64], 'rstep': []}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 1, 1, 16], 'thread': [1, 1, 1, 16], 'rstep': [50], 'block_order': (((floordiv(floormod(block_idx, 24), 4)*200) + (floordiv(block_idx, 24)*4)) + floormod(block_idx, 4)), 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 1, 16], 'thread': [1, 1, 16], 'rstep': []}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 32, 128)
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [112], 'vectorize': {'B_decode': 8}}, <Node, reshape_add_30>: {'block': [1, 1, 128], 'thread': [1, 1, 128], 'rstep': []}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 2, 1, 8], 'thread': [1, 2, 1, 8], 'rstep': [50], 'block_order': (((floordiv(floormod(block_idx, 48), 16)*400) + (floordiv(block_idx, 48)*16)) + floormod(block_idx, 8)), 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 2, 8], 'thread': [1, 2, 8], 'rstep': []}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 32, 1536)
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29>: {'block': [1, 256], 'thread': [1, 128], 'rstep': [112], 'step': [1, 2], 'vectorize': {'B_decode': 8}}, <Node, reshape_add_30>: {'block': [1, 1, 256], 'thread': [1, 1, 128], 'rstep': [], 'step': [1, 1, 2]}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 1, 1, 8], 'thread': [1, 1, 1, 8], 'rstep': [50], 'block_order': (((floordiv(floormod(block_idx, 48), 8)*400) + (floordiv(block_idx, 48)*8)) + floormod(block_idx, 8)), 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 1, 8], 'thread': [1, 1, 8], 'rstep': []}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
   File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
     cpresult = cgen.compile(
-  File "/root/Ladder/python/ladder/code_generator.py", line 190, in compile
-    assert (
-AssertionError
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 32, 128)
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29__reshape_add_30>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [224], 'reduce_thread': [4], 'vectorize': {'mediate0': 8}}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 1, 1, 4], 'thread': [1, 1, 1, 4], 'rstep': [50], 'block_order': (((floordiv(floormod(block_idx, 96), 16)*800) + (floordiv(block_idx, 96)*16)) + floormod(block_idx, 16)), 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 1, 4], 'thread': [1, 1, 4], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 32, 128)
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 2, 1, 4], 'thread': [1, 2, 1, 4], 'rstep': [50], 'block_order': (((floordiv(floormod(block_idx, 96), 32)*800) + (floordiv(block_idx, 96)*32)) + floormod(block_idx, 16)), 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 2, 4], 'thread': [1, 2, 4], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 32, 1536)
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 2, 1, 2], 'thread': [1, 2, 1, 2], 'rstep': [50], 'block_order': (((floordiv(floormod(block_idx, 192), 64)*1600) + (floordiv(block_idx, 192)*64)) + floormod(block_idx, 32)), 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 2, 2], 'thread': [1, 2, 2], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 32, 1536)
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 1, 1, 2], 'thread': [1, 1, 1, 2], 'rstep': [50], 'block_order': (((floordiv(floormod(block_idx, 192), 32)*1600) + (floordiv(block_idx, 192)*32)) + floormod(block_idx, 32)), 'vectorize': {'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 1, 2], 'thread': [1, 1, 2], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 32, 128)
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16>: {'block': [1, 2, 1, 1], 'thread': [1, 2, 1, 1], 'rstep': [50], 'block_order': (((floordiv(floormod(block_idx, 384), 128)*3200) + (floordiv(block_idx, 384)*128)) + floormod(block_idx, 64)), 'vectorize': {'p1': 2, 'T_squeeze': 2}}, <Node, transpose_reshape_17>: {'block': [1, 2, 1], 'thread': [1, 2, 1], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, transpose_reshape_17>, Tensor(shape=[1, 6, 50, 64], op.name=p0), 32, 1536)
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 1, 1, 64], 'thread': [1, 1, 1, 64], 'rstep': [50], 'reduce_thread': [2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1263,8 +1174,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29__reshape_add_30>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [448], 'reduce_thread': [8], 'vectorize': {'mediate0': 8}}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 1, 2, 32], 'thread': [1, 1, 2, 32], 'rstep': [50], 'reduce_thread': [2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1272,8 +1183,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29__reshape_add_30>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [896], 'reduce_thread': [16], 'vectorize': {'mediate0': 8}}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 1, 5, 16], 'thread': [1, 1, 5, 16], 'rstep': [50], 'reduce_thread': [2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1281,8 +1192,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29__reshape_add_30>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [1792], 'reduce_thread': [32], 'vectorize': {'input0': 2, 'mediate0': 8}}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 1, 1, 32], 'thread': [1, 1, 1, 32], 'rstep': [50], 'reduce_thread': [5], 'vectorize': {'mediate1': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1290,8 +1201,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29__reshape_add_30>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [3584], 'reduce_thread': [64], 'vectorize': {'input0': 4, 'mediate0': 8}}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 2, 1, 32], 'thread': [1, 2, 1, 32], 'rstep': [50], 'reduce_thread': [2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1299,8 +1210,8 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29__reshape_add_30>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [112], 'reduce_thread': [2], 'vectorize': {'mediate0': 8}}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 2, 2, 16], 'thread': [1, 2, 2, 16], 'rstep': [50], 'reduce_thread': [2]}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)
@@ -1308,8 +1219,71 @@ Traceback (most recent call last):
     cpresult.code,
 AttributeError: 'NoneType' object has no attribute 'code'
 
-['ladder_quant_linear_29', 'reshape_add_30']
-{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_quant_linear_29__reshape_add_30>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [3584], 'reduce_thread': [128], 'vectorize': {'input0': 4, 'mediate0': 4}}}
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 1, 10, 8], 'thread': [1, 1, 10, 8], 'rstep': [50], 'reduce_thread': [2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 1, 2, 16], 'thread': [1, 1, 2, 16], 'rstep': [50], 'reduce_thread': [5]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 2, 5, 8], 'thread': [1, 2, 5, 8], 'rstep': [50], 'reduce_thread': [2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 1, 5, 8], 'thread': [1, 1, 5, 8], 'rstep': [50], 'reduce_thread': [2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 2, 10, 4], 'thread': [1, 2, 10, 4], 'rstep': [50], 'reduce_thread': [2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 3, 5, 4], 'thread': [1, 3, 5, 4], 'rstep': [50], 'reduce_thread': [2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 1, 1, 16], 'thread': [1, 1, 1, 16], 'rstep': [50], 'reduce_thread': [10]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['strided_slice_squeeze_welder_matmul_16', 'transpose_reshape_17']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, strided_slice_squeeze_welder_matmul_16__transpose_reshape_17>: {'block': [1, 2, 1, 16], 'thread': [1, 2, 1, 16], 'rstep': [50], 'reduce_thread': [5], 'vectorize': {'mediate1': 2}}}
 Traceback (most recent call last):
   File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
     result = fn(*args, **kwargs)

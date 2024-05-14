@@ -1,8 +1,5 @@
+Testing model: /root/Ladder/artifact/Figure9/ladder-benchmark/../../models/Conformer-b128
 Traceback (most recent call last):
-  File "/root/Ladder/artifact/Figure9/ladder-benchmark/ladder_with_fake_conv_dequantize.py", line 149, in <module>
-    run_from_prebuilt(prebuilt_path, arch)
-  File "/root/Ladder/artifact/Figure9/ladder-benchmark/ladder_with_fake_conv_dequantize.py", line 128, in run_from_prebuilt
-    loaded_lib = tvm.runtime.load_module(path_lib)
-  File "/root/Ladder/3rdparty/tvm/python/tvm/runtime/module.py", line 592, in load_module
-    raise ValueError("cannot find file %s" % path)
-ValueError: cannot find file /root/Ladder/artifact/Figure9/../checkpoints/Figure9/ladder/checkpoints/Conformer_fq_0_fp_e5m2_8_ci_False/model.so
+  File "/root/Ladder/artifact/Figure9/ladder-benchmark/ladder_with_fake_dense_dequantize.py", line 190, in <module>
+    run(path, arch, async_propagate=args.async_propagation, fake_quant=args.fake_quant, quant_config=quant_config, convert_int=args.convert_int)
+NameError: name 'path' is not defined
