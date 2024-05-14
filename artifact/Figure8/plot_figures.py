@@ -309,6 +309,7 @@ providers_bs1_seq1 = ["BS1 SEQ1"]
 providers_bs32_seq1 = ["BS32 SEQ1"]
 providers_bs1_seq4096 = ["BS1 SEQ4096"]
 
+print(times_data)
 times_data_bs1_seq1 = [(label, [times[0]]) for label, times in times_data]
 times_data_bs32_seq1 = [(label, [times[1]]) for label, times in times_data]
 times_data_bs1_seq4096 = [(label, [times[2]]) for label, times in times_data]

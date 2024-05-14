@@ -1,0 +1,1 @@
+vllm llama run b1 s4096 avg: 30.26324987411499 ms

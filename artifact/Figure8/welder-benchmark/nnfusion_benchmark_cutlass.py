@@ -48,7 +48,7 @@ for model_name, model_path in models.items():
 
         f.write(f"# Step 1: Getting the model block\n")
         f.write(
-            f"{welder_nnfusion_path}/build/src/tools/nnfusion/nnfusion {model_path} -f onnx -ftune_output_file=model.json > get_model_block.log -ffusion_skiplist='Dot,BatchMatMul,Convolution' 2>&1\n\n"
+            f"{welder_nnfusion_path}/build/src/tools/nnfusion/nnfusion {model_path} -f onnx -ftune_output_file=model.json > get_model_block.log 2>&1\n\n"
         )
 
         f.write(f"# Step 2: Running the compiler\n")
@@ -65,7 +65,7 @@ for model_name, model_path in models.items():
         f.write(f"# Step 3: Code generation\n")
         f.write("echo 'Running Code Generation'\n")
         f.write(
-            f"{welder_nnfusion_path}/build/src/tools/nnfusion/nnfusion {model_path} -f onnx -ftune_output_file=/dev/null -ftune_input_file=tuned.json -fwarmup_step=5 -frun_step=10 -ffusion_skiplist='Dot,BatchMatMul,Convolution' > codegen.log 2>&1\n"
+            f"{welder_nnfusion_path}/build/src/tools/nnfusion/nnfusion {model_path} -f onnx -ftune_output_file=/dev/null -ftune_input_file=tuned.json -fwarmup_step=5 -frun_step=10 > codegen.log 2>&1\n"
         )
         f.write(
             f"cd nnfusion_rt/cuda_codegen;cmake . -DCUDA_ARCH='-gencode arch=compute_80,code=compute_80';make;./main_test > run.log \n"
