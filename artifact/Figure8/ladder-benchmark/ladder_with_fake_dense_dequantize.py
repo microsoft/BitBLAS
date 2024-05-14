@@ -10,7 +10,7 @@ from tvm.contrib import graph_executor
 from ladder.utils import write_mod
 import os
 import logging
-
+ladder.schedule.enable_schedule_dump()
 ladder.set_log_level(logging.DEBUG)
 
 model_path = osp.join(osp.dirname(osp.realpath(__file__)), "..", "..", "models")
@@ -30,7 +30,7 @@ parser.add_argument('--nhwc', action="store_false")
 parser.add_argument('--fake_quant', type=int, default=-1)
 parser.add_argument("--fast_decoding", action="store_true", help="Use fast decoding mode.", default=False)
 parser.add_argument('--batch', type=int, default=1)
-parser.add_argument('--seq_len', type=int, default=4096)
+parser.add_argument('--seq_len', type=int, default=1)
 parser.add_argument('--bits', type=int, default=4)
 parser.add_argument('--convert_int', action="store_true")
 parser.add_argument('--format', type=str, default='int')
@@ -166,12 +166,16 @@ if __name__ == "__main__":
             'group_size': -1,
     }
     arch = ladder.arch.__getattribute__(args.arch)()
+    name = args.prefix
     if args.prefix == "llama2-70b":
         path = f'{model_path}/llama_70b/llama2_70b_layer1_seq{args.seq_len}_bs{args.batch}/model.onnx'
     elif args.prefix == "bloom-176b":
         path = f'{model_path}/bloom_176b/bloom-176b_layer1_seq{args.seq_len}_bs{args.batch}/model.onnx'
+    else:
+        path = args.prefix
+        name = path.split("/")[-1]
     # path = f'./models/llama_70b/llama2_70b_layer1_seq{args.seq_len}_bs{args.batch}/model.onnx'
-    name = args.prefix
+
     log_path = "progress/e2e/" + name + "/" + fname
     if args.fake_quant > -1:
         log_path += f'_fq_{args.fake_quant}_{quant_config["format"]}_{quant_config["bits"]}_{quant_config["group_size"]}_bs{args.batch}_seq{args.seq_len}_ci_{args.convert_int}'

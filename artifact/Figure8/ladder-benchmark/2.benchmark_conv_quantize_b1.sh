@@ -23,27 +23,53 @@ fi
 MODEL_PATH=$(pwd)/../../models
 
 if [ $force_tune -eq 1 ]; then
-# FP8xFP8
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/resnet-50-b1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/resnet-50-b1_fp8_e5m2.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/shufflenet-b1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/shufflenet-b1_fp8_e5m2.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/Conformer-b1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/Conformer-b1_fp8_e5m2.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/vit-b1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/vit-b1_fp8_e5m2.log
+    # resnet
+    ## fp8*fp8
+    python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/resnet-50-b1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/resnet-50-b1_fp8_e5m2.log
+    ## mxfp8*mxfp8
+    python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/resnet-50-b1 --fake_quant 0 --bits 8 --format mxfp 2>&1 | tee logs/resnet-50-b1_mxfp8_e5m2.log
+    ## int4*int1
+    python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/resnet-50-b1 --fake_quant 0 --bits 1 --format int4b 2>&1 | tee logs/resnet-50-b1_int4bxint1.log
 
+    # shufflenet
+    # FP8xFP8
+    python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/shufflenet-b1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/shufflenet-b1_fp8_e5m2.log
 
-# INT4xINT4
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/resnet-50-b1 --fake_quant 0 --bits 4 --format int4b 2>&1 | tee logs/resnet-50-b1_int4b.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/shufflenet-b1 --fake_quant 0 --bits 4 --format int4b 2>&1 | tee logs/shufflenet-b1_int4b.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/Conformer-b1 --fake_quant 0 --bits 4 --format int4b 2>&1 | tee logs/Conformer-b1_int4b.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/vit-b1 --fake_quant 0 --bits 4 --format int4b 2>&1 | tee logs/vit-b1_int4b.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/resnet-50-b1 --fake_quant 0 --bits 1 --format int4b 2>&1 | tee logs/resnet-50-b1_int4bxint1.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/shufflenet-b1 --fake_quant 0 --bits 1 --format int4b 2>&1 | tee logs/shufflenet-b1_int4bxint1.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/Conformer-b1 --fake_quant 0 --bits 1 --format int4b 2>&1 | tee logs/Conformer-b1_int4bxint1.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/vit-b1 --fake_quant 0 --bits 1 --format int4b 2>&1 | tee logs/vit-b1_int4bxint1.log
+    # Conformer
+    # int8*int4
+    python -u ladder_with_fake_dense_dequantize.py --async_propagation --prefix $MODEL_PATH/Conformer-b1 --fake_quant 0 --bits 4 --format int --convert_int 2>&1 | tee logs/Conformer-b1_int8xint4.log
+    # int4*int4
+    python -u ladder_with_fake_dense_dequantize.py --async_propagation --prefix $MODEL_PATH/Conformer-b1 --fake_quant 0 --bits 4 --format int4b 2>&1 | tee logs/Conformer-b1_int4b.log
+    echo "Checking out artifact/Figure8/ladder-benchmark/kernel_benchmark for Conformer INT8xINT4"
+    echo "Checking out artifact/Figure8/ladder-benchmark/kernel_benchmark for Conformer INT4xINT4"
 
+    # vit
+    ## fp8*fp8
+    python -u ladder_with_fake_dense_dequantize.py --async_propagation --prefix $MODEL_PATH/vit-b1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/vit-b1_fp8_e5m2.log
+    ## int4*int4
+    python -u ladder_with_fake_dense_dequantize.py --async_propagation --prefix $MODEL_PATH/vit-b1 --fake_quant 0 --bits 4 --format int4b 2>&1 | tee logs/vit-b1_int4b.log
+    echo "Parsing artifact/Figure8/ladder-benchmark/kernel_benchmark for ViT FP8xFP8"
+    echo "Parsing artifact/Figure8/ladder-benchmark/kernel_benchmark for ViT INT4xINT4"
+else
+    # resnet
+    ## fp8*fp8
+    python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/resnet-50-b1_fq_0_fp_e5m2_8_ci_False_async 2>&1 | tee logs/resnet-50-b1_fp8_e5m2.log
+    ## mxfp8*mxfp8
+    python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/resnet-50-b1_fq_0_mxfp_8_ci_False_async 2>&1 | tee logs/resnet-50-b1_mxfp8_e5m2.log
+    ## int4*int4
+    python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/resnet-50-b1_fq_0_int4b_1_ci_False_async 2>&1 | tee logs/resnet-50-b1_int4b.log
 
-# MxFP8_e5m2
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/resnet-50-b1 --fake_quant 0 --bits 8 --format mxfp 2>&1 | tee logs/resnet-50-b1_mxfp8_e5m2.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/shufflenet-b1 --fake_quant 0 --bits 8 --format mxfp 2>&1 | tee logs/shufflenet-b1_mxfp8_e5m2.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/Conformer-b1 --fake_quant 0 --bits 8 --format mxfp 2>&1 | tee logs/Conformer-b1_mxfp8_e5m2.log
-python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/vit-b1 --fake_quant 0 --bits 8 --format mxfp 2>&1 | tee logs/vit-b1_mxfp8_e5m2.log
+    # shufflenet
+    # FP8xFP8
+    python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/shufflenet-b1_fq_0_fp_e5m2_8_ci_False_async 2>&1 | tee logs/shufflenet-b1_fp8_e5m2.log
+
+    # Conformer
+    # check out artifact/Figure8/ladder-benchmark/kernel_benchmark
+    echo "Parsing out artifact/Figure8/ladder-benchmark/kernel_benchmark for Conformer INT8xINT4"
+    echo "Parsing out artifact/Figure8/ladder-benchmark/kernel_benchmark for Conformer INT4xINT4"
+    
+    # vit
+    # check out artifact/Figure8/ladder-benchmark/kernel_benchmark
+    echo "Parsing out artifact/Figure8/ladder-benchmark/kernel_benchmark for ViT FP8xFP8"
+    echo "Parsing out artifact/Figure8/ladder-benchmark/kernel_benchmark for ViT INT4xINT4"
 fi

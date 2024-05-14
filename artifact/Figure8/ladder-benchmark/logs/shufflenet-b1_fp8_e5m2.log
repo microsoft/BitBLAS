@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure8/ladder/checkpoints/shufflenet-b1_fq_0_fp_e5m2_8_ci_False_async
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   0.3199       0.3199       0.3200       0.3199       0.0000   
+               

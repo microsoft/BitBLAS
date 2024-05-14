@@ -1,0 +1,2157 @@
+Testing model: /root/Ladder/artifact/Figure8/ladder-benchmark/../../models/vit-b1
+/root/Ladder/3rdparty/tvm/python/tvm/target/target.py:397: UserWarning: Try specifying cuda arch by adding 'arch=sm_xx' to your target.
+  warnings.warn("Try specifying cuda arch by adding 'arch=sm_xx' to your target.")
+2024-05-14 03:38:22 [ladder:DEBUG]: currently do not suppory m pad or n pad
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 4, "format": "int4b", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+2024-05-14 03:38:22 [ladder:DEBUG]: currently do not suppory m pad or n pad
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:22 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-14 03:38:23 [ladder:DEBUG]: lhs or rhs is constant
+345
+Output910, 
+add909, nn.dense908, 
+take907, Constant906, add905, multiply904, divide903, 
+sqrt902, add901, Constant900, mean899, 
+multiply898, subtract897, 
+mean896, 
+add895, add894, reshape893, 
+ladder.quant_linear892, 
+reshape891, multiply890, Constant889, 
+Constant886, erf885, add887, divide884, Constant883, add882, multiply888, reshape881, 
+ladder.quant_linear880, 
+reshape879, multiply877, add878, divide876, 
+sqrt875, add874, Constant873, mean872, 
+multiply871, subtract870, 
+mean869, 
+add868, add867, reshape866, 
+ladder.quant_linear865, 
+reshape864, reshape863, transpose862, reshape861, 
+nn.batch_matmul860, 
+reshape858, transpose859, squeeze857, strided_slice856, 
+reshape855, divide854, 
+sum853, 
+exp852, subtract851, 
+max850, 
+reshape849, 
+nn.batch_matmul848, 
+transpose847, reshape846, multiply845, squeeze843, transpose844, strided_slice842, 
+multiply840, reshape841, squeeze839, strided_slice838, 
+reshape836, transpose837, add835, reshape834, 
+ladder.quant_linear833, 
+reshape832, add831, multiply830, divide829, 
+sqrt828, add827, Constant826, mean825, 
+multiply824, subtract823, 
+mean822, 
+add821, add820, reshape819, 
+ladder.quant_linear818, 
+reshape817, multiply816, Constant815, 
+add813, Constant812, erf811, divide810, multiply814, Constant809, add808, reshape807, 
+ladder.quant_linear806, 
+add804, reshape805, multiply803, divide802, 
+sqrt801, add800, Constant799, mean798, 
+multiply797, subtract796, 
+mean795, 
+add794, add793, reshape792, 
+ladder.quant_linear791, 
+reshape790, reshape789, transpose788, reshape787, 
+nn.batch_matmul786, 
+transpose785, reshape784, squeeze783, strided_slice782, 
+reshape781, divide780, 
+sum779, 
+exp778, subtract777, 
+max776, 
+reshape775, 
+nn.batch_matmul774, 
+reshape772, multiply771, transpose770, squeeze769, transpose773, strided_slice768, 
+multiply766, reshape767, squeeze765, strided_slice764, 
+transpose763, reshape762, add761, reshape760, 
+ladder.quant_linear759, 
+reshape758, add757, multiply756, divide755, 
+sqrt754, add753, Constant752, mean751, 
+multiply750, subtract749, 
+mean748, 
+add747, add746, reshape745, 
+ladder.quant_linear744, 
+reshape743, multiply742, Constant741, 
+add739, erf737, divide736, multiply740, Constant738, Constant735, add734, reshape733, 
+ladder.quant_linear732, 
+reshape731, add730, multiply729, divide728, 
+sqrt727, add726, Constant725, mean724, 
+multiply723, subtract722, 
+mean721, 
+add720, add719, reshape718, 
+ladder.quant_linear717, 
+reshape716, reshape715, transpose714, reshape713, 
+nn.batch_matmul712, 
+transpose711, reshape710, squeeze709, strided_slice708, 
+reshape707, divide706, 
+sum705, 
+exp704, subtract703, 
+max702, 
+reshape701, 
+nn.batch_matmul700, 
+transpose699, reshape698, multiply697, transpose696, squeeze695, strided_slice694, 
+reshape693, multiply692, squeeze691, strided_slice690, 
+transpose689, reshape688, add687, reshape686, 
+ladder.quant_linear685, 
+reshape684, add683, multiply682, divide681, 
+sqrt680, add679, Constant678, mean677, 
+exp334, subtract333, 
+reshape331, 
+transpose329, reshape328, multiply327, transpose326, squeeze325, strided_slice324, 
+reshape323, multiply322, squeeze321, strided_slice320, 
+transpose319, reshape318, add317, reshape316, 
+reshape314, add313, multiply312, divide311, 
+multiply306, subtract305, 
+add303, add302, reshape301, 
+reshape299, multiply298, Constant297, 
+multiply296, add295, Constant294, erf293, divide292, Constant291, add290, reshape289, 
+add286, reshape287, multiply285, divide284, 
+multiply279, subtract278, 
+add276, add275, reshape274, 
+reshape272, reshape271, transpose270, reshape269, 
+transpose267, reshape266, squeeze265, strided_slice264, 
+reshape263, divide262, 
+exp260, subtract259, 
+reshape257, 
+reshape254, multiply253, transpose252, squeeze251, transpose255, strided_slice250, 
+reshape249, multiply248, squeeze247, strided_slice246, 
+transpose245, reshape244, add243, reshape242, 
+add239, multiply238, reshape240, divide237, 
+multiply232, subtract231, 
+add229, add228, reshape227, 
+reshape225, multiply224, Constant223, 
+add221, Constant220, erf219, Constant217, multiply222, divide218, add216, reshape215, 
+reshape213, add212, multiply211, divide210, 
+multiply205, subtract204, 
+add202, add201, reshape200, 
+reshape198, reshape197, transpose196, reshape195, 
+transpose193, squeeze191, reshape192, strided_slice190, 
+reshape189, divide188, 
+exp186, subtract185, 
+reshape183, 
+reshape180, multiply179, transpose178, transpose181, squeeze177, strided_slice176, 
+reshape175, multiply174, squeeze173, strided_slice172, 
+reshape170, transpose171, add169, reshape168, 
+reshape166, add165, multiply164, divide163, 
+multiply158, subtract157, 
+add235, Constant234, sqrt236, mean233, 
+multiply676, subtract675, 
+reshape77, multiply76, Constant75, 
+mean230, 
+add673, add672, reshape671, 
+add73, Constant72, erf71, divide70, multiply74, Constant69, add68, reshape67, 
+ladder.quant_linear226, 
+reshape669, multiply668, Constant667, 
+reshape65, add64, multiply63, divide62, 
+ladder.quant_linear214, 
+multiply666, Constant664, erf663, Constant661, divide662, add660, add665, reshape659, 
+multiply57, subtract56, 
+sqrt209, Constant207, add208, mean206, 
+reshape657, add656, multiply655, divide654, 
+add54, add53, reshape52, 
+mean203, 
+multiply649, subtract648, 
+reshape50, reshape49, transpose48, reshape47, 
+ladder.quant_linear199, 
+add646, add645, reshape644, 
+reshape44, squeeze43, transpose45, strided_slice42, 
+nn.batch_matmul194, 
+reshape642, transpose640, reshape641, reshape639, 
+reshape41, divide40, 
+sum187, 
+transpose637, reshape636, squeeze635, strided_slice634, 
+exp38, subtract37, 
+add2, nn.conv2d1, 
+add498, add497, reshape496, 
+add309, sqrt310, Constant308, mean307, 
+add128, add127, reshape126, 
+ladder.quant_linear66, 
+reshape553, 
+max184, 
+reshape633, divide632, 
+reshape35, 
+max36, 
+add525, add524, reshape523, 
+add155, add154, reshape153, 
+mean8, 
+multiply501, subtract500, 
+ladder.quant_linear315, 
+multiply131, subtract130, 
+sum39, 
+multiply528, subtract527, 
+sqrt14, add13, Constant12, mean11, 
+reshape509, multiply507, add508, divide506, 
+nn.batch_matmul330, 
+add138, multiply137, reshape139, divide136, 
+nn.batch_matmul46, 
+reshape536, multiply534, add535, divide533, 
+mean156, 
+reshape619, multiply618, squeeze617, strided_slice616, 
+reshape18, add17, multiply16, divide15, 
+ladder.quant_linear19, 
+multiply518, Constant516, erf515, add517, divide514, Constant513, add512, reshape511, 
+max332, 
+multiply148, add147, Constant146, erf145, divide144, Constant143, add142, reshape141, 
+ladder.quant_linear51, 
+transpose541, reshape540, add539, reshape538, 
+sqrt162, add161, Constant160, mean159, 
+transpose625, reshape624, multiply623, transpose622, squeeze621, strided_slice620, 
+transpose23, reshape22, add21, reshape20, 
+mean55, 
+multiply544, reshape545, squeeze543, strided_slice542, 
+ladder.quant_linear167, 
+reshape627, 
+reshape27, multiply26, squeeze25, strided_slice24, 
+sqrt61, add60, Constant59, mean58, 
+transpose551, reshape550, multiply549, transpose548, squeeze547, strided_slice546, 
+nn.batch_matmul182, 
+exp630, subtract629, 
+transpose33, reshape32, multiply31, squeeze29, transpose30, strided_slice28, 
+nn.batch_matmul34, 
+reshape521, multiply520, Constant519, 
+reshape151, multiply150, Constant149, 
+ladder.quant_linear78, 
+exp556, subtract555, 
+ladder.quant_linear241, 
+add81, add80, reshape79, 
+mean82, 
+reshape559, divide558, 
+nn.batch_matmul256, 
+multiply84, subtract83, 
+sqrt88, add87, Constant86, mean85, 
+transpose563, reshape562, squeeze561, strided_slice560, 
+max258, 
+reshape92, add91, multiply90, divide89, 
+ladder.quant_linear93, 
+reshape568, reshape567, transpose566, reshape565, 
+sum261, 
+transpose97, reshape96, add95, reshape94, 
+nn.batch_matmul268, 
+reshape101, multiply100, squeeze99, strided_slice98, 
+ladder.quant_linear273, 
+reshape106, multiply105, transpose107, transpose104, squeeze103, strided_slice102, 
+nn.batch_matmul108, 
+add572, add571, reshape570, 
+mean277, 
+reshape109, 
+max110, 
+multiply575, subtract574, 
+sqrt283, add282, Constant281, mean280, 
+exp112, subtract111, 
+sum113, 
+reshape583, add582, multiply581, divide580, 
+ladder.quant_linear288, 
+reshape115, divide114, 
+ladder.quant_linear300, 
+transpose119, reshape118, squeeze117, strided_slice116, 
+nn.batch_matmul120, 
+multiply592, Constant590, erf589, divide588, Constant587, add591, add586, reshape585, 
+mean304, 
+reshape124, reshape123, transpose122, reshape121, 
+ladder.quant_linear125, 
+reshape595, multiply594, Constant593, 
+mean129, 
+add599, add598, reshape597, 
+layout_transform0, 
+sqrt135, add134, Constant133, mean132, 
+multiply602, subtract601, 
+add7, concatenate6, transpose5, reshape4, layout_transform3, 
+ladder.quant_linear140, 
+reshape610, add609, multiply608, divide607, 
+multiply10, subtract9, 
+ladder.quant_linear152, 
+transpose615, reshape614, add613, reshape612, 
+sum335, 
+reshape337, divide336, 
+transpose341, squeeze339, reshape340, strided_slice338, 
+nn.batch_matmul342, 
+reshape346, reshape345, transpose344, reshape343, 
+ladder.quant_linear347, 
+add350, add349, reshape348, 
+mean351, 
+multiply353, subtract352, 
+sqrt357, Constant355, add356, mean354, 
+reshape361, add360, multiply359, divide358, 
+ladder.quant_linear362, 
+multiply370, add369, Constant368, erf367, Constant365, divide366, add364, reshape363, 
+reshape373, multiply372, Constant371, 
+ladder.quant_linear374, 
+add377, add376, reshape375, 
+mean378, 
+multiply380, subtract379, 
+sqrt384, add383, Constant382, mean381, 
+reshape388, add387, multiply386, divide385, 
+ladder.quant_linear389, 
+transpose393, reshape392, add391, reshape390, 
+reshape397, multiply396, squeeze395, strided_slice394, 
+transpose403, reshape402, multiply401, transpose400, squeeze399, strided_slice398, 
+nn.batch_matmul404, 
+reshape405, 
+max406, 
+exp408, subtract407, 
+sum409, 
+reshape411, divide410, 
+reshape414, squeeze413, transpose415, strided_slice412, 
+nn.batch_matmul416, 
+reshape420, reshape419, transpose418, reshape417, 
+ladder.quant_linear421, 
+add424, add423, reshape422, 
+mean425, 
+multiply427, subtract426, 
+sqrt431, Constant429, add430, mean428, 
+add434, reshape435, multiply433, divide432, 
+ladder.quant_linear436, 
+add443, Constant442, erf441, multiply444, divide440, Constant439, add438, reshape437, 
+reshape447, multiply446, Constant445, 
+ladder.quant_linear448, 
+add451, add450, reshape449, 
+mean452, 
+multiply454, subtract453, 
+sqrt458, add457, Constant456, mean455, 
+reshape462, add461, multiply460, divide459, 
+ladder.quant_linear463, 
+transpose467, reshape466, add465, reshape464, 
+reshape471, multiply470, squeeze469, strided_slice468, 
+transpose477, reshape476, multiply475, transpose474, squeeze473, strided_slice472, 
+nn.batch_matmul478, 
+reshape479, 
+max480, 
+exp482, subtract481, 
+sum483, 
+reshape485, divide484, 
+transpose489, reshape488, squeeze487, strided_slice486, 
+nn.batch_matmul490, 
+transpose492, reshape494, reshape493, reshape491, 
+ladder.quant_linear495, 
+mean499, 
+add504, sqrt505, Constant503, mean502, 
+ladder.quant_linear510, 
+ladder.quant_linear522, 
+mean526, 
+sqrt532, add531, Constant530, mean529, 
+ladder.quant_linear537, 
+nn.batch_matmul552, 
+max554, 
+sum557, 
+nn.batch_matmul564, 
+ladder.quant_linear569, 
+mean573, 
+sqrt579, add578, Constant577, mean576, 
+ladder.quant_linear584, 
+ladder.quant_linear596, 
+mean600, 
+sqrt606, add605, Constant604, mean603, 
+ladder.quant_linear611, 
+nn.batch_matmul626, 
+max628, 
+sum631, 
+nn.batch_matmul638, 
+ladder.quant_linear643, 
+mean647, 
+sqrt653, add652, Constant651, mean650, 
+ladder.quant_linear658, 
+ladder.quant_linear670, 
+mean674, 
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+conv2d is not optimized for this platform.
+Traceback (most recent call last):
+  File "/root/Ladder/artifact/Figure8/ladder-benchmark/ladder_with_fake_dense_dequantize.py", line 188, in <module>
+    run(path, arch, async_propagate=args.async_propagation, fake_quant=args.fake_quant, quant_config=quant_config, convert_int=args.convert_int)
+  File "/root/Ladder/artifact/Figure8/ladder-benchmark/ladder_with_fake_dense_dequantize.py", line 132, in run
+    mod = ladder.relay.transform.WelderTunePass(arch, topk=40,save_perf_log="./debug_group_info")(mod)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/ir/transform.py", line 161, in __call__
+    return _ffi_transform_api.RunPass(self, mod)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 237, in __call__
+    raise get_last_ffi_error()
+tvm._ffi.base.TVMError: Traceback (most recent call last):
+  5: TVMFuncCall
+  4: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::IRModule (tvm::transform::Pass, tvm::IRModule)>::AssignTypedLambda<tvm::transform::{lambda(tvm::transform::Pass, tvm::IRModule)#7}>(tvm::transform::{lambda(tvm::transform::Pass, tvm::IRModule)#7}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  3: tvm::transform::Pass::operator()(tvm::IRModule) const
+  2: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  1: tvm::transform::ModulePassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  0: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<TVMFuncCreateFromCFunc::{lambda(tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)#2}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*) [clone .cold]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 81, in cfun
+    rv = local_pyfunc(*pyargs)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/ir/transform.py", line 230, in _pass_func
+    return inst.transform_module(mod, ctx)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 45, in transform_module
+    extractor.visit(mod["main"])
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 46, in visit
+    res = self.visit_function(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 233, in visit_function
+    super().visit_function(fn)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 158, in visit_function
+    self.visit(fn.body)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 60, in visit
+    res = self.visit_tuple_getitem(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 248, in visit_tuple_getitem
+    return (self.visit(t.tuple_value), t.index)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in visit_call
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 183, in <listcomp>
+    node_inputs = [self.visit(arg) for arg in call.args]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/expr_functor.py", line 48, in visit
+    res = self.visit_call(expr)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 192, in visit_call
+    out = tvm._ffi.get_global_func("relay.backend.LowerToTE")(call.op)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 237, in __call__
+    raise get_last_ffi_error()
+  6: TVMFuncCall
+  5: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::relay::tec::CachedFunc (tvm::relay::Function)>::AssignTypedLambda<tvm::relay::tec::{lambda(tvm::relay::Function)#5}>(tvm::relay::tec::{lambda(tvm::relay::Function)#5}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  4: tvm::relay::tec::LowerToTECompute::Lower(tvm::relay::Function const&)
+  3: tvm::relay::backend::MemoizedExprTranslator<tvm::runtime::Array<tvm::te::Tensor, void> >::VisitExpr(tvm::RelayExpr const&)
+  2: _ZZN3tvm5relay11ExprFunctorIFNS_7runtime5ArrayINS_2te6TensorEvEERKNS_9Relay
+  1: tvm::relay::tec::LowerToTECompute::VisitExpr_(tvm::relay::CallNode const*)
+  0: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<TVMFuncCreateFromCFunc::{lambda(tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)#2}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*) [clone .cold]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 81, in cfun
+    rv = local_pyfunc(*pyargs)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/backend/te_compiler.py", line 320, in lower_call
+    best_impl, outputs = select_implementation(op, call.attrs, inputs, ret_type, target)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/backend/te_compiler.py", line 207, in select_implementation
+    outs = impl.compute(attrs, inputs, out_type)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/relay/op/op.py", line 126, in compute
+    return _OpImplementationCompute(self, attrs, inputs, out_type)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 237, in __call__
+    raise get_last_ffi_error()
+  3: TVMFuncCall
+  2: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::relay::{lambda(tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)#4}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  1: tvm::relay::OpImplementation::Compute(tvm::Attrs const&, tvm::runtime::Array<tvm::te::Tensor, void> const&, tvm::Type const&)
+  0: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<TVMFuncCreateFromCFunc::{lambda(tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)#2}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*) [clone .cold]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 81, in cfun
+    rv = local_pyfunc(*pyargs)
+  File "/root/Ladder/python/ladder/relay/op/ladder_quant_linear.py", line 52, in compute_ladder_quant_linear
+    assert format == "int", "Only support int format currently"
+AssertionError: Only support int format currently

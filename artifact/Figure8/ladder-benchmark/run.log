@@ -1,0 +1,25 @@
+[LADDER] Using checkpoint path: /root/Ladder/artifact/checkpoints/Figure8
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure8/ladder/checkpoints/resnet-50_fq_0_fp_e5m2_8_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   8.6162       8.6170       8.6178       8.6131       0.0017   
+               
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure8/ladder/checkpoints/resnet-50_fq_0_mxfp_8_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   9.2189       9.2188       9.2202       9.2176       0.0009   
+               
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure8/ladder/checkpoints/resnet-50_fq_0_int4b_4_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   6.1345       6.1343       6.1352       6.1341       0.0004   
+               
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure8/ladder/checkpoints/shufflenet_fq_0_fp_e5m2_8_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   3.3589       3.3589       3.3593       3.3586       0.0003   
+               
+Checking out artifact/Figure8/ladder-benchmark/kernel_benchmark for Conformer INT8xINT4
+Checking out artifact/Figure8/ladder-benchmark/kernel_benchmark for Conformer INT4xINT4
+Checking out artifact/Figure8/ladder-benchmark/kernel_benchmark for ViT FP8xFP8
+Checking out artifact/Figure8/ladder-benchmark/kernel_benchmark for ViT INT4xINT4
