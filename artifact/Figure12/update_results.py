@@ -393,6 +393,40 @@ conv_times_data[5] = paper_conv_times_data[5]
 conv_times_data[6] = paper_conv_times_data[6]
 # update the results for Bitter-W_FP8_A_FP16
 
+# update the results for Bitter-W_INT4_A_INT4
+bitter_data = paper_conv_times_data[3][1]
+for i, (n, c, h, w, f, k, s, p) in enumerate(
+    [
+        (128, 64, 56, 56, 64, 3, 1, 1,),
+        (128, 64, 56, 56, 64, 1, 1, 0,),
+        (128, 128, 28, 28, 128, 3, 1, 1,),
+        (128, 512, 28, 28, 128, 1, 1, 0,),
+        (1, 64, 56, 56, 64, 3, 1, 1,),
+        (1, 64, 56, 56, 64, 1, 1, 0,),
+        (1, 128, 28, 28, 128, 3, 1, 1,),
+        (1, 512, 28, 28, 128, 1, 1, 0,),
+    ]
+):
+    if n == 128:
+        with open(f"./ladder-benchmark/logs/conv_nhwc_nhwc_int4xint4.log") as file:
+            lines = file.readlines()
+            for line in lines:
+                if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
+                    data = float(re.findall(r"\d+\.\d+", line)[-1])
+                    print("find data for bitter int4 n128: ", data, "the paper results is ", paper_conv_times_data[3][1][i])
+                    bitter_data[i] = data
+    elif n == 1:
+        with open(f"./ladder-benchmark/logs/direct_conv_nhwc_nhwc_int8xint4.log") as file:
+            lines = file.readlines()
+            for line in lines:
+                if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
+                    data = float(re.findall(r"\d+\.\d+", line)[-1])
+                    print("find data for bitter int4 n1: ", data, "the paper results is ", paper_conv_times_data[3][1][i])
+                    bitter_data[i] = data
+
+                    
+conv_times_data[3] = ("Bitter-W$_{INT4}$A$_{INT4}$", bitter_data)
+
 # bitter_fp8_fp16_data = conv_times_data[1][1]
 # update the results for Bitter
 bitter_data = conv_times_data[0][1]
@@ -459,40 +493,6 @@ for i, (n, c, h, w, f, k, s, p) in enumerate(
                     bitter_data[i] = data
 
 conv_times_data[2] = ("Bitter-W$_{MXFP8}$A$_{MXFP8}$", bitter_data)
-
-# update the results for Bitter-W_INT4_A_INT4
-bitter_data = paper_conv_times_data[3][1]
-for i, (n, c, h, w, f, k, s, p) in enumerate(
-    [
-        (128, 64, 56, 56, 64, 3, 1, 1,),
-        (128, 64, 56, 56, 64, 1, 1, 0,),
-        (128, 128, 28, 28, 128, 3, 1, 1,),
-        (128, 512, 28, 28, 128, 1, 1, 0,),
-        (1, 64, 56, 56, 64, 3, 1, 1,),
-        (1, 64, 56, 56, 64, 1, 1, 0,),
-        (1, 128, 28, 28, 128, 3, 1, 1,),
-        (1, 512, 28, 28, 128, 1, 1, 0,),
-    ]
-):
-    if n == 128:
-        with open(f"./ladder-benchmark/logs/conv_nhwc_nhwc_int4xint4.log") as file:
-            lines = file.readlines()
-            for line in lines:
-                if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
-                    data = float(re.findall(r"\d+\.\d+", line)[-1])
-                    print("find data for bitter int4 n128: ", data, "the paper results is ", paper_conv_times_data[3][1][i])
-                    bitter_data[i] = data
-    elif n == 1:
-        with open(f"./ladder-benchmark/logs/direct_conv_nhwc_nhwc_int8xint4.log") as file:
-            lines = file.readlines()
-            for line in lines:
-                if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
-                    data = float(re.findall(r"\d+\.\d+", line)[-1])
-                    print("find data for bitter int4 n1: ", data, "the paper results is ", paper_conv_times_data[3][1][i])
-                    bitter_data[i] = data
-
-                    
-conv_times_data[3] = ("Bitter-W$_{INT4}$A$_{INT4}$", bitter_data)
 
 # write the results to back
 reproduced_results = f"""
