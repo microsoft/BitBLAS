@@ -1,5 +1,0 @@
-Running from prebuilt model: /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/../checkpoints/Figure8/ladder/checkpoints/vit
-Execution time summary:
- mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-   4.0986       4.0985       4.0996       4.0980       0.0005   
-               

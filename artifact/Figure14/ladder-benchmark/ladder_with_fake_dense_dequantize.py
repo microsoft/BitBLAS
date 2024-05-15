@@ -134,13 +134,12 @@ def run(prefix, arch, async_propagate, fake_quant, quant_config, convert_int):
     write_mod(mod, log_path, "WelderTunePass")
 
     factory = relay.build(mod, arch.target, params=params)
-    lib = ladder.relay.update_lib(
-        factory.get_lib(), arch, osp.join(log_path, "model.so"))
     with open(osp.join(log_path, "graph.json"), "w") as f:
         f.write(factory.get_graph_json())
     with open(osp.join(log_path, "graph.params"), "wb") as f_params:
         f_params.write(tvm.runtime.save_param_dict(factory.get_params()))
-
+    lib = ladder.relay.update_lib(
+        factory.get_lib(), arch, osp.join(log_path, "model.so"))
     rt_mod = graph_executor.create(factory.get_graph_json(), lib, tvm.cuda(0))
     rt_mod.set_input(**factory.get_params())
     print(rt_mod.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
@@ -155,8 +154,6 @@ def run_from_prebuilt(prefix, arch):
     module = debug_executor.create(graph_json, loaded_lib, tvm.cuda(0))
     
     print(module.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
-
-    module.run()
 
 
 
@@ -183,4 +180,5 @@ if __name__ == "__main__":
         run_from_prebuilt(prebuilt_path, arch)
     else:
         print("Testing model: {}".format(name))
+        print(f"Debug and built model will be saved in {log_path}")
         run(path, arch, async_propagate=args.async_propagation, fake_quant=args.fake_quant, quant_config=quant_config, convert_int=args.convert_int)

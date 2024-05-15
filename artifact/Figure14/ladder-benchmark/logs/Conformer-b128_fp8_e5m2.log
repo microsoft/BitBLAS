@@ -1,5 +1,0 @@
-Running from prebuilt model: /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/../checkpoints/Figure8/ladder/checkpoints/Conformer_fq_0_fp_e5m2_8_ci_False
-Execution time summary:
- mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-  67.3200      67.3079      67.3637      67.3047       0.0222   
-               
