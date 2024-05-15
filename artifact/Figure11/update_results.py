@@ -11,34 +11,34 @@ bloom_providers = ["BS1 SEQ1", "BS32 SEQ1", "BS1 SEQ4096"]
 _ = """
 llama_providers = ['BS1 SEQ1', 'BS32 SEQ1', 'BS1 SEQ4096']
 llama_times_data = [
-    ('PyTorch-Inductor', [2700, 2624, 6878]),
-    ('ONNXRuntime', [2716, 2803, 16078]),
-    ('TensorRT', [5187, 4954, 6342]),
-    ('vLLM', [5008, 4763, 5034]),
-    ('vLLM-W$_{INT4}$A$_{FP16}$', [1123, 1100, 6128]),
-    ('Welder', [2106, 2139, 6790]),
-    ('Bitter', [2075, 2121, 6460]),
-    ('Bitter-W$_{INT4}$A$_{FP16}$', [879, 817, 5216]),
-    ('Bitter-W$_{NF4}$A$_{FP16}$', [866, 852, 5313]),
-    ('Bitter-W$_{FP8}$A$_{FP8}$', [1306, 1192, 5769]),
-    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [1305, 1299, 5947]),
-    ('Bitter-W$_{INT1}$A$_{INT8}$', [522, 532, 5300]),
+    ('PyTorch-Inductor', [-1, -1, -1]),
+    ('ONNXRuntime', [-1, -1, -1]),
+    ('TensorRT', [-1, -1, -1]),
+    ('vLLM', [-1, -1, -1]),
+    ('vLLM-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Welder', [-1, -1, -1]),
+    ('Bitter', [-1, -1, -1]),
+    ('Bitter-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{NF4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{FP8}$A$_{FP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{INT1}$A$_{INT8}$', [-1, -1, -1]),
 ]
 
 bloom_providers = ['BS1 SEQ1', 'BS32 SEQ1', 'BS1 SEQ4096']
 bloom_times_data = [
-    ('PyTorch-Inductor', [11503, 12257, 15383]),
-    ('ONNXRuntime', [7540, 7038, 62636]),
-    ('TensorRT', [5566, 5875, 21209]),
-    ('vLLM', [29011, 31764, 29199]),
-    ('vLLM-W$_{INT4}$A$_{FP16}$', [22327, 21910, 21931]),
-    ('Welder', [5130, 5036, 20109]),
-    ('Bitter', [5169, 5117, 20977]),
-    ('Bitter-W$_{INT4}$A$_{FP16}$', [3277, 3391, 18891]),
-    ('Bitter-W$_{NF4}$A$_{FP16}$', [3374, 3374, 19772]),
-    ('Bitter-W$_{FP8}$A$_{FP8}$', [4052, 3846, 18649]),
-    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [4037, 3944, 20280]),
-    ('Bitter-W$_{INT1}$A$_{INT8}$', [3006, 3032, 17854]),
+    ('PyTorch-Inductor', [-1, -1, -1]),
+    ('ONNXRuntime', [-1, -1, -1]),
+    ('TensorRT', [-1, -1, -1]),
+    ('vLLM', [-1, -1, -1]),
+    ('vLLM-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Welder', [-1, -1, -1]),
+    ('Bitter', [-1, -1, -1]),
+    ('Bitter-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{NF4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{FP8}$A$_{FP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{INT1}$A$_{INT8}$', [-1, -1, -1]),
 ]
 """
 
@@ -136,6 +136,25 @@ for model in ["llama", "bloom"]:
             bloom_times_data[3][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
             print(bloom_times_data[3][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
+            
+# update the vllm_fp16xint4 results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_vllm_fp16_int4_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[4][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[4][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[4][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[4][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+
 # update the welder results
 for model in ["llama", "bloom"]:
     for batch_size, seq_len in [
@@ -145,6 +164,7 @@ for model in ["llama", "bloom"]:
         ]:
         log_path = f"./logs/{model}_ladder_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
+            print(f"File {log_path} does not exist")
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
@@ -167,11 +187,11 @@ for model in ["llama", "bloom"]:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
-            llama_times_data[7][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(llama_times_data[7][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            llama_times_data[6][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[6][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
         elif model == "bloom":
-            bloom_times_data[7][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
-            print(bloom_times_data[7][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            bloom_times_data[6][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[6][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
 # update the ladder_fp16_int4 results
 for model in ["llama", "bloom"]:

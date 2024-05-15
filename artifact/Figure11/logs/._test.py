@@ -48,7 +48,7 @@ name_mapping = {
     "ONNXRuntime": "onnxruntime",
     "TensorRT": "tensorrt",
     "vLLM": "vllm",
-    "vLLM-W$_{INT4}$A$_{FP16}$": "vllm_int4_fp16",
+    "vLLM-W$_{INT4}$A$_{FP16}$": "vllm_fp16_int4",
     "Welder": "welder",
     "Bitter": "ladder",
     "Bitter-W$_{INT4}$A$_{FP16}$": "ladder_fp16_int4",

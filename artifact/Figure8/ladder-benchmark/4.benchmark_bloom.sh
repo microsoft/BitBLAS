@@ -69,7 +69,7 @@ else
 
 # fp16
 python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/llama2_bs1_seq1_async 2>&1 | tee bloom-176b_b1_s1_q-1.log
-python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/llama2_bs32_seq1_async 2>&1 | tee lama2-70b_b32_s1_q-1.log
+python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/llama2_bs32_seq1_async 2>&1 | tee  bloom-176b_b32_s1_q-1.log
 python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/llama2_bs1_seq4096_async 2>&1 | tee bloom-176b_b1_s4096_q-1.log
 
 # FP16XINT4
