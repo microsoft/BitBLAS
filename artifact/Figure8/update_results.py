@@ -613,8 +613,8 @@ def get_welder_results(log_file):
         print(f"Welder data from {log_file} is {data}")
     return data   
 
-welder_times_data = [1.2515, 1.3723, 35.1400]
-# welder_times_data = [-1, -1, -1]  
+# welder_times_data = [1.2515, 1.3723, 35.1400]
+welder_times_data = [-1, -1, -1]  
 latency_llama_b1s1 = get_welder_results('./welder-benchmark/compiled_models/llama2_70b_layer1_seq1_bs1_cutlass/run.log')
 latency_llama_b1s32 = get_welder_results('./welder-benchmark/compiled_models/llama2_70b_layer1_seq1_bs32_cutlass/run.log')
 latency_llama_b1s4096 = get_welder_results('./welder-benchmark/compiled_models/llama2_70b_layer1_seq4096_bs1_cutlass/run.log')
@@ -627,7 +627,8 @@ if latency_llama_b1s4096 is not None:
 
 llama2_times_data[3] = ('Welder', welder_times_data)
 
-welder_times_data = [3.0718, 3.4384, 115.7473]
+# welder_times_data = [3.0718, 3.4384, 115.7473]
+welder_times_data = [-1, -1, -1]  
 latency_bloom_b1s1 = get_welder_results('./welder-benchmark/compiled_models/bloom-176b_layer1_seq1_bs1_cutlass/run.log')
 latency_bloom_b1s32 = get_welder_results('./welder-benchmark/compiled_models/bloom-176b_layer1_seq1_bs32_cutlass/run.log')
 latency_bloom_b1s4096 = get_welder_results('./welder-benchmark/compiled_models/bloom-176b_layer1_seq4096_bs1_cutlass/run.log')
@@ -641,7 +642,8 @@ if latency_bloom_b1s4096 is not None:
 
 bloom_times_data[3] = ('Welder', welder_times_data)
 
-welder_times_data = [1.8076, 16.7814]
+# welder_times_data = [1.8076, 16.7814]
+welder_times_data = [-1, -1]  
 layency_resnet_b1 = get_welder_results('./welder-benchmark/compiled_models/resnet-50-b1_cutlass/run.log')
 layency_resnet_b128 = get_welder_results('./welder-benchmark/compiled_models/resnet-50-b128_cutlass/run.log')
 
@@ -652,8 +654,8 @@ if layency_resnet_b128 is not None:
 
 resnet_times_data[5] = ('Welder', welder_times_data)
 
-welder_times_data = [0.3597, 3.9318]
-# welder_times_data = [-1, -1]
+# welder_times_data = [0.3597, 3.9318]
+welder_times_data = [-1, -1]
 layency_shufflenet_b1 = get_welder_results('./welder-benchmark/compiled_models/shufflenet-b1_cutlass/run.log')
 layency_shufflenet_b128 = get_welder_results('./welder-benchmark/compiled_models/shufflenet-b128_cutlass/run.log')
 if layency_shufflenet_b1 is not None:
@@ -663,7 +665,8 @@ if layency_shufflenet_b128 is not None:
 
 shufflenet_times_data[5] = ('Welder', welder_times_data)
 
-welder_times_data = [1.9198, 88.3134]
+# welder_times_data = [1.9198, 88.3134]
+welder_times_data = [-1, -1]
 layency_conformer_b1 = get_welder_results('./welder-benchmark/compiled_models/Conformer-b1_cutlass/run.log')
 layency_conformer_b128 = get_welder_results('./welder-benchmark/compiled_models/Conformer-b128_cutlass/run.log')
 
@@ -674,9 +677,10 @@ if layency_conformer_b128 is not None:
 
 conformer_times_data[5] = ('Welder', welder_times_data)
 
-welder_times_data = [1.1366, 5.2987]
-layency_vit_b1 = get_welder_results('./welder-benchmark/compiled_models/vit_b1_cutlass/run.log')
-layency_vit_b128 = get_welder_results('./welder-benchmark/compiled_models/vit_b128_cutlass/run.log')
+# welder_times_data = [1.1366, 5.2987]
+welder_times_data = [-1, -1]
+layency_vit_b1 = get_welder_results('./welder-benchmark/compiled_models/vit-b1_cutlass/run.log')
+layency_vit_b128 = get_welder_results('./welder-benchmark/compiled_models/vit-b128_cutlass/run.log')
 if layency_vit_b1 is not None:
     welder_times_data[0] = layency_vit_b1
 if layency_vit_b128 is not None:
@@ -741,7 +745,8 @@ if ladder_llama_fp16_b1s4096_latency is not None:
 
 llama2_times_data[6] = ('Bitter', ladder_data)
 
-ladder_data = [0.3563, 1.1973, 29.5409]
+# ladder_data = [0.3563, 1.1973, 29.5409]
+ladder_data = [-1, -1, -1]
 ladder_llama_int4_b1s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s1_q0_b4.log')
 ladder_llama_int4_b32s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b32_s1_q0_b4.log')
 ladder_llama_int4_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s4096_q0_b4.log')
@@ -752,10 +757,14 @@ if ladder_llama_int4_b1s1_latency is not None:
 if ladder_llama_int4_b32s1_latency is not None:
     ladder_data[1] = ladder_llama_int4_b32s1_latency
 
+if ladder_llama_int4_b1s4096_latency is not None:
+    ladder_data[2] = ladder_llama_int4_b1s4096_latency
+
 llama2_times_data[7] = ('Bitter-W$_{INT4}$A$_{FP16}$', ladder_data)
 
 
-ladder_data = [0.5382, 1.3303, 30.6802]
+# ladder_data = [0.5382, 1.3303, 30.6802]
+ladder_data = [-1, -1, -1]
 # nf4
 ladder_llama_nf4_b1s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s1_q0_nf4.log')
 ladder_llama_nf4_b32s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b32_s1_q0_nf4.log')
@@ -774,7 +783,8 @@ llama2_times_data[8] = ('Bitter-W$_{NF4}$A$_{FP16}$', ladder_data)
 
 
 # fp8
-ladder_data = [0.5758, 1.1959, 29.3180]
+# ladder_data = [0.5758, 1.1959, 29.3180]
+ladder_data = [-1, -1, -1]
 ladder_llama_fp8_b1s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s1_q0_fp_e5m2.log')
 ladder_llama_fp8_b32s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b32_s1_q0_fp_e5m2.log')
 ladder_llama_fp8_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s4096_q0_fp_e5m2.log')
@@ -783,13 +793,16 @@ if ladder_llama_fp8_b1s1_latency is not None:
     ladder_data[0] = ladder_llama_fp8_b1s1_latency
 if ladder_llama_fp8_b32s1_latency is not None:
     ladder_data[1] = ladder_llama_fp8_b32s1_latency
+if ladder_llama_fp8_b1s4096_latency is not None:
+    ladder_data[2] = ladder_llama_fp8_b1s4096_latency
 
 
 llama2_times_data[9] = ('Bitter-W$_{FP8}$A$_{FP8}$', ladder_data)
 
 # mxfp8
-ladder_data = [0.8369, 1.4239, 35.8447]
-ladder_llama_mxfp8_b1s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s1_q0_fp_mxfp8.log')
+# ladder_data = [0.8369, 1.4239, 35.8447]
+ladder_data = [-1, -1, -1]
+ladder_llama_mxfp8_b1s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s1_q0_mxfp8.log')
 ladder_llama_mxfp8_b32s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b32_s1_q0_mxfp8.log')
 ladder_llama_mxfp8_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s4096_q0_fp_mxfp8.log')
 
@@ -797,11 +810,14 @@ if ladder_llama_mxfp8_b1s1_latency is not None:
     ladder_data[0] = ladder_llama_mxfp8_b1s1_latency
 if ladder_llama_mxfp8_b32s1_latency is not None:
     ladder_data[1] = ladder_llama_mxfp8_b32s1_latency
+if ladder_llama_mxfp8_b1s4096_latency is not None:
+    ladder_data[2] = ladder_llama_mxfp8_b1s4096_latency
 
 llama2_times_data[10] = ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', ladder_data)
 
 # int8xint1
-ladder_data = [0.1629, 0.7379, 24.8855]
+# ladder_data = [0.1629, 0.7379, 24.8855]
+ladder_data = [-1, -1, -1]
 ladder_llama_int4_b1s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s1_q0_b1_int.log')
 ladder_llama_int4_b32s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b32_s1_q0_b1_int.log')
 ladder_llama_int4_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s4096_q0_b1_int.log')
@@ -985,8 +1001,8 @@ resnet_times_data[8] = ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', ladder_data)
 
 ## int4xint1
 ladder_data = resnet_times_data[9][1]
-ladder_resnet_int4_b1_latency = parse_ladder_logs('./ladder-benchmark/logs/resnet-50-b1_int4bxint1.log')
-ladder_resnet_int4_b128_latency = parse_ladder_logs('./ladder-benchmark/logs/resnet-50-b128_int4bxint1.log')
+ladder_resnet_int4_b1_latency = parse_ladder_logs('./ladder-benchmark/logs/resnet-50-b1_int4b.log')
+ladder_resnet_int4_b128_latency = parse_ladder_logs('./ladder-benchmark/logs/resnet-50-b128_int4b.log')
 
 if ladder_resnet_int4_b1_latency is not None:
     print(f"Ladder data from resnet-50-b1_int4bxint1.log is {ladder_resnet_int4_b1_latency}, the paper value is {paper_resnet_times_data[9][1][0]}")
