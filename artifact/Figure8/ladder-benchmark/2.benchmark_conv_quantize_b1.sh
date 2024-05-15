@@ -64,12 +64,14 @@ else
     python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/shufflenet-b1_fq_0_fp_e5m2_8_ci_False_async 2>&1 | tee logs/shufflenet-b1_fp8_e5m2.log
 
     # Conformer
-    # check out artifact/Figure8/ladder-benchmark/kernel_benchmark
-    echo "Parsing out artifact/Figure8/ladder-benchmark/kernel_benchmark for Conformer INT8xINT4"
-    echo "Parsing out artifact/Figure8/ladder-benchmark/kernel_benchmark for Conformer INT4xINT4"
-    
+    ## int8*int4
+    python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/Conformer-b1_fq_0_int_8_int4_ci_False_holistic_fp16 2>&1 | tee logs/Conformer-b1_int8xint4.log
+    ## int4*int4
+    python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/Conformer-b1_fq_0_int4b_4_ci_False_async 2>&1 | tee logs/Conformer-b1_int4bxint1.log
+
     # vit
-    # check out artifact/Figure8/ladder-benchmark/kernel_benchmark
-    echo "Parsing out artifact/Figure8/ladder-benchmark/kernel_benchmark for ViT FP8xFP8"
-    echo "Parsing out artifact/Figure8/ladder-benchmark/kernel_benchmark for ViT INT4xINT4"
+    ## fp8*fp8
+    python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/vit-b1_fq_0_fp_e5m2_8_ci_False_holistic_fp16 2>&1 | tee logs/vit-b1_fp8_e5m2.log
+    ## int4*int4
+    python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/vit-b1_fq_0_int4b_4_ci_False_holistic_fp16 2>&1 | tee logs/vit-b1_int4b.log
 fi

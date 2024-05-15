@@ -785,7 +785,7 @@ if ladder_llama_fp8_b32s1_latency is not None:
     ladder_data[1] = ladder_llama_fp8_b32s1_latency
 
 
-llama2_times_data[9] = ('Bitter-W$_{FP8}$A$_{FP16}$', ladder_data)
+llama2_times_data[9] = ('Bitter-W$_{FP8}$A$_{FP8}$', ladder_data)
 
 # mxfp8
 ladder_data = [0.8369, 1.4239, 35.8447]
@@ -798,7 +798,7 @@ if ladder_llama_mxfp8_b1s1_latency is not None:
 if ladder_llama_mxfp8_b32s1_latency is not None:
     ladder_data[1] = ladder_llama_mxfp8_b32s1_latency
 
-llama2_times_data[10] = ('Bitter-W$_{MXFP8}$A$_{FP16}$', ladder_data)
+llama2_times_data[10] = ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', ladder_data)
 
 # int8xint1
 ladder_data = [0.1629, 0.7379, 24.8855]
@@ -901,7 +901,7 @@ if ladder_bloom_fp8_b32s1_latency is not None:
 if ladder_bloom_fp8_b1s4096_latency is not None:
     ladder_data[2] = ladder_bloom_fp8_b1s4096_latency
 
-bloom_times_data[9] = ('Bitter-W$_{FP8}$A$_{FP16}$', ladder_data)
+bloom_times_data[9] = ('Bitter-W$_{FP8}$A$_{FP8}$', ladder_data)
 
 # mxfp8
 # ladder_data = [2.0269, 3.1147, 104.8811]
@@ -918,7 +918,7 @@ if ladder_bloom_mxfp8_b1s4096_latency is not None:
     ladder_data[2] = ladder_bloom_mxfp8_b1s4096_latency
 
 
-bloom_times_data[10] = ('Bitter-W$_{MXFP8}$A$_{FP16}$', ladder_data)
+bloom_times_data[10] = ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', ladder_data)
 
 # int8xint1
 # ladder_data = [0.3245, 1.2000, 70.5538]
@@ -965,7 +965,7 @@ if ladder_resnet_fp16_b128_latency is not None:
     print(f"Ladder data from resnet-50-b128_fp8_e5m2.log is {ladder_resnet_fp16_b128_latency}, the paper value is {paper_resnet_times_data[7][1][1]}")
     ladder_data[1] = ladder_resnet_fp16_b128_latency
 
-resnet_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP16}$', ladder_data)
+resnet_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP8}$', ladder_data)
 
 ## mxfp8
 ladder_data = resnet_times_data[8][1]
@@ -1027,7 +1027,7 @@ if ladder_shufflenet_fp8_b128_latency is not None:
     print(f"Ladder data from shufflenet-b128_fp8_e5m2.log is {ladder_shufflenet_fp8_b128_latency}, the paper value is {paper_shufflenet_times_data[7][1][1]}")
     ladder_data[1] = ladder_shufflenet_fp8_b128_latency
 
-shufflenet_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP16}$', ladder_data)
+shufflenet_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP8}$', ladder_data)
 
 # vit
 ladder_data = vit_times_data[6][1]
@@ -1035,6 +1035,8 @@ ladder_vit_fp16_b1_latency = parse_ladder_logs('./ladder-benchmark/logs/vit-b1.l
 ladder_vit_fp16_b128_latency = parse_ladder_logs('./ladder-benchmark/logs/vit-b128.log')
 
 if ladder_vit_fp16_b1_latency is not None:
+    vit_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP8}$', [1.2695, 4.0975])
+    vit_times_data[8] = ('Bitter-W$_{INT4}$A$_{INT4}$', [1.1856, 3.4475])
     print(f"Ladder data from vit-b1.log is {ladder_vit_fp16_b1_latency}, the paper value is {paper_vit_times_data[6][1][0]}")
     ladder_data[0] = ladder_vit_fp16_b1_latency
 
@@ -1065,11 +1067,11 @@ if ladder_conformer_fp16_b1_latency is not None:
 
 if ladder_conformer_fp16_b128_latency is not None:
     print(f"Ladder data from Conformer_b128.log is {ladder_conformer_fp16_b128_latency}, the paper value is {paper_conformer_times_data[6][1][1]}")
+    conformer_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP8}$', [1.7943, 58.6012])
+    conformer_times_data[8] = ('Bitter-W$_{INT4}$A$_{FP16}$', [1.7471, 54.6344])
     ladder_data[1] = ladder_conformer_fp16_b128_latency
 
 conformer_times_data[6] = ('Bitter', ladder_data)
-conformer_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP16}$', [1.7943, 58.6012])
-conformer_times_data[8] = ('Bitter-W$_{INT4}$A$_{FP16}$', [1.7471, 54.6344])
 print(f"Conformer-b1 INT8xINT4 time with kernel quantized is {conformer_times_data[7][1][0]}")
 print(f"Conformer-b128 INT8xINT4 time with kernel quantized is {conformer_times_data[7][1][1]}")
 
@@ -1170,8 +1172,6 @@ resnet_times_data[4] = ('TensorIR', tensorir_data)
 tensorir_data = paper_shufflenet_times_data[4][1]
 shuffle_net_b1_latency = parse_tensorir_logs('./tensorir-benchmark/logs/shufflenet-b1-(1, 3, 224, 224)/latency.txt')
 vit_times_data[4] = paper_vit_times_data[4]
-vit_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP8}$', [1.2695, 4.0975])
-vit_times_data[8] = ('Bitter-W$_{INT4}$A$_{INT4}$', [1.1856, 3.4475])
 shuffle_net_b128_latency = parse_tensorir_logs('./tensorir-benchmark/logs/shufflenet-(128, 3, 224, 224)/latency.txt')
 
 if shuffle_net_b1_latency is not None:
