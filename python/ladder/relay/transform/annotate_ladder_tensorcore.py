@@ -77,16 +77,18 @@ class OpVisitor(relay.ExprVisitor):
             elif call.op.name == "ladder.perfect_matmul":
                 num_axis = int(len(call.checked_type.shape))
                 self.axis = (num_axis - 2, num_axis - 1)
-                can_propagate = call.attrs.can_propagate
+                can_propagate = call.attrs.can_propagate if "can_propagate" in call.attrs else True
                 self.ladder_config = (True, True, pipleline_stage) if can_propagate else (False, False)
             elif call.op.name == "ladder.perfect_quant_linear":
                 num_axis = int(len(call.checked_type.shape))
                 self.axis = (num_axis - 2, num_axis - 1)
-                can_propagate = call.attrs.can_propagate
+                can_propagate = call.attrs.can_propagate if "can_propagate" in call.attrs else True
                 if call.attrs.format == "mxfp":
                     self.ladder_config = (True, True, 2) # for smem issues about bf16 accum, we set pipeline_stage to 2
                 else:
                     self.ladder_config = (True, True, pipleline_stage) if can_propagate else (False, False)
+                if call.attrs.format == "int4b":
+                    self.ladder_compute_type = "int4"
                 self.consistent = (True, False)
             elif call.op.name == "ladder.quant_linear":
                 self.ladder_config = (False, False)

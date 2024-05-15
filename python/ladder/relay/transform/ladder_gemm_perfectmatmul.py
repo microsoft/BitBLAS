@@ -76,18 +76,18 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
     def visit_call(self, call):
         if isinstance(call.op, ir.Op) and call.op.name in ["welder.matmul", "nn.matmul", "nn.dense"]:
             for type in call.type_args:
-                if type.dtype not in ["float16", "float32"]:
+                if type.dtype not in ["float16", "float32", "int32"]:
                     return super().visit_call(call)
 
             input_shape = call.args[0].checked_type.shape
             kernel_shape = call.args[1].checked_type.shape
-
+            out_dtype = call.checked_type.dtype
             if len(kernel_shape) != 2:
                 logger.debug("currently do not suppory kernel shape > 2")
                 return super().visit_call(call)
             warp_compute_tile_m = 16
             warp_compute_tile_n = 16
-            warp_compute_tile_k = 16
+            warp_compute_tile_k = 32 if out_dtype == "int32" else 16
             
             if call.op.name in ["welder.matmul", "nn.matmul"]:
                 transpose_a, transpose_b = call.attrs.transpose_a, call.attrs.transpose_b
@@ -227,7 +227,6 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
                 _compressed_rate = 32 // (8 // bits)
             elif out_dtype == "float16" or out_dtype == "float32":
                 _compressed_rate = 16 // (8 // bits)
-            # TODO(v-leiwang3): fake kernel for performance
             perfect_kernel = relay.layout_transform(kernel, "HW", f"HW16h{_compressed_rate}w")
 
             attrs = ir.make_node(

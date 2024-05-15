@@ -150,19 +150,6 @@ class LadderFakeQuant(relay.ExprMutator):
 
             if self.quant_config['format'] == 'mxfp':
                 if self.convert_float:
-                    # quant_data = relay.cast(data, "float32")
-                    # attrs = ir.make_node(
-                    #     "DictAttrs",
-                    #     out_dtype='float32',
-                    #     transpose_a=transpose_a,
-                    #     transpose_b=transpose_b,
-                    #     **self.quant_config
-                    # )
-                    # q_matmul = relay.Call(
-                    #     relay.op.get("ladder.quant_linear"),
-                    #     [quant_data, quant_kernel, *other_inputs],
-                    #     attrs,
-                    # )
                     quant_data = relay.cast(data, "float32")
                     quant_kernel_shape = (
                         (int(N), int(K))
@@ -203,22 +190,67 @@ class LadderFakeQuant(relay.ExprMutator):
                     return q_matmul
 
             if self.convert_int:
-                quant_data = relay.cast(data, "float32")
-                quant_data = relay.cast(quant_data, "int8")
-                other_inputs = [relay.cast(input, "int8") for input in other_inputs]
-                attrs = ir.make_node(
-                    "DictAttrs",
-                    out_dtype='int32',
-                    transpose_a=transpose_a,
-                    transpose_b=transpose_b,
-                    **self.quant_config
-                )
-                q_matmul = relay.Call(
-                    relay.op.get("ladder.quant_linear"),
-                    [quant_data, quant_kernel, *other_inputs],
-                    attrs,
-                )
-                q_matmul = relay.cast(q_matmul, out_dtype)
+                warp_compute_tile_k = 32
+                if self.quant_config["bits"] == 8:
+                    quant_data = relay.cast(data, "float32")
+                    quant_data = relay.cast(quant_data, "int8")
+                    quant_data = relay.reshape(quant_data, (M // warp_compute_tile_m, K // warp_compute_tile_k, warp_compute_tile_m, warp_compute_tile_k))
+                    quant_kernel_shape = (int(N // warp_compute_tile_n), int(K // warp_compute_tile_k), warp_compute_tile_n,  warp_compute_tile_k)
+                    quant_kernel_data = tvm.nd.array(
+                        np.random.randint(
+                            low=np.iinfo(np.int8).min,
+                            high=np.iinfo(np.int8).max + 1,
+                            size=quant_kernel_shape,
+                            dtype=np.int8,
+                        )
+                    )
+                    quant_kernel = relay.const(quant_kernel_data)
+                    other_inputs = [relay.cast(input, "int8") for input in other_inputs]
+                    attrs = ir.make_node(
+                        "DictAttrs",
+                        out_dtype='int32',
+                        transpose_a=transpose_a,
+                        transpose_b=transpose_b,
+                        **self.quant_config
+                    )
+                    q_matmul = relay.Call(
+                        relay.op.get("ladder.perfect_matmul"),
+                        [quant_data, quant_kernel, *other_inputs],
+                        attrs,
+                    )
+                    q_matmul = relay.cast(q_matmul, out_dtype)
+                    q_matmul = relay.reshape(q_matmul, (M, N))
+                    return q_matmul
+                else:
+                    quant_data = relay.cast(data, "float32")
+                    quant_data = relay.cast(quant_data, "int8")
+                    warp_compute_tile_k = 32
+                    quant_data = relay.reshape(quant_data, (M // warp_compute_tile_m, K // warp_compute_tile_k, warp_compute_tile_m, warp_compute_tile_k))
+                    quant_kernel_shape = (int(N // warp_compute_tile_n), int(K // warp_compute_tile_k), warp_compute_tile_n,  warp_compute_tile_k // 8 * self.quant_config["bits"])
+                    quant_kernel_data = tvm.nd.array(
+                        np.random.randint(
+                            low=np.iinfo(np.int8).min,
+                            high=np.iinfo(np.int8).max + 1,
+                            size=quant_kernel_shape,
+                            dtype=np.int8,
+                        )
+                    )
+                    quant_kernel = relay.const(quant_kernel_data)
+                    other_inputs = [relay.cast(input, "int8") for input in other_inputs]
+                    attrs = ir.make_node(
+                        "DictAttrs",
+                        out_dtype='int32',
+                        transpose_a=transpose_a,
+                        transpose_b=transpose_b,
+                        **self.quant_config
+                    )
+                    q_matmul = relay.Call(
+                        relay.op.get("ladder.perfect_quant_linear"),
+                        [quant_data, quant_kernel, *other_inputs],
+                        attrs,
+                    )
+                    q_matmul = relay.cast(q_matmul, out_dtype)
+                    return q_matmul
             
             elif self.convert_float:
                 quant_data = relay.cast(data, "float32")
@@ -236,7 +268,45 @@ class LadderFakeQuant(relay.ExprMutator):
                     attrs,
                 )
                 q_matmul = relay.cast(q_matmul, out_dtype)
-    
+
+            elif self.quant_config['format'] == 'int4b':
+                # special case for int4b tensor core
+                # input should be cast into int8
+                quant_data = relay.cast(data, "float32")
+                quant_data = relay.cast(quant_data, "int8")
+                # should set wmma_k -> 32
+                # relay implemetation for crop
+                quant_data = relay.strided_slice(quant_data, begin=[0, 0], end=[M, K // 2])
+                quant_data = relay.reshape(quant_data, (M // 16, (K // 2) // 32, 16, 32))
+
+                quant_kernel_shape = (
+                    (int(N) // 16, int(K  // 2) // 32, 16, 32)
+                )
+                quant_kernel_data = tvm.nd.array(
+                    np.random.randint(
+                        low=np.iinfo(np.int8).min,
+                        high=np.iinfo(np.int8).max + 1,
+                        size=quant_kernel_shape,
+                        dtype=np.int8,
+                    )
+                )
+
+                quant_kernel = relay.const(quant_kernel_data)
+                other_inputs = [relay.cast(input, "int8") for input in other_inputs]
+                attrs = ir.make_node(
+                    "DictAttrs",
+                    out_dtype='int32',
+                    transpose_a=transpose_a,
+                    transpose_b=transpose_b,
+                    **self.quant_config
+                )
+                q_matmul = relay.Call(
+                    relay.op.get("ladder.perfect_matmul"),
+                    [quant_data, quant_kernel, *other_inputs],
+                    attrs,
+                )
+                q_matmul = relay.cast(q_matmul, out_dtype)
+                return q_matmul
             else:
                 attrs = ir.make_node(
                     "DictAttrs",

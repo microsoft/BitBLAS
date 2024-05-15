@@ -49,6 +49,8 @@ def compute_ladder_quant_linear(attrs, inputs, output_type):
     group_size = int(attrs["group_size"])
     bits = int(attrs["bits"])
     format = str(attrs["format"])
+    if format == "int4b":
+        format = "int"
     assert format == "int", "Only support int format currently"
     n_float_per_i8 = 8 // bits
     K_size = A.shape[-2] if transpose_a else A.shape[-1]

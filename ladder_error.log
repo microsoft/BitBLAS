@@ -1,0 +1,12 @@
+['ladder_perfect_quant_linear_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_perfect_quant_linear_6>: {'block': [2, 2, 16, 16], 'warp': [1, 1, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+Compiler timeout.
+['ladder_perfect_quant_linear_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_perfect_quant_linear_6>: {'block': [2, 8, 16, 16], 'warp': [1, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+Compiler timeout.
+['ladder_perfect_quant_linear_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_perfect_quant_linear_6>: {'block': [1, 16, 16, 16], 'warp': [1, 4, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+Compiler timeout.
+['ladder_perfect_quant_linear_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, ladder_perfect_quant_linear_6>: {'block': [2, 16, 16, 16], 'warp': [1, 8, 16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32, 1], 'use_tc': '80', 'strides': {3: <Stride, 2, 16>}}}
+Compiler timeout.
