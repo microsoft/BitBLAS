@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import os
-from configs import models
+from cudnn_configs import models
 
 welder_path = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "..", "..", "baseline_framework", "WELDER"

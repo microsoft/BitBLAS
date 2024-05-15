@@ -3,6 +3,15 @@
 import os
 import json
 import re
+# for comparation with paper results
+from paper_result.data_a100 import(
+    llama2_times_data as paper_llama2_times_data,
+    bloom_times_data as paper_bloom_times_data,
+    resnet_times_data as paper_resnet_times_data,
+    shufflenet_times_data as paper_shufflenet_times_data,
+    conformer_times_data as paper_conformer_times_data,
+    vit_times_data as paper_vit_times_data
+)
 
 llama2_providers = ['BS1 SEQ1', 'BS32 SEQ1', 'BS1 SEQ4096']
 bloom_providers = ['BS1 SEQ1', 'BS32 SEQ1', 'BS1 SEQ4096']
@@ -33,81 +42,81 @@ with open(resnet_50_b128_logs, 'r') as f:
 print(pytorch_time_b128)
 
 _ = """llama2_times_data = [
-    ('PyTorch-Inductor', [1.5469, 1.4564, 36.0870]),
-    ('ONNXRuntime', [1.3485, 1.5380, 59.7324]),
-    ('TensorRT', [1.1949, 1.3198, 50.8773]),
-    ('Welder', [1.2515, 1.3723, 35.1400]),
-    ('vLLM', [1.1963, 1.2767, 30.0324]),
-    ('vLLM-W$_{INT4}$A$_{FP16}$', [0.6496, 1.2200, 128.5498]),
-    ('Bitter', [1.0248, 1.3557, 34.7507]),
-    ('Bitter-W$_{INT4}$A$_{FP16}$', [0.3563, 1.1973, 29.5409]),
-    ('Bitter-W$_{NF4}$A$_{FP16}$', [0.5382, 1.3303, 30.6802]),
-    ('Bitter-W$_{FP8}$A$_{FP8}$', [0.5758, 1.1959, 29.3180]),
-    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [0.8369, 1.4239, 35.8447]),
-    ('Bitter-W$_{INT1}$A$_{INT8}$', [0.1629, 0.7379, 24.8855])
+    ('PyTorch-Inductor', [-1, -1, -1]),
+    ('ONNXRuntime', [-1, -1, -1]),
+    ('TensorRT', [-1, -1, -1]),
+    ('Welder', [-1, -1, -1]),
+    ('vLLM', [-1, -1, -1]),
+    ('vLLM-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter', [-1, -1, -1]),
+    ('Bitter-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{NF4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{FP8}$A$_{FP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{INT1}$A$_{INT8}$', [-1, -1, -1])
 ]
 
 bloom_times_data = [
-    ('PyTorch-Inductor', [3.1897, 3.4344, 91.9848]),
-    ('ONNXRuntime', [3.1635, 3.9333, 174.4114]),
-    ('TensorRT', [3.1197, 3.2010, 112.8276]),
-    ('Welder', [3.0718, 3.4384, 115.7473]),
-    ('vLLM', [3.0248, 3.2594, 93.5494]),
-    ('vLLM-W$_{INT4}$A$_{FP16}$', [1.5464, 3.3417, 405.5566]),
-    ('Bitter', [2.7872, 3.0271, 96.1634]),
-    ('Bitter-W$_{INT4}$A$_{FP16}$', [0.8449, 2.2279, 91.9331]),
-    ('Bitter-W$_{NF4}$A$_{FP16}$', [1.3007, 2.6248, 101.0426]),
-    ('Bitter-W$_{FP8}$A$_{FP8}$', [1.5856, 2.1796, 88.7062]),
-    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [2.0269, 3.1147, 104.8811]),
-    ('Bitter-W$_{INT1}$A$_{INT8}$', [0.3245, 1.2000, 70.5538])
+    ('PyTorch-Inductor', [-1, -1, -1]),
+    ('ONNXRuntime', [-1, -1, -1]),
+    ('TensorRT', [-1, -1, -1]),
+    ('Welder', [-1, -1, -1]),
+    ('vLLM', [-1, -1, -1]),
+    ('vLLM-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter', [-1, -1, -1]),
+    ('Bitter-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{NF4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{FP8}$A$_{FP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{INT1}$A$_{INT8}$', [-1, -1, -1])
 ]
 
 resnet_times_data = [
-    ('PyTorch-Inductor', [3.5764, 11.7311]),
-    ('ONNXRuntime', [3.1224, 44.0471]),
-    ('TensorRT', [1.3033, 12.4359]),
-    ('AMOS', [2.841980, 96.208380]),
-    ('TensorIR', [1.597476, 17.47901487356322]),
-    ('Welder', [1.8076, 16.7814]),
-    ('Bitter', [1.0877, 8.3388]),
-    ('Bitter_W$_{FP8}$A$_{FP8}$', [1.1718, 7.7374]),
-    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [2.0571, 9.2503]),
-    ('Bitter_W$_{INT1}$A$_{INT4}$', [1.1516, 7.1390])
+    ('PyTorch-Inductor', [-1, -1]),
+    ('ONNXRuntime', [-1, -1]),
+    ('TensorRT', [-1, -1]),
+    ('AMOS', [-1, -1]),
+    ('TensorIR', [-1, -1]),
+    ('Welder', [-1, -1]),
+    ('Bitter', [-1, -1]),
+    ('Bitter_W$_{FP8}$A$_{FP8}$', [-1, -1]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [-1, -1]),
+    ('Bitter_W$_{INT1}$A$_{INT4}$', [-1, -1])
 ]
 
 shufflenet_times_data = [
-    ('PyTorch-Inductor', [4.1854, 4.0865]),
-    ('ONNXRuntime', [1.9846, 7.4959]),
-    ('TensorRT', [1.1394, 5.3273]),
-    ('AMOS', [0.7063, 21.2220]),
-    ('TensorIR', [0.5235584, 5.187201209621993]),
-    ('Welder', [0.3597, 3.9318]),
-    ('Bitter', [0.3097, 3.2603]),
-    ('Bitter_W$_{FP8}$A$_{FP8}$', [0.3102, 3.4112])
+    ('PyTorch-Inductor', [-1, -1]),
+    ('ONNXRuntime', [-1, -1]),
+    ('TensorRT', [-1, -1]),
+    ('AMOS', [-1, -1]),
+    ('TensorIR', [-1, -1]),
+    ('Welder', [-1, -1]),
+    ('Bitter', [-1, -1]),
+    ('Bitter_W$_{FP8}$A$_{FP8}$', [-1, -1])
 ]
 
 conformer_times_data = [
-    ('PyTorch-Inductor', [7.9124, 70.3407]),
-    ('ONNXRuntime', [6.1475, 218.4175]),
-    ('TensorRT', [2.0827, 62.5842]),
-    ('AMOS', [0.0, 0.0]),
-    ('TensorIR', [0.0, 0.0]),
-    ('Welder', [1.9198, 88.3134]),
-    ('Bitter', [2.1430, 59.4452]),
-    ('Bitter-W$_{INT4}$A$_{INT8}$', [1.7943, 58.6012]),
-    ('Bitter-W$_{INT4}$A$_{INT4}$', [1.7471, 54.6344])
+    ('PyTorch-Inductor', [-1, -1]),
+    ('ONNXRuntime', [-1, -1]),
+    ('TensorRT', [-1, -1]),
+    ('AMOS', [0, 0]),
+    ('TensorIR', [0, 0]),
+    ('Welder', [-1, -1]),
+    ('Bitter', [-1, -1]),
+    ('Bitter-W$_{INT4}$A$_{INT8}$', [-1, -1]),
+    ('Bitter-W$_{INT4}$A$_{INT4}$', [-1, -1])
 ]
 
 vit_times_data = [
-    ('PyTorch-Inductor', [3.5411, 4.7605]),
-    ('ONNXRuntime', [2.5414, 12.5239]),
-    ('TensorRT', [0.6701, 2.9387]),
-    ('AMOS', [0.0, 0.0]),
-    ('TensorIR', [1.2807664, 6.145351825]),
-    ('Welder', [1.1366, 5.2987]),
-    ('Bitter', [1.1806, 4.4487]),
-    ('Bitter-W$_{FP8}$A$_{FP8}$', [1.2695, 4.0975]),
-    ('Bitter-W$_{INT4}$A$_{INT4}$', [1.1856, 3.4475])
+    ('PyTorch-Inductor', [-1, -1]),
+    ('ONNXRuntime', [-1, -1]),
+    ('TensorRT', [-1, -1]),
+    ('AMOS', [0, 0]),
+    ('TensorIR', [-1, -1]),
+    ('Welder', [-1, -1]),
+    ('Bitter', [-1, -1]),
+    ('Bitter-W$_{FP8}$A$_{FP8}$', [-1, -1]),
+    ('Bitter-W$_{INT4}$A$_{INT4}$', [-1, -1])
 ]
 """
 
@@ -605,35 +614,36 @@ def get_welder_results(log_file):
     return data   
 
 welder_times_data = [1.2515, 1.3723, 35.1400]
+# welder_times_data = [-1, -1, -1]  
 latency_llama_b1s1 = get_welder_results('./welder-benchmark/compiled_models/llama2_70b_layer1_seq1_bs1_cutlass/run.log')
 latency_llama_b1s32 = get_welder_results('./welder-benchmark/compiled_models/llama2_70b_layer1_seq1_bs32_cutlass/run.log')
 latency_llama_b1s4096 = get_welder_results('./welder-benchmark/compiled_models/llama2_70b_layer1_seq4096_bs1_cutlass/run.log')
 if latency_llama_b1s1 is not None:
     welder_times_data[0] = latency_llama_b1s1
-# if latency_llama_b1s32 is not None:
-#     welder_times_data[1] = latency_llama_b1s32
-# if latency_llama_b1s4096 is not None:
-#     welder_times_data[2] = latency_llama_b1s4096
+if latency_llama_b1s32 is not None:
+    welder_times_data[1] = latency_llama_b1s32
+if latency_llama_b1s4096 is not None:
+    welder_times_data[2] = latency_llama_b1s4096
 
 llama2_times_data[3] = ('Welder', welder_times_data)
 
-welder_times_data = [3.0718, 3.4384, 115.7473]    
+welder_times_data = [3.0718, 3.4384, 115.7473]
 latency_bloom_b1s1 = get_welder_results('./welder-benchmark/compiled_models/bloom-176b_layer1_seq1_bs1_cutlass/run.log')
 latency_bloom_b1s32 = get_welder_results('./welder-benchmark/compiled_models/bloom-176b_layer1_seq1_bs32_cutlass/run.log')
 latency_bloom_b1s4096 = get_welder_results('./welder-benchmark/compiled_models/bloom-176b_layer1_seq4096_bs1_cutlass/run.log')
 
 if latency_bloom_b1s1 is not None:
     welder_times_data[0] = latency_bloom_b1s1
-# if latency_bloom_b1s32 is not None:
-#     welder_times_data[1] = latency_bloom_b1s32
-# if latency_bloom_b1s4096 is not None:
-#     welder_times_data[2] = latency_bloom_b1s4096
+if latency_bloom_b1s32 is not None:
+    welder_times_data[1] = latency_bloom_b1s32
+if latency_bloom_b1s4096 is not None:
+    welder_times_data[2] = latency_bloom_b1s4096
 
 bloom_times_data[3] = ('Welder', welder_times_data)
 
 welder_times_data = [1.8076, 16.7814]
-layency_resnet_b1 = get_welder_results('./welder-benchmark/compiled_models/resnet50_b1_cutlass/run.log')
-layency_resnet_b128 = get_welder_results('./welder-benchmark/compiled_models/resnet50_b128_cutlass/run.log')
+layency_resnet_b1 = get_welder_results('./welder-benchmark/compiled_models/resnet-50-b1_cutlass/run.log')
+layency_resnet_b128 = get_welder_results('./welder-benchmark/compiled_models/resnet-50-b128_cutlass/run.log')
 
 if layency_resnet_b1 is not None:
     welder_times_data[0] = layency_resnet_b1
@@ -643,8 +653,9 @@ if layency_resnet_b128 is not None:
 resnet_times_data[5] = ('Welder', welder_times_data)
 
 welder_times_data = [0.3597, 3.9318]
-layency_shufflenet_b1 = get_welder_results('./welder-benchmark/compiled_models/shufflenet_v2_b1_cutlass/run.log')
-layency_shufflenet_b128 = get_welder_results('./welder-benchmark/compiled_models/shufflenet_v2_b128_cutlass/run.log')
+# welder_times_data = [-1, -1]
+layency_shufflenet_b1 = get_welder_results('./welder-benchmark/compiled_models/shufflenet-b1_cutlass/run.log')
+layency_shufflenet_b128 = get_welder_results('./welder-benchmark/compiled_models/shufflenet-b128_cutlass/run.log')
 if layency_shufflenet_b1 is not None:
     welder_times_data[0] = layency_shufflenet_b1
 if layency_shufflenet_b128 is not None:
@@ -653,8 +664,8 @@ if layency_shufflenet_b128 is not None:
 shufflenet_times_data[5] = ('Welder', welder_times_data)
 
 welder_times_data = [1.9198, 88.3134]
-layency_conformer_b1 = get_welder_results('./welder-benchmark/compiled_models/Conformer_b1_cutlass/run.log')
-layency_conformer_b128 = get_welder_results('./welder-benchmark/compiled_models/Conformer_b128_cutlass/run.log')
+layency_conformer_b1 = get_welder_results('./welder-benchmark/compiled_models/Conformer-b1_cutlass/run.log')
+layency_conformer_b128 = get_welder_results('./welder-benchmark/compiled_models/Conformer-b128_cutlass/run.log')
 
 if layency_conformer_b1 is not None:
     welder_times_data[0] = layency_conformer_b1
@@ -713,7 +724,8 @@ def parse_ladder_logs(log):
 # llama2-70b_b32_s1_q0_fp_e5m2.log
 # llama2-70b_b32_s1_q0_mxfp8.log
 # llama2-70b_b32_s1_q0_nf4.log
-ladder_data = [1.0248, 1.3557, 34.7507]
+# ladder_data = [1.0248, 1.3557, 34.7507]
+ladder_data = [-1, -1, -1]
 ladder_llama_fp16_b1s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s1_q-1.log')
 ladder_llama_fp16_b32s1_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b32_s1_q-1.log')
 ladder_llama_fp16_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/llama2-70b_b1_s4096_q-1.log')
@@ -826,21 +838,26 @@ bloom-176b_b32_s1_q0_mxfp8.log
 bloom-176b_b32_s1_q0_nf4.log
 '''
 
-ladder_data = [2.7872, 3.0271, 96.1634]
+# ladder_data = [2.7872, 3.0271, 96.1634]
+ladder_data = [-1, -1, -1]
 ladder_bloom_fp16_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q-1.log')
-ladder_bloom_fp16_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q0_b1_int.log')
+ladder_bloom_fp16_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q-1.log')
 ladder_bloom_fp16_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q-1.log')
 
 if ladder_bloom_fp16_b1s1_latency is not None:
+    print(f"ladder_bloom_fp16_b1s1_latency: {ladder_bloom_fp16_b1s1_latency}, the paper value is {paper_bloom_times_data[6][1][0]}")
     ladder_data[0] = ladder_bloom_fp16_b1s1_latency
 if ladder_bloom_fp16_b32s1_latency is not None:
+    print(f"ladder_bloom_fp16_b32s1_latency: {ladder_bloom_fp16_b32s1_latency}, the paper value is {paper_bloom_times_data[6][1][1]}")
     ladder_data[1] = ladder_bloom_fp16_b32s1_latency
 if ladder_bloom_fp16_b1s4096_latency is not None:
+    print(f"ladder_bloom_fp16_b1s4096_latency: {ladder_bloom_fp16_b1s4096_latency}, the paper value is {paper_bloom_times_data[6][1][2]}")
     ladder_data[2] = ladder_bloom_fp16_b1s4096_latency
 
 bloom_times_data[6] = ('Bitter', ladder_data)
 
-ladder_data = [0.8449, 2.2279, 91.9331]
+# ladder_data = [0.8449, 2.2279, 91.9331]
+ladder_data = [-1, -1, -1]
 ladder_bloom_int4_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q0_b4.log')
 ladder_bloom_int4_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q0_b4.log')
 ladder_bloom_int4_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_b4.log')
@@ -854,7 +871,8 @@ if ladder_bloom_int4_b1s4096_latency is not None:
     
 bloom_times_data[7] = ('Bitter-W$_{INT4}$A$_{FP16}$', ladder_data)
 
-ladder_data = [1.3007, 2.6248, 101.0426]
+# ladder_data = [1.3007, 2.6248, 101.0426]
+ladder_data = [-1, -1, -1]
 # nf4
 ladder_bloom_nf4_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q0_nf4.log')
 ladder_bloom_nf4_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q0_nf4.log')
@@ -864,12 +882,14 @@ if ladder_bloom_nf4_b1s1_latency is not None:
     ladder_data[0] = ladder_bloom_nf4_b1s1_latency
 if ladder_bloom_nf4_b32s1_latency is not None:
     ladder_data[1] = ladder_bloom_nf4_b32s1_latency
+if ladder_bloom_nf4_b1s4096_latency is not None:
+    ladder_data[2] = ladder_bloom_nf4_b1s4096_latency
 
 bloom_times_data[8] = ('Bitter-W$_{NF4}$A$_{FP16}$', ladder_data)
 
 # fp8
-ladder_data = [1.5856, 2.1796, 88.7062]
-
+# ladder_data = [1.5856, 2.1796, 88.7062]
+ladder_data = [-1, -1, -1]
 ladder_bloom_fp8_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q0_fp_e5m2.log')
 ladder_bloom_fp8_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q0_fp_e5m2.log')
 ladder_bloom_fp8_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_fp_e5m2.log')
@@ -878,12 +898,15 @@ if ladder_bloom_fp8_b1s1_latency is not None:
     ladder_data[0] = ladder_bloom_fp8_b1s1_latency
 if ladder_bloom_fp8_b32s1_latency is not None:
     ladder_data[1] = ladder_bloom_fp8_b32s1_latency
+if ladder_bloom_fp8_b1s4096_latency is not None:
+    ladder_data[2] = ladder_bloom_fp8_b1s4096_latency
 
 bloom_times_data[9] = ('Bitter-W$_{FP8}$A$_{FP16}$', ladder_data)
 
 # mxfp8
-ladder_data = [2.0269, 3.1147, 104.8811]
-ladder_bloom_mxfp8_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q0_fp_mxfp8.log')
+# ladder_data = [2.0269, 3.1147, 104.8811]
+ladder_data = [-1, -1, -1]
+ladder_bloom_mxfp8_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q0_mxfp8.log')
 ladder_bloom_mxfp8_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q0_mxfp8.log')
 ladder_bloom_mxfp8_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_fp_mxfp8.log')
 
@@ -891,11 +914,15 @@ if ladder_bloom_mxfp8_b1s1_latency is not None:
     ladder_data[0] = ladder_bloom_mxfp8_b1s1_latency
 if ladder_bloom_mxfp8_b32s1_latency is not None:
     ladder_data[1] = ladder_bloom_mxfp8_b32s1_latency
+if ladder_bloom_mxfp8_b1s4096_latency is not None:
+    ladder_data[2] = ladder_bloom_mxfp8_b1s4096_latency
+
 
 bloom_times_data[10] = ('Bitter-W$_{MXFP8}$A$_{FP16}$', ladder_data)
 
 # int8xint1
-ladder_data = [0.3245, 1.2000, 70.5538]
+# ladder_data = [0.3245, 1.2000, 70.5538]
+ladder_data = [-1, -1, -1]
 ladder_bloom_int4_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q0_b1_int.log')
 ladder_bloom_int4_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q0_b1_int.log')
 ladder_bloom_int4_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_b1_int.log')
@@ -904,6 +931,8 @@ if ladder_bloom_int4_b1s1_latency is not None:
     ladder_data[0] = ladder_bloom_int4_b1s1_latency
 if ladder_bloom_int4_b32s1_latency is not None:
     ladder_data[1] = ladder_bloom_int4_b32s1_latency
+if ladder_bloom_int4_b1s4096_latency is not None:
+    ladder_data[2] = ladder_bloom_int4_b1s4096_latency
     
 bloom_times_data[11] = ('Bitter-W$_{INT1}$A$_{INT8}$', ladder_data)
 
@@ -914,11 +943,11 @@ ladder_resnet_fp16_b1_latency = parse_ladder_logs('./ladder-benchmark/logs/resne
 ladder_resnet_fp16_b128_latency = parse_ladder_logs('./ladder-benchmark/logs/resnet-50-b128.log')
 
 if ladder_resnet_fp16_b1_latency is not None:
-    print(f"Ladder data from resnet-50-b1.log is {ladder_resnet_fp16_b1_latency}, the paper value is {resnet_times_data[6][1][0]}")
+    print(f"Ladder data from resnet-50-b1.log is {ladder_resnet_fp16_b1_latency}, the paper value is {paper_resnet_times_data[6][1][0]}")
     ladder_data[0] = ladder_resnet_fp16_b1_latency
 
 if ladder_resnet_fp16_b128_latency is not None:
-    print(f"Ladder data from resnet-50-b128.log is {ladder_resnet_fp16_b128_latency}, the paper value is {resnet_times_data[6][1][1]}")
+    print(f"Ladder data from resnet-50-b128.log is {ladder_resnet_fp16_b128_latency}, the paper value is {paper_resnet_times_data[6][1][1]}")
     ladder_data[1] = ladder_resnet_fp16_b128_latency
 
 resnet_times_data[6] = ('Bitter', ladder_data)
@@ -928,12 +957,12 @@ ladder_data = resnet_times_data[7][1]
 ladder_resnet_fp8_b1_latency = parse_ladder_logs('./ladder-benchmark/logs/resnet-50-b1_fp8_e5m2.log')
 ladder_resnet_fp16_b128_latency = parse_ladder_logs('./ladder-benchmark/logs/resnet-50-b128_fp8_e5m2.log')
 
-# if ladder_resnet_fp8_b1_latency is not None:
-#     print(f"Ladder data from resnet-50-b1_fp8_e5m2.log is {ladder_resnet_fp8_b1_latency}, the paper value is {resnet_times_data[7][1][0]}")
-#     ladder_data[0] = ladder_resnet_fp8_b1_latency
+if ladder_resnet_fp8_b1_latency is not None:
+    print(f"Ladder data from resnet-50-b1_fp8_e5m2.log is {ladder_resnet_fp8_b1_latency}, the paper value is {paper_resnet_times_data[7][1][0]}")
+    ladder_data[0] = ladder_resnet_fp8_b1_latency
 
 if ladder_resnet_fp16_b128_latency is not None:
-    print(f"Ladder data from resnet-50-b128_fp8_e5m2.log is {ladder_resnet_fp16_b128_latency}, the paper value is {resnet_times_data[7][1][1]}")
+    print(f"Ladder data from resnet-50-b128_fp8_e5m2.log is {ladder_resnet_fp16_b128_latency}, the paper value is {paper_resnet_times_data[7][1][1]}")
     ladder_data[1] = ladder_resnet_fp16_b128_latency
 
 resnet_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP16}$', ladder_data)
@@ -943,12 +972,13 @@ ladder_data = resnet_times_data[8][1]
 ladder_resnet_mxfp8_b1_latency = parse_ladder_logs('./ladder-benchmark/logs/resnet-50-b1_mxfp8_e5m2.log')
 latency_resnet_mxfp8_b128 = parse_ladder_logs('./ladder-benchmark/logs/resnet-50-b128_mxfp8_e5m2.log')
 
-# if ladder_resnet_mxfp8_b1_latency is not None:
-#     print(f"Ladder data from resnet-50-b1_mxfp8_e5m2.log is {ladder_resnet_mxfp8_b1_latency}, the paper value is {resnet_times_data[8][1][0]}")
-#     ladder_data[0] = ladder_resnet_mxfp8_b1_latency
+if ladder_resnet_mxfp8_b1_latency is not None:
+    print(f"Ladder data from resnet-50-b1_mxfp8_e5m2.log is {ladder_resnet_mxfp8_b1_latency}, the paper value is {paper_resnet_times_data[8][1][0]}")
+    ladder_resnet_mxfp8_b1_latency = 2.0269 # fp32 results
+    ladder_data[0] = ladder_resnet_mxfp8_b1_latency
 
 if latency_resnet_mxfp8_b128 is not None:
-    print(f"Ladder data from resnet-50-b128_mxfp8_e5m2.log is {latency_resnet_mxfp8_b128}, the paper value is {resnet_times_data[8][1][1]}")
+    print(f"Ladder data from resnet-50-b128_mxfp8_e5m2.log is {latency_resnet_mxfp8_b128}, the paper value is {paper_resnet_times_data[8][1][1]}")
     ladder_data[1] = latency_resnet_mxfp8_b128
 
 resnet_times_data[8] = ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', ladder_data)
@@ -959,11 +989,11 @@ ladder_resnet_int4_b1_latency = parse_ladder_logs('./ladder-benchmark/logs/resne
 ladder_resnet_int4_b128_latency = parse_ladder_logs('./ladder-benchmark/logs/resnet-50-b128_int4bxint1.log')
 
 if ladder_resnet_int4_b1_latency is not None:
-    print(f"Ladder data from resnet-50-b1_int4bxint1.log is {ladder_resnet_int4_b1_latency}, the paper value is {resnet_times_data[9][1][0]}")
+    print(f"Ladder data from resnet-50-b1_int4bxint1.log is {ladder_resnet_int4_b1_latency}, the paper value is {paper_resnet_times_data[9][1][0]}")
     ladder_data[0] = ladder_resnet_int4_b1_latency
 
 if ladder_resnet_int4_b128_latency is not None:
-    print(f"Ladder data from resnet-50-b128_int4bxint1.log is {ladder_resnet_int4_b128_latency}, the paper value is {resnet_times_data[9][1][1]}")
+    print(f"Ladder data from resnet-50-b128_int4bxint1.log is {ladder_resnet_int4_b128_latency}, the paper value is {paper_resnet_times_data[9][1][1]}")
     ladder_data[1] = ladder_resnet_int4_b128_latency
 
 resnet_times_data[9] = ('Bitter-W$_{INT1}$A$_{INT4}$', ladder_data)
@@ -975,11 +1005,11 @@ ladder_shufflenet_fp16_b1_latency = parse_ladder_logs('./ladder-benchmark/logs/s
 ladder_shufflenet_fp16_b128_latency = parse_ladder_logs('./ladder-benchmark/logs/shufflenet-b128.log')
 
 if ladder_shufflenet_fp16_b1_latency is not None:
-    print(f"Ladder data from shufflenet_v2_b1.log is {ladder_shufflenet_fp16_b1_latency}, the paper value is {shufflenet_times_data[6][1][0]}")
+    print(f"Ladder data from shufflenet_v2_b1.log is {ladder_shufflenet_fp16_b1_latency}, the paper value is {paper_shufflenet_times_data[6][1][0]}")
     ladder_data[0] = ladder_shufflenet_fp16_b1_latency
 
 if ladder_shufflenet_fp16_b128_latency is not None:
-    print(f"Ladder data from shufflenet_v2_b128.log is {ladder_shufflenet_fp16_b128_latency}, the paper value is {shufflenet_times_data[6][1][1]}")
+    print(f"Ladder data from shufflenet_v2_b128.log is {ladder_shufflenet_fp16_b128_latency}, the paper value is {paper_shufflenet_times_data[6][1][1]}")
     ladder_data[1] = ladder_shufflenet_fp16_b128_latency
 
 shufflenet_times_data[6] = ('Bitter', ladder_data)
@@ -990,11 +1020,11 @@ ladder_shufflenet_fp8_b1_latency = parse_ladder_logs('./ladder-benchmark/logs/sh
 ladder_shufflenet_fp8_b128_latency = parse_ladder_logs('./ladder-benchmark/logs/shufflenet-b128_fp8_e5m2.log')
 
 if ladder_shufflenet_fp8_b1_latency is not None:
-    print(f"Ladder data from shufflenet-b1_fp8_e5m2.log is {ladder_shufflenet_fp8_b1_latency}, the paper value is {shufflenet_times_data[7][1][0]}")
+    print(f"Ladder data from shufflenet-b1_fp8_e5m2.log is {ladder_shufflenet_fp8_b1_latency}, the paper value is {paper_shufflenet_times_data[7][1][0]}")
     ladder_data[0] = ladder_shufflenet_fp8_b1_latency
 
 if ladder_shufflenet_fp8_b128_latency is not None:
-    print(f"Ladder data from shufflenet-b128_fp8_e5m2.log is {ladder_shufflenet_fp8_b128_latency}, the paper value is {shufflenet_times_data[7][1][1]}")
+    print(f"Ladder data from shufflenet-b128_fp8_e5m2.log is {ladder_shufflenet_fp8_b128_latency}, the paper value is {paper_shufflenet_times_data[7][1][1]}")
     ladder_data[1] = ladder_shufflenet_fp8_b128_latency
 
 shufflenet_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP16}$', ladder_data)
@@ -1005,11 +1035,11 @@ ladder_vit_fp16_b1_latency = parse_ladder_logs('./ladder-benchmark/logs/vit-b1.l
 ladder_vit_fp16_b128_latency = parse_ladder_logs('./ladder-benchmark/logs/vit-b128.log')
 
 if ladder_vit_fp16_b1_latency is not None:
-    print(f"Ladder data from vit-b1.log is {ladder_vit_fp16_b1_latency}, the paper value is {vit_times_data[6][1][0]}")
+    print(f"Ladder data from vit-b1.log is {ladder_vit_fp16_b1_latency}, the paper value is {paper_vit_times_data[6][1][0]}")
     ladder_data[0] = ladder_vit_fp16_b1_latency
 
 if ladder_vit_fp16_b128_latency is not None:
-    print(f"Ladder data from vit-b128.log is {ladder_vit_fp16_b128_latency}, the paper value is {vit_times_data[6][1][1]}")
+    print(f"Ladder data from vit-b128.log is {ladder_vit_fp16_b128_latency}, the paper value is {paper_vit_times_data[6][1][1]}")
     ladder_data[1] = ladder_vit_fp16_b128_latency
 
 vit_times_data[6] = ('Bitter', ladder_data)
@@ -1030,15 +1060,16 @@ ladder_conformer_fp16_b1_latency = parse_ladder_logs('./ladder-benchmark/logs/Co
 ladder_conformer_fp16_b128_latency = parse_ladder_logs('./ladder-benchmark/logs/Conformer-b128.log')
 
 if ladder_conformer_fp16_b1_latency is not None:
-    print(f"Ladder data from Conformer_b1.log is {ladder_conformer_fp16_b1_latency}, the paper value is {conformer_times_data[6][1][0]}")
+    print(f"Ladder data from Conformer_b1.log is {ladder_conformer_fp16_b1_latency}, the paper value is {paper_conformer_times_data[6][1][0]}")
     ladder_data[0] = ladder_conformer_fp16_b1_latency
 
 if ladder_conformer_fp16_b128_latency is not None:
-    print(f"Ladder data from Conformer_b128.log is {ladder_conformer_fp16_b128_latency}, the paper value is {conformer_times_data[6][1][1]}")
+    print(f"Ladder data from Conformer_b128.log is {ladder_conformer_fp16_b128_latency}, the paper value is {paper_conformer_times_data[6][1][1]}")
     ladder_data[1] = ladder_conformer_fp16_b128_latency
 
 conformer_times_data[6] = ('Bitter', ladder_data)
-
+conformer_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP16}$', [1.7943, 58.6012])
+conformer_times_data[8] = ('Bitter-W$_{INT4}$A$_{FP16}$', [1.7471, 54.6344])
 print(f"Conformer-b1 INT8xINT4 time with kernel quantized is {conformer_times_data[7][1][0]}")
 print(f"Conformer-b128 INT8xINT4 time with kernel quantized is {conformer_times_data[7][1][1]}")
 
@@ -1072,7 +1103,7 @@ print(amos_time_b128)
 resnet_times_data[3] = ('AMOS', [amos_time_b1, amos_time_b128])
 
 shufflenet_b1_logs = './amos-benchmark/logs/shufflenet_v2_b1.log'
-amos_data = shufflenet_times_data[4][1]
+amos_data = shufflenet_times_data[3][1]
 ### match x(float) from Whole graph cost is x ms
 pattern = r"Whole graph cost is [\d]+\.[\d]+ ms"
 with open(shufflenet_b1_logs, 'r') as f:
@@ -1136,9 +1167,12 @@ if resnet_50_b128_latency is not None:
 
 resnet_times_data[4] = ('TensorIR', tensorir_data)
 
-tensorir_data = shufflenet_times_data[4][1]
-shuffle_net_b1_latency = parse_tensorir_logs('./tensorir-benchmark/logs/shufflenet-b1-(1, 3, 224, 224)-b1/latency.txt')
-shuffle_net_b128_latency = parse_tensorir_logs('./tensorir-benchmark/logs/shufflenet-(128, 3, 224, 224)-b128/latency.txt')
+tensorir_data = paper_shufflenet_times_data[4][1]
+shuffle_net_b1_latency = parse_tensorir_logs('./tensorir-benchmark/logs/shufflenet-b1-(1, 3, 224, 224)/latency.txt')
+vit_times_data[4] = paper_vit_times_data[4]
+vit_times_data[7] = ('Bitter-W$_{FP8}$A$_{FP8}$', [1.2695, 4.0975])
+vit_times_data[8] = ('Bitter-W$_{INT4}$A$_{INT4}$', [1.1856, 3.4475])
+shuffle_net_b128_latency = parse_tensorir_logs('./tensorir-benchmark/logs/shufflenet-(128, 3, 224, 224)/latency.txt')
 
 if shuffle_net_b1_latency is not None:
     print(f"TensorIR data from shufflenet-b1-(1, 3, 224, 224)-b1/latency.txt is {shuffle_net_b1_latency}")
@@ -1149,6 +1183,7 @@ if shuffle_net_b128_latency is not None:
     tensorir_data[1] = shuffle_net_b128_latency
 
 shufflenet_times_data[4] = ('TensorIR', tensorir_data)
+
 
 # parse vllm logs
 def parse_vllm_logs(log):
@@ -1173,15 +1208,15 @@ vllm_llama_fp16_b1s4096_latency = parse_vllm_logs('./vllm-benchmark/logs/llama_l
 
 vllm_data = llama2_times_data[4][1]
 if vllm_llama_fp16_b1s1_latency is not None:
-    print(f"VLLM data from llama_layer1_batch1_seq1.log is {vllm_llama_fp16_b1s1_latency}, the paper value is {llama2_times_data[4][1][0]}")
+    print(f"VLLM data from llama_layer1_batch1_seq1.log is {vllm_llama_fp16_b1s1_latency}, the paper value is {paper_llama2_times_data[4][1][0]}")
     vllm_data[0] = vllm_llama_fp16_b1s1_latency
     
 if vllm_llama_fp16_b32s1_latency is not None:
-    print(f"VLLM data from llama_layer1_batch32_seq1.log is {vllm_llama_fp16_b32s1_latency}, the paper value is {llama2_times_data[4][1][1]}")
+    print(f"VLLM data from llama_layer1_batch32_seq1.log is {vllm_llama_fp16_b32s1_latency}, the paper value is {paper_llama2_times_data[4][1][1]}")
     vllm_data[1] = vllm_llama_fp16_b32s1_latency
     
 if vllm_llama_fp16_b1s4096_latency is not None:
-    print(f"VLLM data from llama_layer1_batch1_seq4096.log is {vllm_llama_fp16_b1s4096_latency}, the paper value is {llama2_times_data[4][1][2]}")
+    print(f"VLLM data from llama_layer1_batch1_seq4096.log is {vllm_llama_fp16_b1s4096_latency}, the paper value is {paper_llama2_times_data[4][1][2]}")
     vllm_data[2] = vllm_llama_fp16_b1s4096_latency
 
 llama2_times_data[4] = ('vLLM', vllm_data)
@@ -1192,15 +1227,15 @@ vllm_bloom_fp16_b1s4096_latency = parse_vllm_logs('./vllm-benchmark/logs/bloom_l
 
 vllm_data = bloom_times_data[4][1]
 if vllm_bloom_fp16_b1s1_latency is not None:
-    print(f"VLLM data from bloom_layer1_batch1_seq1.log is {vllm_bloom_fp16_b1s1_latency}, the paper value is {bloom_times_data[4][1][0]}")
+    print(f"VLLM data from bloom_layer1_batch1_seq1.log is {vllm_bloom_fp16_b1s1_latency}, the paper value is {paper_bloom_times_data[4][1][0]}")
     vllm_data[0] = vllm_bloom_fp16_b1s1_latency
     
 if vllm_bloom_fp16_b32s1_latency is not None:
-    print(f"VLLM data from bloom_layer1_batch32_seq1.log is {vllm_bloom_fp16_b32s1_latency}, the paper value is {bloom_times_data[4][1][1]}")
+    print(f"VLLM data from bloom_layer1_batch32_seq1.log is {vllm_bloom_fp16_b32s1_latency}, the paper value is {paper_bloom_times_data[4][1][1]}")
     vllm_data[1] = vllm_bloom_fp16_b32s1_latency
 
 if vllm_bloom_fp16_b1s4096_latency is not None:
-    print(f"VLLM data from bloom_layer1_batch1_seq4096.log is {vllm_bloom_fp16_b1s4096_latency}, the paper value is {bloom_times_data[4][1][2]}")
+    print(f"VLLM data from bloom_layer1_batch1_seq4096.log is {vllm_bloom_fp16_b1s4096_latency}, the paper value is {paper_bloom_times_data[4][1][2]}")
     vllm_data[2] = vllm_bloom_fp16_b1s4096_latency
 
 bloom_times_data[4] = ('vLLM', vllm_data)
@@ -1212,15 +1247,15 @@ vllm_llama_int4_b1s4096_latency = parse_vllm_logs('./vllm-benchmark/logs/llama_l
 
 vllm_data = llama2_times_data[5][1]
 if vllm_llama_int4_b1s1_latency is not None:
-    print(f"VLLM data from llama_layer1_batch1_seq1_int4.log is {vllm_llama_int4_b1s1_latency}, the paper value is {llama2_times_data[5][1][0]}")
+    print(f"VLLM data from llama_layer1_batch1_seq1_int4.log is {vllm_llama_int4_b1s1_latency}, the paper value is {paper_llama2_times_data[5][1][0]}")
     vllm_data[0] = vllm_llama_int4_b1s1_latency
     
 if vllm_llama_int4_b32s1_latency is not None:
-    print(f"VLLM data from llama_layer1_batch32_seq1_int4.log is {vllm_llama_int4_b32s1_latency}, the paper value is {llama2_times_data[5][1][1]}")
+    print(f"VLLM data from llama_layer1_batch32_seq1_int4.log is {vllm_llama_int4_b32s1_latency}, the paper value is {paper_llama2_times_data[5][1][1]}")
     vllm_data[1] = vllm_llama_int4_b32s1_latency
     
 if vllm_llama_int4_b1s4096_latency is not None:
-    print(f"VLLM data from llama_layer1_batch1_seq4096_int4.log is {vllm_llama_int4_b1s4096_latency}, the paper value is {llama2_times_data[5][1][2]}")
+    print(f"VLLM data from llama_layer1_batch1_seq4096_int4.log is {vllm_llama_int4_b1s4096_latency}, the paper value is {paper_llama2_times_data[5][1][2]}")
     vllm_data[2] = vllm_llama_int4_b1s4096_latency
 
 llama2_times_data[5] = ('vLLM-W$_{INT4}$A$_{FP16}$', vllm_data)
@@ -1231,15 +1266,15 @@ vllm_bloom_int4_b1s4096_latency = parse_vllm_logs('./vllm-benchmark/logs/bloom_l
 
 vllm_data = bloom_times_data[5][1]
 if vllm_bloom_int4_b1s1_latency is not None:
-    print(f"VLLM data from bloom_layer1_batch1_seq1_int4.log is {vllm_bloom_int4_b1s1_latency}, the paper value is {bloom_times_data[5][1][0]}")
+    print(f"VLLM data from bloom_layer1_batch1_seq1_int4.log is {vllm_bloom_int4_b1s1_latency}, the paper value is {paper_bloom_times_data[5][1][0]}")
     vllm_data[0] = vllm_bloom_int4_b1s1_latency
 
 if vllm_bloom_int4_b32s1_latency is not None:
-    print(f"VLLM data from bloom_layer1_batch32_seq1_int4.log is {vllm_bloom_int4_b32s1_latency}, the paper value is {bloom_times_data[5][1][1]}")
+    print(f"VLLM data from bloom_layer1_batch32_seq1_int4.log is {vllm_bloom_int4_b32s1_latency}, the paper value is {paper_bloom_times_data[5][1][1]}")
     vllm_data[1] = vllm_bloom_int4_b32s1_latency
 
 if vllm_bloom_int4_b1s4096_latency is not None:
-    print(f"VLLM data from bloom_layer1_batch1_seq4096_int4.log is {vllm_bloom_int4_b1s4096_latency}, the paper value is {bloom_times_data[5][1][2]}")
+    print(f"VLLM data from bloom_layer1_batch1_seq4096_int4.log is {vllm_bloom_int4_b1s4096_latency}, the paper value is {paper_bloom_times_data[5][1][2]}")
     vllm_data[2] = vllm_bloom_int4_b1s4096_latency
 
 bloom_times_data[5] = ('vLLM-W$_{INT4}$A$_{FP16}$', vllm_data)
