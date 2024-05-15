@@ -1,1 +1,3 @@
-{"llama_ladder_fp16_int4_1_4096": 5192}
+{
+    "ladder_fp16_int4_1_4096": 5216
+}
