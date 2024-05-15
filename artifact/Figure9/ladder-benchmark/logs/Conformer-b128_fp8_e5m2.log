@@ -1,5 +1,0 @@
-Testing model: /root/Ladder/artifact/Figure9/ladder-benchmark/../../models/Conformer-b128
-Traceback (most recent call last):
-  File "/root/Ladder/artifact/Figure9/ladder-benchmark/ladder_with_fake_dense_dequantize.py", line 190, in <module>
-    run(path, arch, async_propagate=args.async_propagation, fake_quant=args.fake_quant, quant_config=quant_config, convert_int=args.convert_int)
-NameError: name 'path' is not defined
