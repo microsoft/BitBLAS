@@ -1,4 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure9/ladder/checkpoints/vit
 Execution time summary:
  mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-  12.0351      12.0353      12.0379      12.0323       0.0019   
+  12.0255      12.0254      12.0348      12.0147       0.0076   
                

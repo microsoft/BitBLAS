@@ -26,10 +26,10 @@ if [ $force_tune -eq 1 ]; then
     python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/Conformer-b128 2>&1 | tee logs/Conformer-b128.log 
     python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/vi-b128 2>&1 | tee logs/vit-b128.log 
 
-    python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/resnet-50-b1 2>&1 | tee logs/resnet-50-b1.log 
-    python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/shufflenet-b1 2>&1 | tee logs/shufflenet-b1.log 
-    python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/Conformer-b1 2>&1 | tee logs/Conformer-b1.log
-    python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/vit-b1 2>&1 | tee logs/vit-b1.log
+    python -u ladder_with_fake_conv_dequantize.py --prefix $MODEL_PATH/resnet-50-b1 2>&1 | tee logs/resnet-50-b1.log 
+    python -u ladder_with_fake_conv_dequantize.py --prefix $MODEL_PATH/shufflenet-b1 2>&1 | tee logs/shufflenet-b1.log 
+    python -u ladder_with_fake_conv_dequantize.py --prefix $MODEL_PATH/Conformer-b1 2>&1 | tee logs/Conformer-b1.log
+    python -u ladder_with_fake_conv_dequantize.py --prefix $MODEL_PATH/vit-b1 2>&1 | tee logs/vit-b1.log
 
 else
     python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/resnet-50 2>&1 | tee logs/resnet-50-b128.log
@@ -40,4 +40,6 @@ else
     python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/resnet-50-b1 2>&1 | tee logs/resnet-50-b1.log
     python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/shufflenet-b1 2>&1 | tee logs/shufflenet-b1.log
     python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/Conformer-b1 2>&1 | tee logs/Conformer-b1.log
+    python -u ladder_with_fake_conv_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/vit-b1 2>&1 | tee logs/vit-b1.log
+
 fi

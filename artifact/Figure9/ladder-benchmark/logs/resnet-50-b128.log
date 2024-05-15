@@ -1,215 +1,5 @@
-/root/Ladder/3rdparty/tvm/python/tvm/target/target.py:397: UserWarning: Try specifying cuda arch by adding 'arch=sm_xx' to your target.
-  warnings.warn("Try specifying cuda arch by adding 'arch=sm_xx' to your target.")
-[13:43:21] /root/Ladder/3rdparty/tvm/src/relay/transforms/convert_layout.cc:99: Warning: Desired layout(s) not specified for op: nn.max_pool2d
-[13:43:21] /root/Ladder/3rdparty/tvm/src/relay/transforms/convert_layout.cc:99: Warning: Desired layout(s) not specified for op: nn.global_avg_pool2d
-110
-Output468, 
-add467, 
-Opaque466, 
-nn.batch_flatten465, layout_transform464, 
-nn.global_avg_pool2d463, 
-ladder.perfect_im2col_quant_conv454, 
-ladder.layout_transform453, layout_transform452, nn.relu451, add450, multiply449, layout_transform448, reshape447, 
-ladder.perfect_im2col_quant_conv446, 
-ladder.layout_transform445, layout_transform444, multiply441, nn.relu443, layout_transform440, add442, reshape439, 
-ladder.perfect_im2col_quant_conv438, 
-nn.relu462, layout_transform461, add460, layout_transform459, add458, multiply457, layout_transform456, reshape455, ladder.layout_transform_inverse437, 
-ladder.perfect_im2col_quant_conv426, 
-ladder.layout_transform425, layout_transform424, add422, multiply421, layout_transform420, nn.relu423, reshape419, 
-ladder.perfect_im2col_quant_conv418, 
-ladder.layout_transform417, nn.relu415, add414, multiply413, layout_transform416, layout_transform412, reshape411, 
-ladder.perfect_im2col_quant_conv410, 
-layout_transform435, layout_transform433, add432, layout_transform431, ladder.layout_transform436, nn.relu434, multiply429, layout_transform428, reshape427, add430, ladder.layout_transform_inverse409, 
-ladder.perfect_im2col_quant_conv400, 
-layout_transform407, add405, multiply403, layout_transform402, add404, reshape401, add399, nn.relu406, multiply398, ladder.layout_transform408, layout_transform397, reshape396, 
-ladder.perfect_im2col_quant_conv395, 
-ladder.layout_transform394, layout_transform393, nn.relu392, add391, multiply390, layout_transform389, reshape388, 
-ladder.perfect_im2col_quant_conv387, 
-ladder.layout_transform386, layout_transform385, nn.relu384, add383, multiply382, layout_transform381, reshape380, 
-ladder.perfect_im2col_quant_conv379, 
-ladder.perfect_im2col_quant_conv368, 
-layout_transform366, nn.relu365, add364, ladder.layout_transform367, multiply363, layout_transform362, reshape361, 
-ladder.perfect_im2col_quant_conv360, 
-ladder.layout_transform359, layout_transform358, nn.relu357, add356, multiply355, layout_transform354, reshape353, 
-ladder.perfect_im2col_quant_conv352, 
-layout_transform377, ladder.layout_transform378, layout_transform375, add374, nn.relu376, layout_transform373, multiply371, add372, layout_transform370, reshape369, ladder.layout_transform_inverse351, 
-ladder.perfect_im2col_quant_conv340, 
-layout_transform338, ladder.layout_transform339, nn.relu337, multiply335, add336, layout_transform334, reshape333, 
-ladder.perfect_im2col_quant_conv332, 
-ladder.layout_transform331, layout_transform330, nn.relu329, multiply327, layout_transform326, add328, reshape325, 
-ladder.perfect_im2col_quant_conv324, 
-nn.relu348, add344, ladder.layout_transform350, layout_transform345, multiply343, layout_transform342, reshape341, layout_transform349, layout_transform347, add346, ladder.layout_transform_inverse323, 
-ladder.perfect_im2col_quant_conv312, 
-ladder.layout_transform311, layout_transform310, nn.relu309, add308, multiply307, layout_transform306, reshape305, 
-ladder.perfect_im2col_quant_conv304, 
-nn.relu301, add300, multiply299, layout_transform302, layout_transform298, ladder.layout_transform303, reshape297, 
-ladder.perfect_im2col_quant_conv296, 
-nn.relu320, layout_transform319, add318, ladder.layout_transform322, layout_transform317, add316, layout_transform321, multiply315, reshape313, layout_transform314, ladder.layout_transform_inverse295, 
-ladder.perfect_im2col_quant_conv284, 
-layout_transform282, ladder.layout_transform283, nn.relu281, add280, multiply279, layout_transform278, reshape277, 
-ladder.perfect_im2col_quant_conv276, 
-nn.relu273, add272, ladder.layout_transform275, multiply271, layout_transform270, layout_transform274, reshape269, 
-ladder.perfect_im2col_quant_conv268, 
-layout_transform293, nn.relu292, add290, layout_transform291, add288, ladder.layout_transform294, multiply287, layout_transform286, layout_transform289, reshape285, ladder.layout_transform_inverse267, 
-ladder.perfect_im2col_quant_conv256, 
-ladder.layout_transform255, layout_transform254, nn.relu253, add252, multiply251, layout_transform250, reshape249, 
-ladder.perfect_im2col_quant_conv248, 
-ladder.perfect_im2col_quant_conv111, 
-ladder.layout_transform141, layout_transform140, nn.relu139, add138, multiply137, layout_transform136, reshape135, 
-ladder.perfect_im2col_quant_conv103, 
-ladder.layout_transform133, layout_transform132, nn.relu131, multiply129, add130, layout_transform128, reshape127, 
-ladder.layout_transform110, layout_transform109, nn.relu108, multiply106, layout_transform105, add107, reshape104, 
-ladder.perfect_im2col_quant_conv84, 
-ladder.perfect_im2col_quant_conv95, 
-nn.relu122, add120, ladder.layout_transform124, add121, multiply119, layout_transform118, reshape117, layout_transform123, layout_transform113, add115, multiply114, reshape112, 
-layout_transform101, ladder.layout_transform102, nn.relu100, multiply98, layout_transform97, add99, reshape96, 
-ladder.perfect_im2col_quant_conv76, 
-layout_transform82, nn.relu81, add80, ladder.layout_transform83, multiply79, layout_transform78, reshape77, 
-ladder.perfect_im2col_quant_conv56, 
-ladder.perfect_im2col_quant_conv68, 
-nn.relu92, ladder.layout_transform94, add90, add88, layout_transform91, layout_transform86, layout_transform89, multiply87, reshape85, layout_transform93, ladder.layout_transform_inverse67, 
-ladder.layout_transform75, layout_transform74, nn.relu73, add72, multiply71, layout_transform70, reshape69, 
-ladder.perfect_im2col_quant_conv48, 
-layout_transform54, ladder.layout_transform55, nn.relu53, add52, multiply51, layout_transform50, reshape49, 
-ladder.perfect_im2col_quant_conv30, 
-ladder.perfect_im2col_quant_conv40, 
-ladder.layout_transform66, layout_transform65, add62, layout_transform61, add60, nn.relu64, multiply59, layout_transform58, layout_transform63, reshape57, ladder.layout_transform_inverse39, 
-layout_transform0, 
-ladder.layout_transform47, nn.relu45, layout_transform46, add44, multiply43, layout_transform42, reshape41, 
-ladder.perfect_im2col_quant_conv25, 
-ladder.C2DImplicitGemm1, 
-ladder.layout_transform8, layout_transform7, 
-nn.relu5, add4, multiply3, reshape2, 
-nn.max_pool2d6, 
-ladder.layout_transform16, nn.relu14, layout_transform15, add13, multiply12, layout_transform11, reshape10, 
-ladder.perfect_im2col_quant_conv9, 
-ladder.layout_transform24, layout_transform23, nn.relu22, add21, multiply20, layout_transform19, reshape18, 
-ladder.perfect_im2col_quant_conv17, 
-layout_transform37, add35, add34, multiply33, nn.relu36, reshape31, add29, ladder.layout_transform38, layout_transform32, multiply28, layout_transform27, reshape26, 
-ladder.perfect_im2col_quant_conv116, 
-ladder.layout_transform152, layout_transform149, layout_transform151, add148, layout_transform147, add146, nn.relu150, multiply145, layout_transform144, reshape143, ladder.layout_transform_inverse125, 
-ladder.perfect_im2col_quant_conv126, 
-ladder.layout_transform161, layout_transform160, nn.relu159, add158, multiply157, layout_transform156, reshape155, 
-ladder.perfect_im2col_quant_conv134, 
-layout_transform168, nn.relu167, multiply165, ladder.layout_transform169, add166, layout_transform164, reshape163, 
-ladder.perfect_im2col_quant_conv142, 
-layout_transform179, layout_transform177, layout_transform175, add174, multiply173, layout_transform172, nn.relu178, add176, reshape171, ladder.layout_transform180, ladder.layout_transform_inverse153, 
-ladder.perfect_im2col_quant_conv154, 
-layout_transform188, nn.relu187, add186, ladder.layout_transform189, multiply185, layout_transform184, reshape183, 
-ladder.perfect_im2col_quant_conv162, 
-ladder.layout_transform197, nn.relu195, add194, multiply193, layout_transform196, layout_transform192, reshape191, 
-ladder.perfect_im2col_quant_conv170, 
-layout_transform207, nn.relu206, layout_transform203, layout_transform205, add202, multiply201, layout_transform200, ladder.layout_transform208, reshape199, add204, ladder.layout_transform_inverse181, 
-ladder.perfect_im2col_quant_conv182, 
-ladder.layout_transform216, layout_transform215, nn.relu214, add213, multiply212, layout_transform211, reshape210, 
-ladder.perfect_im2col_quant_conv190, 
-ladder.layout_transform224, nn.relu222, layout_transform223, add221, layout_transform219, multiply220, reshape218, 
-ladder.perfect_im2col_quant_conv198, 
-ladder.layout_transform238, add235, add234, layout_transform232, multiply233, reshape231, add229, layout_transform237, multiply228, layout_transform227, nn.relu236, reshape226, 
-ladder.perfect_im2col_quant_conv209, 
-layout_transform246, add244, nn.relu245, multiply243, ladder.layout_transform247, layout_transform242, reshape241, 
-ladder.perfect_im2col_quant_conv217, 
-ladder.perfect_im2col_quant_conv225, 
-ladder.layout_transform266, layout_transform265, nn.relu264, layout_transform263, add262, layout_transform261, add260, layout_transform258, reshape257, multiply259, ladder.layout_transform_inverse239, 
-ladder.perfect_im2col_quant_conv230, 
-ladder.perfect_im2col_quant_conv240, 
-Processing:   0%|          | 0/272 [00:00<?, ?it/s]                                                   2024-05-13 13:43:53 [ladder:INFO]: Tuning ['layout_transform_0', 'ladder_C2DImplicitGemm_1']
-Processing:   0%|          | 0/272 [00:00<?, ?it/s]                                                   2024-05-13 13:43:53 [ladder:INFO]: Tuning ['layout_transform_0']
-Processing:   0%|          | 0/272 [00:00<?, ?it/s]                                                   2024-05-13 13:44:24 [ladder:INFO]: result: 0.12847787141799927
-Processing:   0%|          | 0/272 [00:30<?, ?it/s]                                                   2024-05-13 13:44:24 [ladder:INFO]: Fusion group created: 0 ['layout_transform_0']
-Processing:   0%|          | 0/272 [00:30<?, ?it/s]Processing:   1%|          | 2/272 [00:30<1:08:24, 15.20s/it]                                                             2024-05-13 13:44:24 [ladder:INFO]: Tuning ['ladder_C2DImplicitGemm_1', 'reshape_multiply_add_nn_relu_2']
-Processing:   1%|          | 2/272 [00:30<1:08:24, 15.20s/it]                                                             2024-05-13 13:44:35 [ladder:INFO]: Tuning ['ladder_C2DImplicitGemm_1', 'reshape_multiply_add_nn_relu_2']
-Processing:   1%|          | 2/272 [00:42<1:08:24, 15.20s/it]                                                             2024-05-13 13:45:08 [ladder:INFO]: result: 1.2654656171798706
-Processing:   1%|          | 2/272 [01:14<1:08:24, 15.20s/it]                                                             2024-05-13 13:45:08 [ladder:INFO]: Tuning ['ladder_C2DImplicitGemm_1']
-Processing:   1%|          | 2/272 [01:14<1:08:24, 15.20s/it]                                                             2024-05-13 13:45:27 [ladder:INFO]: result: 1.2283967733383179
-Processing:   1%|          | 2/272 [01:33<1:08:24, 15.20s/it]                                                             2024-05-13 13:45:27 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_2']
-Processing:   1%|          | 2/272 [01:33<1:08:24, 15.20s/it]                                                             2024-05-13 13:45:56 [ladder:INFO]: result: 0.4992777407169342
-Processing:   1%|          | 2/272 [02:02<1:08:24, 15.20s/it]                                                             2024-05-13 13:45:56 [ladder:INFO]: Tuning ['ladder_C2DImplicitGemm_1', 'reshape_multiply_add_nn_relu_2', 'nn_max_pool2d_3']
-Processing:   1%|          | 2/272 [02:02<1:08:24, 15.20s/it]                                                             2024-05-13 13:45:56 [ladder:INFO]: Fusion group created: 1 ['ladder_C2DImplicitGemm_1', 'reshape_multiply_add_nn_relu_2']
-Processing:   1%|          | 2/272 [02:02<1:08:24, 15.20s/it]Processing:   1%|▏         | 4/272 [02:02<2:29:32, 33.48s/it]                                                             2024-05-13 13:45:56 [ladder:INFO]: Tuning ['nn_max_pool2d_3', 'layout_transform_ladder_layout_transform_4']
-Processing:   1%|▏         | 4/272 [02:02<2:29:32, 33.48s/it]                                                             2024-05-13 13:46:36 [ladder:INFO]: result: 0.4705199897289276
-Processing:   1%|▏         | 4/272 [02:42<2:29:32, 33.48s/it]                                                             2024-05-13 13:46:36 [ladder:INFO]: Tuning ['nn_max_pool2d_3', 'layout_transform_ladder_layout_transform_4']
-Processing:   1%|▏         | 4/272 [02:42<2:29:32, 33.48s/it]                                                             2024-05-13 13:47:10 [ladder:INFO]: result: 0.42147842049598694
-Processing:   1%|▏         | 4/272 [03:16<2:29:32, 33.48s/it]                                                             2024-05-13 13:47:10 [ladder:INFO]: Tuning ['nn_max_pool2d_3']
-Processing:   1%|▏         | 4/272 [03:16<2:29:32, 33.48s/it]                                                             2024-05-13 13:47:44 [ladder:INFO]: result: 0.3291071951389313
-Processing:   1%|▏         | 4/272 [03:50<2:29:32, 33.48s/it]                                                             2024-05-13 13:47:44 [ladder:INFO]: Tuning ['layout_transform_ladder_layout_transform_4']
-Processing:   1%|▏         | 4/272 [03:50<2:29:32, 33.48s/it]                                                             2024-05-13 13:48:10 [ladder:INFO]: result: 0.1704937219619751
-Processing:   1%|▏         | 4/272 [04:16<2:29:32, 33.48s/it]                                                             2024-05-13 13:48:10 [ladder:INFO]: Tuning ['nn_max_pool2d_3', 'layout_transform_ladder_layout_transform_4', 'ladder_perfect_im2col_quant_conv_5', 'ladder_perfect_im2col_quant_conv_10']
-Processing:   1%|▏         | 4/272 [04:16<2:29:32, 33.48s/it]                                                             2024-05-13 13:48:10 [ladder:INFO]: Fusion group created: 2 ['nn_max_pool2d_3', 'layout_transform_ladder_layout_transform_4']
-Processing:   1%|▏         | 4/272 [04:16<2:29:32, 33.48s/it]Processing:   3%|▎         | 8/272 [04:16<2:27:02, 33.42s/it]                                                             2024-05-13 13:48:10 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_5', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_6']
-Processing:   3%|▎         | 8/272 [04:16<2:27:02, 33.42s/it]                                                             2024-05-13 13:48:12 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_5', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_6']
-Processing:   3%|▎         | 8/272 [04:18<2:27:02, 33.42s/it]                                                             2024-05-13 13:48:14 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_5']
-Processing:   3%|▎         | 8/272 [04:20<2:27:02, 33.42s/it]                                                             2024-05-13 13:48:43 [ladder:INFO]: result: 0.13333120942115784
-Processing:   3%|▎         | 8/272 [04:49<2:27:02, 33.42s/it]                                                             2024-05-13 13:48:43 [ladder:INFO]: Fusion group created: 3 ['ladder_perfect_im2col_quant_conv_5']
-Processing:   3%|▎         | 8/272 [04:49<2:27:02, 33.42s/it]Processing:   4%|▍         | 11/272 [04:49<1:46:26, 24.47s/it]                                                              2024-05-13 13:48:43 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_6', 'ladder_perfect_im2col_quant_conv_7']
-Processing:   4%|▍         | 11/272 [04:49<1:46:26, 24.47s/it]                                                              2024-05-13 13:48:43 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_6']
-Processing:   4%|▍         | 11/272 [04:49<1:46:26, 24.47s/it]                                                              2024-05-13 13:49:14 [ladder:INFO]: result: 0.12825600802898407
-Processing:   4%|▍         | 11/272 [05:20<1:46:26, 24.47s/it]                                                              2024-05-13 13:49:14 [ladder:INFO]: Fusion group created: 4 ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_6']
-Processing:   4%|▍         | 11/272 [05:20<1:46:26, 24.47s/it]Processing:   5%|▌         | 14/272 [05:20<1:22:56, 19.29s/it]                                                              2024-05-13 13:49:14 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_7', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_8']
-Processing:   5%|▌         | 14/272 [05:20<1:22:56, 19.29s/it]                                                              2024-05-13 13:49:16 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_7', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_8']
-Processing:   5%|▌         | 14/272 [05:22<1:22:56, 19.29s/it]                                                              2024-05-13 13:49:17 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_7']
-Processing:   5%|▌         | 14/272 [05:23<1:22:56, 19.29s/it]                                                              2024-05-13 13:49:40 [ladder:INFO]: result: 0.5461952090263367
-Processing:   5%|▌         | 14/272 [05:46<1:22:56, 19.29s/it]                                                              2024-05-13 13:49:40 [ladder:INFO]: Fusion group created: 5 ['ladder_perfect_im2col_quant_conv_7']
-Processing:   5%|▌         | 14/272 [05:46<1:22:56, 19.29s/it]Processing:   6%|▌         | 16/272 [05:46<1:15:24, 17.67s/it]                                                              2024-05-13 13:49:40 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_8', 'ladder_perfect_im2col_quant_conv_9']
-Processing:   6%|▌         | 16/272 [05:46<1:15:24, 17.67s/it]                                                              2024-05-13 13:49:41 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_8']
-Processing:   6%|▌         | 16/272 [05:47<1:15:24, 17.67s/it]                                                              2024-05-13 13:49:41 [ladder:INFO]: Fusion group created: 6 ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_8']
-Processing:   6%|▌         | 16/272 [05:47<1:15:24, 17.67s/it]Processing:   7%|▋         | 19/272 [05:47<48:20, 11.46s/it]                                                              2024-05-13 13:49:41 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_9', 'ladder_perfect_im2col_quant_conv_10', 'reshape_layout_transform_multiply_add_reshape_layout_transform_multiply_add_add_nn_relu_layout_transform_ladder_layout_transform_11']
-Processing:   7%|▋         | 19/272 [05:47<48:20, 11.46s/it]                                                            2024-05-13 13:49:45 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_9']
-Processing:   7%|▋         | 19/272 [05:51<48:20, 11.46s/it]                                                            2024-05-13 13:50:16 [ladder:INFO]: result: 0.3448832035064697
-Processing:   7%|▋         | 19/272 [06:23<48:20, 11.46s/it]                                                            2024-05-13 13:50:16 [ladder:INFO]: Fusion group created: 7 ['ladder_perfect_im2col_quant_conv_9']
-Processing:   7%|▋         | 19/272 [06:23<48:20, 11.46s/it]Processing:   8%|▊         | 21/272 [06:23<54:39, 13.07s/it]                                                            2024-05-13 13:50:16 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_10', 'reshape_layout_transform_multiply_add_reshape_layout_transform_multiply_add_add_nn_relu_layout_transform_ladder_layout_transform_11']
-Processing:   8%|▊         | 21/272 [06:23<54:39, 13.07s/it]                                                            2024-05-13 13:50:20 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_10', 'reshape_layout_transform_multiply_add_reshape_layout_transform_multiply_add_add_nn_relu_layout_transform_ladder_layout_transform_11']
-Processing:   8%|▊         | 21/272 [06:27<54:39, 13.07s/it]                                                            2024-05-13 13:50:24 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_10']
-Processing:   8%|▊         | 21/272 [06:30<54:39, 13.07s/it]                                                            2024-05-13 13:50:24 [ladder:INFO]: Fusion group created: 8 ['ladder_perfect_im2col_quant_conv_10']
-Processing:   8%|▊         | 21/272 [06:30<54:39, 13.07s/it]Processing:   8%|▊         | 23/272 [06:30<44:04, 10.62s/it]                                                            2024-05-13 13:50:24 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_reshape_layout_transform_multiply_add_add_nn_relu_layout_transform_ladder_layout_transform_11', 'ladder_perfect_im2col_quant_conv_12', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_13', 'ladder_perfect_im2col_quant_conv_14', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_15', 'ladder_perfect_im2col_quant_conv_16', 'ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_17']
-Processing:   8%|▊         | 23/272 [06:30<44:04, 10.62s/it]                                                            2024-05-13 13:50:24 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_reshape_layout_transform_multiply_add_add_nn_relu_layout_transform_ladder_layout_transform_11']
-Processing:   8%|▊         | 23/272 [06:30<44:04, 10.62s/it]                                                            2024-05-13 13:51:03 [ladder:INFO]: result: 0.7342079877853394
-Processing:   8%|▊         | 23/272 [07:10<44:04, 10.62s/it]                                                            2024-05-13 13:51:03 [ladder:INFO]: Fusion group created: 9 ['reshape_layout_transform_multiply_add_reshape_layout_transform_multiply_add_add_nn_relu_layout_transform_ladder_layout_transform_11']
-Processing:   8%|▊         | 23/272 [07:10<44:04, 10.62s/it]Processing:  10%|█         | 28/272 [07:10<37:43,  9.28s/it]                                                            2024-05-13 13:51:03 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_12', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_13']
-Processing:  10%|█         | 28/272 [07:10<37:43,  9.28s/it]                                                            2024-05-13 13:51:05 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_12', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_13']
-Processing:  10%|█         | 28/272 [07:11<37:43,  9.28s/it]                                                            2024-05-13 13:51:07 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_12']
-Processing:  10%|█         | 28/272 [07:13<37:43,  9.28s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: result: 0.3409920036792755
-Processing:  10%|█         | 28/272 [07:45<37:43,  9.28s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Fusion group created: 10 ['ladder_perfect_im2col_quant_conv_12']
-Processing:  10%|█         | 28/272 [07:45<37:43,  9.28s/it]Processing:  11%|█         | 30/272 [07:45<44:46, 11.10s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_13', 'ladder_perfect_im2col_quant_conv_14']
-Processing:  11%|█         | 30/272 [07:45<44:46, 11.10s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_13']
-Processing:  11%|█         | 30/272 [07:45<44:46, 11.10s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Fusion group created: 11 ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_13']
-Processing:  11%|█         | 30/272 [07:45<44:46, 11.10s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_14', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_15']
-Processing:  11%|█         | 30/272 [07:45<44:46, 11.10s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_14', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_15']
-Processing:  11%|█         | 30/272 [07:45<44:46, 11.10s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_14']
-Processing:  11%|█         | 30/272 [07:45<44:46, 11.10s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Fusion group created: 12 ['ladder_perfect_im2col_quant_conv_14']
-Processing:  11%|█         | 30/272 [07:45<44:46, 11.10s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_15', 'ladder_perfect_im2col_quant_conv_16']
-Processing:  11%|█         | 30/272 [07:45<44:46, 11.10s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_15']
-Processing:  11%|█         | 30/272 [07:45<44:46, 11.10s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Fusion group created: 13 ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_15']
-Processing:  11%|█         | 30/272 [07:45<44:46, 11.10s/it]Processing:  14%|█▍        | 38/272 [07:45<19:19,  4.96s/it]                                                            2024-05-13 13:51:39 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_16', 'ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_17']
-Processing:  14%|█▍        | 38/272 [07:45<19:19,  4.96s/it]                                                            2024-05-13 13:51:43 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_16', 'ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_17']
-Processing:  14%|█▍        | 38/272 [07:49<19:19,  4.96s/it]                                                            2024-05-13 13:51:47 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_16']
-Processing:  14%|█▍        | 38/272 [07:53<19:19,  4.96s/it]                                                            2024-05-13 13:51:47 [ladder:INFO]: Fusion group created: 14 ['ladder_perfect_im2col_quant_conv_16']
-Processing:  14%|█▍        | 38/272 [07:53<19:19,  4.96s/it]Processing:  15%|█▌        | 42/272 [07:53<15:47,  4.12s/it]                                                            2024-05-13 13:51:47 [ladder:INFO]: Tuning ['ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_17', 'ladder_perfect_im2col_quant_conv_18', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_19', 'ladder_perfect_im2col_quant_conv_20', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_21', 'ladder_perfect_im2col_quant_conv_22', 'ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_23']
-Processing:  15%|█▌        | 42/272 [07:53<15:47,  4.12s/it]                                                            2024-05-13 13:51:47 [ladder:INFO]: Tuning ['ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_17']
-Processing:  15%|█▌        | 42/272 [07:53<15:47,  4.12s/it]Processing:  15%|█▌        | 42/272 [08:10<15:47,  4.12s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: result: 0.855478823184967
-Processing:  15%|█▌        | 42/272 [08:30<15:47,  4.12s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Fusion group created: 15 ['ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_17']
-Processing:  15%|█▌        | 42/272 [08:30<15:47,  4.12s/it]Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_18', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_19']
-Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_18', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_19']
-Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_18']
-Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Fusion group created: 16 ['ladder_perfect_im2col_quant_conv_18']
-Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_19', 'ladder_perfect_im2col_quant_conv_20']
-Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_19']
-Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Fusion group created: 17 ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_19']
-Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_20', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_21']
-Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_20', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_21']
-Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_20']
-Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Fusion group created: 18 ['ladder_perfect_im2col_quant_conv_20']
-Processing:  16%|█▌        | 43/272 [08:30<27:16,  7.14s/it]Processing:  18%|█▊        | 50/272 [08:30<13:48,  3.73s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_21', 'ladder_perfect_im2col_quant_conv_22']
-Processing:  18%|█▊        | 50/272 [08:30<13:48,  3.73s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_21']
-Processing:  18%|█▊        | 50/272 [08:30<13:48,  3.73s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Fusion group created: 19 ['reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_21']
-Processing:  18%|█▊        | 50/272 [08:30<13:48,  3.73s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_22', 'ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_23']
-Processing:  18%|█▊        | 50/272 [08:30<13:48,  3.73s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_22', 'ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_23']
-Processing:  18%|█▊        | 50/272 [08:30<13:48,  3.73s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_22']
-Processing:  18%|█▊        | 50/272 [08:30<13:48,  3.73s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Fusion group created: 20 ['ladder_perfect_im2col_quant_conv_22']
-Processing:  18%|█▊        | 50/272 [08:30<13:48,  3.73s/it]Processing:  20%|██        | 55/272 [08:30<09:05,  2.51s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_23', 'ladder_perfect_im2col_quant_conv_24', 'ladder_perfect_im2col_quant_conv_29']
-Processing:  20%|██        | 55/272 [08:30<09:05,  2.51s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_23']
-Processing:  20%|██        | 55/272 [08:30<09:05,  2.51s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Fusion group created: 21 ['ladder_layout_transform_inverse_reshape_layout_transform_multiply_add_layout_transform_add_layout_transform_nn_relu_layout_transform_ladder_layout_transform_23']
-Processing:  20%|██        | 55/272 [08:30<09:05,  2.51s/it]Processing:  22%|██▏       | 59/272 [08:30<06:31,  1.84s/it]                                                            2024-05-13 13:52:24 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_24', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_25']
-Processing:  22%|██▏       | 59/272 [08:30<06:31,  1.84s/it]                                                            2024-05-13 13:52:27 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_24', 'reshape_layout_transform_multiply_add_nn_relu_layout_transform_ladder_layout_transform_25']
-Processing:  22%|██▏       | 59/272 [08:33<06:31,  1.84s/it]                                                            2024-05-13 13:52:28 [ladder:INFO]: Tuning ['ladder_perfect_im2col_quant_conv_24']
-Processing:  22%|██▏       | 59/272 [08:34<06:31,  1.84s/it]Processing:  22%|██▏       | 59/272 [08:50<06:31,  1.84s/it]
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure9/ladder/checkpoints/resnet-50
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+  23.5915      23.5896      23.6071      23.5844       0.0081   
+               

@@ -1,4 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure9/ladder/checkpoints/Conformer-b1
 Execution time summary:
  mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-   4.4824       4.4825       4.4826       4.4820       0.0002   
+   4.4995       4.4994       4.4998       4.4992       0.0002   
                

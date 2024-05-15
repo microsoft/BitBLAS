@@ -1,511 +1,5 @@
-/root/Ladder/3rdparty/tvm/python/tvm/target/target.py:397: UserWarning: Try specifying cuda arch by adding 'arch=sm_xx' to your target.
-  warnings.warn("Try specifying cuda arch by adding 'arch=sm_xx' to your target.")
-[23:59:48] /root/Ladder/3rdparty/tvm/src/relay/transforms/convert_layout.cc:99: Warning: Desired layout(s) not specified for op: nn.max_pool2d
-91
-Output332, 
-add331, 
-Opaque330, 
-mean329, 
-nn.relu328, add327, multiply326, nn.conv2d325, 
-nn.relu318, add317, multiply316, nn.conv2d315, 
-add314, multiply313, nn.conv2d312, 
-nn.relu311, add310, multiply309, nn.conv2d308, 
-layout_transform307, strided_slice306, 
-layout_transform324, reshape323, transpose322, reshape321, concatenate320, layout_transform319, strided_slice305, 
-nn.relu299, add298, multiply297, nn.conv2d296, 
-add295, multiply294, nn.conv2d293, 
-nn.relu292, add291, multiply290, nn.conv2d289, 
-layout_transform288, strided_slice287, 
-reshape304, concatenate301, transpose303, layout_transform300, reshape302, strided_slice286, 
-add279, multiply278, nn.relu280, nn.conv2d277, 
-add276, multiply275, nn.conv2d274, 
-nn.relu273, add272, multiply271, nn.conv2d270, 
-layout_transform269, strided_slice268, 
-reshape285, reshape283, concatenate282, layout_transform281, transpose284, strided_slice267, 
-reshape266, transpose265, reshape264, layout_transform263, concatenate262, 
-nn.relu261, add260, multiply259, nn.conv2d258, 
-add257, multiply256, nn.conv2d255, 
-nn.relu254, add253, multiply252, nn.conv2d251, 
-nn.relu250, add249, multiply248, nn.conv2d247, 
-add246, multiply245, nn.conv2d244, 
-nn.relu237, add236, multiply235, nn.conv2d234, 
-add233, multiply232, nn.conv2d231, 
-add229, multiply228, nn.relu230, nn.conv2d227, 
-layout_transform226, strided_slice225, 
-layout_transform243, reshape242, transpose241, reshape240, concatenate239, layout_transform238, strided_slice224, 
-nn.relu218, add217, multiply216, nn.conv2d215, 
-nn.relu104, add103, multiply102, nn.conv2d101, 
-layout_transform207, strided_slice206, 
-add100, multiply99, nn.conv2d98, 
-reshape204, transpose203, reshape202, concatenate201, layout_transform200, strided_slice186, 
-nn.relu97, add96, multiply95, nn.conv2d94, 
-layout_transform188, strided_slice187, 
-add92, multiply91, nn.relu93, nn.conv2d90, 
-reshape185, transpose184, reshape183, concatenate182, layout_transform181, strided_slice167, 
-add89, multiply88, nn.conv2d87, 
-layout_transform169, strided_slice168, 
-nn.relu80, add79, multiply78, nn.conv2d77, 
-reshape166, transpose165, reshape164, concatenate163, layout_transform162, strided_slice148, 
-add76, multiply75, nn.conv2d74, 
-layout_transform150, strided_slice149, 
-nn.relu73, add72, multiply71, nn.conv2d70, 
-transpose146, reshape147, reshape145, concatenate144, layout_transform143, strided_slice129, 
-nn.relu61, add60, multiply59, nn.conv2d58, 
-layout_transform131, strided_slice130, 
-multiply56, add57, nn.conv2d55, 
-transpose127, reshape126, concatenate125, layout_transform124, reshape128, strided_slice110, 
-nn.relu54, multiply52, add53, nn.conv2d51, 
-layout_transform112, strided_slice111, 
-layout_transform86, transpose84, reshape85, reshape83, layout_transform81, concatenate82, strided_slice67, 
-add38, multiply37, nn.conv2d36, 
-nn.relu42, add41, multiply40, nn.conv2d39, 
-transpose108, reshape107, layout_transform106, reshape109, concatenate105, 
-layout_transform69, strided_slice68, 
-nn.relu35, add34, multiply33, nn.conv2d32, 
-nn.relu4, add3, multiply2, nn.conv2d1, 
-nn.max_pool2d5, 
-layout_transform0, 
-add8, multiply7, nn.conv2d6, 
-reshape28, transpose27, reshape26, layout_transform25, concatenate24, 
-layout_transform50, strided_slice49, 
-multiply18, add19, nn.conv2d17, 
-nn.relu23, add22, multiply21, nn.conv2d20, 
-reshape66, transpose65, reshape64, layout_transform62, concatenate63, strided_slice48, 
-nn.relu12, add11, multiply10, nn.conv2d9, 
-layout_transform31, strided_slice30, 
-transpose46, reshape47, reshape45, concatenate44, layout_transform43, strided_slice29, 
-nn.relu16, add15, multiply14, nn.conv2d13, 
-nn.relu116, add115, multiply114, nn.conv2d113, 
-reshape223, transpose222, reshape221, concatenate220, layout_transform219, strided_slice205, 
-add119, multiply118, nn.conv2d117, 
-nn.relu123, add122, multiply121, nn.conv2d120, 
-add134, nn.relu135, multiply133, nn.conv2d132, 
-add138, multiply137, nn.conv2d136, 
-nn.relu142, add141, multiply140, nn.conv2d139, 
-nn.relu154, add153, multiply152, nn.conv2d151, 
-add157, multiply156, nn.conv2d155, 
-nn.relu161, add160, multiply159, nn.conv2d158, 
-nn.relu173, add172, multiply171, nn.conv2d170, 
-add176, multiply175, nn.conv2d174, 
-nn.relu180, add179, multiply178, nn.conv2d177, 
-nn.relu192, add191, multiply190, nn.conv2d189, 
-add195, multiply194, nn.conv2d193, 
-nn.relu199, add198, multiply197, nn.conv2d196, 
-nn.relu211, add210, multiply209, nn.conv2d208, 
-add214, multiply213, nn.conv2d212, 
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-conv2d is not optimized for this platform.
-Processing:   0%|          | 0/262 [00:00<?, ?it/s]                                                   2024-05-14 00:00:26 [ladder:INFO]: Tuning ['layout_transform_0', 'nn_conv2d_multiply_add_nn_relu_1']
-Processing:   0%|          | 0/262 [00:00<?, ?it/s]                                                   2024-05-14 00:00:26 [ladder:INFO]: Tuning ['layout_transform_0']
-Processing:   0%|          | 0/262 [00:00<?, ?it/s]                                                   2024-05-14 00:00:56 [ladder:INFO]: result: 0.0034352941438555717
-Processing:   0%|          | 0/262 [00:29<?, ?it/s]                                                   2024-05-14 00:00:56 [ladder:INFO]: Fusion group created: 0 ['layout_transform_0']
-Processing:   0%|          | 0/262 [00:29<?, ?it/s]Processing:   1%|          | 2/262 [00:29<1:04:33, 14.90s/it]                                                             2024-05-14 00:00:56 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_1', 'nn_max_pool2d_2']
-Processing:   1%|          | 2/262 [00:29<1:04:33, 14.90s/it]                                                             2024-05-14 00:00:56 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_1']
-Processing:   1%|          | 2/262 [00:29<1:04:33, 14.90s/it]                                                             2024-05-14 00:01:28 [ladder:INFO]: result: 0.007980799302458763
-Processing:   1%|          | 2/262 [01:01<1:04:33, 14.90s/it]                                                             2024-05-14 00:01:28 [ladder:INFO]: Fusion group created: 1 ['nn_conv2d_multiply_add_nn_relu_1']
-Processing:   1%|          | 2/262 [01:01<1:04:33, 14.90s/it]Processing:   2%|▏         | 6/262 [01:01<41:25,  9.71s/it]                                                             2024-05-14 00:01:28 [ladder:INFO]: Tuning ['nn_max_pool2d_2', 'nn_conv2d_multiply_add_nn_relu_5', 'nn_conv2d_multiply_add_3']
-Processing:   2%|▏         | 6/262 [01:01<41:25,  9.71s/it]                                                           2024-05-14 00:01:29 [ladder:INFO]: Tuning ['nn_max_pool2d_2']
-Processing:   2%|▏         | 6/262 [01:02<41:25,  9.71s/it]                                                           2024-05-14 00:01:58 [ladder:INFO]: result: 0.004608000162988901
-Processing:   2%|▏         | 6/262 [01:31<41:25,  9.71s/it]                                                           2024-05-14 00:01:58 [ladder:INFO]: Fusion group created: 2 ['nn_max_pool2d_2']
-Processing:   2%|▏         | 6/262 [01:31<41:25,  9.71s/it]Processing:   3%|▎         | 7/262 [01:31<59:31, 14.01s/it]                                                           2024-05-14 00:01:58 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_5', 'nn_conv2d_multiply_add_6']
-Processing:   3%|▎         | 7/262 [01:31<59:31, 14.01s/it]                                                           2024-05-14 00:01:58 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_5']
-Processing:   3%|▎         | 7/262 [01:31<59:31, 14.01s/it]                                                           2024-05-14 00:02:26 [ladder:INFO]: result: 0.0052906665951013565
-Processing:   3%|▎         | 7/262 [01:59<59:31, 14.01s/it]                                                           2024-05-14 00:02:26 [ladder:INFO]: Fusion group created: 3 ['nn_conv2d_multiply_add_nn_relu_5']
-Processing:   3%|▎         | 7/262 [01:59<59:31, 14.01s/it]Processing:   4%|▍         | 11/262 [01:59<42:35, 10.18s/it]                                                            2024-05-14 00:02:26 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_6', 'nn_conv2d_multiply_add_nn_relu_7']
-Processing:   4%|▍         | 11/262 [01:59<42:35, 10.18s/it]                                                            2024-05-14 00:03:36 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpuekyouxr.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpuekyouxr.so']
-Processing:   4%|▍         | 11/262 [03:09<42:35, 10.18s/it]                                                            2024-05-14 00:03:36 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpc89eyz63.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpc89eyz63.so']
-Processing:   4%|▍         | 11/262 [03:09<42:35, 10.18s/it]                                                            2024-05-14 00:03:36 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpgu934an1.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpgu934an1.so']
-Processing:   4%|▍         | 11/262 [03:09<42:35, 10.18s/it]                                                            2024-05-14 00:03:36 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpdsn54_ao.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpdsn54_ao.so']
-Processing:   4%|▍         | 11/262 [03:09<42:35, 10.18s/it]                                                            2024-05-14 00:03:36 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpqunah2sg.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpqunah2sg.so']
-Processing:   4%|▍         | 11/262 [03:09<42:35, 10.18s/it]                                                            2024-05-14 00:03:36 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpnnia_c_w.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpnnia_c_w.so']
-Processing:   4%|▍         | 11/262 [03:09<42:35, 10.18s/it]                                                            2024-05-14 00:03:36 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpbpvm5gx4.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpbpvm5gx4.so']
-Processing:   4%|▍         | 11/262 [03:09<42:35, 10.18s/it]                                                            2024-05-14 00:03:36 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpmf08w8r9.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpmf08w8r9.so']
-Processing:   4%|▍         | 11/262 [03:09<42:35, 10.18s/it]                                                            2024-05-14 00:03:36 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpfdtrzu58.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpfdtrzu58.so']
-Processing:   4%|▍         | 11/262 [03:09<42:35, 10.18s/it]                                                            2024-05-14 00:03:53 [ladder:INFO]: result: 0.007372800260782242
-Processing:   4%|▍         | 11/262 [03:26<42:35, 10.18s/it]                                                            2024-05-14 00:03:53 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_6']
-Processing:   4%|▍         | 11/262 [03:26<42:35, 10.18s/it]                                                            2024-05-14 00:04:33 [ladder:INFO]: result: 0.004827428609132767
-Processing:   4%|▍         | 11/262 [04:06<42:35, 10.18s/it]                                                            2024-05-14 00:04:33 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_7']
-Processing:   4%|▍         | 11/262 [04:06<42:35, 10.18s/it]                                                            2024-05-14 00:05:08 [ladder:INFO]: result: 0.005740799941122532
-Processing:   4%|▍         | 11/262 [04:41<42:35, 10.18s/it]                                                            2024-05-14 00:05:08 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_6', 'nn_conv2d_multiply_add_nn_relu_7', 'nn_conv2d_multiply_add_3', 'nn_conv2d_multiply_add_nn_relu_4', 'concatenate_layout_transform_reshape_transpose_reshape_8']
-Processing:   4%|▍         | 11/262 [04:41<42:35, 10.18s/it]                                                            2024-05-14 00:05:09 [ladder:INFO]: Fusion group created: 4 ['nn_conv2d_multiply_add_6', 'nn_conv2d_multiply_add_nn_relu_7']
-Processing:   4%|▍         | 11/262 [04:42<42:35, 10.18s/it]Processing:   6%|▌         | 15/262 [04:42<1:36:50, 23.53s/it]                                                              2024-05-14 00:05:09 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_3', 'nn_conv2d_multiply_add_nn_relu_4']
-Processing:   6%|▌         | 15/262 [04:42<1:36:50, 23.53s/it]                                                              2024-05-14 00:05:09 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_3']
-Processing:   6%|▌         | 15/262 [04:42<1:36:50, 23.53s/it]                                                              2024-05-14 00:05:44 [ladder:INFO]: result: 0.004352000076323748
-Processing:   6%|▌         | 15/262 [05:17<1:36:50, 23.53s/it]                                                              2024-05-14 00:05:44 [ladder:INFO]: Fusion group created: 5 ['nn_conv2d_multiply_add_3']
-Processing:   6%|▌         | 15/262 [05:17<1:36:50, 23.53s/it]Processing:   9%|▉         | 23/262 [05:17<51:23, 12.90s/it]                                                              2024-05-14 00:05:44 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_4', 'concatenate_layout_transform_reshape_transpose_reshape_8']
-Processing:   9%|▉         | 23/262 [05:17<51:23, 12.90s/it]                                                            2024-05-14 00:05:48 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_4', 'concatenate_layout_transform_reshape_transpose_reshape_8']
-Processing:   9%|▉         | 23/262 [05:21<51:23, 12.90s/it]                                                            2024-05-14 00:06:26 [ladder:INFO]: result: 0.006138666998594999
-Processing:   9%|▉         | 23/262 [05:59<51:23, 12.90s/it]                                                            2024-05-14 00:06:26 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_4']
-Processing:   9%|▉         | 23/262 [05:59<51:23, 12.90s/it]                                                            2024-05-14 00:06:58 [ladder:INFO]: result: 0.004356000106781721
-Processing:   9%|▉         | 23/262 [06:31<51:23, 12.90s/it]                                                            2024-05-14 00:06:58 [ladder:INFO]: Tuning ['concatenate_layout_transform_reshape_transpose_reshape_8']
-Processing:   9%|▉         | 23/262 [06:31<51:23, 12.90s/it]                                                            2024-05-14 00:07:23 [ladder:INFO]: result: 0.004224000032991171
-Processing:   9%|▉         | 23/262 [06:56<51:23, 12.90s/it]                                                            2024-05-14 00:07:23 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_4', 'concatenate_layout_transform_reshape_transpose_reshape_8', 'strided_slice_layout_transform_9', 'nn_conv2d_multiply_add_nn_relu_10', 'nn_conv2d_multiply_add_11', 'nn_conv2d_multiply_add_nn_relu_12', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_13']
-Processing:   9%|▉         | 23/262 [06:56<51:23, 12.90s/it]                                                            2024-05-14 00:07:23 [ladder:INFO]: Fusion group created: 6 ['nn_conv2d_multiply_add_nn_relu_4', 'concatenate_layout_transform_reshape_transpose_reshape_8']
-Processing:   9%|▉         | 23/262 [06:56<51:23, 12.90s/it]Processing:  10%|█         | 27/262 [06:56<1:03:44, 16.28s/it]                                                              2024-05-14 00:07:23 [ladder:INFO]: Tuning ['strided_slice_layout_transform_9', 'nn_conv2d_multiply_add_nn_relu_10']
-Processing:  10%|█         | 27/262 [06:56<1:03:44, 16.28s/it]                                                              2024-05-14 00:08:32 [ladder:INFO]: result: 0.00634239986538887
-Processing:  10%|█         | 27/262 [08:05<1:03:44, 16.28s/it]                                                              2024-05-14 00:08:32 [ladder:INFO]: Tuning ['strided_slice_layout_transform_9']
-Processing:  10%|█         | 27/262 [08:05<1:03:44, 16.28s/it]                                                              2024-05-14 00:09:00 [ladder:INFO]: result: 0.002814000006765127
-Processing:  10%|█         | 27/262 [08:33<1:03:44, 16.28s/it]                                                              2024-05-14 00:09:00 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_10']
-Processing:  10%|█         | 27/262 [08:33<1:03:44, 16.28s/it]                                                              2024-05-14 00:09:00 [ladder:INFO]: Tuning ['strided_slice_layout_transform_9', 'nn_conv2d_multiply_add_nn_relu_10', 'nn_conv2d_multiply_add_11']
-Processing:  10%|█         | 27/262 [08:33<1:03:44, 16.28s/it]                                                              2024-05-14 00:09:00 [ladder:INFO]: Fusion group created: 7 ['strided_slice_layout_transform_9', 'nn_conv2d_multiply_add_nn_relu_10']
-Processing:  10%|█         | 27/262 [08:33<1:03:44, 16.28s/it]Processing:  11%|█         | 29/262 [08:33<1:24:25, 21.74s/it]                                                              2024-05-14 00:09:00 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_11', 'nn_conv2d_multiply_add_nn_relu_12']
-Processing:  11%|█         | 29/262 [08:33<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:17 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp5tf4oh9r.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp5tf4oh9r.so']
-Processing:  11%|█         | 29/262 [09:50<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:17 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpqdw2zv_2.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpqdw2zv_2.so']
-Processing:  11%|█         | 29/262 [09:50<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:17 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp5lk4s79t.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp5lk4s79t.so']
-Processing:  11%|█         | 29/262 [09:50<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:17 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpavlki4oo.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpavlki4oo.so']
-Processing:  11%|█         | 29/262 [09:50<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:17 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpv2tnwepu.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpv2tnwepu.so']
-Processing:  11%|█         | 29/262 [09:50<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:17 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp5xssp7y8.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp5xssp7y8.so']
-Processing:  11%|█         | 29/262 [09:50<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:17 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp0dhw4u7x.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp0dhw4u7x.so']
-Processing:  11%|█         | 29/262 [09:50<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:17 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpdxs7gq4k.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpdxs7gq4k.so']
-Processing:  11%|█         | 29/262 [09:50<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:17 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpt9t9vb4l.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpt9t9vb4l.so']
-Processing:  11%|█         | 29/262 [09:50<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:17 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp5bp6bftl.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp5bp6bftl.so']
-Processing:  11%|█         | 29/262 [09:50<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:50 [ladder:INFO]: result: 0.007577600423246622
-Processing:  11%|█         | 29/262 [10:24<1:24:25, 21.74s/it]                                                              2024-05-14 00:10:50 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_11']
-Processing:  11%|█         | 29/262 [10:24<1:24:25, 21.74s/it]                                                              2024-05-14 00:11:37 [ladder:INFO]: result: 0.00468114297837019
-Processing:  11%|█         | 29/262 [11:10<1:24:25, 21.74s/it]                                                              2024-05-14 00:11:37 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_12']
-Processing:  11%|█         | 29/262 [11:10<1:24:25, 21.74s/it]                                                              2024-05-14 00:11:37 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_11', 'nn_conv2d_multiply_add_nn_relu_12', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_13']
-Processing:  11%|█         | 29/262 [11:10<1:24:25, 21.74s/it]                                                              2024-05-14 00:11:37 [ladder:INFO]: Fusion group created: 8 ['nn_conv2d_multiply_add_11', 'nn_conv2d_multiply_add_nn_relu_12']
-Processing:  11%|█         | 29/262 [11:10<1:24:25, 21.74s/it]Processing:  14%|█▍        | 37/262 [11:10<1:17:37, 20.70s/it]                                                              2024-05-14 00:11:37 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_13', 'strided_slice_layout_transform_14', 'nn_conv2d_multiply_add_nn_relu_15', 'nn_conv2d_multiply_add_16', 'nn_conv2d_multiply_add_nn_relu_17', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_18']
-Processing:  14%|█▍        | 37/262 [11:10<1:17:37, 20.70s/it]                                                              2024-05-14 00:11:37 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_13']
-Processing:  14%|█▍        | 37/262 [11:11<1:17:37, 20.70s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: result: 0.004251076839864254
-Processing:  14%|█▍        | 37/262 [11:45<1:17:37, 20.70s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Fusion group created: 9 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_13']
-Processing:  14%|█▍        | 37/262 [11:45<1:17:37, 20.70s/it]Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Tuning ['strided_slice_layout_transform_14', 'nn_conv2d_multiply_add_nn_relu_15']
-Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Tuning ['strided_slice_layout_transform_14']
-Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_15']
-Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Tuning ['strided_slice_layout_transform_14', 'nn_conv2d_multiply_add_nn_relu_15', 'nn_conv2d_multiply_add_16']
-Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Fusion group created: 10 ['strided_slice_layout_transform_14', 'nn_conv2d_multiply_add_nn_relu_15']
-Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_16', 'nn_conv2d_multiply_add_nn_relu_17']
-Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_16']
-Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_17']
-Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_16', 'nn_conv2d_multiply_add_nn_relu_17', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_18']
-Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Fusion group created: 11 ['nn_conv2d_multiply_add_16', 'nn_conv2d_multiply_add_nn_relu_17']
-Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_18', 'strided_slice_layout_transform_19', 'nn_conv2d_multiply_add_nn_relu_20', 'nn_conv2d_multiply_add_21', 'nn_conv2d_multiply_add_nn_relu_22', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_23']
-Processing:  16%|█▌        | 42/262 [11:45<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_18']
-Processing:  16%|█▌        | 42/262 [11:46<1:00:34, 16.52s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Fusion group created: 12 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_18']
-Processing:  16%|█▌        | 42/262 [11:46<1:00:34, 16.52s/it]Processing:  21%|██▏       | 56/262 [11:46<25:35,  7.45s/it]                                                              2024-05-14 00:12:12 [ladder:INFO]: Tuning ['strided_slice_layout_transform_19', 'nn_conv2d_multiply_add_nn_relu_20']
-Processing:  21%|██▏       | 56/262 [11:46<25:35,  7.45s/it]                                                            2024-05-14 00:12:12 [ladder:INFO]: Tuning ['strided_slice_layout_transform_19']
-Processing:  21%|██▏       | 56/262 [11:46<25:35,  7.45s/it]                                                            2024-05-14 00:12:12 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_20']
-Processing:  21%|██▏       | 56/262 [11:46<25:35,  7.45s/it]                                                            2024-05-14 00:12:12 [ladder:INFO]: Tuning ['strided_slice_layout_transform_19', 'nn_conv2d_multiply_add_nn_relu_20', 'nn_conv2d_multiply_add_21']
-Processing:  21%|██▏       | 56/262 [11:46<25:35,  7.45s/it]                                                            2024-05-14 00:12:12 [ladder:INFO]: Fusion group created: 13 ['strided_slice_layout_transform_19', 'nn_conv2d_multiply_add_nn_relu_20']
-Processing:  21%|██▏       | 56/262 [11:46<25:35,  7.45s/it]                                                            2024-05-14 00:12:12 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_21', 'nn_conv2d_multiply_add_nn_relu_22']
-Processing:  21%|██▏       | 56/262 [11:46<25:35,  7.45s/it]                                                            2024-05-14 00:12:12 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_21']
-Processing:  21%|██▏       | 56/262 [11:46<25:35,  7.45s/it]                                                            2024-05-14 00:12:12 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_22']
-Processing:  21%|██▏       | 56/262 [11:46<25:35,  7.45s/it]                                                            2024-05-14 00:12:13 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_21', 'nn_conv2d_multiply_add_nn_relu_22', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_23']
-Processing:  21%|██▏       | 56/262 [11:46<25:35,  7.45s/it]                                                            2024-05-14 00:12:13 [ladder:INFO]: Fusion group created: 14 ['nn_conv2d_multiply_add_21', 'nn_conv2d_multiply_add_nn_relu_22']
-Processing:  21%|██▏       | 56/262 [11:46<25:35,  7.45s/it]Processing:  25%|██▍       | 65/262 [11:46<16:21,  4.98s/it]                                                            2024-05-14 00:12:13 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_23', 'nn_conv2d_multiply_add_nn_relu_26', 'nn_conv2d_multiply_add_24']
-Processing:  25%|██▍       | 65/262 [11:46<16:21,  4.98s/it]                                                            2024-05-14 00:12:14 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_23']
-Processing:  25%|██▍       | 65/262 [11:47<16:21,  4.98s/it]Processing:  25%|██▍       | 65/262 [12:00<16:21,  4.98s/it]                                                            2024-05-14 00:12:45 [ladder:INFO]: result: 0.0035840000491589308
-Processing:  25%|██▍       | 65/262 [12:19<16:21,  4.98s/it]                                                            2024-05-14 00:12:45 [ladder:INFO]: Fusion group created: 15 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_23']
-Processing:  25%|██▍       | 65/262 [12:19<16:21,  4.98s/it]Processing:  27%|██▋       | 70/262 [12:19<16:56,  5.29s/it]                                                            2024-05-14 00:12:45 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_26', 'nn_conv2d_multiply_add_27']
-Processing:  27%|██▋       | 70/262 [12:19<16:56,  5.29s/it]                                                            2024-05-14 00:12:46 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_26']
-Processing:  27%|██▋       | 70/262 [12:19<16:56,  5.29s/it]                                                            2024-05-14 00:13:19 [ladder:INFO]: result: 0.007509333547204733
-Processing:  27%|██▋       | 70/262 [12:52<16:56,  5.29s/it]                                                            2024-05-14 00:13:19 [ladder:INFO]: Fusion group created: 16 ['nn_conv2d_multiply_add_nn_relu_26']
-Processing:  27%|██▋       | 70/262 [12:52<16:56,  5.29s/it]Processing:  28%|██▊       | 74/262 [12:52<18:26,  5.88s/it]                                                            2024-05-14 00:13:19 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_27', 'nn_conv2d_multiply_add_nn_relu_28']
-Processing:  28%|██▊       | 74/262 [12:52<18:26,  5.88s/it]                                                            2024-05-14 00:14:03 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp_h5sf42u.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp_h5sf42u.so']
-Processing:  28%|██▊       | 74/262 [13:36<18:26,  5.88s/it]                                                            2024-05-14 00:14:03 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp1zxxlmo8.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp1zxxlmo8.so']
-Processing:  28%|██▊       | 74/262 [13:36<18:26,  5.88s/it]                                                            2024-05-14 00:14:03 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpjmnu7y0z.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpjmnu7y0z.so']
-Processing:  28%|██▊       | 74/262 [13:36<18:26,  5.88s/it]                                                            2024-05-14 00:14:03 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpjd7bpa_t.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpjd7bpa_t.so']
-Processing:  28%|██▊       | 74/262 [13:36<18:26,  5.88s/it]                                                            2024-05-14 00:14:03 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpbjqni_b6.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpbjqni_b6.so']
-Processing:  28%|██▊       | 74/262 [13:36<18:26,  5.88s/it]                                                            2024-05-14 00:14:03 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpu6jzz9zn.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpu6jzz9zn.so']
-Processing:  28%|██▊       | 74/262 [13:36<18:26,  5.88s/it]                                                            2024-05-14 00:14:03 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp02i4f6p8.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp02i4f6p8.so']
-Processing:  28%|██▊       | 74/262 [13:36<18:26,  5.88s/it]                                                            2024-05-14 00:14:09 [ladder:INFO]: result: 0.008396799676120281
-Processing:  28%|██▊       | 74/262 [13:42<18:26,  5.88s/it]                                                            2024-05-14 00:14:09 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_27']
-Processing:  28%|██▊       | 74/262 [13:42<18:26,  5.88s/it]                                                            2024-05-14 00:14:50 [ladder:INFO]: result: 0.004534856881946325
-Processing:  28%|██▊       | 74/262 [14:23<18:26,  5.88s/it]                                                            2024-05-14 00:14:50 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_28']
-Processing:  28%|██▊       | 74/262 [14:23<18:26,  5.88s/it]                                                            2024-05-14 00:15:32 [ladder:INFO]: result: 0.00614933343604207
-Processing:  28%|██▊       | 74/262 [15:05<18:26,  5.88s/it]                                                            2024-05-14 00:15:32 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_27', 'nn_conv2d_multiply_add_nn_relu_28', 'nn_conv2d_multiply_add_24', 'nn_conv2d_multiply_add_nn_relu_25', 'concatenate_layout_transform_reshape_transpose_reshape_29']
-Processing:  28%|██▊       | 74/262 [15:05<18:26,  5.88s/it]                                                            2024-05-14 00:15:32 [ladder:INFO]: Fusion group created: 17 ['nn_conv2d_multiply_add_27', 'nn_conv2d_multiply_add_nn_relu_28']
-Processing:  28%|██▊       | 74/262 [15:05<18:26,  5.88s/it]Processing:  30%|██▉       | 78/262 [15:05<36:18, 11.84s/it]                                                            2024-05-14 00:15:32 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_24', 'nn_conv2d_multiply_add_nn_relu_25']
-Processing:  30%|██▉       | 78/262 [15:05<36:18, 11.84s/it]                                                            2024-05-14 00:15:32 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_24']
-Processing:  30%|██▉       | 78/262 [15:05<36:18, 11.84s/it]                                                            2024-05-14 00:15:32 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_25']
-Processing:  30%|██▉       | 78/262 [15:05<36:18, 11.84s/it]                                                            2024-05-14 00:15:32 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_24', 'nn_conv2d_multiply_add_nn_relu_25', 'concatenate_layout_transform_reshape_transpose_reshape_29']
-Processing:  30%|██▉       | 78/262 [15:05<36:18, 11.84s/it]                                                            2024-05-14 00:15:33 [ladder:INFO]: Fusion group created: 18 ['nn_conv2d_multiply_add_24', 'nn_conv2d_multiply_add_nn_relu_25']
-Processing:  30%|██▉       | 78/262 [15:06<36:18, 11.84s/it]Processing:  33%|███▎      | 86/262 [15:06<21:29,  7.33s/it]                                                            2024-05-14 00:15:33 [ladder:INFO]: Tuning ['concatenate_layout_transform_reshape_transpose_reshape_29', 'strided_slice_layout_transform_30', 'nn_conv2d_multiply_add_nn_relu_31', 'nn_conv2d_multiply_add_32', 'nn_conv2d_multiply_add_nn_relu_33', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_34']
-Processing:  33%|███▎      | 86/262 [15:06<21:29,  7.33s/it]                                                            2024-05-14 00:15:33 [ladder:INFO]: Tuning ['concatenate_layout_transform_reshape_transpose_reshape_29']
-Processing:  33%|███▎      | 86/262 [15:06<21:29,  7.33s/it]Processing:  33%|███▎      | 86/262 [15:20<21:29,  7.33s/it]                                                            2024-05-14 00:16:13 [ladder:INFO]: result: 0.0033083076123148203
-Processing:  33%|███▎      | 86/262 [15:46<21:29,  7.33s/it]                                                            2024-05-14 00:16:13 [ladder:INFO]: Fusion group created: 19 ['concatenate_layout_transform_reshape_transpose_reshape_29']
-Processing:  33%|███▎      | 86/262 [15:46<21:29,  7.33s/it]Processing:  35%|███▍      | 91/262 [15:46<21:22,  7.50s/it]                                                            2024-05-14 00:16:13 [ladder:INFO]: Tuning ['strided_slice_layout_transform_30', 'nn_conv2d_multiply_add_nn_relu_31']
-Processing:  35%|███▍      | 91/262 [15:46<21:22,  7.50s/it]                                                            2024-05-14 00:16:40 [ladder:INFO]: result: 0.0075712003745138645
-Processing:  35%|███▍      | 91/262 [16:13<21:22,  7.50s/it]                                                            2024-05-14 00:16:40 [ladder:INFO]: Tuning ['strided_slice_layout_transform_30']
-Processing:  35%|███▍      | 91/262 [16:13<21:22,  7.50s/it]                                                            2024-05-14 00:17:18 [ladder:INFO]: result: 0.003145142924040556
-Processing:  35%|███▍      | 91/262 [16:51<21:22,  7.50s/it]                                                            2024-05-14 00:17:18 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_31']
-Processing:  35%|███▍      | 91/262 [16:51<21:22,  7.50s/it]                                                            2024-05-14 00:17:18 [ladder:INFO]: Tuning ['strided_slice_layout_transform_30', 'nn_conv2d_multiply_add_nn_relu_31', 'nn_conv2d_multiply_add_32']
-Processing:  35%|███▍      | 91/262 [16:51<21:22,  7.50s/it]                                                            2024-05-14 00:17:18 [ladder:INFO]: Fusion group created: 20 ['strided_slice_layout_transform_30', 'nn_conv2d_multiply_add_nn_relu_31']
-Processing:  35%|███▍      | 91/262 [16:51<21:22,  7.50s/it]Processing:  35%|███▌      | 92/262 [16:51<32:20, 11.41s/it]                                                            2024-05-14 00:17:18 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_32', 'nn_conv2d_multiply_add_nn_relu_33']
-Processing:  35%|███▌      | 92/262 [16:51<32:20, 11.41s/it]                                                            2024-05-14 00:18:16 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp9q7gafp7.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp9q7gafp7.so']
-Processing:  35%|███▌      | 92/262 [17:49<32:20, 11.41s/it]                                                            2024-05-14 00:18:16 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpcsy9ayjw.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpcsy9ayjw.so']
-Processing:  35%|███▌      | 92/262 [17:49<32:20, 11.41s/it]                                                            2024-05-14 00:18:16 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpgswp8w49.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpgswp8w49.so']
-Processing:  35%|███▌      | 92/262 [17:49<32:20, 11.41s/it]                                                            2024-05-14 00:18:16 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp2vbkv27z.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp2vbkv27z.so']
-Processing:  35%|███▌      | 92/262 [17:49<32:20, 11.41s/it]                                                            2024-05-14 00:18:16 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmptk0nwphm.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmptk0nwphm.so']
-Processing:  35%|███▌      | 92/262 [17:49<32:20, 11.41s/it]                                                            2024-05-14 00:18:16 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpsu2dffnd.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpsu2dffnd.so']
-Processing:  35%|███▌      | 92/262 [17:49<32:20, 11.41s/it]                                                            2024-05-14 00:18:16 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp84y7anew.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp84y7anew.so']
-Processing:  35%|███▌      | 92/262 [17:49<32:20, 11.41s/it]                                                            2024-05-14 00:18:22 [ladder:INFO]: result: 0.00818559993058443
-Processing:  35%|███▌      | 92/262 [17:55<32:20, 11.41s/it]                                                            2024-05-14 00:18:22 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_32']
-Processing:  35%|███▌      | 92/262 [17:55<32:20, 11.41s/it]                                                            2024-05-14 00:19:05 [ladder:INFO]: result: 0.0039253332652151585
-Processing:  35%|███▌      | 92/262 [18:38<32:20, 11.41s/it]                                                            2024-05-14 00:19:05 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_33']
-Processing:  35%|███▌      | 92/262 [18:38<32:20, 11.41s/it]                                                            2024-05-14 00:19:05 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_32', 'nn_conv2d_multiply_add_nn_relu_33', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_34']
-Processing:  35%|███▌      | 92/262 [18:38<32:20, 11.41s/it]                                                            2024-05-14 00:19:05 [ladder:INFO]: Fusion group created: 21 ['nn_conv2d_multiply_add_32', 'nn_conv2d_multiply_add_nn_relu_33']
-Processing:  35%|███▌      | 92/262 [18:39<32:20, 11.41s/it]Processing:  38%|███▊      | 100/262 [18:39<33:13, 12.30s/it]                                                             2024-05-14 00:19:05 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_34', 'strided_slice_layout_transform_35', 'nn_conv2d_multiply_add_nn_relu_36', 'nn_conv2d_multiply_add_37', 'nn_conv2d_multiply_add_nn_relu_38', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_39']
-Processing:  38%|███▊      | 100/262 [18:39<33:13, 12.30s/it]                                                             2024-05-14 00:19:06 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_34']
-Processing:  38%|███▊      | 100/262 [18:39<33:13, 12.30s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: result: 0.0032270769588649273
-Processing:  38%|███▊      | 100/262 [19:15<33:13, 12.30s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Fusion group created: 22 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_34']
-Processing:  38%|███▊      | 100/262 [19:15<33:13, 12.30s/it]Processing:  40%|████      | 105/262 [19:15<28:33, 10.91s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['strided_slice_layout_transform_35', 'nn_conv2d_multiply_add_nn_relu_36']
-Processing:  40%|████      | 105/262 [19:15<28:33, 10.91s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['strided_slice_layout_transform_35']
-Processing:  40%|████      | 105/262 [19:15<28:33, 10.91s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_36']
-Processing:  40%|████      | 105/262 [19:15<28:33, 10.91s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['strided_slice_layout_transform_35', 'nn_conv2d_multiply_add_nn_relu_36', 'nn_conv2d_multiply_add_37']
-Processing:  40%|████      | 105/262 [19:15<28:33, 10.91s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Fusion group created: 23 ['strided_slice_layout_transform_35', 'nn_conv2d_multiply_add_nn_relu_36']
-Processing:  40%|████      | 105/262 [19:15<28:33, 10.91s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_37', 'nn_conv2d_multiply_add_nn_relu_38']
-Processing:  40%|████      | 105/262 [19:15<28:33, 10.91s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_37']
-Processing:  40%|████      | 105/262 [19:15<28:33, 10.91s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_38']
-Processing:  40%|████      | 105/262 [19:15<28:33, 10.91s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_37', 'nn_conv2d_multiply_add_nn_relu_38', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_39']
-Processing:  40%|████      | 105/262 [19:15<28:33, 10.91s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Fusion group created: 24 ['nn_conv2d_multiply_add_37', 'nn_conv2d_multiply_add_nn_relu_38']
-Processing:  40%|████      | 105/262 [19:15<28:33, 10.91s/it]Processing:  44%|████▎     | 114/262 [19:15<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_39', 'strided_slice_layout_transform_40', 'nn_conv2d_multiply_add_nn_relu_41', 'nn_conv2d_multiply_add_42', 'nn_conv2d_multiply_add_nn_relu_43', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_44']
-Processing:  44%|████▎     | 114/262 [19:15<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_39']
-Processing:  44%|████▎     | 114/262 [19:15<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Fusion group created: 25 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_39']
-Processing:  44%|████▎     | 114/262 [19:15<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['strided_slice_layout_transform_40', 'nn_conv2d_multiply_add_nn_relu_41']
-Processing:  44%|████▎     | 114/262 [19:15<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['strided_slice_layout_transform_40']
-Processing:  44%|████▎     | 114/262 [19:15<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_41']
-Processing:  44%|████▎     | 114/262 [19:15<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['strided_slice_layout_transform_40', 'nn_conv2d_multiply_add_nn_relu_41', 'nn_conv2d_multiply_add_42']
-Processing:  44%|████▎     | 114/262 [19:16<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Fusion group created: 26 ['strided_slice_layout_transform_40', 'nn_conv2d_multiply_add_nn_relu_41']
-Processing:  44%|████▎     | 114/262 [19:16<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_42', 'nn_conv2d_multiply_add_nn_relu_43']
-Processing:  44%|████▎     | 114/262 [19:16<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_42']
-Processing:  44%|████▎     | 114/262 [19:16<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_43']
-Processing:  44%|████▎     | 114/262 [19:16<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_42', 'nn_conv2d_multiply_add_nn_relu_43', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_44']
-Processing:  44%|████▎     | 114/262 [19:16<15:39,  6.35s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Fusion group created: 27 ['nn_conv2d_multiply_add_42', 'nn_conv2d_multiply_add_nn_relu_43']
-Processing:  44%|████▎     | 114/262 [19:16<15:39,  6.35s/it]Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:42 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_44', 'strided_slice_layout_transform_45', 'nn_conv2d_multiply_add_nn_relu_46', 'nn_conv2d_multiply_add_47', 'nn_conv2d_multiply_add_nn_relu_48', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_49']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_44']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Fusion group created: 28 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_44']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_45', 'nn_conv2d_multiply_add_nn_relu_46']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_45']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_46']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_45', 'nn_conv2d_multiply_add_nn_relu_46', 'nn_conv2d_multiply_add_47']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Fusion group created: 29 ['strided_slice_layout_transform_45', 'nn_conv2d_multiply_add_nn_relu_46']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_47', 'nn_conv2d_multiply_add_nn_relu_48']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_47']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_48']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_47', 'nn_conv2d_multiply_add_nn_relu_48', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_49']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Fusion group created: 30 ['nn_conv2d_multiply_add_47', 'nn_conv2d_multiply_add_nn_relu_48']
-Processing:  49%|████▉     | 128/262 [19:16<07:21,  3.29s/it]Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_49', 'strided_slice_layout_transform_50', 'nn_conv2d_multiply_add_nn_relu_51', 'nn_conv2d_multiply_add_52', 'nn_conv2d_multiply_add_nn_relu_53', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_54']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_49']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Fusion group created: 31 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_49']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_50', 'nn_conv2d_multiply_add_nn_relu_51']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_50']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_51']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_50', 'nn_conv2d_multiply_add_nn_relu_51', 'nn_conv2d_multiply_add_52']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Fusion group created: 32 ['strided_slice_layout_transform_50', 'nn_conv2d_multiply_add_nn_relu_51']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_52', 'nn_conv2d_multiply_add_nn_relu_53']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_52']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_53']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_52', 'nn_conv2d_multiply_add_nn_relu_53', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_54']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Fusion group created: 33 ['nn_conv2d_multiply_add_52', 'nn_conv2d_multiply_add_nn_relu_53']
-Processing:  54%|█████▍    | 142/262 [19:16<03:54,  1.95s/it]Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_54', 'strided_slice_layout_transform_55', 'nn_conv2d_multiply_add_nn_relu_56', 'nn_conv2d_multiply_add_57', 'nn_conv2d_multiply_add_nn_relu_58', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_59']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_54']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Fusion group created: 34 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_54']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_55', 'nn_conv2d_multiply_add_nn_relu_56']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_55']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_56']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_55', 'nn_conv2d_multiply_add_nn_relu_56', 'nn_conv2d_multiply_add_57']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Fusion group created: 35 ['strided_slice_layout_transform_55', 'nn_conv2d_multiply_add_nn_relu_56']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_57', 'nn_conv2d_multiply_add_nn_relu_58']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_57']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_58']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_57', 'nn_conv2d_multiply_add_nn_relu_58', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_59']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]                                                             2024-05-14 00:19:43 [ladder:INFO]: Fusion group created: 36 ['nn_conv2d_multiply_add_57', 'nn_conv2d_multiply_add_nn_relu_58']
-Processing:  60%|█████▉    | 156/262 [19:16<02:11,  1.24s/it]Processing:  65%|██████▍   | 170/262 [19:16<01:15,  1.23it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_59', 'strided_slice_layout_transform_60', 'nn_conv2d_multiply_add_nn_relu_61', 'nn_conv2d_multiply_add_62', 'nn_conv2d_multiply_add_nn_relu_63', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_64']
-Processing:  65%|██████▍   | 170/262 [19:16<01:15,  1.23it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_59']
-Processing:  65%|██████▍   | 170/262 [19:16<01:15,  1.23it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Fusion group created: 37 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_59']
-Processing:  65%|██████▍   | 170/262 [19:16<01:15,  1.23it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_60', 'nn_conv2d_multiply_add_nn_relu_61']
-Processing:  65%|██████▍   | 170/262 [19:16<01:15,  1.23it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_60']
-Processing:  65%|██████▍   | 170/262 [19:16<01:15,  1.23it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_61']
-Processing:  65%|██████▍   | 170/262 [19:16<01:15,  1.23it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['strided_slice_layout_transform_60', 'nn_conv2d_multiply_add_nn_relu_61', 'nn_conv2d_multiply_add_62']
-Processing:  65%|██████▍   | 170/262 [19:16<01:15,  1.23it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Fusion group created: 38 ['strided_slice_layout_transform_60', 'nn_conv2d_multiply_add_nn_relu_61']
-Processing:  65%|██████▍   | 170/262 [19:16<01:15,  1.23it/s]Processing:  68%|██████▊   | 179/262 [19:16<00:51,  1.60it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_62', 'nn_conv2d_multiply_add_nn_relu_63']
-Processing:  68%|██████▊   | 179/262 [19:16<00:51,  1.60it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_62']
-Processing:  68%|██████▊   | 179/262 [19:16<00:51,  1.60it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_63']
-Processing:  68%|██████▊   | 179/262 [19:16<00:51,  1.60it/s]                                                             2024-05-14 00:19:43 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_62', 'nn_conv2d_multiply_add_nn_relu_63', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_64']
-Processing:  68%|██████▊   | 179/262 [19:16<00:51,  1.60it/s]                                                             2024-05-14 00:19:44 [ladder:INFO]: Fusion group created: 39 ['nn_conv2d_multiply_add_62', 'nn_conv2d_multiply_add_nn_relu_63']
-Processing:  68%|██████▊   | 179/262 [19:17<00:51,  1.60it/s]Processing:  71%|███████▏  | 187/262 [19:17<00:36,  2.04it/s]                                                             2024-05-14 00:19:44 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_64', 'nn_conv2d_multiply_add_nn_relu_67', 'nn_conv2d_multiply_add_65']
-Processing:  71%|███████▏  | 187/262 [19:17<00:36,  2.04it/s]                                                             2024-05-14 00:19:44 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_64']
-Processing:  71%|███████▏  | 187/262 [19:17<00:36,  2.04it/s]Processing:  71%|███████▏  | 187/262 [19:30<00:36,  2.04it/s]                                                             2024-05-14 00:20:18 [ladder:INFO]: result: 0.0030719998758286238
-Processing:  71%|███████▏  | 187/262 [19:51<00:36,  2.04it/s]                                                             2024-05-14 00:20:18 [ladder:INFO]: Fusion group created: 40 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_64']
-Processing:  71%|███████▏  | 187/262 [19:51<00:36,  2.04it/s]Processing:  72%|███████▏  | 189/262 [19:51<02:10,  1.79s/it]                                                             2024-05-14 00:20:18 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_67', 'nn_conv2d_multiply_add_68']
-Processing:  72%|███████▏  | 189/262 [19:51<02:10,  1.79s/it]                                                             2024-05-14 00:21:09 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmp87yt92kk.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmp87yt92kk.so']
-Processing:  72%|███████▏  | 189/262 [20:42<02:10,  1.79s/it]                                                             2024-05-14 00:21:09 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmpushf92gc.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmpushf92gc.so']
-Processing:  72%|███████▏  | 189/262 [20:42<02:10,  1.79s/it]                                                             2024-05-14 00:21:09 [ladder:WARNING]: Compilation Timeout! ['nvcc', '-std=c++17', '-Xcudafe', '--diag_suppress=177', '--compiler-options', "'-fPIC'", '-lineinfo', '--shared', '/tmp/tmphze4auxg.cu', '-lcuda', '-gencode=arch=compute_70,code=compute_70', '-I/root/cutlass/include', '-o', '/tmp/tmphze4auxg.so']
-Processing:  72%|███████▏  | 189/262 [20:42<02:10,  1.79s/it]                                                             2024-05-14 00:21:13 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_67']
-Processing:  72%|███████▏  | 189/262 [20:46<02:10,  1.79s/it]                                                             2024-05-14 00:21:53 [ladder:INFO]: result: 0.010444799438118935
-Processing:  72%|███████▏  | 189/262 [21:26<02:10,  1.79s/it]                                                             2024-05-14 00:21:53 [ladder:INFO]: Fusion group created: 41 ['nn_conv2d_multiply_add_nn_relu_67']
-Processing:  72%|███████▏  | 189/262 [21:26<02:10,  1.79s/it]Processing:  74%|███████▎  | 193/262 [21:26<06:37,  5.76s/it]                                                             2024-05-14 00:21:53 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_68', 'nn_conv2d_multiply_add_nn_relu_69']
-Processing:  74%|███████▎  | 193/262 [21:26<06:37,  5.76s/it]                                                             2024-05-14 00:21:59 [ladder:INFO]: result: 0.011776000261306763
-Processing:  74%|███████▎  | 193/262 [21:32<06:37,  5.76s/it]                                                             2024-05-14 00:21:59 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_68']
-Processing:  74%|███████▎  | 193/262 [21:32<06:37,  5.76s/it]                                                             2024-05-14 00:22:26 [ladder:INFO]: result: 0.004091999959200621
-Processing:  74%|███████▎  | 193/262 [21:59<06:37,  5.76s/it]                                                             2024-05-14 00:22:26 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_69']
-Processing:  74%|███████▎  | 193/262 [21:59<06:37,  5.76s/it]                                                             2024-05-14 00:22:51 [ladder:INFO]: result: 0.006650666240602732
-Processing:  74%|███████▎  | 193/262 [22:25<06:37,  5.76s/it]                                                             2024-05-14 00:22:51 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_68']
-Processing:  74%|███████▎  | 193/262 [22:25<06:37,  5.76s/it]                                                             2024-05-14 00:22:51 [ladder:INFO]: Fusion group created: 42 ['nn_conv2d_multiply_add_68']
-Processing:  74%|███████▎  | 193/262 [22:25<06:37,  5.76s/it]Processing:  75%|███████▌  | 197/262 [22:25<08:11,  7.56s/it]                                                             2024-05-14 00:22:51 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_69', 'nn_conv2d_multiply_add_65', 'nn_conv2d_multiply_add_nn_relu_66', 'concatenate_layout_transform_reshape_transpose_reshape_70']
-Processing:  75%|███████▌  | 197/262 [22:25<08:11,  7.56s/it]                                                             2024-05-14 00:22:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_69']
-Processing:  75%|███████▌  | 197/262 [22:25<08:11,  7.56s/it]                                                             2024-05-14 00:22:52 [ladder:INFO]: Fusion group created: 43 ['nn_conv2d_multiply_add_nn_relu_69']
-Processing:  75%|███████▌  | 197/262 [22:25<08:11,  7.56s/it]Processing:  77%|███████▋  | 201/262 [22:25<05:57,  5.86s/it]                                                             2024-05-14 00:22:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_65', 'nn_conv2d_multiply_add_nn_relu_66']
-Processing:  77%|███████▋  | 201/262 [22:25<05:57,  5.86s/it]                                                             2024-05-14 00:22:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_65']
-Processing:  77%|███████▋  | 201/262 [22:25<05:57,  5.86s/it]                                                             2024-05-14 00:22:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_66']
-Processing:  77%|███████▋  | 201/262 [22:25<05:57,  5.86s/it]                                                             2024-05-14 00:22:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_65']
-Processing:  77%|███████▋  | 201/262 [22:25<05:57,  5.86s/it]                                                             2024-05-14 00:22:52 [ladder:INFO]: Fusion group created: 44 ['nn_conv2d_multiply_add_65']
-Processing:  77%|███████▋  | 201/262 [22:25<05:57,  5.86s/it]                                                             2024-05-14 00:22:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_66', 'concatenate_layout_transform_reshape_transpose_reshape_70']
-Processing:  77%|███████▋  | 201/262 [22:25<05:57,  5.86s/it]                                                             2024-05-14 00:22:53 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_66', 'concatenate_layout_transform_reshape_transpose_reshape_70']
-Processing:  77%|███████▋  | 201/262 [22:26<05:57,  5.86s/it]Processing:  77%|███████▋  | 201/262 [22:40<05:57,  5.86s/it]                                                             2024-05-14 00:23:26 [ladder:INFO]: result: 0.02110080048441887
-Processing:  77%|███████▋  | 201/262 [22:59<05:57,  5.86s/it]                                                             2024-05-14 00:23:26 [ladder:INFO]: Tuning ['concatenate_layout_transform_reshape_transpose_reshape_70']
-Processing:  77%|███████▋  | 201/262 [22:59<05:57,  5.86s/it]                                                             2024-05-14 00:23:58 [ladder:INFO]: result: 0.002779428381472826
-Processing:  77%|███████▋  | 201/262 [23:31<05:57,  5.86s/it]                                                             2024-05-14 00:23:58 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_66']
-Processing:  77%|███████▋  | 201/262 [23:31<05:57,  5.86s/it]                                                             2024-05-14 00:23:58 [ladder:INFO]: Fusion group created: 45 ['nn_conv2d_multiply_add_nn_relu_66']
-Processing:  77%|███████▋  | 201/262 [23:31<05:57,  5.86s/it]Processing:  80%|███████▉  | 209/262 [23:31<06:00,  6.79s/it]                                                             2024-05-14 00:23:58 [ladder:INFO]: Tuning ['concatenate_layout_transform_reshape_transpose_reshape_70', 'strided_slice_layout_transform_71', 'nn_conv2d_multiply_add_nn_relu_72', 'nn_conv2d_multiply_add_73', 'nn_conv2d_multiply_add_nn_relu_74', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_75']
-Processing:  80%|███████▉  | 209/262 [23:31<06:00,  6.79s/it]                                                             2024-05-14 00:23:58 [ladder:INFO]: Tuning ['concatenate_layout_transform_reshape_transpose_reshape_70']
-Processing:  80%|███████▉  | 209/262 [23:31<06:00,  6.79s/it]                                                             2024-05-14 00:23:58 [ladder:INFO]: Fusion group created: 46 ['concatenate_layout_transform_reshape_transpose_reshape_70']
-Processing:  80%|███████▉  | 209/262 [23:31<06:00,  6.79s/it]Processing:  80%|████████  | 210/262 [23:31<05:30,  6.36s/it]                                                             2024-05-14 00:23:58 [ladder:INFO]: Tuning ['strided_slice_layout_transform_71', 'nn_conv2d_multiply_add_nn_relu_72']
-Processing:  80%|████████  | 210/262 [23:31<05:30,  6.36s/it]                                                             2024-05-14 00:24:05 [ladder:INFO]: result: 0.01106560043990612
-Processing:  80%|████████  | 210/262 [23:38<05:30,  6.36s/it]                                                             2024-05-14 00:24:05 [ladder:INFO]: Tuning ['strided_slice_layout_transform_71']
-Processing:  80%|████████  | 210/262 [23:38<05:30,  6.36s/it]Processing:  80%|████████  | 210/262 [23:50<05:30,  6.36s/it]                                                             2024-05-14 00:24:33 [ladder:INFO]: result: 0.002673777751624584
-Processing:  80%|████████  | 210/262 [24:07<05:30,  6.36s/it]                                                             2024-05-14 00:24:33 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_72']
-Processing:  80%|████████  | 210/262 [24:07<05:30,  6.36s/it]                                                             2024-05-14 00:24:33 [ladder:INFO]: Tuning ['strided_slice_layout_transform_71']
-Processing:  80%|████████  | 210/262 [24:07<05:30,  6.36s/it]                                                             2024-05-14 00:24:33 [ladder:INFO]: Fusion group created: 47 ['strided_slice_layout_transform_71']
-Processing:  80%|████████  | 210/262 [24:07<05:30,  6.36s/it]Processing:  81%|████████  | 211/262 [24:07<07:32,  8.87s/it]                                                             2024-05-14 00:24:33 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_72', 'nn_conv2d_multiply_add_73']
-Processing:  81%|████████  | 211/262 [24:07<07:32,  8.87s/it]                                                             2024-05-14 00:25:16 [ladder:INFO]: result: 0.06799359619617462
-Processing:  81%|████████  | 211/262 [24:50<07:32,  8.87s/it]                                                             2024-05-14 00:25:16 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_73']
-Processing:  81%|████████  | 211/262 [24:50<07:32,  8.87s/it]                                                             2024-05-14 00:25:39 [ladder:INFO]: result: 0.0034815999679267406
-Processing:  81%|████████  | 211/262 [25:12<07:32,  8.87s/it]                                                             2024-05-14 00:25:39 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_72']
-Processing:  81%|████████  | 211/262 [25:12<07:32,  8.87s/it]                                                             2024-05-14 00:25:39 [ladder:INFO]: Fusion group created: 48 ['nn_conv2d_multiply_add_nn_relu_72']
-Processing:  81%|████████  | 211/262 [25:12<07:32,  8.87s/it]Processing:  82%|████████▏ | 215/262 [25:12<08:54, 11.36s/it]                                                             2024-05-14 00:25:39 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_73', 'nn_conv2d_multiply_add_nn_relu_74']
-Processing:  82%|████████▏ | 215/262 [25:12<08:54, 11.36s/it]                                                             2024-05-14 00:25:49 [ladder:INFO]: result: 0.01152000017464161
-Processing:  82%|████████▏ | 215/262 [25:22<08:54, 11.36s/it]                                                             2024-05-14 00:25:49 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_74']
-Processing:  82%|████████▏ | 215/262 [25:22<08:54, 11.36s/it]                                                             2024-05-14 00:25:49 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_73']
-Processing:  82%|████████▏ | 215/262 [25:22<08:54, 11.36s/it]                                                             2024-05-14 00:25:49 [ladder:INFO]: Fusion group created: 49 ['nn_conv2d_multiply_add_73']
-Processing:  82%|████████▏ | 215/262 [25:22<08:54, 11.36s/it]Processing:  84%|████████▎ | 219/262 [25:22<06:06,  8.52s/it]                                                             2024-05-14 00:25:49 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_74', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_75']
-Processing:  84%|████████▎ | 219/262 [25:22<06:06,  8.52s/it]                                                             2024-05-14 00:25:50 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_74', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_75']
-Processing:  84%|████████▎ | 219/262 [25:23<06:06,  8.52s/it]Processing:  84%|████████▎ | 219/262 [25:40<06:06,  8.52s/it]                                                             2024-05-14 00:26:22 [ladder:INFO]: result: 0.020684799179434776
-Processing:  84%|████████▎ | 219/262 [25:55<06:06,  8.52s/it]                                                             2024-05-14 00:26:22 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_75']
-Processing:  84%|████████▎ | 219/262 [25:55<06:06,  8.52s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: result: 0.0028548571281135082
-Processing:  84%|████████▎ | 219/262 [26:25<06:06,  8.52s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_74']
-Processing:  84%|████████▎ | 219/262 [26:25<06:06,  8.52s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Fusion group created: 50 ['nn_conv2d_multiply_add_nn_relu_74']
-Processing:  84%|████████▎ | 219/262 [26:25<06:06,  8.52s/it]Processing:  85%|████████▌ | 223/262 [26:25<06:59, 10.77s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_75', 'strided_slice_layout_transform_76', 'nn_conv2d_multiply_add_nn_relu_77', 'nn_conv2d_multiply_add_78', 'nn_conv2d_multiply_add_nn_relu_79', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_80']
-Processing:  85%|████████▌ | 223/262 [26:25<06:59, 10.77s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_75']
-Processing:  85%|████████▌ | 223/262 [26:25<06:59, 10.77s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Fusion group created: 51 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_75']
-Processing:  85%|████████▌ | 223/262 [26:25<06:59, 10.77s/it]Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['strided_slice_layout_transform_76', 'nn_conv2d_multiply_add_nn_relu_77']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['strided_slice_layout_transform_76']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_77']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['strided_slice_layout_transform_76']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Fusion group created: 52 ['strided_slice_layout_transform_76']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_77', 'nn_conv2d_multiply_add_78']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_78']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_77']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Fusion group created: 53 ['nn_conv2d_multiply_add_nn_relu_77']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_78', 'nn_conv2d_multiply_add_nn_relu_79']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_79']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_78']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Fusion group created: 54 ['nn_conv2d_multiply_add_78']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_79', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_80']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_79', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_80']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_80']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_79']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Fusion group created: 55 ['nn_conv2d_multiply_add_nn_relu_79']
-Processing:  85%|████████▌ | 224/262 [26:25<06:08,  9.70s/it]Processing:  90%|█████████ | 237/262 [26:25<01:24,  3.39s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_80', 'strided_slice_layout_transform_81', 'nn_conv2d_multiply_add_nn_relu_82', 'nn_conv2d_multiply_add_83', 'nn_conv2d_multiply_add_nn_relu_84', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_85']
-Processing:  90%|█████████ | 237/262 [26:25<01:24,  3.39s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_80']
-Processing:  90%|█████████ | 237/262 [26:25<01:24,  3.39s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Fusion group created: 56 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_80']
-Processing:  90%|█████████ | 237/262 [26:25<01:24,  3.39s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['strided_slice_layout_transform_81', 'nn_conv2d_multiply_add_nn_relu_82']
-Processing:  90%|█████████ | 237/262 [26:25<01:24,  3.39s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['strided_slice_layout_transform_81']
-Processing:  90%|█████████ | 237/262 [26:25<01:24,  3.39s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_82']
-Processing:  90%|█████████ | 237/262 [26:25<01:24,  3.39s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['strided_slice_layout_transform_81']
-Processing:  90%|█████████ | 237/262 [26:25<01:24,  3.39s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Fusion group created: 57 ['strided_slice_layout_transform_81']
-Processing:  90%|█████████ | 237/262 [26:25<01:24,  3.39s/it]Processing:  92%|█████████▏| 241/262 [26:25<00:55,  2.64s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_82', 'nn_conv2d_multiply_add_83']
-Processing:  92%|█████████▏| 241/262 [26:25<00:55,  2.64s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_83']
-Processing:  92%|█████████▏| 241/262 [26:25<00:55,  2.64s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_82']
-Processing:  92%|█████████▏| 241/262 [26:25<00:55,  2.64s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Fusion group created: 58 ['nn_conv2d_multiply_add_nn_relu_82']
-Processing:  92%|█████████▏| 241/262 [26:25<00:55,  2.64s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_83', 'nn_conv2d_multiply_add_nn_relu_84']
-Processing:  92%|█████████▏| 241/262 [26:25<00:55,  2.64s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_84']
-Processing:  92%|█████████▏| 241/262 [26:25<00:55,  2.64s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_83']
-Processing:  92%|█████████▏| 241/262 [26:25<00:55,  2.64s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Fusion group created: 59 ['nn_conv2d_multiply_add_83']
-Processing:  92%|█████████▏| 241/262 [26:25<00:55,  2.64s/it]                                                             2024-05-14 00:26:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_84', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_85']
-Processing:  92%|█████████▏| 241/262 [26:25<00:55,  2.64s/it]                                                             2024-05-14 00:26:53 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_84', 'strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_85']
-Processing:  92%|█████████▏| 241/262 [26:26<00:55,  2.64s/it]Processing:  92%|█████████▏| 241/262 [26:40<00:55,  2.64s/it]                                                             2024-05-14 00:27:33 [ladder:INFO]: result: 0.016998399049043655
-Processing:  92%|█████████▏| 241/262 [27:06<00:55,  2.64s/it]                                                             2024-05-14 00:27:33 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_85']
-Processing:  92%|█████████▏| 241/262 [27:06<00:55,  2.64s/it]                                                             2024-05-14 00:28:01 [ladder:INFO]: result: 0.0028180000372231007
-Processing:  92%|█████████▏| 241/262 [27:34<00:55,  2.64s/it]                                                             2024-05-14 00:28:01 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_84']
-Processing:  92%|█████████▏| 241/262 [27:34<00:55,  2.64s/it]                                                             2024-05-14 00:28:01 [ladder:INFO]: Fusion group created: 60 ['nn_conv2d_multiply_add_nn_relu_84']
-Processing:  92%|█████████▏| 241/262 [27:34<00:55,  2.64s/it]Processing:  96%|█████████▌| 251/262 [27:34<00:49,  4.52s/it]                                                             2024-05-14 00:28:01 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_85', 'nn_conv2d_multiply_add_nn_relu_86']
-Processing:  96%|█████████▌| 251/262 [27:34<00:49,  4.52s/it]                                                             2024-05-14 00:28:14 [ladder:INFO]: result: 0.19537919759750366
-Processing:  96%|█████████▌| 251/262 [27:47<00:49,  4.52s/it]                                                             2024-05-14 00:28:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_86']
-Processing:  96%|█████████▌| 251/262 [27:47<00:49,  4.52s/it]                                                             2024-05-14 00:28:42 [ladder:INFO]: result: 0.016179200261831284
-Processing:  96%|█████████▌| 251/262 [28:15<00:49,  4.52s/it]                                                             2024-05-14 00:28:42 [ladder:INFO]: Tuning ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_85']
-Processing:  96%|█████████▌| 251/262 [28:15<00:49,  4.52s/it]                                                             2024-05-14 00:28:42 [ladder:INFO]: Fusion group created: 61 ['strided_slice_layout_transform_concatenate_reshape_transpose_reshape_layout_transform_85']
-Processing:  96%|█████████▌| 251/262 [28:15<00:49,  4.52s/it]Processing:  96%|█████████▌| 252/262 [28:15<01:07,  6.70s/it]                                                             2024-05-14 00:28:42 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_86', 'mean_87']
-Processing:  96%|█████████▌| 252/262 [28:15<01:07,  6.70s/it]                                                             2024-05-14 00:29:00 [ladder:INFO]: result: 0.027238398790359497
-Processing:  96%|█████████▌| 252/262 [28:33<01:07,  6.70s/it]                                                             2024-05-14 00:29:00 [ladder:INFO]: Tuning ['mean_87']
-Processing:  96%|█████████▌| 252/262 [28:33<01:07,  6.70s/it]                                                             2024-05-14 00:29:10 [ladder:INFO]: result: 0.0029866667464375496
-Processing:  96%|█████████▌| 252/262 [28:43<01:07,  6.70s/it]                                                             2024-05-14 00:29:10 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_86']
-Processing:  96%|█████████▌| 252/262 [28:43<01:07,  6.70s/it]                                                             2024-05-14 00:29:10 [ladder:INFO]: Fusion group created: 62 ['nn_conv2d_multiply_add_nn_relu_86']
-Processing:  96%|█████████▌| 252/262 [28:43<01:07,  6.70s/it]Processing:  98%|█████████▊| 256/262 [28:43<00:40,  6.77s/it]                                                             2024-05-14 00:29:10 [ladder:INFO]: Tuning ['mean_87']
-Processing:  98%|█████████▊| 256/262 [28:43<00:40,  6.77s/it]                                                             2024-05-14 00:29:10 [ladder:INFO]: Fusion group created: 63 ['mean_87']
-Processing:  98%|█████████▊| 256/262 [28:43<00:40,  6.77s/it]                                                             2024-05-14 00:29:10 [ladder:INFO]: Skipping node Opaque_88
-Processing:  98%|█████████▊| 256/262 [28:43<00:40,  6.77s/it]                                                             2024-05-14 00:29:10 [ladder:INFO]: Fusion group created: 64 ['Opaque_88']
-Processing:  98%|█████████▊| 256/262 [28:43<00:40,  6.77s/it]                                                             2024-05-14 00:29:10 [ladder:INFO]: Tuning ['add_89']
-Processing:  98%|█████████▊| 256/262 [28:43<00:40,  6.77s/it]                                                             2024-05-14 00:29:22 [ladder:INFO]: result: 0.002588235307484865
-Processing:  98%|█████████▊| 256/262 [28:55<00:40,  6.77s/it]                                                             2024-05-14 00:29:22 [ladder:INFO]: Fusion group created: 65 ['add_89']
-Processing:  98%|█████████▊| 256/262 [28:55<00:40,  6.77s/it]Processing: 100%|█████████▉| 261/262 [28:55<00:05,  5.38s/it]Processing: 100%|██████████| 262/262 [28:55<00:00,  6.62s/it]
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure9/ladder/checkpoints/shufflenet-b1_fq_0_fp_e5m2_8_ci_False_async
 Execution time summary:
  mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-   0.3384       0.3380       0.3397       0.3380       0.0007   
+   0.3392       0.3391       0.3396       0.3390       0.0002   
                
-Tune time: 1741.2233414649963
