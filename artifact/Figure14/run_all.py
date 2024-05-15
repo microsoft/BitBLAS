@@ -34,7 +34,7 @@ if not reproduce:
 else:
     print("Reproducing the results")
     # reproduce the results for kernel
-    # os.system("cd kernel-benchmark; ./benchmark_kernel.sh")
+    os.system("cd kernel-benchmark; ./benchmark_kernel.sh")
     # reproduce the results for end2end
     os.system("cd ladder-benchmark; ./benchmark_ladder.sh")
     # update the figures
