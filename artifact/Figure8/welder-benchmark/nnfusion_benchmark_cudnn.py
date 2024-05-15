@@ -55,7 +55,7 @@ for model_name, model_path in models.items():
         f.write("echo 'Running the compilation'\n")
         f.write(f"START_TIME=$(date +%s)\n")
         f.write(
-            f"python3 -m run_compiler model.json tuned.json --device 0 --topk 20 > run_compiler.log 2>&1\n"
+            f"python3 -m run_compiler model.json tuned.json --device 0 --topk 20 | tee run_compiler.log \n"
         )
         f.write(f"END_TIME=$(date +%s)\n")
         f.write(

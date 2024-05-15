@@ -40,7 +40,7 @@ if [ $force_tune -eq 1 ]; then
     ## int8*int4
     python -u ladder_with_fake_conv_dequantize_conformer_vit.py --async_propagation --prefix $MODEL_PATH/Conformer-b128 --fake_quant 0 --bits 4 --format int --convert_int 2>&1 | tee logs/Conformer-b128_int8xint4.log
     ## int4*int4
-    python -u ladder_with_fake_conv_dequantize.py --async_propagation --prefix $MODEL_PATH/Conformer-b128 --fake_quant 0 --bits 4 --format int4b 2>&1 | tee logs/Conformer-b128_int4b.log
+    python -u ladder_with_fake_conv_dequantize_conformer_vit.py --async_propagation --prefix $MODEL_PATH/Conformer-b128 --fake_quant 0 --bits 4 --format int4b 2>&1 | tee logs/Conformer-b128_int4b.log
 
     # vit
     ## fp8*fp8
