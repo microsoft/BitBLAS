@@ -1,19 +1,16 @@
 import os
 import json
 import re
-
+from paper_result import (
+    matmul_times_data as paper_matmul_times_data,
+    conv_times_data as paper_conv_times_data,
+)
 _ = '''
 matmul_providers = ['M0', 'M1', 'M2', 'M3', 'M4', 'M5']
 matmul_times_data = [
     ('cuBLAS', [1.0265737319667645, 1.090096979579753, 32.19012415077543, 0.23601211538704653, 0.3087000088622984, 8.437653349759566]),
-    (
-        "cuTLASS-W$_{INT4}$A$_{FP16}$",
-        [0.674009323, 1.186704636, 33.67717266, 0.153660774, 0.259065628, 12.6046657],
-    ),
-    (
-        "vLLM-W$_{INT4}$A$_{FP16}$",
-        [0.484972, 0.972840786, 123.6705709, 0.18430233, 0.27905941, 29.32891846],
-    ),
+    ("cuTLASS-W$_{INT4}$A$_{FP16}$",[0.674009323, 1.186704636, 33.67717266, 0.153660774, 0.259065628, 12.6046657]),
+    ("vLLM-W$_{INT4}$A$_{FP16}$",[0.484972, 0.972840786, 123.6705709, 0.18430233, 0.27905941, 29.32891846],),
     ('Bitter', [0.9405568846412276, 1.0551276457642045, 27.429847626938027, 0.2771763573698525, 0.37289717979611964, 7.4194252736607105]),
     ('Bitter-W$_{INT4}$A$_{FP16}$', [0.25010346697898184, 1.0387403257520407, 24.396201991737335, 0.08182817299037373, 0.3599448964549887, 6.908026137726486]),
     ('Bitter-W$_{NF4}$A$_{FP16}$', [0.4349415730022948, 1.076610324314873, 29.317079643679847, 0.1302926846604392, 0.4114702888693471, 8.07674323812536]),
@@ -33,6 +30,30 @@ conv_times_data = [
 ]
 '''
 exec(_)
+
+matmul_providers = ['M0', 'M1', 'M2', 'M3', 'M4', 'M5']
+matmul_times_data = [
+    ('cuBLAS', [-1, -1, -1, -1, -1, -1]),
+    ("cuTLASS-W$_{INT4}$A$_{FP16}$",[-1, -1, -1, -1, -1, -1]),
+    ("vLLM-W$_{INT4}$A$_{FP16}$",[-1, -1, -1, -1, -1, -1],),
+    ('Bitter', [-1, -1, -1, -1, -1, -1]),
+    ('Bitter-W$_{INT4}$A$_{FP16}$', [-1, -1, -1, -1, -1, -1]),
+    ('Bitter-W$_{NF4}$A$_{FP16}$', [-1, -1, -1, -1, -1, -1]),
+    ('Bitter-W$_{FP8}$A$_{FP16}$', [-1, -1, -1, -1, -1, -1]),
+    ('Bitter-W$_{INT1}$A$_{INT8}$', [-1, -1, -1, -1, -1, -1]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [-1, -1, -1, -1, -1, -1]),
+]
+
+conv_providers = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7']
+conv_times_data = [
+    ('Bitter', [-1, -1, -1, -1, -1, -1, -1, -1]),
+    ('Bitter-W$_{FP8}$A$_{FP16}$', [-1, -1, -1, -1, -1, -1, -1, -1]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [-1, -1, -1, -1, -1, -1, -1, -1]),
+    ('Bitter-W$_{INT4}$A$_{INT4}$', [-1, -1, -1, -1, -1, -1, -1, -1]),
+    ('cuDNN', [-1, -1, -1, -1, -1, -1, -1, -1]),
+    ('AMOS', [-1, -1, -1, -1, -1, -1, -1, -1]), 
+    ('TensorIR', [-1, -1, -1, -1, -1, -1, -1, -1])
+]
 
 def parse_runtime(log_path, A_layout='col', B_layout='row'):
     fp32_cudacore_runtime = []
@@ -218,7 +239,7 @@ for i, (m, n, k) in enumerate([
     if data is None:
         print(f"Could not find Bitter latency for {m}_{n}_{k}")
     else:
-        print(f"Bitter latency for {m}_{n}_{k}: {data}, the paper results is {bitter_data[i]}")
+        print(f"Bitter latency for {m}_{n}_{k}: {data}, the paper results is {paper_matmul_times_data[3][1][i]}")
     bitter_data[i] = data
 matmul_times_data[3] = ("Bitter", bitter_data)
 
@@ -235,7 +256,7 @@ for i, (m, n, k) in enumerate([
     if data is None:
         print(f"Could not find Bitter-W_INT4_A_FP16 latency for {m}_{n}_{k}")
     else:
-        print(f"Bitter-W_INT4_A_FP16 latency for {m}_{n}_{k}: {data}, the paper results is {bitter_int4_fp16_data[i]}")
+        print(f"Bitter-W_INT4_A_FP16 latency for {m}_{n}_{k}: {data}, the paper results is {paper_matmul_times_data[4][1][i]}")
     bitter_int4_fp16_data[i] = data
 matmul_times_data[4] = ("Bitter-W$_{INT4}$A$_{FP16}$", bitter_int4_fp16_data)
 
@@ -252,7 +273,7 @@ for i, (m, n, k) in enumerate([
     if data is None:
         print(f"Could not find Bitter-W_NF4_A_FP16 latency for {m}_{n}_{k}")
     else:
-        print(f"Bitter-W_NF4_A_FP16 latency for {m}_{n}_{k}: {data}, the paper results is {bitter_nf4_fp16_data[i]}")
+        print(f"Bitter-W_NF4_A_FP16 latency for {m}_{n}_{k}: {data}, the paper results is {paper_matmul_times_data[5][1][i]}")
     bitter_nf4_fp16_data[i] = data
 matmul_times_data[5] = ("Bitter-W$_{NF4}$A$_{FP16}$", bitter_nf4_fp16_data)
 
@@ -269,7 +290,7 @@ for i, (m, n, k) in enumerate([
     if data is None:
         print(f"Could not find Bitter-W_FP8_A_FP16 latency for {m}_{n}_{k}")
     else:
-        print(f"Bitter-W_FP8_A_FP16 latency for {m}_{n}_{k}: {data}, the paper results is {bitter_fp8_fp16_data[i]}")
+        print(f"Bitter-W_FP8_A_FP16 latency for {m}_{n}_{k}: {data}, the paper results is {paper_matmul_times_data[6][1][i]}")
     bitter_fp8_fp16_data[i] = data
 
 matmul_times_data[6] = ("Bitter-W$_{FP8}$A$_{FP16}$", bitter_fp8_fp16_data)
@@ -287,7 +308,7 @@ for i, (m, n, k) in enumerate([
     if data is None:
         print(f"Could not find Bitter-W_INT1_A_INT8 latency for {m}_{n}_{k}")
     else:
-        print(f"Bitter-W_INT1_A_INT8 latency for {m}_{n}_{k}: {data}, the paper results is {bitter_int1_int8_data[i]}")
+        print(f"Bitter-W_INT1_A_INT8 latency for {m}_{n}_{k}: {data}, the paper results is {matmul_times_data[7][1][i]}")
     bitter_int1_int8_data[i] = data
 
 matmul_times_data[7] = ("Bitter-W$_{INT1}$A$_{INT8}$", bitter_int1_int8_data)
@@ -308,7 +329,7 @@ for i, (m, n, k) in enumerate([
     if data is None:
         print(f"Could not find Bitter-W_MXFP8_A_MXFP8 latency for {m}_{n}_{k}")
     else:
-        print(f"Bitter-W_MXFP8_A_MXFP8 latency for {m}_{n}_{k}: {data}, the paper results is {bitter_mxfp8_mxfp8_data[i]}")
+        print(f"Bitter-W_MXFP8_A_MXFP8 latency for {m}_{n}_{k}: {data}, the paper results is {matmul_times_data[8][1][i]}")
     bitter_mxfp8_mxfp8_data[i] = data
 
 matmul_times_data[8] = ("Bitter-W$_{MXFP8}$A$_{MXFP8}$", bitter_mxfp8_mxfp8_data)
@@ -332,7 +353,7 @@ for i, (n, c, h, w, f, k, s, p) in enumerate(
         for line in lines:
             if f"{n},{c},{h},{w},{f},{k},{s},{p}" in line:
                 data = float(re.findall(r"\d+\.\d+", line)[-1])
-                print("find data for cudnn: ", data, "the paper results is ", cudnn_data[i])
+                print("find data for cudnn: ", data, "the paper results is ", paper_conv_times_data[4][1][i])
                 cudnn_data[i] = data
 conv_times_data[4] = ("cuDNN", cudnn_data)
             
@@ -356,7 +377,7 @@ for i, (n, c, h, w, f, k, s, p) in enumerate(
             for line in lines:
                 if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
                     data = float(re.findall(r"\d+\.\d+", line)[-1])
-                    print("find data for bitter: ", data, "the paper results is ", bitter_data[i])
+                    print("find data for bitter fp16 n128: ", data, "the paper results is ", paper_conv_times_data[0][1][i])
                     bitter_data[i] = data
     elif n == 1:
         with open(f"./ladder-benchmark/logs/direct_conv_nhwc_nhwc_fp16xfp16.log") as file:
@@ -364,11 +385,15 @@ for i, (n, c, h, w, f, k, s, p) in enumerate(
             for line in lines:
                 if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
                     data = float(re.findall(r"\d+\.\d+", line)[-1])
-                    print("find data for bitter: ", data, "the paper results is ", bitter_data[i])
+                    print("find data for bitter fp16 n1: ", data, "the paper results is ", paper_conv_times_data[0][1][i])
                     bitter_data[i] = data
 
+# parse amos and tensor ir from logs
+conv_times_data[5] = paper_conv_times_data[5]
+conv_times_data[6] = paper_conv_times_data[6]
 # update the results for Bitter-W_FP8_A_FP16
-bitter_fp8_fp16_data = conv_times_data[1][1]
+
+# bitter_fp8_fp16_data = conv_times_data[1][1]
 # update the results for Bitter
 bitter_data = conv_times_data[0][1]
 for i, (n, c, h, w, f, k, s, p) in enumerate(
@@ -389,7 +414,7 @@ for i, (n, c, h, w, f, k, s, p) in enumerate(
             for line in lines:
                 if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
                     data = float(re.findall(r"\d+\.\d+", line)[-1])
-                    print("find data for bitter: ", data, "the paper results is ", bitter_data[i])
+                    print("find data for bitter e5m2: ", data, "the paper results is ", paper_conv_times_data[1][1][i])
                     bitter_data[i] = data
     elif n == 1:
         with open(f"./ladder-benchmark/logs/direct_conv_nhwc_nhwc_fp16xfp8_e5m2.log") as file:
@@ -397,10 +422,10 @@ for i, (n, c, h, w, f, k, s, p) in enumerate(
             for line in lines:
                 if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
                     data = float(re.findall(r"\d+\.\d+", line)[-1])
-                    print("find data for bitter: ", data, "the paper results is ", bitter_data[i])
+                    print("find data for bitter e5m2: ", data, "the paper results is ", paper_conv_times_data[1][1][i])
                     bitter_data[i] = data
 
-conv_times_data[1] = ("Bitter-W$_{FP8}$A$_{FP16}$", bitter_fp8_fp16_data)
+conv_times_data[1] = ("Bitter-W$_{FP8}$A$_{FP16}$", bitter_data)
 
 # update the results for Bitter
 bitter_data = conv_times_data[2][1]
@@ -422,7 +447,7 @@ for i, (n, c, h, w, f, k, s, p) in enumerate(
             for line in lines:
                 if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
                     data = float(re.findall(r"\d+\.\d+", line)[-1])
-                    print("find data for bitter mxfp n128: ", data, "the paper results is ", bitter_data[i])
+                    print("find data for bitter mxfp n128: ", data, "the paper results is ", paper_conv_times_data[2][1][i])
                     bitter_data[i] = data
     elif n == 1:
         with open(f"./ladder-benchmark/logs/direct_conv_nhwc_nhwc_fp32xmxfp8_e5m2.log") as file:
@@ -430,13 +455,13 @@ for i, (n, c, h, w, f, k, s, p) in enumerate(
             for line in lines:
                 if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
                     data = float(re.findall(r"\d+\.\d+", line)[-1])
-                    print("find data for bitter mxfp n1: ", data, "the paper results is ", bitter_data[i])
+                    print("find data for bitter mxfp n1: ", data, "the paper results is ", paper_conv_times_data[2][1][i])
                     bitter_data[i] = data
 
 conv_times_data[2] = ("Bitter-W$_{MXFP8}$A$_{MXFP8}$", bitter_data)
 
 # update the results for Bitter-W_INT4_A_INT4
-bitter_data = conv_times_data[3][1]
+bitter_data = paper_conv_times_data[3][1]
 for i, (n, c, h, w, f, k, s, p) in enumerate(
     [
         (128, 64, 56, 56, 64, 3, 1, 1,),
@@ -455,7 +480,7 @@ for i, (n, c, h, w, f, k, s, p) in enumerate(
             for line in lines:
                 if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
                     data = float(re.findall(r"\d+\.\d+", line)[-1])
-                    print("find data for bitter int4 n128: ", data, "the paper results is ", bitter_data[i])
+                    print("find data for bitter int4 n128: ", data, "the paper results is ", paper_conv_times_data[3][1][i])
                     bitter_data[i] = data
     elif n == 1:
         with open(f"./ladder-benchmark/logs/direct_conv_nhwc_nhwc_int8xint4.log") as file:
@@ -463,9 +488,10 @@ for i, (n, c, h, w, f, k, s, p) in enumerate(
             for line in lines:
                 if f"{n}_{c}_{h}_{w}_{f}_{k}_{k}_{s}_1_{p}" in line:
                     data = float(re.findall(r"\d+\.\d+", line)[-1])
-                    print("find data for bitter int4 n1: ", data, "the paper results is ", bitter_data[i])
+                    print("find data for bitter int4 n1: ", data, "the paper results is ", paper_conv_times_data[3][1][i])
                     bitter_data[i] = data
 
+                    
 conv_times_data[3] = ("Bitter-W$_{INT4}$A$_{INT4}$", bitter_data)
 
 # write the results to back

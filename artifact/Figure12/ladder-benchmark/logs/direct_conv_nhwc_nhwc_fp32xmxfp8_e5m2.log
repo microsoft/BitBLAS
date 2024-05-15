@@ -1,83 +1,83 @@
 direct_conv_nhwc_nhwc_fp32xmxfp8_e5m2.py
 n: 1, f: 64, h: 56, w: 56, c: 64, kh: 3, kw: 3, s: 1, d: 1, p: 1, oh: 56, ow: 56
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.038656000047922134
+0.037887997925281525
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
 0.043007999658584595
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.03256320208311081
+0.03276799991726875
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
 0.046592000871896744
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.031231999397277832
+0.031488001346588135
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 64], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2}}}
-0.06574080139398575
+0.06533120572566986
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
 0.054681599140167236
 {<Node, ladder_conv2d_reshape_bias>: {'block': [64, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.06323199719190598
+0.06348799914121628
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 64], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
 0.15462400019168854
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
-0.053043197840452194
+0.05283839628100395
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.10316800326108932
+0.10342399775981903
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [4, 32], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.03747839853167534
+0.037887997925281525
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.06778879463672638
+0.06799359619617462
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.04362240061163902
+0.04382719844579697
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 16], 'thread': [8, 16], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.04280320182442665
+0.04259840026497841
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 32], 'thread': [4, 32], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.03829760104417801
+0.034406401216983795
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.05058559775352478
+0.05085866525769234
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.06287360191345215
+0.06328319758176804
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.05427199974656105
+0.0541439987719059
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.06492160260677338
+0.0655359998345375
 {<Node, ladder_conv2d_reshape_bias>: {'block': [64, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.05263360217213631
+0.05299200117588043
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.09915733337402344
+0.09932800382375717
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
 0.09274514019489288
 {<Node, ladder_conv2d_reshape_bias>: {'block': [64, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.03624960035085678
+0.0363520011305809
 {<Node, ladder_conv2d_reshape_bias>: {'block': [196, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.17674240469932556
+0.17633280158042908
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.11007999628782272
+0.10956799983978271
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.11776000261306763
+0.11755520105361938
 {<Node, ladder_conv2d_reshape_bias>: {'block': [64, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.03379200026392937
+0.03399679809808731
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.05375999957323074
+0.053862400352954865
 {<Node, ladder_conv2d_reshape_bias>: {'block': [224, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.14745600521564484
+0.14807039499282837
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.048128001391887665
+0.04864000156521797
 {<Node, ladder_conv2d_reshape_bias>: {'block': [196, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.11243519932031631
+0.11212799698114395
 {<Node, ladder_conv2d_reshape_bias>: {'block': [196, 4], 'thread': [28, 4], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.15912958979606628
+0.1592320054769516
 {<Node, ladder_conv2d_reshape_bias>: {'block': [224, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
 0.12202665954828262
 {<Node, ladder_conv2d_reshape_bias>: {'block': [224, 4], 'thread': [32, 4], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.17466513812541962
+0.17451885342597961
 {<Node, ladder_conv2d_reshape_bias>: {'block': [196, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
 0.06988800317049026
 {<Node, ladder_conv2d_reshape_bias>: {'block': [224, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.05939199775457382
+0.059596799314022064
 {<Node, ladder_conv2d_reshape_bias>: {'block': [196, 32], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.1644544005393982
+0.16424959897994995
 {<Node, ladder_conv2d_reshape_bias>: {'block': [224, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.1308159977197647
+0.131071999669075
 {<Node, ladder_conv2d_reshape_bias>: {'block': [392, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
 100000000.0
 code:  __global__ void __launch_bounds__(112) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
@@ -214,90 +214,90 @@ code:  __global__ void __launch_bounds__(112) Fused(float* __restrict__ input, i
 }
 
 
-top1: 0.038656000047922134 	top10: 0.031231999397277832
+top1: 0.037887997925281525 	top10: 0.031488001346588135
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-best latency: 0.031231999397277832
-6.733004316909231 tflops, 4.6434512530408485 %
+best latency: 0.031488001346588135
+6.678264029938611 tflops, 4.605699330992145 %
 n: 1, f: 64, h: 56, w: 56, c: 64, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 56, ow: 56
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.00798719935119152
+0.008191999979317188
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
 0.00798719935119152
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.006485333200544119
+0.006758400239050388
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
-0.009011199697852135
+0.008806400001049042
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
 0.008396799676120281
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.007040000054985285
+0.006912000011652708
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
 0.010649600066244602
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 64], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.006758400239050388
+0.006912000011652708
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 0.007577600423246622
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
-0.007296000141650438
+0.007424000184983015
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 0.006399999838322401
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.008960000239312649
+0.008832000195980072
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 64], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2}}}
 0.009727999567985535
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.009215999394655228
+0.009329777210950851
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.010495999827980995
+0.010239999741315842
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
-0.00798719935119152
+0.007782399654388428
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.011468799784779549
+0.011673600412905216
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.01006933394819498
+0.010410666465759277
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 32], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.008338285610079765
+0.008045714348554611
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.007850666530430317
+0.008063999935984612
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.010581333190202713
+0.010649600066244602
 {<Node, ladder_conv2d_reshape_bias>: {'block': [64, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.009088000282645226
+0.008960000239312649
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.012743111699819565
+0.012697599828243256
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
 0.01413120049983263
 {<Node, ladder_conv2d_reshape_bias>: {'block': [64, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.006940444465726614
+0.006963199935853481
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 16], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.012927999719977379
+0.013055999763309956
 {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.00972800049930811
+0.009784888476133347
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
 0.015018667094409466
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.008396799676120281
-{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.009011199697852135
-{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 32], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.006485333200544119
-{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.010239999741315842
-{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.01152000017464161
-{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 0.008601600304245949
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.008806400001049042
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 32], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.006963199935853481
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.010444799438118935
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.011264000087976456
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.008396799676120281
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 8], 'thread': [49, 2], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
 0.015360000543296337
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 64], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
 0.01740800030529499
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.012287999503314495
+0.012434286065399647
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.009344000369310379
+0.00936228595674038
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.01187840010970831
+0.011673600412905216
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [64], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
 6.023935794830322
 code:  __global__ void __launch_bounds__(128) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
@@ -338,22 +338,22 @@ code:  __global__ void __launch_bounds__(128) Fused(float* __restrict__ input, i
 }
 
 
-top1: 0.00798719935119152 	top10: 0.006399999838322401
+top1: 0.008191999979317188 	top10: 0.006399999838322401
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [32, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 best latency: 0.006399999838322401
 3.6507845847192515 tflops, 2.5177824722201736 %
 n: 1, f: 128, h: 28, w: 28, c: 128, kh: 3, kw: 3, s: 1, d: 1, p: 1, oh: 28, ow: 28
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.08883199840784073
+0.08908800035715103
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
-0.06287360191345215
+0.0630783960223198
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.060416001826524734
+0.06015999987721443
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.0956415981054306
+0.09584639966487885
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.054016001522541046
+0.05427199974656105
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
 0.08048640191555023
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
@@ -363,33 +363,33 @@ n: 1, f: 128, h: 28, w: 28, c: 128, kh: 3, kw: 3, s: 1, d: 1, p: 1, oh: 28, ow: 
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
 0.07884799689054489
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.06451199948787689
+0.0647680014371872
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 16], 'thread': [8, 16], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 0.1013759970664978
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.03968000039458275
+0.03993599861860275
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
 0.08524800091981888
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 0.05427200347185135
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.07884799689054489
+0.0791039988398552
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 16], 'thread': [7, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.04894720017910004
+0.04915199801325798
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.06082559749484062
+0.061184000223875046
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
 0.056063998490571976
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.11392000317573547
+0.11417599767446518
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 8], 'thread': [49, 2], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
 0.15052799880504608
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 8], 'thread': [14, 8], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.09093119949102402
+0.09154559671878815
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
 0.08069120347499847
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.07475199550390244
+0.07526399940252304
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
 0.08785919845104218
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
@@ -399,31 +399,31 @@ n: 1, f: 128, h: 28, w: 28, c: 128, kh: 3, kw: 3, s: 1, d: 1, p: 1, oh: 28, ow: 
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
 0.10956799983978271
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.20398080348968506
+0.20377600193023682
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
-0.1959936022758484
+0.1960960030555725
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.13619199395179749
+0.1363382786512375
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 4], 'thread': [49, 2], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.3260416090488434
+0.326911985874176
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
 0.12902399897575378
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 4], 'thread': [28, 4], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.11717485636472702
+0.11673600226640701
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.13742080330848694
+0.13762560486793518
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.1496746689081192
+0.1501183956861496
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.09728000313043594
+0.09753599762916565
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 0.10117119550704956
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 64], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.27607041597366333
+0.27668482065200806
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 0.1945600062608719
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.296345591545105
+0.29675519466400146
 code:  __global__ void __launch_bounds__(128) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
   
   float T_conv_local[98];
@@ -791,60 +791,60 @@ code:  __global__ void __launch_bounds__(128) Fused(float* __restrict__ input, i
 }
 
 
-top1: 0.08883199840784073 	top10: 0.03968000039458275
+top1: 0.08908800035715103 	top10: 0.03993599861860275
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-best latency: 0.03968000039458275
-5.299525823499915 tflops, 3.6548453955171833 %
+best latency: 0.03993599861860275
+5.265554738616811 tflops, 3.6314170611150423 %
 n: 1, f: 128, h: 28, w: 28, c: 512, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 28, ow: 28
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
 0.04044799879193306
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
-0.030208000913262367
+0.029952000826597214
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.0289280004799366
+0.028467198833823204
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
 0.04853760078549385
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.026419198140501976
+0.02600960060954094
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.03543039783835411
+0.03515733405947685
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.021913599222898483
+0.022016000002622604
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
 0.025087999179959297
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.03543039783835411
+0.03563519939780235
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.025190401822328568
+0.02539519965648651
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 16], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.02611199952661991
+0.025599999353289604
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 0.01884160004556179
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.03379200026392937
+0.03338240087032318
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.017817599698901176
+0.01802239939570427
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 0.03399679809808731
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 16], 'thread': [14, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.04949333146214485
+0.04915200173854828
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
-0.02539519965648651
+0.024985600262880325
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
-0.02314240112900734
+0.023347200825810432
 {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
 0.04321280121803284
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 8], 'thread': [49, 2], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.06062080338597298
+0.06082559749484062
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.032036568969488144
+0.032255999743938446
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.032036568969488144
+0.03174399957060814
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.03563519939780235
+0.0358399972319603
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.03379200026392937
+0.033535998314619064
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 0.021913599222898483
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 64], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2}}}
@@ -852,31 +852,31 @@ n: 1, f: 128, h: 28, w: 28, c: 512, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 28, ow: 
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
 0.03952639922499657
 {<Node, ladder_conv2d_reshape_bias>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.6669653058052063
+0.6657706499099731
 {<Node, ladder_conv2d_reshape_bias>: {'block': [49, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.07372800260782242
+0.07311360538005829
 {<Node, ladder_conv2d_reshape_bias>: {'block': [2, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
-0.047359999269247055
+0.04761600121855736
 {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
 0.06901760399341583
 {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.040192000567913055
+0.03993599861860275
 {<Node, ladder_conv2d_reshape_bias>: {'block': [7, 32], 'thread': [7, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
 0.032972801476716995
 {<Node, ladder_conv2d_reshape_bias>: {'block': [8, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
 0.03768320009112358
 {<Node, ladder_conv2d_reshape_bias>: {'block': [14, 16], 'thread': [7, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.04485119879245758
+0.04505600035190582
 {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 8], 'thread': [16, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-0.04403200000524521
+0.04423680156469345
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.05358933284878731
+0.05370311439037323
 {<Node, ladder_conv2d_reshape_bias>: {'block': [98, 4], 'thread': [49, 2], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.1364479959011078
+0.13653333485126495
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
-0.057548798620700836
+0.05734400078654289
 {<Node, ladder_conv2d_reshape_bias>: {'block': [112, 4], 'thread': [28, 4], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
-0.052337780594825745
+0.052565332502126694
 code:  __global__ void __launch_bounds__(112) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
   
   float T_conv_local[4];
@@ -917,12 +917,12 @@ code:  __global__ void __launch_bounds__(112) Fused(float* __restrict__ input, i
 }
 
 
-top1: 0.04044799879193306 	top10: 0.017817599698901176
+top1: 0.04044799879193306 	top10: 0.01802239939570427
 --------------------------------------------------------------------------------
 best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
-best latency: 0.017817599698901176
-5.24538010659069 tflops, 3.617503521786683 %
-1_64_56_56_64_3_3_1_1_1_1	0.031231999397277832
+best latency: 0.01802239939570427
+5.185773600716517 tflops, 3.576395586701046 %
+1_64_56_56_64_3_3_1_1_1_1	0.031488001346588135
 1_64_56_56_64_1_1_1_1_0_1	0.006399999838322401
-1_128_28_28_128_3_3_1_1_1_1	0.03968000039458275
-1_128_28_28_512_1_1_1_1_0_1	0.017817599698901176
+1_128_28_28_128_3_3_1_1_1_1	0.03993599861860275
+1_512_28_28_128_1_1_1_1_0_1	0.01802239939570427
