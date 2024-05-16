@@ -1,0 +1,521 @@
+1
+
+
+Problem size:
+16384 16384 16384
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(16384, 16384, 16384).log...
+Loading from file gemm-nt-float16-float16-layer-(16384, 16384, 16384).log...
+Load 153 entries! The best known is 74.386818 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(16384, 16384, 16384).log...
+Loading from file gemm-nt-float16-float16-layer-(16384, 16384, 16384).log...
+Load 153 entries! The best known is 74.386818 ms
+0.074386817505
+{'inline': [0, -1], 'vectorize': [2, -1], 'spatial_factors': [[[16, 4, 4, 4], [1, 1, -1]], [[32, 2, 4, 4], [0, 0, 0]]], 'reduce_factors': [[[512, 1, 2], [0, 0]]], 'last_factors': [[[32768, 128, 2], [1, 1]]], 'output_unroll_step': [512, -1], 'last_unroll_step': [1500, 1]}
+Cost of gemm-nt-float16-float16-layer-(16384, 16384, 16384) is 74.530773 ms
+Time cost: 24.800783
+
+
+Problem size:
+8192 43008 14336
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 43008, 14336).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 43008, 14336).log...
+Load 126 entries! The best known is 91.738505 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 43008, 14336).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 43008, 14336).log...
+Load 126 entries! The best known is 91.738505 ms
+0.091738504735
+{'inline': [0, -1], 'vectorize': [8, -1], 'spatial_factors': [[[128, 1, 2, 2], [1, -1, -1]], [[16, 7, 2, 4], [1, -1, 0]]], 'reduce_factors': [[[336, 1, 8], [0, 0]]], 'last_factors': [[[1792, 64, 32], [-1, -1]]], 'output_unroll_step': [512, -1], 'last_unroll_step': [16, -1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 43008, 14336) is 93.919167 ms
+Time cost: 31.304965
+
+
+Problem size:
+8192 14336 14336
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 14336, 14336).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 14336, 14336).log...
+Load 162 entries! The best known is 31.791072 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 14336, 14336).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 14336, 14336).log...
+Load 162 entries! The best known is 31.791072 ms
+0.031791071569999996
+{'inline': [0, -1], 'vectorize': [8, 1], 'spatial_factors': [[[32, 2, 4, 2], [1, 0, 0]], [[112, 2, 1, 4], [1, 0, 0]]], 'reduce_factors': [[[224, 1, 4], [0, 0]]], 'last_factors': [[[28672, 32, 4], [0, 0]]], 'output_unroll_step': [1500, 1], 'last_unroll_step': [512, -1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 14336, 14336) is 32.635380 ms
+Time cost: 12.453659
+
+
+Problem size:
+8192 57344 14336
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 57344, 14336).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 57344, 14336).log...
+Load 140 entries! The best known is 105.433453 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 57344, 14336).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 57344, 14336).log...
+Load 140 entries! The best known is 105.433453 ms
+0.10543345316
+{'inline': [0, -1], 'vectorize': [8, 1], 'spatial_factors': [[[8, 4, 2, 8], [-1, 0, 0]], [[224, 1, 1, 4], [-1, -1, 0]]], 'reduce_factors': [[[896, 4, 1], [-1, 1]]], 'last_factors': [[[448, 512, 16], [1, -1]]], 'output_unroll_step': [16, -1], 'last_unroll_step': [64, 1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 57344, 14336) is 108.299380 ms
+Time cost: 37.182018
+
+
+Problem size:
+8192 14336 57344
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 14336, 57344).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 14336, 57344).log...
+Load 48 entries! The best known is 109.501601 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 14336, 57344).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 14336, 57344).log...
+Load 48 entries! The best known is 109.501601 ms
+0.10950160085
+{'inline': [0, -1], 'vectorize': [8, -1], 'spatial_factors': [[[16, 4, 2, 8], [-1, -1, 0]], [[64, 7, 1, 4], [0, 0, 0]]], 'reduce_factors': [[[448, 1, 2], [-1, 0]]], 'last_factors': [[[57344, 16, 16], [-1, 0]]], 'output_unroll_step': [512, -1], 'last_unroll_step': [512, -1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 14336, 57344) is 113.366509 ms
+Time cost: 38.125750
+
+
+Problem size:
+8192 9216 9216
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 9216, 9216).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 9216, 9216).log...
+Load 211 entries! The best known is 13.966119 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 9216, 9216).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 9216, 9216).log...
+Load 211 entries! The best known is 13.966119 ms
+0.013966119285
+{'inline': [0, -1], 'vectorize': [8, -1], 'spatial_factors': [[[32, 2, 2, 4], [0, 1, -1]], [[192, 1, 1, 3], [-1, 0, 0]]], 'reduce_factors': [[[72, 8, 1], [-1, 1]]], 'last_factors': [[[1536, 64, 24], [-1, 1]]], 'output_unroll_step': [1500, 1], 'last_unroll_step': [512, -1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 9216, 9216) is 14.267147 ms
+Time cost: 7.201717
+
+
+Problem size:
+8192 36864 9216
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 36864, 9216).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 36864, 9216).log...
+Load 116 entries! The best known is 32.402697 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 36864, 9216).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 36864, 9216).log...
+Load 116 entries! The best known is 32.402697 ms
+0.03240269677
+{'inline': [0, -1], 'vectorize': [8, -1], 'spatial_factors': [[[64, 1, 1, 8], [0, -1, 0]], [[24, 1, 4, 6], [-1, 0, -1]]], 'reduce_factors': [[[1152, 1, 2], [0, 0]]], 'last_factors': [[[128, 1536, 12], [-1, -1]]], 'output_unroll_step': [1500, 1], 'last_unroll_step': [64, 1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 36864, 9216) is 34.356551 ms
+Time cost: 15.775277
+
+
+Problem size:
+8192 9216 36864
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 9216, 36864).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 9216, 36864).log...
+Load 158 entries! The best known is 41.861157 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 9216, 36864).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 9216, 36864).log...
+Load 158 entries! The best known is 41.861157 ms
+0.041861156865
+{'inline': [0, -1], 'vectorize': [8, 1], 'spatial_factors': [[[32, 2, 2, 8], [-1, 0, 1]], [[288, 1, 1, 4], [0, 0, 0]]], 'reduce_factors': [[[288, 2, 1], [0, 0]]], 'last_factors': [[[9216, 1024, 1], [-1, 1]]], 'output_unroll_step': [512, -1], 'last_unroll_step': [512, 1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 9216, 36864) is 43.505509 ms
+Time cost: 17.573841
+
+
+Problem size:
+8192 22016 8192
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 22016, 8192).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 22016, 8192).log...
+Load 217 entries! The best known is 21.655058 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 22016, 8192).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 22016, 8192).log...
+Load 217 entries! The best known is 21.655058 ms
+0.021655058029999997
+{'inline': [0, -1], 'vectorize': [8, 1], 'spatial_factors': [[[128, 1, 1, 4], [0, 0, 0]], [[16, 2, 4, 4], [1, 0, 0]]], 'reduce_factors': [[[688, 1, 2], [-1, 0]]], 'last_factors': [[[1024, 128, 16], [0, -1]]], 'output_unroll_step': [64, 1], 'last_unroll_step': [512, -1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 22016, 8192) is 23.661216 ms
+Time cost: 10.538571
+
+
+Problem size:
+8192 8192 22016
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 8192, 22016).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 8192, 22016).log...
+Load 400 entries! The best known is 19.854236 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 8192, 22016).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 8192, 22016).log...
+Load 400 entries! The best known is 19.854236 ms
+0.01985423559
+{'inline': [0, -1], 'vectorize': [8, -1], 'spatial_factors': [[[8, 4, 2, 16], [0, 1, 1]], [[172, 1, 2, 2], [-1, 0, 1]]], 'reduce_factors': [[[128, 2, 2], [0, -1]]], 'last_factors': [[[22016, 32, 8], [0, 0]]], 'output_unroll_step': [512, 1], 'last_unroll_step': [64, 1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 8192, 22016) is 20.222673 ms
+Time cost: 10.395344
+
+
+Problem size:
+8192 8192 8192
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 8192, 8192).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 8192, 8192).log...
+Load 239 entries! The best known is 8.700571 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 8192, 8192).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 8192, 8192).log...
+Load 239 entries! The best known is 8.700571 ms
+0.00870057124
+{'inline': [0, -1], 'vectorize': [4, 1], 'spatial_factors': [[[64, 2, 1, 4], [1, 1, 0]], [[32, 2, 1, 8], [1, 1, -1]]], 'reduce_factors': [[[256, 2, 1], [-1, 1]]], 'last_factors': [[[1024, 512, 4], [1, 1]]], 'output_unroll_step': [512, 1], 'last_unroll_step': [512, -1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 8192, 8192) is 8.935517 ms
+Time cost: 5.618455
+
+
+Problem size:
+8192 28672 8192
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 28672, 8192).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 28672, 8192).log...
+Load 191 entries! The best known is 37.673857 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 28672, 8192).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 28672, 8192).log...
+Load 191 entries! The best known is 37.673857 ms
+0.037673856775
+{'inline': [0, -1], 'vectorize': [8, 1], 'spatial_factors': [[[64, 2, 1, 4], [1, 0, 0]], [[128, 1, 1, 4], [0, -1, -1]]], 'reduce_factors': [[[224, 4, 2], [1, -1]]], 'last_factors': [[[4096, 64, 8], [0, 0]]], 'output_unroll_step': [512, -1], 'last_unroll_step': [1500, 1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 28672, 8192) is 39.763643 ms
+Time cost: 15.474666
+
+
+Problem size:
+8192 8192 22016
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 1 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+Axis mapping:
+i: int32 : [i]
+j: int32 : [j]
+rk: int32 : [k]
+Selected mapping: {"vmap": [[1], 0]}
+Logging to gemm-nt-float16-float16-layer-(8192, 8192, 22016).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 8192, 22016).log...
+Load 400 entries! The best known is 19.854236 ms
+Using arch: sm_80
+Clearing...
+Logging to gemm-nt-float16-float16-layer-(8192, 8192, 22016).log...
+Loading from file gemm-nt-float16-float16-layer-(8192, 8192, 22016).log...
+Load 400 entries! The best known is 19.854236 ms
+0.01985423559
+{'inline': [0, -1], 'vectorize': [8, -1], 'spatial_factors': [[[8, 4, 2, 16], [0, 1, 1]], [[172, 1, 2, 2], [-1, 0, 1]]], 'reduce_factors': [[[128, 2, 2], [0, -1]]], 'last_factors': [[[22016, 32, 8], [0, 0]]], 'output_unroll_step': [512, 1], 'last_unroll_step': [64, 1]}
+Cost of gemm-nt-float16-float16-layer-(8192, 8192, 22016) is 20.223460 ms
+Time cost: 10.249816
+74.53077274500001 24.800782680511475
+93.91916738 31.304965496063232
+32.635379945000004 12.45365858078003
+108.29937954500001 37.18201804161072
+113.3665094 38.125749826431274
+14.267147280000001 7.201717138290405
+34.356551075 15.775277376174927
+43.50550862 17.573841333389282
+23.66121563 10.53857135772705
+20.222673475 10.395343542098999
+8.93551692 5.618454933166504
+39.763643065 15.474666118621826
+20.223459880000004 10.249816417694092

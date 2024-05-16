@@ -1,0 +1,87 @@
+fp16xnf4_gemv.py
+__global__ void __launch_bounds__(128) Fused(half* __restrict__ A, int8_t* __restrict__ B, half* __restrict__ LUT, half* __restrict__ C) {
+  
+  half in_thread_C_local[1];
+  half A_local[8];
+  signed char B_local[4];
+  __shared__ half red_buf0[128];
+  in_thread_C_local[0] = __float2half_rn(0.000000e+00f);
+  for (int k_0 = 0; k_0 < 112; ++k_0) {
+    *(uint4*)(A_local + 0) = *(uint4*)(A + ((k_0 * 512) + (((int)threadIdx.x) * 8)));
+    *(int*)(B_local + 0) = *(int*)(B + ((((((int)blockIdx.x) * 57344) + (((int)threadIdx.y) * 28672)) + (k_0 * 256)) + (((int)threadIdx.x) * 4)));
+    for (int k_2 = 0; k_2 < 8; ++k_2) {
+      in_thread_C_local[0] = (in_thread_C_local[0] + (A_local[k_2] * LUT[((int)((B_local[(k_2 >> 1)] >> ((signed char)((k_2 & 1) * 4))) & (signed char)15))]));
+    }
+  }
+  __syncthreads();
+  ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = in_thread_C_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 32)]));
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    half w_16_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 16)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_16_0;
+    half w_8_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 8)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_8_0;
+    half w_4_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 4)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_4_0;
+    half w_2_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 2)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_2_0;
+    half w_1_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 1)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_1_0;
+  }
+  __syncthreads();
+  C[((((int)blockIdx.x) * 2) + ((int)threadIdx.y))] = (half)(((volatile half*)red_buf0)[(((int)threadIdx.y) * 64)]);
+}
+
+
+top1: 1.2646479606628418 	top10: 0.6070613265037537
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [3584], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 8}}}
+best latency: 0.6070613265037537
+__global__ void __launch_bounds__(128) Fused(half* __restrict__ A, int8_t* __restrict__ B, half* __restrict__ LUT, half* __restrict__ C) {
+  
+  half in_thread_C_local[1];
+  half A_local[8];
+  signed char B_local[4];
+  __shared__ half red_buf0[128];
+  in_thread_C_local[0] = __float2half_rn(0.000000e+00f);
+  for (int k_0 = 0; k_0 < 56; ++k_0) {
+    *(uint4*)(A_local + 0) = *(uint4*)(A + ((k_0 * 512) + (((int)threadIdx.x) * 8)));
+    *(int*)(B_local + 0) = *(int*)(B + ((((((int)blockIdx.x) * 28672) + (((int)threadIdx.y) * 14336)) + (k_0 * 256)) + (((int)threadIdx.x) * 4)));
+    for (int k_2 = 0; k_2 < 8; ++k_2) {
+      in_thread_C_local[0] = (in_thread_C_local[0] + (A_local[k_2] * LUT[((int)((B_local[(k_2 >> 1)] >> ((signed char)((k_2 & 1) * 4))) & (signed char)15))]));
+    }
+  }
+  __syncthreads();
+  ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = in_thread_C_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 32)]));
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    half w_16_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 16)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_16_0;
+    half w_8_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 8)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_8_0;
+    half w_4_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 4)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_4_0;
+    half w_2_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 2)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_2_0;
+    half w_1_0 = ((half)(((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))]) + (half)(((volatile half*)red_buf0)[(((((int)threadIdx.y) * 64) + ((int)threadIdx.x)) + 1)]));
+    ((volatile half*)red_buf0)[((((int)threadIdx.y) * 64) + ((int)threadIdx.x))] = w_1_0;
+  }
+  __syncthreads();
+  C[((((int)blockIdx.x) * 2) + ((int)threadIdx.y))] = (half)(((volatile half*)red_buf0)[(((int)threadIdx.y) * 64)]);
+}
+
+
+top1: 0.4970560073852539 	top10: 0.1812426596879959
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [3584], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A': 4, 'B_decode': 8}}}
+best latency: 0.1812426596879959
+1_14336_57344	0.6070613265037537
+1_8192_28672	0.1812426596879959

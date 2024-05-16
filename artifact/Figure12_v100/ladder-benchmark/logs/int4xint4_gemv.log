@@ -1,0 +1,147 @@
+int4xint4_gemv.py
+2024-05-16 07:45:07 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 56], 'thread': [1, 56], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 2}}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [1, 112], 'thread': [1, 112], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [1, 128], 'thread': [1, 128], 'rstep': [128], 'block_order': <NoRasterization>}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 28], 'thread': [1, 28], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 14], 'thread': [1, 14], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 7], 'thread': [1, 7], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-16 07:45:08 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+{<Node, ladder_matmul>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+1.3545535802841187
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 2}}}
+2.4660847187042236
+{<Node, ladder_matmul>: {'block': [1, 112], 'thread': [1, 112], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+12.667488098144531
+{<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [128], 'block_order': <NoRasterization>}}
+13.141395568847656
+{<Node, ladder_matmul>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+1.2474026679992676
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
+1.2889599800109863
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.6104320287704468
+{<Node, ladder_matmul>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.6055253148078918
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.5265920162200928
+{<Node, ladder_matmul>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.517412543296814
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.4848639965057373
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [8192], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.4901120066642761
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.4843519926071167
+top1: 1.3545535802841187 	top10: 0.4843519926071167
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [8192], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+best latency: 0.4843519926071167
+best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
+  
+  int in_thread_B_local[1];
+  signed char A_local[16];
+  signed char B_local[8];
+  __shared__ int red_buf0[128];
+  in_thread_B_local[0] = 0;
+  for (int k_0 = 0; k_0 < 28; ++k_0) {
+    *(int4*)(A_local + 0) = *(int4*)(A + ((k_0 * 2048) + (((int)threadIdx.x) * 16)));
+    *(int2*)(B_local + 0) = *(int2*)(B + (((((int)blockIdx.x) * 28672) + (k_0 * 1024)) + (((int)threadIdx.x) * 8)));
+    for (int k_2 = 0; k_2 < 16; ++k_2) {
+      in_thread_B_local[0] = (in_thread_B_local[0] + (((int)A_local[k_2]) * ((int)((B_local[(k_2 >> 1)] >> ((signed char)((k_2 & 1) * 4))) & (signed char)15))));
+    }
+  }
+  __syncthreads();
+  ((volatile int*)red_buf0)[((int)threadIdx.x)] = in_thread_B_local[0];
+  __syncthreads();
+  if (((int)threadIdx.x) < 64) {
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 64)]);
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 32) {
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 32)]);
+  }
+  __syncthreads();
+  if (((int)threadIdx.x) < 16) {
+    int w_16_0 = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 16)]);
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = w_16_0;
+    int w_8_0 = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 8)]);
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = w_8_0;
+    int w_4_0 = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 4)]);
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = w_4_0;
+    int w_2_0 = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 2)]);
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = w_2_0;
+    int w_1_0 = (((volatile int*)red_buf0)[((int)threadIdx.x)] + ((volatile int*)red_buf0)[(((int)threadIdx.x) + 1)]);
+    ((volatile int*)red_buf0)[((int)threadIdx.x)] = w_1_0;
+  }
+  __syncthreads();
+  dtype_transform[((int)blockIdx.x)] = ((signed char)((volatile int*)red_buf0)[0]);
+}
+
+
+2024-05-16 07:45:31 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}
+2024-05-16 07:45:31 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 2}}
+2024-05-16 07:45:31 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_simt.TIRSIMTScheduler'> config: {'block': [1, 128], 'thread': [1, 128], 'rstep': [128], 'block_order': <NoRasterization>}
+2024-05-16 07:45:31 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-16 07:45:31 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-16 07:45:31 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}
+2024-05-16 07:45:31 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 2], 'thread': [1, 2], 'rstep': [7168], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}
+2024-05-16 07:45:32 [ladder:DEBUG]: Using template: <class 'ladder.schedule.tir_reduce_interthread.TIRReduceInterThreadScheduler'> config: {'block': [1, 1], 'thread': [1, 1], 'rstep': [7168], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8, 'A': 8}}
+{<Node, ladder_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 4}}}
+0.40934398770332336
+{<Node, ladder_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [256], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 2}}}
+0.8451799750328064
+{<Node, ladder_matmul>: {'block': [1, 128], 'thread': [1, 128], 'rstep': [128], 'block_order': <NoRasterization>}}
+6.135807991027832
+{<Node, ladder_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [1024], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.19002513587474823
+{<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.15038171410560608
+{<Node, ladder_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [4096], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+0.1519862860441208
+{<Node, ladder_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [7168], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 8}}}
+0.15389715135097504
+{<Node, ladder_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [7168], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8, 'A': 8}}}
+0.15584640204906464
+top1: 0.40934398770332336 	top10: 0.15038171410560608
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [2048], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16, 'A': 16}}}
+best latency: 0.15038171410560608
+best code: __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ A, int8_t* __restrict__ B, int8_t* __restrict__ dtype_transform) {
+  
+  int in_thread_B_local[1];
+  signed char A_local[16];
+  signed char B_local[8];
+  int red_buf0[1];
+  in_thread_B_local[0] = 0;
+  for (int k_0 = 0; k_0 < 112; ++k_0) {
+    *(int4*)(A_local + 0) = *(int4*)(A + ((k_0 * 256) + (((int)threadIdx.x) * 16)));
+    *(int2*)(B_local + 0) = *(int2*)(B + ((((((int)blockIdx.x) * 114688) + (((int)threadIdx.y) * 14336)) + (k_0 * 128)) + (((int)threadIdx.x) * 8)));
+    for (int k_2 = 0; k_2 < 16; ++k_2) {
+      in_thread_B_local[0] = (in_thread_B_local[0] + (((int)A_local[k_2]) * ((int)((B_local[(k_2 >> 1)] >> ((signed char)((k_2 & 1) * 4))) & (signed char)15))));
+    }
+  }
+  uint mask[1];
+  int t0[1];
+  red_buf0[0] = in_thread_B_local[0];
+  mask[0] = (__activemask() & ((uint)(65535 << (((int)threadIdx.y) * 16))));
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 8, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 4, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 2, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 1, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  red_buf0[0] = __shfl_sync(mask[0], red_buf0[0], (((int)threadIdx.y) * 16), 32);
+  dtype_transform[((((int)blockIdx.x) * 8) + ((int)threadIdx.y))] = ((signed char)red_buf0[0]);
+}
+
+
+1_14336_57344	0.4843519926071167
+1_8192_28672	0.15038171410560608
