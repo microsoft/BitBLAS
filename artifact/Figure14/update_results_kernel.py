@@ -4,10 +4,10 @@ import re
 
 _ = '''
 b1s1_providers = ['End2End LLAMA']
-b1s1_times_data = [('Bitter', [1.0305]), ('Bitter-W$_{INT8}$A$_{FP16}$', [0.5924999999999999]), ('Bitter-W$_{INT4}$A$_{FP16}$', [0.32849999999999996]), ('Bitter-W$_{INT2}$A$_{FP16}$', [0.2895]), ('Bitter-W$_{INT1}$A$_{FP16}$', [0.2815]), ('Bitter-W$_{INT8}$A$_{INT8}$', [0.6004999999999999]), ('Bitter-W$_{INT4}$A$_{INT8}$', [0.3175]), ('Bitter-W$_{INT2}$A$_{INT8}$', [0.19149999999999998]), ('Bitter-W$_{INT1}$A$_{INT8}$', [0.15849999999999997]), ('Bitter-W$_{INT4}$A$_{INT4}$', [0.3145]), ('Bitter-W$_{INT2}$A$_{INT4}$', [0.19249999999999998]), ('Bitter-W$_{INT1}$A$_{INT4}$', [0.15849999999999997])]
+b1s1_times_data = [('Bitter', [-1]), ('Bitter-W$_{INT8}$A$_{FP16}$', [-1]), ('Bitter-W$_{INT4}$A$_{FP16}$', [-1]), ('Bitter-W$_{INT2}$A$_{FP16}$', [-1]), ('Bitter-W$_{INT1}$A$_{FP16}$', [-1]), ('Bitter-W$_{INT8}$A$_{INT8}$', [-1]), ('Bitter-W$_{INT4}$A$_{INT8}$', [-1]), ('Bitter-W$_{INT2}$A$_{INT8}$', [-1]), ('Bitter-W$_{INT1}$A$_{INT8}$', [-1]), ('Bitter-W$_{INT4}$A$_{INT4}$', [-1]), ('Bitter-W$_{INT2}$A$_{INT4}$', [-1]), ('Bitter-W$_{INT1}$A$_{INT4}$', [-1])]
 
 b1s4096_providers = ['End2End LLAMA']
-b1s4096_times_data = [('Bitter', [33.7857]), ('Bitter-W$_{INT8}$A$_{FP16}$', [34.7037]), ('Bitter-W$_{INT4}$A$_{FP16}$', [32.58669999999999]), ('Bitter-W$_{INT2}$A$_{FP16}$', [33.5087]), ('Bitter-W$_{INT1}$A$_{FP16}$', [33.33369999999999]), ('Bitter-W$_{INT8}$A$_{INT8}$', [22.998699999999996]), ('Bitter-W$_{INT4}$A$_{INT8}$', [22.5307]), ('Bitter-W$_{INT2}$A$_{INT8}$', [22.005699999999997]), ('Bitter-W$_{INT1}$A$_{INT8}$', [22.2537]), ('Bitter-W$_{INT4}$A$_{INT4}$', [14.267433072996138]), ('Bitter-W$_{INT2}$A$_{INT4}$', [14.268457080793379]), ('Bitter-W$_{INT1}$A$_{INT4}$', [14.270300294828413])]
+b1s4096_times_data = [('Bitter', [-1]), ('Bitter-W$_{INT8}$A$_{FP16}$', [-1]), ('Bitter-W$_{INT4}$A$_{FP16}$', [-1]), ('Bitter-W$_{INT2}$A$_{FP16}$', [-1]), ('Bitter-W$_{INT1}$A$_{FP16}$', [-1]), ('Bitter-W$_{INT8}$A$_{INT8}$', [-1]), ('Bitter-W$_{INT4}$A$_{INT8}$', [-1]), ('Bitter-W$_{INT2}$A$_{INT8}$', [-1]), ('Bitter-W$_{INT1}$A$_{INT8}$', [-1]), ('Bitter-W$_{INT4}$A$_{INT4}$', [-1]), ('Bitter-W$_{INT2}$A$_{INT4}$', [-1]), ('Bitter-W$_{INT1}$A$_{INT4}$', [-1])]
 
 b1s1_matmul_providers = ['M0', 'M1', 'M2', 'M3']
 b1s1_matmul_times_data = [('Bitter', [-1, -1, -1, -1]), ('Bitter-W$_{INT8}$A$_{FP16}$', [-1, -1, -1, -1]), ('Bitter-W$_{INT4}$A$_{FP16}$', [-1, -1, -1, -1]), ('Bitter-W$_{INT2}$A$_{FP16}$', [-1, -1, -1, -1]), ('Bitter-W$_{INT1}$A$_{FP16}$', [-1, -1, -1, -1]), ('Bitter-W$_{INT8}$A$_{INT8}$', [-1, -1, -1, -1]), ('Bitter-W$_{INT4}$A$_{INT8}$', [-1, -1, -1, -1]), ('Bitter-W$_{INT2}$A$_{INT8}$', [-1, -1, -1, -1]), ('Bitter-W$_{INT1}$A$_{INT8}$', [-1, -1, -1, -1]), ('Bitter-W$_{INT4}$A$_{INT4}$', [-1, -1, -1, -1]), ('Bitter-W$_{INT2}$A$_{INT4}$', [-1, -1, -1, -1]), ('Bitter-W$_{INT1}$A$_{INT4}$', [-1, -1, -1, -1])]
@@ -17,8 +17,8 @@ b1s4096_matmul_times_data = [('Bitter', [-1, -1, -1, -1]), ('Bitter-W$_{INT8}$A$
 '''
 # get float16xfloat16_results
 # this was extracted from the end2end process
-bs1_fp16_time = 1.0305
-bs4096_fp16_time = 33.7857
+# bs1_fp16_time = 1.0305
+# bs4096_fp16_time = 33.7857
 KERNEL_LOG_PATH = "./kernel-benchmark/logs/"
 exec(_)
 def extract_floats(line):
@@ -52,43 +52,43 @@ def get_latency(batch_size=1, format="float16xfloat16"):
     n8192k28672 = get_result_from_file(batch_size, 8192, 28672, format)
     return n1024k8192 * 2 + n8192k8192 * 2 + n28672k8192 * 2 + n8192k28672
 
-fp16xfp16_bs1_overall_latency = get_latency(1, "float16xfloat16")
-fp16xint8_bs1_overall_latency = get_latency(1, "float16xint8")
-fp16xint4_bs1_overall_latency = get_latency(1, "float16xint4")
-fp16xint2_bs1_overall_latency = get_latency(1, "float16xint2")
-fp16xint1_bs1_overall_latency = get_latency(1, "float16xint1")
-int8xint8_bs1_overall_latency = get_latency(1, "int8xint8")
-int8xint4_bs1_overall_latency = get_latency(1, "int8xint4")
-int8xint2_bs1_overall_latency = get_latency(1, "int8xint2")
-int8xint1_bs1_overall_latency = get_latency(1, "int8xint1")
-int4xint4_bs1_overall_latency = get_latency(1, "int4xint4")
-int4xint2_bs1_overall_latency = get_latency(1, "int4xint2")
-int4xint1_bs1_overall_latency = get_latency(1, "int4xint1")
+# fp16xfp16_bs1_overall_latency = get_latency(1, "float16xfloat16")
+# fp16xint8_bs1_overall_latency = get_latency(1, "float16xint8")
+# fp16xint4_bs1_overall_latency = get_latency(1, "float16xint4")
+# fp16xint2_bs1_overall_latency = get_latency(1, "float16xint2")
+# fp16xint1_bs1_overall_latency = get_latency(1, "float16xint1")
+# int8xint8_bs1_overall_latency = get_latency(1, "int8xint8")
+# int8xint4_bs1_overall_latency = get_latency(1, "int8xint4")
+# int8xint2_bs1_overall_latency = get_latency(1, "int8xint2")
+# int8xint1_bs1_overall_latency = get_latency(1, "int8xint1")
+# int4xint4_bs1_overall_latency = get_latency(1, "int4xint4")
+# int4xint2_bs1_overall_latency = get_latency(1, "int4xint2")
+# int4xint1_bs1_overall_latency = get_latency(1, "int4xint1")
 
-fp16xint8_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + fp16xint8_bs1_overall_latency
-fp16xint4_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + fp16xint4_bs1_overall_latency
-fp16xint2_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + fp16xint2_bs1_overall_latency
-fp16xint1_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + fp16xint1_bs1_overall_latency
-int8xint8_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int8xint8_bs1_overall_latency
-int8xint4_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int8xint4_bs1_overall_latency
-int8xint2_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int8xint2_bs1_overall_latency
-int8xint1_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int8xint1_bs1_overall_latency
-int4xint4_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int4xint4_bs1_overall_latency
-int4xint2_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int4xint2_bs1_overall_latency
-int4xint1_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int4xint1_bs1_overall_latency
+# fp16xint8_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + fp16xint8_bs1_overall_latency
+# fp16xint4_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + fp16xint4_bs1_overall_latency
+# fp16xint2_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + fp16xint2_bs1_overall_latency
+# fp16xint1_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + fp16xint1_bs1_overall_latency
+# int8xint8_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int8xint8_bs1_overall_latency
+# int8xint4_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int8xint4_bs1_overall_latency
+# int8xint2_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int8xint2_bs1_overall_latency
+# int8xint1_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int8xint1_bs1_overall_latency
+# int4xint4_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int4xint4_bs1_overall_latency
+# int4xint2_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int4xint2_bs1_overall_latency
+# int4xint1_bs1_end2end_latency = bs1_fp16_time - fp16xfp16_bs1_overall_latency + int4xint1_bs1_overall_latency
 
-b1s1_times_data[0] = ("Bitter", [bs1_fp16_time])
-b1s1_times_data[1] = ("Bitter-W$_{INT8}$A$_{FP16}$", [fp16xint8_bs1_end2end_latency])
-b1s1_times_data[2] = ("Bitter-W$_{INT4}$A$_{FP16}$", [fp16xint4_bs1_end2end_latency])
-b1s1_times_data[3] = ("Bitter-W$_{INT2}$A$_{FP16}$", [fp16xint2_bs1_end2end_latency])
-b1s1_times_data[4] = ("Bitter-W$_{INT1}$A$_{FP16}$", [fp16xint1_bs1_end2end_latency])
-b1s1_times_data[5] = ("Bitter-W$_{INT8}$A$_{INT8}$", [int8xint8_bs1_end2end_latency])
-b1s1_times_data[6] = ("Bitter-W$_{INT4}$A$_{INT8}$", [int8xint4_bs1_end2end_latency])
-b1s1_times_data[7] = ("Bitter-W$_{INT2}$A$_{INT8}$", [int8xint2_bs1_end2end_latency])
-b1s1_times_data[8] = ("Bitter-W$_{INT1}$A$_{INT8}$", [int8xint1_bs1_end2end_latency])
-b1s1_times_data[9] = ("Bitter-W$_{INT4}$A$_{INT4}$", [int4xint4_bs1_end2end_latency])
-b1s1_times_data[10] = ("Bitter-W$_{INT2}$A$_{INT4}$", [int4xint2_bs1_end2end_latency])
-b1s1_times_data[11] = ("Bitter-W$_{INT1}$A$_{INT4}$", [int4xint1_bs1_end2end_latency])
+# b1s1_times_data[0] = ("Bitter", [bs1_fp16_time])
+# b1s1_times_data[1] = ("Bitter-W$_{INT8}$A$_{FP16}$", [fp16xint8_bs1_end2end_latency])
+# b1s1_times_data[2] = ("Bitter-W$_{INT4}$A$_{FP16}$", [fp16xint4_bs1_end2end_latency])
+# b1s1_times_data[3] = ("Bitter-W$_{INT2}$A$_{FP16}$", [fp16xint2_bs1_end2end_latency])
+# b1s1_times_data[4] = ("Bitter-W$_{INT1}$A$_{FP16}$", [fp16xint1_bs1_end2end_latency])
+# b1s1_times_data[5] = ("Bitter-W$_{INT8}$A$_{INT8}$", [int8xint8_bs1_end2end_latency])
+# b1s1_times_data[6] = ("Bitter-W$_{INT4}$A$_{INT8}$", [int8xint4_bs1_end2end_latency])
+# b1s1_times_data[7] = ("Bitter-W$_{INT2}$A$_{INT8}$", [int8xint2_bs1_end2end_latency])
+# b1s1_times_data[8] = ("Bitter-W$_{INT1}$A$_{INT8}$", [int8xint1_bs1_end2end_latency])
+# b1s1_times_data[9] = ("Bitter-W$_{INT4}$A$_{INT4}$", [int4xint4_bs1_end2end_latency])
+# b1s1_times_data[10] = ("Bitter-W$_{INT2}$A$_{INT4}$", [int4xint2_bs1_end2end_latency])
+# b1s1_times_data[11] = ("Bitter-W$_{INT1}$A$_{INT4}$", [int4xint1_bs1_end2end_latency])
 
 def get_result_from_file_ladder(m, n, k, format="float16xfloat16"):
     suffix = "gemm" if m != 1 else "gemv"
@@ -117,43 +117,43 @@ def get_latency_ladder(batch_size=1, format="float16xfloat16"):
     n8192k28672 = get_result_from_file_ladder(batch_size, 8192, 28672, format)
     return n1024k8192 * 2 + n8192k8192 * 2 + n28672k8192 * 2 + n8192k28672
 
-fp16xfp16_bs4096_overall_latency = get_latency(4096, "float16xfloat16")
-fp16xint8_bs4096_overall_latency = get_latency(4096, "float16xint8")
-fp16xint4_bs4096_overall_latency = get_latency(4096, "float16xint4")
-fp16xint2_bs4096_overall_latency = get_latency(4096, "float16xint2")
-fp16xint1_bs4096_overall_latency = get_latency(4096, "float16xint1")
-int8xint8_bs4096_overall_latency = get_latency(4096, "int8xint8")
-int8xint4_bs4096_overall_latency = get_latency(4096, "int8xint4")
-int8xint2_bs4096_overall_latency = get_latency(4096, "int8xint2")
-int8xint1_bs4096_overall_latency = get_latency(4096, "int8xint1")
-int4xint4_bs4096_overall_latency = get_latency_ladder(4096, "int4xint4")
-int4xint2_bs4096_overall_latency = get_latency_ladder(4096, "int4xint2")
-int4xint1_bs4096_overall_latency = get_latency_ladder(4096, "int4xint1")
+# fp16xfp16_bs4096_overall_latency = get_latency(4096, "float16xfloat16")
+# fp16xint8_bs4096_overall_latency = get_latency(4096, "float16xint8")
+# fp16xint4_bs4096_overall_latency = get_latency(4096, "float16xint4")
+# fp16xint2_bs4096_overall_latency = get_latency(4096, "float16xint2")
+# fp16xint1_bs4096_overall_latency = get_latency(4096, "float16xint1")
+# int8xint8_bs4096_overall_latency = get_latency(4096, "int8xint8")
+# int8xint4_bs4096_overall_latency = get_latency(4096, "int8xint4")
+# int8xint2_bs4096_overall_latency = get_latency(4096, "int8xint2")
+# int8xint1_bs4096_overall_latency = get_latency(4096, "int8xint1")
+# int4xint4_bs4096_overall_latency = get_latency_ladder(4096, "int4xint4")
+# int4xint2_bs4096_overall_latency = get_latency_ladder(4096, "int4xint2")
+# int4xint1_bs4096_overall_latency = get_latency_ladder(4096, "int4xint1")
 
-fp16xint8_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + fp16xint8_bs4096_overall_latency
-fp16xint4_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + fp16xint4_bs4096_overall_latency
-fp16xint2_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + fp16xint2_bs4096_overall_latency
-fp16xint1_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + fp16xint1_bs4096_overall_latency
-int8xint8_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int8xint8_bs4096_overall_latency
-int8xint4_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int8xint4_bs4096_overall_latency
-int8xint2_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int8xint2_bs4096_overall_latency
-int8xint1_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int8xint1_bs4096_overall_latency
-int4xint4_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int4xint4_bs4096_overall_latency
-int4xint2_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int4xint2_bs4096_overall_latency
-int4xint1_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int4xint1_bs4096_overall_latency
+# fp16xint8_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + fp16xint8_bs4096_overall_latency
+# fp16xint4_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + fp16xint4_bs4096_overall_latency
+# fp16xint2_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + fp16xint2_bs4096_overall_latency
+# fp16xint1_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + fp16xint1_bs4096_overall_latency
+# int8xint8_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int8xint8_bs4096_overall_latency
+# int8xint4_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int8xint4_bs4096_overall_latency
+# int8xint2_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int8xint2_bs4096_overall_latency
+# int8xint1_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int8xint1_bs4096_overall_latency
+# int4xint4_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int4xint4_bs4096_overall_latency
+# int4xint2_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int4xint2_bs4096_overall_latency
+# int4xint1_bs4096_end2end_latency = bs4096_fp16_time - fp16xfp16_bs4096_overall_latency + int4xint1_bs4096_overall_latency
 
-b1s4096_times_data[0] = ("Bitter", [bs4096_fp16_time])
-b1s4096_times_data[1] = ("Bitter-W$_{INT8}$A$_{FP16}$", [fp16xint8_bs4096_end2end_latency])
-b1s4096_times_data[2] = ("Bitter-W$_{INT4}$A$_{FP16}$", [fp16xint4_bs4096_end2end_latency])
-b1s4096_times_data[3] = ("Bitter-W$_{INT2}$A$_{FP16}$", [fp16xint2_bs4096_end2end_latency])
-b1s4096_times_data[4] = ("Bitter-W$_{INT1}$A$_{FP16}$", [fp16xint1_bs4096_end2end_latency])
-b1s4096_times_data[5] = ("Bitter-W$_{INT8}$A$_{INT8}$", [int8xint8_bs4096_end2end_latency])
-b1s4096_times_data[6] = ("Bitter-W$_{INT4}$A$_{INT8}$", [int8xint4_bs4096_end2end_latency])
-b1s4096_times_data[7] = ("Bitter-W$_{INT2}$A$_{INT8}$", [int8xint2_bs4096_end2end_latency])
-b1s4096_times_data[8] = ("Bitter-W$_{INT1}$A$_{INT8}$", [int8xint1_bs4096_end2end_latency])
-b1s4096_times_data[9] = ("Bitter-W$_{INT4}$A$_{INT4}$", [int4xint4_bs4096_end2end_latency])
-b1s4096_times_data[10] = ("Bitter-W$_{INT2}$A$_{INT4}$", [int4xint2_bs4096_end2end_latency])
-b1s4096_times_data[11] = ("Bitter-W$_{INT1}$A$_{INT4}$", [int4xint1_bs4096_end2end_latency])
+# b1s4096_times_data[0] = ("Bitter", [bs4096_fp16_time])
+# b1s4096_times_data[1] = ("Bitter-W$_{INT8}$A$_{FP16}$", [fp16xint8_bs4096_end2end_latency])
+# b1s4096_times_data[2] = ("Bitter-W$_{INT4}$A$_{FP16}$", [fp16xint4_bs4096_end2end_latency])
+# b1s4096_times_data[3] = ("Bitter-W$_{INT2}$A$_{FP16}$", [fp16xint2_bs4096_end2end_latency])
+# b1s4096_times_data[4] = ("Bitter-W$_{INT1}$A$_{FP16}$", [fp16xint1_bs4096_end2end_latency])
+# b1s4096_times_data[5] = ("Bitter-W$_{INT8}$A$_{INT8}$", [int8xint8_bs4096_end2end_latency])
+# b1s4096_times_data[6] = ("Bitter-W$_{INT4}$A$_{INT8}$", [int8xint4_bs4096_end2end_latency])
+# b1s4096_times_data[7] = ("Bitter-W$_{INT2}$A$_{INT8}$", [int8xint2_bs4096_end2end_latency])
+# b1s4096_times_data[8] = ("Bitter-W$_{INT1}$A$_{INT8}$", [int8xint1_bs4096_end2end_latency])
+# b1s4096_times_data[9] = ("Bitter-W$_{INT4}$A$_{INT4}$", [int4xint4_bs4096_end2end_latency])
+# b1s4096_times_data[10] = ("Bitter-W$_{INT2}$A$_{INT4}$", [int4xint2_bs4096_end2end_latency])
+# b1s4096_times_data[11] = ("Bitter-W$_{INT1}$A$_{INT4}$", [int4xint1_bs4096_end2end_latency])
 
 # write the results to back
 
