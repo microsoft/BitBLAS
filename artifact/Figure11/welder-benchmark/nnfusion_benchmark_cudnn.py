@@ -71,6 +71,7 @@ for model_name, model_path in models.items():
             f"cd nnfusion_rt/cuda_codegen;cmake . -DCUDA_ARCH='-gencode arch=compute_80,code=compute_80';make;./main_test > run.log \n"
         )
         f.write(f"cp run.log ../../\n")
+        f.write(f"sed -i 's/int steps = 100;/int steps = 10000;/' nnfusion_rt/cuda_codegen/main_test.cpp\n")
 
     # 让.sh文件具有执行权限
     os.chmod(sh_filepath, 0o755)
