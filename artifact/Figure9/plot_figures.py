@@ -922,7 +922,7 @@ fig.legend(
     labels_other,
     loc="upper center",
     bbox_to_anchor=(0.5, 0.52),
-    ncol=len(labels_other) // 2,
+    ncol=len(labels_other) // 2 + 1,
     fontsize=legend_fontsize,
     frameon=True,
 )

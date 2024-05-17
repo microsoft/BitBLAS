@@ -10,6 +10,25 @@ b1s4096_llama2_providers = ['W$_{FP16}$A$_{FP16}$', 'W$_{INT4}$A$_{FP16}$', 'W$_
 b1s4096_llama2_times_data = [('Welder-Roller', [60.127214, 0, 0, 0]), ('+Transform', [52.42052881456757, 49.46731518246079, 82.41326694227601, 39.091531917823794]), ('+PTX', [44.65635679699326, 46.29885332323456, 80.05688004232789, 36.24276338554764]), ('+Holistic Schedule', [44.5666551444664, 46.318308756126406, 47.12634848095322, 36.24972687698746])]
 '''
 
+
+b1s1_llama2_providers = ['W$_{FP16}$A$_{FP16}$', 'W$_{INT4}$A$_{FP16}$', 'W$_{MXFP8}$A$_{MXFP8}$', 'W$_{INT1}$A$_{INT8}$']
+b1s1_llama2_times_data = [
+    ('Welder-Roller', [-1, 0, 0, 0]), 
+    ('+Transform', [-1, -1, -1, -1]), 
+    ('+PTX', [-1, -1, -1, -1]), 
+    ('+Holistic Schedule', [-1, -1, -1, -1])
+]
+
+b1s4096_llama2_providers = ['W$_{FP16}$A$_{FP16}$', 'W$_{INT4}$A$_{FP16}$', 'W$_{MXFP8}$A$_{MXFP8}$', 'W$_{INT1}$A$_{INT8}$']
+b1s4096_llama2_times_data = [
+    ('Welder-Roller', [-1, -1, -1, -1]),
+    ('+Transform', [-1, -1, -1, -1]),
+    ('+PTX', [-1, -1, -1, -1]),
+    ('+Holistic Schedule', [-1, -1, -1, -1])
+]
+
+
+
 # it's extract from logs
 llama_b1s1_fp16xfp16_roller_latency = 2.173171
 llama_b1s4096_fp16xfp16_roller_latency = 254.423248

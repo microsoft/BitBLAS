@@ -156,8 +156,6 @@ def run_from_prebuilt(prefix, arch):
     
     print(module.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
 
-    module.run()
-
 
 
 if __name__ == "__main__":

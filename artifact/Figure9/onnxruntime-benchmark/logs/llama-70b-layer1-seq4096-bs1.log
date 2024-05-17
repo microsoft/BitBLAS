@@ -1,0 +1,16 @@
+ONNX model check passed!
+Importing ONNX model into ONNX Runtime...
+Execution Providers: ['CUDAExecutionProvider', 'CPUExecutionProvider']
+tensor_name onnx::Cast_0, shape [1, 4096, 8192], dtype float16
+240
+[ 3.277 -4.96   5.027  1.359  0.54  14.79  -4.785  0.371 -3.238  5.094] ...(size= 33554432 end with -0.1094 )
+240
+[ 3.277 -4.96   5.027  1.359  0.54  14.79  -4.785  0.371 -3.238  5.094] ...(size= 33554432 end with -0.1094 )
+240
+[ 3.277 -4.96   5.027  1.359  0.54  14.79  -4.785  0.371 -3.238  5.094] ...(size= 33554432 end with -0.1094 )
+240
+[ 3.277 -4.96   5.027  1.359  0.54  14.79  -4.785  0.371 -3.238  5.094] ...(size= 33554432 end with -0.1094 )
+240
+[ 3.277 -4.96   5.027  1.359  0.54  14.79  -4.785  0.371 -3.238  5.094] ...(size= 33554432 end with -0.1094 )
+>> Evaluating Benchmark ...
+>> Average time for each run: 146.3234 ms;

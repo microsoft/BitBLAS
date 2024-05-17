@@ -65,9 +65,9 @@ else
     ## int4*int4
     python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/Conformer-b128_fq_0_int4b_4_ci_False_async_holistic_fp16 2>&1 | tee logs/Conformer-b128_int4bxint1.log
 
-    # # vit
-    # ## fp8*fp8
-    # python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/vit-b128_fq_0_fp_e5m2_8_ci_False_async_holistic_fp16 2>&1 | tee logs/vit-b128_fp8_e5m2.log
-    # ## int4*int4
-    # python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/vit-b128_fq_0_int4b_4_ci_False_holistic_fp16 2>&1 | tee logs/vit-b128_int4b.log
+    # vit
+    ## fp8*fp8
+    python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/vit-b128_fq_0_fp_e5m2_8_ci_False_async_holistic_fp16 2>&1 | tee logs/vit-b128_fp8_e5m2.log
+    ## int4*int4
+    python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/vit-b128_fq_0_int4b_4_ci_False_holistic_fp16 2>&1 | tee logs/vit-b128_int4b.log
 fi

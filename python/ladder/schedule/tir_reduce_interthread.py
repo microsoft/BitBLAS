@@ -611,7 +611,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
                         is_a_consistent, is_b_consistent
                     )
                 if use_dp4a:
-                    if self.config.compute_capability == "80":
+                    if self.config.compute_capability == "80" or self.config.compute_capability == "70":
                         return self.schedule_inconsistent_shared_decode(
                             is_a_consistent, is_b_consistent, use_dp4a=True
                         )
@@ -619,7 +619,7 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
                         is_a_consistent, is_b_consistent, use_dp4a=True
                     )
 
-                if self.config.compute_capability == "80":
+                if self.config.compute_capability == "80" or self.config.compute_capability == "70":
                     if is_a_consistent == False and is_b_consistent == False:
                         return self.schedule_inconsistent_shared_decode_a_b(
                             is_a_consistent, is_b_consistent

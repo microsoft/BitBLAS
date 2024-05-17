@@ -38,8 +38,8 @@ class TEReduceScheduler(TESchedulerBase):
         for va in vthd_axis:
             sch[out].bind(va, te.thread_axis("vthread"))
         sch[out].bind(thrd_fused, te.thread_axis("threadIdx.x"))
-        for tn in tile_axis:
-            sch[out].unroll(tn)
+        # for tn in tile_axis:
+        #     sch[out].unroll(tn)
 
         sch[reg_tile].compute_at(sch[out], thrd_fused)
 
@@ -54,7 +54,7 @@ class TEReduceScheduler(TESchedulerBase):
         axis_order = reduce_outer_axis + reduce_inner_axis + space_axis
         sch[reg_tile].reorder(*axis_order)
         space_fused = sch[reg_tile].fuse(*space_axis)
-        sch[reg_tile].unroll(space_fused)
+        # sch[reg_tile].unroll(space_fused)
 
         for input_tensor in self.reduce_op.input_tensors:
             shared_tensor = sch.cache_read(input_tensor, "shared", [reg_tile])

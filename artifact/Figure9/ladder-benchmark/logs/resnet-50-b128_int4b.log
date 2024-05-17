@@ -1,5 +1,5 @@
 Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure9/ladder/checkpoints/resnet-50-b128_fq_0_int4b_1_ci_False_async_holistic_fp16
 Execution time summary:
  mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-  30.6591      30.6582      30.6625      30.6561       0.0027   
+  30.5769      30.5760      30.5807      30.5722       0.0031   
                

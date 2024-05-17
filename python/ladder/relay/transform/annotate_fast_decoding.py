@@ -17,16 +17,20 @@ class AnnotateFastDecoding(relay.ExprMutator):
         visitor.visit(func)
         if visitor.fast_decoding is not None:
             func = func.with_attr("fast_decoding", visitor.fast_decoding)
+        if visitor.consistent_config is not None:
+            func = func.with_attr("consistent_config", visitor.consistent_config)
         return super().visit_function(func)
 
 class OpVisitor(relay.ExprVisitor):
     def __init__(self):
         super().__init__()
         self.fast_decoding = None
+        self.consistent_config = None
 
     def visit_call(self, call):
         if call.op.name in ["ladder.quant_linear", "ladder.perfect_quant_linear", "perfect_im2col_quant_conv"]:
             self.fast_decoding = True
+            self.consistent_config = (True, False)
         return super().visit_call(call)
 
 __all__ = ["AnnotateFastDecoding"]
