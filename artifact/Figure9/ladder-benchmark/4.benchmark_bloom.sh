@@ -24,9 +24,9 @@ mkdir -p logs/bloom
 
 if [ $force_tune -eq 1 ]; then
 
-# /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding --prefix bloom-176b  --batch 1 --seq_len 1 --fake_quant -1 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q-1.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding --prefix bloom-176b  --batch 1 --seq_len 1 --fake_quant -1 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q-1.log
 
-# /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding --prefix bloom-176b  --batch 32 --seq_len 1 --fake_quant -1  2>&1 | tee logs/bloom/bloom-176b_b32_s1_q-1.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --fast_decoding --prefix bloom-176b  --batch 32 --seq_len 1 --fake_quant -1  2>&1 | tee logs/bloom/bloom-176b_b32_s1_q-1.log
 
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 1 --seq_len 1 --fake_quant 0 --bits 4  2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_b4.log
 
@@ -38,21 +38,21 @@ if [ $force_tune -eq 1 ]; then
 
 /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 32 --seq_len 1 --fake_quant 0 --bits 8 --convert_int 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_b8_int.log
 
-# # nf4
-# /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 1 --seq_len 1 --fake_quant 0 --bits 4 --format nf 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_nf4.log
+# nf4
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 1 --seq_len 1 --fake_quant 0 --bits 4 --format nf 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_nf4.log
 
-# /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 32 --seq_len 1 --fake_quant 0 --bits 4 --format nf 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_nf4.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 32 --seq_len 1 --fake_quant 0 --bits 4 --format nf 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_nf4.log
 
-# # fp8
-# /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 1 --seq_len 1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_fp_e5m2.log
+# fp8
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 1 --seq_len 1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_fp_e5m2.log
 
-# /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 32 --seq_len 1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_fp_e5m2.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 32 --seq_len 1 --fake_quant 0 --bits 8 --format fp_e5m2 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_fp_e5m2.log
 
 
-# # mxfp8
-# /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 1 --seq_len 1 --fake_quant 0 --bits 8 --format mxfp 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_mxfp8.log
+# mxfp8
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 1 --seq_len 1 --fake_quant 0 --bits 8 --format mxfp 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_mxfp8.log
 
-# /usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 32 --seq_len 1 --fake_quant 0 --bits 8 --format mxfp --convert_float 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_mxfp8.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prefix bloom-176b --fast_decoding --batch 32 --seq_len 1 --fake_quant 0 --bits 8 --format mxfp --convert_float 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_mxfp8.log
 
 else
 
