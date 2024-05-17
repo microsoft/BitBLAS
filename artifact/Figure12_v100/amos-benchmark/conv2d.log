@@ -1,0 +1,37 @@
+1
+
+
+Problem size:
+128 64 56 56 64 3 3 1 1 1
+[AMOS] Mapping starts...
+Using deterministic mapping logic with dynamic schedule tuning
+Possible matchings:
+0 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:16x16x16)
+1 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+2 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:8x32x16)
+3 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:16x16x16)
+4 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:32x8x16)
+5 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ntn, shape:8x32x16)
+6 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:16x16x16)
+7 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:32x8x16)
+8 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:tnn, shape:8x32x16)
+9 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:16x16x16)
+10 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:32x8x16)
+11 : MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:ttn, shape:8x32x16)
+Logging to devnull...
+Totally 35 different mappings for this matching
+Selected matching: MatchResult(hw_abs_dag:wmma_fp16_fp16, compute:nnn, shape:32x8x16)
+Axis mapping:
+i: int32 : [n, n, n, p, p, q, q]
+j: int32 : [k, k, k, k, k, k, k]
+rk: int32 : [rc, rr, rs, rc, rs, rc, rr]
+Selected mapping: {"vmap": [[1, 1, 1, 1, 1, 1, 1], 0]}
+Logging to conv2d-nchw-float16-float16-layer-(128,64,56,56,64,3,3,1,1,1).log...
+Loading from file conv2d-nchw-float16-float16-layer-(128,64,56,56,64,3,3,1,1,1).log...
+Load 0 entries! The best known is 10000000000000.000000 ms
+Using arch: sm_80
+Total search tirals: 1000 
+batch size: 16 
+batch num: 63
+Search round: 0
+.Y.E.E.E.E.Y.E.E.E.Y

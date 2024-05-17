@@ -1,0 +1,1331 @@
+direct_conv_nhwc_nhwc_fp32xmxfp8_e5m2.py
+n: 1, f: 64, h: 56, w: 56, c: 64, kh: 3, kw: 3, s: 1, d: 1, p: 1, oh: 56, ow: 56
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.05098880082368851
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.05196800082921982
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.055507201701402664
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.05325440317392349
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 64], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2}}}
+0.06573440134525299
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.055560000240802765
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.07168640196323395
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 64], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.19804160296916962
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.11100159585475922
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.09235839545726776
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.05365120247006416
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.04935679957270622
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 32], 'thread': [4, 32], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.05365120247006416
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.07424800097942352
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.07187839597463608
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.06266240030527115
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.07495679706335068
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.12840959429740906
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+0.10833920538425446
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.054476797580718994
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.2158655822277069
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.12133599817752838
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.1292800009250641
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.05406720191240311
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.078438401222229
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.16916480660438538
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.06143200024962425
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.08069760352373123
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.12543199956417084
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+0.13439999520778656
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 4], 'thread': [32, 4], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.19626133143901825
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.0813056007027626
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.07618559896945953
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 32], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.20008321106433868
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.14131200313568115
+{<Node, ladder_conv2d_reshape_bias>: {'block': [392, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [392, 16], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [392, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [448, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.0911296010017395
+code:  __global__ void __launch_bounds__(112) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
+  
+  float T_conv_local[4];
+  __shared__ float data_shared[1344];
+  __shared__ float B_decode_shared[3072];
+  T_conv_local[0] = 0.000000e+00f;
+  T_conv_local[2] = 0.000000e+00f;
+  T_conv_local[1] = 0.000000e+00f;
+  T_conv_local[3] = 0.000000e+00f;
+  for (int k_outer = 0; k_outer < 6; ++k_outer) {
+    __syncthreads();
+    for (int ax0_ax1_fused_inner_s = 0; ax0_ax1_fused_inner_s < 4; ++ax0_ax1_fused_inner_s) {
+      data_shared[((((int)threadIdx.x) * 4) + ax0_ax1_fused_inner_s)] = ((((1 <= ((((int)blockIdx.x) >> 3) + (k_outer >> 1))) && (1 <= (((((((int)blockIdx.x) & 7) >> 1) * 14) + (((int)threadIdx.x) / 24)) + ((((k_outer & 1) * 3) + ((((int)threadIdx.x) % 24) >> 3)) >> 1)))) && (((((int)blockIdx.x) >> 3) + (k_outer >> 1)) < 57)) ? input[(((((((k_outer >> 1) * 3584) + ((((int)blockIdx.x) >> 1) * 896)) + ((((int)threadIdx.x) / 24) * 64)) + (((((k_outer & 1) * 3) + ((((int)threadIdx.x) % 24) >> 3)) >> 1) * 64)) + ((((k_outer * 32) + ((((int)threadIdx.x) % 24) * 4)) + ax0_ax1_fused_inner_s) & 63)) - 3648)] : 0.000000e+00f);
+    }
+    for (int ax0_ax1_fused_inner_s_1 = 0; ax0_ax1_fused_inner_s_1 < 4; ++ax0_ax1_fused_inner_s_1) {
+      data_shared[(((((int)threadIdx.x) * 4) + ax0_ax1_fused_inner_s_1) + 448)] = (((1 <= ((((int)blockIdx.x) >> 3) + (k_outer >> 1))) && (((((int)blockIdx.x) >> 3) + (k_outer >> 1)) < 57)) ? input[(((((((k_outer >> 1) * 3584) + ((((int)blockIdx.x) >> 1) * 896)) + (((((int)threadIdx.x) + 112) / 24) * 64)) + (((((k_outer & 1) * 3) + (((((int)threadIdx.x) >> 3) + 2) % 3)) >> 1) * 64)) + (((k_outer * 32) + ((((((int)threadIdx.x) * 4) + ax0_ax1_fused_inner_s_1) + 64) % 96)) & 63)) - 3648)] : 0.000000e+00f);
+    }
+    for (int ax0_ax1_fused_inner_s_2 = 0; ax0_ax1_fused_inner_s_2 < 4; ++ax0_ax1_fused_inner_s_2) {
+      data_shared[(((((int)threadIdx.x) * 4) + ax0_ax1_fused_inner_s_2) + 896)] = ((((1 <= ((((int)blockIdx.x) >> 3) + (k_outer >> 1))) && (((((int)blockIdx.x) >> 3) + (k_outer >> 1)) < 57)) && ((((((((int)blockIdx.x) & 7) >> 1) * 14) + ((((int)threadIdx.x) + 224) / 24)) + ((((k_outer & 1) * 3) + (((((int)threadIdx.x) >> 3) + 1) % 3)) >> 1)) < 57)) ? input[(((((((k_outer >> 1) * 3584) + ((((int)blockIdx.x) >> 1) * 896)) + (((((int)threadIdx.x) + 224) / 24) * 64)) + (((((k_outer & 1) * 3) + (((((int)threadIdx.x) >> 3) + 1) % 3)) >> 1) * 64)) + (((k_outer * 32) + ((((((int)threadIdx.x) * 4) + ax0_ax1_fused_inner_s_2) + 32) % 96)) & 63)) - 3648)] : 0.000000e+00f);
+    }
+      uint __1 = (((max((((((((uint)weight[((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[((int)threadIdx.x)] = (*(float *)(&(__1)));
+      uint __2 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 112) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 112) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 112) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 112) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 112)] = (*(float *)(&(__2)));
+      uint __3 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 448)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 7)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 448)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 448)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 224)] = (*(float *)(&(__3)));
+      uint __4 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 336) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 336) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 336) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 336) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 336)] = (*(float *)(&(__4)));
+      uint __5 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 896)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 14)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 896)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 896)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 448)] = (*(float *)(&(__5)));
+      uint __6 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 560) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 560) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 560) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 560) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 560)] = (*(float *)(&(__6)));
+      uint __7 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 1344)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 21)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 1344)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 1344)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 672)] = (*(float *)(&(__7)));
+      uint __8 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 784) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 784) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 784) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 784) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 784)] = (*(float *)(&(__8)));
+      uint __9 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 28)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 896)] = (*(float *)(&(__9)));
+      uint __10 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1008) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 1008) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1008) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1008) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 1008)] = (*(float *)(&(__10)));
+      uint __11 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 2240)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 35)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 2240)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 2240)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 1120)] = (*(float *)(&(__11)));
+      uint __12 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1232) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 1232) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1232) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1232) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 1232)] = (*(float *)(&(__12)));
+      uint __13 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 2688)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 42)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 2688)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 2688)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 1344)] = (*(float *)(&(__13)));
+      uint __14 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1456) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 1456) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1456) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1456) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 1456)] = (*(float *)(&(__14)));
+      uint __15 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 3136)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 49)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 3136)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 3136)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 1568)] = (*(float *)(&(__15)));
+      uint __16 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1680) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 1680) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1680) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1680) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 1680)] = (*(float *)(&(__16)));
+      uint __17 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 3584)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 56)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 3584)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 3584)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 1792)] = (*(float *)(&(__17)));
+      uint __18 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1904) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 1904) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1904) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 1904) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 1904)] = (*(float *)(&(__18)));
+      uint __19 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 4032)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 63)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 4032)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 4032)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 2016)] = (*(float *)(&(__19)));
+      uint __20 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2128) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 2128) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2128) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2128) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 2128)] = (*(float *)(&(__20)));
+      uint __21 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 4480)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 70)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 4480)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 4480)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 2240)] = (*(float *)(&(__21)));
+      uint __22 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2352) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 2352) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2352) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2352) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 2352)] = (*(float *)(&(__22)));
+      uint __23 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 4928)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 77)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 4928)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 4928)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 2464)] = (*(float *)(&(__23)));
+      uint __24 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2576) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 2576) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2576) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2576) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 2576)] = (*(float *)(&(__24)));
+      uint __25 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 5376)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 84)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 5376)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 5376)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 2688)] = (*(float *)(&(__25)));
+      uint __26 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2800) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 2800) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2800) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 2800) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 2800)] = (*(float *)(&(__26)));
+      uint __27 = (((max((((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 5824)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) >> 5)) + 91)])), (uint)63) | ((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 5824)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 6144) + ((((int)threadIdx.x) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 31)) + 5824)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 2912)] = (*(float *)(&(__27)));
+    if (((int)threadIdx.x) < 48) {
+        uint __28 = (((max((((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 3024) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((k_outer * 96) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) + 3024) >> 5))])), (uint)63) | ((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 3024) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 6144) + (((((int)threadIdx.x) + 3024) >> 5) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + ((((int)threadIdx.x) + 16) & 31))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+      B_decode_shared[(((int)threadIdx.x) + 3024)] = (*(float *)(&(__28)));
+    }
+    __syncthreads();
+    for (int k_inner = 0; k_inner < 96; ++k_inner) {
+      T_conv_local[0] = (T_conv_local[0] + (data_shared[(((((int)threadIdx.x) >> 4) * 96) + k_inner)] * B_decode_shared[((k_inner * 32) + (((int)threadIdx.x) & 15))]));
+      T_conv_local[2] = (T_conv_local[2] + (data_shared[(((((int)threadIdx.x) >> 4) * 96) + k_inner)] * B_decode_shared[(((k_inner * 32) + (((int)threadIdx.x) & 15)) + 16)]));
+      T_conv_local[1] = (T_conv_local[1] + (data_shared[((((((int)threadIdx.x) >> 4) * 96) + k_inner) + 672)] * B_decode_shared[((k_inner * 32) + (((int)threadIdx.x) & 15))]));
+      T_conv_local[3] = (T_conv_local[3] + (data_shared[((((((int)threadIdx.x) >> 4) * 96) + k_inner) + 672)] * B_decode_shared[(((k_inner * 32) + (((int)threadIdx.x) & 15)) + 16)]));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 1) * 896) + ((((int)threadIdx.x) >> 4) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 15))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 1) * 896) + ((((int)threadIdx.x) >> 4) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 15)) + 16)] = T_conv_local[2];
+  T_conv[((((((((int)blockIdx.x) >> 1) * 896) + ((((int)threadIdx.x) >> 4) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 15)) + 448)] = T_conv_local[1];
+  T_conv[((((((((int)blockIdx.x) >> 1) * 896) + ((((int)threadIdx.x) >> 4) * 64)) + ((((int)blockIdx.x) & 1) * 32)) + (((int)threadIdx.x) & 15)) + 464)] = T_conv_local[3];
+}
+
+
+top1: 0.05098880082368851 	top10: 0.04935679957270622
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+best latency: 0.04935679957270622
+4.260510985073343 tflops, 2.9382834379816156 %
+n: 1, f: 64, h: 56, w: 56, c: 64, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 56, ow: 56
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.008601600304245949
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.008960000239312649
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.009625600650906563
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.012902399525046349
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 64], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.009625600650906563
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.009727999567985535
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.007782399654388428
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.007782399654388428
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.011264000087976456
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.010649600066244602
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 64], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2}}}
+0.011264000087976456
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.00972800049930811
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.010854399763047695
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.013107200153172016
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.011264000087976456
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.011776000261306763
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.007509333547204733
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.015615999698638916
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.016042666509747505
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+0.014745600521564484
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.008704000152647495
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 16], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.015018667094409466
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.01587199978530407
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.009625600650906563
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.014336000196635723
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 32], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.009472000412642956
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.008704000152647495
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.012083200737833977
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.011673600412905216
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 32], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.009625600650906563
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.012492800131440163
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 8], 'thread': [49, 2], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.020735999569296837
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 64], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.016793599352240562
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.015360000543296337
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.009045333601534367
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.011468799784779549
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.019046399742364883
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.022869333624839783
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.011434666812419891
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.01597439870238304
+code:  __global__ void __launch_bounds__(112) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
+  
+  float T_conv_local[14];
+  __shared__ float data_shared[6272];
+  __shared__ float B_decode_shared[256];
+  T_conv_local[0] = 0.000000e+00f;
+  T_conv_local[1] = 0.000000e+00f;
+  T_conv_local[2] = 0.000000e+00f;
+  T_conv_local[3] = 0.000000e+00f;
+  T_conv_local[4] = 0.000000e+00f;
+  T_conv_local[5] = 0.000000e+00f;
+  T_conv_local[6] = 0.000000e+00f;
+  T_conv_local[7] = 0.000000e+00f;
+  T_conv_local[8] = 0.000000e+00f;
+  T_conv_local[9] = 0.000000e+00f;
+  T_conv_local[10] = 0.000000e+00f;
+  T_conv_local[11] = 0.000000e+00f;
+  T_conv_local[12] = 0.000000e+00f;
+  T_conv_local[13] = 0.000000e+00f;
+  for (int k_outer = 0; k_outer < 2; ++k_outer) {
+    __syncthreads();
+    *(float4*)(data_shared + (((int)threadIdx.x) * 4)) = *(float4*)(input + (((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 448)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 896));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 896)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 1792));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1344)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 2688));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1792)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 3584));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2240)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 4480));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2688)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 5376));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 3136)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 6272));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 3584)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 7168));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 4032)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 8064));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 4480)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 8960));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 4928)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 9856));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 5376)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 10752));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 5824)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 11648));
+      uint __1 = (((max((((((((uint)weight[((((k_outer * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((((((int)blockIdx.x) & 7) >> 2) * 64) + (k_outer * 32)) + (((int)threadIdx.x) >> 3))])), (uint)63) | ((((((uint)weight[((((k_outer * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[((int)threadIdx.x)] = (*(float *)(&(__1)));
+      uint __2 = (((max((((((((uint)weight[(((((k_outer * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 896)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 7) >> 2) * 64) + (k_outer * 32)) + (((int)threadIdx.x) >> 3)) + 14)])), (uint)63) | ((((((uint)weight[(((((k_outer * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 896)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 896)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 112)] = (*(float *)(&(__2)));
+    if (((int)threadIdx.x) < 32) {
+        uint __3 = (((max((((((((uint)weight[(((((k_outer * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 7) >> 2) * 64) + (k_outer * 32)) + (((int)threadIdx.x) >> 3)) + 28)])), (uint)63) | ((((((uint)weight[(((((k_outer * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+      B_decode_shared[(((int)threadIdx.x) + 224)] = (*(float *)(&(__3)));
+    }
+    __syncthreads();
+    for (int k_inner = 0; k_inner < 32; ++k_inner) {
+      T_conv_local[0] = (T_conv_local[0] + (data_shared[(((((int)threadIdx.x) >> 3) * 32) + k_inner)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[1] = (T_conv_local[1] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 448)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[2] = (T_conv_local[2] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 896)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[3] = (T_conv_local[3] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1344)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[4] = (T_conv_local[4] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1792)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[5] = (T_conv_local[5] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2240)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[6] = (T_conv_local[6] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2688)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[7] = (T_conv_local[7] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3136)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[8] = (T_conv_local[8] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3584)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[9] = (T_conv_local[9] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4032)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[10] = (T_conv_local[10] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4480)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[11] = (T_conv_local[11] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4928)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[12] = (T_conv_local[12] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 5376)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[13] = (T_conv_local[13] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 5824)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 896)] = T_conv_local[1];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 1792)] = T_conv_local[2];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 2688)] = T_conv_local[3];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 3584)] = T_conv_local[4];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 4480)] = T_conv_local[5];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 5376)] = T_conv_local[6];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 6272)] = T_conv_local[7];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 7168)] = T_conv_local[8];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 8064)] = T_conv_local[9];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 8960)] = T_conv_local[10];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 9856)] = T_conv_local[11];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 10752)] = T_conv_local[12];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 12544) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 11648)] = T_conv_local[13];
+}
+
+
+top1: 0.008601600304245949 	top10: 0.007509333547204733
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+best latency: 0.007509333547204733
+3.111463967484904 tflops, 2.1458372189551063 %
+n: 1, f: 128, h: 28, w: 28, c: 128, kh: 3, kw: 3, s: 1, d: 1, p: 1, oh: 28, ow: 28
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.09789440035820007
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.10075519979000092
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.09573599696159363
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.0716799944639206
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.09194879978895187
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.08662400394678116
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.07659520208835602
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.062457598745822906
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.09011200070381165
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.07168640196323395
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.08519040048122406
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 16], 'thread': [7, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.05673599988222122
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.07639040052890778
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.06757760047912598
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.12554240226745605
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 8], 'thread': [49, 2], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.21872639656066895
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 8], 'thread': [14, 8], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.1068992018699646
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.08755200356245041
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.08846719563007355
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.09379199892282486
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.09072639793157578
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 64], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2}}}
+0.13742080330848694
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.11202559620141983
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.3024960160255432
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.22240641713142395
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.13495680689811707
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 4], 'thread': [49, 2], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.43765121698379517
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+0.1467680037021637
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 4], 'thread': [28, 4], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.13496319949626923
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.14003199338912964
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.16024799644947052
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.13230720162391663
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.1290159970521927
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 64], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.34139519929885864
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.21319039165973663
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.38296958804130554
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.14950400590896606
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 4], 'thread': [28, 4], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.2342911958694458
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.3321855962276459
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.12672799825668335
+code:  __global__ void __launch_bounds__(112) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
+  
+  float T_conv_local[28];
+  __shared__ float data_shared[6272];
+  __shared__ float B_decode_shared[512];
+  T_conv_local[0] = 0.000000e+00f;
+  T_conv_local[14] = 0.000000e+00f;
+  T_conv_local[1] = 0.000000e+00f;
+  T_conv_local[15] = 0.000000e+00f;
+  T_conv_local[2] = 0.000000e+00f;
+  T_conv_local[16] = 0.000000e+00f;
+  T_conv_local[3] = 0.000000e+00f;
+  T_conv_local[17] = 0.000000e+00f;
+  T_conv_local[4] = 0.000000e+00f;
+  T_conv_local[18] = 0.000000e+00f;
+  T_conv_local[5] = 0.000000e+00f;
+  T_conv_local[19] = 0.000000e+00f;
+  T_conv_local[6] = 0.000000e+00f;
+  T_conv_local[20] = 0.000000e+00f;
+  T_conv_local[7] = 0.000000e+00f;
+  T_conv_local[21] = 0.000000e+00f;
+  T_conv_local[8] = 0.000000e+00f;
+  T_conv_local[22] = 0.000000e+00f;
+  T_conv_local[9] = 0.000000e+00f;
+  T_conv_local[23] = 0.000000e+00f;
+  T_conv_local[10] = 0.000000e+00f;
+  T_conv_local[24] = 0.000000e+00f;
+  T_conv_local[11] = 0.000000e+00f;
+  T_conv_local[25] = 0.000000e+00f;
+  T_conv_local[12] = 0.000000e+00f;
+  T_conv_local[26] = 0.000000e+00f;
+  T_conv_local[13] = 0.000000e+00f;
+  T_conv_local[27] = 0.000000e+00f;
+  for (int k_outer = 0; k_outer < 36; ++k_outer) {
+    __syncthreads();
+    *(float4*)(data_shared + (((int)threadIdx.x) * 4)) = (((1 <= (((((int)blockIdx.x) >> 3) * 7) + (k_outer / 12))) && (1 <= ((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2)))) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 448)) = (((1 <= (((((int)blockIdx.x) >> 3) * 7) + (k_outer / 12))) && (((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2)) < 15)) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 1920)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 896)) = ((1 <= ((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2))) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 128)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1344)) = ((((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2)) < 15) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 1664)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1792)) = ((1 <= ((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2))) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 3456)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2240)) = ((((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2)) < 15) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 5248)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2688)) = ((1 <= ((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2))) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 7040)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 3136)) = ((((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2)) < 15) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 8832)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 3584)) = ((1 <= ((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2))) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 10624)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 4032)) = ((((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2)) < 15) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 12416)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 4480)) = ((1 <= ((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2))) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 14208)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 4928)) = ((((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2)) < 15) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 16000)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 5376)) = (((1 <= ((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2))) && ((((((int)blockIdx.x) >> 3) * 7) + (k_outer / 12)) < 23)) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 17792)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 5824)) = ((((((((int)blockIdx.x) >> 3) * 7) + (k_outer / 12)) < 23) && (((((int)threadIdx.x) >> 3) + ((k_outer % 12) >> 2)) < 15)) ? *(float4*)(input + (((((((((int)blockIdx.x) >> 3) * 25088) + ((k_outer / 12) * 3584)) + ((((int)threadIdx.x) >> 3) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 19584)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+      uint __1 = (((max((((((((uint)weight[((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((((((int)blockIdx.x) & 7) >> 1) * 128) + (k_outer * 32)) + (((int)threadIdx.x) >> 4))])), (uint)63) | ((((((uint)weight[((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[((int)threadIdx.x)] = (*(float *)(&(__1)));
+      uint __2 = (((max((((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 896)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 7) >> 1) * 128) + (k_outer * 32)) + (((int)threadIdx.x) >> 4)) + 7)])), (uint)63) | ((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 896)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 896)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 112)] = (*(float *)(&(__2)));
+      uint __3 = (((max((((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 7) >> 1) * 128) + (k_outer * 32)) + (((int)threadIdx.x) >> 4)) + 14)])), (uint)63) | ((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 224)] = (*(float *)(&(__3)));
+      uint __4 = (((max((((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 2688)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 7) >> 1) * 128) + (k_outer * 32)) + (((int)threadIdx.x) >> 4)) + 21)])), (uint)63) | ((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 2688)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 2688)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 336)] = (*(float *)(&(__4)));
+    if (((int)threadIdx.x) < 64) {
+        uint __5 = (((max((((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 3584)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 7) >> 1) * 128) + (k_outer * 32)) + (((int)threadIdx.x) >> 4)) + 28)])), (uint)63) | ((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 3584)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 15)) + 3584)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+      B_decode_shared[(((int)threadIdx.x) + 448)] = (*(float *)(&(__5)));
+    }
+    __syncthreads();
+    for (int k_inner = 0; k_inner < 32; ++k_inner) {
+      T_conv_local[0] = (T_conv_local[0] + (data_shared[(((((int)threadIdx.x) >> 3) * 32) + k_inner)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[14] = (T_conv_local[14] + (data_shared[(((((int)threadIdx.x) >> 3) * 32) + k_inner)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[1] = (T_conv_local[1] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 448)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[15] = (T_conv_local[15] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 448)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[2] = (T_conv_local[2] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 896)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[16] = (T_conv_local[16] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 896)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[3] = (T_conv_local[3] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1344)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[17] = (T_conv_local[17] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1344)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[4] = (T_conv_local[4] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1792)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[18] = (T_conv_local[18] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1792)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[5] = (T_conv_local[5] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2240)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[19] = (T_conv_local[19] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2240)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[6] = (T_conv_local[6] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2688)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[20] = (T_conv_local[20] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2688)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[7] = (T_conv_local[7] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3136)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[21] = (T_conv_local[21] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3136)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[8] = (T_conv_local[8] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3584)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[22] = (T_conv_local[22] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3584)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[9] = (T_conv_local[9] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4032)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[23] = (T_conv_local[23] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4032)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[10] = (T_conv_local[10] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4480)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[24] = (T_conv_local[24] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4480)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[11] = (T_conv_local[11] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4928)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[25] = (T_conv_local[25] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4928)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[12] = (T_conv_local[12] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 5376)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[26] = (T_conv_local[26] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 5376)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[13] = (T_conv_local[13] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 5824)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[27] = (T_conv_local[27] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 5824)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 8)] = T_conv_local[14];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 1792)] = T_conv_local[1];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 1800)] = T_conv_local[15];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 3584)] = T_conv_local[2];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 3592)] = T_conv_local[16];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 5376)] = T_conv_local[3];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 5384)] = T_conv_local[17];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 7168)] = T_conv_local[4];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 7176)] = T_conv_local[18];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 8960)] = T_conv_local[5];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 8968)] = T_conv_local[19];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 10752)] = T_conv_local[6];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 10760)] = T_conv_local[20];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 12544)] = T_conv_local[7];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 12552)] = T_conv_local[21];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 14336)] = T_conv_local[8];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 14344)] = T_conv_local[22];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 16128)] = T_conv_local[9];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 16136)] = T_conv_local[23];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 17920)] = T_conv_local[10];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 17928)] = T_conv_local[24];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 19712)] = T_conv_local[11];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 19720)] = T_conv_local[25];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 21504)] = T_conv_local[12];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 21512)] = T_conv_local[26];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 23296)] = T_conv_local[13];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 25088) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 23304)] = T_conv_local[27];
+}
+
+
+top1: 0.09789440035820007 	top10: 0.05673599988222122
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 16], 'thread': [7, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+best latency: 0.05673599988222122
+3.7063802031181448 tflops, 2.5561242780125135 %
+n: 1, f: 128, h: 28, w: 28, c: 512, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 28, ow: 28
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.04567680135369301
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.047520000487565994
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.04120799899101257
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.03460479900240898
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.03993599861860275
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.04095359891653061
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.03400320187211037
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.03235840052366257
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.039315201342105865
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.03400320187211037
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.05877760052680969
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 16], 'thread': [14, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.0575920008122921
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.031123200431466103
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.043219201266765594
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.07699839770793915
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 8], 'thread': [49, 2], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.08755200356245041
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.039532799273729324
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.03768320009112358
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.04136959835886955
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.038707200437784195
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.04055039957165718
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 64], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2}}}
+0.05652480199933052
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.06881280243396759
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.12041600048542023
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.05610880255699158
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.12227199971675873
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.04055039957165718
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 32], 'thread': [7, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.04463999718427658
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.037273600697517395
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 16], 'thread': [7, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.060152001678943634
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 16], 'thread': [8, 16], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.03399679809808731
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.06143999844789505
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 4], 'thread': [49, 2], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.20128457248210907
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+0.06732799857854843
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 4], 'thread': [28, 4], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.0645066648721695
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.06205440312623978
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.03379200026392937
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.07045120000839233
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.06901760399341583
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 8], 'thread': [14, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.09522560238838196
+code:  __global__ void __launch_bounds__(112) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
+  
+  float T_conv_local[2];
+  __shared__ float data_shared[3584];
+  __shared__ float B_decode_shared[1024];
+  T_conv_local[0] = 0.000000e+00f;
+  T_conv_local[1] = 0.000000e+00f;
+  for (int k_outer = 0; k_outer < 4; ++k_outer) {
+    __syncthreads();
+    *(float4*)(data_shared + (((int)threadIdx.x) * 4)) = *(float4*)(input + (((((((int)blockIdx.x) >> 4) * 14336) + ((((int)threadIdx.x) >> 5) * 512)) + (k_outer * 128)) + ((((int)threadIdx.x) & 31) * 4)));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 448)) = *(float4*)(input + (((((((int)blockIdx.x) >> 4) * 14336) + ((((((int)threadIdx.x) * 4) + 448) >> 7) * 512)) + (k_outer * 128)) + (((((int)threadIdx.x) * 4) + 64) & 127)));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 896)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 4) * 14336) + ((((int)threadIdx.x) >> 5) * 512)) + (k_outer * 128)) + ((((int)threadIdx.x) & 31) * 4)) + 3584));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1344)) = *(float4*)(input + (((((((int)blockIdx.x) >> 4) * 14336) + ((((((int)threadIdx.x) * 4) + 1344) >> 7) * 512)) + (k_outer * 128)) + (((((int)threadIdx.x) * 4) + 64) & 127)));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1792)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 4) * 14336) + ((((int)threadIdx.x) >> 5) * 512)) + (k_outer * 128)) + ((((int)threadIdx.x) & 31) * 4)) + 7168));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2240)) = *(float4*)(input + (((((((int)blockIdx.x) >> 4) * 14336) + ((((((int)threadIdx.x) * 4) + 2240) >> 7) * 512)) + (k_outer * 128)) + (((((int)threadIdx.x) * 4) + 64) & 127)));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2688)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 4) * 14336) + ((((int)threadIdx.x) >> 5) * 512)) + (k_outer * 128)) + ((((int)threadIdx.x) & 31) * 4)) + 10752));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 3136)) = *(float4*)(input + (((((((int)blockIdx.x) >> 4) * 14336) + ((((((int)threadIdx.x) * 4) + 3136) >> 7) * 512)) + (k_outer * 128)) + (((((int)threadIdx.x) * 4) + 64) & 127)));
+      uint __1 = (((max((((((((uint)weight[((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((((((int)blockIdx.x) & 15) >> 2) * 128) + (k_outer * 128)) + (((int)threadIdx.x) >> 3))])), (uint)63) | ((((((uint)weight[((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7))]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7))]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[((int)threadIdx.x)] = (*(float *)(&(__1)));
+      uint __2 = (((max((((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 15) >> 2) * 128) + (k_outer * 128)) + (((int)threadIdx.x) >> 3)) + 14)])), (uint)63) | ((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 1792)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 112)] = (*(float *)(&(__2)));
+      uint __3 = (((max((((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 3584)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 15) >> 2) * 128) + (k_outer * 128)) + (((int)threadIdx.x) >> 3)) + 28)])), (uint)63) | ((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 3584)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 3584)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 224)] = (*(float *)(&(__3)));
+      uint __4 = (((max((((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 5376)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 15) >> 2) * 128) + (k_outer * 128)) + (((int)threadIdx.x) >> 3)) + 42)])), (uint)63) | ((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 5376)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 5376)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 336)] = (*(float *)(&(__4)));
+      uint __5 = (((max((((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 7168)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 15) >> 2) * 128) + (k_outer * 128)) + (((int)threadIdx.x) >> 3)) + 56)])), (uint)63) | ((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 7168)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 7168)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 448)] = (*(float *)(&(__5)));
+      uint __6 = (((max((((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 8960)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 15) >> 2) * 128) + (k_outer * 128)) + (((int)threadIdx.x) >> 3)) + 70)])), (uint)63) | ((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 8960)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 8960)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 560)] = (*(float *)(&(__6)));
+      uint __7 = (((max((((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 10752)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 15) >> 2) * 128) + (k_outer * 128)) + (((int)threadIdx.x) >> 3)) + 84)])), (uint)63) | ((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 10752)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 10752)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 672)] = (*(float *)(&(__7)));
+      uint __8 = (((max((((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 12544)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 15) >> 2) * 128) + (k_outer * 128)) + (((int)threadIdx.x) >> 3)) + 98)])), (uint)63) | ((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 12544)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 12544)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 784)] = (*(float *)(&(__8)));
+      uint __9 = (((max((((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 14336)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 15) >> 2) * 128) + (k_outer * 128)) + (((int)threadIdx.x) >> 3)) + 112)])), (uint)63) | ((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 14336)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 14336)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((int)threadIdx.x) + 896)] = (*(float *)(&(__9)));
+    if (((int)threadIdx.x) < 16) {
+        uint __10 = (((max((((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 16128)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((((int)blockIdx.x) & 15) >> 2) * 128) + (k_outer * 128)) + (((int)threadIdx.x) >> 3)) + 126)])), (uint)63) | ((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 16128)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 16128)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+      B_decode_shared[(((int)threadIdx.x) + 1008)] = (*(float *)(&(__10)));
+    }
+    __syncthreads();
+    for (int k_inner = 0; k_inner < 128; ++k_inner) {
+      T_conv_local[0] = (T_conv_local[0] + (data_shared[(((((int)threadIdx.x) >> 3) * 128) + k_inner)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[1] = (T_conv_local[1] + (data_shared[((((((int)threadIdx.x) >> 3) * 128) + k_inner) + 1792)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 4) * 3584) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 4) * 3584) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.x) & 7)) + 1792)] = T_conv_local[1];
+}
+
+
+top1: 0.04567680135369301 	top10: 0.031123200431466103
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+best latency: 0.031123200431466103
+3.0029072110888286 tflops, 2.0709704904060886 %
+n: 128, f: 64, h: 56, w: 56, c: 64, kh: 3, kw: 3, s: 1, d: 1, p: 1, oh: 56, ow: 56
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+2.795724868774414
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+2.823577642440796
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 64], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+9.565183639526367
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+7.585587501525879
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+6.453043460845947
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+12.361727714538574
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+5.877145767211914
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+2.4764416217803955
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 64], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2}}}
+3.4220032691955566
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+4.928102493286133
+{<Node, ladder_conv2d_reshape_bias>: {'block': [392, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+6.575718879699707
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+7.82663631439209
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 32], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+14.002584457397461
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+6.593740940093994
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+2.7607040405273438
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+5.543936252593994
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+3.446988582611084
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.954892635345459
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+8.400691032409668
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+10.362265586853027
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+6.644735813140869
+{<Node, ladder_conv2d_reshape_bias>: {'block': [392, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+10.259455680847168
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+5.421465873718262
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.633356809616089
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+9.897574424743652
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+5.611519813537598
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+5.463654518127441
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+9.963724136352539
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+5.125120162963867
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 32], 'thread': [4, 32], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+4.322099208831787
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+10.195199966430664
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+8.953241348266602
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+4.132249355316162
+{<Node, ladder_conv2d_reshape_bias>: {'block': [392, 16], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+4.08207368850708
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 8], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+10.523238182067871
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+5.864448070526123
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 8], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+6.310912132263184
+code:  __global__ void __launch_bounds__(128) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
+  
+  float T_conv_local[8];
+  __shared__ float data_shared[4096];
+  __shared__ float B_decode_shared[256];
+  T_conv_local[0] = 0.000000e+00f;
+  T_conv_local[1] = 0.000000e+00f;
+  T_conv_local[2] = 0.000000e+00f;
+  T_conv_local[3] = 0.000000e+00f;
+  T_conv_local[4] = 0.000000e+00f;
+  T_conv_local[5] = 0.000000e+00f;
+  T_conv_local[6] = 0.000000e+00f;
+  T_conv_local[7] = 0.000000e+00f;
+  for (int k_outer = 0; k_outer < 18; ++k_outer) {
+    __syncthreads();
+    *(float4*)(data_shared + (((int)threadIdx.x) * 4)) = (((((1 <= ((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) % 392) / 7) + (k_outer / 6))) && (1 <= (((k_outer % 6) >> 1) + ((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) % 56)))) && (((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) % 392) / 7) + (k_outer / 6)) < 57)) && ((((k_outer % 6) >> 1) + ((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) % 56)) < 57)) ? *(float4*)(input + ((((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) / 7) * 3584) + ((k_outer / 6) * 3584)) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) % 56) * 64)) + ((k_outer % 6) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3648)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 512)) = (((((1 <= (((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 2) % 392) / 7) + (k_outer / 6))) && (1 <= (((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 16) % 56)))) && ((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 2) % 392) / 7) + (k_outer / 6)) < 57)) && ((((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 16) % 56)) < 57)) ? *(float4*)(input + (((((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 2) / 7) * 3584) + ((k_outer / 6) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 16) % 56) * 64)) + ((k_outer % 6) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3648)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1024)) = (((((1 <= (((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 4) % 392) / 7) + (k_outer / 6))) && (1 <= (((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 32) % 56)))) && ((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 4) % 392) / 7) + (k_outer / 6)) < 57)) && ((((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 32) % 56)) < 57)) ? *(float4*)(input + (((((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 4) / 7) * 3584) + ((k_outer / 6) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 32) % 56) * 64)) + ((k_outer % 6) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3648)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1536)) = (((((1 <= (((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 6) % 392) / 7) + (k_outer / 6))) && (1 <= (((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 48) % 56)))) && ((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 6) % 392) / 7) + (k_outer / 6)) < 57)) && ((((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 48) % 56)) < 57)) ? *(float4*)(input + (((((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 6) / 7) * 3584) + ((k_outer / 6) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 48) % 56) * 64)) + ((k_outer % 6) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3648)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2048)) = (((((1 <= (((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 8) % 392) / 7) + (k_outer / 6))) && (1 <= (((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 8) % 56)))) && ((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 8) % 392) / 7) + (k_outer / 6)) < 57)) && ((((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 8) % 56)) < 57)) ? *(float4*)(input + (((((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 8) / 7) * 3584) + ((k_outer / 6) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 8) % 56) * 64)) + ((k_outer % 6) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3648)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2560)) = (((((1 <= (((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 10) % 392) / 7) + (k_outer / 6))) && (1 <= (((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 24) % 56)))) && ((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 10) % 392) / 7) + (k_outer / 6)) < 57)) && ((((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 24) % 56)) < 57)) ? *(float4*)(input + (((((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 10) / 7) * 3584) + ((k_outer / 6) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 24) % 56) * 64)) + ((k_outer % 6) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3648)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 3072)) = (((((1 <= (((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 12) % 392) / 7) + (k_outer / 6))) && (1 <= (((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 40) % 56)))) && ((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 12) % 392) / 7) + (k_outer / 6)) < 57)) && ((((k_outer % 6) >> 1) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 40) % 56)) < 57)) ? *(float4*)(input + (((((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) + 12) / 7) * 3584) + ((k_outer / 6) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) + 40) % 56) * 64)) + ((k_outer % 6) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3648)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 3584)) = (((((1 <= ((k_outer / 6) + ((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) / 7) + 2) % 56))) && (1 <= (((k_outer % 6) >> 1) + ((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) % 56)))) && (((k_outer / 6) + ((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) / 7) + 2) % 56)) < 57)) && ((((k_outer % 6) >> 1) + ((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) % 56)) < 57)) ? *(float4*)(input + ((((((((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 6)) / 7) * 3584) + ((k_outer / 6) * 3584)) + (((((((int)blockIdx.x) >> 3) * 16) + (((int)threadIdx.x) >> 3)) % 56) * 64)) + ((k_outer % 6) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 3520)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    for (int ax0_ax1_fused_inner_s = 0; ax0_ax1_fused_inner_s < 2; ++ax0_ax1_fused_inner_s) {
+        uint __1 = (((max((((((((uint)weight[(((((k_outer * 2048) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + ((((int)threadIdx.x) & 3) * 2)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((((((int)blockIdx.x) & 7) >> 2) * 64) + (k_outer * 32)) + (((int)threadIdx.x) >> 2))])), (uint)63) | ((((((uint)weight[(((((k_outer * 2048) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + ((((int)threadIdx.x) & 3) * 2)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 2048) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + ((((int)threadIdx.x) & 3) * 2)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+      B_decode_shared[((((int)threadIdx.x) * 2) + ax0_ax1_fused_inner_s)] = (*(float *)(&(__1)));
+    }
+    __syncthreads();
+    for (int k_inner = 0; k_inner < 32; ++k_inner) {
+      T_conv_local[0] = (T_conv_local[0] + (data_shared[(((((int)threadIdx.x) >> 3) * 32) + k_inner)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[1] = (T_conv_local[1] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 512)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[2] = (T_conv_local[2] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1024)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[3] = (T_conv_local[3] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1536)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[4] = (T_conv_local[4] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2048)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[5] = (T_conv_local[5] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2560)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[6] = (T_conv_local[6] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3072)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[7] = (T_conv_local[7] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3584)] * B_decode_shared[((k_inner * 8) + (((int)threadIdx.x) & 7))]));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 3) * 8192) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 8192) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 1024)] = T_conv_local[1];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 8192) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 2048)] = T_conv_local[2];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 8192) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 3072)] = T_conv_local[3];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 8192) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 4096)] = T_conv_local[4];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 8192) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 5120)] = T_conv_local[5];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 8192) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 6144)] = T_conv_local[6];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 8192) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 7)) + 7168)] = T_conv_local[7];
+}
+
+
+top1: 2.795724868774414 	top10: 2.4764416217803955
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+best latency: 2.4764416217803955
+10.869024195651678 tflops, 7.495878755621846 %
+n: 128, f: 64, h: 56, w: 56, c: 64, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 56, ow: 56
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.3520447909832001
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 64], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.6088703870773315
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 64], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.371916800737381
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.33178240060806274
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 64], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2}}}
+0.4392896294593811
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 64], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.3487679958343506
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.432940810918808
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.3342335820198059
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.439303994178772
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.3538944125175476
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.5306367874145508
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 64], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.41553276777267456
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 64], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.4218944013118744
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.6932479739189148
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.39464321732521057
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.35777920484542847
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.383379191160202
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.6891599893569946
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 32], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.4517888128757477
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.7086080312728882
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.7444400191307068
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+1.0844160318374634
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 32], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.3814319968223572
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.3940746784210205
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.4841407835483551
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.4179967939853668
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.46960002183914185
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.4679679870605469
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+1.2617664337158203
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.47636479139328003
+{<Node, ladder_conv2d_reshape_bias>: {'block': [392, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.5227519869804382
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.7430880069732666
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+0.9098160266876221
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.7485439777374268
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.5730933547019958
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.5517851114273071
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+1.0242559909820557
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.5242816209793091
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.7226468324661255
+code:  __global__ void __launch_bounds__(128) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
+  
+  float T_conv_local[4];
+  __shared__ float data_shared[2048];
+  __shared__ float B_decode_shared[1024];
+  T_conv_local[0] = 0.000000e+00f;
+  T_conv_local[2] = 0.000000e+00f;
+  T_conv_local[1] = 0.000000e+00f;
+  T_conv_local[3] = 0.000000e+00f;
+  *(float4*)(data_shared + (((int)threadIdx.x) * 4)) = *(float4*)(input + (((((int)blockIdx.x) >> 2) * 2048) + (((int)threadIdx.x) * 4)));
+  *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(input + ((((((int)blockIdx.x) >> 2) * 2048) + (((int)threadIdx.x) * 4)) + 512));
+  *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(input + ((((((int)blockIdx.x) >> 2) * 2048) + (((int)threadIdx.x) * 4)) + 1024));
+  *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(input + ((((((int)blockIdx.x) >> 2) * 2048) + (((int)threadIdx.x) * 4)) + 1536));
+  for (int ax0_ax1_fused_inner_s = 0; ax0_ax1_fused_inner_s < 4; ++ax0_ax1_fused_inner_s) {
+      uint __1 = (((max((((((((uint)weight[(((((((int)threadIdx.x) >> 2) * 64) + ((((int)blockIdx.x) & 3) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[((((((int)blockIdx.x) & 3) >> 1) * 64) + (((int)threadIdx.x) >> 2))])), (uint)63) | ((((((uint)weight[(((((((int)threadIdx.x) >> 2) * 64) + ((((int)blockIdx.x) & 3) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((((int)threadIdx.x) >> 2) * 64) + ((((int)blockIdx.x) & 3) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[((((int)threadIdx.x) * 4) + ax0_ax1_fused_inner_s)] = (*(float *)(&(__1)));
+  }
+  for (int ax0_ax1_fused_inner_s_1 = 0; ax0_ax1_fused_inner_s_1 < 4; ++ax0_ax1_fused_inner_s_1) {
+      uint __2 = (((max((((((((uint)weight[((((((((int)threadIdx.x) >> 2) * 64) + ((((int)blockIdx.x) & 3) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s_1) + 2048)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((((((int)blockIdx.x) & 3) >> 1) * 64) + (((int)threadIdx.x) >> 2)) + 32)])), (uint)63) | ((((((uint)weight[((((((((int)threadIdx.x) >> 2) * 64) + ((((int)blockIdx.x) & 3) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s_1) + 2048)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[((((((((int)threadIdx.x) >> 2) * 64) + ((((int)blockIdx.x) & 3) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s_1) + 2048)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+    B_decode_shared[(((((int)threadIdx.x) * 4) + ax0_ax1_fused_inner_s_1) + 512)] = (*(float *)(&(__2)));
+  }
+  __syncthreads();
+  for (int k_inner = 0; k_inner < 64; ++k_inner) {
+    T_conv_local[0] = (T_conv_local[0] + (data_shared[(((((int)threadIdx.x) >> 3) * 64) + k_inner)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+    T_conv_local[2] = (T_conv_local[2] + (data_shared[(((((int)threadIdx.x) >> 3) * 64) + k_inner)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+    T_conv_local[1] = (T_conv_local[1] + (data_shared[((((((int)threadIdx.x) >> 3) * 64) + k_inner) + 1024)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+    T_conv_local[3] = (T_conv_local[3] + (data_shared[((((((int)threadIdx.x) >> 3) * 64) + k_inner) + 1024)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+  }
+  T_conv[(((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 3) * 16)) + (((int)threadIdx.x) & 7))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 3) * 16)) + (((int)threadIdx.x) & 7)) + 8)] = T_conv_local[2];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 3) * 16)) + (((int)threadIdx.x) & 7)) + 1024)] = T_conv_local[1];
+  T_conv[((((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 3) * 64)) + ((((int)blockIdx.x) & 3) * 16)) + (((int)threadIdx.x) & 7)) + 1032)] = T_conv_local[3];
+}
+
+
+top1: 0.3520447909832001 	top10: 0.33178240060806274
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+best latency: 0.33178240060806274
+9.014108797720603 tflops, 6.216626757048691 %
+n: 128, f: 128, h: 28, w: 28, c: 128, kh: 3, kw: 3, s: 1, d: 1, p: 1, oh: 28, ow: 28
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.074662446975708
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.25099515914917
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+4.906393527984619
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+4.217446327209473
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.115206241607666
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.0552127361297607
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+4.743372917175293
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.6661248207092285
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 64], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+5.511775970458984
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.3511359691619873
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+8.532377243041992
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+4.140646457672119
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+5.2803521156311035
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+3.2747585773468018
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.0853121280670166
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+3.363020658493042
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+5.498476982116699
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+2.944812774658203
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 32], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+5.605177879333496
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.0799808502197266
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+3.2741310596466064
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+2.9020161628723145
+{<Node, ladder_conv2d_reshape_bias>: {'block': [392, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 64], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2}}}
+3.941171169281006
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+2.9712448120117188
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+5.819385528564453
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+3.276390552520752
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.3386497497558594
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.8815741539001465
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.065241575241089
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+4.249395370483398
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.076505661010742
+{<Node, ladder_conv2d_reshape_bias>: {'block': [392, 32], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+3.782041549682617
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 16], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+4.015103816986084
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+3.8694911003112793
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+5.606809616088867
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+10.075750350952148
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+5.638758659362793
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+5.397094249725342
+code:  __global__ void __launch_bounds__(128) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
+  
+  float T_conv_local[32];
+  __shared__ float data_shared[8192];
+  __shared__ float B_decode_shared[512];
+  T_conv_local[0] = 0.000000e+00f;
+  T_conv_local[16] = 0.000000e+00f;
+  T_conv_local[1] = 0.000000e+00f;
+  T_conv_local[17] = 0.000000e+00f;
+  T_conv_local[2] = 0.000000e+00f;
+  T_conv_local[18] = 0.000000e+00f;
+  T_conv_local[3] = 0.000000e+00f;
+  T_conv_local[19] = 0.000000e+00f;
+  T_conv_local[4] = 0.000000e+00f;
+  T_conv_local[20] = 0.000000e+00f;
+  T_conv_local[5] = 0.000000e+00f;
+  T_conv_local[21] = 0.000000e+00f;
+  T_conv_local[6] = 0.000000e+00f;
+  T_conv_local[22] = 0.000000e+00f;
+  T_conv_local[7] = 0.000000e+00f;
+  T_conv_local[23] = 0.000000e+00f;
+  T_conv_local[8] = 0.000000e+00f;
+  T_conv_local[24] = 0.000000e+00f;
+  T_conv_local[9] = 0.000000e+00f;
+  T_conv_local[25] = 0.000000e+00f;
+  T_conv_local[10] = 0.000000e+00f;
+  T_conv_local[26] = 0.000000e+00f;
+  T_conv_local[11] = 0.000000e+00f;
+  T_conv_local[27] = 0.000000e+00f;
+  T_conv_local[12] = 0.000000e+00f;
+  T_conv_local[28] = 0.000000e+00f;
+  T_conv_local[13] = 0.000000e+00f;
+  T_conv_local[29] = 0.000000e+00f;
+  T_conv_local[14] = 0.000000e+00f;
+  T_conv_local[30] = 0.000000e+00f;
+  T_conv_local[15] = 0.000000e+00f;
+  T_conv_local[31] = 0.000000e+00f;
+  for (int k_outer = 0; k_outer < 36; ++k_outer) {
+    __syncthreads();
+    *(float4*)(data_shared + (((int)threadIdx.x) * 4)) = (((((1 <= ((k_outer / 12) + (((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + ((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) % 28)))) && (((k_outer / 12) + (((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + ((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + (((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) / 7) * 3584)) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 512)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 4) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 16) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 4) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 16) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 4) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 16) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1024)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 8) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 4) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 8) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 4) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 8) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 4) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1536)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 12) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 20) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 12) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 20) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 12) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 20) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2048)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 16) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 8) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 16) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 8) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 16) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 8) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2560)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 20) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 24) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 20) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 24) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 20) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 24) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 3072)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 24) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 12) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 24) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 12) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 24) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 12) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 3584)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) / 7) + 4) % 28))) && (1 <= (((k_outer % 12) >> 2) + ((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) / 7) + 4) % 28)) < 29)) && ((((k_outer % 12) >> 2) + ((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + (((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) / 7) * 3584)) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 10624)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 4096)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 32) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 16) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 32) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 16) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 32) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 16) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 4608)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 36) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 4) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 36) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 4) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 36) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 4) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 5120)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 40) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 20) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 40) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 20) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 40) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 20) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 5632)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 44) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 8) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 44) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 8) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 44) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 8) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 6144)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 48) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 24) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 48) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 24) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 48) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 24) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 6656)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 52) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 12) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 52) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 12) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 52) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 12) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 7168)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) / 7) + 8) % 28))) && (1 <= (((k_outer % 12) >> 2) + ((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) / 7) + 8) % 28)) < 29)) && ((((k_outer % 12) >> 2) + ((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + (((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) / 7) * 3584)) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 24960)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 7680)) = (((((1 <= ((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 60) % 196) / 7))) && (1 <= (((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 16) % 28)))) && (((k_outer / 12) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 60) % 196) / 7)) < 29)) && ((((k_outer % 12) >> 2) + (((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 16) % 28)) < 29)) ? *(float4*)(input + (((((((k_outer / 12) * 3584) + ((((((((int)blockIdx.x) >> 3) * 64) + (((int)threadIdx.x) >> 5)) + 60) / 7) * 3584)) + ((((((((int)blockIdx.x) >> 3) * 4) + (((int)threadIdx.x) >> 3)) + 16) % 28) * 128)) + ((k_outer % 12) * 32)) + ((((int)threadIdx.x) & 7) * 4)) - 3712)) : make_float4(0.000000e+00f, 0.000000e+00f, 0.000000e+00f, 0.000000e+00f));
+    for (int ax0_ax1_fused_inner_s = 0; ax0_ax1_fused_inner_s < 4; ++ax0_ax1_fused_inner_s) {
+        uint __1 = (((max((((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 2) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((((((int)blockIdx.x) & 7) >> 1) * 128) + (k_outer * 32)) + (((int)threadIdx.x) >> 2))])), (uint)63) | ((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 2) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 2) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+      B_decode_shared[((((int)threadIdx.x) * 4) + ax0_ax1_fused_inner_s)] = (*(float *)(&(__1)));
+    }
+    __syncthreads();
+    for (int k_inner = 0; k_inner < 32; ++k_inner) {
+      T_conv_local[0] = (T_conv_local[0] + (data_shared[(((((int)threadIdx.x) >> 3) * 32) + k_inner)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[16] = (T_conv_local[16] + (data_shared[(((((int)threadIdx.x) >> 3) * 32) + k_inner)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[1] = (T_conv_local[1] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 512)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[17] = (T_conv_local[17] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 512)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[2] = (T_conv_local[2] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1024)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[18] = (T_conv_local[18] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1024)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[3] = (T_conv_local[3] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1536)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[19] = (T_conv_local[19] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1536)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[4] = (T_conv_local[4] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2048)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[20] = (T_conv_local[20] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2048)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[5] = (T_conv_local[5] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2560)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[21] = (T_conv_local[21] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2560)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[6] = (T_conv_local[6] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3072)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[22] = (T_conv_local[22] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3072)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[7] = (T_conv_local[7] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3584)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[23] = (T_conv_local[23] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3584)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[8] = (T_conv_local[8] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4096)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[24] = (T_conv_local[24] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4096)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[9] = (T_conv_local[9] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4608)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[25] = (T_conv_local[25] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 4608)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[10] = (T_conv_local[10] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 5120)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[26] = (T_conv_local[26] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 5120)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[11] = (T_conv_local[11] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 5632)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[27] = (T_conv_local[27] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 5632)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[12] = (T_conv_local[12] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 6144)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[28] = (T_conv_local[28] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 6144)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[13] = (T_conv_local[13] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 6656)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[29] = (T_conv_local[29] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 6656)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[14] = (T_conv_local[14] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 7168)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[30] = (T_conv_local[30] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 7168)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[15] = (T_conv_local[15] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 7680)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[31] = (T_conv_local[31] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 7680)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 8)] = T_conv_local[16];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 2048)] = T_conv_local[1];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 2056)] = T_conv_local[17];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 4096)] = T_conv_local[2];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 4104)] = T_conv_local[18];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 6144)] = T_conv_local[3];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 6152)] = T_conv_local[19];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 8192)] = T_conv_local[4];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 8200)] = T_conv_local[20];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 10240)] = T_conv_local[5];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 10248)] = T_conv_local[21];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 12288)] = T_conv_local[6];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 12296)] = T_conv_local[22];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 14336)] = T_conv_local[7];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 14344)] = T_conv_local[23];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 16384)] = T_conv_local[8];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 16392)] = T_conv_local[24];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 18432)] = T_conv_local[9];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 18440)] = T_conv_local[25];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 20480)] = T_conv_local[10];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 20488)] = T_conv_local[26];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 22528)] = T_conv_local[11];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 22536)] = T_conv_local[27];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 24576)] = T_conv_local[12];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 24584)] = T_conv_local[28];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 26624)] = T_conv_local[13];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 26632)] = T_conv_local[29];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 28672)] = T_conv_local[14];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 28680)] = T_conv_local[30];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 30720)] = T_conv_local[15];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 32768) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 30728)] = T_conv_local[31];
+}
+
+
+top1: 3.074662446975708 	top10: 2.9020161628723145
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+best latency: 2.9020161628723145
+9.275104753244717 tflops, 6.396623967754977 %
+n: 128, f: 128, h: 28, w: 28, c: 512, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 28, ow: 28
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+1.3938688039779663
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 128], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.3617216348648071
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.6357440948486328
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 64], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.3981631994247437
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.349836826324463
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 128], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.3139967918395996
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.4221311807632446
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 128], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.32444167137146
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.4114816188812256
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 64], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+2.4154176712036133
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.4436415433883667
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+1.2494847774505615
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.267302393913269
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 64], 'thread': [7, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2}}}
+1.7078272104263306
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.5769599676132202
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+2.0412352085113525
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 64], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.4239680767059326
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 64], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.47948157787323
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 64], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.4030847549438477
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 128], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+2.7312192916870117
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 128], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.3197247982025146
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.3504575490951538
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 128], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.3875136375427246
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.3326336145401
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+1.5745023488998413
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 32], 'thread': [14, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+2.6527678966522217
+{<Node, ladder_conv2d_reshape_bias>: {'block': [224, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.4731199741363525
+{<Node, ladder_conv2d_reshape_bias>: {'block': [196, 32], 'thread': [4, 32], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.63778555393219
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 64], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.5527936220169067
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.4401535987854004
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 128], 'thread': [2, 64], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+2.1516289710998535
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 32], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.5757375955581665
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+2.776876926422119
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 128], 'thread': [1, 128], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+2.6624081134796143
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.7985471487045288
+{<Node, ladder_conv2d_reshape_bias>: {'block': [392, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+100000000.0
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+2.1370880603790283
+{<Node, ladder_conv2d_reshape_bias>: {'block': [256, 32], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.456531286239624
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.882931113243103
+{<Node, ladder_conv2d_reshape_bias>: {'block': [128, 16], 'thread': [16, 8], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+1.8362367153167725
+code:  __global__ void __launch_bounds__(128) Fused(float* __restrict__ input, int8_t* __restrict__ weight, uint8_t* __restrict__ Scales, float* __restrict__ T_conv) {
+  
+  float T_conv_local[16];
+  __shared__ float data_shared[4096];
+  __shared__ float B_decode_shared[512];
+  T_conv_local[0] = 0.000000e+00f;
+  T_conv_local[8] = 0.000000e+00f;
+  T_conv_local[1] = 0.000000e+00f;
+  T_conv_local[9] = 0.000000e+00f;
+  T_conv_local[2] = 0.000000e+00f;
+  T_conv_local[10] = 0.000000e+00f;
+  T_conv_local[3] = 0.000000e+00f;
+  T_conv_local[11] = 0.000000e+00f;
+  T_conv_local[4] = 0.000000e+00f;
+  T_conv_local[12] = 0.000000e+00f;
+  T_conv_local[5] = 0.000000e+00f;
+  T_conv_local[13] = 0.000000e+00f;
+  T_conv_local[6] = 0.000000e+00f;
+  T_conv_local[14] = 0.000000e+00f;
+  T_conv_local[7] = 0.000000e+00f;
+  T_conv_local[15] = 0.000000e+00f;
+  for (int k_outer = 0; k_outer < 16; ++k_outer) {
+    __syncthreads();
+    *(float4*)(data_shared + (((int)threadIdx.x) * 4)) = *(float4*)(input + (((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 3) * 512)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 3) * 512)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 8192));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 3) * 512)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 16384));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 3) * 512)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 24576));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2048)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 3) * 512)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 32768));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 2560)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 3) * 512)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 40960));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 3072)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 3) * 512)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 49152));
+    *(float4*)(data_shared + ((((int)threadIdx.x) * 4) + 3584)) = *(float4*)(input + ((((((((int)blockIdx.x) >> 3) * 65536) + ((((int)threadIdx.x) >> 3) * 512)) + (k_outer * 32)) + ((((int)threadIdx.x) & 7) * 4)) + 57344));
+    for (int ax0_ax1_fused_inner_s = 0; ax0_ax1_fused_inner_s < 4; ++ax0_ax1_fused_inner_s) {
+        uint __1 = (((max((((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 2) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) + ((uint)Scales[(((((((int)blockIdx.x) & 7) >> 1) * 128) + (k_outer * 32)) + (((int)threadIdx.x) >> 2))])), (uint)63) | ((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 2) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)7) << (uint)8)) << (uint)2) | (((((((uint)weight[(((((k_outer * 4096) + ((((int)threadIdx.x) >> 2) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + ((((int)threadIdx.x) & 3) * 4)) + ax0_ax1_fused_inner_s)]) >> (uint)0) & (uint)255) >> (uint)2) & (uint)31) & (uint)2)) << (uint)25;
+      B_decode_shared[((((int)threadIdx.x) * 4) + ax0_ax1_fused_inner_s)] = (*(float *)(&(__1)));
+    }
+    __syncthreads();
+    for (int k_inner = 0; k_inner < 32; ++k_inner) {
+      T_conv_local[0] = (T_conv_local[0] + (data_shared[(((((int)threadIdx.x) >> 3) * 32) + k_inner)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[8] = (T_conv_local[8] + (data_shared[(((((int)threadIdx.x) >> 3) * 32) + k_inner)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[1] = (T_conv_local[1] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 512)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[9] = (T_conv_local[9] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 512)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[2] = (T_conv_local[2] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1024)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[10] = (T_conv_local[10] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1024)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[3] = (T_conv_local[3] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1536)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[11] = (T_conv_local[11] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 1536)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[4] = (T_conv_local[4] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2048)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[12] = (T_conv_local[12] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2048)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[5] = (T_conv_local[5] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2560)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[13] = (T_conv_local[13] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 2560)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[6] = (T_conv_local[6] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3072)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[14] = (T_conv_local[14] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3072)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+      T_conv_local[7] = (T_conv_local[7] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3584)] * B_decode_shared[((k_inner * 16) + (((int)threadIdx.x) & 7))]));
+      T_conv_local[15] = (T_conv_local[15] + (data_shared[((((((int)threadIdx.x) >> 3) * 32) + k_inner) + 3584)] * B_decode_shared[(((k_inner * 16) + (((int)threadIdx.x) & 7)) + 8)]));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 8)] = T_conv_local[8];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 2048)] = T_conv_local[1];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 2056)] = T_conv_local[9];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 4096)] = T_conv_local[2];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 4104)] = T_conv_local[10];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 6144)] = T_conv_local[3];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 6152)] = T_conv_local[11];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 8192)] = T_conv_local[4];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 8200)] = T_conv_local[12];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 10240)] = T_conv_local[5];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 10248)] = T_conv_local[13];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 12288)] = T_conv_local[6];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 12296)] = T_conv_local[14];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 14336)] = T_conv_local[7];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 16384) + ((((int)threadIdx.x) >> 3) * 128)) + ((((int)blockIdx.x) & 7) * 16)) + (((int)threadIdx.x) & 7)) + 14344)] = T_conv_local[15];
+}
+
+
+top1: 1.3938688039779663 	top10: 1.2494847774505615
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [56, 64], 'thread': [8, 16], 'rstep': [32], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 4}}}
+best latency: 1.2494847774505615
+9.574258799222015 tflops, 6.602937102911735 %
+1_64_56_56_64_3_3_1_1_1_1	0.04935679957270622
+1_64_56_56_64_1_1_1_1_0_1	0.007509333547204733
+1_128_28_28_128_3_3_1_1_1_1	0.05673599988222122
+1_512_28_28_128_1_1_1_1_0_1	0.031123200431466103
+128_64_56_56_64_3_3_1_1_1_1	2.4764416217803955
+128_64_56_56_64_1_1_1_1_0_1	0.33178240060806274
+128_128_28_28_128_3_3_1_1_1_1	2.9020161628723145
+128_512_28_28_128_1_1_1_1_0_1	1.2494847774505615

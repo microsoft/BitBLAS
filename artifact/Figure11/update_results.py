@@ -254,7 +254,7 @@ for model in ["llama", "bloom"]:
             (32, 1),
             (1, 4096)
         ]:
-        log_path = f"./logs/{model}_ladder_fp16_mxfp8xmxfp8_b{batch_size}_s{seq_len}_data.json"
+        log_path = f"./logs/{model}_ladder_mxfp8_mxfp8_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
             continue
         data = list(json.load(open(log_path)).values())[-1]
@@ -272,7 +272,7 @@ for model in ["llama", "bloom"]:
             (32, 1),
             (1, 4096)
         ]:
-        log_path = f"./logs/{model}_ladder_fp16_int8xint1_b{batch_size}_s{seq_len}_data.json"
+        log_path = f"./logs/{model}_ladder_int8_int1_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
             continue
         data = list(json.load(open(log_path)).values())[-1]
