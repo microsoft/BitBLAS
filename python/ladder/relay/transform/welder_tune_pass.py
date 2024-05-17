@@ -55,7 +55,7 @@ class WelderTunePass(relay.ExprMutator):
         """
         # print(tune_node(ordered_nodes, ["multiply_reshape_add_multiply_17", "cast_multiply_18", "mean_sqrt_divide_19", "multiply_cast_multiply_20", "reshape_21", "nn_dense_cast_divide_erf_add_multiply_22", "multiply_cast_nn_dense_multiply_23", "nn_dense_24", "reshape_add_25"]))
         # raise NotImplementedError()
-        # print(tune_node(ordered_nodes, ['ladder_perfect_quant_linear_6']))
+        # print(tune_node(ordered_nodes, ['ladder_perfect_quant_linear_cast_3']))
         # raise NotImplementedError()
 
         tunner = MultiProcTunner(

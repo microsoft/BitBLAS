@@ -436,6 +436,145 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
         write_sch(sch, "tensorize_lop3")
         return sch.mod["main"]
 
+    def schedule_inconsistent_shared_decode_a_b(
+        self, is_a_consistent: bool, is_b_consistent: bool, use_dp4a=False
+    ) -> tir.Schedule:
+        from ladder.schedule.lop3_intrin import (
+            LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
+            LOP3_FAST_DECODE_INT2_TO_FP16_INTRIN_L8,
+            LOP3_FAST_DECODE_INT1_TO_FP16_INTRIN_L8,
+            LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN,
+            LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L16,
+            LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16,
+        )
+
+        sch, config = self.sche, self.config
+        assert config.block[0] == 1, "inconsistent computation only support gemv case"
+        tx = np.prod(config.thread) * np.prod(config.reduce_thread)
+        try:
+            vec = list(config.vectorize.values())[-1]
+        except IndexError:
+
+            def get_vec(in_dtype):
+                if in_dtype == "float32" or in_dtype == "int32":
+                    vec = 4
+                elif in_dtype == "float16":
+                    vec = 8
+                elif in_dtype == "int8":
+                    vec = 16
+                else:
+                    raise NotImplementedError("dtype {} not supported".format(in_dtype))
+                return vec
+
+            vec = get_vec(self.args[0].dtype)
+
+        num_warps = int(np.prod(self.config.thread))
+        warp_size = int(np.prod(self.config.reduce_thread))
+        write_sch(sch, "origin")
+
+        block_b = sch.get_block(self.reduce_op.name)
+        B_decode_block = None
+        other_blocks = []
+
+        for op in reversed(self.ops):
+            if op not in (self.reduce_op, *[arg.op for arg in self.output_args]):
+                if "B_decode" in op.name:
+                    B_decode_block = self.sche.get_block(op.name)
+                else:
+                    other_blocks.append(self.sche.get_block(op.name))
+
+        i, j, k = sch.get_loops(block_b)
+        block_shared_local_A = sch.cache_read(block_b, 0, "local")
+        block_shared_local_B_rescale = sch.cache_read(block_b, 1, "local")
+
+        block_shared_local_B_decompress = sch.cache_read(
+            block_shared_local_B_rescale, 0, "local"
+        )
+        if B_decode_block != None:
+            read_shape = sch.get(B_decode_block).reads[0].buffer.shape
+            write_shape = sch.get(B_decode_block).writes[0].buffer.shape
+            compress_rate = np.prod(write_shape) // np.prod(read_shape)
+            bits = 8 // compress_rate
+            sch.compute_inline(B_decode_block)
+        block_shared_local_B_prefetch = sch.cache_read(
+            block_shared_local_B_decompress, 0, "local"
+        )
+        for block in other_blocks:
+            self.sche.compute_inline(block)
+        block_local_C = sch.cache_write(block_b, 0, "local")
+        write_sch(sch, "cache_related")
+        # reverse inline
+        if self.reduce_op != None and self.reduce_op != self.output_op:
+            block = self.sche.get_block(self.output_op.name)
+            self.sche.reverse_compute_inline(block)
+        bx, j = sch.split(j, factors=[None, num_warps])
+        k, tx, vk = sch.split(k, factors=[None, warp_size, vec])
+        sch.reorder(bx, j, i, k, tx)
+
+        sch.bind(bx, "blockIdx.x")
+        sch.bind(tx, "threadIdx.x")
+        sch.bind(j, "threadIdx.y")
+
+        self.block_size = [sch.get_sref(tx).stmt.extent, sch.get_sref(j).stmt.extent, 1]
+        self.grid_size = [sch.get_sref(bx).stmt.extent, 1, 1]
+
+        write_sch(sch, "do_split")
+
+        sch.compute_at(block_shared_local_A, tx, preserve_unit_loops=True)
+        sch.compute_at(block_shared_local_B_rescale, tx, preserve_unit_loops=True)
+        sch.compute_at(block_shared_local_B_decompress, tx, preserve_unit_loops=True)
+        sch.compute_at(block_shared_local_B_prefetch, tx, preserve_unit_loops=True)
+        sch.reverse_compute_at(block_local_C, j, preserve_unit_loops=True)
+        write_sch(sch, "compute_at_related")
+
+        block_local_a_v = sch.get_loops(block_shared_local_A)[-1]
+        sch.vectorize(block_local_a_v)
+
+        block_local_b_v = sch.get_loops(block_shared_local_B_prefetch)[-1]
+        sch.vectorize(block_local_b_v)
+        if use_dp4a:
+            vo, vi = sch.split(vk, [None, 4])
+        write_sch(sch, "decompose_reduction")
+        if decode_block and self.config.fast_decoding:
+            try:
+                if self.args[0].dtype == "float16":
+                    if bits == 4:
+                        sch.tensorize(
+                            sch.get_loops(block_shared_local_B_decompress)[-1],
+                            LOP3_FAST_DECODE_INT4_TO_FP16_INTRIN,
+                        )
+                    elif bits == 2:
+                        sch.tensorize(
+                            sch.get_loops(block_shared_local_B_decompress)[-1],
+                            LOP3_FAST_DECODE_INT2_TO_FP16_INTRIN_L8,
+                        )
+                    elif bits == 1:
+                        sch.tensorize(
+                            sch.get_loops(block_shared_local_B_decompress)[-1],
+                            LOP3_FAST_DECODE_INT1_TO_FP16_INTRIN_L8,
+                        )
+                elif self.args[0].dtype == "int8":
+                    # compute the decode bits.
+                    if bits == 4:
+                        sch.tensorize(sch.get_loops(block_shared_local_B_decompress)[-1], LOP3_FAST_DECODE_INT4_TO_INT8_INTRIN)
+                    elif bits == 2:
+                        loop = sch.get_loops(block_shared_local_B_decompress)[-1]
+                        loop_extent = sch.get_sref(loop).stmt.extent
+                        if loop_extent == 16:
+                            sch.tensorize(
+                                loop, LOP3_FAST_DECODE_INT2_TO_INT8_INTRIN_L16
+                            )
+                    elif bits == 1:
+                        sch.tensorize(
+                            sch.get_loops(block_shared_local_B_decompress)[-1],
+                            LOP3_FAST_DECODE_INT1_TO_INT8_INTRIN_L16,
+                        )
+            except Exception as e:
+                logger.debug(f"tensorize decode block failed: {e}")
+
+        write_sch(sch, "tensorize_lop3")
+        return sch.mod["main"]
+
     def schedule(self) -> tir.Schedule:
         if len(self.reduce_op.input_tensors) > 1:
             num_args = len(self.args)
@@ -481,6 +620,10 @@ class TIRReduceInterThreadScheduler(TIRSchedulerBase):
                     )
 
                 if self.config.compute_capability == "80":
+                    if is_a_consistent == False and is_b_consistent == False:
+                        return self.schedule_inconsistent_shared_decode_a_b(
+                            is_a_consistent, is_b_consistent
+                        )
                     return self.schedule_inconsistent_shared_decode(
                         is_a_consistent, is_b_consistent
                     )

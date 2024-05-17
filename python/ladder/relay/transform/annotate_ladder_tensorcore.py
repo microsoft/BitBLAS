@@ -4,15 +4,17 @@ from tvm import relay
 
 @relay.transform.function_pass(opt_level=0)
 class AnnotateLadderTensorCore(relay.ExprMutator):
-    def __init__(self, arch=None):
+    def __init__(self, arch=None, diable_async=False, disable_transform=False):
         super().__init__()
         self.arch = arch
+        self.disable_async = diable_async
+        self.disable_transform = disable_transform
 
     def transform_function(self, func, mod, ctx):
         return super().visit_function(func)
 
     def visit_function(self, func):
-        visitor = OpVisitor(self.arch)
+        visitor = OpVisitor(self.arch, disable_async=self.disable_async)
         visitor.visit(func)
         if visitor.axis is not None:
             func = func.with_attr("tensorCoreConfig", visitor.axis)
@@ -20,17 +22,21 @@ class AnnotateLadderTensorCore(relay.ExprMutator):
         if visitor.ladder_compute_type is not None:
             func = func.with_attr("ladder_compute_type", visitor.ladder_compute_type)
         if visitor.consistent is not None:
-            func = func.with_attr("consistent_config", visitor.consistent)
+            if self.disable_transform:
+                func = func.with_attr("consistent_config", (True, True))
+            else:
+                func = func.with_attr("consistent_config", visitor.consistent)
         return super().visit_function(func)
 
 class OpVisitor(relay.ExprVisitor):
-    def __init__(self, arch):
+    def __init__(self, arch, disable_async=False):
         super().__init__()
         self.arch = arch
         self.axis = None
         self.ladder_config = None
         self.ladder_compute_type = None
         self.consistent = None
+        self.disable_async = disable_async
 
     def visit_call(self, call):
         if call.op.name in ["ladder.perfect_im2col_conv", "ladder.C2DImplicitGemm", "ladder.perfect_matmul", "ladder.perfect_quant_linear"]:
@@ -84,15 +90,35 @@ class OpVisitor(relay.ExprVisitor):
                 self.axis = (num_axis - 2, num_axis - 1)
                 can_propagate = call.attrs.can_propagate if "can_propagate" in call.attrs else True
                 if call.attrs.format == "mxfp":
-                    self.ladder_config = (True, True, 2) # for smem issues about bf16 accum, we set pipeline_stage to 2
+                    if self.disable_async:
+                        self.ladder_config = (True, True, 1)
+                    else:
+                        self.ladder_config = (True, True, 2) # for smem issues about bf16 accum, we set pipeline_stage to 2
                 else:
-                    self.ladder_config = (True, True, pipleline_stage) if can_propagate else (False, False)
+                    if self.disable_async:
+                        self.ladder_config = (True, True, 1) if can_propagate else (False, False)
+                    else:
+                        self.ladder_config = (True, True, pipleline_stage) if can_propagate else (False, False)
                 if call.attrs.format == "int4b":
                     self.ladder_compute_type = "int4"
-                self.consistent = (True, False)
+                if call.attrs.format == "mxfp":
+                    if call.args[0].checked_type.dtype == "int8":
+                        self.consistent = (False, False)
+                    else:
+                        self.consistent = (True, False)
+                else:
+                    self.consistent = (True, False)
             elif call.op.name == "ladder.quant_linear":
                 self.ladder_config = (False, False)
-                self.consistent = (True, False)
+                if call.attrs.format == "mxfp":
+                    A_dtype = call.args[0].checked_type.dtype
+                    print("A_dtype", A_dtype, "is_int8", A_dtype == "int8")
+                    if A_dtype == "int8":
+                        self.consistent = (False, False)
+                    else:
+                        self.consistent = (True, False)
+                else:
+                    self.consistent = (True, False)
         elif call.op.name in ["ladder.perfect_im2col_quant_conv"]:
             A_shape = call.args[0].checked_type.shape
             B_shape = call.args[1].checked_type.shape
@@ -107,8 +133,15 @@ class OpVisitor(relay.ExprVisitor):
             self.axis = (num_axis - 2, num_axis - 1)
             self.ladder_config = (True, True, 2)
         elif call.op.name in ["ladder.quant_linear"]:
-            print(call.op.name, "ladder.quant_linear set consistent")
-            self.consistent = (True, False)
+            if call.attrs.format == "mxfp":
+                A_dtype = call.args[0].checked_type.dtype
+                print("A_dtype", A_dtype, "is_int8", A_dtype == "int8")
+                if A_dtype == "int8":
+                    self.consistent = (False, False)
+                else:
+                    self.consistent = (True, False)
+            else:
+                self.consistent = (True, False)
 
         return super().visit_call(call)
 
