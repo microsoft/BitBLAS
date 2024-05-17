@@ -71,7 +71,7 @@ After downloading, it should be extracted under the artifacts/temp folder. You c
 | Table1    | MatMul Support and its Performance of Vendor Libraries   | [Table1](#Table1)             | [artifact/Table1](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Table1)         |
 | Table2    | Compilation time of AMOS, TensorIR Welder and Ladder     | [Table2](#Table2)             | [artifact/Table2](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Table2)         |
 
-### <a id="Figure9"> Figure9 </a>
+### <a id="Figure9">Figure9</a>
 
 **Device: NVIDIA V100-16GB-PCIe GPU**
 
@@ -151,7 +151,7 @@ Measure the memory for llama batch 1 seq 1 under pytorch
 
 As we do not provide Welder Execute Binaries in our checkpoints (the Welder Execute Binaries are too big), so the scripts will first compile the welder binaries from onnx model, and then run the welder binaries to measure the memory usage. The compilation process may take a while.
 
-### <a id="Figure12"> Figure12_V100</a>
+### <a id="Figure12">Figure12_V100</a>
 
 **Device: NVIDIA A100-80GB-PCIe GPU / V100-16GB-PCIe GPU**
 
