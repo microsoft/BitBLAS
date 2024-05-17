@@ -110,6 +110,8 @@ The result will be saved in the `pdf` and `png` directory, respectively. For exa
 
 ![Figure 9](./artifact/Figure9/png/figure9_end2end_v100.png)
 
+**Notes**: The performance drop on $W_{INTx}A_{INTy}$ compared to A100 is because V100 only has tensor core support for $W_{FP16}A_{FP16}$ as shown in [Table1](#Table1). So $W_{INTx}A_{INTy}$ uses the cuda cores on V100, which is much slower than tensor core.
+
 
 ### <a id="Figure11">Figure11_V100</a>
 
@@ -186,7 +188,9 @@ The result will be saved in the `pdf` and `png` directory, respectively. For exa
 
 ![Figure 12](./artifact/Figure12_v100/png/figure12_operator_performance_a100.png)
 
-For TensorIR Conv2d, we directly extract the operator performance form the end2end traces. So we do not provide the script to reproduce the result from single tensor ir expression. 
+**Notes**: For TensorIR Conv2d, we directly extract the operator performance form the end2end traces. So we do not provide the script to reproduce the result from single tensor ir expression. 
+
+The performance drop on $W_{INTx}A_{INTy}$ compared to A100 is because V100 only has tensor core support for $W_{FP16}A_{FP16}$ as shown in [Table1](#Table1). So $W_{INTx}A_{INTy}$ uses the cuda cores on V100, which is much slower than tensor core.
 
 ### <a id="Figure13">Figure13_V100</a>
 
@@ -257,6 +261,8 @@ The `run_all.py` script has the following options:
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
 ![Figure 14](./artifact/Figure14_v100/png/figure14_different_bits.png)
+
+**Notes**: The performance drop on $W_{INTx}A_{INTy}$ compared to A100 is because V100 only has tensor core support for $W_{FP16}A_{FP16}$ as shown in [Table1](#Table1). So $W_{INTx}A_{INTy}$ uses the cuda cores on V100, which is much slower than tensor core.
 
 ### <a id="Table1">Table1</a>
 
