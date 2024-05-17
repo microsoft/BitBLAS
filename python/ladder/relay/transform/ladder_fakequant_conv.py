@@ -12,7 +12,7 @@ import numpy as np
 
 @relay.transform.function_pass(opt_level=0, required=["InferType"])
 class LadderFakeQuantConv(relay.ExprMutator):
-    def __init__(self, quant_weight_candidate=None, quant_config=None, quant_type=0, convert_int=False):
+    def __init__(self, quant_weight_candidate=None, quant_config=None, quant_type=0, convert_int=False, convert_float=False):
         super().__init__()
         """
         quant_gemm_candidate: list of weight candidates
@@ -38,6 +38,7 @@ class LadderFakeQuantConv(relay.ExprMutator):
         self.quant_type = quant_type
         self.quant_config = quant_config
         self.convert_int = convert_int
+        self.convert_float = convert_float
 
     def transform_function(self, func, mod, ctx):
         return self.visit(func)
@@ -61,6 +62,29 @@ class LadderFakeQuantConv(relay.ExprMutator):
             other_inputs = []
             conv2d_attrs = call.attrs
             
+            if self.convert_float:
+                quant_data = relay.cast(data, "float32")
+                quant_kernel = relay.cast(kernel, "float32")
+
+                attrs = ir.make_node(
+                    "DictAttrs",
+                    out_dtype='float32',
+                    strides=conv2d_attrs.strides,
+                    padding=conv2d_attrs.padding,
+                    dilation=conv2d_attrs.dilation,
+                    data_layout=conv2d_attrs.data_layout,
+                    kernel_layout=conv2d_attrs.kernel_layout,
+                    kernel_size=conv2d_attrs.kernel_size,
+                    can_propagate=conv2d_attrs.can_propagate,
+                )
+                q_perfect_conv = relay.Call(
+                    relay.op.get("ladder.perfect_im2col_conv"),
+                    [quant_data, quant_kernel],
+                    attrs,
+                )
+                q_perfect_conv = relay.cast(q_perfect_conv, out_dtype)
+                return q_perfect_conv
+
             # convert kernel to quant format shape -> (N, K // 2), dtype -> int8
             # assume the kernel is stored with transpose. (int8 mma tensorcore only support nt case.)
             if self.quant_config['format'] == 'mxfp':
