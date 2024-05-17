@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/Figure14_v100/ladder-benchmark/progress/e2e/llama2-70b/ladder_with_fake_dense_dequantize_bs1_seq1_async
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   1.9767       1.9767       1.9767       1.9766       0.0000   
+               

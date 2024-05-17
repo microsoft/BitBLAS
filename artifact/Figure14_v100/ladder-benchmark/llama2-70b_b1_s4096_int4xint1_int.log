@@ -1,0 +1,7 @@
+Running from prebuilt model: /root/Ladder/artifact/Figure14_v100/ladder-benchmark/progress/e2e/llama2-70b/ladder_with_fake_dense_dequantize_fq_0_int4b_1_-1_bs1_seq4096_ci_False_async
+Traceback (most recent call last):
+  File "./ladder_with_fake_dense_dequantize.py", line 181, in <module>
+    run_from_prebuilt(prebuilt_path, arch)
+  File "./ladder_with_fake_dense_dequantize.py", line 151, in run_from_prebuilt
+    with open(os.path.join(prefix, "graph.json")) as f:
+FileNotFoundError: [Errno 2] No such file or directory: '/root/Ladder/artifact/Figure14_v100/ladder-benchmark/progress/e2e/llama2-70b/ladder_with_fake_dense_dequantize_fq_0_int4b_1_-1_bs1_seq4096_ci_False_async/graph.json'

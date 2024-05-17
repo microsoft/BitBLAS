@@ -1,0 +1,989 @@
+[
+  {
+    "nodes": [
+      0,
+      1
+    ],
+    "node_names": [
+      "cast_multiply_0",
+      "mean_add_sqrt_divide_1"
+    ],
+    "group_id": 0,
+    "input_desc": [
+      [
+        "cast_multiply_0",
+        0,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        "cast_multiply_0",
+        0,
+        0
+      ],
+      [
+        "mean_add_sqrt_divide_1",
+        1,
+        0
+      ]
+    ],
+    "code": "__device__ void Group0_0_cast_multiply_0(half* __restrict__ p0, float* __restrict__ output_proxy, float* __restrict__ output_proxy_1, char* shared) {\n  output_proxy[((((int)blockIdx.x) * 8192) + ((int)threadIdx.x))] = ((float)p0[((((int)blockIdx.x) * 8192) + ((int)threadIdx.x))]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 128)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 128)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 256)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 256)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 384)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 384)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 512)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 512)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 640)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 640)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 768)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 768)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 896)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 896)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1024)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1024)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1152)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1152)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1280)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1280)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1408)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1408)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1536)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1536)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1664)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1664)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1792)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1792)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1920)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1920)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2048)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2048)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2176)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2176)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2304)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2304)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2432)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2432)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2560)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2560)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2688)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2688)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2816)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2816)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2944)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2944)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3072)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3072)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3200)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3200)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3328)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3328)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3456)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3456)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3584)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3584)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3712)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3712)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3840)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3840)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3968)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3968)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4096)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4096)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4224)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4224)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4352)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4352)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4480)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4480)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4608)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4608)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4736)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4736)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4864)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4864)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4992)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4992)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5120)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5120)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5248)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5248)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5376)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5376)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5504)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5504)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5632)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5632)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5760)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5760)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5888)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5888)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6016)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6016)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6144)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6144)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6272)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6272)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6400)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6400)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6528)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6528)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6656)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6656)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6784)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6784)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6912)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6912)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7040)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7040)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7168)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7168)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7296)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7296)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7424)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7424)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7552)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7552)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7680)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7680)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7808)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7808)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7936)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7936)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 8064)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 8064)]);\n  __syncthreads();\n  output_proxy_1[((int)threadIdx.x)] = (((float)p0[((((int)blockIdx.x) * 8192) + ((int)threadIdx.x))]) * ((float)p0[((((int)blockIdx.x) * 8192) + ((int)threadIdx.x))]));\n  output_proxy_1[(((int)threadIdx.x) + 128)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 128)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 128)]));\n  output_proxy_1[(((int)threadIdx.x) + 256)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 256)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 256)]));\n  output_proxy_1[(((int)threadIdx.x) + 384)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 384)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 384)]));\n  output_proxy_1[(((int)threadIdx.x) + 512)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 512)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 512)]));\n  output_proxy_1[(((int)threadIdx.x) + 640)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 640)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 640)]));\n  output_proxy_1[(((int)threadIdx.x) + 768)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 768)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 768)]));\n  output_proxy_1[(((int)threadIdx.x) + 896)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 896)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 896)]));\n  output_proxy_1[(((int)threadIdx.x) + 1024)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1024)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1024)]));\n  output_proxy_1[(((int)threadIdx.x) + 1152)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1152)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1152)]));\n  output_proxy_1[(((int)threadIdx.x) + 1280)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1280)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1280)]));\n  output_proxy_1[(((int)threadIdx.x) + 1408)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1408)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1408)]));\n  output_proxy_1[(((int)threadIdx.x) + 1536)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1536)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1536)]));\n  output_proxy_1[(((int)threadIdx.x) + 1664)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1664)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1664)]));\n  output_proxy_1[(((int)threadIdx.x) + 1792)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1792)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1792)]));\n  output_proxy_1[(((int)threadIdx.x) + 1920)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1920)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1920)]));\n  output_proxy_1[(((int)threadIdx.x) + 2048)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2048)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2048)]));\n  output_proxy_1[(((int)threadIdx.x) + 2176)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2176)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2176)]));\n  output_proxy_1[(((int)threadIdx.x) + 2304)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2304)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2304)]));\n  output_proxy_1[(((int)threadIdx.x) + 2432)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2432)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2432)]));\n  output_proxy_1[(((int)threadIdx.x) + 2560)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2560)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2560)]));\n  output_proxy_1[(((int)threadIdx.x) + 2688)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2688)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2688)]));\n  output_proxy_1[(((int)threadIdx.x) + 2816)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2816)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2816)]));\n  output_proxy_1[(((int)threadIdx.x) + 2944)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2944)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2944)]));\n  output_proxy_1[(((int)threadIdx.x) + 3072)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3072)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3072)]));\n  output_proxy_1[(((int)threadIdx.x) + 3200)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3200)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3200)]));\n  output_proxy_1[(((int)threadIdx.x) + 3328)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3328)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3328)]));\n  output_proxy_1[(((int)threadIdx.x) + 3456)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3456)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3456)]));\n  output_proxy_1[(((int)threadIdx.x) + 3584)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3584)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3584)]));\n  output_proxy_1[(((int)threadIdx.x) + 3712)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3712)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3712)]));\n  output_proxy_1[(((int)threadIdx.x) + 3840)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3840)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3840)]));\n  output_proxy_1[(((int)threadIdx.x) + 3968)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3968)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3968)]));\n  output_proxy_1[(((int)threadIdx.x) + 4096)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4096)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4096)]));\n  output_proxy_1[(((int)threadIdx.x) + 4224)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4224)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4224)]));\n  output_proxy_1[(((int)threadIdx.x) + 4352)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4352)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4352)]));\n  output_proxy_1[(((int)threadIdx.x) + 4480)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4480)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4480)]));\n  output_proxy_1[(((int)threadIdx.x) + 4608)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4608)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4608)]));\n  output_proxy_1[(((int)threadIdx.x) + 4736)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4736)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4736)]));\n  output_proxy_1[(((int)threadIdx.x) + 4864)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4864)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4864)]));\n  output_proxy_1[(((int)threadIdx.x) + 4992)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4992)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4992)]));\n  output_proxy_1[(((int)threadIdx.x) + 5120)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5120)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5120)]));\n  output_proxy_1[(((int)threadIdx.x) + 5248)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5248)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5248)]));\n  output_proxy_1[(((int)threadIdx.x) + 5376)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5376)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5376)]));\n  output_proxy_1[(((int)threadIdx.x) + 5504)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5504)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5504)]));\n  output_proxy_1[(((int)threadIdx.x) + 5632)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5632)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5632)]));\n  output_proxy_1[(((int)threadIdx.x) + 5760)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5760)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5760)]));\n  output_proxy_1[(((int)threadIdx.x) + 5888)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5888)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5888)]));\n  output_proxy_1[(((int)threadIdx.x) + 6016)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6016)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6016)]));\n  output_proxy_1[(((int)threadIdx.x) + 6144)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6144)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6144)]));\n  output_proxy_1[(((int)threadIdx.x) + 6272)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6272)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6272)]));\n  output_proxy_1[(((int)threadIdx.x) + 6400)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6400)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6400)]));\n  output_proxy_1[(((int)threadIdx.x) + 6528)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6528)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6528)]));\n  output_proxy_1[(((int)threadIdx.x) + 6656)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6656)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6656)]));\n  output_proxy_1[(((int)threadIdx.x) + 6784)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6784)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6784)]));\n  output_proxy_1[(((int)threadIdx.x) + 6912)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6912)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6912)]));\n  output_proxy_1[(((int)threadIdx.x) + 7040)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7040)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7040)]));\n  output_proxy_1[(((int)threadIdx.x) + 7168)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7168)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7168)]));\n  output_proxy_1[(((int)threadIdx.x) + 7296)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7296)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7296)]));\n  output_proxy_1[(((int)threadIdx.x) + 7424)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7424)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7424)]));\n  output_proxy_1[(((int)threadIdx.x) + 7552)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7552)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7552)]));\n  output_proxy_1[(((int)threadIdx.x) + 7680)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7680)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7680)]));\n  output_proxy_1[(((int)threadIdx.x) + 7808)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7808)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7808)]));\n  output_proxy_1[(((int)threadIdx.x) + 7936)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7936)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7936)]));\n  output_proxy_1[(((int)threadIdx.x) + 8064)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 8064)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 8064)]));\n  __syncthreads();\n}\n\n__device__ void Group0_1_mean_add_sqrt_divide_1(float* __restrict__ p0, float* __restrict__ T_divide_7, char* shared) {\n  float normal_reduce_temp0[1];\n  float* p0_shared = (float*)p0;\n  __shared__ float red_buf0[128];\n  normal_reduce_temp0[0] = 0.000000e+00f;\n  for (int k2_inner_outer = 0; k2_inner_outer < 64; ++k2_inner_outer) {\n    normal_reduce_temp0[0] = (normal_reduce_temp0[0] + p0_shared[((k2_inner_outer * 128) + ((int)threadIdx.x))]);\n  }\n  __syncthreads();\n  ((volatile float*)red_buf0)[((int)threadIdx.x)] = normal_reduce_temp0[0];\n  __syncthreads();\n  if (((int)threadIdx.x) < 64) {\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 64)]);\n  }\n  __syncthreads();\n  if (((int)threadIdx.x) < 32) {\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 32)]);\n  }\n  __syncthreads();\n  if (((int)threadIdx.x) < 16) {\n    float w_16_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 16)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_16_0;\n    float w_8_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 8)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_8_0;\n    float w_4_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 4)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_4_0;\n    float w_2_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 2)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_2_0;\n    float w_1_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 1)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_1_0;\n  }\n  __syncthreads();\n  T_divide_7[((int)blockIdx.x)] = (1.000000e+00f / sqrtf(((((volatile float*)red_buf0)[0] * 1.220703e-04f) + 1.000000e-05f)));\n}\n\n__global__ void __launch_bounds__(128) Group0(half* input0, float* output0, float* output1) {\n  __shared__ char shared[32768];\n  Group0_0_cast_multiply_0(input0, output0, (float*)(shared+0), shared+0);\n  Group0_1_mean_add_sqrt_divide_1((float*)(shared+0), output1, shared+32768);\n}\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      4096,
+      1,
+      1
+    ],
+    "latency": 0.25948160886764526,
+    "name": "Group0",
+    "gain": 0.336275190114975
+  },
+  {
+    "nodes": [
+      2
+    ],
+    "node_names": [
+      "multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2"
+    ],
+    "group_id": 1,
+    "input_desc": [
+      [
+        "multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2",
+        2,
+        0
+      ],
+      [
+        "multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2",
+        2,
+        1
+      ],
+      [
+        "multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2",
+        2,
+        2
+      ]
+    ],
+    "output_desc": [
+      [
+        "multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2",
+        2,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group1(float* __restrict__ p0, float* __restrict__ p1, half* __restrict__ p2, half* __restrict__ ladder_layout_transform) {\n  \n  ladder_layout_transform[(((((((int)blockIdx.x) >> 3) * 2048) + ((((int)threadIdx.x) >> 4) * 256)) + ((((int)blockIdx.x) & 7) * 32)) + ((((int)threadIdx.x) & 15) * 2))] = (p2[((((((((int)blockIdx.x) & 511) >> 3) * 128) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 7) >> 2) * 8)) + ((((int)threadIdx.x) & 3) * 2))] * ((half)(p0[((((((((((int)blockIdx.x) >> 9) * 131072) + ((((int)blockIdx.x) & 3) * 32768)) + (((((int)threadIdx.x) & 15) >> 2) * 8192)) + (((((int)blockIdx.x) & 511) >> 3) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 7) >> 2) * 8)) + ((((int)threadIdx.x) & 3) * 2))] * p1[((((((int)blockIdx.x) >> 9) * 16) + ((((int)blockIdx.x) & 3) * 4)) + ((((int)threadIdx.x) & 15) >> 2))])));\n  ladder_layout_transform[((((((((int)blockIdx.x) >> 3) * 2048) + ((((int)threadIdx.x) >> 4) * 256)) + ((((int)blockIdx.x) & 7) * 32)) + ((((int)threadIdx.x) & 15) * 2)) + 1)] = (p2[(((((((((int)blockIdx.x) & 511) >> 3) * 128) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 7) >> 2) * 8)) + ((((int)threadIdx.x) & 3) * 2)) + 1)] * ((half)(p0[(((((((((((int)blockIdx.x) >> 9) * 131072) + ((((int)blockIdx.x) & 3) * 32768)) + (((((int)threadIdx.x) & 15) >> 2) * 8192)) + (((((int)blockIdx.x) & 511) >> 3) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 7) >> 2) * 8)) + ((((int)threadIdx.x) & 3) * 2)) + 1)] * p1[((((((int)blockIdx.x) >> 9) * 16) + ((((int)blockIdx.x) & 3) * 4)) + ((((int)threadIdx.x) & 15) >> 2))])));\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      131072,
+      1,
+      1
+    ],
+    "latency": 0.2701874375343323,
+    "name": "Group1",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      3
+    ],
+    "node_names": [
+      "ladder_perfect_quant_linear_3"
+    ],
+    "group_id": 2,
+    "input_desc": [
+      [
+        "ladder_perfect_quant_linear_3",
+        3,
+        0
+      ],
+      [
+        "ladder_perfect_quant_linear_3",
+        3,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        "ladder_perfect_quant_linear_3",
+        3,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group2(half* __restrict__ p0, int8_t* __restrict__ p1, half* __restrict__ T_perfect_quant_linear) {\n  \n  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 16, 16, 16, half> T_perfect_quant_linear_shared_wmma_accumulator[32];\n  __shared__ half p0_shared[8192];\n  __shared__ half B_decode_shared[4096];\n  signed char p1_local[1];\n  half B_decode_local[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 16, 16, 16, half, nvcuda::wmma::row_major> p0_shared_wmma_matrix_a[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 16, 16, 16, half, nvcuda::wmma::col_major> B_decode_shared_wmma_matrix_b[4];\n  __shared__ half T_perfect_quant_linear_shared[11520];\n  for (int i0_2_init = 0; i0_2_init < 8; ++i0_2_init) {\n    for (int i1_2_init = 0; i1_2_init < 4; ++i1_2_init) {\n      nvcuda::wmma::fill_fragment(T_perfect_quant_linear_shared_wmma_accumulator[((i0_2_init * 4) + i1_2_init)], 0.000000e+00f);\n    }\n  }\n  for (int k_0 = 0; k_0 < 256; ++k_0) {\n    __syncthreads();\n    #pragma unroll\n    for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 8; ++ax0_ax1_ax2_ax3_0_fused_0) {\n      *(uint4*)(p0_shared + ((((ax0_ax1_ax2_ax3_0_fused_0 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(p0 + ((((((((int)blockIdx.y) * 2097152) + (ax0_ax1_ax2_ax3_0_fused_0 * 262144)) + (((int)threadIdx.y) * 131072)) + (k_0 * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8)));\n    }\n    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 4; ++ax0_ax1_ax2_ax3_0_fused_0_1) {\n      p1_local[0] = p1[((((((((int)blockIdx.x) * 131072) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 32768)) + (((int)threadIdx.y) * 16384)) + (k_0 * 64)) + (((int)threadIdx.z) * 32)) + ((int)threadIdx.x))];\n      for (int ax0 = 0; ax0 < 8; ++ax0) {\n        B_decode_local[ax0] = ((half)((p1_local[0] >> ((signed char)ax0)) & (signed char)1));\n      }\n      *(uint4*)(B_decode_shared + ((((ax0_ax1_ax2_ax3_0_fused_0_1 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(B_decode_local + 0);\n    }\n    __syncthreads();\n    for (int k_1 = 0; k_1 < 2; ++k_1) {\n      for (int ax0_1 = 0; ax0_1 < 8; ++ax0_1) {\n        nvcuda::wmma::load_matrix_sync(p0_shared_wmma_matrix_a[ax0_1], (&(p0_shared[(((((int)threadIdx.y) * 4096) + (ax0_1 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int ax0_2 = 0; ax0_2 < 4; ++ax0_2) {\n        nvcuda::wmma::load_matrix_sync(B_decode_shared_wmma_matrix_b[ax0_2], (&(B_decode_shared[(((((int)threadIdx.z) * 2048) + (ax0_2 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int i0_2 = 0; i0_2 < 8; ++i0_2) {\n        for (int i1_2 = 0; i1_2 < 4; ++i1_2) {\n          nvcuda::wmma::mma_sync(T_perfect_quant_linear_shared_wmma_accumulator[((i0_2 * 4) + i1_2)], p0_shared_wmma_matrix_a[i0_2], B_decode_shared_wmma_matrix_b[i1_2], T_perfect_quant_linear_shared_wmma_accumulator[((i0_2 * 4) + i1_2)]);\n        }\n      }\n    }\n  }\n  __syncthreads();\n  for (int ax0_3 = 0; ax0_3 < 8; ++ax0_3) {\n    for (int ax1 = 0; ax1 < 4; ++ax1) {\n      __syncthreads();\n      nvcuda::wmma::store_matrix_sync((&(T_perfect_quant_linear_shared[((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024))])), T_perfect_quant_linear_shared_wmma_accumulator[((ax0_3 * 4) + ax1)], 16, nvcuda::wmma::mem_row_major);\n      __syncthreads();\n      #pragma unroll\n      for (int ax0_ax1_ax2_ax3_fused_0 = 0; ax0_ax1_ax2_ax3_fused_0 < 1; ++ax0_ax1_ax2_ax3_fused_0) {\n        *(uint4*)(T_perfect_quant_linear + (((((((((int)blockIdx.y) * 2097152) + (((int)threadIdx.y) * 1048576)) + (ax0_3 * 131072)) + (((int)blockIdx.x) * 2048)) + (((int)threadIdx.z) * 1024)) + (ax1 * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(T_perfect_quant_linear_shared + (((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024)) + (((int)threadIdx.x) * 8)));\n      }\n    }\n  }\n  __syncthreads();\n}\n\n",
+    "block_size": [
+      32,
+      2,
+      2
+    ],
+    "grid_size": [
+      64,
+      16,
+      1
+    ],
+    "latency": 6.650061130523682,
+    "name": "Group2",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      4
+    ],
+    "node_names": [
+      "layout_transform_reshape_reshape_reshape_transpose_4"
+    ],
+    "group_id": 3,
+    "input_desc": [
+      [
+        "layout_transform_reshape_reshape_reshape_transpose_4",
+        4,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        "layout_transform_reshape_reshape_reshape_transpose_4",
+        4,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group3(half* __restrict__ p0, half* __restrict__ T_transpose) {\n  \n  T_transpose[(((((((int)blockIdx.x) >> 1) * 1024) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) & 15) * 2))] = p0[(((((((((((int)blockIdx.x) & 1023) >> 2) * 131072) + ((((int)blockIdx.x) >> 10) * 2048)) + ((((int)blockIdx.x) & 1) * 1024)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)blockIdx.x) & 3) >> 1) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + ((((int)threadIdx.x) & 7) * 2))];\n  T_transpose[((((((((int)blockIdx.x) >> 1) * 1024) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) & 15) * 2)) + 32)] = p0[((((((((((((int)blockIdx.x) & 1023) >> 2) * 131072) + ((((int)blockIdx.x) >> 10) * 2048)) + ((((int)blockIdx.x) & 1) * 1024)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)blockIdx.x) & 3) >> 1) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 512)];\n  T_transpose[((((((((int)blockIdx.x) >> 1) * 1024) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) & 15) * 2)) + 1)] = p0[((((((((((((int)blockIdx.x) & 1023) >> 2) * 131072) + ((((int)blockIdx.x) >> 10) * 2048)) + ((((int)blockIdx.x) & 1) * 1024)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)blockIdx.x) & 3) >> 1) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 1)];\n  T_transpose[((((((((int)blockIdx.x) >> 1) * 1024) + ((((int)threadIdx.x) >> 4) * 128)) + ((((int)blockIdx.x) & 1) * 64)) + ((((int)threadIdx.x) & 15) * 2)) + 33)] = p0[((((((((((((int)blockIdx.x) & 1023) >> 2) * 131072) + ((((int)blockIdx.x) >> 10) * 2048)) + ((((int)blockIdx.x) & 1) * 1024)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)blockIdx.x) & 3) >> 1) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 513)];\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      65536,
+      1,
+      1
+    ],
+    "latency": 0.20384915173053741,
+    "name": "Group3",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      5
+    ],
+    "node_names": [
+      "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5"
+    ],
+    "group_id": 4,
+    "input_desc": [
+      [
+        "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5",
+        5,
+        0
+      ],
+      [
+        "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5",
+        5,
+        1
+      ],
+      [
+        "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5",
+        5,
+        2
+      ]
+    ],
+    "output_desc": [
+      [
+        "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5",
+        5,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group4(half* __restrict__ p0, half* __restrict__ p1, half* __restrict__ p2, half* __restrict__ T_reshape) {\n  \n  T_reshape[(((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2))] = ((p0[(((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2))] * p1[(((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2))]) + ((__float2half_rn(0.000000e+00f) - p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 64)]) * p2[(((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2))]));\n  T_reshape[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 32)] = ((p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 32)] * p1[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 32)]) + ((__float2half_rn(0.000000e+00f) - p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 96)]) * p2[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 32)]));\n  T_reshape[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 64)] = ((p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 64)] * p1[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 64)]) + (p0[(((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2))] * p2[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 64)]));\n  T_reshape[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 96)] = ((p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 96)] * p1[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 96)]) + (p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 32)] * p2[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 96)]));\n  T_reshape[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 1)] = ((p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 1)] * p1[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 1)]) + ((__float2half_rn(0.000000e+00f) - p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 65)]) * p2[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 1)]));\n  T_reshape[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 33)] = ((p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 33)] * p1[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 33)]) + ((__float2half_rn(0.000000e+00f) - p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 97)]) * p2[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 33)]));\n  T_reshape[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 65)] = ((p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 65)] * p1[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 65)]) + (p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 1)] * p2[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 65)]));\n  T_reshape[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 97)] = ((p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 97)] * p1[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 97)]) + (p0[((((((((int)blockIdx.x) >> 12) * 4194304) + ((((int)threadIdx.x) >> 4) * 524288)) + ((((int)blockIdx.x) & 4095) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 33)] * p2[((((((int)blockIdx.x) & 4095) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 97)]));\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      32768,
+      1,
+      1
+    ],
+    "latency": 0.2263919860124588,
+    "name": "Group4",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      6,
+      7
+    ],
+    "node_names": [
+      "ladder_perfect_quant_linear_6",
+      "layout_transform_reshape_reshape_reshape_transpose_7"
+    ],
+    "group_id": 5,
+    "input_desc": [
+      [
+        "ladder_perfect_quant_linear_6",
+        6,
+        0
+      ],
+      [
+        "ladder_perfect_quant_linear_6",
+        6,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        "layout_transform_reshape_reshape_reshape_transpose_7",
+        7,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group5(half* __restrict__ input0, int8_t* __restrict__ input1, half* __restrict__ output0) {\n  \n  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 16, 16, 16, half> mediate1_shared_wmma_accumulator[32];\n  __shared__ half input0_shared[8192];\n  __shared__ half mediate0_shared[4096];\n  signed char input1_local[1];\n  half mediate0_local[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 16, 16, 16, half, nvcuda::wmma::row_major> input0_shared_wmma_matrix_a[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 16, 16, 16, half, nvcuda::wmma::col_major> mediate0_shared_wmma_matrix_b[4];\n  __shared__ half mediate1_shared[11520];\n  for (int i0_2_init = 0; i0_2_init < 8; ++i0_2_init) {\n    for (int i1_2_init = 0; i1_2_init < 4; ++i1_2_init) {\n      nvcuda::wmma::fill_fragment(mediate1_shared_wmma_accumulator[((i0_2_init * 4) + i1_2_init)], 0.000000e+00f);\n    }\n  }\n  for (int k_0 = 0; k_0 < 256; ++k_0) {\n    __syncthreads();\n    #pragma unroll\n    for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 8; ++ax0_ax1_ax2_ax3_0_fused_0) {\n      *(uint4*)(input0_shared + ((((ax0_ax1_ax2_ax3_0_fused_0 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(input0 + ((((((((int)blockIdx.y) * 2097152) + (ax0_ax1_ax2_ax3_0_fused_0 * 262144)) + (((int)threadIdx.y) * 131072)) + (k_0 * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8)));\n    }\n    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 4; ++ax0_ax1_ax2_ax3_0_fused_0_1) {\n      input1_local[0] = input1[((((((((int)blockIdx.x) * 131072) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 32768)) + (((int)threadIdx.y) * 16384)) + (k_0 * 64)) + (((int)threadIdx.z) * 32)) + ((int)threadIdx.x))];\n      for (int ax0 = 0; ax0 < 8; ++ax0) {\n        mediate0_local[ax0] = ((half)((input1_local[0] >> ((signed char)ax0)) & (signed char)1));\n      }\n      *(uint4*)(mediate0_shared + ((((ax0_ax1_ax2_ax3_0_fused_0_1 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(mediate0_local + 0);\n    }\n    __syncthreads();\n    for (int k_1 = 0; k_1 < 2; ++k_1) {\n      for (int ax0_1 = 0; ax0_1 < 8; ++ax0_1) {\n        nvcuda::wmma::load_matrix_sync(input0_shared_wmma_matrix_a[ax0_1], (&(input0_shared[(((((int)threadIdx.y) * 4096) + (ax0_1 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int ax0_2 = 0; ax0_2 < 4; ++ax0_2) {\n        nvcuda::wmma::load_matrix_sync(mediate0_shared_wmma_matrix_b[ax0_2], (&(mediate0_shared[(((((int)threadIdx.z) * 2048) + (ax0_2 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int i0_2 = 0; i0_2 < 8; ++i0_2) {\n        for (int i1_2 = 0; i1_2 < 4; ++i1_2) {\n          nvcuda::wmma::mma_sync(mediate1_shared_wmma_accumulator[((i0_2 * 4) + i1_2)], input0_shared_wmma_matrix_a[i0_2], mediate0_shared_wmma_matrix_b[i1_2], mediate1_shared_wmma_accumulator[((i0_2 * 4) + i1_2)]);\n        }\n      }\n    }\n  }\n  __syncthreads();\n  for (int ax0_3 = 0; ax0_3 < 8; ++ax0_3) {\n    for (int ax1 = 0; ax1 < 4; ++ax1) {\n      __syncthreads();\n      nvcuda::wmma::store_matrix_sync((&(mediate1_shared[((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024))])), mediate1_shared_wmma_accumulator[((ax0_3 * 4) + ax1)], 16, nvcuda::wmma::mem_row_major);\n      __syncthreads();\n      #pragma unroll\n      for (int ax0_ax1_ax2_ax3_fused_0 = 0; ax0_ax1_ax2_ax3_fused_0 < 1; ++ax0_ax1_ax2_ax3_fused_0) {\n        *(uint4*)(output0 + ((((((((((int)blockIdx.x) * 524288) + (((int)blockIdx.y) * 32768)) + (((int)threadIdx.y) * 16384)) + (ax0_3 * 2048)) + ((((int)threadIdx.x) >> 1) * 128)) + (((int)threadIdx.z) * 64)) + (ax1 * 16)) + ((((int)threadIdx.x) & 1) * 8))) = *(uint4*)(mediate1_shared + (((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024)) + (((int)threadIdx.x) * 8)));\n      }\n    }\n  }\n  __syncthreads();\n}\n\n",
+    "block_size": [
+      32,
+      2,
+      2
+    ],
+    "grid_size": [
+      8,
+      16,
+      1
+    ],
+    "latency": 1.0473535060882568,
+    "name": "Group5",
+    "gain": 0.028243284672498703
+  },
+  {
+    "nodes": [
+      8
+    ],
+    "node_names": [
+      "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8"
+    ],
+    "group_id": 6,
+    "input_desc": [
+      [
+        "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8",
+        8,
+        0
+      ],
+      [
+        "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8",
+        8,
+        1
+      ],
+      [
+        "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8",
+        8,
+        2
+      ]
+    ],
+    "output_desc": [
+      [
+        "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8",
+        8,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group6(half* __restrict__ p0, half* __restrict__ p1, half* __restrict__ p2, half* __restrict__ T_transpose_15) {\n  \n  T_transpose_15[(((((((int)blockIdx.x) >> 13) * 8388608) + ((((int)threadIdx.x) >> 6) * 1048576)) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63))] = ((p0[((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63))] * p1[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]) + ((((((int)blockIdx.x) & 1) == 1) ? p0[((((((int)blockIdx.x) >> 13) * 1048576) + (((((int)blockIdx.x) & 8191) >> 1) * 128)) + (((int)threadIdx.x) & 63))] : (__float2half_rn(0.000000e+00f) - p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 64)])) * p2[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]));\n  T_transpose_15[((((((((int)blockIdx.x) >> 13) * 8388608) + ((((int)threadIdx.x) >> 6) * 1048576)) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 2097152)] = ((p0[((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63))] * p1[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]) + ((((((int)blockIdx.x) & 1) == 1) ? p0[((((((int)blockIdx.x) >> 13) * 1048576) + (((((int)blockIdx.x) & 8191) >> 1) * 128)) + (((int)threadIdx.x) & 63))] : (__float2half_rn(0.000000e+00f) - p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 64)])) * p2[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]));\n  T_transpose_15[((((((((int)blockIdx.x) >> 13) * 8388608) + ((((int)threadIdx.x) >> 6) * 1048576)) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 4194304)] = ((p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 524288)] * p1[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]) + ((((((int)blockIdx.x) & 1) == 1) ? p0[(((((((int)blockIdx.x) >> 13) * 1048576) + (((((int)blockIdx.x) & 8191) >> 1) * 128)) + (((int)threadIdx.x) & 63)) + 524288)] : (__float2half_rn(0.000000e+00f) - p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 524352)])) * p2[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]));\n  T_transpose_15[((((((((int)blockIdx.x) >> 13) * 8388608) + ((((int)threadIdx.x) >> 6) * 1048576)) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 6291456)] = ((p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 524288)] * p1[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]) + ((((((int)blockIdx.x) & 1) == 1) ? p0[(((((((int)blockIdx.x) >> 13) * 1048576) + (((((int)blockIdx.x) & 8191) >> 1) * 128)) + (((int)threadIdx.x) & 63)) + 524288)] : (__float2half_rn(0.000000e+00f) - p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 524352)])) * p2[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]));\n  T_transpose_15[((((((((int)blockIdx.x) >> 13) * 8388608) + ((((int)threadIdx.x) >> 6) * 1048576)) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 524288)] = ((p0[((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63))] * p1[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]) + ((((((int)blockIdx.x) & 1) == 1) ? p0[((((((int)blockIdx.x) >> 13) * 1048576) + (((((int)blockIdx.x) & 8191) >> 1) * 128)) + (((int)threadIdx.x) & 63))] : (__float2half_rn(0.000000e+00f) - p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 64)])) * p2[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]));\n  T_transpose_15[((((((((int)blockIdx.x) >> 13) * 8388608) + ((((int)threadIdx.x) >> 6) * 1048576)) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 2621440)] = ((p0[((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63))] * p1[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]) + ((((((int)blockIdx.x) & 1) == 1) ? p0[((((((int)blockIdx.x) >> 13) * 1048576) + (((((int)blockIdx.x) & 8191) >> 1) * 128)) + (((int)threadIdx.x) & 63))] : (__float2half_rn(0.000000e+00f) - p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 64)])) * p2[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]));\n  T_transpose_15[((((((((int)blockIdx.x) >> 13) * 8388608) + ((((int)threadIdx.x) >> 6) * 1048576)) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 4718592)] = ((p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 524288)] * p1[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]) + ((((((int)blockIdx.x) & 1) == 1) ? p0[(((((((int)blockIdx.x) >> 13) * 1048576) + (((((int)blockIdx.x) & 8191) >> 1) * 128)) + (((int)threadIdx.x) & 63)) + 524288)] : (__float2half_rn(0.000000e+00f) - p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 524352)])) * p2[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]));\n  T_transpose_15[((((((((int)blockIdx.x) >> 13) * 8388608) + ((((int)threadIdx.x) >> 6) * 1048576)) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 6815744)] = ((p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 524288)] * p1[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]) + ((((((int)blockIdx.x) & 1) == 1) ? p0[(((((((int)blockIdx.x) >> 13) * 1048576) + (((((int)blockIdx.x) & 8191) >> 1) * 128)) + (((int)threadIdx.x) & 63)) + 524288)] : (__float2half_rn(0.000000e+00f) - p0[(((((((int)blockIdx.x) >> 13) * 1048576) + ((((int)blockIdx.x) & 8191) * 64)) + (((int)threadIdx.x) & 63)) + 524352)])) * p2[(((((int)blockIdx.x) & 8191) * 64) + (((int)threadIdx.x) & 63))]));\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      32768,
+      1,
+      1
+    ],
+    "latency": 0.11468800157308578,
+    "name": "Group6",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      9
+    ],
+    "node_names": [
+      "nn_batch_matmul_9"
+    ],
+    "group_id": 7,
+    "input_desc": [
+      [
+        "nn_batch_matmul_9",
+        9,
+        0
+      ],
+      [
+        "nn_batch_matmul_9",
+        9,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        "nn_batch_matmul_9",
+        9,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group7(half* __restrict__ p0, half* __restrict__ p1, half* __restrict__ T_batch_matmul_NT) {\n  \n  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 16, 16, 16, half> T_batch_matmul_NT_wmma_accumulator[32];\n  __shared__ half p0_shared[10240];\n  __shared__ half p1_shared[10240];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 16, 16, 16, half, nvcuda::wmma::row_major> p0_shared_wmma_matrix_a[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 16, 16, 16, half, nvcuda::wmma::col_major> p1_shared_wmma_matrix_b[8];\n  for (int b_c_outer_init = 0; b_c_outer_init < 2; ++b_c_outer_init) {\n    for (int i_c_outer_init = 0; i_c_outer_init < 4; ++i_c_outer_init) {\n      for (int j_c_outer_init = 0; j_c_outer_init < 4; ++j_c_outer_init) {\n        nvcuda::wmma::fill_fragment(T_batch_matmul_NT_wmma_accumulator[(((b_c_outer_init * 16) + (i_c_outer_init * 4)) + j_c_outer_init)], __float2half_rn(0.000000e+00f));\n      }\n    }\n  }\n  for (int k_outer = 0; k_outer < 4; ++k_outer) {\n    __syncthreads();\n    *(uint4*)(p0_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(p0 + (((((((((int)blockIdx.x) >> 10) * 1048576) + (((((int)blockIdx.x) & 1023) >> 5) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));\n    *(uint4*)(p0_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(p0 + ((((((((((int)blockIdx.x) >> 10) * 1048576) + (((((int)blockIdx.x) & 1023) >> 5) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 4096));\n    *(uint4*)(p0_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(p0 + ((((((((((int)blockIdx.x) >> 10) * 1048576) + (((((int)blockIdx.x) & 1023) >> 5) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 8192));\n    *(uint4*)(p0_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(p0 + ((((((((((int)blockIdx.x) >> 10) * 1048576) + (((((int)blockIdx.x) & 1023) >> 5) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 12288));\n    *(uint4*)(p0_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 5120)) = *(uint4*)(p0 + ((((((((((int)blockIdx.x) >> 10) * 1048576) + (((((int)blockIdx.x) & 1023) >> 5) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 524288));\n    *(uint4*)(p0_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 5120) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(p0 + (((((((((((int)blockIdx.x) >> 10) * 1048576) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 5120) >> 12) * 524288)) + (((((int)blockIdx.x) & 1023) >> 5) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 4096));\n    *(uint4*)(p0_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 6144) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(p0 + (((((((((((int)blockIdx.x) >> 10) * 1048576) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 6144) >> 12) * 524288)) + (((((int)blockIdx.x) & 1023) >> 5) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 8192));\n    *(uint4*)(p0_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 7168) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(p0 + (((((((((((int)blockIdx.x) >> 10) * 1048576) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 7168) >> 12) * 524288)) + (((((int)blockIdx.x) & 1023) >> 5) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 12288));\n    *(uint4*)(p1_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(p1 + (((((((((int)blockIdx.x) >> 10) * 1048576) + ((((int)blockIdx.x) & 31) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));\n    *(uint4*)(p1_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(p1 + ((((((((((int)blockIdx.x) >> 10) * 1048576) + ((((int)blockIdx.x) & 31) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 4096));\n    *(uint4*)(p1_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(p1 + ((((((((((int)blockIdx.x) >> 10) * 1048576) + ((((int)blockIdx.x) & 31) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 8192));\n    *(uint4*)(p1_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(p1 + ((((((((((int)blockIdx.x) >> 10) * 1048576) + ((((int)blockIdx.x) & 31) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 12288));\n    *(uint4*)(p1_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 5120)) = *(uint4*)(p1 + ((((((((((int)blockIdx.x) >> 10) * 1048576) + ((((int)blockIdx.x) & 31) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 524288));\n    *(uint4*)(p1_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 5120) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(p1 + (((((((((((int)blockIdx.x) >> 10) * 1048576) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 5120) >> 12) * 524288)) + ((((int)blockIdx.x) & 31) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 4096));\n    *(uint4*)(p1_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 6144) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(p1 + (((((((((((int)blockIdx.x) >> 10) * 1048576) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 6144) >> 12) * 524288)) + ((((int)blockIdx.x) & 31) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 8192));\n    *(uint4*)(p1_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 7168) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(p1 + (((((((((((int)blockIdx.x) >> 10) * 1048576) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 7168) >> 12) * 524288)) + ((((int)blockIdx.x) & 31) * 16384)) + (((int)threadIdx.y) * 1024)) + ((((int)threadIdx.x) >> 2) * 128)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 12288));\n    __syncthreads();\n    for (int k_inner_outer = 0; k_inner_outer < 2; ++k_inner_outer) {\n      for (int ax0_outer = 0; ax0_outer < 2; ++ax0_outer) {\n        for (int ax1_outer = 0; ax1_outer < 4; ++ax1_outer) {\n          nvcuda::wmma::load_matrix_sync(p0_shared_wmma_matrix_a[((ax0_outer * 4) + ax1_outer)], (&(p0_shared[((((ax0_outer * 5120) + ((((int)threadIdx.y) >> 1) * 2560)) + (ax1_outer * 640)) + (k_inner_outer * 16))])), 40);\n        }\n      }\n      for (int ax0_outer_1 = 0; ax0_outer_1 < 2; ++ax0_outer_1) {\n        for (int ax1_outer_1 = 0; ax1_outer_1 < 4; ++ax1_outer_1) {\n          nvcuda::wmma::load_matrix_sync(p1_shared_wmma_matrix_b[((ax0_outer_1 * 4) + ax1_outer_1)], (&(p1_shared[((((ax0_outer_1 * 5120) + ((((int)threadIdx.y) & 1) * 2560)) + (ax1_outer_1 * 640)) + (k_inner_outer * 16))])), 40);\n        }\n      }\n      for (int b_c_outer = 0; b_c_outer < 2; ++b_c_outer) {\n        for (int i_c_outer = 0; i_c_outer < 4; ++i_c_outer) {\n          for (int j_c_outer = 0; j_c_outer < 4; ++j_c_outer) {\n            nvcuda::wmma::mma_sync(T_batch_matmul_NT_wmma_accumulator[(((b_c_outer * 16) + (i_c_outer * 4)) + j_c_outer)], p0_shared_wmma_matrix_a[((b_c_outer * 4) + i_c_outer)], p1_shared_wmma_matrix_b[((b_c_outer * 4) + j_c_outer)], T_batch_matmul_NT_wmma_accumulator[(((b_c_outer * 16) + (i_c_outer * 4)) + j_c_outer)]);\n          }\n        }\n      }\n    }\n  }\n  __syncthreads();\n  for (int b_inner_inner_outer = 0; b_inner_inner_outer < 2; ++b_inner_inner_outer) {\n    for (int i_inner_inner_outer = 0; i_inner_inner_outer < 4; ++i_inner_inner_outer) {\n      for (int j_inner_inner_outer = 0; j_inner_inner_outer < 4; ++j_inner_inner_outer) {\n        nvcuda::wmma::store_matrix_sync((&(T_batch_matmul_NT[(((((((((((int)blockIdx.x) >> 10) * 33554432) + (b_inner_inner_outer * 16777216)) + (((((int)blockIdx.x) & 1023) >> 5) * 524288)) + ((((int)threadIdx.y) >> 1) * 262144)) + (i_inner_inner_outer * 65536)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.y) & 1) * 64)) + (j_inner_inner_outer * 16))])), T_batch_matmul_NT_wmma_accumulator[(((b_inner_inner_outer * 16) + (i_inner_inner_outer * 4)) + j_inner_inner_outer)], 4096, nvcuda::wmma::mem_row_major);\n      }\n    }\n  }\n  __syncthreads();\n}\n\n",
+    "block_size": [
+      32,
+      4,
+      1
+    ],
+    "grid_size": [
+      32768,
+      1,
+      1
+    ],
+    "latency": 6.079071998596191,
+    "name": "Group7",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      10
+    ],
+    "node_names": [
+      "reshape_divide_10"
+    ],
+    "group_id": 8,
+    "input_desc": [
+      [
+        "reshape_divide_10",
+        10,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        "reshape_divide_10",
+        10,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group8(half* __restrict__ p0, half* __restrict__ T_divide) {\n  \n  T_divide[(((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2))] = (p0[(((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2))] * __float2half_rn(8.839779e-02f));\n  T_divide[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 32)] = (p0[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 32)] * __float2half_rn(8.839779e-02f));\n  T_divide[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 64)] = (p0[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 64)] * __float2half_rn(8.839779e-02f));\n  T_divide[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 96)] = (p0[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 96)] * __float2half_rn(8.839779e-02f));\n  T_divide[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 1)] = (p0[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 1)] * __float2half_rn(8.839779e-02f));\n  T_divide[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 33)] = (p0[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 33)] * __float2half_rn(8.839779e-02f));\n  T_divide[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 65)] = (p0[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 65)] * __float2half_rn(8.839779e-02f));\n  T_divide[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 97)] = (p0[((((((((int)blockIdx.x) >> 5) * 32768) + ((((int)threadIdx.x) >> 4) * 4096)) + ((((int)blockIdx.x) & 31) * 128)) + ((((int)threadIdx.x) & 15) * 2)) + 97)] * __float2half_rn(8.839779e-02f));\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      1048576,
+      1,
+      1
+    ],
+    "latency": 6.461518287658691,
+    "name": "Group8",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      11,
+      12
+    ],
+    "node_names": [
+      "max_11",
+      "subtract_exp_12"
+    ],
+    "group_id": 9,
+    "input_desc": [
+      [
+        "max_11",
+        11,
+        0
+      ],
+      [
+        "subtract_exp_12",
+        12,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        "subtract_exp_12",
+        12,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group9(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0) {\n  \n  half mediate0_local[1];\n  __shared__ half input0_shared[8192];\n  mediate0_local[0] = __float2half_rn(-6.550400e+04f);\n  for (int k3_outer = 0; k3_outer < 64; ++k3_outer) {\n    __syncthreads();\n    *(uint4*)(input0_shared + (((int)threadIdx.x) * 8)) = *(uint4*)(input0 + (((((((((int)blockIdx.x) >> 22) * 536870912) + ((((int)threadIdx.x) >> 5) * 16777216)) + (((((int)blockIdx.x) & 4194303) >> 12) * 16384)) + (((((int)threadIdx.x) & 31) >> 3) * 4096)) + (k3_outer * 64)) + ((((int)threadIdx.x) & 7) * 8)));\n    *(uint4*)(input0_shared + ((((int)threadIdx.x) * 8) + 1024)) = *(uint4*)(input0 + ((((((((((int)blockIdx.x) >> 22) * 536870912) + ((((int)threadIdx.x) >> 5) * 16777216)) + (((((int)blockIdx.x) & 4194303) >> 12) * 16384)) + (((((int)threadIdx.x) & 31) >> 3) * 4096)) + (k3_outer * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 67108864));\n    *(uint4*)(input0_shared + ((((int)threadIdx.x) * 8) + 2048)) = *(uint4*)(input0 + ((((((((((int)blockIdx.x) >> 22) * 536870912) + ((((int)threadIdx.x) >> 5) * 16777216)) + (((((int)blockIdx.x) & 4194303) >> 12) * 16384)) + (((((int)threadIdx.x) & 31) >> 3) * 4096)) + (k3_outer * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 134217728));\n    *(uint4*)(input0_shared + ((((int)threadIdx.x) * 8) + 3072)) = *(uint4*)(input0 + ((((((((((int)blockIdx.x) >> 22) * 536870912) + ((((int)threadIdx.x) >> 5) * 16777216)) + (((((int)blockIdx.x) & 4194303) >> 12) * 16384)) + (((((int)threadIdx.x) & 31) >> 3) * 4096)) + (k3_outer * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 201326592));\n    *(uint4*)(input0_shared + ((((int)threadIdx.x) * 8) + 4096)) = *(uint4*)(input0 + ((((((((((int)blockIdx.x) >> 22) * 536870912) + ((((int)threadIdx.x) >> 5) * 16777216)) + (((((int)blockIdx.x) & 4194303) >> 12) * 16384)) + (((((int)threadIdx.x) & 31) >> 3) * 4096)) + (k3_outer * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 268435456));\n    *(uint4*)(input0_shared + ((((int)threadIdx.x) * 8) + 5120)) = *(uint4*)(input0 + ((((((((((int)blockIdx.x) >> 22) * 536870912) + ((((int)threadIdx.x) >> 5) * 16777216)) + (((((int)blockIdx.x) & 4194303) >> 12) * 16384)) + (((((int)threadIdx.x) & 31) >> 3) * 4096)) + (k3_outer * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 335544320));\n    *(uint4*)(input0_shared + ((((int)threadIdx.x) * 8) + 6144)) = *(uint4*)(input0 + ((((((((((int)blockIdx.x) >> 22) * 536870912) + ((((int)threadIdx.x) >> 5) * 16777216)) + (((((int)blockIdx.x) & 4194303) >> 12) * 16384)) + (((((int)threadIdx.x) & 31) >> 3) * 4096)) + (k3_outer * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 402653184));\n    *(uint4*)(input0_shared + ((((int)threadIdx.x) * 8) + 7168)) = *(uint4*)(input0 + ((((((((((int)blockIdx.x) >> 22) * 536870912) + ((((int)threadIdx.x) >> 5) * 16777216)) + (((((int)blockIdx.x) & 4194303) >> 12) * 16384)) + (((((int)threadIdx.x) & 31) >> 3) * 4096)) + (k3_outer * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 469762048));\n    __syncthreads();\n    for (int k3_inner = 0; k3_inner < 64; ++k3_inner) {\n      mediate0_local[0] = max(mediate0_local[0], input0_shared[((((int)threadIdx.x) * 64) + k3_inner)]);\n    }\n  }\n  output0[((((((((int)blockIdx.x) >> 22) * 536870912) + ((((int)threadIdx.x) >> 2) * 16777216)) + (((((int)blockIdx.x) & 4194303) >> 12) * 16384)) + ((((int)threadIdx.x) & 3) * 4096)) + (((int)blockIdx.x) & 4095))] = hexp((input1[((((((((int)blockIdx.x) >> 22) * 536870912) + ((((int)threadIdx.x) >> 2) * 16777216)) + (((((int)blockIdx.x) & 4194303) >> 12) * 16384)) + ((((int)threadIdx.x) & 3) * 4096)) + (((int)blockIdx.x) & 4095))] - mediate0_local[0]));\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      2048,
+      1,
+      1
+    ],
+    "latency": 3.028991937637329,
+    "name": "Group9",
+    "gain": 5.848941326141357
+  },
+  {
+    "nodes": [
+      13,
+      14
+    ],
+    "node_names": [
+      "sum_13",
+      "divide_cast_cast_reshape_14"
+    ],
+    "group_id": 10,
+    "input_desc": [
+      [
+        "sum_13",
+        13,
+        0
+      ],
+      [
+        "divide_cast_cast_reshape_14",
+        14,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        "divide_cast_cast_reshape_14",
+        14,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group10(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0) {\n  \n  half mediate0_local[1];\n  __shared__ half input0_shared[64];\n  mediate0_local[0] = __float2half_rn(0.000000e+00f);\n  for (int k3_outer = 0; k3_outer < 64; ++k3_outer) {\n    __syncthreads();\n    if (((int)threadIdx.x) < 8) {\n      *(uint4*)(input0_shared + (((int)threadIdx.x) * 8)) = *(uint4*)(input0 + ((((((int)blockIdx.x) >> 4) * 4096) + (k3_outer * 64)) + (((int)threadIdx.x) * 8)));\n    }\n    __syncthreads();\n    for (int k3_inner = 0; k3_inner < 64; ++k3_inner) {\n      mediate0_local[0] = (mediate0_local[0] + input0_shared[k3_inner]);\n    }\n  }\n  for (int ax2_inner_inner_inner = 0; ax2_inner_inner_inner < 2; ++ax2_inner_inner_inner) {\n    output0[(((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 2)) + ax2_inner_inner_inner)] = ((half)((float)(input1[(((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 2)) + ax2_inner_inner_inner)] / mediate0_local[0])));\n  }\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      1024,
+      1,
+      1
+    ],
+    "latency": 0.1123799979686737,
+    "name": "Group10",
+    "gain": 8.807142525911331
+  },
+  {
+    "nodes": [
+      15
+    ],
+    "node_names": [
+      "ladder_perfect_quant_linear_15"
+    ],
+    "group_id": 11,
+    "input_desc": [
+      [
+        "ladder_perfect_quant_linear_15",
+        15,
+        0
+      ],
+      [
+        "ladder_perfect_quant_linear_15",
+        15,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        "ladder_perfect_quant_linear_15",
+        15,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group11(half* __restrict__ p0, int8_t* __restrict__ p1, half* __restrict__ T_perfect_quant_linear) {\n  \n  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 16, 16, 16, half> T_perfect_quant_linear_shared_wmma_accumulator[32];\n  __shared__ half p0_shared[8192];\n  __shared__ half B_decode_shared[4096];\n  signed char p1_local[1];\n  half B_decode_local[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 16, 16, 16, half, nvcuda::wmma::row_major> p0_shared_wmma_matrix_a[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 16, 16, 16, half, nvcuda::wmma::col_major> B_decode_shared_wmma_matrix_b[4];\n  __shared__ half T_perfect_quant_linear_shared[11520];\n  for (int i0_2_init = 0; i0_2_init < 8; ++i0_2_init) {\n    for (int i1_2_init = 0; i1_2_init < 4; ++i1_2_init) {\n      nvcuda::wmma::fill_fragment(T_perfect_quant_linear_shared_wmma_accumulator[((i0_2_init * 4) + i1_2_init)], 0.000000e+00f);\n    }\n  }\n  for (int k_0 = 0; k_0 < 256; ++k_0) {\n    __syncthreads();\n    #pragma unroll\n    for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 8; ++ax0_ax1_ax2_ax3_0_fused_0) {\n      *(uint4*)(p0_shared + ((((ax0_ax1_ax2_ax3_0_fused_0 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(p0 + ((((((((int)blockIdx.y) * 2097152) + (ax0_ax1_ax2_ax3_0_fused_0 * 262144)) + (((int)threadIdx.y) * 131072)) + (k_0 * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8)));\n    }\n    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 4; ++ax0_ax1_ax2_ax3_0_fused_0_1) {\n      p1_local[0] = p1[((((((((int)blockIdx.x) * 131072) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 32768)) + (((int)threadIdx.y) * 16384)) + (k_0 * 64)) + (((int)threadIdx.z) * 32)) + ((int)threadIdx.x))];\n      for (int ax0 = 0; ax0 < 8; ++ax0) {\n        B_decode_local[ax0] = ((half)((p1_local[0] >> ((signed char)ax0)) & (signed char)1));\n      }\n      *(uint4*)(B_decode_shared + ((((ax0_ax1_ax2_ax3_0_fused_0_1 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(B_decode_local + 0);\n    }\n    __syncthreads();\n    for (int k_1 = 0; k_1 < 2; ++k_1) {\n      for (int ax0_1 = 0; ax0_1 < 8; ++ax0_1) {\n        nvcuda::wmma::load_matrix_sync(p0_shared_wmma_matrix_a[ax0_1], (&(p0_shared[(((((int)threadIdx.y) * 4096) + (ax0_1 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int ax0_2 = 0; ax0_2 < 4; ++ax0_2) {\n        nvcuda::wmma::load_matrix_sync(B_decode_shared_wmma_matrix_b[ax0_2], (&(B_decode_shared[(((((int)threadIdx.z) * 2048) + (ax0_2 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int i0_2 = 0; i0_2 < 8; ++i0_2) {\n        for (int i1_2 = 0; i1_2 < 4; ++i1_2) {\n          nvcuda::wmma::mma_sync(T_perfect_quant_linear_shared_wmma_accumulator[((i0_2 * 4) + i1_2)], p0_shared_wmma_matrix_a[i0_2], B_decode_shared_wmma_matrix_b[i1_2], T_perfect_quant_linear_shared_wmma_accumulator[((i0_2 * 4) + i1_2)]);\n        }\n      }\n    }\n  }\n  __syncthreads();\n  for (int ax0_3 = 0; ax0_3 < 8; ++ax0_3) {\n    for (int ax1 = 0; ax1 < 4; ++ax1) {\n      __syncthreads();\n      nvcuda::wmma::store_matrix_sync((&(T_perfect_quant_linear_shared[((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024))])), T_perfect_quant_linear_shared_wmma_accumulator[((ax0_3 * 4) + ax1)], 16, nvcuda::wmma::mem_row_major);\n      __syncthreads();\n      #pragma unroll\n      for (int ax0_ax1_ax2_ax3_fused_0 = 0; ax0_ax1_ax2_ax3_fused_0 < 1; ++ax0_ax1_ax2_ax3_fused_0) {\n        *(uint4*)(T_perfect_quant_linear + (((((((((int)blockIdx.y) * 262144) + (((int)threadIdx.y) * 131072)) + (ax0_3 * 16384)) + (((int)blockIdx.x) * 2048)) + (((int)threadIdx.z) * 1024)) + (ax1 * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(T_perfect_quant_linear_shared + (((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024)) + (((int)threadIdx.x) * 8)));\n      }\n    }\n  }\n  __syncthreads();\n}\n\n",
+    "block_size": [
+      32,
+      2,
+      2
+    ],
+    "grid_size": [
+      8,
+      16,
+      1
+    ],
+    "latency": 1.0477567911148071,
+    "name": "Group11",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      16
+    ],
+    "node_names": [
+      "layout_transform_reshape_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16"
+    ],
+    "group_id": 12,
+    "input_desc": [
+      [
+        "layout_transform_reshape_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
+        16,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        "layout_transform_reshape_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
+        16,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group12(half* __restrict__ p0, half* __restrict__ T_transpose_10) {\n  \n  T_transpose_10[((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2))] = p0[(((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3))];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 524288)] = p0[(((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3))];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 1048576)] = p0[(((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3))];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 1572864)] = p0[(((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3))];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 2097152)] = p0[(((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3))];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 2621440)] = p0[(((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3))];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 3145728)] = p0[(((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3))];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 3670016)] = p0[(((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3))];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 1)] = p0[((((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3)) + 16)];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 524289)] = p0[((((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3)) + 16)];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 1048577)] = p0[((((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3)) + 16)];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 1572865)] = p0[((((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3)) + 16)];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 2097153)] = p0[((((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3)) + 16)];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 2621441)] = p0[((((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3)) + 16)];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 3145729)] = p0[((((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3)) + 16)];\n  T_transpose_10[(((((((((int)blockIdx.x) >> 11) * 4194304) + (((((int)blockIdx.x) & 2047) >> 8) * 65536)) + ((((int)threadIdx.x) >> 3) * 4096)) + ((((int)blockIdx.x) & 255) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 3670017)] = p0[((((((((int)blockIdx.x) & 255) * 16384) + ((((int)blockIdx.x) >> 8) * 256)) + ((((int)threadIdx.x) & 7) * 32)) + (((int)threadIdx.x) >> 3)) + 16)];\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      16384,
+      1,
+      1
+    ],
+    "latency": 0.19411885738372803,
+    "name": "Group12",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      17
+    ],
+    "node_names": [
+      "nn_batch_matmul_17"
+    ],
+    "group_id": 13,
+    "input_desc": [
+      [
+        "nn_batch_matmul_17",
+        17,
+        0
+      ],
+      [
+        "nn_batch_matmul_17",
+        17,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        "nn_batch_matmul_17",
+        17,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group13(half* __restrict__ p0, half* __restrict__ p1, half* __restrict__ T_batch_matmul_NT) {\n  \n  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 16, 16, 16, half> T_batch_matmul_NT_wmma_accumulator[32];\n  __shared__ half p0_shared[10240];\n  __shared__ half p1_shared[10240];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 16, 16, 16, half, nvcuda::wmma::row_major> p0_shared_wmma_matrix_a[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 16, 16, 16, half, nvcuda::wmma::col_major> p1_shared_wmma_matrix_b[8];\n  for (int b_c_outer_init = 0; b_c_outer_init < 2; ++b_c_outer_init) {\n    for (int i_c_outer_init = 0; i_c_outer_init < 4; ++i_c_outer_init) {\n      for (int j_c_outer_init = 0; j_c_outer_init < 4; ++j_c_outer_init) {\n        nvcuda::wmma::fill_fragment(T_batch_matmul_NT_wmma_accumulator[(((b_c_outer_init * 16) + (i_c_outer_init * 4)) + j_c_outer_init)], __float2half_rn(0.000000e+00f));\n      }\n    }\n  }\n  for (int k_outer = 0; k_outer < 128; ++k_outer) {\n    __syncthreads();\n    *(uint4*)(p0_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(p0 + (((((((((int)blockIdx.x) >> 5) * 33554432) + ((((int)blockIdx.x) & 31) * 524288)) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));\n    *(uint4*)(p0_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(p0 + ((((((((((int)blockIdx.x) >> 5) * 33554432) + ((((int)blockIdx.x) & 31) * 524288)) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 131072));\n    *(uint4*)(p0_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(p0 + ((((((((((int)blockIdx.x) >> 5) * 33554432) + ((((int)blockIdx.x) & 31) * 524288)) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 262144));\n    *(uint4*)(p0_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(p0 + ((((((((((int)blockIdx.x) >> 5) * 33554432) + ((((int)blockIdx.x) & 31) * 524288)) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 393216));\n    *(uint4*)(p0_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 5120)) = *(uint4*)(p0 + ((((((((((int)blockIdx.x) >> 5) * 33554432) + ((((int)blockIdx.x) & 31) * 524288)) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 16777216));\n    *(uint4*)(p0_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 5120) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(p0 + (((((((((((int)blockIdx.x) >> 5) * 33554432) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 5120) >> 12) * 16777216)) + ((((int)blockIdx.x) & 31) * 524288)) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 131072));\n    *(uint4*)(p0_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 6144) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(p0 + (((((((((((int)blockIdx.x) >> 5) * 33554432) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 6144) >> 12) * 16777216)) + ((((int)blockIdx.x) & 31) * 524288)) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 262144));\n    *(uint4*)(p0_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 7168) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(p0 + (((((((((((int)blockIdx.x) >> 5) * 33554432) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 7168) >> 12) * 16777216)) + ((((int)blockIdx.x) & 31) * 524288)) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 393216));\n    *(uint4*)(p1_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(p1 + ((((((((int)blockIdx.x) >> 5) * 1048576) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));\n    *(uint4*)(p1_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(p1 + (((((((((int)blockIdx.x) >> 5) * 1048576) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 131072));\n    *(uint4*)(p1_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(p1 + (((((((((int)blockIdx.x) >> 5) * 1048576) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 262144));\n    *(uint4*)(p1_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(p1 + (((((((((int)blockIdx.x) >> 5) * 1048576) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 393216));\n    *(uint4*)(p1_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 5120)) = *(uint4*)(p1 + (((((((((int)blockIdx.x) >> 5) * 1048576) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 524288));\n    *(uint4*)(p1_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 5120) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(p1 + ((((((((((int)blockIdx.x) >> 5) * 1048576) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 5120) >> 12) * 524288)) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 131072));\n    *(uint4*)(p1_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 6144) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(p1 + ((((((((((int)blockIdx.x) >> 5) * 1048576) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 6144) >> 12) * 524288)) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 262144));\n    *(uint4*)(p1_shared + (((((((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 7168) >> 12) * 5120) + (((int)threadIdx.y) * 320)) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(p1 + ((((((((((int)blockIdx.x) >> 5) * 1048576) + (((((((int)threadIdx.y) * 256) + (((int)threadIdx.x) * 8)) + 7168) >> 12) * 524288)) + (((int)threadIdx.y) * 32768)) + ((((int)threadIdx.x) >> 2) * 4096)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 393216));\n    __syncthreads();\n    for (int k_inner_outer = 0; k_inner_outer < 2; ++k_inner_outer) {\n      for (int ax0_outer = 0; ax0_outer < 2; ++ax0_outer) {\n        for (int ax1_outer = 0; ax1_outer < 4; ++ax1_outer) {\n          nvcuda::wmma::load_matrix_sync(p0_shared_wmma_matrix_a[((ax0_outer * 4) + ax1_outer)], (&(p0_shared[((((ax0_outer * 5120) + ((((int)threadIdx.y) >> 1) * 2560)) + (ax1_outer * 640)) + (k_inner_outer * 16))])), 40);\n        }\n      }\n      for (int ax0_outer_1 = 0; ax0_outer_1 < 2; ++ax0_outer_1) {\n        for (int ax1_outer_1 = 0; ax1_outer_1 < 4; ++ax1_outer_1) {\n          nvcuda::wmma::load_matrix_sync(p1_shared_wmma_matrix_b[((ax0_outer_1 * 4) + ax1_outer_1)], (&(p1_shared[((((ax0_outer_1 * 5120) + ((((int)threadIdx.y) & 1) * 2560)) + (ax1_outer_1 * 640)) + (k_inner_outer * 16))])), 40);\n        }\n      }\n      for (int b_c_outer = 0; b_c_outer < 2; ++b_c_outer) {\n        for (int i_c_outer = 0; i_c_outer < 4; ++i_c_outer) {\n          for (int j_c_outer = 0; j_c_outer < 4; ++j_c_outer) {\n            nvcuda::wmma::mma_sync(T_batch_matmul_NT_wmma_accumulator[(((b_c_outer * 16) + (i_c_outer * 4)) + j_c_outer)], p0_shared_wmma_matrix_a[((b_c_outer * 4) + i_c_outer)], p1_shared_wmma_matrix_b[((b_c_outer * 4) + j_c_outer)], T_batch_matmul_NT_wmma_accumulator[(((b_c_outer * 16) + (i_c_outer * 4)) + j_c_outer)]);\n          }\n        }\n      }\n    }\n  }\n  __syncthreads();\n  for (int b_inner_inner_outer = 0; b_inner_inner_outer < 2; ++b_inner_inner_outer) {\n    for (int i_inner_inner_outer = 0; i_inner_inner_outer < 4; ++i_inner_inner_outer) {\n      for (int j_inner_inner_outer = 0; j_inner_inner_outer < 4; ++j_inner_inner_outer) {\n        nvcuda::wmma::store_matrix_sync((&(T_batch_matmul_NT[((((((((((int)blockIdx.x) >> 5) * 1048576) + (b_inner_inner_outer * 524288)) + ((((int)blockIdx.x) & 31) * 16384)) + ((((int)threadIdx.y) >> 1) * 8192)) + (i_inner_inner_outer * 2048)) + ((((int)threadIdx.y) & 1) * 64)) + (j_inner_inner_outer * 16))])), T_batch_matmul_NT_wmma_accumulator[(((b_inner_inner_outer * 16) + (i_inner_inner_outer * 4)) + j_inner_inner_outer)], 128, nvcuda::wmma::mem_row_major);\n      }\n    }\n  }\n  __syncthreads();\n}\n\n",
+    "block_size": [
+      32,
+      4,
+      1
+    ],
+    "grid_size": [
+      1024,
+      1,
+      1
+    ],
+    "latency": 5.588787078857422,
+    "name": "Group13",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      18
+    ],
+    "node_names": [
+      "reshape_transpose_reshape_reshape_layout_transform_ladder_layout_transform_18"
+    ],
+    "group_id": 14,
+    "input_desc": [
+      [
+        "reshape_transpose_reshape_reshape_layout_transform_ladder_layout_transform_18",
+        18,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        "reshape_transpose_reshape_reshape_layout_transform_ladder_layout_transform_18",
+        18,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group14(half* __restrict__ p0, half* __restrict__ ladder_layout_transform) {\n  \n  ladder_layout_transform[(((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 2))] = p0[(((((((((((int)blockIdx.x) & 255) >> 2) * 524288) + ((((int)blockIdx.x) >> 8) * 2048)) + ((((int)blockIdx.x) & 1) * 1024)) + (((((int)threadIdx.x) & 15) >> 2) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 3) >> 1) * 8)) + ((((int)threadIdx.x) & 3) * 2))];\n  ladder_layout_transform[((((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 2)) + 32)] = p0[((((((((((int)blockIdx.x) & 255) >> 2) * 524288) + ((((int)blockIdx.x) >> 8) * 2048)) + ((((((((int)blockIdx.x) & 3) * 8) + ((((int)threadIdx.x) & 15) >> 2)) + 4) & 15) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 3) >> 1) * 8)) + ((((int)threadIdx.x) & 3) * 2))];\n  ladder_layout_transform[((((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 2)) + 1)] = p0[((((((((((((int)blockIdx.x) & 255) >> 2) * 524288) + ((((int)blockIdx.x) >> 8) * 2048)) + ((((int)blockIdx.x) & 1) * 1024)) + (((((int)threadIdx.x) & 15) >> 2) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 3) >> 1) * 8)) + ((((int)threadIdx.x) & 3) * 2)) + 1)];\n  ladder_layout_transform[((((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 2)) + 33)] = p0[(((((((((((int)blockIdx.x) & 255) >> 2) * 524288) + ((((int)blockIdx.x) >> 8) * 2048)) + ((((((((int)blockIdx.x) & 3) * 8) + ((((int)threadIdx.x) & 15) >> 2)) + 4) & 15) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 3) >> 1) * 8)) + ((((int)threadIdx.x) & 3) * 2)) + 1)];\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      65536,
+      1,
+      1
+    ],
+    "latency": 0.19824640452861786,
+    "name": "Group14",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      19
+    ],
+    "node_names": [
+      "ladder_perfect_quant_linear_19"
+    ],
+    "group_id": 15,
+    "input_desc": [
+      [
+        "ladder_perfect_quant_linear_19",
+        19,
+        0
+      ],
+      [
+        "ladder_perfect_quant_linear_19",
+        19,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        "ladder_perfect_quant_linear_19",
+        19,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group2(half* __restrict__ p0, int8_t* __restrict__ p1, half* __restrict__ T_perfect_quant_linear) {\n  \n  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 16, 16, 16, half> T_perfect_quant_linear_shared_wmma_accumulator[32];\n  __shared__ half p0_shared[8192];\n  __shared__ half B_decode_shared[4096];\n  signed char p1_local[1];\n  half B_decode_local[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 16, 16, 16, half, nvcuda::wmma::row_major> p0_shared_wmma_matrix_a[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 16, 16, 16, half, nvcuda::wmma::col_major> B_decode_shared_wmma_matrix_b[4];\n  __shared__ half T_perfect_quant_linear_shared[11520];\n  for (int i0_2_init = 0; i0_2_init < 8; ++i0_2_init) {\n    for (int i1_2_init = 0; i1_2_init < 4; ++i1_2_init) {\n      nvcuda::wmma::fill_fragment(T_perfect_quant_linear_shared_wmma_accumulator[((i0_2_init * 4) + i1_2_init)], 0.000000e+00f);\n    }\n  }\n  for (int k_0 = 0; k_0 < 256; ++k_0) {\n    __syncthreads();\n    #pragma unroll\n    for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 8; ++ax0_ax1_ax2_ax3_0_fused_0) {\n      *(uint4*)(p0_shared + ((((ax0_ax1_ax2_ax3_0_fused_0 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(p0 + ((((((((int)blockIdx.y) * 2097152) + (ax0_ax1_ax2_ax3_0_fused_0 * 262144)) + (((int)threadIdx.y) * 131072)) + (k_0 * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8)));\n    }\n    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 4; ++ax0_ax1_ax2_ax3_0_fused_0_1) {\n      p1_local[0] = p1[((((((((int)blockIdx.x) * 131072) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 32768)) + (((int)threadIdx.y) * 16384)) + (k_0 * 64)) + (((int)threadIdx.z) * 32)) + ((int)threadIdx.x))];\n      for (int ax0 = 0; ax0 < 8; ++ax0) {\n        B_decode_local[ax0] = ((half)((p1_local[0] >> ((signed char)ax0)) & (signed char)1));\n      }\n      *(uint4*)(B_decode_shared + ((((ax0_ax1_ax2_ax3_0_fused_0_1 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(B_decode_local + 0);\n    }\n    __syncthreads();\n    for (int k_1 = 0; k_1 < 2; ++k_1) {\n      for (int ax0_1 = 0; ax0_1 < 8; ++ax0_1) {\n        nvcuda::wmma::load_matrix_sync(p0_shared_wmma_matrix_a[ax0_1], (&(p0_shared[(((((int)threadIdx.y) * 4096) + (ax0_1 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int ax0_2 = 0; ax0_2 < 4; ++ax0_2) {\n        nvcuda::wmma::load_matrix_sync(B_decode_shared_wmma_matrix_b[ax0_2], (&(B_decode_shared[(((((int)threadIdx.z) * 2048) + (ax0_2 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int i0_2 = 0; i0_2 < 8; ++i0_2) {\n        for (int i1_2 = 0; i1_2 < 4; ++i1_2) {\n          nvcuda::wmma::mma_sync(T_perfect_quant_linear_shared_wmma_accumulator[((i0_2 * 4) + i1_2)], p0_shared_wmma_matrix_a[i0_2], B_decode_shared_wmma_matrix_b[i1_2], T_perfect_quant_linear_shared_wmma_accumulator[((i0_2 * 4) + i1_2)]);\n        }\n      }\n    }\n  }\n  __syncthreads();\n  for (int ax0_3 = 0; ax0_3 < 8; ++ax0_3) {\n    for (int ax1 = 0; ax1 < 4; ++ax1) {\n      __syncthreads();\n      nvcuda::wmma::store_matrix_sync((&(T_perfect_quant_linear_shared[((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024))])), T_perfect_quant_linear_shared_wmma_accumulator[((ax0_3 * 4) + ax1)], 16, nvcuda::wmma::mem_row_major);\n      __syncthreads();\n      #pragma unroll\n      for (int ax0_ax1_ax2_ax3_fused_0 = 0; ax0_ax1_ax2_ax3_fused_0 < 1; ++ax0_ax1_ax2_ax3_fused_0) {\n        *(uint4*)(T_perfect_quant_linear + (((((((((int)blockIdx.y) * 2097152) + (((int)threadIdx.y) * 1048576)) + (ax0_3 * 131072)) + (((int)blockIdx.x) * 2048)) + (((int)threadIdx.z) * 1024)) + (ax1 * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(T_perfect_quant_linear_shared + (((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024)) + (((int)threadIdx.x) * 8)));\n      }\n    }\n  }\n  __syncthreads();\n}\n\n",
+    "block_size": [
+      32,
+      2,
+      2
+    ],
+    "grid_size": [
+      64,
+      16,
+      1
+    ],
+    "latency": 6.650061130523682,
+    "name": "Group2",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      20
+    ],
+    "node_names": [
+      "layout_transform_reshape_reshape_add_20"
+    ],
+    "group_id": 16,
+    "input_desc": [
+      [
+        "layout_transform_reshape_reshape_add_20",
+        20,
+        0
+      ],
+      [
+        "layout_transform_reshape_reshape_add_20",
+        20,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        "layout_transform_reshape_reshape_add_20",
+        20,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group16(half* __restrict__ p0, half* __restrict__ p1, half* __restrict__ T_add) {\n  \n  T_add[(((((((int)blockIdx.x) >> 8) * 65536) + ((((int)threadIdx.x) >> 4) * 8192)) + ((((int)blockIdx.x) & 255) * 32)) + ((((int)threadIdx.x) & 15) * 2))] = (p1[(((((((int)blockIdx.x) >> 8) * 65536) + ((((int)threadIdx.x) >> 4) * 8192)) + ((((int)blockIdx.x) & 255) * 32)) + ((((int)threadIdx.x) & 15) * 2))] + p0[(((((((((int)blockIdx.x) >> 9) * 131072) + ((((int)blockIdx.x) & 255) * 512)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)blockIdx.x) & 511) >> 8) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + ((((int)threadIdx.x) & 7) * 2))]);\n  T_add[((((((((int)blockIdx.x) >> 8) * 65536) + ((((int)threadIdx.x) >> 4) * 8192)) + ((((int)blockIdx.x) & 255) * 32)) + ((((int)threadIdx.x) & 15) * 2)) + 1)] = (p1[((((((((int)blockIdx.x) >> 8) * 65536) + ((((int)threadIdx.x) >> 4) * 8192)) + ((((int)blockIdx.x) & 255) * 32)) + ((((int)threadIdx.x) & 15) * 2)) + 1)] + p0[((((((((((int)blockIdx.x) >> 9) * 131072) + ((((int)blockIdx.x) & 255) * 512)) + (((((int)threadIdx.x) & 15) >> 3) * 256)) + (((((int)blockIdx.x) & 511) >> 8) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + ((((int)threadIdx.x) & 7) * 2)) + 1)]);\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      131072,
+      1,
+      1
+    ],
+    "latency": 0.26843199133872986,
+    "name": "Group16",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      21,
+      22
+    ],
+    "node_names": [
+      "cast_multiply_21",
+      "mean_add_sqrt_divide_22"
+    ],
+    "group_id": 17,
+    "input_desc": [
+      [
+        "cast_multiply_21",
+        21,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        "cast_multiply_21",
+        21,
+        0
+      ],
+      [
+        "mean_add_sqrt_divide_22",
+        22,
+        0
+      ]
+    ],
+    "code": "__device__ void Group0_0_cast_multiply_0(half* __restrict__ p0, float* __restrict__ output_proxy, float* __restrict__ output_proxy_1, char* shared) {\n  output_proxy[((((int)blockIdx.x) * 8192) + ((int)threadIdx.x))] = ((float)p0[((((int)blockIdx.x) * 8192) + ((int)threadIdx.x))]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 128)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 128)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 256)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 256)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 384)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 384)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 512)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 512)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 640)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 640)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 768)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 768)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 896)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 896)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1024)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1024)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1152)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1152)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1280)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1280)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1408)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1408)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1536)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1536)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1664)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1664)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1792)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1792)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1920)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1920)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2048)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2048)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2176)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2176)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2304)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2304)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2432)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2432)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2560)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2560)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2688)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2688)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2816)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2816)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2944)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2944)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3072)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3072)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3200)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3200)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3328)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3328)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3456)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3456)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3584)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3584)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3712)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3712)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3840)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3840)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3968)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3968)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4096)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4096)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4224)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4224)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4352)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4352)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4480)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4480)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4608)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4608)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4736)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4736)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4864)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4864)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4992)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4992)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5120)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5120)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5248)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5248)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5376)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5376)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5504)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5504)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5632)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5632)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5760)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5760)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5888)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5888)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6016)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6016)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6144)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6144)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6272)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6272)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6400)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6400)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6528)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6528)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6656)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6656)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6784)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6784)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6912)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6912)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7040)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7040)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7168)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7168)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7296)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7296)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7424)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7424)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7552)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7552)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7680)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7680)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7808)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7808)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7936)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7936)]);\n  output_proxy[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 8064)] = ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 8064)]);\n  __syncthreads();\n  output_proxy_1[((int)threadIdx.x)] = (((float)p0[((((int)blockIdx.x) * 8192) + ((int)threadIdx.x))]) * ((float)p0[((((int)blockIdx.x) * 8192) + ((int)threadIdx.x))]));\n  output_proxy_1[(((int)threadIdx.x) + 128)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 128)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 128)]));\n  output_proxy_1[(((int)threadIdx.x) + 256)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 256)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 256)]));\n  output_proxy_1[(((int)threadIdx.x) + 384)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 384)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 384)]));\n  output_proxy_1[(((int)threadIdx.x) + 512)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 512)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 512)]));\n  output_proxy_1[(((int)threadIdx.x) + 640)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 640)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 640)]));\n  output_proxy_1[(((int)threadIdx.x) + 768)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 768)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 768)]));\n  output_proxy_1[(((int)threadIdx.x) + 896)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 896)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 896)]));\n  output_proxy_1[(((int)threadIdx.x) + 1024)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1024)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1024)]));\n  output_proxy_1[(((int)threadIdx.x) + 1152)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1152)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1152)]));\n  output_proxy_1[(((int)threadIdx.x) + 1280)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1280)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1280)]));\n  output_proxy_1[(((int)threadIdx.x) + 1408)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1408)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1408)]));\n  output_proxy_1[(((int)threadIdx.x) + 1536)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1536)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1536)]));\n  output_proxy_1[(((int)threadIdx.x) + 1664)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1664)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1664)]));\n  output_proxy_1[(((int)threadIdx.x) + 1792)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1792)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1792)]));\n  output_proxy_1[(((int)threadIdx.x) + 1920)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1920)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 1920)]));\n  output_proxy_1[(((int)threadIdx.x) + 2048)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2048)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2048)]));\n  output_proxy_1[(((int)threadIdx.x) + 2176)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2176)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2176)]));\n  output_proxy_1[(((int)threadIdx.x) + 2304)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2304)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2304)]));\n  output_proxy_1[(((int)threadIdx.x) + 2432)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2432)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2432)]));\n  output_proxy_1[(((int)threadIdx.x) + 2560)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2560)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2560)]));\n  output_proxy_1[(((int)threadIdx.x) + 2688)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2688)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2688)]));\n  output_proxy_1[(((int)threadIdx.x) + 2816)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2816)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2816)]));\n  output_proxy_1[(((int)threadIdx.x) + 2944)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2944)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 2944)]));\n  output_proxy_1[(((int)threadIdx.x) + 3072)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3072)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3072)]));\n  output_proxy_1[(((int)threadIdx.x) + 3200)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3200)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3200)]));\n  output_proxy_1[(((int)threadIdx.x) + 3328)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3328)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3328)]));\n  output_proxy_1[(((int)threadIdx.x) + 3456)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3456)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3456)]));\n  output_proxy_1[(((int)threadIdx.x) + 3584)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3584)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3584)]));\n  output_proxy_1[(((int)threadIdx.x) + 3712)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3712)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3712)]));\n  output_proxy_1[(((int)threadIdx.x) + 3840)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3840)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3840)]));\n  output_proxy_1[(((int)threadIdx.x) + 3968)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3968)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 3968)]));\n  output_proxy_1[(((int)threadIdx.x) + 4096)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4096)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4096)]));\n  output_proxy_1[(((int)threadIdx.x) + 4224)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4224)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4224)]));\n  output_proxy_1[(((int)threadIdx.x) + 4352)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4352)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4352)]));\n  output_proxy_1[(((int)threadIdx.x) + 4480)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4480)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4480)]));\n  output_proxy_1[(((int)threadIdx.x) + 4608)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4608)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4608)]));\n  output_proxy_1[(((int)threadIdx.x) + 4736)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4736)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4736)]));\n  output_proxy_1[(((int)threadIdx.x) + 4864)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4864)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4864)]));\n  output_proxy_1[(((int)threadIdx.x) + 4992)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4992)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 4992)]));\n  output_proxy_1[(((int)threadIdx.x) + 5120)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5120)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5120)]));\n  output_proxy_1[(((int)threadIdx.x) + 5248)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5248)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5248)]));\n  output_proxy_1[(((int)threadIdx.x) + 5376)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5376)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5376)]));\n  output_proxy_1[(((int)threadIdx.x) + 5504)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5504)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5504)]));\n  output_proxy_1[(((int)threadIdx.x) + 5632)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5632)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5632)]));\n  output_proxy_1[(((int)threadIdx.x) + 5760)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5760)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5760)]));\n  output_proxy_1[(((int)threadIdx.x) + 5888)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5888)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 5888)]));\n  output_proxy_1[(((int)threadIdx.x) + 6016)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6016)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6016)]));\n  output_proxy_1[(((int)threadIdx.x) + 6144)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6144)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6144)]));\n  output_proxy_1[(((int)threadIdx.x) + 6272)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6272)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6272)]));\n  output_proxy_1[(((int)threadIdx.x) + 6400)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6400)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6400)]));\n  output_proxy_1[(((int)threadIdx.x) + 6528)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6528)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6528)]));\n  output_proxy_1[(((int)threadIdx.x) + 6656)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6656)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6656)]));\n  output_proxy_1[(((int)threadIdx.x) + 6784)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6784)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6784)]));\n  output_proxy_1[(((int)threadIdx.x) + 6912)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6912)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 6912)]));\n  output_proxy_1[(((int)threadIdx.x) + 7040)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7040)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7040)]));\n  output_proxy_1[(((int)threadIdx.x) + 7168)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7168)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7168)]));\n  output_proxy_1[(((int)threadIdx.x) + 7296)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7296)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7296)]));\n  output_proxy_1[(((int)threadIdx.x) + 7424)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7424)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7424)]));\n  output_proxy_1[(((int)threadIdx.x) + 7552)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7552)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7552)]));\n  output_proxy_1[(((int)threadIdx.x) + 7680)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7680)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7680)]));\n  output_proxy_1[(((int)threadIdx.x) + 7808)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7808)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7808)]));\n  output_proxy_1[(((int)threadIdx.x) + 7936)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7936)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 7936)]));\n  output_proxy_1[(((int)threadIdx.x) + 8064)] = (((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 8064)]) * ((float)p0[(((((int)blockIdx.x) * 8192) + ((int)threadIdx.x)) + 8064)]));\n  __syncthreads();\n}\n\n__device__ void Group0_1_mean_add_sqrt_divide_1(float* __restrict__ p0, float* __restrict__ T_divide_7, char* shared) {\n  float normal_reduce_temp0[1];\n  float* p0_shared = (float*)p0;\n  __shared__ float red_buf0[128];\n  normal_reduce_temp0[0] = 0.000000e+00f;\n  for (int k2_inner_outer = 0; k2_inner_outer < 64; ++k2_inner_outer) {\n    normal_reduce_temp0[0] = (normal_reduce_temp0[0] + p0_shared[((k2_inner_outer * 128) + ((int)threadIdx.x))]);\n  }\n  __syncthreads();\n  ((volatile float*)red_buf0)[((int)threadIdx.x)] = normal_reduce_temp0[0];\n  __syncthreads();\n  if (((int)threadIdx.x) < 64) {\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 64)]);\n  }\n  __syncthreads();\n  if (((int)threadIdx.x) < 32) {\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 32)]);\n  }\n  __syncthreads();\n  if (((int)threadIdx.x) < 16) {\n    float w_16_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 16)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_16_0;\n    float w_8_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 8)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_8_0;\n    float w_4_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 4)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_4_0;\n    float w_2_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 2)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_2_0;\n    float w_1_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 1)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_1_0;\n  }\n  __syncthreads();\n  T_divide_7[((int)blockIdx.x)] = (1.000000e+00f / sqrtf(((((volatile float*)red_buf0)[0] * 1.220703e-04f) + 1.000000e-05f)));\n}\n\n__global__ void __launch_bounds__(128) Group0(half* input0, float* output0, float* output1) {\n  __shared__ char shared[32768];\n  Group0_0_cast_multiply_0(input0, output0, (float*)(shared+0), shared+0);\n  Group0_1_mean_add_sqrt_divide_1((float*)(shared+0), output1, shared+32768);\n}\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      4096,
+      1,
+      1
+    ],
+    "latency": 0.25948160886764526,
+    "name": "Group0",
+    "gain": 0.336275190114975
+  },
+  {
+    "nodes": [
+      23
+    ],
+    "node_names": [
+      "multiply_cast_multiply_23"
+    ],
+    "group_id": 18,
+    "input_desc": [
+      [
+        "multiply_cast_multiply_23",
+        23,
+        0
+      ],
+      [
+        "multiply_cast_multiply_23",
+        23,
+        1
+      ],
+      [
+        "multiply_cast_multiply_23",
+        23,
+        2
+      ]
+    ],
+    "output_desc": [
+      [
+        "multiply_cast_multiply_23",
+        23,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group18(float* __restrict__ p0, float* __restrict__ p1, half* __restrict__ p2, half* __restrict__ T_multiply_5) {\n  \n  T_multiply_5[(((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31))] = (p2[(((((int)blockIdx.x) & 255) * 32) + (((int)threadIdx.x) & 31))] * ((half)(p0[(((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31))] * p1[(((((int)blockIdx.x) >> 8) * 32) + ((((int)threadIdx.x) >> 5) * 2))])));\n  T_multiply_5[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 65536)] = (p2[(((((int)blockIdx.x) & 255) * 32) + (((int)threadIdx.x) & 31))] * ((half)(p0[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 65536)] * p1[((((((int)blockIdx.x) >> 8) * 32) + ((((int)threadIdx.x) >> 5) * 2)) + 8)])));\n  T_multiply_5[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 131072)] = (p2[(((((int)blockIdx.x) & 255) * 32) + (((int)threadIdx.x) & 31))] * ((half)(p0[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 131072)] * p1[((((((int)blockIdx.x) >> 8) * 32) + ((((int)threadIdx.x) >> 5) * 2)) + 16)])));\n  T_multiply_5[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 196608)] = (p2[(((((int)blockIdx.x) & 255) * 32) + (((int)threadIdx.x) & 31))] * ((half)(p0[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 196608)] * p1[((((((int)blockIdx.x) >> 8) * 32) + ((((int)threadIdx.x) >> 5) * 2)) + 24)])));\n  T_multiply_5[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 8192)] = (p2[(((((int)blockIdx.x) & 255) * 32) + (((int)threadIdx.x) & 31))] * ((half)(p0[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 8192)] * p1[((((((int)blockIdx.x) >> 8) * 32) + ((((int)threadIdx.x) >> 5) * 2)) + 1)])));\n  T_multiply_5[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 73728)] = (p2[(((((int)blockIdx.x) & 255) * 32) + (((int)threadIdx.x) & 31))] * ((half)(p0[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 73728)] * p1[((((((int)blockIdx.x) >> 8) * 32) + ((((int)threadIdx.x) >> 5) * 2)) + 9)])));\n  T_multiply_5[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 139264)] = (p2[(((((int)blockIdx.x) & 255) * 32) + (((int)threadIdx.x) & 31))] * ((half)(p0[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 139264)] * p1[((((((int)blockIdx.x) >> 8) * 32) + ((((int)threadIdx.x) >> 5) * 2)) + 17)])));\n  T_multiply_5[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 204800)] = (p2[(((((int)blockIdx.x) & 255) * 32) + (((int)threadIdx.x) & 31))] * ((half)(p0[((((((((int)blockIdx.x) >> 8) * 262144) + ((((int)threadIdx.x) >> 5) * 16384)) + ((((int)blockIdx.x) & 255) * 32)) + (((int)threadIdx.x) & 31)) + 204800)] * p1[((((((int)blockIdx.x) >> 8) * 32) + ((((int)threadIdx.x) >> 5) * 2)) + 25)])));\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      32768,
+      1,
+      1
+    ],
+    "latency": 0.23986934125423431,
+    "name": "Group18",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      24
+    ],
+    "node_names": [
+      "reshape_layout_transform_ladder_layout_transform_24"
+    ],
+    "group_id": 19,
+    "input_desc": [
+      [
+        "reshape_layout_transform_ladder_layout_transform_24",
+        24,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        "reshape_layout_transform_ladder_layout_transform_24",
+        24,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group19(half* __restrict__ p0, half* __restrict__ ladder_layout_transform) {\n  \n  ladder_layout_transform[(((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 2))] = p0[((((((((((int)blockIdx.x) >> 8) * 131072) + ((((int)blockIdx.x) & 1) * 65536)) + (((((int)threadIdx.x) & 15) >> 2) * 8192)) + (((((int)blockIdx.x) & 255) >> 2) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 3) >> 1) * 8)) + ((((int)threadIdx.x) & 3) * 2))];\n  ladder_layout_transform[((((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 2)) + 32)] = p0[(((((((((int)blockIdx.x) >> 8) * 131072) + ((((((((int)blockIdx.x) & 3) * 8) + ((((int)threadIdx.x) & 15) >> 2)) + 4) & 15) * 8192)) + (((((int)blockIdx.x) & 255) >> 2) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 3) >> 1) * 8)) + ((((int)threadIdx.x) & 3) * 2))];\n  ladder_layout_transform[((((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 2)) + 1)] = p0[(((((((((((int)blockIdx.x) >> 8) * 131072) + ((((int)blockIdx.x) & 1) * 65536)) + (((((int)threadIdx.x) & 15) >> 2) * 8192)) + (((((int)blockIdx.x) & 255) >> 2) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 3) >> 1) * 8)) + ((((int)threadIdx.x) & 3) * 2)) + 1)];\n  ladder_layout_transform[((((((((int)blockIdx.x) >> 2) * 2048) + ((((int)threadIdx.x) >> 4) * 256)) + ((((int)blockIdx.x) & 3) * 64)) + ((((int)threadIdx.x) & 15) * 2)) + 33)] = p0[((((((((((int)blockIdx.x) >> 8) * 131072) + ((((((((int)blockIdx.x) & 3) * 8) + ((((int)threadIdx.x) & 15) >> 2)) + 4) & 15) * 8192)) + (((((int)blockIdx.x) & 255) >> 2) * 128)) + ((((int)threadIdx.x) >> 4) * 16)) + (((((int)blockIdx.x) & 3) >> 1) * 8)) + ((((int)threadIdx.x) & 3) * 2)) + 1)];\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      65536,
+      1,
+      1
+    ],
+    "latency": 0.19865387678146362,
+    "name": "Group19",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      25,
+      26
+    ],
+    "node_names": [
+      "ladder_perfect_quant_linear_25",
+      "layout_transform_reshape_reshape_26"
+    ],
+    "group_id": 20,
+    "input_desc": [
+      [
+        "ladder_perfect_quant_linear_25",
+        25,
+        0
+      ],
+      [
+        "ladder_perfect_quant_linear_25",
+        25,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        "layout_transform_reshape_reshape_26",
+        26,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group20(half* __restrict__ input0, int8_t* __restrict__ input1, half* __restrict__ output0) {\n  \n  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 16, 16, 16, half> mediate1_shared_wmma_accumulator[32];\n  __shared__ half input0_shared[8192];\n  __shared__ half mediate0_shared[4096];\n  signed char input1_local[1];\n  half mediate0_local[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 16, 16, 16, half, nvcuda::wmma::row_major> input0_shared_wmma_matrix_a[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 16, 16, 16, half, nvcuda::wmma::col_major> mediate0_shared_wmma_matrix_b[4];\n  __shared__ half mediate1_shared[11520];\n  for (int i0_2_init = 0; i0_2_init < 8; ++i0_2_init) {\n    for (int i1_2_init = 0; i1_2_init < 4; ++i1_2_init) {\n      nvcuda::wmma::fill_fragment(mediate1_shared_wmma_accumulator[((i0_2_init * 4) + i1_2_init)], 0.000000e+00f);\n    }\n  }\n  for (int k_0 = 0; k_0 < 256; ++k_0) {\n    __syncthreads();\n    #pragma unroll\n    for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 8; ++ax0_ax1_ax2_ax3_0_fused_0) {\n      *(uint4*)(input0_shared + ((((ax0_ax1_ax2_ax3_0_fused_0 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(input0 + ((((((((int)blockIdx.y) * 2097152) + (ax0_ax1_ax2_ax3_0_fused_0 * 262144)) + (((int)threadIdx.y) * 131072)) + (k_0 * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8)));\n    }\n    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 4; ++ax0_ax1_ax2_ax3_0_fused_0_1) {\n      input1_local[0] = input1[((((((((int)blockIdx.x) * 131072) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 32768)) + (((int)threadIdx.y) * 16384)) + (k_0 * 64)) + (((int)threadIdx.z) * 32)) + ((int)threadIdx.x))];\n      for (int ax0 = 0; ax0 < 8; ++ax0) {\n        mediate0_local[ax0] = ((half)((input1_local[0] >> ((signed char)ax0)) & (signed char)1));\n      }\n      *(uint4*)(mediate0_shared + ((((ax0_ax1_ax2_ax3_0_fused_0_1 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(mediate0_local + 0);\n    }\n    __syncthreads();\n    for (int k_1 = 0; k_1 < 2; ++k_1) {\n      for (int ax0_1 = 0; ax0_1 < 8; ++ax0_1) {\n        nvcuda::wmma::load_matrix_sync(input0_shared_wmma_matrix_a[ax0_1], (&(input0_shared[(((((int)threadIdx.y) * 4096) + (ax0_1 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int ax0_2 = 0; ax0_2 < 4; ++ax0_2) {\n        nvcuda::wmma::load_matrix_sync(mediate0_shared_wmma_matrix_b[ax0_2], (&(mediate0_shared[(((((int)threadIdx.z) * 2048) + (ax0_2 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int i0_2 = 0; i0_2 < 8; ++i0_2) {\n        for (int i1_2 = 0; i1_2 < 4; ++i1_2) {\n          nvcuda::wmma::mma_sync(mediate1_shared_wmma_accumulator[((i0_2 * 4) + i1_2)], input0_shared_wmma_matrix_a[i0_2], mediate0_shared_wmma_matrix_b[i1_2], mediate1_shared_wmma_accumulator[((i0_2 * 4) + i1_2)]);\n        }\n      }\n    }\n  }\n  __syncthreads();\n  for (int ax0_3 = 0; ax0_3 < 8; ++ax0_3) {\n    for (int ax1 = 0; ax1 < 4; ++ax1) {\n      __syncthreads();\n      nvcuda::wmma::store_matrix_sync((&(mediate1_shared[((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024))])), mediate1_shared_wmma_accumulator[((ax0_3 * 4) + ax1)], 16, nvcuda::wmma::mem_row_major);\n      __syncthreads();\n      #pragma unroll\n      for (int ax0_ax1_ax2_ax3_fused_0 = 0; ax0_ax1_ax2_ax3_fused_0 < 1; ++ax0_ax1_ax2_ax3_fused_0) {\n        *(uint4*)(output0 + ((((((((((int)blockIdx.y) * 7340032) + (((int)threadIdx.y) * 3670016)) + (ax0_3 * 458752)) + ((((int)threadIdx.x) >> 1) * 28672)) + (((int)blockIdx.x) * 128)) + (((int)threadIdx.z) * 64)) + (ax1 * 16)) + ((((int)threadIdx.x) & 1) * 8))) = *(uint4*)(mediate1_shared + (((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024)) + (((int)threadIdx.x) * 8)));\n      }\n    }\n  }\n  __syncthreads();\n}\n\n",
+    "block_size": [
+      32,
+      2,
+      2
+    ],
+    "grid_size": [
+      224,
+      16,
+      1
+    ],
+    "latency": 21.811609268188477,
+    "name": "Group20",
+    "gain": 0.5223072171211243
+  },
+  {
+    "nodes": [
+      27,
+      28
+    ],
+    "node_names": [
+      "ladder_perfect_quant_linear_27",
+      "sigmoid_multiply_layout_transform_reshape_reshape_multiply_reshape_layout_transform_ladder_layout_transform_28"
+    ],
+    "group_id": 21,
+    "input_desc": [
+      [
+        "ladder_perfect_quant_linear_27",
+        27,
+        0
+      ],
+      [
+        "ladder_perfect_quant_linear_27",
+        27,
+        1
+      ],
+      [
+        "sigmoid_multiply_layout_transform_reshape_reshape_multiply_reshape_layout_transform_ladder_layout_transform_28",
+        28,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        "sigmoid_multiply_layout_transform_reshape_reshape_multiply_reshape_layout_transform_ladder_layout_transform_28",
+        28,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group21(half* __restrict__ input0, int8_t* __restrict__ input1, half* __restrict__ input2, half* __restrict__ output0) {\n  \n  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 16, 16, 16, half> mediate1_shared_wmma_accumulator[32];\n  __shared__ half input0_shared[8192];\n  __shared__ half mediate0_shared[4096];\n  signed char input1_local[1];\n  half mediate0_local[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 16, 16, 16, half, nvcuda::wmma::row_major> input0_shared_wmma_matrix_a[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 16, 16, 16, half, nvcuda::wmma::col_major> mediate0_shared_wmma_matrix_b[4];\n  __shared__ half mediate1_shared[11520];\n  for (int i0_2_init = 0; i0_2_init < 8; ++i0_2_init) {\n    for (int i1_2_init = 0; i1_2_init < 4; ++i1_2_init) {\n      nvcuda::wmma::fill_fragment(mediate1_shared_wmma_accumulator[((i0_2_init * 4) + i1_2_init)], 0.000000e+00f);\n    }\n  }\n  for (int k_0 = 0; k_0 < 256; ++k_0) {\n    __syncthreads();\n    #pragma unroll\n    for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 8; ++ax0_ax1_ax2_ax3_0_fused_0) {\n      *(uint4*)(input0_shared + ((((ax0_ax1_ax2_ax3_0_fused_0 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(input0 + ((((((((int)blockIdx.y) * 2097152) + (ax0_ax1_ax2_ax3_0_fused_0 * 262144)) + (((int)threadIdx.y) * 131072)) + (k_0 * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8)));\n    }\n    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 4; ++ax0_ax1_ax2_ax3_0_fused_0_1) {\n      input1_local[0] = input1[((((((((int)blockIdx.x) * 131072) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 32768)) + (((int)threadIdx.y) * 16384)) + (k_0 * 64)) + (((int)threadIdx.z) * 32)) + ((int)threadIdx.x))];\n      for (int ax0 = 0; ax0 < 8; ++ax0) {\n        mediate0_local[ax0] = ((half)((input1_local[0] >> ((signed char)ax0)) & (signed char)1));\n      }\n      *(uint4*)(mediate0_shared + ((((ax0_ax1_ax2_ax3_0_fused_0_1 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(mediate0_local + 0);\n    }\n    __syncthreads();\n    for (int k_1 = 0; k_1 < 2; ++k_1) {\n      for (int ax0_1 = 0; ax0_1 < 8; ++ax0_1) {\n        nvcuda::wmma::load_matrix_sync(input0_shared_wmma_matrix_a[ax0_1], (&(input0_shared[(((((int)threadIdx.y) * 4096) + (ax0_1 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int ax0_2 = 0; ax0_2 < 4; ++ax0_2) {\n        nvcuda::wmma::load_matrix_sync(mediate0_shared_wmma_matrix_b[ax0_2], (&(mediate0_shared[(((((int)threadIdx.z) * 2048) + (ax0_2 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int i0_2 = 0; i0_2 < 8; ++i0_2) {\n        for (int i1_2 = 0; i1_2 < 4; ++i1_2) {\n          nvcuda::wmma::mma_sync(mediate1_shared_wmma_accumulator[((i0_2 * 4) + i1_2)], input0_shared_wmma_matrix_a[i0_2], mediate0_shared_wmma_matrix_b[i1_2], mediate1_shared_wmma_accumulator[((i0_2 * 4) + i1_2)]);\n        }\n      }\n    }\n  }\n  __syncthreads();\n  for (int ax0_3 = 0; ax0_3 < 8; ++ax0_3) {\n    for (int ax1 = 0; ax1 < 4; ++ax1) {\n      __syncthreads();\n      nvcuda::wmma::store_matrix_sync((&(mediate1_shared[((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024))])), mediate1_shared_wmma_accumulator[((ax0_3 * 4) + ax1)], 16, nvcuda::wmma::mem_row_major);\n      __syncthreads();\n      #pragma unroll\n      for (int ax0_ax1_ax2_ax3_fused_0 = 0; ax0_ax1_ax2_ax3_fused_0 < 1; ++ax0_ax1_ax2_ax3_fused_0) {\n        uint4 __1;\n          uint4 __2;\n            uint4 __3 = *(uint4*)(input2 + ((((((((((int)blockIdx.y) * 7340032) + (((int)threadIdx.y) * 3670016)) + (ax0_3 * 458752)) + ((((int)threadIdx.x) >> 1) * 28672)) + (((int)blockIdx.x) * 128)) + (((int)threadIdx.z) * 64)) + (ax1 * 16)) + ((((int)threadIdx.x) & 1) * 8)));\n            uint4 __4;\n              uint4 __5 = make_uint4(__pack_half2(__float2half_rn(1.000000e+00f), __float2half_rn(1.000000e+00f)), __pack_half2(__float2half_rn(1.000000e+00f), __float2half_rn(1.000000e+00f)), __pack_half2(__float2half_rn(1.000000e+00f), __float2half_rn(1.000000e+00f)), __pack_half2(__float2half_rn(1.000000e+00f), __float2half_rn(1.000000e+00f)));\n              uint4 __6;\n                uint4 __7;\n                uint4 __8;\n                  uint4 __9 = make_uint4(__pack_half2(__float2half_rn(0.000000e+00f), __float2half_rn(0.000000e+00f)), __pack_half2(__float2half_rn(0.000000e+00f), __float2half_rn(0.000000e+00f)), __pack_half2(__float2half_rn(0.000000e+00f), __float2half_rn(0.000000e+00f)), __pack_half2(__float2half_rn(0.000000e+00f), __float2half_rn(0.000000e+00f)));\n                  ((half2*)(&(__8.x)))->x = (((half2*)(&(__9.x)))->x-((half2*)(&(__3.x)))->x);\n                  ((half2*)(&(__8.x)))->y = (((half2*)(&(__9.x)))->y-((half2*)(&(__3.x)))->y);\n                  ((half2*)(&(__8.y)))->x = (((half2*)(&(__9.y)))->x-((half2*)(&(__3.y)))->x);\n                  ((half2*)(&(__8.y)))->y = (((half2*)(&(__9.y)))->y-((half2*)(&(__3.y)))->y);\n                  ((half2*)(&(__8.z)))->x = (((half2*)(&(__9.z)))->x-((half2*)(&(__3.z)))->x);\n                  ((half2*)(&(__8.z)))->y = (((half2*)(&(__9.z)))->y-((half2*)(&(__3.z)))->y);\n                  ((half2*)(&(__8.w)))->x = (((half2*)(&(__9.w)))->x-((half2*)(&(__3.w)))->x);\n                  ((half2*)(&(__8.w)))->y = (((half2*)(&(__9.w)))->y-((half2*)(&(__3.w)))->y);\n                ((half2*)(&(__7.x)))->x = hexp(((half2*)(&(__8.x)))->x);\n                ((half2*)(&(__7.x)))->y = hexp(((half2*)(&(__8.x)))->y);\n                ((half2*)(&(__7.y)))->x = hexp(((half2*)(&(__8.y)))->x);\n                ((half2*)(&(__7.y)))->y = hexp(((half2*)(&(__8.y)))->y);\n                ((half2*)(&(__7.z)))->x = hexp(((half2*)(&(__8.z)))->x);\n                ((half2*)(&(__7.z)))->y = hexp(((half2*)(&(__8.z)))->y);\n                ((half2*)(&(__7.w)))->x = hexp(((half2*)(&(__8.w)))->x);\n                ((half2*)(&(__7.w)))->y = hexp(((half2*)(&(__8.w)))->y);\n                ((half2*)(&(__6.x)))->x = (((half2*)(&(__5.x)))->x+((half2*)(&(__7.x)))->x);\n                ((half2*)(&(__6.x)))->y = (((half2*)(&(__5.x)))->y+((half2*)(&(__7.x)))->y);\n                ((half2*)(&(__6.y)))->x = (((half2*)(&(__5.y)))->x+((half2*)(&(__7.y)))->x);\n                ((half2*)(&(__6.y)))->y = (((half2*)(&(__5.y)))->y+((half2*)(&(__7.y)))->y);\n                ((half2*)(&(__6.z)))->x = (((half2*)(&(__5.z)))->x+((half2*)(&(__7.z)))->x);\n                ((half2*)(&(__6.z)))->y = (((half2*)(&(__5.z)))->y+((half2*)(&(__7.z)))->y);\n                ((half2*)(&(__6.w)))->x = (((half2*)(&(__5.w)))->x+((half2*)(&(__7.w)))->x);\n                ((half2*)(&(__6.w)))->y = (((half2*)(&(__5.w)))->y+((half2*)(&(__7.w)))->y);\n              ((half2*)(&(__4.x)))->x = (((half2*)(&(__5.x)))->x/((half2*)(&(__6.x)))->x);\n              ((half2*)(&(__4.x)))->y = (((half2*)(&(__5.x)))->y/((half2*)(&(__6.x)))->y);\n              ((half2*)(&(__4.y)))->x = (((half2*)(&(__5.y)))->x/((half2*)(&(__6.y)))->x);\n              ((half2*)(&(__4.y)))->y = (((half2*)(&(__5.y)))->y/((half2*)(&(__6.y)))->y);\n              ((half2*)(&(__4.z)))->x = (((half2*)(&(__5.z)))->x/((half2*)(&(__6.z)))->x);\n              ((half2*)(&(__4.z)))->y = (((half2*)(&(__5.z)))->y/((half2*)(&(__6.z)))->y);\n              ((half2*)(&(__4.w)))->x = (((half2*)(&(__5.w)))->x/((half2*)(&(__6.w)))->x);\n              ((half2*)(&(__4.w)))->y = (((half2*)(&(__5.w)))->y/((half2*)(&(__6.w)))->y);\n            ((half2*)(&(__2.x)))->x = (((half2*)(&(__3.x)))->x*((half2*)(&(__4.x)))->x);\n            ((half2*)(&(__2.x)))->y = (((half2*)(&(__3.x)))->y*((half2*)(&(__4.x)))->y);\n            ((half2*)(&(__2.y)))->x = (((half2*)(&(__3.y)))->x*((half2*)(&(__4.y)))->x);\n            ((half2*)(&(__2.y)))->y = (((half2*)(&(__3.y)))->y*((half2*)(&(__4.y)))->y);\n            ((half2*)(&(__2.z)))->x = (((half2*)(&(__3.z)))->x*((half2*)(&(__4.z)))->x);\n            ((half2*)(&(__2.z)))->y = (((half2*)(&(__3.z)))->y*((half2*)(&(__4.z)))->y);\n            ((half2*)(&(__2.w)))->x = (((half2*)(&(__3.w)))->x*((half2*)(&(__4.w)))->x);\n            ((half2*)(&(__2.w)))->y = (((half2*)(&(__3.w)))->y*((half2*)(&(__4.w)))->y);\n          uint4 __10 = *(uint4*)(mediate1_shared + (((((int)threadIdx.y) * 10240) + (((int)threadIdx.z) * 1024)) + (((int)threadIdx.x) * 8)));\n          ((half2*)(&(__1.x)))->x = (((half2*)(&(__2.x)))->x*((half2*)(&(__10.x)))->x);\n          ((half2*)(&(__1.x)))->y = (((half2*)(&(__2.x)))->y*((half2*)(&(__10.x)))->y);\n          ((half2*)(&(__1.y)))->x = (((half2*)(&(__2.y)))->x*((half2*)(&(__10.y)))->x);\n          ((half2*)(&(__1.y)))->y = (((half2*)(&(__2.y)))->y*((half2*)(&(__10.y)))->y);\n          ((half2*)(&(__1.z)))->x = (((half2*)(&(__2.z)))->x*((half2*)(&(__10.z)))->x);\n          ((half2*)(&(__1.z)))->y = (((half2*)(&(__2.z)))->y*((half2*)(&(__10.z)))->y);\n          ((half2*)(&(__1.w)))->x = (((half2*)(&(__2.w)))->x*((half2*)(&(__10.w)))->x);\n          ((half2*)(&(__1.w)))->y = (((half2*)(&(__2.w)))->y*((half2*)(&(__10.w)))->y);\n        *(uint4*)(output0 + ((((((((((int)blockIdx.y) * 7340032) + (((int)threadIdx.y) * 3670016)) + (ax0_3 * 458752)) + (((int)blockIdx.x) * 2048)) + (((int)threadIdx.z) * 1024)) + (ax1 * 256)) + ((((int)threadIdx.x) & 1) * 128)) + ((((int)threadIdx.x) >> 1) * 8))) = __1;\n      }\n    }\n  }\n  __syncthreads();\n}\n\n",
+    "block_size": [
+      32,
+      2,
+      2
+    ],
+    "grid_size": [
+      224,
+      16,
+      1
+    ],
+    "latency": 21.83536720275879,
+    "name": "Group21",
+    "gain": 0.8909811973571777
+  },
+  {
+    "nodes": [
+      29,
+      30
+    ],
+    "node_names": [
+      "ladder_perfect_quant_linear_29",
+      "layout_transform_reshape_reshape_add_30"
+    ],
+    "group_id": 22,
+    "input_desc": [
+      [
+        "ladder_perfect_quant_linear_29",
+        29,
+        0
+      ],
+      [
+        "ladder_perfect_quant_linear_29",
+        29,
+        1
+      ],
+      [
+        "layout_transform_reshape_reshape_add_30",
+        30,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        "layout_transform_reshape_reshape_add_30",
+        30,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group22(half* __restrict__ input0, int8_t* __restrict__ input1, half* __restrict__ input2, half* __restrict__ output0) {\n  \n  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 16, 16, 16, half> mediate1_shared_wmma_accumulator[16];\n  __shared__ half input0_shared[4096];\n  __shared__ half mediate0_shared[4096];\n  signed char input1_local[1];\n  half mediate0_local[8];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 16, 16, 16, half, nvcuda::wmma::row_major> input0_shared_wmma_matrix_a[4];\n  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 16, 16, 16, half, nvcuda::wmma::col_major> mediate0_shared_wmma_matrix_b[4];\n  __shared__ half mediate1_shared[6400];\n  for (int i0_2_init = 0; i0_2_init < 4; ++i0_2_init) {\n    for (int i1_2_init = 0; i1_2_init < 4; ++i1_2_init) {\n      nvcuda::wmma::fill_fragment(mediate1_shared_wmma_accumulator[((i0_2_init * 4) + i1_2_init)], 0.000000e+00f);\n    }\n  }\n  for (int k_0 = 0; k_0 < 896; ++k_0) {\n    __syncthreads();\n    #pragma unroll\n    for (int ax0_ax1_ax2_ax3_0_fused_0 = 0; ax0_ax1_ax2_ax3_0_fused_0 < 4; ++ax0_ax1_ax2_ax3_0_fused_0) {\n      *(uint4*)(input0_shared + ((((ax0_ax1_ax2_ax3_0_fused_0 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(input0 + ((((((((int)blockIdx.y) * 3670016) + (ax0_ax1_ax2_ax3_0_fused_0 * 917504)) + (((int)threadIdx.y) * 458752)) + (k_0 * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8)));\n    }\n    for (int ax0_ax1_ax2_ax3_0_fused_0_1 = 0; ax0_ax1_ax2_ax3_0_fused_0_1 < 4; ++ax0_ax1_ax2_ax3_0_fused_0_1) {\n      input1_local[0] = input1[((((((((int)blockIdx.x) * 458752) + (ax0_ax1_ax2_ax3_0_fused_0_1 * 114688)) + (((int)threadIdx.y) * 57344)) + (k_0 * 64)) + (((int)threadIdx.z) * 32)) + ((int)threadIdx.x))];\n      for (int ax0 = 0; ax0 < 8; ++ax0) {\n        mediate0_local[ax0] = ((half)((input1_local[0] >> ((signed char)ax0)) & (signed char)1));\n      }\n      *(uint4*)(mediate0_shared + ((((ax0_ax1_ax2_ax3_0_fused_0_1 * 1024) + (((int)threadIdx.y) * 512)) + (((int)threadIdx.z) * 256)) + (((int)threadIdx.x) * 8))) = *(uint4*)(mediate0_local + 0);\n    }\n    __syncthreads();\n    for (int k_1 = 0; k_1 < 2; ++k_1) {\n      for (int ax0_1 = 0; ax0_1 < 4; ++ax0_1) {\n        nvcuda::wmma::load_matrix_sync(input0_shared_wmma_matrix_a[ax0_1], (&(input0_shared[(((((int)threadIdx.y) * 2048) + (ax0_1 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int ax0_2 = 0; ax0_2 < 4; ++ax0_2) {\n        nvcuda::wmma::load_matrix_sync(mediate0_shared_wmma_matrix_b[ax0_2], (&(mediate0_shared[(((((int)threadIdx.z) * 2048) + (ax0_2 * 512)) + (k_1 * 256))])), 16);\n      }\n      for (int i0_2 = 0; i0_2 < 4; ++i0_2) {\n        for (int i1_2 = 0; i1_2 < 4; ++i1_2) {\n          nvcuda::wmma::mma_sync(mediate1_shared_wmma_accumulator[((i0_2 * 4) + i1_2)], input0_shared_wmma_matrix_a[i0_2], mediate0_shared_wmma_matrix_b[i1_2], mediate1_shared_wmma_accumulator[((i0_2 * 4) + i1_2)]);\n        }\n      }\n    }\n  }\n  __syncthreads();\n  for (int ax0_3 = 0; ax0_3 < 4; ++ax0_3) {\n    for (int ax1 = 0; ax1 < 4; ++ax1) {\n      __syncthreads();\n      nvcuda::wmma::store_matrix_sync((&(mediate1_shared[((((int)threadIdx.y) * 5120) + (((int)threadIdx.z) * 1024))])), mediate1_shared_wmma_accumulator[((ax0_3 * 4) + ax1)], 16, nvcuda::wmma::mem_row_major);\n      __syncthreads();\n      #pragma unroll\n      for (int ax0_ax1_ax2_ax3_fused_0 = 0; ax0_ax1_ax2_ax3_fused_0 < 1; ++ax0_ax1_ax2_ax3_fused_0) {\n        uint4 __1;\n          uint4 __2 = *(uint4*)(input2 + ((((((((((int)blockIdx.y) * 1048576) + (((int)threadIdx.y) * 524288)) + (ax0_3 * 131072)) + ((((int)threadIdx.x) >> 1) * 8192)) + (((int)blockIdx.x) * 128)) + (((int)threadIdx.z) * 64)) + (ax1 * 16)) + ((((int)threadIdx.x) & 1) * 8)));\n          uint4 __3 = *(uint4*)(mediate1_shared + (((((int)threadIdx.y) * 5120) + (((int)threadIdx.z) * 1024)) + (((int)threadIdx.x) * 8)));\n          ((half2*)(&(__1.x)))->x = (((half2*)(&(__2.x)))->x+((half2*)(&(__3.x)))->x);\n          ((half2*)(&(__1.x)))->y = (((half2*)(&(__2.x)))->y+((half2*)(&(__3.x)))->y);\n          ((half2*)(&(__1.y)))->x = (((half2*)(&(__2.y)))->x+((half2*)(&(__3.y)))->x);\n          ((half2*)(&(__1.y)))->y = (((half2*)(&(__2.y)))->y+((half2*)(&(__3.y)))->y);\n          ((half2*)(&(__1.z)))->x = (((half2*)(&(__2.z)))->x+((half2*)(&(__3.z)))->x);\n          ((half2*)(&(__1.z)))->y = (((half2*)(&(__2.z)))->y+((half2*)(&(__3.z)))->y);\n          ((half2*)(&(__1.w)))->x = (((half2*)(&(__2.w)))->x+((half2*)(&(__3.w)))->x);\n          ((half2*)(&(__1.w)))->y = (((half2*)(&(__2.w)))->y+((half2*)(&(__3.w)))->y);\n        *(uint4*)(output0 + ((((((((((int)blockIdx.y) * 1048576) + (((int)threadIdx.y) * 524288)) + (ax0_3 * 131072)) + ((((int)threadIdx.x) >> 1) * 8192)) + (((int)blockIdx.x) * 128)) + (((int)threadIdx.z) * 64)) + (ax1 * 16)) + ((((int)threadIdx.x) & 1) * 8))) = __1;\n      }\n    }\n  }\n  __syncthreads();\n}\n\n",
+    "block_size": [
+      32,
+      2,
+      2
+    ],
+    "grid_size": [
+      64,
+      32,
+      1
+    ],
+    "latency": 22.71457290649414,
+    "name": "Group22",
+    "gain": 0.2385323941707611
+  }
+]
