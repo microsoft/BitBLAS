@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure13/ptx/llama2_bs1_seq4096_async
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+  35.1925      35.1928      35.1984      35.1888       0.0034   
+               
