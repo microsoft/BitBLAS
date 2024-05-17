@@ -1,5 +1,5 @@
 Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure9/ladder/checkpoints/shufflenet
 Execution time summary:
  mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-   5.4321       5.4314       5.4377       5.4266       0.0041   
+   5.4303       5.4301       5.4324       5.4286       0.0015   
                

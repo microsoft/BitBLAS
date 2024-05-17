@@ -10,10 +10,12 @@ import random
 from vllm.model_executor.weight_utils import (get_quant_config,
                                               initialize_dummy_weights)
 from vllm.model_executor.layers.quantization.awq import AWQLinearMethod, AWQConfig
+import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch_size", type=int, default=1)
 parser.add_argument("--seq_length", type=int, default=1)
+parser.add_argument("--int4", action="store_true", help="use int4 quantization", default=False)
 
 args = parser.parse_args()
 batch_size = args.batch_size
@@ -39,7 +41,7 @@ config_70b = LlamaConfig(
 linear_method = None
 
 run_single = True
-enable_awq = True
+enable_awq = args.int4
 
 if enable_awq:
     quant_config = AWQConfig(

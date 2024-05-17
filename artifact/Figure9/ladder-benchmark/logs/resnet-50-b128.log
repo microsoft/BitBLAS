@@ -1,5 +1,5 @@
 Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure9/ladder/checkpoints/resnet-50
 Execution time summary:
  mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-  23.5915      23.5896      23.6071      23.5844       0.0081   
+  23.5883      23.5873      23.5995      23.5823       0.0059   
                

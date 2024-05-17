@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure9/ladder/checkpoints/bloom-176b/ladder_with_fake_dense_dequantize_fq_0_fp_e5m2_8_-1_bs1_seq1_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   2.8467       2.8467       2.8468       2.8467       0.0000   
+               
