@@ -64,10 +64,10 @@ After downloading, it should be extracted under the artifacts/temp folder. You c
 | Figure # in paper | Experiment Description                           | Commands                      | Script Location      |
 | ----------------- | ------------------------------------------------ | ----------------------------- | ----------------------------- |
 | Figure9   | End2End Performance on the NVIDIA V100 GPU               | [Figure9](#Figure9)           | [artifact/Figure9](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure9)           |
-| Figure11_V100  | Memory usage of LLM inference on the NVIDIA V100 GPU     | [Figure11](#Figure11)         | [artifact/Figure11_v100](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure11_v100)         |
-| Figure12_V100  | Operator Benchmark on the NVIDIA V100 GPU                | [Figure12](#Figure12)         | [artifact/Figure12_v100](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure12_v100)         |
-| Figure13_V100  | Optimization breakdown of LLAMA on the NVIDIA V100 GPU   | [Figure13](#Figure13)         | [artifact/Figure13_v100](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure13_v100)         |
-| Figure14_V100  | Scaling the bit width of weight and activation.          | [Figure14](#Figure14)         | [artifact/Figure14_v100](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure14_v100)         |
+| Figure11_V100  | Memory usage of LLM inference on the NVIDIA V100 GPU     | [Figure11](#figure11_v100)         | [artifact/Figure11_v100](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure11_v100)         |
+| Figure12_V100  | Operator Benchmark on the NVIDIA V100 GPU                | [Figure12](#figure12_v100)         | [artifact/Figure12_v100](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure12_v100)         |
+| Figure13_V100  | Optimization breakdown of LLAMA on the NVIDIA V100 GPU   | [Figure13](#figure13_v100)         | [artifact/Figure13_v100](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure13_v100)         |
+| Figure14_V100  | Scaling the bit width of weight and activation.          | [Figure14](#figure14_v100)         | [artifact/Figure14_v100](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Figure14_v100)         |
 | Table1    | MatMul Support and its Performance of Vendor Libraries   | [Table1](#Table1)             | [artifact/Table1](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Table1)         |
 | Table2    | Compilation time of AMOS, TensorIR Welder and Ladder     | [Table2](#Table2)             | [artifact/Table2](https://github.com/microsoft/BitBLAS/tree/osdi24_ladder_artifact/artifact/Table2)         |
 
