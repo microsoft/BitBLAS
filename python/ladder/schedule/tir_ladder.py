@@ -343,7 +343,7 @@ class TIRLadderMMAScheduler4D(TIRSchedulerBase):
         warp_size = self.config.arch.warp_size
         compute_dtype = self.reduce_op.output(0).dtype
         wmma_k = 32 if compute_dtype == "int32" else 16
-        shared_cache_c = (compute_dtype != "float32")
+        shared_cache_c = (compute_dtype != "float32") or (not is_a_consistent)
         sch, config = self.sche, self.config
         write_sch(sch, "original")
         C = sch.get_block(self.reduce_op.name)

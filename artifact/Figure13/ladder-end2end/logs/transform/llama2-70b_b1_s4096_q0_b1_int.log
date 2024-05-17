@@ -1,0 +1,45 @@
+Testing model: llama2-70b
+/root/Ladder/3rdparty/tvm/python/tvm/target/target.py:397: UserWarning: Try specifying cuda arch by adding 'arch=sm_xx' to your target.
+  warnings.warn("Try specifying cuda arch by adding 'arch=sm_xx' to your target.")
+2024-05-17 13:18:15 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-17 13:18:15 [ladder:DEBUG]: lhs or rhs is constant
+32
+Output112, 
+add111, reshape110, 
+cast109, ladder.perfect_quant_linear108, 
+exp52, subtract51, 
+divide49, Constant48, reshape47, 
+transpose45, reshape44, transpose43, broadcast_to41, expand_dims40, reshape42, add39, strided_slice36, multiply38, concatenate37, negative35, strided_slice34, multiply33, 
+transpose32, reshape31, reshape30, 
+max50, 
+reshape27, add26, multiply25, concatenate24, negative22, strided_slice23, strided_slice21, multiply20, 
+nn.batch_matmul46, 
+reshape18, transpose19, reshape17, 
+cast29, ladder.perfect_quant_linear28, 
+reshape14, cast13, cast12, reshape11, multiply10, cast9, multiply8, 
+divide7, add5, Constant4, mean3, sqrt6, Constant1, 
+reshape97, 
+cast16, ladder.perfect_quant_linear15, 
+cast106, cast105, reshape107, reshape104, multiply103, reshape102, multiply99, sigmoid98, 
+multiply2, cast0, 
+sum53, 
+reshape57, cast56, cast55, divide54, 
+cast59, ladder.perfect_quant_linear58, 
+reshape65, broadcast_to64, transpose67, expand_dims63, reshape66, transpose62, reshape61, reshape60, 
+nn.batch_matmul68, 
+cast73, reshape75, reshape72, reshape71, transpose70, cast74, reshape69, 
+cast77, ladder.perfect_quant_linear76, 
+add79, reshape78, 
+multiply82, cast80, 
+divide87, sqrt86, add85, Constant84, mean83, Constant81, 
+multiply90, cast89, multiply88, 
+reshape94, cast93, cast92, reshape91, 
+cast96, ladder.perfect_quant_linear95, 
+cast101, ladder.perfect_quant_linear100, 
+batch_matmul is not optimized for this platform.
+batch_matmul is not optimized for this platform.
+2024-05-17 13:18:17 [ladder:DEBUG]: candidate nodes: [<Node, cast_multiply_0>, <Node, mean_add_sqrt_divide_1>, <Node, multiply_cast_multiply_reshape_cast_cast_reshape_2>, <Node, ladder_perfect_quant_linear_cast_3>, <Node, reshape_reshape_transpose_4>, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5>, <Node, ladder_perfect_quant_linear_cast_6>, <Node, reshape_reshape_transpose_7>, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8>, <Node, nn_batch_matmul_9>, <Node, reshape_divide_10>, <Node, max_11>, <Node, subtract_exp_12>, <Node, sum_13>, <Node, divide_cast_cast_reshape_14>, <Node, ladder_perfect_quant_linear_cast_15>, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>, <Node, nn_batch_matmul_17>, <Node, reshape_transpose_reshape_reshape_cast_cast_reshape_18>, <Node, ladder_perfect_quant_linear_cast_19>, <Node, reshape_add_20>, <Node, cast_multiply_21>, <Node, mean_add_sqrt_divide_22>, <Node, multiply_cast_multiply_23>, <Node, reshape_cast_cast_reshape_24>, <Node, ladder_perfect_quant_linear_cast_25>, <Node, reshape_26>, <Node, ladder_perfect_quant_linear_cast_27>, <Node, sigmoid_multiply_reshape_multiply_reshape_cast_cast_reshape_28>, <Node, ladder_perfect_quant_linear_cast_29>, <Node, reshape_add_30>, <Node, Output >]
+2024-05-17 13:18:17 [ladder:DEBUG]: tune candidate nodes: [<Node, PlaceHolder >, <Node, cast_multiply_0>, <Node, mean_add_sqrt_divide_1>, <Node, PlaceHolder >, <Node, multiply_cast_multiply_reshape_cast_cast_reshape_2>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_cast_3>, <Node, reshape_reshape_transpose_4>, <Node, PlaceHolder >, <Node, PlaceHolder >, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_cast_6>, <Node, reshape_reshape_transpose_7>, <Node, PlaceHolder >, <Node, PlaceHolder >, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8>, <Node, nn_batch_matmul_9>, <Node, reshape_divide_10>, <Node, max_11>, <Node, subtract_exp_12>, <Node, sum_13>, <Node, divide_cast_cast_reshape_14>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_cast_15>, <Node, reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>, <Node, nn_batch_matmul_17>, <Node, reshape_transpose_reshape_reshape_cast_cast_reshape_18>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_cast_19>, <Node, PlaceHolder >, <Node, reshape_add_20>, <Node, cast_multiply_21>, <Node, mean_add_sqrt_divide_22>, <Node, PlaceHolder >, <Node, multiply_cast_multiply_23>, <Node, reshape_cast_cast_reshape_24>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_cast_25>, <Node, reshape_26>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_cast_27>, <Node, sigmoid_multiply_reshape_multiply_reshape_cast_cast_reshape_28>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_cast_29>, <Node, reshape_add_30>, <Node, Output >]
+Processing:   0%|          | 0/47 [00:00<?, ?it/s]                                                  2024-05-17 13:18:17 [ladder:INFO]: Tuning ['cast_multiply_0', 'mean_add_sqrt_divide_1', 'multiply_cast_multiply_reshape_cast_cast_reshape_2']
+Processing:   0%|          | 0/47 [00:00<?, ?it/s]                                                  2024-05-17 13:18:17 [ladder:INFO]: Tuning ['cast_multiply_0', 'mean_add_sqrt_divide_1']
+Processing:   0%|          | 0/47 [00:00<?, ?it/s]

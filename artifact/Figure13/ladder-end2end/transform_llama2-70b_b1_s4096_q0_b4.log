@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure13/transform/ladder_from_onnx_transform_fq_0_int_4_-1_bs1_seq4096_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+  36.9790      36.9798      36.9848      36.9738       0.0037   
+               

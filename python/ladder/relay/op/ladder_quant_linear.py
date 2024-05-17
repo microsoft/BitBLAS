@@ -4,7 +4,8 @@ from tvm import relay, ir, target, te, topi, tir
 from tvm.relay.op.strategy import wrap_topi_schedule
 from tvm.relay import reg
 from .utils import compute_matmul_shape
-
+import tvm
+from tvm.script import tir as T
 
 def rel_ladder_quant_linear(arg_types, attrs):
     a_shape = arg_types[0].shape
@@ -291,6 +292,85 @@ def compute_ladder_quant_linear_mxfp(attrs, inputs, output_type):
     C = te.compute(out_shape, fcompute=fcompute, name="T_quant_linear")
     return [C]
 
+def compute_ladder_quant_linear_mxfp_mxfp(attrs, inputs, output_type):
+    transpose_a = attrs["transpose_a"]
+    transpose_b = attrs["transpose_b"]
+    out_shape = output_type.shape
+    out_dtype = output_type.dtype
+    A, B = inputs[:2]
+    Scales = inputs[2]
+    M = int(out_shape[0])
+    bits = int(attrs["bits"])
+    format = str(attrs["format"])
+    assert format == "mxfp"
+    A_dtype = A.dtype
+
+    n_float_per_i8 = 8 // bits
+    K_size = A.shape[-2] if transpose_a else A.shape[-1]
+    k = te.reduce_axis((0, K_size), name="k")
+    if transpose_b:
+        dequant_b_shape = [B.shape[0], K_size]
+    else:
+        dequant_b_shape = [K_size, B.shape[1]]
+    dequant_a_shape = [M, K_size]
+    group_size = 32
+    def _tir_u8_to_f8_to_float(nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, dtype: str, scale: tvm.tir.PrimExpr = None):
+        assert nbit == 8
+        # e_f4 == 0 -> e_f32 = 0
+        mask = tvm.tir.const((1 << nbit) - 1, "uint32")
+        f8 = (val >> (pos.astype("uint32") * tvm.tir.const(nbit, "uint32"))) & mask
+        s = f8 >> tvm.tir.const(7, "uint32")
+        # e5m2
+        e_f8 = (f8 >> tvm.tir.const(2, "uint32")) & tvm.tir.const(31, "uint32")
+        e_f16 = T.max(e_f8 + scale, tvm.tir.const(63, "uint32"))
+        m_f8 = e_f8 & tvm.tir.const(2, "uint32")
+        return tvm.tir.reinterpret(dtype, (e_f16 | (s << tvm.tir.const(8, "uint32"))) << tvm.tir.const(23, "uint32") | m_f8)
+
+    def fcompute(*args):
+        m, n = args[-2], args[-1]
+        A_args = [k, m] if transpose_a else [m, k]
+        B_args = [n, k] if transpose_b else [k, n]
+        assert bits == 8, "Only support 8 bits currently"
+
+        for arg in reversed(args[:-2]):
+            if len(A_args) < len(A.shape):
+                if A.shape[len(A.shape) - len(A_args) - 1] == 1:
+                    A_args = [0] + A_args
+                else:
+                    A_args = [arg] + A_args
+            if len(B_args) < len(B.shape):
+                if B.shape[len(B.shape) - len(B_args) - 1] == 1:
+                    B_args = [0] + B_args
+                else:
+                    B_args = [arg] + B_args
+
+        def A_decode_func(n, k):
+            w = _tir_u8_to_f8_to_float(8, A[n, k // n_float_per_i8], k % n_float_per_i8, "float32", Scales[k // group_size, n])
+            return w
+        
+        A_decode = te.compute(
+            dequant_a_shape,
+            A_decode_func,
+            name='A_decode'
+        )
+        
+        def B_decode_func(n, k):
+            w = _tir_u8_to_f8_to_float(8, B[n, k // n_float_per_i8], k % n_float_per_i8, "float32", Scales[k // group_size, n])
+            return w
+        B_decode = te.compute(
+            dequant_b_shape,
+            B_decode_func,
+            name='B_decode'
+        )
+        return te.sum(
+            A_decode.__getitem__(tuple(A_args)).astype(out_dtype)
+            * B_decode.__getitem__(tuple(B_args)).astype(out_dtype),
+            axis=[k],
+        )
+
+    C = te.compute(out_shape, fcompute=fcompute, name="T_quant_linear")
+    return [C]
+
 def compute_ladder_quant_linear_fp(attrs, inputs, output_type):
     transpose_a = attrs["transpose_a"]
     transpose_b = attrs["transpose_b"]
@@ -309,10 +389,17 @@ def compute_ladder_quant_linear_fp(attrs, inputs, output_type):
     else:
         dequant_b_shape = [K_size, B.shape[1]]
 
-    def _tir_u8_to_f8_to_float(nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr):
-        assert val.dtype == "int8"
+    def _tir_u8_to_f8_to_float(nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, dtype: str, scale: tvm.tir.PrimExpr = None):
         assert nbit == 8
-        return tir.reinterpret('float16', tir.Cast('int16', val) << 8)
+        # e_f4 == 0 -> e_f32 = 0
+        mask = tvm.tir.const((1 << nbit) - 1, "uint32")
+        f8 = (val >> (pos.astype("uint32") * tvm.tir.const(nbit, "uint32"))) & mask
+        s = f8 >> tvm.tir.const(7, "uint32")
+        # e5m2
+        e_f8 = (f8 >> tvm.tir.const(2, "uint32")) & tvm.tir.const(31, "uint32")
+        e_f16 = T.max(e_f8 + scale, tvm.tir.const(63, "uint32"))
+        m_f8 = e_f8 & tvm.tir.const(2, "uint32")
+        return tvm.tir.reinterpret(dtype, (e_f16 | (s << tvm.tir.const(8, "uint32"))) << tvm.tir.const(23, "uint32") | m_f8)
     
     def fcompute(*args):
         m, n = args[-2], args[-1]
@@ -360,11 +447,18 @@ def strategy_ladder_quant_linear(attrs, inputs, out_type, target):
             name="ladder.quant_linear.generic",
         )
     elif attrs["format"] == "mxfp":
-        strategy.add_implementation(
-            compute_ladder_quant_linear_mxfp,
-            wrap_topi_schedule(topi.generic.schedule_extern),
-            name="ladder.quant_linear.generic",
-        )
+        if inputs[0].dtype == "int8":
+            strategy.add_implementation(
+                compute_ladder_quant_linear_mxfp_mxfp,
+                wrap_topi_schedule(topi.generic.schedule_extern),
+                name="ladder.quant_linear.generic",
+            )
+        else:
+            strategy.add_implementation(
+                compute_ladder_quant_linear_mxfp,
+                wrap_topi_schedule(topi.generic.schedule_extern),
+                name="ladder.quant_linear.generic",
+            )
     elif "fp_" in attrs["format"]:
         assert attrs["format"] == "fp_e5m2", "Only support fp_e5m2 currently"
         strategy.add_implementation(
