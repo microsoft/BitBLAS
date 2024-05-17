@@ -1,5 +1,5 @@
 Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure13/ptx/ladder_from_onnx_ptx_fq_0_mxfp_8_-1_bs1_seq4096_ci_False_cmxfp_async
 Execution time summary:
  mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-  98.9012      98.9032      98.9076      98.8922       0.0053   
+  98.8915      98.8924      98.8980      98.8836       0.0048   
                

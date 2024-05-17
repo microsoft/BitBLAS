@@ -115,7 +115,10 @@ def run(prefix, arch, async_propagate, fake_quant, quant_config, convert_int):
     write_mod(mod, log_path, "EliminateCommonSubexpr")
     mod = ladder.relay.transform.WelderFuseOps()(mod)
     write_mod(mod, log_path, "WelderFuseOps")
-    if args.seq_len > 1:
+    is_int8_int1 = (args.convert_int and args.bits == 1)
+    if is_int8_int1 and args.seq_len > 1:
+        mod = ladder.relay.transform.AnnotateLadderTensorCore(arch=arch, diable_async=True, disable_transform=True, is_int8_int1=True)(mod)
+    elif args.seq_len > 1 and args.convert_mxfp:
         mod = ladder.relay.transform.AnnotateLadderTensorCore(arch=arch, diable_async=True, disable_transform=True)(mod)
     else:
         mod = ladder.relay.transform.AnnotateLadderTensorCore(arch=arch, diable_async=True, disable_transform=False)(mod)
@@ -148,7 +151,12 @@ def run_from_prebuilt(prefix, arch):
     
     loaded_lib = tvm.runtime.load_module(lib_path)
     module = debug_executor.create(graph_json, loaded_lib, tvm.cuda(0))
-    
+    # if graph.params exists, set input
+    if os.path.exists(os.path.join(prefix, "graph.params")):
+        with open(os.path.join(prefix, "graph.params"), "rb") as f_params:
+            params = tvm.runtime.load_param_dict(f_params.read())
+            module.set_input(**params)
+
     print(module.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
 
     # module.run()

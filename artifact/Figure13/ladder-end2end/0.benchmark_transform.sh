@@ -29,7 +29,7 @@ if [ $force_tune -eq 1 ]; then
 # fp16xint4
 # /usr/bin/python -u ./ladder_from_onnx_transform.py   --batch 1 --seq_len 1 --fake_quant 0 --bits 4  2>&1 | tee logs/transform/llama2-70b_b1_s1_q0_b4.log
 
-/usr/bin/python -u ./ladder_from_onnx_transform.py  --batch 1 --seq_len 4096 --fake_quant 0 --bits 4  2>&1 | tee logs/transform/llama2-70b_b1_s4096_q0_b4.log
+# /usr/bin/python -u ./ladder_from_onnx_transform.py  --batch 1 --seq_len 4096 --fake_quant 0 --bits 4  2>&1 | tee logs/transform/llama2-70b_b1_s4096_q0_b4.log
 
 # # mxfp8xmxfp8
 # /usr/bin/python -u ./ladder_from_onnx_transform.py --batch 1 --seq_len 1 --fake_quant 0 --bits 8 --convert_mxfp --format mxfp 2>&1 | tee logs/transform/llama2-70b_b1_s1_q0_mxfp8.log

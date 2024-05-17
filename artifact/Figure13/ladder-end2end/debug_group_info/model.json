@@ -32,13 +32,13 @@
         ]
       },
       {
-        "name": "multiply_cast_multiply_reshape_cast_reshape_2",
+        "name": "multiply_cast_multiply_reshape_cast_cast_reshape_2",
         "shapes": [
           [
             256,
-            512,
+            256,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
@@ -53,13 +53,13 @@
     "inputs": [],
     "outputs": [
       {
-        "name": "multiply_cast_multiply_reshape_cast_reshape_2",
+        "name": "multiply_cast_multiply_reshape_cast_cast_reshape_2",
         "shapes": [
           [
             256,
-            512,
+            256,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
@@ -70,7 +70,7 @@
   },
   {
     "idx": 2,
-    "name": "multiply_cast_multiply_reshape_cast_reshape_2",
+    "name": "multiply_cast_multiply_reshape_cast_cast_reshape_2",
     "inputs": [
       {
         "name": "PlaceHolder ",
@@ -138,43 +138,19 @@
         "shapes": [
           [
             512,
-            512,
+            256,
             16,
-            16
+            4
           ]
         ],
         "dtypes": [
           "int8"
         ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            4096
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            8192
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
       }
     ],
     "outputs": [
       {
-        "name": "reshape_reshape_reshape_transpose_4",
+        "name": "reshape_reshape_transpose_4",
         "shapes": [
           [
             1,
@@ -191,7 +167,7 @@
   },
   {
     "idx": 4,
-    "name": "reshape_reshape_reshape_transpose_4",
+    "name": "reshape_reshape_transpose_4",
     "inputs": [],
     "outputs": [
       {
@@ -267,43 +243,19 @@
         "shapes": [
           [
             64,
-            512,
+            256,
             16,
-            16
+            4
           ]
         ],
         "dtypes": [
           "int8"
         ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            4096
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            1024
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
       }
     ],
     "outputs": [
       {
-        "name": "reshape_reshape_reshape_transpose_7",
+        "name": "reshape_reshape_transpose_7",
         "shapes": [
           [
             1,
@@ -320,7 +272,7 @@
   },
   {
     "idx": 7,
-    "name": "reshape_reshape_reshape_transpose_7",
+    "name": "reshape_reshape_transpose_7",
     "inputs": [],
     "outputs": [
       {
@@ -547,43 +499,19 @@
         "shapes": [
           [
             64,
-            512,
+            256,
             16,
-            16
+            4
           ]
         ],
         "dtypes": [
           "int8"
         ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            4096
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            1024
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
       }
     ],
     "outputs": [
       {
-        "name": "reshape_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
+        "name": "reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
         "shapes": [
           [
             64,
@@ -599,7 +527,7 @@
   },
   {
     "idx": 16,
-    "name": "reshape_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
+    "name": "reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
     "inputs": [],
     "outputs": [
       {
@@ -623,13 +551,13 @@
     "inputs": [],
     "outputs": [
       {
-        "name": "reshape_transpose_reshape_reshape_cast_reshape_18",
+        "name": "reshape_transpose_reshape_reshape_cast_cast_reshape_18",
         "shapes": [
           [
             256,
-            512,
+            256,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
@@ -640,7 +568,7 @@
   },
   {
     "idx": 18,
-    "name": "reshape_transpose_reshape_reshape_cast_reshape_18",
+    "name": "reshape_transpose_reshape_reshape_cast_cast_reshape_18",
     "inputs": [],
     "outputs": [
       {
@@ -668,43 +596,19 @@
         "shapes": [
           [
             512,
-            512,
+            256,
             16,
-            16
+            4
           ]
         ],
         "dtypes": [
           "int8"
         ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            4096
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            8192
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
       }
     ],
     "outputs": [
       {
-        "name": "reshape_reshape_add_20",
+        "name": "reshape_add_20",
         "shapes": [
           [
             1,
@@ -720,7 +624,7 @@
   },
   {
     "idx": 20,
-    "name": "reshape_reshape_add_20",
+    "name": "reshape_add_20",
     "inputs": [
       {
         "name": "PlaceHolder ",
@@ -757,7 +661,7 @@
         ]
       },
       {
-        "name": "reshape_reshape_add_30",
+        "name": "reshape_add_30",
         "shapes": [
           [
             1,
@@ -842,13 +746,13 @@
     ],
     "outputs": [
       {
-        "name": "reshape_cast_reshape_24",
+        "name": "reshape_cast_cast_reshape_24",
         "shapes": [
           [
             256,
-            512,
+            256,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
@@ -859,7 +763,7 @@
   },
   {
     "idx": 24,
-    "name": "reshape_cast_reshape_24",
+    "name": "reshape_cast_cast_reshape_24",
     "inputs": [],
     "outputs": [
       {
@@ -901,43 +805,19 @@
         "shapes": [
           [
             1792,
-            512,
+            256,
             16,
-            16
+            4
           ]
         ],
         "dtypes": [
           "int8"
         ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            4096
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            28672
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
       }
     ],
     "outputs": [
       {
-        "name": "reshape_reshape_26",
+        "name": "reshape_26",
         "shapes": [
           [
             1,
@@ -953,17 +833,17 @@
   },
   {
     "idx": 26,
-    "name": "reshape_reshape_26",
+    "name": "reshape_26",
     "inputs": [],
     "outputs": [
       {
-        "name": "sigmoid_multiply_reshape_reshape_multiply_reshape_cast_reshape_28",
+        "name": "sigmoid_multiply_reshape_multiply_reshape_cast_cast_reshape_28",
         "shapes": [
           [
             256,
-            1792,
+            896,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
@@ -981,49 +861,25 @@
         "shapes": [
           [
             1792,
-            512,
+            256,
             16,
-            16
+            4
           ]
         ],
         "dtypes": [
           "int8"
         ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            4096
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            512,
-            28672
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
       }
     ],
     "outputs": [
       {
-        "name": "sigmoid_multiply_reshape_reshape_multiply_reshape_cast_reshape_28",
+        "name": "sigmoid_multiply_reshape_multiply_reshape_cast_cast_reshape_28",
         "shapes": [
           [
             256,
-            1792,
+            896,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
@@ -1034,7 +890,7 @@
   },
   {
     "idx": 28,
-    "name": "sigmoid_multiply_reshape_reshape_multiply_reshape_cast_reshape_28",
+    "name": "sigmoid_multiply_reshape_multiply_reshape_cast_cast_reshape_28",
     "inputs": [],
     "outputs": [
       {
@@ -1062,43 +918,19 @@
         "shapes": [
           [
             512,
-            1792,
+            896,
             16,
-            16
+            4
           ]
         ],
         "dtypes": [
           "int8"
         ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            1792,
-            4096
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
-      },
-      {
-        "name": "PlaceHolder ",
-        "shapes": [
-          [
-            1792,
-            8192
-          ]
-        ],
-        "dtypes": [
-          "uint8"
-        ]
       }
     ],
     "outputs": [
       {
-        "name": "reshape_reshape_add_30",
+        "name": "reshape_add_30",
         "shapes": [
           [
             1,
@@ -1114,7 +946,7 @@
   },
   {
     "idx": 30,
-    "name": "reshape_reshape_add_30",
+    "name": "reshape_add_30",
     "inputs": [],
     "outputs": [
       {

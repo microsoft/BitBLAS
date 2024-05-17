@@ -41,6 +41,6 @@ else:
     # run_command("./benchmark_holistic.sh", working_dir="holistic")
     run_command("./benchmark_ladder.sh", working_dir="ladder-end2end")
     # update the results
-    os.system(f"python3 update_results.py")
+    os.system(f"python3 update_results_end2end.py")
     # plot from the reproduced results
     os.system(f"python3 plot_optimization_breakdown.py --reproduce")

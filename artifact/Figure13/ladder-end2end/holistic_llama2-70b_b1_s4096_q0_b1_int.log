@@ -1,5 +1,5 @@
 Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure13/holistic/llama2_fq_0_int_1_-1_bs1_seq4096_ci_True_async
 Execution time summary:
  mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-  25.2145      25.2216      25.2244      25.1913       0.0122   
+  25.1403      25.1406      25.1430      25.1377       0.0020   
                
