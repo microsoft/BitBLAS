@@ -110,7 +110,7 @@ The result will be saved in the `pdf` and `png` directory, respectively. For exa
 
 ![Figure 9](./artifact/Figure9/png/figure9_end2end_v100.png)
 
-**Notes**: The performance drop on $W_{INTx}A_{INTy}$ compared to A100 is because V100 only has tensor core support for $W_{FP16}A_{FP16}$ as shown in [Table1](#Table1). So $W_{INTx}A_{INTy}$ uses the cuda cores on V100, which is much slower than tensor core.
+**Notes**: The performance drop on $W_{INTx}A_{INTy}$ compared to A100 is because V100 only has tensor core support for $W_{FP16}A_{FP16}$ as shown in [Table1](#Table1). So $W_{INTx}A_{INTy}$ uses the cuda cores on V100, which is much slower than tensor core. Besides, $W_{MXFP8}A_{MXFP8}$ can only leverage $W_{FP32}A_{FP32}$ cuda core on V100 for processing, while it leverages $W_{BF16}A_{BF16}$ tensor core on A100, resulting in performance drop on V100.
 
 
 ### <a id="Figure11">Figure11_V100</a>
