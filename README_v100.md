@@ -45,7 +45,7 @@ bash export.sh
 
 ## 2. Reproducing Individual Experiement Results
 
-Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints_v100.tar.gz - Google Drive](https://drive.google.com/file/d/1qgf5YuFYCLLcmVl5DySPxMmUfnG787x6/view?usp=drive_link) or [Checkpoints_v100.tar.gz - Microsoft OneDrive](https://1drv.ms/u/c/4c1511b24254d525/EYonh4se12NEg8OHrsxvbJoBzachclMvMYl6ea7dLM-S6A?e=AEE2E0)
+Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints_v100.tar.gz - Google Drive](https://drive.google.com/file/d/1WGGi7mFNPfKUDptCZt_w-xtQwJIHw0-q/view?usp=sharing) or [Checkpoints_v100.tar.gz - Microsoft OneDrive](https://1drv.ms/u/c/4c1511b24254d525/Ed9_T3x6z8ZIhiRsiYov3VAB-PP1Qe9ySWi30bOkaRi4Pw?e=23fTA0)
 
 To use the checkpoints, you can download the checkpoints and extract it to the root/artifact of the project.
 
@@ -53,7 +53,7 @@ To use the checkpoints, you can download the checkpoints and extract it to the r
 cd /root/Ladder
 # download from google drive
 pip install gdown
-gdown https://drive.google.com/uc?id=1qgf5YuFYCLLcmVl5DySPxMmUfnG787x6 -O artifact/checkpoints.tar.gz
+gdown https://drive.google.com/uc?id=1WGGi7mFNPfKUDptCZt_w-xtQwJIHw0-q -O artifact/checkpoints.tar.gz
 # or download from microsoft onedrive
 curl https://my.microsoftpersonalcontent.com/personal/4c1511b24254d525/_layouts/15/download.aspx\?UniqueId\=f3342e8e-5cdb-4041-a2b5-32b6fdf5bb2d\&Translate\=false\&tempauth\=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfZGlzcGxheW5hbWUiOiJDb25zdW1lciBBcHA6IDAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImFwcGlkIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0IiwiYXVkIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwL215Lm1pY3Jvc29mdHBlcnNvbmFsY29udGVudC5jb21AOTE4ODA0MGQtNmM2Ny00YzViLWIxMTItMzZhMzA0YjY2ZGFkIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8MDAwM2JmZmQ1ZWVjZTU1MEBsaXZlLmNvbSIsImNpZCI6Im9TVzFLdnZBQUZCay8xckxPeWJ2RlE9PSIsImVuZHBvaW50dXJsIjoidGZDSmFoaE12MldyVExhOERxUTg0cVIwSnZZZmZRNTRjdDY0UXpxWEprUT0iLCJlbmRwb2ludHVybExlbmd0aCI6IjE1MyIsImV4cCI6IjE3MTQ5MjI3NjgiLCJpcGFkZHIiOiIxNjcuMjIwLjIzMi4yNSIsImlzbG9vcGJhY2siOiJUcnVlIiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTcxNDkxOTE2OCIsInB1aWQiOiIwMDAzQkZGRDVFRUNFNTUwIiwic2NwIjoiYWxsc2l0ZXMuZnVsbGNvbnRyb2wiLCJzaWQiOiI1ODY0NDMzMzc4ODM5MDg3OTkxIiwic2l0ZWlkIjoiTURKalpqazFOV1V0WkRWbVpDMDBOalE1TFdKa05UQXROelUyTmprek1ESXpNV1ptIiwidGlkIjoiOTE4ODA0MGQtNmM2Ny00YzViLWIxMTItMzZhMzA0YjY2ZGFkIiwidHQiOiIyIiwidXBuIjoibGVpd2FuZzE5OTlAb3V0bG9vay5jb20iLCJ2ZXIiOiJoYXNoZWRwcm9vZnRva2VuIn0.PWbr-I0SJLbfKJYwzdiK3vxpx9infqFhV5kEGd-pXrM\&ApiVersion\=2.0\&AVOverride\=1   --output artifact/checkpoints.tar.gz
 tar -xvf artifact/checkpoints.tar.gz -C .
