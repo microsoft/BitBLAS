@@ -835,7 +835,8 @@ bloom-176b_b32_s1_q0_nf4.log
 ladder_data = [-1, -1, -1]
 ladder_bloom_fp16_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q-1.log')
 ladder_bloom_fp16_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q-1.log')
-ladder_bloom_fp16_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q-1.log')
+# ladder_bloom_fp16_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q-1.log')
+ladder_bloom_fp16_b1s4096_latency = 0 # OOM
 
 if ladder_bloom_fp16_b1s1_latency is not None:
     print(f"ladder_bloom_fp16_b1s1_latency: {ladder_bloom_fp16_b1s1_latency}, the paper value is {paper_bloom_times_data[6][1][0]}")
@@ -853,7 +854,8 @@ bloom_times_data[6] = ('Bitter', ladder_data)
 ladder_data = [-1, -1, -1]
 ladder_bloom_int4_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q0_b4.log')
 ladder_bloom_int4_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q0_b4.log')
-ladder_bloom_int4_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_b4.log')
+# ladder_bloom_int4_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_b4.log')
+ladder_bloom_int4_b1s4096_latency = 0 # OOM
 
 if ladder_bloom_int4_b1s1_latency is not None:
     ladder_data[0] = ladder_bloom_int4_b1s1_latency
@@ -869,7 +871,8 @@ ladder_data = [-1, -1, -1]
 # nf4
 ladder_bloom_nf4_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q0_nf4.log')
 ladder_bloom_nf4_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q0_nf4.log')
-ladder_bloom_nf4_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_nf4.log')
+# ladder_bloom_nf4_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_nf4.log')
+ladder_bloom_nf4_b1s4096_latency = 0 # OOM
 
 if ladder_bloom_nf4_b1s1_latency is not None:
     ladder_data[0] = ladder_bloom_nf4_b1s1_latency
@@ -885,11 +888,14 @@ bloom_times_data[8] = ('Bitter-W$_{NF4}$A$_{FP16}$', ladder_data)
 ladder_data = [-1, -1, 0]
 ladder_bloom_fp8_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q0_fp_e5m2.log')
 ladder_bloom_fp8_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q0_fp_e5m2.log')
+ladder_bloom_fp8_b1s4096_latency = 0 # OOM
 
 if ladder_bloom_fp8_b1s1_latency is not None:
     ladder_data[0] = ladder_bloom_fp8_b1s1_latency
 if ladder_bloom_fp8_b32s1_latency is not None:
     ladder_data[1] = ladder_bloom_fp8_b32s1_latency
+if ladder_bloom_fp8_b1s4096_latency is not None:
+    ladder_data[2] = ladder_bloom_fp8_b1s4096_latency
 
 bloom_times_data[9] = ('Bitter-W$_{FP8}$A$_{FP8}$', ladder_data)
 
@@ -898,7 +904,8 @@ bloom_times_data[9] = ('Bitter-W$_{FP8}$A$_{FP8}$', ladder_data)
 ladder_data = [-1, -1, -1]
 ladder_bloom_mxfp8_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q0_mxfp8.log')
 ladder_bloom_mxfp8_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q0_mxfp8.log')
-ladder_bloom_mxfp8_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_fp_mxfp8.log')
+# ladder_bloom_mxfp8_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_fp_mxfp8.log')
+ladder_bloom_mxfp8_b1s4096_latency = 0 # OOM
 
 if ladder_bloom_mxfp8_b1s1_latency is not None:
     ladder_data[0] = ladder_bloom_mxfp8_b1s1_latency
@@ -915,7 +922,8 @@ bloom_times_data[10] = ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', ladder_data)
 ladder_data = [-1, -1, 0]
 ladder_bloom_int4_b1s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s1_q0_b1_int.log')
 ladder_bloom_int4_b32s1_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b32_s1_q0_b1_int.log')
-ladder_bloom_int4_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_b1_int.log')
+# ladder_bloom_int4_b1s4096_latency = parse_ladder_logs('./ladder-benchmark/bloom-176b_b1_s4096_q0_b1_int.log')
+ladder_bloom_int4_b1s4096_latency = 0 # OOM
 
 if ladder_bloom_int4_b1s1_latency is not None:
     ladder_data[0] = ladder_bloom_int4_b1s1_latency
@@ -1539,6 +1547,10 @@ with open(llama_b1s4096_int1_logs, 'r') as f:
                 ladder_llama_b1s4096_int1 = float(matches[0])
                 is_next_line = False
 
+if ladder_llama_b1s1_int1 and ladder_llama_b32s1_int1 and ladder_llama_b1s4096_int1:
+    print(ladder_llama_b1s1_int1, ladder_llama_b32s1_int1, ladder_llama_b1s4096_int1)
+    llama2_times_data[11] = ('Bitter-W$_{INT1}$A$_{INT8}$', [ladder_llama_b1s1_int1, ladder_llama_b32s1_int1, ladder_llama_b1s4096_int1])
+
 # bitter fp16xfp16
 bloom_b1s1_fp16_logs = './ladder-benchmark/logs/bloom/bloom-176b_b1_s1_q-1.log'
 ### 
@@ -1572,21 +1584,21 @@ with open(bloom_b32s1_fp16_logs, 'r') as f:
                 ladder_bloom_b32s1_fp16 = float(matches[0])
                 is_next_line = False
 
-bloom_b1s4096_fp16_logs = './ladder-benchmark/logs/bloom/bloom-176b_b1_s4096_q-1.log'
-### 
-pattern = r"[\d]+\.[\d]+"
-ladder_bloom_b1s4096_fp16 = None
-with open(bloom_b1s4096_fp16_logs, 'r') as f:
-    lines = f.readlines()
-    is_next_line=False
-    for line in lines:
-        if 'mean (ms)' in line:
-            is_next_line = True
-        if is_next_line:
-            matches = re.findall(pattern, line)
-            if matches:
-                ladder_bloom_b1s4096_fp16 = float(matches[0])
-                is_next_line = False
+# bloom_b1s4096_fp16_logs = './ladder-benchmark/logs/bloom/bloom-176b_b1_s4096_q-1.log'
+# ### 
+# pattern = r"[\d]+\.[\d]+"
+# ladder_bloom_b1s4096_fp16 = None
+# with open(bloom_b1s4096_fp16_logs, 'r') as f:
+#     lines = f.readlines()
+#     is_next_line=False
+#     for line in lines:
+#         if 'mean (ms)' in line:
+#             is_next_line = True
+#         if is_next_line:
+#             matches = re.findall(pattern, line)
+#             if matches:
+#                 ladder_bloom_b1s4096_fp16 = float(matches[0])
+#                 is_next_line = False
 
 if ladder_bloom_b1s1_fp16 and ladder_bloom_b32s1_fp16:
     print(ladder_bloom_b1s1_fp16, ladder_bloom_b32s1_fp16)
@@ -1704,8 +1716,8 @@ with open(bloom_b32s1_fp8_logs, 'r') as f:
 if ladder_bloom_b1s1_fp8 and ladder_bloom_b32s1_fp8:
     print(ladder_bloom_b1s1_fp8, ladder_bloom_b32s1_fp8)
     bloom_times_data[9] = ('Bitter-W$_{FP8}$A$_{FP8}$', [ladder_bloom_b1s1_fp8, ladder_bloom_b32s1_fp8, 0])
-else:
-    print(ladder_bloom_b1s1_fp8, ladder_bloom_b32s1_fp8, ladder_bloom_b1s4096_fp8)
+# else:
+#     print(ladder_bloom_b1s1_fp8, ladder_bloom_b32s1_fp8, ladder_bloom_b1s4096_fp8)
 
 
 # bitter fp16xint4
@@ -1777,6 +1789,10 @@ with open(bloom_b32s1_int1_logs, 'r') as f:
             if matches:
                 ladder_bloom_b32s1_int1 = float(matches[0])
                 is_next_line = False
+
+if ladder_bloom_b1s1_int1 and ladder_bloom_b32s1_int1:
+    print(ladder_bloom_b1s1_int1, ladder_bloom_b32s1_int1)
+    bloom_times_data[11] = ('Bitter-W$_{INT1}$A$_{INT8}$', [ladder_bloom_b1s1_int1, ladder_bloom_b32s1_int1, 0])
 
 # parse vllm logs
 def parse_vllm_logs(log):

@@ -57,33 +57,33 @@ if [ $force_tune -eq 1 ]; then
 else
 
 # FP16
-python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/llama2_bs1_seq1_async 2>&1 | tee bloom-176b_b1_s1_q-1.log
-python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/llama2_bs32_seq1_async 2>&1 | tee lama2-70b_b32_s1_q-1.log
+python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/llama2_bs1_seq1_async 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q-1.log
+python -u ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/llama2_bs32_seq1_async 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q-1.log
 
 # FP16XINT4
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_int_4_-1_bs1_seq1_ci_False 2>&1 | tee bloom-176b_b1_s1_q0_b4.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_int_4_-1_bs1_seq1_ci_False 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_b4.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_int_4_-1_bs32_seq1_ci_False 2>&1 | tee bloom-176b_b32_s1_q0_b4.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_int_4_-1_bs32_seq1_ci_False 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_b4.log
 
 # INT8XINT1
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_int_1_-1_bs1_seq1_ci_True 2>&1 | tee bloom-176b_b1_s1_q0_b1_int.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_int_1_-1_bs1_seq1_ci_True 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_b1_int.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_int_1_-1_bs32_seq1_ci_True 2>&1 | tee bloom-176b_b32_s1_q0_b1_int.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_int_1_-1_bs32_seq1_ci_True 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_b1_int.log
 
 # NF4
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_nf_4_-1_bs1_seq1_ci_False 2>&1 | tee bloom-176b_b1_s1_q0_nf4.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_nf_4_-1_bs1_seq1_ci_False 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_nf4.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_nf_4_-1_bs32_seq1_ci_False 2>&1 | tee bloom-176b_b32_s1_q0_nf4.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_nf_4_-1_bs32_seq1_ci_False 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_nf4.log
 
 # FP16xFP8
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_fp_e5m2_8_-1_bs1_seq1_ci_False 2>&1 | tee bloom-176b_b1_s1_q0_fp_e5m2.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_fp_e5m2_8_-1_bs1_seq1_ci_False 2>&1 | tee logs/bloom/bloom-176b_b1_s1_q0_fp_e5m2.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_fp_e5m2_8_-1_bs32_seq1_ci_False 2>&1 | tee bloom-176b_b32_s1_q0_fp_e5m2.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_fp_e5m2_8_-1_bs32_seq1_ci_False 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_fp_e5m2.log
 
 # MXFP8
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_mxfp_8_-1_bs1_seq1_ci_False 2>&1 | tee  bloom-176b_b1_s1_q0_mxfp8.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_mxfp_8_-1_bs1_seq1_ci_False 2>&1 | tee  logs/bloom/bloom-176b_b1_s1_q0_mxfp8.log
 
-/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_mxfp_8_-1_bs32_seq1_ci_False_cf_True 2>&1 | tee bloom-176b_b32_s1_q0_mxfp8.log
+/usr/bin/python -u ./ladder_with_fake_dense_dequantize.py --prebuilt_path $LADDER_CHECKPOINT_PATH/ladder_with_fake_dense_dequantize_fq_0_mxfp_8_-1_bs32_seq1_ci_False_cf_True 2>&1 | tee logs/bloom/bloom-176b_b32_s1_q0_mxfp8.log
 
 # add op benchmark for low precision models
 fi
