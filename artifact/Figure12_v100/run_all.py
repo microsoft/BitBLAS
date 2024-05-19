@@ -42,10 +42,10 @@ else:
     run_command("./benchmark.sh", working_dir="cutlass-dequantize-benchmark")
     # vllm benchmark
     print("vllm doesn't support int4 kernel for v100 when we do the experiments.")
-    # run_command("./benchmark_vllm.sh", working_dir="vllm-benchmark")
+    run_command("./benchmark_vllm.sh", working_dir="vllm-benchmark")
     # reproduce for ladder
     print("Reproducing ladder")
-    # run_command("./benchmark_ladder.sh", working_dir="ladder-benchmark")
+    run_command("./benchmark_ladder.sh", working_dir="ladder-benchmark")
     # plot from the reproduced results
     os.system(f"python3 update_results.py")
     os.system(f"python3 plot_operator_performance.py --reproduce")
