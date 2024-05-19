@@ -54,6 +54,8 @@ for model in ["llama", "bloom"]:
         log_path = f"./logs/{model}_pytorch_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
             continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
+            continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
             llama_times_data[0][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
@@ -73,6 +75,8 @@ for model in ["llama", "bloom"]:
         log_path = f"./logs/{model}_onnxruntime_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
             continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
+            continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
             llama_times_data[1][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
@@ -90,6 +94,8 @@ for model in ["llama", "bloom"]:
         ]:
         log_path = f"./logs/{model}_tensorrt_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
+            continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
@@ -109,6 +115,8 @@ for model in ["llama", "bloom"]:
         log_path = f"./logs/{model}_welder_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
             continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
+            continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
             llama_times_data[5][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
@@ -126,6 +134,8 @@ for model in ["llama", "bloom"]:
         ]:
         log_path = f"./logs/{model}_vllm_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
+            continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
@@ -145,6 +155,8 @@ for model in ["llama", "bloom"]:
         log_path = f"./logs/{model}_welder_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
             continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
+            continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
             llama_times_data[5][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
@@ -162,6 +174,8 @@ for model in ["llama", "bloom"]:
         ]:
         log_path = f"./logs/{model}_ladder_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
+            continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
@@ -181,6 +195,8 @@ for model in ["llama", "bloom"]:
         log_path = f"./logs/{model}_ladder_fp16_int4_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
             continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
+            continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
             llama_times_data[7][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
@@ -198,6 +214,8 @@ for model in ["llama", "bloom"]:
         ]:
         log_path = f"./logs/{model}_ladder_fp16_nf4_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
+            continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
@@ -217,6 +235,8 @@ for model in ["llama", "bloom"]:
         log_path = f"./logs/{model}_ladder_fp8_fp8_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
             continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
+            continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
             llama_times_data[9][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
@@ -235,6 +255,8 @@ for model in ["llama", "bloom"]:
         log_path = f"./logs/{model}_ladder_mxfp8_mxfp8_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
             continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
+            continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
             llama_times_data[10][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
@@ -252,6 +274,8 @@ for model in ["llama", "bloom"]:
         ]:
         log_path = f"./logs/{model}_ladder_int8_int1_b{batch_size}_s{seq_len}_data.json"
         if not os.path.exists(log_path):
+            continue
+        if model == "bloom" and batch_size == 1 and seq_len == 4096:
             continue
         data = list(json.load(open(log_path)).values())[-1]
         if model == "llama":
