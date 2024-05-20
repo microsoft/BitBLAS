@@ -242,10 +242,9 @@ class Matmul(Operator):
         "int1": ("int", 1),
         "uint1": ("uint", 1),
         "nf4": ("nf", 4),
-        "fp8_e5m2": ("fp", 8),
         "fp4_e2m1": ("fp", 4),
-        "e4m3_float8": ("fp", 8),  # "e4m3_float8" is a trick for "float8_e4m3fn"
-        "e5m2_float8": ("fp", 8),
+        "e4m3_float8": ("fp_e4m3", 8),  # "e4m3_float8" is a trick for "float8_e4m3fn"
+        "e5m2_float8": ("fp_e5m2", 8),
     }
 
     def __init__(
@@ -484,6 +483,9 @@ class Matmul(Operator):
             maxq = 2 ** (bit - 1)
             # Clamp weight values to be within the quantizable range and adjust
             weight = torch.clamp(weight, -maxq, maxq).int() + maxq
+        elif source_format in ["fp_e5m2", "fp_e4m3"]:
+            weight = weight.view(torch.int8)
+            weight = weight.int()
         else:
             # For non-integer formats, simply convert weights to integers
             weight = weight.int()

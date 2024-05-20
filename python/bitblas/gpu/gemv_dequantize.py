@@ -50,7 +50,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             # check source format in ["int", "fp", "nf"]
             conditions.append("source_format" in weight_decode_info)
             conditions.append(
-                weight_decode_info["source_format"]["format"] in ["uint", "int", "fp", "nf"])
+                weight_decode_info["source_format"]["format"] in ["uint", "int", "fp", "nf", "fp_e5m2", "fp_e4m3"])
             # check source bits in [1, 2, 4, 8]
             conditions.append(weight_decode_info["source_format"]["bits"] in [1, 2, 4, 8])
             # check target format in ["float16", "int8"]
@@ -214,7 +214,7 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             # check source format in ["int", "fp", "nf"]
             conditions.append("source_format" in weight_decode_info)
             conditions.append(
-                weight_decode_info["source_format"]["format"] in ["uint", "int", "fp", "nf"])
+                weight_decode_info["source_format"]["format"] in ["uint", "int", "fp", "nf", "fp_e5m2", "fp_e4m3"])
             # check source bits in [1, 2, 4, 8]
             conditions.append(weight_decode_info["source_format"]["bits"] in [1, 2, 4, 8])
             # check target format in ["float16", "int8"]
