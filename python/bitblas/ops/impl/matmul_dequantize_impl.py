@@ -92,8 +92,7 @@ def matmul_nt_dequantize_b(
             w = _tir_u32_to_f4_to_f16(
                 bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
         elif source_format == "fp_e4m3":
-            w = _tir_u8_to_f8_e4m3_to_f16(
-                bit, B[n, k], dtype=in_dtype)
+            w = _tir_u8_to_f8_e4m3_to_f16(bit, B[n, k], dtype=in_dtype)
         elif source_format == "nf":
             w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit,
@@ -268,8 +267,7 @@ def matmul_nt_dequantize_b_propagate_b(
                 dtype=in_dtype,
             )
         elif source_format == "fp_e4m3":
-            w = _tir_u8_to_f8_e4m3_to_f16(
-                bit, B_reindex[n, k], dtype=in_dtype)
+            w = _tir_u8_to_f8_e4m3_to_f16(bit, B_reindex[n, k], dtype=in_dtype)
         elif source_format == "nf":
             w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit,
@@ -457,8 +455,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
                 dtype=in_dtype,
             )
         elif source_format == "fp_e4m3":
-            w = _tir_u8_to_f8_e4m3_to_f16(
-                bit, B_reindex[n, k], dtype=in_dtype)
+            w = _tir_u8_to_f8_e4m3_to_f16(bit, B_reindex[n, k], dtype=in_dtype)
         elif source_format == "nf":
             w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit,
