@@ -11,6 +11,7 @@ from bitblas.quantization import (
     _tir_packed_to_signed_convert,
     _tir_packed_to_unsigned_convert,
     _tir_u32_to_f4_to_f16,
+    _tir_u8_to_f8_e4m3_to_f16,
     _tir_packed_to_unsigned_convert_with_zeros,
 )
 
@@ -58,14 +59,17 @@ def matmul_nt_dequantize_b(
             dtype=storage_dtype,
         )
 
-    Dequantize_qzeros = te.compute(
-        (K // group_size, N),
-        qzeros_dequantize,
-        name="Dequantize_zeros",
-    )
+    Dequantize_qzeros = None
+    if with_zeros and zeros_mode == "quantized":
+        Dequantize_qzeros = te.compute(
+            (K // group_size, N),
+            qzeros_dequantize,
+            name="Dequantize_zeros",
+        )
 
     def decode_func(n, k):
         if with_zeros and zeros_mode == "quantized":
+            assert Dequantize_qzeros is not None, "Dequantize_zeros is None"
             w = _tir_packed_to_unsigned_convert_with_zeros(storage_type, storage_nbit)(
                 bit,
                 B[n, k // n_float_per_elem],
@@ -87,6 +91,8 @@ def matmul_nt_dequantize_b(
         elif source_format == "fp":
             w = _tir_u32_to_f4_to_f16(
                 bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
+        elif source_format == "fp_e4m3":
+            w = _tir_u8_to_f8_e4m3_to_f16(bit, B[n, k], dtype=in_dtype)
         elif source_format == "nf":
             w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit,
@@ -260,6 +266,8 @@ def matmul_nt_dequantize_b_propagate_b(
                 k % n_float_per_elem,
                 dtype=in_dtype,
             )
+        elif source_format == "fp_e4m3":
+            w = _tir_u8_to_f8_e4m3_to_f16(bit, B_reindex[n, k], dtype=in_dtype)
         elif source_format == "nf":
             w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit,
@@ -446,6 +454,8 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
                 k % n_float_per_elem,
                 dtype=in_dtype,
             )
+        elif source_format == "fp_e4m3":
+            w = _tir_u8_to_f8_e4m3_to_f16(bit, B_reindex[n, k], dtype=in_dtype)
         elif source_format == "nf":
             w = LUT[_tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                 bit,

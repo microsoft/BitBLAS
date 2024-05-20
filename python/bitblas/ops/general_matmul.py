@@ -8,8 +8,7 @@ from bitblas.base.roller.arch.cuda import CUDA
 from typing import Any, List, Literal, Optional, Tuple, Union
 from .operator import Operator, TransformKind
 from .impl.matmul_dequantize_impl import (
-    select_implementation as weight_dequantize_implementation,
-)
+    select_implementation as weight_dequantize_implementation,)
 from .impl.matmul_impl import select_implementation as consistent_implementation
 from ..base.utils import tensor_replace_dp4a, tensor_remove_make_int4
 from bitblas.utils.target_detector import auto_detect_nvidia_target
@@ -110,36 +109,23 @@ class MatmulConfig:
 
     def __legalize_propagate(self, propagate):
         if isinstance(propagate, bool):
-            return (
-                TransformKind.IntraWarpTransform
-                if propagate
-                else TransformKind.NonTransform
-            )
+            return (TransformKind.IntraWarpTransform if propagate else TransformKind.NonTransform)
         elif isinstance(propagate, int):
             return TransformKind(propagate)
 
         return propagate
 
-    def __initialize_propagate(
-        self, propagate_a: Optional[TransformKind], propagate_b: Optional[TransformKind]
-    ):
+    def __initialize_propagate(self, propagate_a: Optional[TransformKind],
+                               propagate_b: Optional[TransformKind]):
         MICRO_KERNEL_SIZE = 16
-        if (
-            isinstance(self.M, int)
-            and (self.M % MICRO_KERNEL_SIZE) == 0
-            and (self.K % MICRO_KERNEL_SIZE) == 0
-        ):
+        if (isinstance(self.M, int) and (self.M % MICRO_KERNEL_SIZE) == 0 and
+            (self.K % MICRO_KERNEL_SIZE) == 0):
             object.__setattr__(self, "propagate_a", TransformKind.IntraWarpTransform)
         else:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
 
-        if (
-            self.M == 1
-            or (self.N % MICRO_KERNEL_SIZE) != 0
-            or (self.K % MICRO_KERNEL_SIZE) != 0
-            or isinstance(self.M, Tuple)
-            or (self.with_zeros and self.zeros_mode == "quantized")
-        ):
+        if (self.M == 1 or (self.N % MICRO_KERNEL_SIZE) != 0 or (self.K % MICRO_KERNEL_SIZE) != 0 or
+                isinstance(self.M, Tuple) or (self.with_zeros and self.zeros_mode == "quantized")):
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
             object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
         else:
@@ -164,10 +150,7 @@ class MatmulConfig:
     def __initialize_fast_decoding(self, fast_decoding: Optional[bool]):
         if fast_decoding is not None:
             object.__setattr__(self, "fast_decoding", fast_decoding)
-        elif (
-            "int" not in self.W_dtype
-            or self.W_dtype == self.A_dtype
-        ):
+        elif ("int" not in self.W_dtype or self.W_dtype == self.A_dtype):
             object.__setattr__(self, "fast_decoding", False)
         else:
             object.__setattr__(self, "fast_decoding", True)
@@ -186,12 +169,8 @@ class MatmulConfig:
         object.__setattr__(self, "M", self.__legalize_dynamic_symbolic(self.M))
 
         # set propagate_a and propagate_b to default value if it is None
-        object.__setattr__(
-            self, "propagate_a", self.__legalize_propagate(self.propagate_a)
-        )
-        object.__setattr__(
-            self, "propagate_b", self.__legalize_propagate(self.propagate_b)
-        )
+        object.__setattr__(self, "propagate_a", self.__legalize_propagate(self.propagate_a))
+        object.__setattr__(self, "propagate_b", self.__legalize_propagate(self.propagate_b))
 
         # This is hack to legalize propagate_a and b
         # TODO(lei): should be removed in the future when tc+br template is ready.
@@ -214,10 +193,10 @@ class MatmulConfig:
             object.__setattr__(self, "with_zeros", False)
 
         if self.A_dtype == self.W_dtype and self.W_dtype in [
-            "float16",
-            "int8",
-            "e4m3_float8",
-            "e5m2_float8",
+                "float16",
+                "int8",
+                "e4m3_float8",
+                "e5m2_float8",
         ]:
             object.__setattr__(self, "storage_dtype", self.W_dtype)
 
@@ -242,10 +221,9 @@ class Matmul(Operator):
         "int1": ("int", 1),
         "uint1": ("uint", 1),
         "nf4": ("nf", 4),
-        "fp8_e5m2": ("fp", 8),
         "fp4_e2m1": ("fp", 4),
-        "e4m3_float8": ("fp", 8),  # "e4m3_float8" is a trick for "float8_e4m3fn"
-        "e5m2_float8": ("fp", 8),
+        "e4m3_float8": ("fp_e4m3", 8),  # "e4m3_float8" is a trick for "float8_e4m3fn"
+        "e5m2_float8": ("fp_e5m2", 8),
     }
 
     def __init__(
@@ -261,9 +239,8 @@ class Matmul(Operator):
         if target is None:
             target = auto_detect_nvidia_target()
             logger.info(f"Auto detected target: {target}")
-        assert (
-            config.A_dtype in self.BITBLAS_TRICK_DTYPE_MAP
-        ), f"Unsupported input dtype {config.A_dtype}"
+        assert (config.A_dtype
+                in self.BITBLAS_TRICK_DTYPE_MAP), f"Unsupported input dtype {config.A_dtype}"
         source_format, bit = self.BITBLAS_TRICK_DTYPE_MAP[config.W_dtype]
 
         self.source_format = source_format
@@ -284,8 +261,7 @@ class Matmul(Operator):
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
             self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
-                {"opt_shapes": self.dynamic_range}
-            )
+                {"opt_shapes": self.dynamic_range})
         else:
             self.dynamic_range = None
 
@@ -394,9 +370,7 @@ class Matmul(Operator):
 
     def _build_default_module(self, target: Target):
         try:
-            self.optimized_func = self.apply_default_schedule(
-                self.prim_func_mod, target
-            )
+            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
         except Exception:
             self.optimized_func = None
             logger.warning(
@@ -447,9 +421,7 @@ class Matmul(Operator):
         return code
 
     def retrieve_weight_shape(self):
-        return [
-            int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape
-        ]
+        return [int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape]
 
     def transform_weight(self, weight, scale=None, zeros=None, bias=None):
         """
@@ -481,9 +453,12 @@ class Matmul(Operator):
         if source_format == "int":
             assert not self.with_scaling, "scale should be False for int source format"
             assert not self.with_zeros, "zeros should be False for int source format"
-            maxq = 2 ** (bit - 1)
+            maxq = 2**(bit - 1)
             # Clamp weight values to be within the quantizable range and adjust
             weight = torch.clamp(weight, -maxq, maxq).int() + maxq
+        elif source_format in ["fp_e5m2", "fp_e4m3"]:
+            weight = weight.view(torch.int8)
+            weight = weight.int()
         else:
             # For non-integer formats, simply convert weights to integers
             weight = weight.int()
@@ -491,8 +466,7 @@ class Matmul(Operator):
         np_storage_dtype = getattr(np, self.storage_dtype)
 
         weight = general_compress(
-            weight.cpu().numpy(), source_bits=bit, storage_dtype=np_storage_dtype
-        )
+            weight.cpu().numpy(), source_bits=bit, storage_dtype=np_storage_dtype)
 
         weight = torch.from_numpy(weight).cuda().contiguous()
 
@@ -518,9 +492,7 @@ class Matmul(Operator):
                 raise ValueError(
                     f"Input size {input_tensor.numel()} is larger than the workspace size {WORKSPACE_SIZE}, please increase the workspace size."
                 )
-            self.ladder_permutate_a._forward_from_prebuild_lib(
-                input_tensor, self.workspace
-            )
+            self.ladder_permutate_a._forward_from_prebuild_lib(input_tensor, self.workspace)
             return self.workspace
         return input_tensor
 
@@ -528,14 +500,13 @@ class Matmul(Operator):
         args = []
         args.append(self.transform_input(A))
         args.append(W)
-        
+
         if self.lut is not None:
             args.append(self.lut)
 
         if output is None:
             output = torch.empty(
-                A.shape[:-1] + (self.N,), dtype=self.torch_output_dtype, device=A.device
-            )
+                A.shape[:-1] + (self.N,), dtype=self.torch_output_dtype, device=A.device)
         if scale is not None:
             args.append(scale)
         if zeros is not None:
