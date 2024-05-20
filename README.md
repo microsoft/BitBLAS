@@ -59,6 +59,7 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 |:-----------:|:-----------:|:---------------:|:---------------:|:----------------------:|:----------------------:|
 |     FP16    |     FP16    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     FP16    |   FP4_E2M1  |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     FP16    |   FP8_E4M3  |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     FP16    |     INT8    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     FP16    |     UINT4/INT4    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     FP16    |     UINT2/INT2    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
