@@ -1,5 +1,5 @@
-Running from prebuilt model: /root/Ladder/artifact/Figure14_v100/ladder-benchmark/progress/e2e/llama2-70b/ladder_with_fake_dense_dequantize_fq_0_int_8_-1_bs1_seq4096_ci_False
+Running from prebuilt model: /root/Ladder/artifact/Figure14_v100/ladder-benchmark/../../checkpoints/Figure14_v100/ladder//ladder_with_fake_dense_dequantize_fq_0_int_8_-1_bs1_seq4096_ci_False
 Execution time summary:
  mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
-  109.7299     109.1119     112.2855     109.0552      1.2780   
+  109.5936     109.0284     111.9973     108.9194      1.2027   
                

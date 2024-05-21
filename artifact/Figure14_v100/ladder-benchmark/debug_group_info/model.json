@@ -32,17 +32,17 @@
         ]
       },
       {
-        "name": "multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2",
+        "name": "multiply_cast_multiply_reshape_cast_cast_reshape_2",
         "shapes": [
           [
             256,
-            512,
+            256,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
-          "float16"
+          "int8"
         ]
       }
     ]
@@ -53,24 +53,24 @@
     "inputs": [],
     "outputs": [
       {
-        "name": "multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2",
+        "name": "multiply_cast_multiply_reshape_cast_cast_reshape_2",
         "shapes": [
           [
             256,
-            512,
+            256,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
-          "float16"
+          "int8"
         ]
       }
     ]
   },
   {
     "idx": 2,
-    "name": "multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2",
+    "name": "multiply_cast_multiply_reshape_cast_cast_reshape_2",
     "inputs": [
       {
         "name": "PlaceHolder ",
@@ -86,7 +86,7 @@
     ],
     "outputs": [
       {
-        "name": "ladder_perfect_quant_linear_3",
+        "name": "ladder_perfect_quant_linear_cast_3",
         "shapes": [
           [
             256,
@@ -100,7 +100,7 @@
         ]
       },
       {
-        "name": "ladder_perfect_quant_linear_6",
+        "name": "ladder_perfect_quant_linear_cast_6",
         "shapes": [
           [
             256,
@@ -114,7 +114,7 @@
         ]
       },
       {
-        "name": "ladder_perfect_quant_linear_15",
+        "name": "ladder_perfect_quant_linear_cast_15",
         "shapes": [
           [
             256,
@@ -131,16 +131,16 @@
   },
   {
     "idx": 3,
-    "name": "ladder_perfect_quant_linear_3",
+    "name": "ladder_perfect_quant_linear_cast_3",
     "inputs": [
       {
         "name": "PlaceHolder ",
         "shapes": [
           [
             512,
-            512,
+            256,
             16,
-            2
+            4
           ]
         ],
         "dtypes": [
@@ -150,7 +150,7 @@
     ],
     "outputs": [
       {
-        "name": "layout_transform_reshape_reshape_reshape_transpose_4",
+        "name": "reshape_reshape_transpose_4",
         "shapes": [
           [
             1,
@@ -167,7 +167,7 @@
   },
   {
     "idx": 4,
-    "name": "layout_transform_reshape_reshape_reshape_transpose_4",
+    "name": "reshape_reshape_transpose_4",
     "inputs": [],
     "outputs": [
       {
@@ -236,16 +236,16 @@
   },
   {
     "idx": 6,
-    "name": "ladder_perfect_quant_linear_6",
+    "name": "ladder_perfect_quant_linear_cast_6",
     "inputs": [
       {
         "name": "PlaceHolder ",
         "shapes": [
           [
             64,
-            512,
+            256,
             16,
-            2
+            4
           ]
         ],
         "dtypes": [
@@ -255,7 +255,7 @@
     ],
     "outputs": [
       {
-        "name": "layout_transform_reshape_reshape_reshape_transpose_7",
+        "name": "reshape_reshape_transpose_7",
         "shapes": [
           [
             1,
@@ -272,7 +272,7 @@
   },
   {
     "idx": 7,
-    "name": "layout_transform_reshape_reshape_reshape_transpose_7",
+    "name": "reshape_reshape_transpose_7",
     "inputs": [],
     "outputs": [
       {
@@ -492,16 +492,16 @@
   },
   {
     "idx": 15,
-    "name": "ladder_perfect_quant_linear_15",
+    "name": "ladder_perfect_quant_linear_cast_15",
     "inputs": [
       {
         "name": "PlaceHolder ",
         "shapes": [
           [
             64,
-            512,
+            256,
             16,
-            2
+            4
           ]
         ],
         "dtypes": [
@@ -511,7 +511,7 @@
     ],
     "outputs": [
       {
-        "name": "layout_transform_reshape_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
+        "name": "reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
         "shapes": [
           [
             64,
@@ -527,7 +527,7 @@
   },
   {
     "idx": 16,
-    "name": "layout_transform_reshape_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
+    "name": "reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
     "inputs": [],
     "outputs": [
       {
@@ -551,28 +551,28 @@
     "inputs": [],
     "outputs": [
       {
-        "name": "reshape_transpose_reshape_reshape_layout_transform_ladder_layout_transform_18",
+        "name": "reshape_transpose_reshape_reshape_cast_cast_reshape_18",
         "shapes": [
           [
             256,
-            512,
+            256,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
-          "float16"
+          "int8"
         ]
       }
     ]
   },
   {
     "idx": 18,
-    "name": "reshape_transpose_reshape_reshape_layout_transform_ladder_layout_transform_18",
+    "name": "reshape_transpose_reshape_reshape_cast_cast_reshape_18",
     "inputs": [],
     "outputs": [
       {
-        "name": "ladder_perfect_quant_linear_19",
+        "name": "ladder_perfect_quant_linear_cast_19",
         "shapes": [
           [
             256,
@@ -589,16 +589,16 @@
   },
   {
     "idx": 19,
-    "name": "ladder_perfect_quant_linear_19",
+    "name": "ladder_perfect_quant_linear_cast_19",
     "inputs": [
       {
         "name": "PlaceHolder ",
         "shapes": [
           [
             512,
-            512,
+            256,
             16,
-            2
+            4
           ]
         ],
         "dtypes": [
@@ -608,7 +608,7 @@
     ],
     "outputs": [
       {
-        "name": "layout_transform_reshape_reshape_add_20",
+        "name": "reshape_add_20",
         "shapes": [
           [
             1,
@@ -624,7 +624,7 @@
   },
   {
     "idx": 20,
-    "name": "layout_transform_reshape_reshape_add_20",
+    "name": "reshape_add_20",
     "inputs": [
       {
         "name": "PlaceHolder ",
@@ -661,7 +661,7 @@
         ]
       },
       {
-        "name": "layout_transform_reshape_reshape_add_30",
+        "name": "reshape_add_30",
         "shapes": [
           [
             1,
@@ -746,28 +746,28 @@
     ],
     "outputs": [
       {
-        "name": "reshape_layout_transform_ladder_layout_transform_24",
+        "name": "reshape_cast_cast_reshape_24",
         "shapes": [
           [
             256,
-            512,
+            256,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
-          "float16"
+          "int8"
         ]
       }
     ]
   },
   {
     "idx": 24,
-    "name": "reshape_layout_transform_ladder_layout_transform_24",
+    "name": "reshape_cast_cast_reshape_24",
     "inputs": [],
     "outputs": [
       {
-        "name": "ladder_perfect_quant_linear_25",
+        "name": "ladder_perfect_quant_linear_cast_25",
         "shapes": [
           [
             256,
@@ -781,7 +781,7 @@
         ]
       },
       {
-        "name": "ladder_perfect_quant_linear_27",
+        "name": "ladder_perfect_quant_linear_cast_27",
         "shapes": [
           [
             256,
@@ -798,16 +798,16 @@
   },
   {
     "idx": 25,
-    "name": "ladder_perfect_quant_linear_25",
+    "name": "ladder_perfect_quant_linear_cast_25",
     "inputs": [
       {
         "name": "PlaceHolder ",
         "shapes": [
           [
             1792,
-            512,
+            256,
             16,
-            2
+            4
           ]
         ],
         "dtypes": [
@@ -817,7 +817,7 @@
     ],
     "outputs": [
       {
-        "name": "layout_transform_reshape_reshape_26",
+        "name": "reshape_26",
         "shapes": [
           [
             1,
@@ -833,37 +833,37 @@
   },
   {
     "idx": 26,
-    "name": "layout_transform_reshape_reshape_26",
+    "name": "reshape_26",
     "inputs": [],
     "outputs": [
       {
-        "name": "sigmoid_multiply_layout_transform_reshape_reshape_multiply_reshape_layout_transform_ladder_layout_transform_28",
+        "name": "sigmoid_multiply_reshape_multiply_reshape_cast_cast_reshape_28",
         "shapes": [
           [
             256,
-            1792,
+            896,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
-          "float16"
+          "int8"
         ]
       }
     ]
   },
   {
     "idx": 27,
-    "name": "ladder_perfect_quant_linear_27",
+    "name": "ladder_perfect_quant_linear_cast_27",
     "inputs": [
       {
         "name": "PlaceHolder ",
         "shapes": [
           [
             1792,
-            512,
+            256,
             16,
-            2
+            4
           ]
         ],
         "dtypes": [
@@ -873,28 +873,28 @@
     ],
     "outputs": [
       {
-        "name": "sigmoid_multiply_layout_transform_reshape_reshape_multiply_reshape_layout_transform_ladder_layout_transform_28",
+        "name": "sigmoid_multiply_reshape_multiply_reshape_cast_cast_reshape_28",
         "shapes": [
           [
             256,
-            1792,
+            896,
             16,
-            16
+            32
           ]
         ],
         "dtypes": [
-          "float16"
+          "int8"
         ]
       }
     ]
   },
   {
     "idx": 28,
-    "name": "sigmoid_multiply_layout_transform_reshape_reshape_multiply_reshape_layout_transform_ladder_layout_transform_28",
+    "name": "sigmoid_multiply_reshape_multiply_reshape_cast_cast_reshape_28",
     "inputs": [],
     "outputs": [
       {
-        "name": "ladder_perfect_quant_linear_29",
+        "name": "ladder_perfect_quant_linear_cast_29",
         "shapes": [
           [
             256,
@@ -911,16 +911,16 @@
   },
   {
     "idx": 29,
-    "name": "ladder_perfect_quant_linear_29",
+    "name": "ladder_perfect_quant_linear_cast_29",
     "inputs": [
       {
         "name": "PlaceHolder ",
         "shapes": [
           [
             512,
-            1792,
+            896,
             16,
-            2
+            4
           ]
         ],
         "dtypes": [
@@ -930,7 +930,7 @@
     ],
     "outputs": [
       {
-        "name": "layout_transform_reshape_reshape_add_30",
+        "name": "reshape_add_30",
         "shapes": [
           [
             1,
@@ -946,7 +946,7 @@
   },
   {
     "idx": 30,
-    "name": "layout_transform_reshape_reshape_add_30",
+    "name": "reshape_add_30",
     "inputs": [],
     "outputs": [
       {

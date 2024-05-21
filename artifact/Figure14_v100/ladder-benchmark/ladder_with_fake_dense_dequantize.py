@@ -122,9 +122,11 @@ def run(prefix, arch, async_propagate, fake_quant, quant_config, convert_int):
     write_mod(mod, log_path, "EliminateCommonSubexpr")
     mod = ladder.relay.transform.WelderFuseOps()(mod)
     write_mod(mod, log_path, "WelderFuseOps")
-    mod = ladder.relay.transform.AnnotateLadderTensorCore(arch=arch)(mod)
+    if not args.convert_int:
+        mod = ladder.relay.transform.AnnotateLadderTensorCore(arch=arch)(mod)
     write_mod(mod, log_path, "AnnotateLadderTensorCore")
-    mod = ladder.relay.transform.AnnotateTensorCore()(mod)
+    if not args.convert_int:
+        mod = ladder.relay.transform.AnnotateTensorCore()(mod)
     write_mod(mod, log_path, "AnnotateWelderTensorCore")
     if args.fast_decoding:
         mod = ladder.relay.transform.AnnotateFastDecoding()(mod)
@@ -134,12 +136,13 @@ def run(prefix, arch, async_propagate, fake_quant, quant_config, convert_int):
     write_mod(mod, log_path, "WelderTunePass")
 
     factory = relay.build(mod, arch.target, params=params)
-    lib = ladder.relay.update_lib(
-        factory.get_lib(), arch, osp.join(log_path, "model.so"))
+
     with open(osp.join(log_path, "graph.json"), "w") as f:
         f.write(factory.get_graph_json())
     with open(osp.join(log_path, "graph.params"), "wb") as f_params:
         f_params.write(tvm.runtime.save_param_dict(factory.get_params()))
+    lib = ladder.relay.update_lib(
+    factory.get_lib(), arch, osp.join(log_path, "model.so"))
 
     rt_mod = graph_executor.create(factory.get_graph_json(), lib, tvm.cuda(0))
     rt_mod.set_input(**factory.get_params())

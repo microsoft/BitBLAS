@@ -33,9 +33,12 @@ if not reproduce:
     os.system(f"python3 plot_scaling_bitwidth.py")
 else:
     print("Reproducing the results")
-    # reproduce the results for amos
+    # reproduce the results for kernel
     os.system("cd kernel-benchmark; ./benchmark_kernel.sh")
+    # reproduce the results for end2end
+    os.system("cd ladder-benchmark; ./benchmark_ladder.sh")
     # update the figures
-    os.system("python3 update_results.py")
+    os.system("python3 update_results_kernel.py")
+    os.system("python3 update_results_end2end.py")
     # plot from the reproduced results
     os.system(f"python3 plot_scaling_bitwidth.py --reproduce")
