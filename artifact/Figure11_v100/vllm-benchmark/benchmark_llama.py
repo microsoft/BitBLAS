@@ -1,4 +1,5 @@
 import torch
+import argparse
 from transformers import LlamaModel, LlamaConfig, LlamaTokenizer
 from transformers import AutoTokenizer
 import os
@@ -39,7 +40,7 @@ config_70b = LlamaConfig(
 linear_method = None
 
 run_single = True
-enable_awq = True
+enable_awq = False
 
 if enable_awq:
     quant_config = AWQConfig(

@@ -50,7 +50,7 @@ else:
         ]
         if model == "bloom":
             configs = [
-                (1, 1)
+                (1, 1),
                 (32, 1)
             ]
         for batch_size, seq_len in configs:
@@ -60,6 +60,8 @@ else:
             os.system(f"python -u measure_memory.py --framework onnxruntime --model {model} --batch_size {batch_size} --seq_len {seq_len} 2>&1 | tee logs/{model}_onnxruntime_{batch_size}_{seq_len}.log")
             # reproduce the results for tensorrt`1`
             os.system(f"python -u measure_memory.py --framework tensorrt --model {model} --batch_size {batch_size} --seq_len {seq_len} 2>&1 | tee logs/{model}_tensorrt_{batch_size}_{seq_len}.log")
+            # reproduce the results for vllm
+            os.system(f"python -u measure_memory.py --framework vllm --model {model} --batch_size {batch_size} --seq_len {seq_len} 2>&1 | tee logs/{model}_vllm_{batch_size}_{seq_len}.log")
             # reproduce the results for welder
             os.system(f"python -u measure_memory.py --framework welder --model {model} --batch_size {batch_size} --seq_len {seq_len} 2>&1 | tee logs/{model}_welder_{batch_size}_{seq_len}.log")
             # reproduce the results for ladder

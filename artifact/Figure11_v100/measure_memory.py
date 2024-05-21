@@ -51,7 +51,7 @@ def analyze_log(log_path):
 
 def pytorch_inference(model='llama', batch_size=1, seq_len=1):
     run_file = 'llama_70b.py' if model == 'llama' else 'bloom_176b.py'
-    target_process = subprocess.Popen(f'cd {pwd}/pytorch-inductor-benchmark; python {run_file} --batch_size {batch_size} --seq_len {seq_len}; cd ..', shell=True)
+    target_process = subprocess.Popen(f'cd {pwd}/pytorch-inductor-benchmark; python {run_file} --batch_size {batch_size} --seq_length {seq_len}; cd ..', shell=True)
     return target_process
 
 def onnxruntime_inference(model='llama', batch_size=1, seq_len=1):
@@ -80,12 +80,12 @@ def vllm_inference(model='llama', batch_size=1, seq_len=1):
     VLLM_HOME = f'{pwd}/../baseline_framework/vLLM'
     PYTHONPATH = f'{VLLM_HOME}'
     run_file = 'benchmark_llama.py' if model == 'llama' else 'benchmark_bloom.py'
-    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; PYTHONPATH={PYTHONPATH} python {run_file}  --batch_size {batch_size} --seq_len {seq_len}; cd ..', shell=True)
+    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; PYTHONPATH={PYTHONPATH} python {run_file}  --batch_size {batch_size} --seq_length {seq_len}; cd ..', shell=True)
     return target_process
 
 def vllm_fp16_int4_inference(model='llama', batch_size=1, seq_len=1):
     run_file = 'benchmark_llama.py' if model == 'llama' else 'benchmark_bloom.py'
-    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; python {run_file}  --batch_size {batch_size} --seq_len {seq_len}; cd ..', shell=True)
+    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; python {run_file}  --batch_size {batch_size} --seq_length {seq_len}; cd ..', shell=True)
     return target_process
 
 def welder_inference(model='llama', batch_size=1, seq_len=1):
