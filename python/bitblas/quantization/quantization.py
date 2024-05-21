@@ -142,9 +142,9 @@ def _tir_u32_to_f4_to_f16(nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr, dtype
 def _tir_u8_to_f8_e4m3_to_f16(nbit: int, val: tir.PrimExpr, dtype: str):
     assert nbit == 8
     assert dtype == "float16"
-    s_f16 = (val >> tir.const(7, "int16")) << tir.const(15, "int16")
-    offset = tir.Select(s_f16 == 0, tir.const(8192, "int16"), tir.const(-8192, "int16"))
-    e_f16 = ((val << tir.const(7, "int16")) + offset)
+    s_f16 = (val >> tir.const(7, "uint16")) << tir.const(15, "uint16")
+    prefix = tir.Select(s_f16 == 0, tir.const(0x2000, "uint16"), tir.const(0xc000, "uint16"))
+    e_f16 = (((val & tir.const(127, "uint16")) << tir.const(7, "uint16"))) | prefix
     return tir.reinterpret("float16", s_f16 | e_f16)
 
 

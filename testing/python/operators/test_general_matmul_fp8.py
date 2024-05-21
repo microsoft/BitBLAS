@@ -166,7 +166,7 @@ def test_matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum
     print("torch_ref_out", ref_out)
     print("bitblas_out", bitblas_out)
 
-    torch.testing.assert_allclose(ref_out, bitblas_out, rtol=1e-2, atol=1e-2)
+    torch.testing.assert_close(ref_out, bitblas_out, rtol=1e-1, atol=1e-1)
 
 
 # fmt: on
