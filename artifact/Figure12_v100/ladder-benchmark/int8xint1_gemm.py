@@ -97,8 +97,8 @@ for M, N, K in shapes:
 
     def _tir_u8_to_int(nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, dtype: str):
         assert val.dtype == "int8"
-        mask = tvm.tir.const((1 << nbit) - 1, "int8")
-        return ((val >> (pos * nbit).astype("int8")) & mask).astype(dtype)
+        mask = tvm.tir.const((1 << nbit) - 1, "int32")
+        return ((val >> (pos * nbit).astype("int32")) & mask).astype(dtype)
 
 
     A = te.placeholder((M, K), name='A', dtype='int8')
