@@ -4,11 +4,12 @@ from tvm import relay
 
 @relay.transform.function_pass(opt_level=0)
 class AnnotateLadderTensorCore(relay.ExprMutator):
-    def __init__(self, arch=None, diable_async=False, disable_transform=False):
+    def __init__(self, arch=None, diable_async=False, disable_transform=False, is_int8_int1=False):
         super().__init__()
         self.arch = arch
         self.disable_async = diable_async
         self.disable_transform = disable_transform
+        self.is_int8_int1 = is_int8_int1
 
     def transform_function(self, func, mod, ctx):
         return super().visit_function(func)
@@ -19,13 +20,16 @@ class AnnotateLadderTensorCore(relay.ExprMutator):
         if visitor.axis is not None:
             func = func.with_attr("tensorCoreConfig", visitor.axis)
             func = func.with_attr("ladder_config", visitor.ladder_config)
+            if self.is_int8_int1:
+                func = func.with_attr("ladder_config", (False, True, 1))
         if visitor.ladder_compute_type is not None:
             func = func.with_attr("ladder_compute_type", visitor.ladder_compute_type)
         if visitor.consistent is not None:
-            if self.disable_transform:
-                func = func.with_attr("consistent_config", (True, True))
-            else:
-                func = func.with_attr("consistent_config", visitor.consistent)
+            if not self.is_int8_int1:
+                if self.disable_transform:
+                    func = func.with_attr("consistent_config", (True, True))
+                else:
+                    func = func.with_attr("consistent_config", visitor.consistent)
         return super().visit_function(func)
 
 class OpVisitor(relay.ExprVisitor):

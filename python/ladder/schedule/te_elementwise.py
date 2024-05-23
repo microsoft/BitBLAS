@@ -52,8 +52,8 @@ class TEElementWiseScheduler(TESchedulerBase):
             sch[out].bind(va, te.thread_axis("vthread"))
         sch[out].bind(thrd_fused, te.thread_axis("threadIdx.x"))
 
-        for tn in tile_axis:
-            sch[out].unroll(tn)
+        # for tn in tile_axis:
+        #     sch[out].unroll(tn)
 
         cache_plan = {}
         for op in self.none_reduce_ops:

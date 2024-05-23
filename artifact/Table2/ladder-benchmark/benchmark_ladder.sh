@@ -54,13 +54,14 @@ run_benchmark() {
 
 
 # resnet-50-batch-1 default tuning
-run_benchmark "resnet-50-b1.log" "dequantize_tune_from_onnx.py" "--prefix resnet-50-b1"
+# run_benchmark "resnet-50-b1.log" "dequantize_tune_from_onnx.py" "--prefix resnet-50-b1"
+
 
 # resnet-50-batch-128 default tuning
-run_benchmark "resnet-50-b128.log" "dequantize_tune_from_onnx.py" "--prefix resnet-50-b128"
+# run_benchmark "resnet-50-b128.log" "dequantize_tune_from_onnx.py" "--prefix resnet-50-b128"
 
 # shufflenet-batch-1 default tuning
-run_benchmark "shufflenet-b1.log" "dequantize_tune_from_onnx.py" "--prefix shufflenet-b1"
+# run_benchmark "shufflenet-b1.log" "dequantize_tune_from_onnx.py" "--prefix shufflenet-b1"
 
 # shufflenet-batch-128 default tuning
 run_benchmark "shufflenet-b128.log" "dequantize_tune_from_onnx.py" "--prefix shufflenet-b128"
