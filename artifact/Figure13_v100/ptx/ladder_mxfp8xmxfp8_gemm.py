@@ -62,10 +62,11 @@ for M, N, K in shapes:
     def ladder_gemm(M, N, K):
         A = te.placeholder((M, K // 8 * bit), name='A', dtype='int8')
         B = te.placeholder((N, K // 8 * bit), name='B', dtype='int8')
-        Scales = te.placeholder((K // group_size, N), name='Scales', dtype='int8')
+        AScales = te.placeholder((K // group_size, M), name='AScales', dtype='int8')
+        BScales = te.placeholder((K // group_size, N), name='BScales', dtype='int8')
         
         def A_decode_func(n, k):
-            w = _tir_u8_to_f8_to_float(bit, A[n, k // n_float_per_i8], k % n_float_per_i8, "float32", Scales[k // group_size, n])
+            w = _tir_u8_to_f8_to_float(bit, A[n, k // n_float_per_i8], k % n_float_per_i8, "float32", AScales[k // group_size, n])
             return w
         
         A_decode = te.compute(
@@ -75,7 +76,7 @@ for M, N, K in shapes:
         )
         
         def B_decode_func(n, k):
-            w = _tir_u8_to_f8_to_float(bit, B[n, k // n_float_per_i8], k % n_float_per_i8, "float32", Scales[k // group_size, n])
+            w = _tir_u8_to_f8_to_float(bit, B[n, k // n_float_per_i8], k % n_float_per_i8, "float32", BScales[k // group_size, n])
             return w
         B_decode = te.compute(
             (N, K),
@@ -92,7 +93,7 @@ for M, N, K in shapes:
             name='C'
         )
 
-        return A, B, Scales, C
+        return A, B, AScales, BScales, C
 
     arg1 = ladder_gemm(M, N, K)
     args = arg1
