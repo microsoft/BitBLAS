@@ -170,7 +170,4 @@ if __name__ == "__main__":
     if from_prebuilt:
         run_from_prebuilt(model, arch)
     else:
-        if args.prefix in ["resnet-50-b1"]:
-            # dummy simulate case for holistic schedule
-            run(model, arch, args.fake_quant, quant_config, args.convert_int)
         run(model, arch, args.fake_quant, quant_config, args.convert_int)
