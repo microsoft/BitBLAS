@@ -298,7 +298,8 @@ def compute_ladder_quant_linear_mxfp_mxfp(attrs, inputs, output_type):
     out_shape = output_type.shape
     out_dtype = output_type.dtype
     A, B = inputs[:2]
-    Scales = inputs[2]
+    AScales = inputs[2]
+    BScales = inputs[3]
     M = int(out_shape[0])
     bits = int(attrs["bits"])
     format = str(attrs["format"])
@@ -345,7 +346,7 @@ def compute_ladder_quant_linear_mxfp_mxfp(attrs, inputs, output_type):
                     B_args = [arg] + B_args
 
         def A_decode_func(n, k):
-            w = _tir_u8_to_f8_to_float(8, A[n, k // n_float_per_i8], k % n_float_per_i8, "float32", Scales[k // group_size, n])
+            w = _tir_u8_to_f8_to_float(8, A[n, k // n_float_per_i8], k % n_float_per_i8, "float32", AScales[k // group_size, n])
             return w
         
         A_decode = te.compute(
@@ -355,7 +356,7 @@ def compute_ladder_quant_linear_mxfp_mxfp(attrs, inputs, output_type):
         )
         
         def B_decode_func(n, k):
-            w = _tir_u8_to_f8_to_float(8, B[n, k // n_float_per_i8], k % n_float_per_i8, "float32", Scales[k // group_size, n])
+            w = _tir_u8_to_f8_to_float(8, B[n, k // n_float_per_i8], k % n_float_per_i8, "float32", BScales[k // group_size, n])
             return w
         B_decode = te.compute(
             dequant_b_shape,
