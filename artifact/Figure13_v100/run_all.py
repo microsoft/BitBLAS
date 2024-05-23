@@ -32,7 +32,7 @@ if not reproduce:
 else:
     print("Reproducing the results")
     # reproduce the results for welder-roller
-    run_command("./benchmark_welder_roller.sh", working_dir="welder-roller")
+    run_command("./benchmark_welder_roller.sh", working_dir="welder-roller-end2end")
     # # reproduce the results for transform
     # run_command("./benchmark_transform.sh", working_dir="transform")
     # # reproduce the results for ptx

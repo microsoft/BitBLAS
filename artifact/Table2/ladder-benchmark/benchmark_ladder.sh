@@ -56,6 +56,7 @@ run_benchmark() {
 # resnet-50-batch-1 default tuning
 run_benchmark "resnet-50-b1.log" "dequantize_tune_from_onnx.py" "--prefix resnet-50-b1"
 
+
 # resnet-50-batch-128 default tuning
 run_benchmark "resnet-50-b128.log" "dequantize_tune_from_onnx.py" "--prefix resnet-50-b128"
 
