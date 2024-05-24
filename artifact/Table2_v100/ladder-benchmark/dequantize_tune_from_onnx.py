@@ -119,7 +119,6 @@ def run(prefix, arch, quant_type, quant_config, convert_int=False):
         f_params.write(tvm.runtime.save_param_dict(factory.get_params()))
 
     rt_mod = graph_executor.create(factory.get_graph_json(), lib, tvm.cuda(0))
-    rt_mod.set_input(**factory.get_params())
     print(rt_mod.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
     print("Tune time: {}".format(end_time))
 
@@ -170,4 +169,5 @@ if __name__ == "__main__":
     if from_prebuilt:
         run_from_prebuilt(model, arch)
     else:
+        print(f"Tuning from model {model}")
         run(model, arch, args.fake_quant, quant_config, args.convert_int)
