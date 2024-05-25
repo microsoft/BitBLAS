@@ -53,7 +53,7 @@ To use the checkpoints, you can download the checkpoints and extract it to the r
 cd /root/Ladder
 # download from google drive
 pip install gdown
-gdown https://drive.google.com/uc?id=1I9kjtZnrBL2WfXwd2hOn1-AL5Snztx4W -O artifact/checkpoints.zip
+gdown https://drive.google.com/uc?id=1T7E_DbSCzosLmySG6L_N1roSNRgmDvoS -O artifact/checkpoints.zip
 apt install unzip
 unzip artifact/checkpoints.zip # passwd: ladder
 # or download from microsoft onedrive
