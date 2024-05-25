@@ -1553,6 +1553,32 @@ TensorIntrin.register(
     ),
 )
 
+LOP3_FAST_DECODE_INT1_TO_INT8_TO_FP16_L8_INTRIN = ("lop3_fast_decode_i1_to_int8_to_f16_l8_")
+TensorIntrin.register(
+    LOP3_FAST_DECODE_INT1_TO_INT8_TO_FP16_L8_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=1,
+        storage_dtype="int8",
+        source_format="int",
+        target_dtype="float16",
+        loops_extent=8,
+    ),
+)
+
+LOP3_FAST_DECODE_INT1_TO_INT8_TO_FP16_L8_SCALE_INTRIN = (
+    "lop3_fast_decode_i1_to_int8_to_f16_l8_scale_")
+TensorIntrin.register(
+    LOP3_FAST_DECODE_INT1_TO_INT8_TO_FP16_L8_SCALE_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=1,
+        storage_dtype="int8",
+        source_format="int",
+        target_dtype="float16",
+        loops_extent=8,
+        with_scale=True,
+    ),
+)
+
 
 def get_lop3_intrin_group(
     out_dtype: Literal["float16", "int8"],
