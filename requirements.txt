@@ -20,3 +20,4 @@ scipy
 tornado
 torch
 thefuzz
+tabulate

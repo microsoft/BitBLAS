@@ -2,13 +2,19 @@
 # Licensed under the MIT License.
 
 import subprocess
+from typing import List
 from thefuzz import process
 from tvm.target import Target
 from tvm.target.tag import list_tags
 
 import logging
+
 logger = logging.getLogger(__name__)
 
+TARGET_MISSING_ERROR = (
+    "TVM target not found. Please set the TVM target environment variable using `export TVM_TARGET=<target>`, "
+    "where <target> is one of the available targets can be found in the output of `tools/get_available_targets.py`."
+)
 
 def get_gpu_model_from_nvidia_smi():
     """
@@ -44,8 +50,16 @@ def find_best_match(tags, query):
     if check_target(best_match, "cuda") == best_match:
         return best_match if score >= MATCH_THRESHOLD else "cuda"
     else:
-        logger.info(f"Best match '{best_match}' is not a valid CUDA target, falling back to 'cuda'")
+        logger.warning(TARGET_MISSING_ERROR)
         return "cuda"
+
+
+def get_all_nvidia_targets() -> List[str]:
+    """
+    Returns all available NVIDIA targets.
+    """
+    all_tags = list_tags()
+    return [tag for tag in all_tags if "nvidia" in tag]
 
 
 def auto_detect_nvidia_target() -> str:
