@@ -41,7 +41,7 @@ def find_best_match(tags, query):
     def check_target(best, default):
         return best if Target(best).arch == Target(default).arch else default
 
-    if check_target(best_match, "cuda"):
+    if check_target(best_match, "cuda") == best_match:
         return best_match if score >= MATCH_THRESHOLD else "cuda"
     else:
         logger.info(f"Best match '{best_match}' is not a valid CUDA target, falling back to 'cuda'")
