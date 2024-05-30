@@ -12,7 +12,7 @@ git submodule update --init --recursive
 
 mkdir -p build
 cd build
-cmake .. -DCUTLASS_NVCC_ARCHS='89' -DCUTLASS_LIBRARY_KERNELS=cutlass_tensorop* -DCUTLASS_LIBRARY_OPERATIONS=gemm -DCUTLASS_LIBRARY_IGNORE_KERNELS=complex -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCUTLASS_NVCC_ARCHS='80' -DCUTLASS_LIBRARY_KERNELS=cutlass_tensorop* -DCUTLASS_LIBRARY_OPERATIONS=gemm -DCUTLASS_LIBRARY_IGNORE_KERNELS=complex -DCMAKE_BUILD_TYPE=Release
 
 make -j 16 cutlass_profiler
 
