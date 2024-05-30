@@ -882,13 +882,18 @@ for ax in axes:
         else:
             pass
 
+# add baseline line to handles
+from matplotlib.lines import Line2D
+# insert to the first
+handles_llm.insert(0, Line2D([0], [0], color="black", lw=1, linestyle="--"))
+labels_llm.insert(0, _1x_baseline)
 
 # 为上面六个图添加图例
 fig.legend(
     handles_llm,
     labels_llm,
     loc="upper center",
-    ncol=len(labels_llm) // 2 + 1,
+    ncol=len(labels_llm) // 2,
     fontsize=legend_fontsize,
     frameon=True,
 )
@@ -897,24 +902,29 @@ fig.legend(
 other_axes = [ax3, ax4, ax5, ax6]
 handles_other = []
 labels_other = []
-handles_bitter = []
-labels_bitter = []
+handles_Ladder = []
+labels_Ladder = []
 for ax in axes:
     handles, labels = ax.get_legend_handles_labels()
     for handle, label in zip(handles, labels):
-        if label not in (labels_other + labels_bitter) and label in other_legands:
-            if "Bitter" in label:
-                handles_bitter.append(handle)
-                labels_bitter.append(label)
+        if label not in (labels_other + labels_Ladder) and label in other_legands:
+            if "Ladder" in label:
+                handles_Ladder.append(handle)
+                labels_Ladder.append(label)
             else:
                 handles_other.append(handle)
                 labels_other.append(label)
         else:
             pass
-handles_other.extend(handles_bitter)
-labels_other.extend(labels_bitter)
+handles_other.extend(handles_Ladder)
+labels_other.extend(labels_Ladder)
 # 调整图例位置和大小
 legend_fontsize = 10
+# add baseline line to handles
+from matplotlib.lines import Line2D
+# insert to the first
+handles_other.insert(0, Line2D([0], [0], color="black", lw=1, linestyle="--"))
+labels_other.insert(0, _1x_baseline)
 
 # 将图例放置在图表中间
 fig.legend(
@@ -922,7 +932,7 @@ fig.legend(
     labels_other,
     loc="upper center",
     bbox_to_anchor=(0.5, 0.52),
-    ncol=len(labels_other) // 2 + 1,
+    ncol=len(labels_other) // 2,
     fontsize=legend_fontsize,
     frameon=True,
 )

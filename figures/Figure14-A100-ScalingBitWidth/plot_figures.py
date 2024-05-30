@@ -79,7 +79,7 @@ ax1_1 = fig.add_subplot(gs[0, 0])
 times_data = b1s1_times_data
 providers = b1s1_providers
 # 获取pytorch_inductor的时间值
-_1x_baseline = "Bitter"
+_1x_baseline = "Ladder-W$_{FP16}$A$_{FP16}$"
 _1x_baseline_times = dict(times_data)[_1x_baseline]
 
 # 计算其他方法相对于pytorch_inductor的加速比
@@ -145,14 +145,14 @@ for i, (label, speedup) in enumerate(speed_up_data):
 
 ax1_1.set_xticks(x + len(speed_up_data) * bar_width / 2)
 ax1_1.set_xticklabels(providers)
-# ax1_1.set_ylabel('Speedup Vs. Bitter', fontsize=12, labelpad=10)
+# ax1_1.set_ylabel('Speedup Vs. Ladder', fontsize=12, labelpad=10)
 
 
 ax1_2 = fig.add_subplot(gs[0, 1])
 times_data = b1s4096_times_data
 providers = b1s4096_providers
 # 获取pytorch_inductor的时间值
-_1x_baseline = "Bitter"
+_1x_baseline = "Ladder-W$_{FP16}$A$_{FP16}$"
 _1x_baseline_times = dict(times_data)[_1x_baseline]
 
 # 计算其他方法相对于pytorch_inductor的加速比
@@ -225,10 +225,10 @@ if not reproduce:
     from paper_result import b1s1_matmul_providers as providers, b1s1_matmul_times_data as times_data
     
 else:
-    from paper_result import b1s1_matmul_providers as providers, b1s1_matmul_times_data as times_data
+    from reproduce_result import b1s1_matmul_providers as providers, b1s1_matmul_times_data as times_data
 
 # 获取pytorch_inductor的时间值
-_1x_baseline = "Bitter"
+_1x_baseline = "Ladder-W$_{FP16}$A$_{FP16}$"
 _1x_baseline_times = dict(times_data)[_1x_baseline]
 
 # 计算其他方法相对于pytorch_inductor的加速比
@@ -286,7 +286,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
 
 ax2_1.set_xticks(x + len(speed_up_data) * bar_width / 2)
 ax2_1.set_xticklabels(providers)
-# ax2_1.set_ylabel('Speedup Vs. Bitter', fontsize=12, labelpad=10, )
+# ax2_1.set_ylabel('Speedup Vs. Ladder', fontsize=12, labelpad=10, )
 
 ax2_2 = fig.add_subplot(gs[1, 1])
 
@@ -297,7 +297,7 @@ else:
     from reproduce_result import b1s4096_matmul_providers as providers, b1s4096_matmul_times_data as times_data
 
 # 获取pytorch_inductor的时间值
-_1x_baseline = "Bitter"
+_1x_baseline = "Ladder-W$_{FP16}$A$_{FP16}$"
 _1x_baseline_times = dict(times_data)[_1x_baseline]
 
 # 计算其他方法相对于pytorch_inductor的加速比
@@ -370,11 +370,11 @@ fig.legend(
 )
 
 legand_font = 10
-# text speedup vs bitter-fp16, transpose and let it at the left
+# text speedup vs Ladder-fp16, transpose and let it at the left
 fig.text(
     0.07,
     0.45,
-    "Speedup Vs. Bitter-W$_{FP16}$A$_{FP16}$",
+    "Speedup Vs. Ladder-W$_{FP16}$A$_{FP16}$",
     fontsize=14,
     rotation=90,
     va="center",

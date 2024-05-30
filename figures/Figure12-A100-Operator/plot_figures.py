@@ -60,7 +60,7 @@ times_data = matmul_times_data
 fig = plt.figure(figsize=(6, 3))
 
 # 获取Torch-Inductor的时间值
-_1x_baseline = "Bitter"
+_1x_baseline = "Ladder-W$_{FP16}$A$_{FP16}$"
 legend_items = {}
 
 llm_legands = []
@@ -100,7 +100,7 @@ ax1_1_2.set_xticks([])
 times_data = times_data
 providers = providers
 # 获取pytorch_inductor的时间值
-_1x_baseline = "Bitter"
+_1x_baseline = "Ladder-W$_{FP16}$A$_{FP16}$"
 _1x_baseline_times = dict(times_data)[_1x_baseline]
 
 # 计算其他方法相对于pytorch_inductor的加速比
@@ -121,7 +121,7 @@ print(speed_up_data)
 x = np.arange(len(providers))
 
 # Set the width of the bars
-bar_width = 0.07
+bar_width = 0.08
 
 # Draw cublas as a horizontal dashed line
 ax1_1.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
@@ -160,15 +160,15 @@ for i, (label, speedup) in enumerate(speed_up_data):
             else:
                 if "vLLM" in label:
                     warning_text = "vLLM Not Support"
-                else:
-                    warning_text = f"{label} Not Support"
+                elif "AMOS" in label:
+                    warning_text = f"AMOS Not Support"
             ax1_1.text(
-                rect.get_x() + rect.get_width() / 2,
+                rect.get_x() + rect.get_width() / 2 + 0.01,
                 height + 0.05,
                 warning_text,
                 ha="center",
                 va="bottom",
-                fontsize=6,
+                fontsize=3,
                 rotation=90,
                 color="red",
                 weight="bold",
@@ -191,7 +191,7 @@ ax1_1.grid(False)
 
 ax1_1.set_xticks(x + len(speed_up_data) * bar_width / 2)
 ax1_1.set_xticklabels(providers)
-# ax1_1.set_ylabel('Speedup Vs. Bitter', fontsize=12, labelpad=10)
+# ax1_1.set_ylabel('Speedup Vs. Ladder', fontsize=12, labelpad=10)
 
 
 providers = conv_providers
@@ -200,7 +200,7 @@ ax2_1 = fig.add_subplot(gs[2, 0])
 times_data = times_data
 providers = providers
 # 获取pytorch_inductor的时间值
-_1x_baseline = "Bitter"
+_1x_baseline = "Ladder-W$_{FP16}$A$_{FP16}$"
 _1x_baseline_times = dict(times_data)[_1x_baseline]
 
 # 计算其他方法相对于pytorch_inductor的加速比
@@ -221,7 +221,7 @@ print(speed_up_data)
 x = np.arange(len(providers))
 
 # Set the width of the bars
-bar_width = 0.07
+bar_width = 0.14
 
 # Draw cublas as a horizontal dashed line
 ax2_1.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
@@ -250,10 +250,10 @@ for i, (label, speedup) in enumerate(speed_up_data):
             else:
                 if "vLLM" in label:
                     warning_text = "vLLM Not Support"
-                else:
-                    warning_text = f"{label} Not Support"
+                elif "AMOS" in label:
+                    warning_text = f"AMOS Not Support"
             ax2_1.text(
-                rect.get_x() + rect.get_width() / 2,
+                rect.get_x() + rect.get_width() / 2 + 0.01,
                 height + 0.05,
                 warning_text,
                 ha="center",
@@ -271,22 +271,22 @@ legend_fontsize = 6
 
 handles_other = []
 labels_other = []
-handles_bitter = []
-labels_bitter = []
+handles_Ladder = []
+labels_Ladder = []
 for ax in [ax1_1_2, ax1_1, ax2_1]:
     handles, labels = ax.get_legend_handles_labels()
     for handle, label in zip(handles, labels):
-        if label not in (labels_other + labels_bitter):
-            if "Bitter" in label:
-                handles_bitter.append(handle)
-                labels_bitter.append(label)
+        if label not in (labels_other + labels_Ladder):
+            if "Ladder" in label:
+                handles_Ladder.append(handle)
+                labels_Ladder.append(label)
             else:
                 handles_other.append(handle)
                 labels_other.append(label)
         else:
             pass
-handles_other.extend(handles_bitter)
-labels_other.extend(labels_bitter)
+handles_other.extend(handles_Ladder)
+labels_other.extend(labels_Ladder)
 print(handles_other)
 # 调整图例位置和大小
 legend_fontsize = 7
@@ -294,17 +294,19 @@ fig.legend(
     handles_other,
     labels_other,
     loc="upper left",
-    bbox_to_anchor=(0.76, 0.89),
+    bbox_to_anchor=(0.76, 0.92),
     ncol=1,
     fontsize=legend_fontsize,
-    frameon=True,
+    frameon=True, 
+    facecolor='white',
+    edgecolor='black',
 )
 
 fig.text(
     0.07,
     0.45,
-    "Speedup Vs. Bitter-W$_{FP16}$A$_{FP16}$",
-    fontsize=9,
+    "Speedup Vs. Ladder-W$_{FP16}$A$_{FP16}$",
+    fontsize=10,
     rotation=90,
     va="center",
     ha="center",

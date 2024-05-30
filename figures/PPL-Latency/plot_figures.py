@@ -3,33 +3,33 @@ import matplotlib.pyplot as plt
 # Data
 models = ['LLAMA2-3B', 'LLAMA2-7B', 'LLAMA2-13B', 'LLAMA2-70B']
 latencies = {
-    'FP16XFP16': [5.7171, 8.3704, 17.8364, 82.456],
-    'FP16XFP8_E4M3-G-1': [4.8071, 5.7144, 13.0364, 48.456],
-    'FP16XINT4_G-1 (GPTQ)': [3.6371, 3.3464, 10.3484, 27.896],
-    'FP16XNF4_G-1 (NF4)': [4.6511, 5.0104, 12.6204, 43.176],
-    'FP16XINT2_G64 (BitDistiller)': [3.8711, 3.5704, 10.1564, 27.496],
-    'FP16XINT1 (OneBit)': [3.8451, 3.7624, 10.6364, 30.616],
-    'INT8XINT2 (BitNet-b1.58)': [3.1951, 2.5144, 8.7804, 17.896],
+    'W$_{FP16}$A$_{FP16}$': [5.7171, 8.3704, 17.8364, 82.456],
+    'W$_{FP8\_E4M3}$A$_{FP8\_E4M3}$': [4.8071, 5.7144, 11.8364, 48.456],
+    'W$_{INT4}$A$_{FP16}$': [3.6371, 3.3464, 8.3564, 27.896],
+    'W$_{NF4}$A$_{FP16}$': [4.6511, 5.0104, 11.3164, 43.176],
+    'W$_{INT2}$A$_{FP16}$-G64': [3.8711, 3.5704, 8.2364, 27.496],
+    'W$_{INT1}$A$_{FP16}$': [3.7151, 3.3464, 8.0764, 25.896],
+    'W$_{INT2}$A$_{INT8}$': [3.1951, 2.5144, 6.5164, 17.896],
 }
 
 ppls = {
-    'FP16XFP16': [10.04, 5.47, 4.88, 3.32],
-    'FP16XFP8_E4M3-G-1': [None, 5.8277, 5.1334, 3.4467],
-    'FP16XINT4_G-1 (GPTQ)': [None, 6.12, 5.20, 3.67],
-    'FP16XNF4_G-1 (NF4)': [None, 5.87, 5.09, 3.52],
-    'FP16XINT2_G64 (BitDistiller)': [None, 8.08, 6.78, 5.54],
-    'FP16XINT1 (OneBit)': [None, 9.73, 8.76, None],
-    'INT8XINT2 (BitNet-b1.58)': [9.91, None, None, None],
+    'W$_{FP16}$A$_{FP16}$': [10.04, 5.47, 4.88, 3.32],
+    'W$_{FP8\_E4M3}$A$_{FP8\_E4M3}$': [None, 5.8277, 5.1334, 3.4467],
+    'W$_{INT4}$A$_{FP16}$': [None, 6.12, 5.20, 3.67],
+    'W$_{NF4}$A$_{FP16}$': [None, 5.87, 5.09, 3.52],
+    'W$_{INT2}$A$_{FP16}$-G64': [None, 8.08, 6.78, 5.54],
+    'W$_{INT1}$A$_{FP16}$': [None, 9.73, 8.76, None],
+    'W$_{INT2}$A$_{INT8}$': [9.91, None, None, None],
 }
 
 markers = {
-    'FP16XFP16': 'o',
-    'FP16XFP8_E4M3-G-1': 's',
-    'FP16XINT4_G-1 (GPTQ)': 'D',
-    'FP16XNF4_G-1 (NF4)': '^',
-    'FP16XINT2_G64 (BitDistiller)': 'v',
-    'FP16XINT1 (OneBit)': '<',
-    'INT8XINT2 (BitNet-b1.58)': '>',
+    'W$_{FP16}$A$_{FP16}$': 'o',
+    'W$_{FP8\_E4M3}$A$_{FP8\_E4M3}$': 's',
+    'W$_{INT4}$A$_{FP16}$': 'D',
+    'W$_{NF4}$A$_{FP16}$': '^',
+    'W$_{INT2}$A$_{FP16}$-G64': 'v',
+    'W$_{INT1}$A$_{FP16}$': '<',
+    'W$_{INT2}$A$_{INT8}$': '>',
 }
 
 # Using tab10 colormap for higher contrast
@@ -38,11 +38,11 @@ colors = {
     'LLAMA2-3B': colormap(0.0),
     'LLAMA2-7B': colormap(0.1),
     'LLAMA2-13B': colormap(0.2),
-    'LLAMA2-70B': colormap(0.3),
+    'LLAMA2-70B': '0.8',
 }
 
 # Plotting
-plt.figure(figsize=(14, 8))
+plt.figure(figsize=(14, 6))
 
 for precision in latencies.keys():
     for model in models:
@@ -64,26 +64,36 @@ for model in models:
     # if valid_points:
     #     plt.plot(*zip(*valid_points), color=colors[model])
 
-# Custom legend
-handles = []
-labels = []
-for marker in markers.values():
-    handles.append(plt.scatter([], [], color='black', marker=marker, s=100))
-labels.extend(markers.keys())
-for color in colors.values():
-    handles.append(plt.scatter([], [], color=color, s=100))
-labels.extend(colors.keys())
+# Custom legend for precision
+legend_fontsize = 16
+legend_title_fontsize = 18
+precision_handles = [plt.scatter([], [], color='black', marker=markers[prec], s=100, facecolors='none') for prec in markers.keys()]
+precision_labels = markers.keys()
+legend1 = plt.legend(precision_handles, precision_labels, loc="upper center", bbox_to_anchor=(0.85, 1.0), fontsize=legend_fontsize, title='Data Type', shadow=True, fancybox=True, frameon=True, facecolor='white', edgecolor='black', title_fontproperties={'weight':'bold', 'size': legend_title_fontsize})
+plt.gca().add_artist(legend1)
 
-plt.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.72, 1.0), ncol=2, fontsize=12, frameon=True, title='Precision - Model', title_fontsize='14', shadow=True, fancybox=True, facecolor='white', edgecolor='black')
+# Custom legend for models
+model_handles = [plt.scatter([], [], color=colors[mod], s=100) for mod in models]
+model_labels = models
+legend2 = plt.legend(model_handles, model_labels, loc="upper center", bbox_to_anchor=(0.12, 0.42), fontsize=legend_fontsize, title='Model', shadow=True, fancybox=True, frameon=True, facecolor='white', edgecolor='black', title_fontproperties={'weight':'bold', 'size': legend_title_fontsize})
+plt.gca().add_artist(legend2)
 
 # Log scale for x-axis
-plt.xscale('log')
-plt.xlabel('Log Latency (ms)', fontsize=20)
-plt.ylabel('PPL on WikiText2', fontsize=20)
-plt.title('Latency vs PPL for different precisions and models', fontsize=24, pad=10)
+tick_fontsize = 22
+plt.xscale('log', base=2)
+# plt.yscale('log', base=2)
+# plt.xticks([10, 20, 50, 100], labels=['10', '20', '50', '100'], fontsize=tick_fontsize)
+plt.xticks([2, 4, 8, 16, 32, 64, 128], labels=['2', '4', '8', '16', '32', '64', '128'], fontsize=tick_fontsize)
+plt.yticks(fontsize=tick_fontsize)
+plt.xlim(left=2)  # Set x-axis limit starting from 1
+plt.ylim(bottom=2)  # Set y-axis limit starting from 0
+plt.xlabel('Latency (ms)', fontsize=28, labelpad=10,)
+plt.ylabel('PPL on WikiText-2(↓)', fontsize=28, labelpad=10)
+# plt.title('Latency vs PPL for different precisions and models', fontsize=24, pad=10)
 plt.grid(False)
 
 # Save plots
 plt.savefig("pdf/ppl_latency.pdf", bbox_inches="tight")
 plt.savefig("png/ppl_latency.png", bbox_inches="tight", transparent=False, dpi=255)
-plt.show()
+
+print(plt.gca().get_xlim())

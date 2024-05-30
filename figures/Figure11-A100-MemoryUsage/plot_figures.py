@@ -84,7 +84,7 @@ for i, (provider, times) in enumerate(times_data):
     )
 
 
-legend_fontsize = 8
+legend_fontsize = 12
 # set y scale
 ax_llama.set_yscale("log")
 ax_llama.set_xlabel("LLAMA", fontsize=15, labelpad=10)
@@ -99,10 +99,11 @@ fig.legend(
     handles,
     labels,
     loc="upper center",
-    ncol=len(labels) // 2,
+    ncol=3,
     fontsize=legend_fontsize,
     frameon=True,
-    bbox_to_anchor=(0.5, 1.01),
+    bbox_to_anchor=(0.51, 1.22),
+    # edgecolor='black', 
 )
 
 # 调整布局以避免图例被遮挡

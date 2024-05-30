@@ -13,9 +13,9 @@ args = parser.parse_args()
 
 reproduce = args.reproduce
 if not reproduce:
-    from paper_result.data_a6000 import *
+    from paper_result.data_mi250 import *
 else:
-    from reproduce_result.data_a6000 import * 
+    from reproduce_result.data_mi250 import * 
 
 colers_sets = [
     # nilu
@@ -86,11 +86,8 @@ times_data_bs1_seq4096 = [(label, [times[2]]) for label, times in times_data]
 providers = providers_bs1_seq1
 times_data = times_data_bs1_seq1
 
-gs_llama2_bs1_seq1 = gridspec.GridSpecFromSubplotSpec(
-    3, 1, subplot_spec=gs[0, 0:2], hspace=0.25
-)
-ax1a = fig.add_subplot(gs_llama2_bs1_seq1[0])
-ax1b = fig.add_subplot(gs_llama2_bs1_seq1[1:])
+
+ax1_0 = fig.add_subplot(gs[0, 0:2])
 
 # draw for bs1_seq1
 _1x_baseline_times = dict(times_data)[_1x_baseline]
@@ -113,24 +110,15 @@ x = np.arange(len(providers))
 bar_width = 0.07
 
 max_speedup = np.ceil(max([max(speedup) for _, speedup in speed_up_data]))
-
-# 设置两个Y轴的范围
-ax1a.set_ylim(10, max_speedup)  # 上面的图为10到最大值
-ax1b.set_ylim(0, 5)  # 下面的图为0到5
-
+ax1_0.set_ylim(0, max_speedup * 1.05)  # 上面的图为10到最大值
 
 # Draw cublas as a horizontal dashed line
-ax1a.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-ax1b.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-ax1a.spines["bottom"].set_visible(False)
-ax1b.spines["top"].set_visible(False)
-ax1a.set_xticklabels([])
-ax1a.set_xticks([])
+ax1_0.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
 # Create bars using a loop
 for i, (label, speedup) in enumerate(speed_up_data):
     if label not in llm_legands:
         llm_legands.append(label)
-    rec = ax1a.bar(
+    rec = ax1_0.bar(
         x + i * bar_width,
         speedup,
         bar_width,
@@ -140,7 +128,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
         hatch=get_legend_item(label)[1],
         color=get_legend_item(label)[0],
     )
-    ax1b.bar(
+    ax1_0.bar(
         x + i * bar_width,
         speedup,
         bar_width,
@@ -158,7 +146,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
                 warning_text = f"TIR Not Support"
             else:
                 warning_text = f"{label} Not Support"
-            ax1a.text(
+            ax1_0.text(
                 rect.get_x() + rect.get_width() / 2,
                 height + 0.05,
                 warning_text,
@@ -170,19 +158,9 @@ for i, (label, speedup) in enumerate(speed_up_data):
                 weight="bold",
             )
 
-d = 0.01  # 斜线的长度
-kwargs = dict(transform=ax1a.transAxes, color="k", clip_on=False)
-ax1a.plot((1 - d, 1 + d), (-d, +d), **kwargs)  # top-left diagonal
-ax1a.plot((-d, +d), (-d, +d), **kwargs)  # top-right diagonal
-
-
-kwargs.update(transform=ax1b.transAxes)  # switch to the bottom axes
-ax1b.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)  # bottom-left diagonal
-ax1b.plot((-d, +d), (1 - d, 1 + d), **kwargs)  # bottom-right diagonal
-
-ax1b.set_xticks(x + len(speed_up_data) * bar_width / 2)
-ax1b.set_xticklabels(providers)
-ax1b.grid(False)
+ax1_0.set_xticks(x + len(speed_up_data) * bar_width / 2)
+ax1_0.set_xticklabels(providers)
+ax1_0.grid(False)
 
 providers = providers_bs32_seq1
 times_data = times_data_bs32_seq1
@@ -321,9 +299,8 @@ times_data_bs32_seq1 = [(label, [times[1]]) for label, times in times_data]
 times_data_bs1_seq4096 = [(label, [times[2]]) for label, times in times_data]
 providers = providers_bs1_seq1
 times_data = times_data_bs1_seq1
-gs_bloom = gridspec.GridSpecFromSubplotSpec(3, 1, subplot_spec=gs[0, 6:8], hspace=0.25)
-ax2a = fig.add_subplot(gs_bloom[0])
-ax2b = fig.add_subplot(gs_bloom[1:])
+
+ax2_0 = fig.add_subplot(gs[0, 6:8])
 
 # 获取Torch-Inductor的时间值
 _1x_baseline_times = dict(times_data)[_1x_baseline]
@@ -344,24 +321,17 @@ bar_width = 0.07
 
 max_speedup = np.ceil(max([max(speedup) for _, speedup in speed_up_data]))
 
-# 设置两个Y轴的范围
-ax2a.set_ylim(13, max_speedup * 1.05)  # 上面的图为10到最大值
-ax2b.set_ylim(0, 6)  # 下面的图为0到5
+ax2_0.set_ylim(0, max_speedup * 1.07)  # 上面的图为10到最大值
 
 
 # Draw cublas as a horizontal dashed line
-ax2a.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-ax2b.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
-ax2a.spines["bottom"].set_visible(False)
-ax2b.spines["top"].set_visible(False)
-ax2a.set_xticklabels([])
-ax2a.set_xticks([])
+ax2_0.axhline(y=1, color="black", linestyle="dashed", label=_1x_baseline)
 
 # Create bars using a loop
 for i, (label, speedup) in enumerate(speed_up_data):
     if label not in llm_legands:
         llm_legands.append(label)
-    rec = ax2a.bar(
+    rec = ax2_0.bar(
         x + i * bar_width,
         speedup,
         bar_width,
@@ -371,7 +341,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
         hatch=get_legend_item(label)[1],
         color=get_legend_item(label)[0],
     )
-    ax2b.bar(
+    ax2_0.bar(
         x + i * bar_width,
         speedup,
         bar_width,
@@ -389,7 +359,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
                 warning_text = f"TIR Not Support"
             else:
                 warning_text = f"{label} Not Support"
-            ax2a.text(
+            ax2_0.text(
                 rect.get_x() + rect.get_width() / 2,
                 height + 0.05,
                 warning_text,
@@ -401,20 +371,9 @@ for i, (label, speedup) in enumerate(speed_up_data):
                 weight="bold",
             )
 
-d = 0.01  # 斜线的长度
-kwargs = dict(transform=ax2a.transAxes, color="k", clip_on=False)
-ax2a.plot((1 - d, 1 + d), (-d, +d), **kwargs)  # top-left diagonal
-ax2a.plot((-d, +d), (-d, +d), **kwargs)  # top-right diagonal
-
-
-kwargs.update(transform=ax2b.transAxes)  # switch to the bottom axes
-ax2b.plot((1 - d, 1 + d), (1 - d, 1 + d), **kwargs)  # bottom-left diagonal
-ax2b.plot((-d, +d), (1 - d, 1 + d), **kwargs)  # bottom-right diagonal
-
-ax2b.set_xticks(x + len(speed_up_data) * bar_width / 2)
-ax2b.set_xticklabels(providers)
-ax2a.grid(False)
-ax2b.grid(False)
+ax2_0.set_xticks(x + len(speed_up_data) * bar_width / 2)
+ax2_0.set_xticklabels(providers)
+ax2_0.grid(False)
 
 
 providers = providers_bs32_seq1
@@ -778,7 +737,7 @@ ax6.grid(False)
 # 在每个子图的外部底部添加脚注
 
 legand_font = 10
-ax1b.text(
+ax1_0.text(
     0.5,
     -0.43,
     "(a) LLAMA",
@@ -786,7 +745,7 @@ ax1b.text(
     fontsize=legand_font,
     ha="center",
 )
-ax2b.text(
+ax2_0.text(
     0.5,
     -0.43,
     "(b) BLOOM",
@@ -818,12 +777,10 @@ ax6.text(
 )
 
 y_size = 8
-ax1a.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
-ax1b.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
+ax1_0.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
 ax1_1.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
 ax1_2.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
-ax2a.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
-ax2b.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
+ax2_0.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
 ax2_1.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
 ax2_2.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
 ax3.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
@@ -831,35 +788,16 @@ ax4.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体�
 ax5.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
 ax6.tick_params(axis="y", labelsize=y_size)  # 设置y轴刻度标签的字体大小
 
-axes = [ax1a, ax1b, ax1_1, ax1_2, ax2a, ax2b, ax2_1, ax2_2, ax3, ax4, ax5, ax6]
+axes = [ax1_0, ax1_1, ax1_2, ax2_0, ax2_1, ax2_2, ax3, ax4, ax5, ax6]
 for ax in axes:
     ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
 
 # set the y-label for the gs_llama2_bs1_seq1
 # 获取ax1a的位置信息
 # 计算ax1a和ax1b的垂直位置
-# 获取ax3的位置信息
-pos_ax3 = ax3.get_position()
-left_ax3 = pos_ax3.x0 - 0.028
-
-# 计算ax1a和ax1b的垂直位置
-y0_ax1a = ax1a.get_position().y0
-y1_ax1b = ax1b.get_position().y1
-
-# 计算中点位置
-middle_y = (y0_ax1a + y1_ax1b) / 2 - 0.05
-
-# 添加文本作为Y轴标签，并确保与ax3的Y轴标签对齐
-fig.text(
-    left_ax3,
-    middle_y,
-    "Speedup vs. Welder",
-    va="center",
-    rotation="vertical",
-    fontsize=10,
-)
-
 # 设置ax3的Y轴标签
+
+ax1_0.set_ylabel("Speedup vs. Welder", fontsize=10, labelpad=10)
 ax3.set_ylabel("Speedup vs. Welder", fontsize=10, labelpad=10)
 
 
@@ -868,7 +806,7 @@ handles1, labels1 = ax1_2.get_legend_handles_labels()
 
 # 调整图例位置和大小
 legend_fontsize = 10
-llm_axes = [ax1a, ax1b, ax1_1, ax1_2, ax2a, ax2b, ax2_1, ax2_2]
+llm_axes = [ax1_0, ax1_1, ax1_2, ax2_0, ax2_1, ax2_2]
 handles_llm = []
 labels_llm = []
 for ax in axes:
@@ -880,7 +818,11 @@ for ax in axes:
         else:
             pass
 
-
+# add baseline line to handles
+from matplotlib.lines import Line2D
+# insert to the first
+handles_llm.insert(0, Line2D([0], [0], color="black", lw=1, linestyle="--"))
+labels_llm.insert(0, _1x_baseline)
 # 为上面六个图添加图例
 fig.legend(
     handles_llm,
@@ -895,32 +837,36 @@ fig.legend(
 other_axes = [ax3, ax4, ax5, ax6]
 handles_other = []
 labels_other = []
-handles_bitter = []
-labels_bitter = []
+handles_Ladder = []
+labels_Ladder = []
 for ax in axes:
     handles, labels = ax.get_legend_handles_labels()
     for handle, label in zip(handles, labels):
-        if label not in (labels_other + labels_bitter) and label in other_legands:
-            if "Bitter" in label:
-                handles_bitter.append(handle)
-                labels_bitter.append(label)
+        if label not in (labels_other + labels_Ladder) and label in other_legands:
+            if "Ladder" in label:
+                handles_Ladder.append(handle)
+                labels_Ladder.append(label)
             else:
                 handles_other.append(handle)
                 labels_other.append(label)
         else:
             pass
-handles_other.extend(handles_bitter)
-labels_other.extend(labels_bitter)
+handles_other.extend(handles_Ladder)
+labels_other.extend(labels_Ladder)
 # 调整图例位置和大小
 legend_fontsize = 10
-
+# add baseline line to handles
+from matplotlib.lines import Line2D
+# insert to the first
+handles_other.insert(0, Line2D([0], [0], color="black", lw=1, linestyle="--"))
+labels_other.insert(0, _1x_baseline)
 # 将图例放置在图表中间
 fig.legend(
     handles_other,
     labels_other,
     loc="upper center",
     bbox_to_anchor=(0.5, 0.52),
-    ncol=len(labels_other) // 2 + 1,
+    ncol=len(labels_other) // 2,
     fontsize=legend_fontsize,
     frameon=True,
 )
@@ -928,14 +874,13 @@ fig.legend(
 # 调整布局以避免图例被遮挡
 plt.subplots_adjust(top=0.85, bottom=0.15)
 
-
 # 保存图形
 plt.savefig(
-    "pdf/figure10_end2end_a6000.pdf",
+    "pdf/figure15_end2end_mi250.pdf",
     bbox_inches="tight",
 )
 plt.savefig(
-    "png/figure10_end2end_a6000.png",
+    "png/figure15_end2end_mi250.png",
     bbox_inches="tight",
     transparent=False,
     dpi=255,
