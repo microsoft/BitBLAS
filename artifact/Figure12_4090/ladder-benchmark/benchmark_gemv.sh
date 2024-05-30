@@ -16,7 +16,7 @@ run_python_script() {
 
 scripts=(
     fp16xfp16_gemv.py
-    fp16xfp8_gemv.py
+    # fp16xfp8_gemv.py
     fp16xint4_gemv.py
     fp16xnf4_gemv.py
     fp32xmxfp8_gemv.py

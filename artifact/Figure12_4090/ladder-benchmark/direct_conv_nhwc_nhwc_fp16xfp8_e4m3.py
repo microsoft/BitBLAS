@@ -1,6 +1,6 @@
 import numpy as np
-import tvm
 import ladder
+import tvm
 from tvm import relay
 import os.path as osp
 from tvm.contrib.target.onnx import to_onnx
@@ -23,25 +23,27 @@ log_path = "progress/" + fname
 arch = 'cuda'
 arch = ladder.arch.__getattribute__(arch)()
 dtype="float16"
-bit = 4
+bit = 8
 n_float_per_i8 = 8 // bit
 mask = (1 << bit) - 1
+
 def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p):
     
-    A = te.placeholder((n, h, w, c), name='input', dtype='int8')
-    B = te.placeholder((f, kh*kw*c // n_float_per_i8), name='weight', dtype='int8')
-
-    def _tir_u8_to_int(nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, dtype: str):
-        assert val.dtype == "int8"
-        mask = tvm.tir.const((1 << nbit) - 1, "int8")
-        return ((val >> (pos * nbit).astype("int8")) & mask).astype(dtype)
-    
+    def _tir_u8_to_f8_e4m3_to_f16(nbit: int, val: tir.PrimExpr, dtype: str):
+        assert nbit == 8
+        assert dtype == "float16"
+        s_f16 = (val >> tir.const(7, "uint16")) << tir.const(15, "uint16")
+        prefix = tir.Select(s_f16 == 0, tir.const(0x2000, "uint16"), tir.const(0xc000, "uint16"))
+        e_f16 = (((val & tir.const(127, "uint16")) << tir.const(7, "uint16"))) | prefix
+        return tir.reinterpret("float16", s_f16 | e_f16)
+    A = te.placeholder((n, h, w, c), name='input', dtype='float16')
+    B = te.placeholder((kh*kw*c, f // 8 * bit), name='weight', dtype='int8')
     def B_decode_func(n, k):
-        w = _tir_u8_to_int(bit, B[n, k // n_float_per_i8], k % n_float_per_i8, "int8")
+        w = _tir_u8_to_f8_e4m3_to_f16(bit, B[n, k // n_float_per_i8], "float16")
         return w
 
     B_decode = te.compute(
-        (f, kh*kw*c),
+        (kh*kw*c, f),
         B_decode_func,
         name='B_decode'
     )
@@ -79,7 +81,7 @@ def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p):
                 lambda n, k: pad[
                     n // (out_h * out_w),
                     (n % (out_h * out_w) // out_w) * stride_h
-                    + (k // (kernel_w * c)) * dilation_h,
+                    + (k // (kernel_w * (c))) * dilation_h,
                     (n % out_w) * stride_w + (k // (c) % kernel_w) * dilation_w,
                     k % c,
                 ],
@@ -87,16 +89,11 @@ def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p):
             )
     C = te.compute(
             [n_size, f],
-            lambda i, j: te.sum(data[i, k_axis].astype('int32') * B_decode[j, k_axis].astype('int32'), axis=[k_axis]),
+            lambda i, j: te.sum(data[i, k_axis] * B_decode[k_axis, j], axis=[k_axis]),
             "T_conv",
         )
-    # cast to int8
-    C_int8 = te.compute(
-        [n_size, f],
-        lambda i, j: C[i, j].astype('int8'),
-        name='C_int8'
-    )
-    return A, B, C_int8
+    return A, B, C
+
 
 def reshape(_N, _H, _W, _C, wmma_m, wmma_n):
     M = _N * _H * _W
@@ -194,121 +191,23 @@ def layout_transform_with_func(_N, _H, _W, _C, wmma_m = 16, wmma_n = 16, func=No
     )
     return A, B
 
-shapes = [
-    (128, 128, 28, 28, 128, 3, 3, 1, 1, 1),
-    (128, 256, 28, 28, 128, 1, 1, 2, 1, 0),
-    (128, 256, 14, 14, 256, 3, 3, 1, 1, 1),
-    (128, 256, 28, 28, 128, 3, 3, 2, 1, 1),
-    (128, 512, 14, 14, 256, 3, 3, 2, 1, 1),
-    (128, 128, 56, 56, 64, 3, 3, 2, 1, 1),
-    (128, 512, 14, 14, 256, 1, 1, 2, 1, 0),
-    (128, 512, 7, 7, 512, 3, 3, 1, 1, 1),
-    (128, 64, 56, 56, 64, 3, 3, 1, 1, 1),
-    (128, 128, 56, 56, 64, 1, 1, 2, 1, 0),
-]
-
-naf_net = [
-    # (128, 64, 128, 128, 32, 1, 1, 1, 1, 0),
-    # (128, 128, 1, 1, 128, 1, 1, 1, 1, 0),
-    # (128, 32, 1, 1, 32, 1, 1, 1, 1, 0),
-    # (128, 32, 256, 256, 16, 2, 2, 2, 1, 0),
-    # (128, 32, 128, 128, 32, 1, 1, 1, 1, 0),
-    # (128, 64, 128, 128, 32, 2, 2, 2, 1, 0),
-    # (128, 32, 256, 256, 16, 1, 1, 1, 1, 0),
-    # (128, 64, 64, 64, 64, 1, 1, 1, 1, 0),
-    (128, 256, 32, 32, 128, 1, 1, 1, 1, 0),
-    # (128, 16, 256, 256, 16, 1, 1, 1, 1, 0),
-    # (128, 128, 64, 64, 64, 2, 2, 2, 1, 0),
-    # (128, 128, 64, 64, 64, 1, 1, 1, 1, 0),
-    # (128, 128, 32, 32, 128, 1, 1, 1, 1, 0),
-    # (128, 64, 1, 1, 64, 1, 1, 1, 1, 0),
-    # (128, 16, 1, 1, 16, 1, 1, 1, 1, 0),
-]
-
-mobile_net = [
-    [128, 24, 56, 56, 96, 1, 1, 1, 1, 0],
-    [128, 24, 56, 56, 144, 1, 1, 1, 1, 0],
-    [128, 96, 14, 14, 384, 1, 1, 1, 1, 0],
-    [128, 160, 7, 7, 960, 1, 1, 1, 1, 0],
-    [128, 192, 28, 28, 32, 1, 1, 1, 1, 0],
-    [128, 64, 14, 14, 192, 1, 1, 1, 1, 0],
-    [128, 1280, 7, 7, 320, 1, 1, 1, 1, 0],
-    [128, 960, 7, 7, 160, 1, 1, 1, 1, 0],
-    [128, 64, 14, 14, 384, 1, 1, 1, 1, 0],
-    [128, 96, 112, 112, 16, 1, 1, 1, 1, 0],
-    [128, 160, 7, 7, 576, 1, 1, 1, 1, 0],
-    [128, 96, 14, 14, 576, 1, 1, 1, 1, 0],
-    [128, 16, 112, 112, 32, 1, 1, 1, 1, 0],
-    [128, 32, 28, 28, 192, 1, 1, 1, 1, 0],
-    [128, 144, 56, 56, 24, 1, 1, 1, 1, 0],
-    [128, 576, 14, 14, 96, 1, 1, 1, 1, 0],
-    [128, 320, 7, 7, 960, 1, 1, 1, 1, 0],
-    [128, 384, 14, 14, 64, 1, 1, 1, 1, 0],
-    [128, 32, 28, 28, 144, 1, 1, 1, 1, 0],
-]
-resnet50_shapes = [
-    [128, 512, 7, 7, 2048, 1, 1, 1, 1, 0],
-    [128, 512, 14, 14, 512, 3, 3, 2, 1, 1],
-    [128, 1024, 14, 14, 512, 1, 1, 1, 1, 0],
-    [128, 256, 14, 14, 1024, 1, 1, 1, 1, 0],
-    [128, 256, 28, 28, 256, 3, 3, 2, 1, 1],
-    [128, 512, 28, 28, 256, 1, 1, 1, 1, 0],
-    [128, 128, 28, 28, 512, 1, 1, 1, 1, 0],
-
-    [128, 256, 56, 56, 128, 1, 1, 1, 1, 0],
-    [128, 64, 56, 56, 256, 1, 1, 1, 1, 0],
-    [128, 64, 56, 56, 64, 3, 3, 1, 1, 1],
-    [128, 64, 56, 56, 64, 1, 1, 1, 1, 0],
-    [128, 256, 56, 56, 64, 1, 1, 1, 1, 0],
-    [128, 256, 56, 56, 512, 1, 1, 2, 1, 0],
-    [128, 128, 28, 28, 128, 3, 3, 1, 1, 1],
-    [128, 512, 28, 28, 128, 1, 1, 1, 1, 0],
-    [128, 512, 28, 28, 1024, 1, 1, 2, 1, 0],
-    [128, 256, 14, 14, 256, 3, 3, 1, 1, 1],
-    [128, 1024, 14, 14, 256, 1, 1, 1, 1, 0],
-    [128, 1024, 14, 14, 2048, 1, 1, 2, 1, 0],
-    [128, 512, 7, 7, 512, 3, 3, 1, 1, 1],
-    [128, 2048, 7, 7, 512, 1, 1, 1, 1, 0],
-]
 shufflenet_shapes = [
-    [128, 464, 7, 7, 1024, 1, 1, 1, 1, 0],
+    [128, 232, 14, 14, 232, 3, 3, 2, 1, 1, 232],
+    [128, 116, 14, 14, 116, 1, 1, 1, 1, 0, 1],
+    [128, 116, 28, 28, 116, 3, 3, 2, 1, 1, 116],
+    [128, 24, 28, 28, 58, 1, 1, 1, 1, 0, 1],
+    [128, 24, 56, 56, 24, 3, 3, 2, 1, 1, 24],
+    [128, 3, 224, 224, 24, 3, 3, 2, 1, 1, 1],
+    [128, 58, 28, 28, 58, 1, 1, 1, 1, 0, 1],
+    [128, 58, 56, 56, 58, 3, 3, 2, 1, 1, 58],
+    [128, 24, 56, 56, 58, 1, 1, 1, 1, 0, 1],
+    [128, 58, 28, 28, 58, 3, 3, 1, 1, 1, 58],
+    [128, 116, 28, 28, 116, 1, 1, 1, 1, 0, 1],
+    [128, 116, 14, 14, 116, 3, 3, 1, 1, 1, 116],
+    [128, 232, 14, 14, 232, 1, 1, 1, 1, 0, 1],
+    [128, 232, 7, 7, 232, 3, 3, 1, 1, 1, 232],
 ]
-unet_shapes = [
-    [16, 320, 64, 64, 320, 1, 1, 1, 1, 0, ],
-    [16, 640, 64, 64, 320, 1, 1, 1, 1, 0, ],
-    [16, 960, 64, 64, 320, 1, 1, 1, 1, 0, ],
-    [16, 640, 64, 64, 640, 3, 3, 1, 1, 1, ],
-    [16, 640, 32, 32, 640, 1, 1, 1, 1, 0, ],
-    [16, 960, 32, 32, 640, 1, 1, 1, 1, 0, ],
-    [16, 1280, 32, 32, 640, 1, 1, 1, 1, 0, ],
-    [16, 1920, 32, 32, 640, 1, 1, 1, 1, 0, ],
-    [16, 1280, 32, 32, 1280, 3, 3, 1, 1, 1, ],
-    [16, 1280, 16, 16, 1280, 1, 1, 1, 1, 0, ],
-    [16, 1920, 16, 16, 1280, 1, 1, 1, 1, 0, ],
-    [16, 2560, 16, 16, 1280, 1, 1, 1, 1, 0, ],
-    [16, 1280, 16, 16, 1280, 3, 3, 1, 1, 1, ],
-    [16, 2560, 8, 8, 1280, 1, 1, 1, 1, 0, ],
-    [16, 1280, 8, 8, 1280, 1, 1, 1, 1, 0, ],
-    [16, 1280, 16, 16, 1280, 3, 3, 2, 1, 1, ],
-    [16, 640, 16, 16, 1280, 1, 1, 1, 1, 0, ],
-    [16, 640, 32, 32, 640, 3, 3, 2, 1, 1, ],
-    [16, 320, 32, 32, 640, 1, 1, 1, 1, 0, ],
-    [16, 320, 64, 64, 320, 3, 3, 2, 1, 1, ],
-    [16, 320, 64, 64, 320, 3, 3, 1, 1, 1, ],
-    [16, 640, 32, 32, 640, 3, 3, 1, 1, 1, ],
-    [16, 320, 32, 32, 640, 3, 3, 1, 1, 1, ],
-    [16, 640, 16, 16, 1280, 3, 3, 1, 1, 1, ],
-    [16, 1280, 8, 8, 1280, 3, 3, 1, 1, 1, ],
-    [16, 2560, 8, 8, 1280, 3, 3, 1, 1, 1, ],
-    [16, 2560, 16, 16, 1280, 3, 3, 1, 1, 1, ],
-    [16, 1920, 16, 16, 1280, 3, 3, 1, 1, 1, ],
-    [16, 1920, 32, 32, 640, 3, 3, 1, 1, 1, ],
-    [16, 1280, 32, 32, 640, 3, 3, 1, 1, 1, ],
-    [16, 960, 32, 32, 640, 3, 3, 1, 1, 1, ],
-    [16, 960, 64, 64, 320, 3, 3, 1, 1, 1, ],
-    [16, 640, 64, 64, 320, 3, 3, 1, 1, 1, ],
-]
-shapes = shufflenet_shapes
+
 
 shufflenet_shapes_b1 = [
     [1, 464, 7, 7, 1024, 1, 1, 1, 1, 0, 1],
@@ -350,23 +249,27 @@ resnet_shapes_b1 = [
 
 
 shapes = [
-    [1, 64, 56, 56, 64, 3, 3, 1, 1, 0, 1],
-    [1, 64, 56, 56, 64, 1, 1, 1, 1, 0, 1],
-    [1, 128, 28, 28, 128, 3, 3, 1, 1, 0, 1],
-    [1, 512, 28, 28, 128, 1, 1, 1, 1, 0, 1],
+    [1, 64, 56, 56, 64, 3, 3, 1, 1, 1, 0],
+    [1, 64, 56, 56, 64, 1, 1, 1, 1, 0, 0],
+    [1, 128, 28, 28, 128, 3, 3, 1, 1, 1, 0],
+    [1, 512, 28, 28, 128, 1, 1, 1, 1, 0, 0],
 ]
-
-# shapes = mobile_net
 perf_map = []
-diff_map = {}
 for n, c, h, w, f, kh, kw, s, d, p, g in shapes:
-    key = f'{n}_{c}_{h}_{w}_{f}_{kh}_{kw}_{s}_{d}_{p}'
-
+    key = f'{n}_{c}_{h}_{w}_{f}_{kh}_{kw}_{s}_{d}_{p}_{g}'
     oh = (h + 2 * p - kh) // s + 1
     ow = (w + 2 * p - kw) // s + 1
     print("n: {}, f: {}, h: {}, w: {}, c: {}, kh: {}, kw: {}, s: {}, d: {}, p: {}, oh: {}, ow: {}".format(n, f, h, w, c, kh, kw, s, d, p, oh, ow))
     compute_flops = 2 * n * f * oh * ow * c * kh * kw
     arg1 = ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p)
+    arg2 = reshape(n, oh, ow, f, 16, 16)
+    arg3 = reshape_nhwc(n, oh, ow, f, 16, 16)
+    arg4 = bias(n, oh, ow, f)
+    arg5 = add_conv(n, oh, ow, f)
+    arg6 = relu(n, oh, ow, f)
+    arg7 = layout_transform(n, oh, ow, f)
+    arg8 = layout_transform_with_func(n, oh, ow, f, func=A_global_16x16_to_shared_load_16x16_layout)
+    arg9 = layout_transform_nhwc2nchw(n, oh, ow, f)
     
     args = arg1
     # args = tuple(connect_tensor_graph(args, arg2, {arg2[0]:args[-1]}))
@@ -380,12 +283,8 @@ for n, c, h, w, f, kh, kw, s, d, p, g in shapes:
     input_args = args[:-1]
     output_args = [args[-1]]
     node = IRNode([None for _ in input_args], args, "ladder_conv2d_reshape_bias")
-    # node.add_tag("tensorCoreConfig", [2, 3])
-    # node.add_tag("consistent_config", (True, False))
-    # node.add_tag("ladder_config", (False, False, 1))
-    # node.add_tag("ladder_config", (True, True, 2))
+    # node.add_tag("consistent_config", (True, True))
     output_nodes = [OutputNode(node)]
-    # policy = LadderPolicy(output_nodes, arch)
     policy = DefaultPolicy(output_nodes, arch)
     configs = policy.emit_config(40)
 
@@ -397,19 +296,15 @@ for n, c, h, w, f, kh, kw, s, d, p, g in shapes:
         except:
             continue
         compile_results.append(cpresult)
-    try:
-        ladder.utils.compile_and_load_parallel(compile_results, arch)
-    except:
-        perf_map.append((key, 10000.0))
-        continue
-    best_latency = 10000.0
+    ladder.utils.compile_and_load_parallel(compile_results, arch, timeout=20)
+    best_latency = 10000
     best = None
     values = []
     for cpresult in compile_results:
         print(cpresult.config)
         code = cpresult.code
         if cpresult.lib is None:
-            latency = 10000.0 
+            latency = 10000 
         else:
             latency = cpresult.profile()
         values.append(latency)
@@ -424,8 +319,8 @@ for n, c, h, w, f, kh, kw, s, d, p, g in shapes:
     print("best latency: {}".format(best_latency))
     print(f"{(compute_flops/(best_latency * 1e-3))/ pow((1024), 4)} tflops, {(compute_flops/(best_latency * 1e-3))/ pow((1024), 4) / 145 * 100} %")
     
-    
     perf_map.append((key, best_latency))
 
 for key, latency in perf_map:
     print("{}\t{}".format(key, latency))
+

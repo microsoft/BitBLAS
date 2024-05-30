@@ -50,9 +50,8 @@ target = tvm.target.Target("nvidia/geforce-rtx-4090")
 def cuda_build(mod, target, _params):
     from tvm.driver import build as tvm_build
 
-    with tvm.transform.PassContext(config={"tir.predicate_opt": True}):
+    with tvm.transform.PassContext(config={"tir.predicate_opt": True, "tir.use_async_copy": 1}):
         return tvm_build(mod, target=target)
-
 
 @tvm.script.ir_module
 class MyModule:
@@ -92,6 +91,16 @@ def tune():
             work_dir=workdir,
             sch_rules=sch_rules_tensor_core,
             postprocs=postprocs_tensor_core,
+            builder=ms.builder.LocalBuilder(timeout_sec=60),
+            runner=ms.runner.LocalRunner(
+                timeout_sec=100,
+                evaluator_config=ms.runner.EvaluatorConfig(
+                    number=3,
+                    repeat=1,
+                    min_repeat_ms=100,
+                    enable_cpu_cache_flush=False,
+                )
+            )
         )
     sch = ms.tir_integration.compile_tir(
         database=database, mod=mod, target=target)

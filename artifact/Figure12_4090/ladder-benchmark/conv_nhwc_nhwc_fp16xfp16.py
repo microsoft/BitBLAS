@@ -276,7 +276,7 @@ for n, c, h, w, f, kh, kw, s, d, p in shapes:
     node.add_tag("tensorCoreConfig", [2, 3])
     node.add_tag("consistent_config", (True, True))
     # node.add_tag("ladder_config", (False, False, 1))
-    node.add_tag("ladder_config", (True, True, 2))
+    node.add_tag("ladder_config", (True, True))
     output_nodes = [OutputNode(node)]
     policy = LadderPolicy(output_nodes, arch)
     configs = policy.emit_config(40)

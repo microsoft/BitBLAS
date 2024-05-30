@@ -1,7 +1,7 @@
 import os
 import re
 import csv
-from matmul_data_config import _gemm_sizes, square_sizes, rectangle_sizes, roller_sizes, irregular_sizes, llm_sizes
+from matmul_data_config import _gemm_sizes, square_sizes, rectangle_sizes, roller_sizes, irregular_sizes, operators_shape
 
 
 def parse_runtime(log_path, A_layout='col', B_layout='row'):
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     # log_case = 'min_s8_tensorcore_runtime'
     log_dir = './csv_logs'
     print("llm_sizes")
-    for m, n, k in llm_sizes:
+    for m, n, k in operators_shape:
         log_name = 'cutlass_shape_{0}_{1}_{2}_performance.gemm.csv'.format(
             m, k, n)
         log_path = os.path.join(log_dir, log_name)

@@ -21,5 +21,5 @@ LADDER_LOG_PATH="$CHECKPOINT_PATH/ladder/logs"
 mkdir -p logs
 
 ./benchmark_conv.sh
-./benchmark_gemm.sh
-./benchmark_gemv.sh
+# ./benchmark_gemm.sh
+# ./benchmark_gemv.sh

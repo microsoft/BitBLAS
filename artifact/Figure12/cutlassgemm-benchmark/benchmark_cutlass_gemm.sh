@@ -1,16 +1,19 @@
 #!/bin/sh
+export CUTLASS_HOME=$(pwd)/../../baseline_framework/cutlass
+export PATH=${CUTLASS_HOME}/build/tools/profiler:${PATH}
 
-export PATH=/home/t-leiwang/cutlass-3.2.1/build/tools/profiler:${PATH}
 # ncu --export cutlass_f64_1024.ncu-rep --force-overwrite --target-processes application-only --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 --section-folder /workspace/v-leiwang3/nsight_compute_workspace/sections --section ComputeWorkloadAnalysis --section InstructionStats --section LaunchStats --section MemoryWorkloadAnalysis --section MemoryWorkloadAnalysis_Chart --section MemoryWorkloadAnalysis_Tables --section Nvlink_Tables --section Nvlink_Topology --section Occupancy --section SchedulerStats --section SourceCounters --section SpeedOfLight --section SpeedOfLight_RooflineChart --section WarpStateStats --sampling-interval auto --sampling-max-passes 5 --sampling-buffer-size 33554432 --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes --import-source yes --check-exit-code yes cutlass_profiler  --operation=Gemm \
 
 # cutlass_profiler  --operation=Gemm \
-#    --m=2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384 \
-#    --n=2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384 \
+#    --m=1
+#    --n=14336
 #    --k=2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384 \
-#    --warmup-iterations=5 --profiling-iterations=10 \
+#    --warmup-iterations=2 --profiling-iterations=5 \
 #    --providers=cutlass --output=cutlass_gemm_performance.csv
 
 python3 cutlass-gemm-bench.py | tee cutlass-gemm-bench_execution.log
+python3 cutlass-gemm-bench-e4m3.py | tee cutlass-gemm-bench-e4m3_execution.log
+python3 cutlass-gemm-bench-e5m2.py | tee cutlass-gemm-bench-e5m2_execution.log
 
 # # single precision benchmark
 # cutlass_profiler  --operation=Gemm \

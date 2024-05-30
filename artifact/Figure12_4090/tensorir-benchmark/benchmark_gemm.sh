@@ -26,11 +26,11 @@ else
 
 echo "[TensorIR] Running benchmark..."
 
-python3 meta_nt.py --M 1 --N 14336 --K 57344 --trails 1000 2>&1 | tee meta_nt_m1_n14336_k57344.log
-python3 meta_nt.py --M 32 --N 14336 --K 57344 --trails 1000 2>&1 | tee meta_nt_m32_n14336_k57344.log
+# python3 meta_nt.py --M 1 --N 14336 --K 57344 --trails 1000 2>&1 | tee meta_nt_m1_n14336_k57344.log
+# python3 meta_nt.py --M 32 --N 14336 --K 57344 --trails 1000 2>&1 | tee meta_nt_m32_n14336_k57344.log
 python3 meta_nt.py --M 4096 --N 14336 --K 57344 --trails 1000 2>&1 | tee meta_nt_m4096_n14336_k57344.log
-python3 meta_nt.py --M 1 --N 8192 --K 28672 --trails 1000 2>&1 | tee meta_nt_m1_n8192_k28672.log
-python3 meta_nt.py --M 32 --N 8192 --K 28672 --trails 1000 2>&1 | tee meta_nt_m32_n8192_k28672.log
-python3 meta_nt.py --M 4096 --N 8192 --K 28672 --trails 1000 2>&1 | tee meta_nt_m4096_n8192_k28672.log
+# python3 meta_nt.py --M 1 --N 8192 --K 28672 --trails 100 2>&1 | tee meta_nt_m1_n8192_k28672.log
+# python3 meta_nt.py --M 32 --N 8192 --K 28672 --trails 100 2>&1 | tee meta_nt_m32_n8192_k28672.log
+# python3 meta_nt.py --M 4096 --N 8192 --K 28672 --trails 1000 2>&1 | tee meta_nt_m4096_n8192_k28672.log
 
 fi

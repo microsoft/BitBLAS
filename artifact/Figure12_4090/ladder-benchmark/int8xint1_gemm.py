@@ -122,9 +122,9 @@ vit_shapes = [
 ]
 
 shapes = [
-    [32, 14336, 57344],
-    [4096, 14336, 57344],
-    [32, 8192, 28672],
+    # [32, 14336, 57344],
+    # [4096, 14336, 57344],
+    # [32, 8192, 28672],
     [4096, 8192, 28672],
 ]
 perf_map = []
@@ -156,7 +156,13 @@ for M, N, K in shapes:
                 "int32") * B_decode[j, k, jj, kk].astype("int32"), axis=[k, kk]),
             name='C'
         )
-        return A, B, C
+        # cast to int8
+        C_cast = te.compute(
+            (M // wmma_m, N // wmma_n, wmma_m, wmma_n),
+            lambda i, j, ii, jj: C[i, j, ii, jj].astype("int8"),
+            name='C_cast'
+        )
+        return A, B, C_cast
 
 
     def reshape(M, N, wmma_m, wmma_n):
@@ -170,14 +176,15 @@ for M, N, K in shapes:
         return C, C_reshape
 
     arg1 = ladder_gemm(M, N, K, wmma_m, wmma_n, wmma_k)
-    arg2 = reshape(M, N, wmma_m, wmma_n)
-    args = connect_tensor_graph(arg1, arg2, {arg2[0]:arg1[2]})
+    # arg2 = reshape(M, N, wmma_m, wmma_n)
+    # args = connect_tensor_graph(arg1, arg2, {arg2[0]:arg1[2]})
+    args = arg1
 
     input_args = args[:2]
     output_args = [args[-1]]
     node = IRNode([None for _ in input_args], args, "ladder_matmul")
     node.add_tag("tensorCoreConfig", [2, 3])
-    node.add_tag("ladder_config", (True, True, 2))
+    node.add_tag("ladder_config", (True, True))
     node.add_tag("consistent_config", (True, False))
     node.add_tag(("fast_decoding", True))
     # node.add_tag("ladder_config", (False, False))
@@ -212,6 +219,7 @@ for M, N, K in shapes:
     
     # with open("int8xint1_ladder_gemm.cu", "w+") as f:
     #     f.write(code)
+    print(code)
     print("top1: {} \ttop10: {}".format(values[0], min(values)))
     print("-" * 80, flush=True)
     print("best config: {}".format(best.config))

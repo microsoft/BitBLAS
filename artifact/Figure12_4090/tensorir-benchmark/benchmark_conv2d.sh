@@ -26,12 +26,12 @@ else
 
 echo "[TensorIR] Running benchmark..."
 
-python3 meta_conv_nhwc.py --N 128 --C 64 --H 56 --W 56 --F 64 --K  3 --S 1 --P 1 2>&1 | tee meta_conv_nhwc_n128_c64_h56_w56_f64_k3_s1_p1.log
-python3 meta_conv_nhwc.py --N 128 --C 64 --H 56 --W 56 --F 64 --K  1 --S 1 --P 0 2>&1 | tee meta_conv_nhwc_n128_c64_h56_w56_f64_k1_s1_p0.log
-python3 meta_conv_nhwc.py --N 128 --C 128 --H 28 --W 28 --F 128 --K  3 --S 1 --P 1 2>&1 | tee meta_conv_nhwc_n128_c128_h28_w28_f128_k3_s1_p1.log
-python3 meta_conv_nhwc.py --N 128 --C 512 --H 28 --W 28 --F 128 --K  1 --S 1 --P 0 2>&1 | tee meta_conv_nhwc_n128_c512_h28_w28_f128_k1_s1_p0.log
-python3 meta_conv_nhwc.py --N 1 --C 64 --H 56 --W 56 --F 64 --K  3 --S 1 --P 1 2>&1 | tee meta_conv_nhwc_n1_c64_h56_w56_f64_k3_s1_p1.log
-python3 meta_conv_nhwc.py --N 1 --C 64 --H 56 --W 56 --F 64 --K  1 --S 1 --P 1 2>&1 | tee meta_conv_nhwc_n1_c64_h56_w56_f64_k1_s1_p1.log
-python3 meta_conv_nhwc.py --N 1 --C 128 --H 28 --W 28 --F 128 --K  3 --S 1 --P 1 2>&1 | tee meta_conv_nhwc_n1_c128_h28_w28_f128_k3_s1_p1.log
-python3 meta_conv_nhwc.py --N 1 --C 512 --H 28 --W 28 --F 128 --K  1 --S 1 --P 0 2>&1 | tee meta_conv_nhwc_n1_c512_h28_w28_f128_k1_s1_p0.log
+python3 meta_conv_nhwc.py --N 128 --C 64 --H 56 --W 56 --F 64 --K  3 --S 1 --P 1 --trails 1000 2>&1 | tee meta_conv_nhwc_n128_c64_h56_w56_f64_k3_s1_p1.log
+python3 meta_conv_nhwc.py --N 128 --C 64 --H 56 --W 56 --F 64 --K  1 --S 1 --P 0 --trails 1000 2>&1 | tee meta_conv_nhwc_n128_c64_h56_w56_f64_k1_s1_p0.log
+python3 meta_conv_nhwc.py --N 128 --C 128 --H 28 --W 28 --F 128 --K  3 --S 1 --P 1 --trails 1000 2>&1 | tee meta_conv_nhwc_n128_c128_h28_w28_f128_k3_s1_p1.log
+python3 meta_conv_nhwc.py --N 128 --C 512 --H 28 --W 28 --F 128 --K  1 --S 1 --P 0 --trails 1000 2>&1 | tee meta_conv_nhwc_n128_c512_h28_w28_f128_k1_s1_p0.log
+python3 meta_conv_nhwc.py --N 1 --C 64 --H 56 --W 56 --F 64 --K  3 --S 1 --P 1 --trails 1000 2>&1 | tee meta_conv_nhwc_n1_c64_h56_w56_f64_k3_s1_p1.log
+python3 meta_conv_nhwc.py --N 1 --C 64 --H 56 --W 56 --F 64 --K  1 --S 1 --P 1 --trails 1000 2>&1 | tee meta_conv_nhwc_n1_c64_h56_w56_f64_k1_s1_p1.log
+python3 meta_conv_nhwc.py --N 1 --C 128 --H 28 --W 28 --F 128 --K  3 --S 1 --P 1 --trails 1000 2>&1 | tee meta_conv_nhwc_n1_c128_h28_w28_f128_k3_s1_p1.log
+python3 meta_conv_nhwc.py --N 1 --C 512 --H 28 --W 28 --F 128 --K  1 --S 1 --P 0 --trails 1000 2>&1 | tee meta_conv_nhwc_n1_c512_h28_w28_f128_k1_s1_p0.log
 fi
