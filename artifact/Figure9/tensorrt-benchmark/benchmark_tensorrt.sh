@@ -5,7 +5,7 @@
 
 MODEL_PATH=$(pwd)/../../models
 TRT_EXEC_PATH=$(pwd)/../../baseline_framework/TensorRT-9.0.1.4/bin
-LD_LIBRARY_PATH=$TRT_EXEC_PATH/../lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$TRT_EXEC_PATH/../lib:$LD_LIBRARY_PATH
 echo "[TENSORRT] Using checkpoint path: $CHECKPOINT_PATH"
 LADDER_LOG_PATH="$CHECKPOINT_PATH/onnxruntime/logs"
 
@@ -34,7 +34,8 @@ $TRT_EXEC_PATH/trtexec --onnx=$MODEL_PATH/bloom_176b/bloom-176b_layer1_seq1_bs1/
 
 $TRT_EXEC_PATH/trtexec --onnx=$MODEL_PATH/bloom_176b/bloom-176b_layer1_seq1_bs32/model.onnx --saveEngine=$MODEL_PATH/bloom_176b/bloom-176b_layer1_seq1_bs32/model.trt --fp16 --workspace=8192 | tee logs/bloom-176b-layer1-seq1-bs32.log
 
-$TRT_EXEC_PATH/trtexec --onnx=$MODEL_PATH/bloom_176b/bloom-176b_layer1_seq4096_bs1/model.onnx --saveEngine=$MODEL_PATH/bloom_176b/bloom-176b_layer1_seq4096_bs1/model.trt --fp16 --workspace=8192 | tee logs/bloom-176b-layer1-seq4096-bs1.log
+# out of memory
+# $TRT_EXEC_PATH/trtexec --onnx=$MODEL_PATH/bloom_176b/bloom-176b_layer1_seq4096_bs1/model.onnx --saveEngine=$MODEL_PATH/bloom_176b/bloom-176b_layer1_seq4096_bs1/model.trt --fp16 --workspace=8192 | tee logs/bloom-176b-layer1-seq4096-bs1.log
 
 $TRT_EXEC_PATH/trtexec --onnx=$MODEL_PATH/llama_70b/llama2_70b_layer1_seq1_bs1/model.onnx --saveEngine=$MODEL_PATH/llama_70b/llama2_70b_layer1_seq1_bs1/model.trt --fp16 --workspace=8192 | tee logs/llama-70b-layer1-seq1-bs1.log
 

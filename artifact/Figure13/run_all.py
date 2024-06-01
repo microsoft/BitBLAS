@@ -31,14 +31,16 @@ if not reproduce:
     os.system(f"python3 plot_optimization_breakdown.py")
 else:
     print("Reproducing the results")
-    # reproduce the results for welder-roller
-    run_command("./benchmark_welder_roller.sh", working_dir="welder-roller")
-    # reproduce the results for transform
-    run_command("./benchmark_transform.sh", working_dir="transform")
-    # reproduce the results for ptx
-    run_command("./benchmark_ptx.sh", working_dir="ptx")
-    # reproduce the results for holistic
-    run_command("./benchmark_holistic.sh", working_dir="holistic")
-    
+    # # reproduce the results for welder-roller
+    # run_command("./benchmark_welder_roller.sh", working_dir="welder-roller")
+    # # reproduce the results for transform
+    # run_command("./benchmark_transform.sh", working_dir="transform")
+    # # reproduce the results for ptx
+    # run_command("./benchmark_ptx.sh", working_dir="ptx")
+    # # reproduce the results for holistic
+    # run_command("./benchmark_holistic.sh", working_dir="holistic")
+    run_command("./benchmark_ladder.sh", working_dir="ladder-end2end")
+    # update the results
+    os.system(f"python3 update_results_end2end.py")
     # plot from the reproduced results
     os.system(f"python3 plot_optimization_breakdown.py --reproduce")

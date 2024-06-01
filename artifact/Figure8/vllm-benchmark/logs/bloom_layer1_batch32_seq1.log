@@ -1,0 +1,1 @@
+vllm bloom run b32 s1 avg: 3.4136271476745605 ms

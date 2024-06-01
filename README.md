@@ -45,7 +45,7 @@ bash export.sh
 
 ## 2. Reproducing Individual Experiement Results
 
-Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Google Drive](https://drive.google.com/file/d/1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c/view?usp=sharing) or [Checkpoints.tar.gz - Microsoft OneDrive](https://drive.google.com/file/d/1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c/view?usp=sharing)
+Since ladder's paper evaluate different models with different batch-sizes and data-types, leading to more than 50 models to tune to completely reproduce the paper's result. To help reproduce quickly, we have uploaded all ladder's compiled model of A100 GPU at [Checkpoints.tar.gz - Google Drive](https://drive.google.com/file/d/1I9kjtZnrBL2WfXwd2hOn1-AL5Snztx4W/view?usp=sharing) or [Checkpoints.tar.gz - Microsoft OneDrive](https://1drv.ms/u/c/4c1511b24254d525/EQAp0aBJj85JgvRqofbPQsYBkpKAGqPsYfFvQIzbT7TQNg?e=1BSFPB)
 
 To use the checkpoints, you can download the checkpoints and extract it to the root/artifact of the project.
 
@@ -53,7 +53,7 @@ To use the checkpoints, you can download the checkpoints and extract it to the r
 cd /root/Ladder
 # download from google drive
 pip install gdown
-gdown https://drive.google.com/uc?id=1W7XJFEInyb9H8cG3bRHzAHq2DrZcs_8c -O artifact/checkpoints.tar.gz
+gdown https://drive.google.com/uc?id=1I9kjtZnrBL2WfXwd2hOn1-AL5Snztx4W -O artifact/checkpoints.tar.gz
 # or download from microsoft onedrive
 curl https://my.microsoftpersonalcontent.com/personal/4c1511b24254d525/_layouts/15/download.aspx\?UniqueId\=f3342e8e-5cdb-4041-a2b5-32b6fdf5bb2d\&Translate\=false\&tempauth\=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfZGlzcGxheW5hbWUiOiJDb25zdW1lciBBcHA6IDAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImFwcGlkIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0IiwiYXVkIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwL215Lm1pY3Jvc29mdHBlcnNvbmFsY29udGVudC5jb21AOTE4ODA0MGQtNmM2Ny00YzViLWIxMTItMzZhMzA0YjY2ZGFkIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8MDAwM2JmZmQ1ZWVjZTU1MEBsaXZlLmNvbSIsImNpZCI6Im9TVzFLdnZBQUZCay8xckxPeWJ2RlE9PSIsImVuZHBvaW50dXJsIjoidGZDSmFoaE12MldyVExhOERxUTg0cVIwSnZZZmZRNTRjdDY0UXpxWEprUT0iLCJlbmRwb2ludHVybExlbmd0aCI6IjE1MyIsImV4cCI6IjE3MTQ5MjI3NjgiLCJpcGFkZHIiOiIxNjcuMjIwLjIzMi4yNSIsImlzbG9vcGJhY2siOiJUcnVlIiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTcxNDkxOTE2OCIsInB1aWQiOiIwMDAzQkZGRDVFRUNFNTUwIiwic2NwIjoiYWxsc2l0ZXMuZnVsbGNvbnRyb2wiLCJzaWQiOiI1ODY0NDMzMzc4ODM5MDg3OTkxIiwic2l0ZWlkIjoiTURKalpqazFOV1V0WkRWbVpDMDBOalE1TFdKa05UQXROelUyTmprek1ESXpNV1ptIiwidGlkIjoiOTE4ODA0MGQtNmM2Ny00YzViLWIxMTItMzZhMzA0YjY2ZGFkIiwidHQiOiIyIiwidXBuIjoibGVpd2FuZzE5OTlAb3V0bG9vay5jb20iLCJ2ZXIiOiJoYXNoZWRwcm9vZnRva2VuIn0.PWbr-I0SJLbfKJYwzdiK3vxpx9infqFhV5kEGd-pXrM\&ApiVersion\=2.0\&AVOverride\=1   --output artifact/checkpoints.tar.gz
 tar -xvf artifact/checkpoints.tar.gz -C .
@@ -86,12 +86,19 @@ Run the following command to generate the results of Figure 8:
 cd /root/Ladder/artifact/Figure8
 # draw figures with paper results
 python3 run_all.py
-mv png paper_result/
-mv pdf paper_result/
+mv png/* paper_result/
+mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
 # reproduce results and draw figures
 python3 run_all.py --reproduce
-mv png reproduce_result/
-mv pdf reproduce_result/
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -104,7 +111,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 8](./artifact/Figure8/png/end2end_a100.png)
+![Figure 8](./artifact/Figure8/paper_result/end2end_a100.png)
 
 #### Notes for Reproducing the Results
 
@@ -131,12 +138,19 @@ Run the following command to generate the results of Figure 8:
 cd /root/Ladder/artifact/Figure9
 # draw figures with paper results
 python3 run_all.py
-mv png paper_result/
-mv pdf paper_result/
+mv png/* paper_result/
+mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
 # reproduce results and draw figures
 python3 run_all.py --reproduce
-mv png reproduce_result/
-mv pdf reproduce_result/
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -149,7 +163,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 9](./artifact/Figure9/png/end2end_v100.png)
+![Figure 9](./artifact/Figure9/png/figure9_end2end_v100.png)
 
 
 ### <a id="Figure10">Figure10</a>
@@ -164,12 +178,19 @@ Run the following command to generate the results of Figure 8:
 cd /root/Ladder/artifact/Figure10
 # draw figures with paper results
 python3 run_all.py
-mv png paper_result/
-mv pdf paper_result/
+mv png/* paper_result/
+mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
 # reproduce results and draw figures
 python3 run_all.py --reproduce
-mv png reproduce_result/
-mv pdf reproduce_result/
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -204,7 +225,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 11](./artifact/Figure11/png/memory_usage_a100.png)
+![Figure 11](./artifact/Figure11/paper_result/memory_usage_a100.png)
 
 #### Notes on Reproducing the Results
 
@@ -232,7 +253,21 @@ Figure 12 showcases the performance speedup of various computational kernels acr
 Run the following command to generate the results of Figure 12:
 
 ```bash
+# use the paper result
 python3 run_all.py
+mv png/* paper_result/
+mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
+# reproduce results and draw figures
+python3 run_all.py --reproduce
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -242,7 +277,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 12](./artifact/Figure12/png/operator_performance_a100.png)
+![Figure 12](./artifact/Figure12/paper_result/operator_performance_a100.png)
 
 For TensorIR Conv2d, we directly extract the operator performance form the end2end traces. So we do not provide the script to reproduce the result from single tensor ir expression. 
 
@@ -255,10 +290,21 @@ Figure 13 illustrates the normalized speedup of various optimization techniques 
 Run the following command to generate the results of Figure 13:
 
 ```bash
-# to use the paper result
+# use the paper result
 python3 run_all.py
-# to reproduce
-python3 run_all.py --reproduce # This may take 1 hour to finish the ladder tuning process, if you enable --force_tune, it may take 1 day to finish the tuning process.
+mv png/* paper_result/
+mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
+# reproduce results and draw figures
+python3 run_all.py --reproduce
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -268,7 +314,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 13](./artifact/Figure13/png/optimization_breakdown.png)
+![Figure 13](./artifact/Figure13/paper_result/optimization_breakdown.png)
 
 ### <a id="Figure14">Figure14</a>
 
@@ -279,10 +325,21 @@ Figure 14 depicts the end-to-end performance comparison of various baseline conf
 Run the following command to generate the results of Figure 14:
 
 ```bash
-# to use the paper result
+# use the paper result
 python3 run_all.py
-# to reproduce
-python3 run_all.py --reproduce # This may take 1 hour to finish the ladder tuning process, if you enable --force_tune, it may take 1 day to finish the tuning process.
+mv png/* paper_result/
+mv pdf/* paper_result/
+# clean the reproduced logs
+rm -rf reproduce_result/*
+# ls reproduce_result
+ls reproduce_result
+# reproduce results and draw figures
+python3 run_all.py --reproduce
+# ls reproduce_result
+ls reproduce_result
+md5sum reproduce_result/*
+mv png/* reproduce_result/
+mv pdf/* reproduce_result/
 ```
 
 The `run_all.py` script has the following options:
@@ -292,7 +349,7 @@ The `run_all.py` script has the following options:
 
 The result will be saved in the `pdf` and `png` directory, respectively. For example, the reproduced result is:
 
-![Figure 14](./artifact/Figure14/png/different_bits.png)
+![Figure 14](./artifact/Figure14/paper_result/different_bits.png)
 
 ### <a id="Figure15">Figure15</a>
 

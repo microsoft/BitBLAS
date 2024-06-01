@@ -12,16 +12,19 @@ from vllm.model_executor.weight_utils import (get_quant_config,
 from vllm.model_executor.layers.quantization.awq import AWQLinearMethod, AWQConfig
 import argparse
 
+import argparse
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch_size", type=int, default=1)
 parser.add_argument("--seq_length", type=int, default=1)
+parser.add_argument("--int4", action="store_true", help="use int4 quantization", default=False)
 
 args = parser.parse_args()
 batch_size = args.batch_size
 seq_length = args.seq_length
 
 run_single = True
-enable_awq = False
+enable_awq = args.int4
 
 linear_method = None
 if enable_awq:
@@ -67,5 +70,6 @@ else:
     kv_caches = [(None, None)] * config.num_hidden_layers
     cache_envents = None
 
-while True:
-    _ = model(*args)
+with torch.no_grad():
+    while True:
+        _ = model(*args)

@@ -112,11 +112,11 @@ plt.grid(False)
 
 # 保存图形
 plt.savefig(
-    "pdf/memory_usage_a100.pdf",
+    "pdf/figure11_memory_usage_a100.pdf",
     bbox_inches="tight",
 )
 plt.savefig(
-    "png/memory_usage_a100.png",
+    "png/figure11_memory_usage_a100.png",
     bbox_inches="tight",
     transparent=False,
     dpi=255,

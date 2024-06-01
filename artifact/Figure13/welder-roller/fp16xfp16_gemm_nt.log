@@ -1,0 +1,376 @@
+{<Node, roller_matmul>: {'block': [128, 128], 'warp': [64, 64], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+3.3797121047973633
+{<Node, roller_matmul>: {'block': [64, 128], 'warp': [32, 64], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+6.802091121673584
+{<Node, roller_matmul>: {'block': [128, 64], 'warp': [64, 32], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+4.962645053863525
+{<Node, roller_matmul>: {'block': [128, 256], 'warp': [64, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+2.8431360721588135
+{<Node, roller_matmul>: {'block': [256, 128], 'warp': [128, 64], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+2.9061119556427
+{<Node, roller_matmul>: {'block': [64, 256], 'warp': [32, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+4.060160160064697
+{<Node, roller_matmul>: {'block': [256, 64], 'warp': [128, 32], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+3.9130451679229736
+{<Node, roller_matmul>: {'block': [64, 64], 'warp': [32, 32], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+5.869823932647705
+{<Node, roller_matmul>: {'block': [256, 256], 'warp': [128, 128], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+5.570559978485107
+{<Node, roller_matmul>: {'block': [32, 256], 'warp': [16, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+7.847253322601318
+{<Node, roller_matmul>: {'block': [256, 32], 'warp': [128, 16], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+7.214080333709717
+{<Node, roller_matmul>: {'block': [64, 512], 'warp': [32, 256], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 520>}}}
+3.729919910430908
+{<Node, roller_matmul>: {'block': [512, 64], 'warp': [256, 32], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+3.7160959243774414
+{<Node, roller_matmul>: {'block': [32, 128], 'warp': [16, 64], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+10.011648178100586
+{<Node, roller_matmul>: {'block': [128, 32], 'warp': [64, 16], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+5.731328010559082
+{<Node, roller_matmul>: {'block': [32, 64], 'warp': [16, 32], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+10.511701583862305
+{<Node, roller_matmul>: {'block': [64, 32], 'warp': [32, 16], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+6.445738315582275
+{<Node, roller_matmul>: {'block': [32, 32], 'warp': [16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [128], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+10.732203483581543
+{<Node, roller_matmul>: {'block': [16, 256], 'warp': [8, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+17.203540802001953
+{<Node, roller_matmul>: {'block': [256, 16], 'warp': [128, 8], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 24>}}}
+15.361706733703613
+best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
+  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 8, 32, 16, half> C_wmma_accumulator[32];
+  __shared__ half A_shared[5120];
+  __shared__ half B_shared[10240];
+  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 8, 32, 16, half, nvcuda::wmma::row_major> A_shared_wmma_matrix_a[8];
+  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 8, 32, 16, half, nvcuda::wmma::col_major> B_shared_wmma_matrix_b[4];
+  for (int i_c_outer_init = 0; i_c_outer_init < 8; ++i_c_outer_init) {
+    for (int j_c_outer_init = 0; j_c_outer_init < 4; ++j_c_outer_init) {
+      nvcuda::wmma::fill_fragment(C_wmma_accumulator[((i_c_outer_init * 4) + j_c_outer_init)], 0.000000e+00f);
+    }
+  }
+  for (int k_outer = 0; k_outer < 256; ++k_outer) {
+    __syncthreads();
+    *(uint4*)(A_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(A + ((((((((int)blockIdx.x) >> 5) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 5) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 262144));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 5) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 524288));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 5) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 786432));
+    *(uint4*)(B_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(B + ((((((((int)blockIdx.x) & 31) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 31) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 262144));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 31) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 524288));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 31) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 786432));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 5120)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 31) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 1048576));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 6400)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 31) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 1310720));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 7680)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 31) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 1572864));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 8960)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 31) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 1835008));
+    __syncthreads();
+    for (int k_inner_outer = 0; k_inner_outer < 2; ++k_inner_outer) {
+      for (int ax0_outer = 0; ax0_outer < 8; ++ax0_outer) {
+        nvcuda::wmma::load_matrix_sync(A_shared_wmma_matrix_a[ax0_outer], (&(A_shared[((((((int)threadIdx.y) >> 1) * 2560) + (ax0_outer * 320)) + (k_inner_outer * 16))])), 40);
+      }
+      for (int ax0_outer_1 = 0; ax0_outer_1 < 4; ++ax0_outer_1) {
+        nvcuda::wmma::load_matrix_sync(B_shared_wmma_matrix_b[ax0_outer_1], (&(B_shared[((((((int)threadIdx.y) & 1) * 5120) + (ax0_outer_1 * 1280)) + (k_inner_outer * 16))])), 40);
+      }
+      for (int i_c_outer = 0; i_c_outer < 8; ++i_c_outer) {
+        for (int j_c_outer = 0; j_c_outer < 4; ++j_c_outer) {
+          nvcuda::wmma::mma_sync(C_wmma_accumulator[((i_c_outer * 4) + j_c_outer)], A_shared_wmma_matrix_a[i_c_outer], B_shared_wmma_matrix_b[j_c_outer], C_wmma_accumulator[((i_c_outer * 4) + j_c_outer)]);
+        }
+      }
+    }
+  }
+  __syncthreads();
+  for (int i_inner_inner_outer = 0; i_inner_inner_outer < 8; ++i_inner_inner_outer) {
+    for (int j_inner_inner_outer = 0; j_inner_inner_outer < 4; ++j_inner_inner_outer) {
+      nvcuda::wmma::store_matrix_sync((&(C[(((((((((int)blockIdx.x) >> 5) * 1048576) + ((((int)threadIdx.y) >> 1) * 524288)) + (i_inner_inner_outer * 65536)) + ((((int)blockIdx.x) & 31) * 256)) + ((((int)threadIdx.y) & 1) * 128)) + (j_inner_inner_outer * 32))])), C_wmma_accumulator[((i_inner_inner_outer * 4) + j_inner_inner_outer)], 8192, nvcuda::wmma::mem_row_major);
+    }
+  }
+  __syncthreads();
+}
+
+
+top1: 3.3797121047973633 	top10: 2.8431360721588135
+--------------------------------------------------------------------------------
+best config: {<Node, roller_matmul>: {'block': [128, 256], 'warp': [64, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+best latency: 2.8431360721588135
+{<Node, roller_matmul>: {'block': [128, 128], 'warp': [64, 64], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+16.138751983642578
+{<Node, roller_matmul>: {'block': [128, 112], 'warp': [64, 56], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 120>}}}
+23.311872482299805
+{<Node, roller_matmul>: {'block': [64, 224], 'warp': [16, 224], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 232>}}}
+28.50150489807129
+{<Node, roller_matmul>: {'block': [128, 64], 'warp': [64, 32], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+17.989120483398438
+{<Node, roller_matmul>: {'block': [64, 128], 'warp': [32, 64], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+30.118911743164062
+{<Node, roller_matmul>: {'block': [256, 128], 'warp': [128, 64], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+10.309120178222656
+{<Node, roller_matmul>: {'block': [128, 256], 'warp': [64, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+13.684736251831055
+{<Node, roller_matmul>: {'block': [128, 224], 'warp': [32, 224], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 232>}}}
+15.276543617248535
+{<Node, roller_matmul>: {'block': [128, 56], 'warp': [32, 56], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 64>}}}
+32.381439208984375
+{<Node, roller_matmul>: {'block': [256, 112], 'warp': [128, 56], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 120>}}}
+19.140607833862305
+{<Node, roller_matmul>: {'block': [256, 64], 'warp': [128, 32], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+13.751808166503906
+{<Node, roller_matmul>: {'block': [64, 256], 'warp': [32, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+28.941823959350586
+{<Node, roller_matmul>: {'block': [256, 56], 'warp': [64, 56], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 64>}}}
+20.414464950561523
+{<Node, roller_matmul>: {'block': [64, 64], 'warp': [32, 32], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+21.867860794067383
+{<Node, roller_matmul>: {'block': [256, 256], 'warp': [128, 128], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+21.03705596923828
+{<Node, roller_matmul>: {'block': [64, 56], 'warp': [64, 8], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 64>}}}
+39.05433654785156
+{<Node, roller_matmul>: {'block': [256, 224], 'warp': [128, 112], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 232>}}}
+14.211071968078613
+{<Node, roller_matmul>: {'block': [32, 224], 'warp': [8, 224], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 232>}}}
+56.67942428588867
+{<Node, roller_matmul>: {'block': [64, 448], 'warp': [32, 224], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 456>}}}
+23.024639129638672
+{<Node, roller_matmul>: {'block': [256, 32], 'warp': [128, 16], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+23.705598831176758
+best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
+  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 32, 8, 16, half> C_wmma_accumulator[32];
+  __shared__ half A_shared[10240];
+  __shared__ half B_shared[5120];
+  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 32, 8, 16, half, nvcuda::wmma::row_major> A_shared_wmma_matrix_a[4];
+  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 32, 8, 16, half, nvcuda::wmma::col_major> B_shared_wmma_matrix_b[8];
+  for (int i_c_outer_init = 0; i_c_outer_init < 4; ++i_c_outer_init) {
+    for (int j_c_outer_init = 0; j_c_outer_init < 8; ++j_c_outer_init) {
+      nvcuda::wmma::fill_fragment(C_wmma_accumulator[((i_c_outer_init * 8) + j_c_outer_init)], 0.000000e+00f);
+    }
+  }
+  for (int k_outer = 0; k_outer < 256; ++k_outer) {
+    __syncthreads();
+    *(uint4*)(A_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(A + ((((((((int)blockIdx.x) / 224) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(A + (((((((((int)blockIdx.x) / 224) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 262144));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(A + (((((((((int)blockIdx.x) / 224) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 524288));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(A + (((((((((int)blockIdx.x) / 224) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 786432));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 5120)) = *(uint4*)(A + (((((((((int)blockIdx.x) / 224) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 1048576));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 6400)) = *(uint4*)(A + (((((((((int)blockIdx.x) / 224) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 1310720));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 7680)) = *(uint4*)(A + (((((((((int)blockIdx.x) / 224) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 1572864));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 8960)) = *(uint4*)(A + (((((((((int)blockIdx.x) / 224) * 2097152) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 1835008));
+    *(uint4*)(B_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(B + ((((((((int)blockIdx.x) % 224) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(B + (((((((((int)blockIdx.x) % 224) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 262144));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(B + (((((((((int)blockIdx.x) % 224) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 524288));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(B + (((((((((int)blockIdx.x) % 224) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 786432));
+    __syncthreads();
+    for (int k_inner_outer = 0; k_inner_outer < 2; ++k_inner_outer) {
+      for (int ax0_outer = 0; ax0_outer < 4; ++ax0_outer) {
+        nvcuda::wmma::load_matrix_sync(A_shared_wmma_matrix_a[ax0_outer], (&(A_shared[((((((int)threadIdx.y) >> 1) * 5120) + (ax0_outer * 1280)) + (k_inner_outer * 16))])), 40);
+      }
+      for (int ax0_outer_1 = 0; ax0_outer_1 < 8; ++ax0_outer_1) {
+        nvcuda::wmma::load_matrix_sync(B_shared_wmma_matrix_b[ax0_outer_1], (&(B_shared[((((((int)threadIdx.y) & 1) * 2560) + (ax0_outer_1 * 320)) + (k_inner_outer * 16))])), 40);
+      }
+      for (int i_c_outer = 0; i_c_outer < 4; ++i_c_outer) {
+        for (int j_c_outer = 0; j_c_outer < 8; ++j_c_outer) {
+          nvcuda::wmma::mma_sync(C_wmma_accumulator[((i_c_outer * 8) + j_c_outer)], A_shared_wmma_matrix_a[i_c_outer], B_shared_wmma_matrix_b[j_c_outer], C_wmma_accumulator[((i_c_outer * 8) + j_c_outer)]);
+        }
+      }
+    }
+  }
+  __syncthreads();
+  for (int i_inner_inner_outer = 0; i_inner_inner_outer < 4; ++i_inner_inner_outer) {
+    for (int j_inner_inner_outer = 0; j_inner_inner_outer < 8; ++j_inner_inner_outer) {
+      nvcuda::wmma::store_matrix_sync((&(C[(((((((((int)blockIdx.x) / 224) * 7340032) + ((((int)threadIdx.y) >> 1) * 3670016)) + (i_inner_inner_outer * 917504)) + ((((int)blockIdx.x) % 224) * 128)) + ((((int)threadIdx.y) & 1) * 64)) + (j_inner_inner_outer * 8))])), C_wmma_accumulator[((i_inner_inner_outer * 8) + j_inner_inner_outer)], 28672, nvcuda::wmma::mem_row_major);
+    }
+  }
+  __syncthreads();
+}
+
+
+top1: 16.138751983642578 	top10: 10.309120178222656
+--------------------------------------------------------------------------------
+best config: {<Node, roller_matmul>: {'block': [256, 128], 'warp': [128, 64], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+best latency: 10.309120178222656
+{<Node, roller_matmul>: {'block': [128, 128], 'warp': [64, 64], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+14.756863594055176
+{<Node, roller_matmul>: {'block': [64, 128], 'warp': [32, 64], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+28.823551177978516
+{<Node, roller_matmul>: {'block': [128, 64], 'warp': [64, 32], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+18.711551666259766
+{<Node, roller_matmul>: {'block': [128, 256], 'warp': [64, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+12.24294376373291
+{<Node, roller_matmul>: {'block': [256, 128], 'warp': [128, 64], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+11.823103904724121
+{<Node, roller_matmul>: {'block': [64, 256], 'warp': [32, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+25.379840850830078
+{<Node, roller_matmul>: {'block': [256, 64], 'warp': [128, 32], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+18.471424102783203
+{<Node, roller_matmul>: {'block': [64, 64], 'warp': [32, 32], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+21.84601593017578
+{<Node, roller_matmul>: {'block': [256, 256], 'warp': [128, 128], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+23.11577606201172
+{<Node, roller_matmul>: {'block': [32, 256], 'warp': [16, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+49.454593658447266
+{<Node, roller_matmul>: {'block': [256, 32], 'warp': [128, 16], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+28.230144500732422
+{<Node, roller_matmul>: {'block': [64, 512], 'warp': [32, 256], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 520>}}}
+22.65497589111328
+{<Node, roller_matmul>: {'block': [512, 64], 'warp': [256, 32], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+17.70649528503418
+{<Node, roller_matmul>: {'block': [32, 128], 'warp': [16, 64], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+37.71392059326172
+{<Node, roller_matmul>: {'block': [128, 32], 'warp': [64, 16], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+21.634729385375977
+{<Node, roller_matmul>: {'block': [32, 64], 'warp': [16, 32], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [112], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+55.411712646484375
+{<Node, roller_matmul>: {'block': [64, 32], 'warp': [32, 16], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [112], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+58.4007682800293
+{<Node, roller_matmul>: {'block': [32, 32], 'warp': [16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [128], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+37.59667205810547
+{<Node, roller_matmul>: {'block': [16, 256], 'warp': [8, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+113.03526306152344
+{<Node, roller_matmul>: {'block': [256, 16], 'warp': [128, 8], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 24>}}}
+56.188926696777344
+best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
+  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 32, 8, 16, half> C_wmma_accumulator[32];
+  __shared__ half A_shared[10240];
+  __shared__ half B_shared[5120];
+  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 32, 8, 16, half, nvcuda::wmma::row_major> A_shared_wmma_matrix_a[4];
+  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 32, 8, 16, half, nvcuda::wmma::col_major> B_shared_wmma_matrix_b[8];
+  for (int i_c_outer_init = 0; i_c_outer_init < 4; ++i_c_outer_init) {
+    for (int j_c_outer_init = 0; j_c_outer_init < 8; ++j_c_outer_init) {
+      nvcuda::wmma::fill_fragment(C_wmma_accumulator[((i_c_outer_init * 8) + j_c_outer_init)], 0.000000e+00f);
+    }
+  }
+  for (int k_outer = 0; k_outer < 896; ++k_outer) {
+    __syncthreads();
+    *(uint4*)(A_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(A + ((((((((int)blockIdx.x) >> 6) * 7340032) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 6) * 7340032) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 917504));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 6) * 7340032) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 1835008));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 6) * 7340032) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 2752512));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 5120)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 6) * 7340032) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 3670016));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 6400)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 6) * 7340032) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 4587520));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 7680)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 6) * 7340032) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 5505024));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 8960)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 6) * 7340032) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 6422528));
+    *(uint4*)(B_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(B + ((((((((int)blockIdx.x) & 63) * 3670016) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 63) * 3670016) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 917504));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 63) * 3670016) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 1835008));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 63) * 3670016) + (((int)threadIdx.y) * 229376)) + ((((int)threadIdx.x) >> 2) * 28672)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 2752512));
+    __syncthreads();
+    for (int k_inner_outer = 0; k_inner_outer < 2; ++k_inner_outer) {
+      for (int ax0_outer = 0; ax0_outer < 4; ++ax0_outer) {
+        nvcuda::wmma::load_matrix_sync(A_shared_wmma_matrix_a[ax0_outer], (&(A_shared[((((((int)threadIdx.y) >> 1) * 5120) + (ax0_outer * 1280)) + (k_inner_outer * 16))])), 40);
+      }
+      for (int ax0_outer_1 = 0; ax0_outer_1 < 8; ++ax0_outer_1) {
+        nvcuda::wmma::load_matrix_sync(B_shared_wmma_matrix_b[ax0_outer_1], (&(B_shared[((((((int)threadIdx.y) & 1) * 2560) + (ax0_outer_1 * 320)) + (k_inner_outer * 16))])), 40);
+      }
+      for (int i_c_outer = 0; i_c_outer < 4; ++i_c_outer) {
+        for (int j_c_outer = 0; j_c_outer < 8; ++j_c_outer) {
+          nvcuda::wmma::mma_sync(C_wmma_accumulator[((i_c_outer * 8) + j_c_outer)], A_shared_wmma_matrix_a[i_c_outer], B_shared_wmma_matrix_b[j_c_outer], C_wmma_accumulator[((i_c_outer * 8) + j_c_outer)]);
+        }
+      }
+    }
+  }
+  __syncthreads();
+  for (int i_inner_inner_outer = 0; i_inner_inner_outer < 4; ++i_inner_inner_outer) {
+    for (int j_inner_inner_outer = 0; j_inner_inner_outer < 8; ++j_inner_inner_outer) {
+      nvcuda::wmma::store_matrix_sync((&(C[(((((((((int)blockIdx.x) >> 6) * 2097152) + ((((int)threadIdx.y) >> 1) * 1048576)) + (i_inner_inner_outer * 262144)) + ((((int)blockIdx.x) & 63) * 128)) + ((((int)threadIdx.y) & 1) * 64)) + (j_inner_inner_outer * 8))])), C_wmma_accumulator[((i_inner_inner_outer * 8) + j_inner_inner_outer)], 8192, nvcuda::wmma::mem_row_major);
+    }
+  }
+  __syncthreads();
+}
+
+
+top1: 14.756863594055176 	top10: 11.823103904724121
+--------------------------------------------------------------------------------
+best config: {<Node, roller_matmul>: {'block': [256, 128], 'warp': [128, 64], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+best latency: 11.823103904724121
+{<Node, roller_matmul>: {'block': [128, 128], 'warp': [64, 64], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+0.5679786801338196
+{<Node, roller_matmul>: {'block': [64, 256], 'warp': [32, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+0.6021119952201843
+{<Node, roller_matmul>: {'block': [256, 64], 'warp': [128, 32], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+0.6123520135879517
+{<Node, roller_matmul>: {'block': [64, 64], 'warp': [32, 32], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+0.6236159801483154
+{<Node, roller_matmul>: {'block': [64, 128], 'warp': [32, 64], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+0.7178239822387695
+{<Node, roller_matmul>: {'block': [128, 64], 'warp': [64, 32], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+0.7079253196716309
+{<Node, roller_matmul>: {'block': [128, 256], 'warp': [64, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+0.5908480286598206
+{<Node, roller_matmul>: {'block': [256, 128], 'warp': [128, 64], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+0.5729280114173889
+{<Node, roller_matmul>: {'block': [32, 64], 'warp': [16, 32], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+0.7800319790840149
+{<Node, roller_matmul>: {'block': [64, 32], 'warp': [32, 16], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+0.7866880297660828
+{<Node, roller_matmul>: {'block': [32, 128], 'warp': [16, 64], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+0.726527988910675
+{<Node, roller_matmul>: {'block': [128, 32], 'warp': [64, 16], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+0.7375360131263733
+{<Node, roller_matmul>: {'block': [256, 256], 'warp': [128, 128], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+1.3946880102157593
+{<Node, roller_matmul>: {'block': [32, 256], 'warp': [16, 128], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 264>}}}
+0.9333760142326355
+{<Node, roller_matmul>: {'block': [256, 32], 'warp': [128, 16], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+0.9136639833450317
+{<Node, roller_matmul>: {'block': [64, 512], 'warp': [32, 256], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 520>}}}
+0.7997440099716187
+{<Node, roller_matmul>: {'block': [512, 64], 'warp': [256, 32], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 72>}}}
+0.7552000284194946
+{<Node, roller_matmul>: {'block': [32, 32], 'warp': [16, 16], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [128], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}}
+1.03603196144104
+{<Node, roller_matmul>: {'block': [16, 128], 'warp': [8, 64], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+1.2193280458450317
+{<Node, roller_matmul>: {'block': [128, 16], 'warp': [64, 8], 'wmma': [32, 8, 16], 'use_cutlass': False, 'rstep': [64], 'use_tc': '80', 'strides': {2: <Stride, 0, 24>}}}
+1.230847954750061
+best code __global__ void __launch_bounds__(128) Fused(half* __restrict__ A, half* __restrict__ B, half* __restrict__ C) {
+  nvcuda::wmma::fragment<nvcuda::wmma::accumulator, 16, 16, 16, half> C_wmma_accumulator[16];
+  __shared__ half A_shared[5120];
+  __shared__ half B_shared[5120];
+  nvcuda::wmma::fragment<nvcuda::wmma::matrix_a, 16, 16, 16, half, nvcuda::wmma::row_major> A_shared_wmma_matrix_a[4];
+  nvcuda::wmma::fragment<nvcuda::wmma::matrix_b, 16, 16, 16, half, nvcuda::wmma::col_major> B_shared_wmma_matrix_b[4];
+  for (int i_c_outer_init = 0; i_c_outer_init < 4; ++i_c_outer_init) {
+    for (int j_c_outer_init = 0; j_c_outer_init < 4; ++j_c_outer_init) {
+      nvcuda::wmma::fill_fragment(C_wmma_accumulator[((i_c_outer_init * 4) + j_c_outer_init)], 0.000000e+00f);
+    }
+  }
+  for (int k_outer = 0; k_outer < 256; ++k_outer) {
+    __syncthreads();
+    *(uint4*)(A_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(A + ((((((((int)blockIdx.x) >> 3) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 3) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 262144));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 3) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 524288));
+    *(uint4*)(A_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(A + (((((((((int)blockIdx.x) >> 3) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 786432));
+    *(uint4*)(B_shared + (((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8))) = *(uint4*)(B + ((((((((int)blockIdx.x) & 7) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 1280)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 7) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 262144));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 2560)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 7) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 524288));
+    *(uint4*)(B_shared + ((((((int)threadIdx.y) * 320) + ((((int)threadIdx.x) >> 2) * 40)) + ((((int)threadIdx.x) & 3) * 8)) + 3840)) = *(uint4*)(B + (((((((((int)blockIdx.x) & 7) * 1048576) + (((int)threadIdx.y) * 65536)) + ((((int)threadIdx.x) >> 2) * 8192)) + (k_outer * 32)) + ((((int)threadIdx.x) & 3) * 8)) + 786432));
+    __syncthreads();
+    for (int k_inner_outer = 0; k_inner_outer < 2; ++k_inner_outer) {
+      for (int ax0_outer = 0; ax0_outer < 4; ++ax0_outer) {
+        nvcuda::wmma::load_matrix_sync(A_shared_wmma_matrix_a[ax0_outer], (&(A_shared[((((((int)threadIdx.y) >> 1) * 2560) + (ax0_outer * 640)) + (k_inner_outer * 16))])), 40);
+      }
+      for (int ax0_outer_1 = 0; ax0_outer_1 < 4; ++ax0_outer_1) {
+        nvcuda::wmma::load_matrix_sync(B_shared_wmma_matrix_b[ax0_outer_1], (&(B_shared[((((((int)threadIdx.y) & 1) * 2560) + (ax0_outer_1 * 640)) + (k_inner_outer * 16))])), 40);
+      }
+      for (int i_c_outer = 0; i_c_outer < 4; ++i_c_outer) {
+        for (int j_c_outer = 0; j_c_outer < 4; ++j_c_outer) {
+          nvcuda::wmma::mma_sync(C_wmma_accumulator[((i_c_outer * 4) + j_c_outer)], A_shared_wmma_matrix_a[i_c_outer], B_shared_wmma_matrix_b[j_c_outer], C_wmma_accumulator[((i_c_outer * 4) + j_c_outer)]);
+        }
+      }
+    }
+  }
+  __syncthreads();
+  for (int i_inner_inner_outer = 0; i_inner_inner_outer < 4; ++i_inner_inner_outer) {
+    for (int j_inner_inner_outer = 0; j_inner_inner_outer < 4; ++j_inner_inner_outer) {
+      nvcuda::wmma::store_matrix_sync((&(C[(((((((((int)blockIdx.x) >> 3) * 131072) + ((((int)threadIdx.y) >> 1) * 65536)) + (i_inner_inner_outer * 16384)) + ((((int)blockIdx.x) & 7) * 128)) + ((((int)threadIdx.y) & 1) * 64)) + (j_inner_inner_outer * 16))])), C_wmma_accumulator[((i_inner_inner_outer * 4) + j_inner_inner_outer)], 1024, nvcuda::wmma::mem_row_major);
+    }
+  }
+  __syncthreads();
+}
+
+
+top1: 0.5679786801338196 	top10: 0.5679786801338196
+--------------------------------------------------------------------------------
+best config: {<Node, roller_matmul>: {'block': [128, 128], 'warp': [64, 64], 'wmma': [16, 16, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 136>}}}
+best latency: 0.5679786801338196
+4096_8192_8192	2.8431360721588135
+4096_28672_8192	10.309120178222656
+4096_8192_28672	11.823103904724121
+4096_1024_8192	0.5679786801338196

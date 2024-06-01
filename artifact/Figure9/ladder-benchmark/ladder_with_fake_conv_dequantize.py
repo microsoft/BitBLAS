@@ -20,6 +20,7 @@ parser.add_argument('--cudnn', action="store_true")
 parser.add_argument('--nhwc', action="store_false")
 parser.add_argument('--bits', type=int, default=4)
 parser.add_argument('--convert_int', action="store_true")
+parser.add_argument('--convert_float', action="store_true")
 parser.add_argument('--format', type=str, default='int')
 parser.add_argument('--fake_quant', type=int, default=-1)
 parser.add_argument("--fast_decoding", action="store_true", help="Use fast decoding mode.", default=False)
@@ -34,12 +35,10 @@ fname = os.path.basename(__file__)
 fname = os.path.splitext(fname)[0]
 # create log path
 log_path = "progress/e2e/" + fname
-if async_propagation:
-    log_path += "_async"
 
 def run(prefix, arch, quant_type, quant_config, convert_int=False):
     onnx_model = onnx.load(osp.join(prefix, "model.onnx"))
-    mod, params = relay.frontend.from_onnx(onnx_model, convert_config={"use_welder_matmul": True})
+    mod, params = relay.frontend.from_onnx(onnx_model, convert_config={"use_welder_matmul": False})
     write_mod(mod, log_path, "load_from_onnx")
 
     if args.cublas:
@@ -85,7 +84,7 @@ def run(prefix, arch, quant_type, quant_config, convert_int=False):
     write_mod(mod, log_path, "LadderConvImplicitGemm")
     mod = ladder.relay.transform.WelderConvImplicitGemm()(mod)
     write_mod(mod, log_path, "WelderConvImplicitGemm")
-    mod = ladder.relay.transform.LadderFakeQuantConv(quant_config=quant_config, quant_type=quant_type, convert_int=convert_int)(mod)
+    mod = ladder.relay.transform.LadderFakeQuantConv(quant_config=quant_config, quant_type=quant_type, convert_int=convert_int, convert_float=args.convert_float)(mod)
     write_mod(mod, log_path, "LadderFakeQuantConv")
     mod = relay.transform.FoldConstant()(mod)
     write_mod(mod, log_path, "FoldConstant")
@@ -131,6 +130,7 @@ def run_from_prebuilt(prefix, arch):
     module = debug_executor.create(graph_json, loaded_lib, tvm.cuda(0))
     print(module.benchmark(tvm.cuda(0), min_repeat_ms=500, end_to_end=False))
     
+    
 if __name__ == "__main__":
     arch = ladder.arch.__getattribute__(args.arch)()
     model_name = osp.basename(args.prefix)
@@ -142,10 +142,13 @@ if __name__ == "__main__":
     }
     if args.fake_quant > -1 or args.convert_int:
         log_path += f'_fq_{args.fake_quant}_{quant_config["format"]}_{quant_config["bits"]}_ci_{args.convert_int}'
+        if args.convert_float:
+            log_path += f'_cf_{args.convert_float}'
     if args.async_propagation:
         log_path += "_async"
     prebuilt_path = args.prebuilt_path
     if prebuilt_path:
+        print(f"Running from prebuilt model: {prebuilt_path}")
         run_from_prebuilt(prebuilt_path, arch)
     else:
         run(args.prefix, arch, args.fake_quant, quant_config, args.convert_int)

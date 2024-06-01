@@ -1,0 +1,875 @@
+/root/Ladder/3rdparty/tvm/python/tvm/target/target.py:397: UserWarning: Try specifying cuda arch by adding 'arch=sm_xx' to your target.
+  warnings.warn("Try specifying cuda arch by adding 'arch=sm_xx' to your target.")
+629
+Output1786, 
+Output1785, 
+copy1784, 
+transpose1783, add1782, multiply1781, divide1780, 
+sqrt1779, add1778, Constant1777, mean1776, 
+multiply1775, subtract1774, 
+mean1773, 
+multiply1771, add1772, Constant1770, add1769, reshape1768, 
+cast1767, ladder.quant_linear1766, 
+cast1765, cast1764, reshape1763, multiply1762, sigmoid1761, 
+add1760, reshape1759, 
+cast1758, ladder.quant_linear1757, 
+cast1756, cast1755, reshape1754, add1753, multiply1752, divide1751, 
+sqrt1750, add1749, Constant1748, mean1747, 
+multiply1746, subtract1745, 
+mean1744, 
+transpose1742, add1741, add1743, reshape1740, transpose1739, reshape1738, 
+welder.C1DImplicitGemm1737, 
+multiply1736, sigmoid1735, 
+add1734, nn.conv1d1733, 
+multiply1732, sigmoid1731, strided_slice1730, strided_slice1729, 
+add1728, transpose1726, reshape1727, reshape1725, 
+welder.C1DImplicitGemm1724, 
+transpose1723, add1722, multiply1721, divide1720, 
+sqrt1719, add1718, Constant1717, mean1716, 
+multiply1715, subtract1714, 
+mean1713, transpose1712, 
+add1711, reshape1710, add1709, 
+Opaque1708, 
+reshape1707, transpose1706, 
+welder.matmul1705, 
+transpose1704, reshape1703, strided_slice1702, 
+divide1701, 
+sum1700, 
+exp1699, subtract1698, 
+max1697, 
+add1696, 
+multiply1691, Constant1690, welder.matmul1689, 
+transpose1688, reshape1687, strided_slice1686, 
+divide1685, Constant1684, transpose1683, reshape1682, strided_slice1681, 
+add1680, reshape1679, 
+cast1678, ladder.quant_linear1677, 
+cast1676, reshape1674, cast1675, multiply1672, add1673, divide1671, 
+add1669, sqrt1670, Constant1668, mean1667, 
+multiply1666, subtract1665, 
+mean1664, 
+multiply1662, Constant1661, add1663, add1660, reshape1659, 
+cast1658, ladder.quant_linear1657, 
+cast1656, cast1655, reshape1654, multiply1653, sigmoid1652, 
+add1651, reshape1650, 
+cast1649, ladder.quant_linear1648, 
+cast1647, cast1646, reshape1645, add1644, multiply1643, divide1642, 
+sqrt1641, add1640, Constant1639, mean1638, 
+multiply1637, subtract1636, 
+mean1635, 
+add1634, multiply1633, divide1632, 
+sqrt1631, add1630, Constant1629, mean1628, 
+multiply1627, subtract1626, 
+mean1625, 
+add1624, multiply1623, Constant1622, add1621, reshape1620, 
+cast1619, ladder.quant_linear1618, 
+cast1617, reshape1615, multiply1614, cast1616, sigmoid1613, 
+add1612, reshape1611, 
+cast1610, ladder.quant_linear1609, 
+cast1608, cast1607, reshape1606, multiply1604, add1605, divide1603, 
+sqrt1602, add1601, Constant1600, mean1599, 
+multiply1598, subtract1597, 
+mean1596, 
+add1595, add1593, reshape1592, transpose1591, transpose1594, reshape1590, 
+welder.C1DImplicitGemm1589, 
+multiply1588, sigmoid1587, 
+add1586, nn.conv1d1585, 
+multiply1584, sigmoid1583, strided_slice1582, strided_slice1581, 
+add1580, transpose1578, reshape1579, reshape1577, 
+welder.C1DImplicitGemm1576, 
+transpose1575, add1574, multiply1573, divide1572, 
+sqrt1571, add1570, Constant1569, mean1568, 
+multiply1567, subtract1566, 
+mean1565, transpose1564, 
+add1563, reshape1562, add1561, 
+Opaque1560, 
+reshape1559, transpose1558, 
+welder.matmul1557, 
+transpose1556, reshape1555, strided_slice1554, 
+divide1553, 
+sum1552, 
+exp1551, subtract1550, 
+max1549, 
+cast729, cast728, reshape727, multiply726, sigmoid725, 
+add724, reshape723, 
+cast720, reshape718, cast719, add717, multiply716, divide715, 
+multiply710, subtract709, 
+add707, transpose706, add705, reshape704, transpose703, reshape702, 
+multiply700, sigmoid699, 
+sigmoid695, multiply696, strided_slice694, strided_slice693, 
+reshape691, add692, transpose690, reshape689, 
+transpose687, add686, multiply685, divide684, 
+multiply679, subtract678, 
+add675, reshape674, add673, 
+reshape671, transpose670, 
+transpose668, reshape667, strided_slice666, 
+divide665, 
+exp663, subtract662, 
+add660, 
+transpose652, reshape651, strided_slice650, 
+divide649, Constant648, transpose647, reshape646, strided_slice645, 
+add644, reshape643, 
+reshape638, cast640, add637, cast639, multiply636, divide635, 
+multiply630, subtract629, 
+add627, multiply626, Constant625, add624, reshape623, 
+cast620, cast619, reshape618, multiply617, sigmoid616, 
+add615, reshape614, 
+cast611, cast610, reshape609, multiply607, add608, divide606, 
+multiply601, subtract600, 
+multiply597, add598, divide596, 
+multiply591, subtract590, 
+add588, multiply587, Constant586, add585, reshape584, 
+cast581, cast580, reshape579, multiply578, sigmoid577, 
+add576, reshape575, 
+cast572, cast571, reshape570, add569, multiply568, divide567, 
+multiply562, subtract561, 
+add559, transpose558, add557, reshape556, transpose555, reshape554, 
+multiply552, sigmoid551, 
+multiply548, sigmoid547, strided_slice546, strided_slice545, 
+add544, transpose542, reshape543, reshape541, 
+transpose539, add538, multiply537, divide536, 
+multiply531, subtract530, 
+add527, reshape526, add525, 
+reshape523, transpose522, 
+transpose520, reshape519, strided_slice518, 
+divide517, 
+exp515, subtract514, 
+add512, 
+transpose504, reshape503, strided_slice502, 
+divide501, Constant500, transpose499, reshape498, strided_slice497, 
+add496, reshape495, 
+cast492, cast491, reshape490, add489, multiply488, divide487, 
+multiply482, subtract481, 
+add479, multiply478, Constant477, add476, reshape475, 
+cast472, reshape470, cast471, multiply469, sigmoid468, 
+cast731, ladder.quant_linear730, 
+add467, reshape466, 
+cast722, ladder.quant_linear721, 
+cast463, cast462, reshape461, add460, multiply459, divide458, 
+sqrt714, add713, Constant712, mean711, 
+multiply453, subtract452, 
+mean708, 
+add450, multiply449, divide448, 
+welder.C1DImplicitGemm701, 
+multiply443, subtract442, 
+add698, nn.conv1d697, 
+add440, multiply439, Constant438, add437, reshape436, 
+welder.C1DImplicitGemm688, 
+cast432, reshape431, cast433, multiply430, sigmoid429, 
+add682, Constant681, sqrt683, mean680, 
+add428, reshape427, 
+mean677, transpose676, 
+cast424, cast423, multiply420, reshape422, add421, divide419, 
+Opaque672, 
+multiply414, subtract413, 
+welder.matmul669, 
+add411, transpose410, add409, reshape408, transpose407, reshape406, 
+sum664, 
+multiply404, sigmoid403, 
+max661, 
+multiply400, sigmoid399, strided_slice398, strided_slice397, 
+multiply655, Constant654, welder.matmul653, 
+add396, reshape395, transpose394, reshape393, 
+cast642, ladder.quant_linear641, 
+transpose391, multiply389, add390, divide388, 
+sqrt634, add633, Constant632, mean631, 
+multiply383, subtract382, 
+mean628, 
+add379, reshape378, add377, 
+cast622, ladder.quant_linear621, 
+reshape375, transpose374, 
+cast613, ladder.quant_linear612, 
+transpose372, reshape371, strided_slice370, 
+sqrt605, Constant603, add604, mean602, 
+divide369, 
+multiply3, subtract2, 
+sqrt151, Constant149, add150, mean148, 
+multiply1450, subtract1449, 
+transpose0, 
+mean145, 
+add1447, transpose1446, add1445, transpose1443, reshape1444, reshape1442, 
+cast139, ladder.quant_linear138, 
+multiply1440, sigmoid1439, 
+cast130, ladder.quant_linear129, 
+multiply1436, sigmoid1435, strided_slice1434, strided_slice1433, 
+sqrt122, add121, Constant120, mean119, 
+add1432, reshape1431, transpose1430, reshape1429, 
+mean116, 
+transpose1427, add1426, multiply1425, divide1424, 
+welder.C1DImplicitGemm109, 
+multiply1419, subtract1418, 
+add106, nn.conv1d105, 
+add1415, reshape1414, add1413, 
+welder.C1DImplicitGemm96, 
+reshape1411, transpose1410, 
+sqrt91, add90, Constant89, mean88, 
+transpose1408, reshape1407, strided_slice1406, 
+cast167, cast166, reshape165, add164, multiply163, divide162, 
+multiply359, Constant358, welder.matmul357, 
+mean85, transpose84, 
+divide1405, 
+mean30, 
+add1367, multiply1366, Constant1365, add1364, reshape1363, 
+cast24, ladder.quant_linear23, 
+cast1360, cast1359, reshape1358, multiply1357, sigmoid1356, 
+cast169, ladder.quant_linear168, 
+cast1469, reshape1467, multiply1466, cast1468, sigmoid1465, 
+cast22, cast21, reshape20, multiply19, sigmoid18, 
+sqrt161, add160, Constant159, mean158, 
+add1464, reshape1463, 
+add17, reshape16, 
+multiply32, subtract31, 
+mean184, 
+multiply1479, subtract1478, 
+mean264, 
+transpose95, add94, multiply93, divide92, 
+cast15, ladder.quant_linear14, 
+add1355, reshape1354, 
+mean155, 
+cast1460, cast1459, reshape1458, add1457, multiply1456, divide1455, 
+cast13, cast12, reshape11, add10, multiply9, divide8, 
+multiply28, add29, Constant27, add26, reshape25, 
+cast178, ladder.quant_linear177, 
+add1476, multiply1475, Constant1474, add1473, reshape1472, 
+welder.C1DImplicitGemm257, 
+add1548, 
+multiply87, subtract86, 
+multiply104, sigmoid103, strided_slice102, strided_slice101, 
+cast278, ladder.quant_linear277, 
+sqrt7, add6, Constant5, mean4, 
+cast1351, cast1350, reshape1349, add1348, multiply1347, divide1346, 
+reshape79, transpose78, 
+welder.C1DImplicitGemm244, 
+divide1537, Constant1536, transpose1535, reshape1534, strided_slice1533, 
+add254, nn.conv1d253, 
+transpose1540, reshape1539, strided_slice1538, 
+add83, reshape82, add81, 
+add100, reshape99, transpose98, reshape97, 
+sqrt270, add269, Constant268, mean267, 
+mean1, 
+multiply1341, subtract1340, 
+transpose76, reshape75, strided_slice74, 
+sqrt239, add238, Constant237, mean236, 
+add1532, reshape1531, 
+cast287, ladder.quant_linear286, 
+multiply108, sigmoid107, 
+sqrt36, add35, Constant34, mean33, 
+multiply1370, subtract1369, 
+sqrt190, Constant188, add189, mean187, 
+multiply1485, add1486, divide1484, 
+cast42, cast41, reshape40, add39, multiply38, divide37, 
+mean293, 
+add115, transpose114, add113, reshape112, transpose111, reshape110, 
+cast44, ladder.quant_linear43, 
+cast1380, cast1379, reshape1378, add1377, multiply1376, divide1375, 
+cast198, ladder.quant_linear197, 
+multiply1489, subtract1488, 
+add46, reshape45, 
+multiply211, Constant210, welder.matmul209, 
+cast1498, reshape1497, add1496, multiply1495, cast1499, divide1494, 
+divide51, Constant50, transpose49, reshape48, strided_slice47, 
+add68, 
+welder.matmul225, 
+add1515, Constant1513, add1512, multiply1514, reshape1511, 
+max217, 
+add1503, reshape1502, 
+transpose54, reshape53, strided_slice52, 
+exp71, subtract70, 
+Opaque228, 
+multiply1518, subtract1517, 
+add298, Constant297, sqrt299, mean296, 
+multiply118, subtract117, 
+multiply57, Constant56, welder.matmul55, 
+add1384, reshape1383, 
+sum220, 
+cast1508, reshape1506, multiply1505, cast1507, sigmoid1504, 
+multiply1695, Constant1694, where1693, multiply1547, Constant1546, multiply1399, multiply1251, Constant1248, Constant1102, where1101, where1249, Constant1100, multiply955, where953, multiply807, where213, where509, Constant954, Constant952, Constant658, Constant1544, broadcast_to61, where65, Constant214, multiply215, Constant212, Constant508, reshape62, greater_equal59, multiply1103, Constant360, Constant1250, Constant64, Constant66, where361, Constant510, Constant362, multiply363, cast63, multiply511, reshape60, Constant656, where1545, where657, multiply659, expand_dims58, Constant804, where1397, where805, Constant1692, Constant1398, Constant1396, multiply67, Constant806, 
+divide73, 
+mean233, transpose232, 
+cast1528, reshape1526, add1525, cast1527, multiply1524, divide1523, 
+mean303, 
+cast127, cast128, reshape126, add125, multiply124, divide123, 
+max69, 
+divide1389, Constant1388, transpose1387, reshape1386, strided_slice1385, 
+sqrt309, add308, Constant307, mean306, 
+add132, reshape131, 
+multiply147, subtract146, 
+mean332, 
+sum72, 
+transpose1392, reshape1391, strided_slice1390, 
+cast317, ladder.quant_linear316, 
+cast137, cast136, reshape135, multiply134, sigmoid133, 
+add154, multiply153, divide152, 
+sqrt338, add337, Constant336, mean335, 
+welder.matmul77, 
+add1400, 
+cast326, ladder.quant_linear325, 
+add144, multiply143, Constant142, add141, reshape140, 
+multiply157, subtract156, 
+cast346, ladder.quant_linear345, 
+Opaque80, 
+exp1403, subtract1402, 
+max365, 
+add171, reshape170, 
+sum368, 
+cast176, cast175, reshape174, multiply173, sigmoid172, 
+welder.matmul373, 
+add183, multiply182, add180, Constant181, reshape179, 
+Opaque376, 
+multiply186, subtract185, 
+mean381, transpose380, 
+cast196, cast195, reshape194, add193, multiply192, divide191, 
+sqrt387, add386, Constant385, mean384, 
+add200, reshape199, 
+welder.C1DImplicitGemm392, 
+divide205, Constant204, transpose203, reshape202, strided_slice201, 
+add402, nn.conv1d401, 
+transpose208, reshape207, strided_slice206, 
+welder.C1DImplicitGemm405, 
+add216, 
+mean412, 
+exp219, subtract218, 
+sqrt418, add417, Constant416, mean415, 
+divide221, 
+cast426, ladder.quant_linear425, 
+transpose224, reshape223, strided_slice222, 
+cast435, ladder.quant_linear434, 
+reshape227, transpose226, 
+mean441, 
+add231, reshape230, add229, 
+sqrt447, add446, Constant445, mean444, 
+multiply235, subtract234, 
+mean451, 
+transpose243, add242, multiply241, divide240, 
+sqrt457, add456, Constant455, mean454, 
+reshape247, add248, transpose246, reshape245, 
+cast465, ladder.quant_linear464, 
+multiply252, sigmoid251, strided_slice250, strided_slice249, 
+cast474, ladder.quant_linear473, 
+multiply256, sigmoid255, 
+mean480, 
+add263, transpose262, add261, reshape260, transpose259, reshape258, 
+sqrt486, add485, Constant484, mean483, 
+multiply266, subtract265, 
+cast494, ladder.quant_linear493, 
+cast276, reshape274, add273, multiply272, cast275, divide271, 
+multiply507, Constant506, welder.matmul505, 
+add280, reshape279, 
+max513, 
+cast285, reshape283, cast284, multiply282, sigmoid281, 
+sum516, 
+multiply291, Constant290, add289, add292, reshape288, 
+welder.matmul521, 
+multiply295, subtract294, 
+Opaque524, 
+add302, multiply301, divide300, 
+mean529, transpose528, 
+multiply305, subtract304, 
+add534, sqrt535, Constant533, mean532, 
+cast315, cast314, reshape313, add312, multiply311, divide310, 
+welder.C1DImplicitGemm540, 
+add319, reshape318, 
+add550, nn.conv1d549, 
+cast324, reshape322, cast323, multiply321, sigmoid320, 
+welder.C1DImplicitGemm553, 
+multiply330, add331, Constant329, add328, reshape327, 
+mean560, 
+multiply334, subtract333, 
+sqrt566, add565, Constant564, mean563, 
+cast344, reshape342, add341, cast343, multiply340, divide339, 
+cast574, ladder.quant_linear573, 
+add348, reshape347, 
+cast583, ladder.quant_linear582, 
+divide353, Constant352, reshape350, transpose351, strided_slice349, 
+mean589, 
+transpose356, reshape355, strided_slice354, 
+sqrt595, add594, Constant593, mean592, 
+add364, 
+mean599, 
+exp367, subtract366, 
+add736, Constant734, add733, multiply735, reshape732, 
+mean737, 
+multiply739, subtract738, 
+add742, Constant741, sqrt743, mean740, 
+add746, multiply745, divide744, 
+mean747, 
+multiply749, subtract748, 
+sqrt753, add752, Constant751, mean750, 
+cast759, cast758, reshape757, add756, multiply755, divide754, 
+cast761, ladder.quant_linear760, 
+add763, reshape762, 
+cast768, cast767, reshape766, multiply765, sigmoid764, 
+cast770, ladder.quant_linear769, 
+add775, multiply774, Constant773, add772, reshape771, 
+mean776, 
+multiply778, subtract777, 
+sqrt782, add781, Constant780, mean779, 
+cast787, reshape786, add785, cast788, multiply784, divide783, 
+cast790, ladder.quant_linear789, 
+add792, reshape791, 
+divide797, Constant796, transpose795, reshape794, strided_slice793, 
+transpose800, reshape799, strided_slice798, 
+multiply803, Constant802, welder.matmul801, 
+add808, 
+max809, 
+exp811, subtract810, 
+sum812, 
+divide813, 
+transpose816, reshape815, strided_slice814, 
+welder.matmul817, 
+reshape819, transpose818, 
+Opaque820, 
+add823, reshape822, add821, 
+mean825, transpose824, 
+multiply827, subtract826, 
+sqrt831, add830, Constant829, mean828, 
+transpose835, add834, multiply833, divide832, 
+welder.C1DImplicitGemm836, 
+reshape839, transpose838, add840, reshape837, 
+multiply844, sigmoid843, strided_slice842, strided_slice841, 
+add846, nn.conv1d845, 
+multiply848, sigmoid847, 
+welder.C1DImplicitGemm849, 
+add855, transpose854, add853, reshape852, transpose851, reshape850, 
+mean856, 
+multiply858, subtract857, 
+sqrt862, add861, Constant860, mean859, 
+cast868, cast867, reshape866, add865, multiply864, divide863, 
+cast870, ladder.quant_linear869, 
+add872, reshape871, 
+cast876, cast877, reshape875, multiply874, sigmoid873, 
+cast879, ladder.quant_linear878, 
+multiply883, add884, Constant882, add881, reshape880, 
+mean885, 
+multiply887, subtract886, 
+sqrt891, add890, Constant889, mean888, 
+add894, multiply893, divide892, 
+mean895, 
+multiply897, subtract896, 
+sqrt901, add900, Constant899, mean898, 
+cast907, cast906, reshape905, add904, multiply903, divide902, 
+cast909, ladder.quant_linear908, 
+add911, reshape910, 
+cast916, cast915, reshape914, multiply913, sigmoid912, 
+cast918, ladder.quant_linear917, 
+add923, Constant921, add920, multiply922, reshape919, 
+mean924, 
+multiply926, subtract925, 
+sqrt930, add929, Constant928, mean927, 
+cast935, reshape934, cast936, add933, multiply932, divide931, 
+cast938, ladder.quant_linear937, 
+add940, reshape939, 
+divide945, Constant944, transpose943, reshape942, strided_slice941, 
+transpose948, reshape947, strided_slice946, 
+multiply951, Constant950, welder.matmul949, 
+add956, 
+max957, 
+exp959, subtract958, 
+sum960, 
+divide961, 
+transpose964, reshape963, strided_slice962, 
+welder.matmul965, 
+reshape967, transpose966, 
+Opaque968, 
+reshape970, add971, add969, 
+mean973, transpose972, 
+multiply975, subtract974, 
+sqrt979, add978, Constant977, mean976, 
+transpose983, add982, multiply981, divide980, 
+welder.C1DImplicitGemm984, 
+add988, reshape987, transpose986, reshape985, 
+sigmoid991, strided_slice990, multiply992, strided_slice989, 
+add994, nn.conv1d993, 
+multiply996, sigmoid995, 
+welder.C1DImplicitGemm997, 
+add1003, add1001, transpose1002, reshape1000, transpose999, reshape998, 
+mean1004, 
+multiply1006, subtract1005, 
+sqrt1010, add1009, Constant1008, mean1007, 
+cast1015, add1013, cast1016, reshape1014, multiply1012, divide1011, 
+cast1018, ladder.quant_linear1017, 
+add1020, reshape1019, 
+cast1024, reshape1023, cast1025, multiply1022, sigmoid1021, 
+cast1027, ladder.quant_linear1026, 
+add1032, multiply1031, Constant1030, add1029, reshape1028, 
+mean1033, 
+multiply1035, subtract1034, 
+sqrt1039, add1038, Constant1037, mean1036, 
+add1042, multiply1041, divide1040, 
+mean1043, 
+multiply1045, subtract1044, 
+sqrt1049, add1048, Constant1047, mean1046, 
+cast1054, add1052, cast1055, multiply1051, reshape1053, divide1050, 
+cast1057, ladder.quant_linear1056, 
+add1059, reshape1058, 
+cast1064, cast1063, reshape1062, multiply1061, sigmoid1060, 
+cast1066, ladder.quant_linear1065, 
+add1071, multiply1070, Constant1069, add1068, reshape1067, 
+mean1072, 
+multiply1074, subtract1073, 
+sqrt1078, add1077, Constant1076, mean1075, 
+cast1084, cast1083, reshape1082, add1081, multiply1080, divide1079, 
+cast1086, ladder.quant_linear1085, 
+add1088, reshape1087, 
+divide1093, transpose1091, reshape1090, Constant1092, strided_slice1089, 
+transpose1096, reshape1095, strided_slice1094, 
+multiply1099, Constant1098, welder.matmul1097, 
+add1104, 
+max1105, 
+exp1107, subtract1106, 
+sum1108, 
+divide1109, 
+transpose1112, reshape1111, strided_slice1110, 
+welder.matmul1113, 
+reshape1115, transpose1114, 
+Opaque1116, 
+add1119, reshape1118, add1117, 
+mean1121, transpose1120, 
+multiply1123, subtract1122, 
+add1126, Constant1125, sqrt1127, mean1124, 
+transpose1131, multiply1129, add1130, divide1128, 
+welder.C1DImplicitGemm1132, 
+add1136, reshape1135, transpose1134, reshape1133, 
+multiply1140, sigmoid1139, strided_slice1138, strided_slice1137, 
+add1142, nn.conv1d1141, 
+multiply1144, sigmoid1143, 
+welder.C1DImplicitGemm1145, 
+add1151, transpose1150, add1149, reshape1148, transpose1147, reshape1146, 
+mean1152, 
+multiply1154, subtract1153, 
+sqrt1158, add1157, Constant1156, mean1155, 
+cast1164, cast1163, reshape1162, multiply1160, add1161, divide1159, 
+cast1166, ladder.quant_linear1165, 
+add1168, reshape1167, 
+cast1173, cast1172, reshape1171, multiply1170, sigmoid1169, 
+cast1175, ladder.quant_linear1174, 
+add1180, multiply1179, Constant1178, add1177, reshape1176, 
+mean1181, 
+multiply1183, subtract1182, 
+sqrt1187, add1186, Constant1185, mean1184, 
+add1190, multiply1189, divide1188, 
+mean1191, 
+multiply1193, subtract1192, 
+sqrt1197, add1196, Constant1195, mean1194, 
+cast1203, cast1202, reshape1201, add1200, multiply1199, divide1198, 
+cast1205, ladder.quant_linear1204, 
+add1207, reshape1206, 
+cast1211, multiply1209, cast1212, reshape1210, sigmoid1208, 
+cast1214, ladder.quant_linear1213, 
+add1219, multiply1218, Constant1217, add1216, reshape1215, 
+mean1220, 
+multiply1222, subtract1221, 
+sqrt1226, add1225, Constant1224, mean1223, 
+cast1232, cast1231, reshape1230, add1229, multiply1228, divide1227, 
+cast1234, ladder.quant_linear1233, 
+add1236, reshape1235, 
+divide1241, Constant1240, transpose1239, reshape1238, strided_slice1237, 
+reshape1243, transpose1244, strided_slice1242, 
+multiply1247, Constant1246, welder.matmul1245, 
+add1252, 
+max1253, 
+exp1255, subtract1254, 
+sum1256, 
+divide1257, 
+transpose1260, reshape1259, strided_slice1258, 
+welder.matmul1261, 
+reshape1263, transpose1262, 
+Opaque1264, 
+add1267, reshape1266, add1265, 
+mean1269, transpose1268, 
+multiply1271, subtract1270, 
+sqrt1275, add1274, Constant1273, mean1272, 
+transpose1279, add1278, multiply1277, divide1276, 
+welder.C1DImplicitGemm1280, 
+add1284, reshape1283, transpose1282, reshape1281, 
+multiply1288, sigmoid1287, strided_slice1286, strided_slice1285, 
+add1290, nn.conv1d1289, 
+multiply1292, sigmoid1291, 
+welder.C1DImplicitGemm1293, 
+transpose1298, add1297, reshape1296, transpose1295, add1299, reshape1294, 
+mean1300, 
+multiply1302, subtract1301, 
+sqrt1306, add1305, Constant1304, mean1303, 
+cast1312, cast1311, reshape1310, add1309, multiply1308, divide1307, 
+cast1314, ladder.quant_linear1313, 
+add1316, reshape1315, 
+cast1321, cast1320, reshape1319, multiply1318, sigmoid1317, 
+cast1323, ladder.quant_linear1322, 
+add1328, multiply1327, Constant1326, add1325, reshape1324, 
+mean1329, 
+multiply1331, subtract1330, 
+sqrt1335, add1334, Constant1333, mean1332, 
+add1338, multiply1337, divide1336, 
+mean1339, 
+add1344, Constant1343, sqrt1345, mean1342, 
+cast1353, ladder.quant_linear1352, 
+cast1362, ladder.quant_linear1361, 
+mean1368, 
+sqrt1374, add1373, Constant1372, mean1371, 
+cast1382, ladder.quant_linear1381, 
+multiply1395, Constant1394, welder.matmul1393, 
+max1401, 
+sum1404, 
+welder.matmul1409, 
+Opaque1412, 
+mean1417, transpose1416, 
+sqrt1423, Constant1421, add1422, mean1420, 
+welder.C1DImplicitGemm1428, 
+add1438, nn.conv1d1437, 
+welder.C1DImplicitGemm1441, 
+mean1448, 
+sqrt1454, add1453, Constant1452, mean1451, 
+cast1462, ladder.quant_linear1461, 
+cast1471, ladder.quant_linear1470, 
+mean1477, 
+sqrt1483, add1482, Constant1481, mean1480, 
+mean1487, 
+sqrt1493, add1492, Constant1491, mean1490, 
+cast1501, ladder.quant_linear1500, 
+cast1510, ladder.quant_linear1509, 
+mean1516, 
+add1521, sqrt1522, Constant1520, mean1519, 
+cast1530, ladder.quant_linear1529, 
+multiply1543, Constant1542, welder.matmul1541, 
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+ladder.quant_linear ladder.quant_linear set consistent
+Processing:   0%|          | 0/981 [00:00<?, ?it/s]                                                   2024-05-14 04:55:48 [ladder:INFO]: Tuning ['transpose_0', 'mean_1', 'subtract_multiply_2', 'mean_add_sqrt_3', 'divide_multiply_add_reshape_cast_cast_4', 'ladder_quant_linear_cast_5', 'reshape_add_6', 'sigmoid_multiply_reshape_cast_cast_7', 'ladder_quant_linear_cast_8', 'reshape_add_multiply_add_9']
+Processing:   0%|          | 0/981 [00:00<?, ?it/s]                                                   2024-05-14 04:55:48 [ladder:INFO]: Tuning ['transpose_0']
+Processing:   0%|          | 0/981 [00:00<?, ?it/s]                                                   2024-05-14 04:56:10 [ladder:INFO]: result: 0.09366904944181442
+Processing:   0%|          | 0/981 [00:21<?, ?it/s]                                                   2024-05-14 04:56:10 [ladder:INFO]: Fusion group created: 0 ['transpose_0']
+Processing:   0%|          | 0/981 [00:21<?, ?it/s]Processing:   0%|          | 2/981 [00:21<2:57:13, 10.86s/it]                                                             2024-05-14 04:56:10 [ladder:INFO]: Tuning ['mean_1', 'subtract_multiply_2']
+Processing:   0%|          | 2/981 [00:21<2:57:13, 10.86s/it]                                                             2024-05-14 04:56:10 [ladder:INFO]: Tuning ['mean_1', 'subtract_multiply_2']
+Processing:   0%|          | 2/981 [00:21<2:57:13, 10.86s/it]                                                             2024-05-14 04:56:14 [ladder:INFO]: result: 0.07811657339334488
+Processing:   0%|          | 2/981 [00:26<2:57:13, 10.86s/it]                                                             2024-05-14 04:56:14 [ladder:INFO]: Tuning ['mean_1']
+Processing:   0%|          | 2/981 [00:26<2:57:13, 10.86s/it]                                                             2024-05-14 04:56:28 [ladder:INFO]: result: 0.043776001781225204
+Processing:   0%|          | 2/981 [00:40<2:57:13, 10.86s/it]                                                             2024-05-14 04:56:28 [ladder:INFO]: Tuning ['subtract_multiply_2']
+Processing:   0%|          | 2/981 [00:40<2:57:13, 10.86s/it]                                                             2024-05-14 04:56:44 [ladder:INFO]: result: 0.1414826661348343
+Processing:   0%|          | 2/981 [00:56<2:57:13, 10.86s/it]                                                             2024-05-14 04:56:44 [ladder:INFO]: Tuning ['mean_1', 'subtract_multiply_2', 'mean_add_sqrt_3', 'divide_multiply_add_reshape_cast_cast_4']
+Processing:   0%|          | 2/981 [00:56<2:57:13, 10.86s/it]                                                             2024-05-14 04:56:48 [ladder:INFO]: result: 1.0821632146835327
+Processing:   0%|          | 2/981 [01:00<2:57:13, 10.86s/it]                                                             2024-05-14 04:56:48 [ladder:INFO]: Tuning ['mean_add_sqrt_3']
+Processing:   0%|          | 2/981 [01:00<2:57:13, 10.86s/it]                                                             2024-05-14 04:57:03 [ladder:INFO]: result: 0.04364800080657005
+Processing:   0%|          | 2/981 [01:14<2:57:13, 10.86s/it]                                                             2024-05-14 04:57:03 [ladder:INFO]: Tuning ['divide_multiply_add_reshape_cast_cast_4']
+Processing:   0%|          | 2/981 [01:14<2:57:13, 10.86s/it]                                                             2024-05-14 04:57:24 [ladder:INFO]: result: 0.06846171617507935
+Processing:   0%|          | 2/981 [01:36<2:57:13, 10.86s/it]                                                             2024-05-14 04:57:24 [ladder:INFO]: Tuning ['mean_1', 'subtract_multiply_2', 'mean_add_sqrt_3']
+Processing:   0%|          | 2/981 [01:36<2:57:13, 10.86s/it]                                                             2024-05-14 04:57:36 [ladder:INFO]: result: 0.1353728026151657
+Processing:   0%|          | 2/981 [01:48<2:57:13, 10.86s/it]                                                             2024-05-14 04:57:36 [ladder:INFO]: Fusion group created: 1 ['mean_1', 'subtract_multiply_2']
+Processing:   0%|          | 2/981 [01:48<2:57:13, 10.86s/it]Processing:   0%|          | 3/981 [01:48<11:29:25, 42.30s/it]                                                              2024-05-14 04:57:36 [ladder:INFO]: Tuning ['mean_add_sqrt_3', 'divide_multiply_add_reshape_cast_cast_4']
+Processing:   0%|          | 3/981 [01:48<11:29:25, 42.30s/it]                                                              2024-05-14 04:57:42 [ladder:INFO]: result: 0.27955201268196106
+Processing:   0%|          | 3/981 [01:54<11:29:25, 42.30s/it]                                                              2024-05-14 04:57:42 [ladder:INFO]: Tuning ['mean_add_sqrt_3', 'divide_multiply_add_reshape_cast_cast_4']
+Processing:   0%|          | 3/981 [01:54<11:29:25, 42.30s/it]                                                              2024-05-14 04:57:49 [ladder:INFO]: result: 0.008704000152647495
+Processing:   0%|          | 3/981 [02:00<11:29:25, 42.30s/it]                                                              2024-05-14 04:57:49 [ladder:INFO]: Tuning ['mean_add_sqrt_3', 'divide_multiply_add_reshape_cast_cast_4', 'ladder_quant_linear_cast_5']
+Processing:   0%|          | 3/981 [02:00<11:29:25, 42.30s/it]                                                              2024-05-14 04:57:56 [ladder:INFO]: result: 2.059878349304199
+Processing:   0%|          | 3/981 [02:07<11:29:25, 42.30s/it]                                                              2024-05-14 04:57:56 [ladder:INFO]: Tuning ['ladder_quant_linear_cast_5']
+Processing:   0%|          | 3/981 [02:07<11:29:25, 42.30s/it]                                                              2024-05-14 04:58:01 [ladder:INFO]: result: 71.76110076904297
+Processing:   0%|          | 3/981 [02:12<11:29:25, 42.30s/it]                                                              2024-05-14 04:58:01 [ladder:INFO]: Tuning ['mean_add_sqrt_3', 'divide_multiply_add_reshape_cast_cast_4', 'ladder_quant_linear_cast_5', 'reshape_add_6']
+Processing:   0%|          | 3/981 [02:12<11:29:25, 42.30s/it]                                                              2024-05-14 04:58:01 [ladder:INFO]: Fusion group created: 2 ['mean_add_sqrt_3', 'divide_multiply_add_reshape_cast_cast_4', 'ladder_quant_linear_cast_5']
+Processing:   0%|          | 3/981 [02:12<11:29:25, 42.30s/it]Processing:   1%|          | 5/981 [02:12<7:03:13, 26.02s/it]                                                              2024-05-14 04:58:01 [ladder:INFO]: Tuning ['reshape_add_6', 'sigmoid_multiply_reshape_cast_cast_7']
+Processing:   1%|          | 5/981 [02:12<7:03:13, 26.02s/it]                                                             2024-05-14 04:58:06 [ladder:INFO]: result: 0.0793600007891655
+Processing:   1%|          | 5/981 [02:17<7:03:13, 26.02s/it]                                                             2024-05-14 04:58:06 [ladder:INFO]: Tuning ['reshape_add_6']
+Processing:   1%|          | 5/981 [02:17<7:03:13, 26.02s/it]                                                             2024-05-14 04:58:21 [ladder:INFO]: result: 0.08683519810438156
+Processing:   1%|          | 5/981 [02:33<7:03:13, 26.02s/it]                                                             2024-05-14 04:58:21 [ladder:INFO]: Tuning ['sigmoid_multiply_reshape_cast_cast_7']
+Processing:   1%|          | 5/981 [02:33<7:03:13, 26.02s/it]                                                             2024-05-14 04:58:42 [ladder:INFO]: result: 0.06826666742563248
+Processing:   1%|          | 5/981 [02:53<7:03:13, 26.02s/it]                                                             2024-05-14 04:58:42 [ladder:INFO]: Tuning ['reshape_add_6', 'sigmoid_multiply_reshape_cast_cast_7', 'ladder_quant_linear_cast_8']
+Processing:   1%|          | 5/981 [02:53<7:03:13, 26.02s/it]                                                             2024-05-14 04:58:49 [ladder:INFO]: result: 2.0183041095733643
+Processing:   1%|          | 5/981 [03:00<7:03:13, 26.02s/it]                                                             2024-05-14 04:58:49 [ladder:INFO]: Tuning ['ladder_quant_linear_cast_8']
+Processing:   1%|          | 5/981 [03:00<7:03:13, 26.02s/it]                                                             2024-05-14 04:58:49 [ladder:INFO]: Tuning ['reshape_add_6', 'sigmoid_multiply_reshape_cast_cast_7', 'ladder_quant_linear_cast_8', 'reshape_add_multiply_add_9']
+Processing:   1%|          | 5/981 [03:00<7:03:13, 26.02s/it]                                                             2024-05-14 04:58:56 [ladder:INFO]: result: 2.031001567840576
+Processing:   1%|          | 5/981 [03:08<7:03:13, 26.02s/it]                                                             2024-05-14 04:58:56 [ladder:INFO]: Tuning ['reshape_add_multiply_add_9']
+Processing:   1%|          | 5/981 [03:08<7:03:13, 26.02s/it]                                                             2024-05-14 04:59:12 [ladder:INFO]: result: 0.13154461979866028
+Processing:   1%|          | 5/981 [03:24<7:03:13, 26.02s/it]                                                             2024-05-14 04:59:12 [ladder:INFO]: Fusion group created: 3 ['reshape_add_6', 'sigmoid_multiply_reshape_cast_cast_7', 'ladder_quant_linear_cast_8', 'reshape_add_multiply_add_9']
+Processing:   1%|          | 5/981 [03:24<7:03:13, 26.02s/it]Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Tuning ['mean_10', 'subtract_multiply_11']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Tuning ['mean_10', 'subtract_multiply_11']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Tuning ['mean_10']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Tuning ['subtract_multiply_11']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Tuning ['mean_10', 'subtract_multiply_11', 'mean_add_sqrt_12', 'divide_multiply_add_reshape_cast_cast_13']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Tuning ['mean_add_sqrt_12']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Tuning ['divide_multiply_add_reshape_cast_cast_13']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Tuning ['mean_10', 'subtract_multiply_11', 'mean_add_sqrt_12']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Fusion group created: 4 ['mean_10', 'subtract_multiply_11']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Tuning ['mean_add_sqrt_12', 'divide_multiply_add_reshape_cast_cast_13']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Tuning ['mean_add_sqrt_12', 'divide_multiply_add_reshape_cast_cast_13']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:12 [ladder:INFO]: Tuning ['mean_add_sqrt_12', 'divide_multiply_add_reshape_cast_cast_13', 'ladder_quant_linear_cast_14']
+Processing:   1%|          | 12/981 [03:24<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:21 [ladder:INFO]: result: 6.2701568603515625
+Processing:   1%|          | 12/981 [03:33<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:21 [ladder:INFO]: Tuning ['ladder_quant_linear_cast_14']
+Processing:   1%|          | 12/981 [03:33<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:22 [ladder:INFO]: Tuning ['mean_add_sqrt_12', 'divide_multiply_add_reshape_cast_cast_13', 'ladder_quant_linear_cast_14', 'reshape_add_15']
+Processing:   1%|          | 12/981 [03:34<3:53:45, 14.47s/it]                                                              2024-05-14 04:59:22 [ladder:INFO]: Fusion group created: 5 ['mean_add_sqrt_12', 'divide_multiply_add_reshape_cast_cast_13', 'ladder_quant_linear_cast_14']
+Processing:   1%|          | 12/981 [03:34<3:53:45, 14.47s/it]Processing:   2%|▏         | 20/981 [03:34<1:56:33,  7.28s/it]                                                              2024-05-14 04:59:22 [ladder:INFO]: Tuning ['reshape_add_15', 'strided_slice_reshape_transpose_divide_16', 'strided_slice_reshape_transpose_17', 'strided_slice_reshape_transpose_25']
+Processing:   2%|▏         | 20/981 [03:34<1:56:33,  7.28s/it]                                                              2024-05-14 04:59:24 [ladder:INFO]: Tuning ['reshape_add_15']
+Processing:   2%|▏         | 20/981 [03:36<1:56:33,  7.28s/it]                                                              2024-05-14 04:59:41 [ladder:INFO]: result: 0.25998222827911377
+Processing:   2%|▏         | 20/981 [03:53<1:56:33,  7.28s/it]                                                              2024-05-14 04:59:41 [ladder:INFO]: Fusion group created: 6 ['reshape_add_15']
+Processing:   2%|▏         | 20/981 [03:53<1:56:33,  7.28s/it]Processing:   3%|▎         | 27/981 [03:53<1:26:10,  5.42s/it]                                                              2024-05-14 04:59:41 [ladder:INFO]: Tuning ['strided_slice_reshape_transpose_divide_16', 'strided_slice_reshape_transpose_17', 'welder_matmul_multiply_18']
+Processing:   3%|▎         | 27/981 [03:53<1:26:10,  5.42s/it]                                                              2024-05-14 04:59:41 [ladder:INFO]: Tuning ['strided_slice_reshape_transpose_divide_16']
+Processing:   3%|▎         | 27/981 [03:53<1:26:10,  5.42s/it]                                                              2024-05-14 04:59:57 [ladder:INFO]: result: 0.09079466760158539
+Processing:   3%|▎         | 27/981 [04:08<1:26:10,  5.42s/it]                                                              2024-05-14 04:59:57 [ladder:INFO]: Fusion group created: 7 ['strided_slice_reshape_transpose_divide_16']
+Processing:   3%|▎         | 27/981 [04:08<1:26:10,  5.42s/it]Processing:   3%|▎         | 28/981 [04:08<1:38:13,  6.18s/it]                                                              2024-05-14 04:59:57 [ladder:INFO]: Tuning ['strided_slice_reshape_transpose_17', 'welder_matmul_multiply_18']
+Processing:   3%|▎         | 28/981 [04:08<1:38:13,  6.18s/it]                                                              2024-05-14 05:00:02 [ladder:INFO]: Tuning ['strided_slice_reshape_transpose_17']
+Processing:   3%|▎         | 28/981 [04:13<1:38:13,  6.18s/it]                                                              2024-05-14 05:00:17 [ladder:INFO]: result: 0.11417599767446518
+Processing:   3%|▎         | 28/981 [04:28<1:38:13,  6.18s/it]                                                              2024-05-14 05:00:17 [ladder:INFO]: Fusion group created: 8 ['strided_slice_reshape_transpose_17']
+Processing:   3%|▎         | 28/981 [04:28<1:38:13,  6.18s/it]Processing:   3%|▎         | 29/981 [04:28<2:00:09,  7.57s/it]                                                              2024-05-14 05:00:17 [ladder:INFO]: Tuning ['welder_matmul_multiply_18', 'expand_dims_greater_equal_reshape_broadcast_to_reshape_cast_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_19', 'add_20']
+Processing:   3%|▎         | 29/981 [04:28<2:00:09,  7.57s/it]                                                              2024-05-14 05:00:22 [ladder:INFO]: result: 1.569587230682373
+Processing:   3%|▎         | 29/981 [04:34<2:00:09,  7.57s/it]                                                              2024-05-14 05:00:22 [ladder:INFO]: Tuning ['welder_matmul_multiply_18']
+Processing:   3%|▎         | 29/981 [04:34<2:00:09,  7.57s/it]                                                              2024-05-14 05:00:41 [ladder:INFO]: result: 0.47738879919052124
+Processing:   3%|▎         | 29/981 [04:53<2:00:09,  7.57s/it]                                                              2024-05-14 05:00:41 [ladder:INFO]: Tuning ['expand_dims_greater_equal_reshape_broadcast_to_reshape_cast_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_19']
+Processing:   3%|▎         | 29/981 [04:53<2:00:09,  7.57s/it]                                                              2024-05-14 05:01:29 [ladder:INFO]: result: 0.008089600130915642
+Processing:   3%|▎         | 29/981 [05:41<2:00:09,  7.57s/it]                                                              2024-05-14 05:01:29 [ladder:INFO]: Tuning ['add_20']
+Processing:   3%|▎         | 29/981 [05:41<2:00:09,  7.57s/it]                                                              2024-05-14 05:01:46 [ladder:INFO]: result: 0.7043840289115906
+Processing:   3%|▎         | 29/981 [05:57<2:00:09,  7.57s/it]                                                              2024-05-14 05:01:46 [ladder:INFO]: Tuning ['welder_matmul_multiply_18']
+Processing:   3%|▎         | 29/981 [05:57<2:00:09,  7.57s/it]                                                              2024-05-14 05:01:46 [ladder:INFO]: Fusion group created: 9 ['welder_matmul_multiply_18']
+Processing:   3%|▎         | 29/981 [05:57<2:00:09,  7.57s/it]Processing:   3%|▎         | 30/981 [05:57<4:38:49, 17.59s/it]                                                              2024-05-14 05:01:46 [ladder:INFO]: Tuning ['expand_dims_greater_equal_reshape_broadcast_to_reshape_cast_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_19', 'add_20']
+Processing:   3%|▎         | 30/981 [05:57<4:38:49, 17.59s/it]                                                              2024-05-14 05:02:08 [ladder:INFO]: result: 1.1985188722610474
+Processing:   3%|▎         | 30/981 [06:19<4:38:49, 17.59s/it]                                                              2024-05-14 05:02:08 [ladder:INFO]: Tuning ['expand_dims_greater_equal_reshape_broadcast_to_reshape_cast_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_19']
+Processing:   3%|▎         | 30/981 [06:19<4:38:49, 17.59s/it]                                                              2024-05-14 05:02:08 [ladder:INFO]: Fusion group created: 10 ['expand_dims_greater_equal_reshape_broadcast_to_reshape_cast_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_where_multiply_19']
+Processing:   3%|▎         | 30/981 [06:19<4:38:49, 17.59s/it]Processing:   5%|▍         | 45/981 [06:19<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:08 [ladder:INFO]: Tuning ['add_20', 'max_21', 'subtract_exp_22']
+Processing:   5%|▍         | 45/981 [06:19<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:08 [ladder:INFO]: Tuning ['add_20']
+Processing:   5%|▍         | 45/981 [06:19<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:08 [ladder:INFO]: Fusion group created: 11 ['add_20']
+Processing:   5%|▍         | 45/981 [06:19<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:08 [ladder:INFO]: Tuning ['max_21', 'subtract_exp_22']
+Processing:   5%|▍         | 45/981 [06:19<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:09 [ladder:INFO]: Tuning ['max_21', 'subtract_exp_22']
+Processing:   5%|▍         | 45/981 [06:20<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:14 [ladder:INFO]: result: 0.5189120173454285
+Processing:   5%|▍         | 45/981 [06:26<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:14 [ladder:INFO]: Tuning ['max_21']
+Processing:   5%|▍         | 45/981 [06:26<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:29 [ladder:INFO]: result: 0.3150196373462677
+Processing:   5%|▍         | 45/981 [06:41<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:29 [ladder:INFO]: Tuning ['subtract_exp_22']
+Processing:   5%|▍         | 45/981 [06:41<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:46 [ladder:INFO]: result: 0.6825600266456604
+Processing:   5%|▍         | 45/981 [06:58<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:46 [ladder:INFO]: Tuning ['max_21', 'subtract_exp_22', 'sum_23', 'divide_24']
+Processing:   5%|▍         | 45/981 [06:58<1:31:54,  5.89s/it]                                                              2024-05-14 05:02:46 [ladder:INFO]: Fusion group created: 12 ['max_21', 'subtract_exp_22']
+Processing:   5%|▍         | 45/981 [06:58<1:31:54,  5.89s/it]Processing:   5%|▍         | 47/981 [06:58<1:57:02,  7.52s/it]                                                              2024-05-14 05:02:46 [ladder:INFO]: Tuning ['sum_23', 'divide_24']
+Processing:   5%|▍         | 47/981 [06:58<1:57:02,  7.52s/it]                                                              2024-05-14 05:02:46 [ladder:INFO]: Tuning ['sum_23', 'divide_24']
+Processing:   5%|▍         | 47/981 [06:58<1:57:02,  7.52s/it]                                                              2024-05-14 05:02:52 [ladder:INFO]: result: 0.5238783955574036
+Processing:   5%|▍         | 47/981 [07:03<1:57:02,  7.52s/it]                                                              2024-05-14 05:02:52 [ladder:INFO]: Tuning ['sum_23']
+Processing:   5%|▍         | 47/981 [07:03<1:57:02,  7.52s/it]                                                              2024-05-14 05:03:07 [ladder:INFO]: result: 0.31617969274520874
+Processing:   5%|▍         | 47/981 [07:18<1:57:02,  7.52s/it]                                                              2024-05-14 05:03:07 [ladder:INFO]: Tuning ['divide_24']
+Processing:   5%|▍         | 47/981 [07:18<1:57:02,  7.52s/it]                                                              2024-05-14 05:03:26 [ladder:INFO]: result: 0.7165074348449707
+Processing:   5%|▍         | 47/981 [07:37<1:57:02,  7.52s/it]                                                              2024-05-14 05:03:26 [ladder:INFO]: Tuning ['sum_23', 'divide_24', 'strided_slice_reshape_transpose_25', 'welder_matmul_26']
+Processing:   5%|▍         | 47/981 [07:37<1:57:02,  7.52s/it]                                                              2024-05-14 05:03:26 [ladder:INFO]: Fusion group created: 13 ['sum_23', 'divide_24']
+Processing:   5%|▍         | 47/981 [07:37<1:57:02,  7.52s/it]Processing:   5%|▍         | 49/981 [07:37<2:24:43,  9.32s/it]                                                              2024-05-14 05:03:26 [ladder:INFO]: Tuning ['strided_slice_reshape_transpose_25', 'welder_matmul_26']
+Processing:   5%|▍         | 49/981 [07:37<2:24:43,  9.32s/it]                                                              2024-05-14 05:03:29 [ladder:INFO]: Tuning ['strided_slice_reshape_transpose_25']
+Processing:   5%|▍         | 49/981 [07:41<2:24:43,  9.32s/it]                                                              2024-05-14 05:03:44 [ladder:INFO]: result: 0.09149439632892609
+Processing:   5%|▍         | 49/981 [07:56<2:24:43,  9.32s/it]                                                              2024-05-14 05:03:44 [ladder:INFO]: Fusion group created: 14 ['strided_slice_reshape_transpose_25']
+Processing:   5%|▍         | 49/981 [07:56<2:24:43,  9.32s/it]Processing:   5%|▌         | 51/981 [07:56<2:24:30,  9.32s/it]                                                              2024-05-14 05:03:44 [ladder:INFO]: Tuning ['welder_matmul_26', 'transpose_reshape_27']
+Processing:   5%|▌         | 51/981 [07:56<2:24:30,  9.32s/it]                                                              2024-05-14 05:03:52 [ladder:INFO]: result: 1.5003647804260254
+Processing:   5%|▌         | 51/981 [08:04<2:24:30,  9.32s/it]                                                              2024-05-14 05:03:52 [ladder:INFO]: Tuning ['welder_matmul_26', 'transpose_reshape_27']
+Processing:   5%|▌         | 51/981 [08:04<2:24:30,  9.32s/it]                                                              2024-05-14 05:03:58 [ladder:INFO]: result: 0.4550655782222748
+Processing:   5%|▌         | 51/981 [08:09<2:24:30,  9.32s/it]                                                              2024-05-14 05:03:58 [ladder:INFO]: Tuning ['welder_matmul_26']
+Processing:   5%|▌         | 51/981 [08:09<2:24:30,  9.32s/it]                                                              2024-05-14 05:04:17 [ladder:INFO]: result: 0.44830718636512756
+Processing:   5%|▌         | 51/981 [08:28<2:24:30,  9.32s/it]                                                              2024-05-14 05:04:17 [ladder:INFO]: Tuning ['transpose_reshape_27']
+Processing:   5%|▌         | 51/981 [08:28<2:24:30,  9.32s/it]                                                              2024-05-14 05:04:34 [ladder:INFO]: result: 0.09171199798583984
+Processing:   5%|▌         | 51/981 [08:45<2:24:30,  9.32s/it]                                                              2024-05-14 05:04:34 [ladder:INFO]: Fusion group created: 15 ['welder_matmul_26', 'transpose_reshape_27']
+Processing:   5%|▌         | 51/981 [08:45<2:24:30,  9.32s/it]Processing:   5%|▌         | 52/981 [08:45<3:32:48, 13.74s/it]                                                              2024-05-14 05:04:34 [ladder:INFO]: Skipping node Opaque_28
+Processing:   5%|▌         | 52/981 [08:45<3:32:48, 13.74s/it]                                                              2024-05-14 05:04:34 [ladder:INFO]: Fusion group created: 16 ['Opaque_28']
+Processing:   5%|▌         | 52/981 [08:45<3:32:48, 13.74s/it]                                                              2024-05-14 05:04:34 [ladder:INFO]: Tuning ['add_reshape_add_29']
+Processing:   5%|▌         | 52/981 [08:45<3:32:48, 13.74s/it]                                                              2024-05-14 05:04:49 [ladder:INFO]: result: 0.13138708472251892
+Processing:   5%|▌         | 52/981 [09:01<3:32:48, 13.74s/it]                                                              2024-05-14 05:04:49 [ladder:INFO]: Fusion group created: 17 ['add_reshape_add_29']
+Processing:   5%|▌         | 52/981 [09:01<3:32:48, 13.74s/it]Processing:   6%|▌         | 57/981 [09:01<2:19:41,  9.07s/it]                                                              2024-05-14 05:04:49 [ladder:INFO]: Tuning ['transpose_mean_30', 'subtract_multiply_31']
+Processing:   6%|▌         | 57/981 [09:01<2:19:41,  9.07s/it]                                                              2024-05-14 05:04:50 [ladder:INFO]: Tuning ['transpose_mean_30', 'subtract_multiply_31']
+Processing:   6%|▌         | 57/981 [09:01<2:19:41,  9.07s/it]                                                              2024-05-14 05:04:56 [ladder:INFO]: result: 0.08294399827718735
+Processing:   6%|▌         | 57/981 [09:07<2:19:41,  9.07s/it]                                                              2024-05-14 05:04:56 [ladder:INFO]: Tuning ['transpose_mean_30']
+Processing:   6%|▌         | 57/981 [09:07<2:19:41,  9.07s/it]Processing:   6%|▌         | 57/981 [09:24<2:32:37,  9.91s/it]
+Traceback (most recent call last):
+  File "/root/Ladder/artifact/Figure8/ladder-benchmark/ladder_with_fake_conv_dequantize_conformer_vit.py", line 163, in <module>
+    run(args.prefix, arch, args.fake_quant, quant_config, args.convert_int)
+  File "/root/Ladder/artifact/Figure8/ladder-benchmark/ladder_with_fake_conv_dequantize_conformer_vit.py", line 120, in run
+    mod = ladder.relay.transform.WelderTunePass(arch, topk=40)(mod)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/ir/transform.py", line 161, in __call__
+    return _ffi_transform_api.RunPass(self, mod)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 237, in __call__
+    raise get_last_ffi_error()
+tvm._ffi.base.TVMError: Traceback (most recent call last):
+  5: TVMFuncCall
+  4: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::IRModule (tvm::transform::Pass, tvm::IRModule)>::AssignTypedLambda<tvm::transform::{lambda(tvm::transform::Pass, tvm::IRModule)#7}>(tvm::transform::{lambda(tvm::transform::Pass, tvm::IRModule)#7}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  3: tvm::transform::Pass::operator()(tvm::IRModule) const
+  2: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  1: tvm::transform::ModulePassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  0: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<TVMFuncCreateFromCFunc::{lambda(tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)#2}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*) [clone .cold]
+  File "/root/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 81, in cfun
+    rv = local_pyfunc(*pyargs)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/ir/transform.py", line 230, in _pass_func
+    return inst.transform_module(mod, ctx)
+  File "/root/Ladder/python/ladder/relay/transform/welder_tune_pass.py", line 70, in transform_module
+    fusion_groups = engine.run(ordered_nodes)
+  File "/root/Ladder/python/ladder/engine/engine.py", line 62, in run
+    fg = self._build_fusion_group(node)
+  File "/root/Ladder/python/ladder/engine/engine.py", line 132, in _build_fusion_group
+    gain = self.compute_gain(new_group, result)
+  File "/root/Ladder/python/ladder/engine/engine.py", line 159, in compute_gain
+    result = self.tunner.tune([node], kernel_name=node.name)
+  File "/root/Ladder/python/ladder/engine/base_tunner.py", line 268, in tune
+    best = self.select_best(output_nodes, compile_results)
+  File "/root/Ladder/python/ladder/engine/base_tunner.py", line 193, in select_best
+    cpresult.latency = future.result()
+  File "/opt/conda/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/opt/conda/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/opt/conda/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/contrib/popen_pool.py", line 432, in <lambda>
+    worker = lambda *args: self._worker_run(*args)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/contrib/popen_pool.py", line 401, in _worker_run
+    return proc.recv()
+  File "/root/Ladder/3rdparty/tvm/python/tvm/contrib/popen_pool.py", line 305, in recv
+    raise value
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/profiler.py", line 23, in call_profile
+    torch.cuda.set_device(device)
+  File "/opt/conda/lib/python3.10/site-packages/torch/cuda/__init__.py", line 399, in set_device
+    torch._C._cuda_setDevice(device)
+  File "/opt/conda/lib/python3.10/site-packages/torch/cuda/__init__.py", line 293, in _lazy_init
+    torch._C._cuda_init()
+RuntimeError: No CUDA GPUs are available

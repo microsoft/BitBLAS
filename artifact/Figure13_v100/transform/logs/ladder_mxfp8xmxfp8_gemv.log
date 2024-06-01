@@ -1,0 +1,84 @@
+{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [1024], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.041471999138593674
+{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [512], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.04095999896526337
+{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [2048], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.04350399971008301
+{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [256], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 2, 'B_decode': 4}}}
+0.0668906643986702
+{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [2048], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.040618665516376495
+{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [128], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.15188266336917877
+{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.42904001474380493
+top1: 0.041471999138593674 	top10: 0.040618665516376495
+--------------------------------------------------------------------------------
+best config: {<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [2048], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+best latency: 0.040618665516376495
+{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [128], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.38468265533447266
+{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [256], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 2, 'B_decode': 4}}}
+0.2361920028924942
+{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [512], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.1908053308725357
+{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [1024], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.21348799765110016
+{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+0.621071994304657
+{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [2048], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.26316800713539124
+{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [2048], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.26076799631118774
+top1: 0.38468265533447266 	top10: 0.1908053308725357
+--------------------------------------------------------------------------------
+best config: {<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [512], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+best latency: 0.1908053308725357
+{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [128], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.1288000345230103
+{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [256], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 2, 'B_decode': 4}}}
+0.7430827021598816
+{<Node, roller_matmul>: {'block': [1, 28], 'thread': [1, 28], 'rstep': [128], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.4781440496444702
+{<Node, roller_matmul>: {'block': [1, 14], 'thread': [1, 14], 'rstep': [256], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.1320159435272217
+{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [512], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.6010879874229431
+{<Node, roller_matmul>: {'block': [1, 7], 'thread': [1, 7], 'rstep': [512], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.0060960054397583
+{<Node, roller_matmul>: {'block': [1, 56], 'thread': [1, 56], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+2.1791040897369385
+{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [1024], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.7423840165138245
+{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.8350239992141724
+{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [2048], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.922111988067627
+{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [2048], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.9099946618080139
+top1: 1.1288000345230103 	top10: 0.6010879874229431
+--------------------------------------------------------------------------------
+best config: {<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [512], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+best latency: 0.6010879874229431
+{<Node, roller_matmul>: {'block': [1, 32], 'thread': [1, 32], 'rstep': [128], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+1.21889066696167
+{<Node, roller_matmul>: {'block': [1, 16], 'thread': [1, 16], 'rstep': [256], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 2, 'B_decode': 4}}}
+0.9731519818305969
+{<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [512], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.6468372941017151
+{<Node, roller_matmul>: {'block': [1, 4], 'thread': [1, 4], 'rstep': [1024], 'reduce_thread': [32], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.7347360253334045
+{<Node, roller_matmul>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [128], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 4}}}
+2.1539840698242188
+{<Node, roller_matmul>: {'block': [1, 2], 'thread': [1, 2], 'rstep': [2048], 'reduce_thread': [64], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.8729599714279175
+{<Node, roller_matmul>: {'block': [1, 1], 'thread': [1, 1], 'rstep': [2048], 'reduce_thread': [128], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+0.8639039993286133
+top1: 1.21889066696167 	top10: 0.6468372941017151
+--------------------------------------------------------------------------------
+best config: {<Node, roller_matmul>: {'block': [1, 8], 'thread': [1, 8], 'rstep': [512], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'A_decode': 4, 'B_decode': 4}}}
+best latency: 0.6468372941017151
+1_1024_8192	0.040618665516376495
+1_8192_8192	0.1908053308725357
+1_28672_8192	0.6010879874229431
+1_8192_28672	0.6468372941017151

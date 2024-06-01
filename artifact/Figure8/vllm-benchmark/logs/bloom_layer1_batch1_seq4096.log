@@ -1,0 +1,1 @@
+vllm bloom run b1 s4096 avg: 95.84596395492554 ms

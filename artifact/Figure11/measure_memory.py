@@ -7,7 +7,7 @@ import time
 import re
 import json
 import argparse
-
+import signal
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, choices=['llama', 'bloom'], default='llama')
@@ -50,8 +50,8 @@ def analyze_log(log_path):
     return peak
 
 def pytorch_inference(model='llama', batch_size=1, seq_len=1):
-    run_file = 'llama_70b.py' if model == 'llama' else 'bloom-176b.py'
-    target_process = subprocess.Popen(f'cd {pwd}/pytorch-inductor-benchmark; python {run_file} --batch_size {batch_size} --seq_len {seq_len}; cd ..', shell=True)
+    run_file = 'llama_70b.py' if model == 'llama' else 'bloom_176b.py'
+    target_process = subprocess.Popen(f'cd {pwd}/pytorch-inductor-benchmark; python {run_file} --batch_size {batch_size} --seq_length {seq_len}; cd ..', shell=True)
     return target_process
 
 def onnxruntime_inference(model='llama', batch_size=1, seq_len=1):
@@ -59,18 +59,19 @@ def onnxruntime_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.onnx'
     else:
-        model_file = f'{model_path}/bloom-176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
+        model_file = f'{model_path}/bloom_176b/bloom-176b_layer1_seq{seq_len}_bs{batch_size}/model.onnx'
     target_process = subprocess.Popen(f'cd {pwd}/onnxruntime-benchmark; python {run_file} --file {model_file} --iters 10000 ; cd ..', shell=True)
     return target_process
 
 def tensorrt_inference(model='llama', batch_size=1, seq_len=1):
     # TRT_EXEC_PATH=$(pwd)/../../baseline_framework/TensorRT-9.0.1.4/bin
     trt_exec_path = f'{pwd}/../baseline_framework/TensorRT-9.0.1.4/bin/trtexec'
+    ld_library_path = f'{pwd}/../baseline_framework/TensorRT-9.0.1.4/lib'
     if model=='llama':
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.trt'
     else:
-        model_file = f'{model_path}/bloom-176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.trt'
-    target_process = subprocess.Popen(f'{trt_exec_path} --loadEngine {model_file} --fp16 --workspace=8192 --iterations=10000 ;', shell=True)
+        model_file = f'{model_path}/bloom_176b/bloom-176b_layer1_seq{seq_len}_bs{batch_size}/model.trt'
+    target_process = subprocess.Popen(f'LD_LIBRARY_PATH={ld_library_path} {trt_exec_path} --loadEngine={model_file} --fp16 --workspace=8192 --iterations=10000 ;', shell=True)
     return target_process
 
 def vllm_inference(model='llama', batch_size=1, seq_len=1):
@@ -84,7 +85,7 @@ def vllm_inference(model='llama', batch_size=1, seq_len=1):
 
 def vllm_fp16_int4_inference(model='llama', batch_size=1, seq_len=1):
     run_file = 'benchmark_llama.py' if model == 'llama' else 'benchmark_bloom.py'
-    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; python {run_file}  --batch_size {batch_size} --seq_len {seq_len}; cd ..', shell=True)
+    target_process = subprocess.Popen(f'cd {pwd}/vllm-benchmark; python {run_file}  --batch_size {batch_size} --seq_len {seq_len} --int4; cd ..', shell=True)
     return target_process
 
 def welder_inference(model='llama', batch_size=1, seq_len=1):
@@ -92,7 +93,7 @@ def welder_inference(model='llama', batch_size=1, seq_len=1):
     if model=='llama':
         model_file = f'{model_path}/llama_70b/llama2_70b_layer1_seq{seq_len}_bs{batch_size}/model.onnx'
     else:
-        model_file = f'{model_path}/bloom-176b/bloom-176b_seq{seq_len}_bs{batch_size}/model.onnx'
+        model_file = f'{model_path}/bloom_176b/bloom-176b_layer1_seq{seq_len}_bs{batch_size}/model.onnx'
     target_process = subprocess.Popen(f'cd {pwd}/onnxruntime-benchmark; python {run_file} --file {model_file} --iters 10000 ; cd ..', shell=True)
     return target_process
 
@@ -181,29 +182,53 @@ path = './logs/{}_{}_{}_{}'.format(model, framework, batch_size, seq_len)
 if not os.path.exists(path):
     os.makedirs(path)
 
+def find_process_and_kill():
+    process_keywords = [
+        'nvidia_measure_memory.sh',
+        'llama_70b.py',
+        'bloom-176b.py',
+        'bloom_176b.py',
+        'ort_runtime.py',
+        'trtexec',
+        'benchmark_llama.py',
+        'benchmark_bloom.py',
+        'ladder_with_fake_dense_dequantize.py',
+        'nvidia-smi'
+    ]
+    # if the process is this script, we should not kill it
+    for keyword in process_keywords:
+        os.system(f'pkill -f {keyword}')
+
+# clean the process
+find_process_and_kill()
+# measure the memory usage
 memory_usage = 0
 if os.path.exists(path):
-    with pushd(path):
-        print('Measure the memory for {} batch {} seq {} under {}'.format(model, batch_size, seq_len, framework))
-        if os.path.exists('prepare_mem.sh'):
-            os.system('bash prepare_mem.sh')
-        # here start the inference process at the same time and
-        # measure the memory at the same time
-        inference_func = model_inference_mapping[framework]
-        target_process = inference_func(model, batch_size, seq_len)
-    sleep(30) # wait the memory to be steady (this large laguange model need more time to be steady)
-    monitor_process = subprocess.Popen('bash nvidia_measure_memory.sh > run.log', shell=True)
+    print('Measure the memory for {} batch {} seq {} under {}'.format(model, batch_size, seq_len, framework))
+    # here start the inference process at the same time and
+    # measure the memory at the same time
+    inference_func = model_inference_mapping[framework]
+    target_process = inference_func(model, batch_size, seq_len)
+    if framework == 'pytorch' and model =='bloom':
+        # append a sleep to wait the memory to be steady
+        for i in range(120, 0, -1):
+            sys.stdout.write(f'\rThe compilation of Torch Conductor may take a while Wait for {i} seconds')
+            sys.stdout.flush()
+            time.sleep(1)
+    else:
+        sleep(15) # wait the memory to be steady (this large laguange model need more time to be steady)
+    monitor_process = subprocess.Popen('./nvidia_measure_memory.sh > run.log', shell=True)
     try:
-        target_process.wait(timeout=10)
+        target_process.wait(timeout=20)
     except Exception as err:
-        try:
-            target_process.terminate()
-            time.sleep(10)
-        except Exception as err:
-            print(err)
+        find_process_and_kill()
     monitor_process.terminate()
     memory_usage = analyze_log('run.log')
 data['{}_{}_{}_{}'.format(model, framework, batch_size, seq_len)] = memory_usage
 print(data)
-with open(f'{args.model}_data.json', 'w') as f:
+find_process_and_kill()
+
+with open(f'logs/{model}_{framework}_b{batch_size}_s{seq_len}_data.json', 'w') as f:
     json.dump(data, f)
+
+find_process_and_kill()

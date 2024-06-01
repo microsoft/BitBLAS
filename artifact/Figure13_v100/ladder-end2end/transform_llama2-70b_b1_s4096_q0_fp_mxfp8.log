@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/Figure13_v100/ladder-end2end/../../checkpoints/Figure13_v100/transform/ladder_from_onnx_transform_fq_0_mxfp_8_-1_bs1_seq4096_ci_False_cmxfp_async
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+ 2252.1765    2252.2105    2252.5984    2251.5275      0.3809   
+               

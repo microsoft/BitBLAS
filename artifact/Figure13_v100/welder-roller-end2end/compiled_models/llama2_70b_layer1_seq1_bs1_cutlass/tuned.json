@@ -1,0 +1,839 @@
+[
+  {
+    "nodes": [
+      28
+    ],
+    "node_names": [
+      "Reshape_28"
+    ],
+    "group_id": 0,
+    "input_desc": [
+      [
+        28,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        28,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(1) Group0(float* __restrict__ input0, float* __restrict__ output0) {\n  output0[0] = input0[0];\n}\n\n",
+    "block_size": [
+      1,
+      1,
+      1
+    ],
+    "grid_size": [
+      1,
+      1,
+      1
+    ],
+    "latency": 0.0029664000030606985,
+    "name": "Group0",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      27
+    ],
+    "node_names": [
+      "Convert_27"
+    ],
+    "group_id": 1,
+    "input_desc": [
+      [
+        27,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        27,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group1(half* __restrict__ input0, float* __restrict__ output0) {\n  output0[((((int)blockIdx.x) * 256) + ((int)threadIdx.x))] = ((float)input0[((((int)blockIdx.x) * 256) + ((int)threadIdx.x))]);\n  output0[(((((int)blockIdx.x) * 256) + ((int)threadIdx.x)) + 128)] = ((float)input0[(((((int)blockIdx.x) * 256) + ((int)threadIdx.x)) + 128)]);\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      32,
+      1,
+      1
+    ],
+    "latency": 0.0027324443217366934,
+    "name": "Group1",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      148
+    ],
+    "node_names": [
+      "Broadcast_Power_148"
+    ],
+    "group_id": 2,
+    "input_desc": [
+      [
+        148,
+        0
+      ],
+      [
+        148,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        148,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(64) Group2(float* __restrict__ input0, float* __restrict__ input1, float* __restrict__ output0) {\n  __shared__ float input0_shared[8];\n  if (((int)threadIdx.x) < 1) {\n    input0_shared[((int)threadIdx.x)] = input0[((int)threadIdx.x)];\n  }\n  __syncthreads();\n  output0[((((int)blockIdx.x) * 64) + ((int)threadIdx.x))] = powf(input1[((((int)blockIdx.x) * 64) + ((int)threadIdx.x))], input0_shared[0]);\n}\n\n",
+    "block_size": [
+      64,
+      1,
+      1
+    ],
+    "grid_size": [
+      128,
+      1,
+      1
+    ],
+    "latency": 0.003276800038293004,
+    "name": "Group2",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      147
+    ],
+    "node_names": [
+      "Sum_Reshape_Divide_147"
+    ],
+    "group_id": 3,
+    "input_desc": [
+      [
+        147,
+        0
+      ],
+      [
+        147,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        147,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group3(float* __restrict__ input0, float* __restrict__ input1, float* __restrict__ output0) {\n  float normal_reduce_temp0[1];\n  __shared__ float input1_shared[4096];\n  __shared__ float red_buf0[128];\n  normal_reduce_temp0[0] = 0.000000e+00f;\n  for (int N2_outer = 0; N2_outer < 2; ++N2_outer) {\n    __syncthreads();\n    *(float4*)(input1_shared + (((int)threadIdx.x) * 4)) = *(float4*)(input1 + ((N2_outer * 4096) + (((int)threadIdx.x) * 4)));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 512));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 1024));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 1536));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 2048)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 2048));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 2560)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 2560));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 3072)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 3072));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 3584)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 3584));\n    __syncthreads();\n    for (int N2_inner_outer = 0; N2_inner_outer < 32; ++N2_inner_outer) {\n      normal_reduce_temp0[0] = (normal_reduce_temp0[0] + input1_shared[((N2_inner_outer * 128) + ((int)threadIdx.x))]);\n    }\n  }\n  __syncthreads();\n  ((volatile float*)red_buf0)[((int)threadIdx.x)] = normal_reduce_temp0[0];\n  __syncthreads();\n  if (((int)threadIdx.x) < 64) {\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 64)]);\n  }\n  __syncthreads();\n  if (((int)threadIdx.x) < 32) {\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 32)]);\n  }\n  __syncthreads();\n  if (((int)threadIdx.x) < 16) {\n    float w_16_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 16)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_16_0;\n    float w_8_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 8)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_8_0;\n    float w_4_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 4)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_4_0;\n    float w_2_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 2)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_2_0;\n    float w_1_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 1)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_1_0;\n  }\n  __syncthreads();\n  output0[0] = (((volatile float*)red_buf0)[0] / input0[0]);\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      1,
+      1,
+      1
+    ],
+    "latency": 0.004710400011390448,
+    "name": "Group3",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      36,
+      43,
+      144
+    ],
+    "node_names": [
+      "Reshape_36",
+      "Reshape_43",
+      "Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Multiply_144"
+    ],
+    "group_id": 4,
+    "input_desc": [
+      [
+        144,
+        0
+      ],
+      [
+        36,
+        0
+      ],
+      [
+        144,
+        2
+      ],
+      [
+        43,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        144,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(64) Group4(float* __restrict__ input0, float* __restrict__ input1, float* __restrict__ input2, half* __restrict__ input3, half* __restrict__ output0) {\n  output0[((((int)blockIdx.x) * 64) + ((int)threadIdx.x))] = (input3[((((int)blockIdx.x) * 64) + ((int)threadIdx.x))] * ((half)(input2[((((int)blockIdx.x) * 64) + ((int)threadIdx.x))] / sqrtf((input0[0] + input1[0])))));\n}\n\n",
+    "block_size": [
+      64,
+      1,
+      1
+    ],
+    "grid_size": [
+      128,
+      1,
+      1
+    ],
+    "latency": 0.0033319999929517508,
+    "name": "Group4",
+    "gain": 0.0
+  },
+  {
+    "nodes": [
+      65,
+      141
+    ],
+    "node_names": [
+      "Dot_65",
+      "Reshape_Reshape_Reshape_Broadcast_Multiply_141"
+    ],
+    "group_id": 5,
+    "input_desc": [
+      [
+        141,
+        0
+      ],
+      [
+        65,
+        0
+      ],
+      [
+        65,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        141,
+        0
+      ],
+      [
+        141,
+        1
+      ]
+    ],
+    "code": "__device__ void Group5_0_Dot_65(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0, char* shared) {\n  half output0_local[1];\n  half* input0_shared = (half*)(shared+0);\n  half* input1_shared = (half*)(shared+256);\n  output0_local[0] = __float2half_rn(0.000000e+00f);\n  for (int K_outer = 0; K_outer < 64; ++K_outer) {\n    __syncthreads();\n    *(uint1*)(input0_shared + (((int)threadIdx.x) * 2)) = *(uint1*)(input0 + ((K_outer * 128) + (((int)threadIdx.x) * 2)));\n    *(uint4*)(input1_shared + (((int)threadIdx.x) * 8)) = *(uint4*)(input1 + ((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 512)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 65536));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 1024)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 131072));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 1536)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 196608));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 2048)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 262144));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 2560)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 327680));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 3072)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 393216));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 3584)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 458752));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 4096)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 524288));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 4608)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 589824));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 5120)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 655360));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 5632)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 720896));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 6144)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 786432));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 6656)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 851968));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 7168)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 917504));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 7680)) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.x) >> 3) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.x) & 7) * 8)) + 983040));\n    __syncthreads();\n    for (int K_inner = 0; K_inner < 128; ++K_inner) {\n      output0_local[0] = (output0_local[0] + (input0_shared[K_inner] * input1_shared[((K_inner * 64) + ((int)threadIdx.x))]));\n    }\n  }\n  __syncthreads();\n  output0[((int)threadIdx.x)] = output0_local[0];\n  __syncthreads();\n}\n\n__device__ void Group5_1_Reshape_Reshape_Reshape_Broadcast_Multiply_141(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output_proxy, half* __restrict__ output_proxy_1, char* shared) {\n  half* input1_shared = input1;\n  output_proxy[((((int)blockIdx.x) * 64) + ((int)threadIdx.x))] = input1_shared[((int)threadIdx.x)];\n  output_proxy_1[((((int)blockIdx.x) * 64) + ((int)threadIdx.x))] = (input1_shared[((int)threadIdx.x)] * input0[(((((int)blockIdx.x) & 1) * 64) + ((int)threadIdx.x))]);\n}\n\n__global__ void __launch_bounds__(64) Group5(half* input0, half* input1, half* input2, half* output0, half* output1) {\n  __shared__ char shared[16640];\n  Group5_0_Dot_65(input1, input2, (half*)(shared+0), shared+0);\n  Group5_1_Reshape_Reshape_Reshape_Broadcast_Multiply_141(input0, (half*)(shared+0), output0, output1, shared+128);\n}\n",
+    "block_size": [
+      64,
+      1,
+      1
+    ],
+    "grid_size": [
+      128,
+      1,
+      1
+    ],
+    "latency": 0.16025599837303162,
+    "name": "Group5",
+    "gain": 0.00584177952259779
+  },
+  {
+    "nodes": [
+      149,
+      70,
+      143
+    ],
+    "node_names": [
+      "Slice_Negative_149",
+      "Slice_70",
+      "Concat_Reshape_Broadcast_Multiply_143"
+    ],
+    "group_id": 6,
+    "input_desc": [
+      [
+        143,
+        0
+      ],
+      [
+        149,
+        0
+      ],
+      [
+        70,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        143,
+        0
+      ]
+    ],
+    "code": "__device__ void Group6_0_Slice_Negative_149(half* __restrict__ input0, half* __restrict__ output0, char* shared) {\n  __syncthreads();\n  output0[((int)threadIdx.x)] = (__float2half_rn(0.000000e+00f) - input0[((((((int)blockIdx.x) * 256) + ((((int)threadIdx.x) >> 6) * 128)) + (((int)threadIdx.x) & 63)) + 64)]);\n  __syncthreads();\n}\n\n__device__ void Group6_1_Slice_70(half* __restrict__ input0, half* __restrict__ output0, char* shared) {\n  __syncthreads();\n  output0[((int)threadIdx.x)] = input0[(((((int)blockIdx.x) * 256) + ((((int)threadIdx.x) >> 6) * 128)) + (((int)threadIdx.x) & 63))];\n  __syncthreads();\n}\n\n__device__ void Group6_2_Concat_Reshape_Broadcast_Multiply_143(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ input2, half* __restrict__ output0, char* shared) {\n  half* input1_shared = input1;\n  half* input2_shared = input2;\n  output0[((((int)blockIdx.x) * 256) + ((int)threadIdx.x))] = (((((int)threadIdx.x) < 64) ? input1_shared[((int)threadIdx.x)] : input2_shared[(((int)threadIdx.x) - 64)]) * input0[((int)threadIdx.x)]);\n  output0[(((((int)blockIdx.x) * 256) + ((int)threadIdx.x)) + 128)] = (((((int)threadIdx.x) < 64) ? input1_shared[(((int)threadIdx.x) + 64)] : input2_shared[((int)threadIdx.x)]) * input0[((int)threadIdx.x)]);\n}\n\n__global__ void __launch_bounds__(128) Group6(half* input0, half* input1, half* input2, half* output0) {\n  __shared__ char shared[512];\n  Group6_0_Slice_Negative_149(input1, (half*)(shared+0), shared+0);\n  Group6_1_Slice_70(input2, (half*)(shared+256), shared+256);\n  Group6_2_Concat_Reshape_Broadcast_Multiply_143(input0, (half*)(shared+0), (half*)(shared+256), output0, shared+512);\n}\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      32,
+      1,
+      1
+    ],
+    "latency": 0.002882000058889389,
+    "name": "Group6",
+    "gain": 0.005000547273084521
+  },
+  {
+    "nodes": [
+      150
+    ],
+    "node_names": [
+      "Add_Reshape_Broadcast_150"
+    ],
+    "group_id": 7,
+    "input_desc": [
+      [
+        150,
+        0
+      ],
+      [
+        150,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        150,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group7(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0) {\n  output0[(((((((int)blockIdx.x) >> 2) * 512) + ((((int)threadIdx.x) >> 5) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 31))] = (input0[(((((((int)blockIdx.x) >> 2) * 512) + ((((int)threadIdx.x) >> 5) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 31))] + input1[(((((((int)blockIdx.x) >> 2) * 512) + ((((int)threadIdx.x) >> 5) * 128)) + ((((int)blockIdx.x) & 3) * 32)) + (((int)threadIdx.x) & 31))]);\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      64,
+      1,
+      1
+    ],
+    "latency": 0.0026624000165611506,
+    "name": "Group7",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      45
+    ],
+    "node_names": [
+      "Dot_45"
+    ],
+    "group_id": 8,
+    "input_desc": [
+      [
+        45,
+        0
+      ],
+      [
+        45,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        45,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group8(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0) {\n  half normal_reduce_temp0[1];\n  __shared__ half input0_shared[512];\n  __shared__ half input1_shared[8192];\n  half red_buf0[1];\n  normal_reduce_temp0[0] = __float2half_rn(0.000000e+00f);\n  for (int K_outer = 0; K_outer < 16; ++K_outer) {\n    __syncthreads();\n    *(uint2*)(input0_shared + ((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4))) = *(uint2*)(input0 + (((K_outer * 512) + (((int)threadIdx.y) * 32)) + (((int)threadIdx.x) * 4)));\n    *(uint4*)(input1_shared + ((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8))) = *(uint4*)(input1 + (((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 1024)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 65536));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 2048)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 131072));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 3072)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 196608));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 4096)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 262144));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 5120)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 327680));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 6144)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 393216));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 7168)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 458752));\n    __syncthreads();\n    for (int K_inner_outer = 0; K_inner_outer < 64; ++K_inner_outer) {\n      normal_reduce_temp0[0] = (normal_reduce_temp0[0] + (input0_shared[((K_inner_outer * 8) + ((int)threadIdx.x))] * input1_shared[(((K_inner_outer * 128) + (((int)threadIdx.x) * 16)) + ((int)threadIdx.y))]));\n    }\n  }\n  uint mask[1];\n  half t0[1];\n  red_buf0[0] = normal_reduce_temp0[0];\n  mask[0] = (__activemask() & ((uint)(255 << (((int)threadIdx.y) * 8))));\n  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 4, 32);\n  red_buf0[0] = (red_buf0[0] + t0[0]);\n  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 2, 32);\n  red_buf0[0] = (red_buf0[0] + t0[0]);\n  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 1, 32);\n  red_buf0[0] = (red_buf0[0] + t0[0]);\n  red_buf0[0] = __shfl_sync(mask[0], red_buf0[0], (((int)threadIdx.y) * 8), 32);\n  output0[((((int)blockIdx.x) * 16) + ((int)threadIdx.y))] = red_buf0[0];\n}\n\n",
+    "block_size": [
+      8,
+      16,
+      1
+    ],
+    "grid_size": [
+      64,
+      1,
+      1
+    ],
+    "latency": 0.03911039978265762,
+    "name": "Group8",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      151
+    ],
+    "node_names": [
+      "Reshape_Reshape_Reshape_Broadcast_Multiply_151"
+    ],
+    "group_id": 9,
+    "input_desc": [
+      [
+        151,
+        0
+      ],
+      [
+        151,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        151,
+        0
+      ],
+      [
+        151,
+        1
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group9(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output_proxy, half* __restrict__ output_proxy_1) {\n  output_proxy[(((((((int)blockIdx.x) >> 1) * 256) + ((((int)threadIdx.x) >> 6) * 128)) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) & 63))] = input1[(((((((int)blockIdx.x) >> 1) * 256) + ((((int)threadIdx.x) >> 6) * 128)) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) & 63))];\n  output_proxy_1[(((((((int)blockIdx.x) >> 1) * 256) + ((((int)threadIdx.x) >> 6) * 128)) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) & 63))] = (input1[(((((((int)blockIdx.x) >> 1) * 256) + ((((int)threadIdx.x) >> 6) * 128)) + ((((int)blockIdx.x) & 1) * 64)) + (((int)threadIdx.x) & 63))] * input0[(((((int)blockIdx.x) & 1) * 64) + (((int)threadIdx.x) & 63))]);\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      8,
+      1,
+      1
+    ],
+    "latency": 0.002588235307484865,
+    "name": "Group9",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      153,
+      50,
+      152
+    ],
+    "node_names": [
+      "Slice_Negative_153",
+      "Slice_50",
+      "Concat_Reshape_Broadcast_Multiply_152"
+    ],
+    "group_id": 10,
+    "input_desc": [
+      [
+        152,
+        0
+      ],
+      [
+        153,
+        0
+      ],
+      [
+        50,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        152,
+        0
+      ]
+    ],
+    "code": "__device__ void Group10_0_Slice_Negative_153(half* __restrict__ input0, half* __restrict__ output0, char* shared) {\n  __syncthreads();\n  output0[((int)threadIdx.x)] = (__float2half_rn(0.000000e+00f) - input0[((((((int)blockIdx.x) * 256) + ((((int)threadIdx.x) >> 6) * 128)) + (((int)threadIdx.x) & 63)) + 64)]);\n  __syncthreads();\n}\n\n__device__ void Group10_1_Slice_50(half* __restrict__ input0, half* __restrict__ output0, char* shared) {\n  __syncthreads();\n  output0[((int)threadIdx.x)] = input0[(((((int)blockIdx.x) * 256) + ((((int)threadIdx.x) >> 6) * 128)) + (((int)threadIdx.x) & 63))];\n  __syncthreads();\n}\n\n__device__ void Group10_2_Concat_Reshape_Broadcast_Multiply_152(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ input2, half* __restrict__ output0, char* shared) {\n  half* input1_shared = input1;\n  half* input2_shared = input2;\n  output0[((((int)blockIdx.x) * 256) + ((int)threadIdx.x))] = (((((int)threadIdx.x) < 64) ? input1_shared[((int)threadIdx.x)] : input2_shared[(((int)threadIdx.x) - 64)]) * input0[((int)threadIdx.x)]);\n  output0[(((((int)blockIdx.x) * 256) + ((int)threadIdx.x)) + 128)] = (((((int)threadIdx.x) < 64) ? input1_shared[(((int)threadIdx.x) + 64)] : input2_shared[((int)threadIdx.x)]) * input0[((int)threadIdx.x)]);\n}\n\n__global__ void __launch_bounds__(128) Group10(half* input0, half* input1, half* input2, half* output0) {\n  __shared__ char shared[512];\n  Group10_0_Slice_Negative_153(input1, (half*)(shared+0), shared+0);\n  Group10_1_Slice_50(input2, (half*)(shared+256), shared+256);\n  Group10_2_Concat_Reshape_Broadcast_Multiply_152(input0, (half*)(shared+0), (half*)(shared+256), output0, shared+512);\n}\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      4,
+      1,
+      1
+    ],
+    "latency": 0.0028780000284314156,
+    "name": "Group10",
+    "gain": 0.004610313568264246
+  },
+  {
+    "nodes": [
+      146,
+      145,
+      133,
+      134,
+      135,
+      155
+    ],
+    "node_names": [
+      "Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_146",
+      "BatchMatMul_Reshape_Reshape_Broadcast_Divide_145",
+      "SoftmaxBasic_133",
+      "SoftmaxBasic_134",
+      "SoftmaxBasic_135",
+      "Reshape_Broadcast_SoftmaxBasic_155"
+    ],
+    "group_id": 11,
+    "input_desc": [
+      [
+        145,
+        0
+      ],
+      [
+        145,
+        1
+      ],
+      [
+        146,
+        0
+      ],
+      [
+        146,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        155,
+        0
+      ]
+    ],
+    "code": "__device__ void Group11_0_Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_146(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0, char* shared) {\n  __syncthreads();\n  output0[(((int)threadIdx.x) * 2)] = (input0[(((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2))] + input1[(((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2))]);\n  output0[((((int)threadIdx.x) * 2) + 4)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 4)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 4)]);\n  output0[((((int)threadIdx.x) * 2) + 8)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 8)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 8)]);\n  output0[((((int)threadIdx.x) * 2) + 12)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 12)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 12)]);\n  output0[((((int)threadIdx.x) * 2) + 16)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 16)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 16)]);\n  output0[((((int)threadIdx.x) * 2) + 20)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 20)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 20)]);\n  output0[((((int)threadIdx.x) * 2) + 24)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 24)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 24)]);\n  output0[((((int)threadIdx.x) * 2) + 28)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 28)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 28)]);\n  output0[((((int)threadIdx.x) * 2) + 32)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 32)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 32)]);\n  output0[((((int)threadIdx.x) * 2) + 36)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 36)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 36)]);\n  output0[((((int)threadIdx.x) * 2) + 40)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 40)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 40)]);\n  output0[((((int)threadIdx.x) * 2) + 44)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 44)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 44)]);\n  output0[((((int)threadIdx.x) * 2) + 48)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 48)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 48)]);\n  output0[((((int)threadIdx.x) * 2) + 52)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 52)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 52)]);\n  output0[((((int)threadIdx.x) * 2) + 56)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 56)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 56)]);\n  output0[((((int)threadIdx.x) * 2) + 60)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 60)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 60)]);\n  output0[((((int)threadIdx.x) * 2) + 64)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 64)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 64)]);\n  output0[((((int)threadIdx.x) * 2) + 68)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 68)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 68)]);\n  output0[((((int)threadIdx.x) * 2) + 72)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 72)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 72)]);\n  output0[((((int)threadIdx.x) * 2) + 76)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 76)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 76)]);\n  output0[((((int)threadIdx.x) * 2) + 80)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 80)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 80)]);\n  output0[((((int)threadIdx.x) * 2) + 84)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 84)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 84)]);\n  output0[((((int)threadIdx.x) * 2) + 88)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 88)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 88)]);\n  output0[((((int)threadIdx.x) * 2) + 92)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 92)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 92)]);\n  output0[((((int)threadIdx.x) * 2) + 96)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 96)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 96)]);\n  output0[((((int)threadIdx.x) * 2) + 100)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 100)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 100)]);\n  output0[((((int)threadIdx.x) * 2) + 104)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 104)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 104)]);\n  output0[((((int)threadIdx.x) * 2) + 108)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 108)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 108)]);\n  output0[((((int)threadIdx.x) * 2) + 112)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 112)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 112)]);\n  output0[((((int)threadIdx.x) * 2) + 116)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 116)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 116)]);\n  output0[((((int)threadIdx.x) * 2) + 120)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 120)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 120)]);\n  output0[((((int)threadIdx.x) * 2) + 124)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 124)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 124)]);\n  output0[((((int)threadIdx.x) * 2) + 128)] = (input0[(((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2))] + input1[(((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2))]);\n  output0[((((int)threadIdx.x) * 2) + 132)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 4)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 4)]);\n  output0[((((int)threadIdx.x) * 2) + 136)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 8)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 8)]);\n  output0[((((int)threadIdx.x) * 2) + 140)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 12)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 12)]);\n  output0[((((int)threadIdx.x) * 2) + 144)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 16)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 16)]);\n  output0[((((int)threadIdx.x) * 2) + 148)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 20)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 20)]);\n  output0[((((int)threadIdx.x) * 2) + 152)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 24)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 24)]);\n  output0[((((int)threadIdx.x) * 2) + 156)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 28)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 28)]);\n  output0[((((int)threadIdx.x) * 2) + 160)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 32)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 32)]);\n  output0[((((int)threadIdx.x) * 2) + 164)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 36)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 36)]);\n  output0[((((int)threadIdx.x) * 2) + 168)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 40)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 40)]);\n  output0[((((int)threadIdx.x) * 2) + 172)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 44)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 44)]);\n  output0[((((int)threadIdx.x) * 2) + 176)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 48)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 48)]);\n  output0[((((int)threadIdx.x) * 2) + 180)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 52)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 52)]);\n  output0[((((int)threadIdx.x) * 2) + 184)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 56)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 56)]);\n  output0[((((int)threadIdx.x) * 2) + 188)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 60)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 60)]);\n  output0[((((int)threadIdx.x) * 2) + 192)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 64)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 64)]);\n  output0[((((int)threadIdx.x) * 2) + 196)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 68)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 68)]);\n  output0[((((int)threadIdx.x) * 2) + 200)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 72)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 72)]);\n  output0[((((int)threadIdx.x) * 2) + 204)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 76)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 76)]);\n  output0[((((int)threadIdx.x) * 2) + 208)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 80)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 80)]);\n  output0[((((int)threadIdx.x) * 2) + 212)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 84)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 84)]);\n  output0[((((int)threadIdx.x) * 2) + 216)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 88)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 88)]);\n  output0[((((int)threadIdx.x) * 2) + 220)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 92)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 92)]);\n  output0[((((int)threadIdx.x) * 2) + 224)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 96)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 96)]);\n  output0[((((int)threadIdx.x) * 2) + 228)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 100)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 100)]);\n  output0[((((int)threadIdx.x) * 2) + 232)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 104)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 104)]);\n  output0[((((int)threadIdx.x) * 2) + 236)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 108)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 108)]);\n  output0[((((int)threadIdx.x) * 2) + 240)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 112)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 112)]);\n  output0[((((int)threadIdx.x) * 2) + 244)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 116)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 116)]);\n  output0[((((int)threadIdx.x) * 2) + 248)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 120)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 120)]);\n  output0[((((int)threadIdx.x) * 2) + 252)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 124)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 124)]);\n  output0[((((int)threadIdx.x) * 2) + 1)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 1)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 1)]);\n  output0[((((int)threadIdx.x) * 2) + 5)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 5)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 5)]);\n  output0[((((int)threadIdx.x) * 2) + 9)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 9)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 9)]);\n  output0[((((int)threadIdx.x) * 2) + 13)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 13)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 13)]);\n  output0[((((int)threadIdx.x) * 2) + 17)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 17)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 17)]);\n  output0[((((int)threadIdx.x) * 2) + 21)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 21)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 21)]);\n  output0[((((int)threadIdx.x) * 2) + 25)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 25)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 25)]);\n  output0[((((int)threadIdx.x) * 2) + 29)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 29)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 29)]);\n  output0[((((int)threadIdx.x) * 2) + 33)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 33)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 33)]);\n  output0[((((int)threadIdx.x) * 2) + 37)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 37)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 37)]);\n  output0[((((int)threadIdx.x) * 2) + 41)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 41)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 41)]);\n  output0[((((int)threadIdx.x) * 2) + 45)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 45)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 45)]);\n  output0[((((int)threadIdx.x) * 2) + 49)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 49)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 49)]);\n  output0[((((int)threadIdx.x) * 2) + 53)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 53)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 53)]);\n  output0[((((int)threadIdx.x) * 2) + 57)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 57)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 57)]);\n  output0[((((int)threadIdx.x) * 2) + 61)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 61)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 61)]);\n  output0[((((int)threadIdx.x) * 2) + 65)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 65)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 65)]);\n  output0[((((int)threadIdx.x) * 2) + 69)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 69)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 69)]);\n  output0[((((int)threadIdx.x) * 2) + 73)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 73)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 73)]);\n  output0[((((int)threadIdx.x) * 2) + 77)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 77)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 77)]);\n  output0[((((int)threadIdx.x) * 2) + 81)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 81)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 81)]);\n  output0[((((int)threadIdx.x) * 2) + 85)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 85)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 85)]);\n  output0[((((int)threadIdx.x) * 2) + 89)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 89)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 89)]);\n  output0[((((int)threadIdx.x) * 2) + 93)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 93)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 93)]);\n  output0[((((int)threadIdx.x) * 2) + 97)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 97)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 97)]);\n  output0[((((int)threadIdx.x) * 2) + 101)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 101)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 101)]);\n  output0[((((int)threadIdx.x) * 2) + 105)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 105)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 105)]);\n  output0[((((int)threadIdx.x) * 2) + 109)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 109)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 109)]);\n  output0[((((int)threadIdx.x) * 2) + 113)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 113)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 113)]);\n  output0[((((int)threadIdx.x) * 2) + 117)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 117)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 117)]);\n  output0[((((int)threadIdx.x) * 2) + 121)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 121)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 121)]);\n  output0[((((int)threadIdx.x) * 2) + 125)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 125)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 125)]);\n  output0[((((int)threadIdx.x) * 2) + 129)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 1)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 1)]);\n  output0[((((int)threadIdx.x) * 2) + 133)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 5)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 5)]);\n  output0[((((int)threadIdx.x) * 2) + 137)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 9)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 9)]);\n  output0[((((int)threadIdx.x) * 2) + 141)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 13)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 13)]);\n  output0[((((int)threadIdx.x) * 2) + 145)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 17)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 17)]);\n  output0[((((int)threadIdx.x) * 2) + 149)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 21)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 21)]);\n  output0[((((int)threadIdx.x) * 2) + 153)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 25)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 25)]);\n  output0[((((int)threadIdx.x) * 2) + 157)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 29)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 29)]);\n  output0[((((int)threadIdx.x) * 2) + 161)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 33)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 33)]);\n  output0[((((int)threadIdx.x) * 2) + 165)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 37)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 37)]);\n  output0[((((int)threadIdx.x) * 2) + 169)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 41)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 41)]);\n  output0[((((int)threadIdx.x) * 2) + 173)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 45)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 45)]);\n  output0[((((int)threadIdx.x) * 2) + 177)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 49)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 49)]);\n  output0[((((int)threadIdx.x) * 2) + 181)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 53)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 53)]);\n  output0[((((int)threadIdx.x) * 2) + 185)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 57)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 57)]);\n  output0[((((int)threadIdx.x) * 2) + 189)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 61)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 61)]);\n  output0[((((int)threadIdx.x) * 2) + 193)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 65)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 65)]);\n  output0[((((int)threadIdx.x) * 2) + 197)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 69)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 69)]);\n  output0[((((int)threadIdx.x) * 2) + 201)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 73)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 73)]);\n  output0[((((int)threadIdx.x) * 2) + 205)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 77)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 77)]);\n  output0[((((int)threadIdx.x) * 2) + 209)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 81)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 81)]);\n  output0[((((int)threadIdx.x) * 2) + 213)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 85)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 85)]);\n  output0[((((int)threadIdx.x) * 2) + 217)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 89)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 89)]);\n  output0[((((int)threadIdx.x) * 2) + 221)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 93)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 93)]);\n  output0[((((int)threadIdx.x) * 2) + 225)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 97)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 97)]);\n  output0[((((int)threadIdx.x) * 2) + 229)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 101)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 101)]);\n  output0[((((int)threadIdx.x) * 2) + 233)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 105)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 105)]);\n  output0[((((int)threadIdx.x) * 2) + 237)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 109)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 109)]);\n  output0[((((int)threadIdx.x) * 2) + 241)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 113)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 113)]);\n  output0[((((int)threadIdx.x) * 2) + 245)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 117)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 117)]);\n  output0[((((int)threadIdx.x) * 2) + 249)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 121)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 121)]);\n  output0[((((int)threadIdx.x) * 2) + 253)] = (input0[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 125)] + input1[((((((int)blockIdx.x) >> 2) * 128) + (((int)threadIdx.x) * 2)) + 125)]);\n  __syncthreads();\n}\n\n__device__ void Group11_1_BatchMatMul_Reshape_Reshape_Broadcast_Divide_145(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ input2, half* __restrict__ output0, char* shared) {\n  half mediate2_local[1];\n  half* input1_shared = (half*)(shared+0);\n  half* input2_shared = input2;\n  mediate2_local[0] = __float2half_rn(0.000000e+00f);\n  *(uint4*)(input1_shared + (((int)threadIdx.x) * 8)) = *(uint4*)(input1 + ((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 16)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 16));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 32)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 32));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 48)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 48));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 64)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 64));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 80)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 80));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 96)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 96));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 112)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 112));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 128)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 128));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 144)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 144));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 160)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 160));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 176)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 176));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 192)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 192));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 208)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 208));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 224)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 224));\n  *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 240)) = *(uint4*)(input1 + (((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 8)) + 240));\n  __syncthreads();\n  for (int K_inner = 0; K_inner < 128; ++K_inner) {\n    mediate2_local[0] = (mediate2_local[0] + (input1_shared[((((int)threadIdx.x) * 128) + K_inner)] * input2_shared[((((int)threadIdx.x) * 128) + K_inner)]));\n  }\n  __syncthreads();\n  output0[((int)threadIdx.x)] = (mediate2_local[0] / input0[0]);\n  __syncthreads();\n}\n\n__device__ void Group11_2_SoftmaxBasic_133(half* __restrict__ input0, half* __restrict__ output0, char* shared) {\n  half output0_local[1];\n  half* input0_shared = input0;\n  output0_local[0] = __float2half_rn(-6.550400e+04f);\n  output0_local[0] = max(output0_local[0], input0_shared[((int)threadIdx.x)]);\n  __syncthreads();\n  output0[((int)threadIdx.x)] = output0_local[0];\n  __syncthreads();\n}\n\n__device__ void Group11_3_SoftmaxBasic_134(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0, char* shared) {\n  half* input0_shared = input0;\n  half input0_shared_local[1];\n  half* input1_shared = input1;\n  half input1_shared_local[1];\n  input0_shared_local[0] = input0_shared[((int)threadIdx.x)];\n  input1_shared_local[0] = input1_shared[((int)threadIdx.x)];\n  __syncthreads();\n  output0[((int)threadIdx.x)] = hexp((input0_shared_local[0] - input1_shared_local[0]));\n  __syncthreads();\n}\n\n__device__ void Group11_4_SoftmaxBasic_135(half* __restrict__ input0, half* __restrict__ output0, char* shared) {\n  half output0_local[1];\n  half* input0_shared = input0;\n  output0_local[0] = __float2half_rn(0.000000e+00f);\n  output0_local[0] = (output0_local[0] + input0_shared[((int)threadIdx.x)]);\n  __syncthreads();\n  output0[((int)threadIdx.x)] = output0_local[0];\n  __syncthreads();\n}\n\n__device__ void Group11_5_Reshape_Broadcast_SoftmaxBasic_155(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0, char* shared) {\n  half* input0_shared = input0;\n  half* input1_shared = input1;\n  output0[((((int)blockIdx.x) * 2) + ((int)threadIdx.x))] = (input0_shared[((int)threadIdx.x)] / input1_shared[((int)threadIdx.x)]);\n}\n\n__global__ void __launch_bounds__(2) Group11(half* input0, half* input1, half* input2, half* input3, half* output0) {\n  __shared__ char shared[1024];\n  Group11_0_Add_Reshape_Reshape_Broadcast_Reshape_Reshape_Reshape_Broadcast_146(input2, input3, (half*)(shared+0), shared+0);\n  Group11_1_BatchMatMul_Reshape_Reshape_Broadcast_Divide_145(input0, input1, (half*)(shared+0), (half*)(shared+0), shared+512);\n  Group11_2_SoftmaxBasic_133((half*)(shared+0), (half*)(shared+32), shared+32);\n  Group11_3_SoftmaxBasic_134((half*)(shared+0), (half*)(shared+32), (half*)(shared+0), shared+64);\n  Group11_4_SoftmaxBasic_135((half*)(shared+0), (half*)(shared+32), shared+32);\n  Group11_5_Reshape_Broadcast_SoftmaxBasic_155((half*)(shared+0), (half*)(shared+32), output0, shared+64);\n}\n",
+    "block_size": [
+      2,
+      1,
+      1
+    ],
+    "grid_size": [
+      32,
+      1,
+      1
+    ],
+    "latency": 0.0071680000983178616,
+    "name": "Group11",
+    "gain": 0.008670850889757276
+  },
+  {
+    "nodes": [
+      89
+    ],
+    "node_names": [
+      "Dot_89"
+    ],
+    "group_id": 12,
+    "input_desc": [
+      [
+        89,
+        0
+      ],
+      [
+        89,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        89,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group8(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0) {\n  half normal_reduce_temp0[1];\n  __shared__ half input0_shared[512];\n  __shared__ half input1_shared[8192];\n  half red_buf0[1];\n  normal_reduce_temp0[0] = __float2half_rn(0.000000e+00f);\n  for (int K_outer = 0; K_outer < 16; ++K_outer) {\n    __syncthreads();\n    *(uint2*)(input0_shared + ((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4))) = *(uint2*)(input0 + (((K_outer * 512) + (((int)threadIdx.y) * 32)) + (((int)threadIdx.x) * 4)));\n    *(uint4*)(input1_shared + ((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8))) = *(uint4*)(input1 + (((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 1024)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 65536));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 2048)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 131072));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 3072)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 196608));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 4096)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 262144));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 5120)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 327680));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 6144)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 393216));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 64) + (((int)threadIdx.x) * 8)) + 7168)) = *(uint4*)(input1 + ((((((K_outer * 524288) + (((int)threadIdx.y) * 4096)) + ((((int)threadIdx.x) >> 1) * 1024)) + (((int)blockIdx.x) * 16)) + ((((int)threadIdx.x) & 1) * 8)) + 458752));\n    __syncthreads();\n    for (int K_inner_outer = 0; K_inner_outer < 64; ++K_inner_outer) {\n      normal_reduce_temp0[0] = (normal_reduce_temp0[0] + (input0_shared[((K_inner_outer * 8) + ((int)threadIdx.x))] * input1_shared[(((K_inner_outer * 128) + (((int)threadIdx.x) * 16)) + ((int)threadIdx.y))]));\n    }\n  }\n  uint mask[1];\n  half t0[1];\n  red_buf0[0] = normal_reduce_temp0[0];\n  mask[0] = (__activemask() & ((uint)(255 << (((int)threadIdx.y) * 8))));\n  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 4, 32);\n  red_buf0[0] = (red_buf0[0] + t0[0]);\n  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 2, 32);\n  red_buf0[0] = (red_buf0[0] + t0[0]);\n  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 1, 32);\n  red_buf0[0] = (red_buf0[0] + t0[0]);\n  red_buf0[0] = __shfl_sync(mask[0], red_buf0[0], (((int)threadIdx.y) * 8), 32);\n  output0[((((int)blockIdx.x) * 16) + ((int)threadIdx.y))] = red_buf0[0];\n}\n\n",
+    "block_size": [
+      8,
+      16,
+      1
+    ],
+    "grid_size": [
+      64,
+      1,
+      1
+    ],
+    "latency": 0.03911039978265762,
+    "name": "Group8",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      142,
+      156,
+      154
+    ],
+    "node_names": [
+      "Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_142",
+      "BatchMatMul_Reshape_156",
+      "Reshape_Reshape_154"
+    ],
+    "group_id": 13,
+    "input_desc": [
+      [
+        156,
+        0
+      ],
+      [
+        142,
+        0
+      ]
+    ],
+    "output_desc": [
+      [
+        154,
+        0
+      ]
+    ],
+    "code": "__device__ void Group13_0_Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_142(half* __restrict__ input0, half* __restrict__ output0, char* shared) {\n  __syncthreads();\n  output0[((int)threadIdx.x)] = input0[((((int)blockIdx.x) * 128) + ((int)threadIdx.x))];\n  output0[(((int)threadIdx.x) + 256)] = input0[((((int)blockIdx.x) * 128) + ((int)threadIdx.x))];\n  output0[(((int)threadIdx.x) + 512)] = input0[((((int)blockIdx.x) * 128) + ((int)threadIdx.x))];\n  output0[(((int)threadIdx.x) + 768)] = input0[((((int)blockIdx.x) * 128) + ((int)threadIdx.x))];\n  output0[(((int)threadIdx.x) + 128)] = input0[((((int)blockIdx.x) * 128) + ((int)threadIdx.x))];\n  output0[(((int)threadIdx.x) + 384)] = input0[((((int)blockIdx.x) * 128) + ((int)threadIdx.x))];\n  output0[(((int)threadIdx.x) + 640)] = input0[((((int)blockIdx.x) * 128) + ((int)threadIdx.x))];\n  output0[(((int)threadIdx.x) + 896)] = input0[((((int)blockIdx.x) * 128) + ((int)threadIdx.x))];\n  __syncthreads();\n}\n\n__device__ void Group13_1_BatchMatMul_Reshape_156(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0, char* shared) {\n  half mediate0_local[8];\n  half* input0_shared = (half*)(shared+0);\n  half* input1_shared = input1;\n  mediate0_local[0] = __float2half_rn(0.000000e+00f);\n  mediate0_local[2] = __float2half_rn(0.000000e+00f);\n  mediate0_local[4] = __float2half_rn(0.000000e+00f);\n  mediate0_local[6] = __float2half_rn(0.000000e+00f);\n  mediate0_local[1] = __float2half_rn(0.000000e+00f);\n  mediate0_local[3] = __float2half_rn(0.000000e+00f);\n  mediate0_local[5] = __float2half_rn(0.000000e+00f);\n  mediate0_local[7] = __float2half_rn(0.000000e+00f);\n  if (((int)threadIdx.x) < 8) {\n    input0_shared[((int)threadIdx.x)] = input0[((((int)blockIdx.x) * 8) + ((int)threadIdx.x))];\n  }\n  __syncthreads();\n  mediate0_local[0] = (mediate0_local[0] + (input0_shared[(((int)threadIdx.x) >> 4)] * input1_shared[(((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2))]));\n  mediate0_local[2] = (mediate0_local[2] + (input0_shared[(((int)threadIdx.x) >> 4)] * input1_shared[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 32)]));\n  mediate0_local[4] = (mediate0_local[4] + (input0_shared[(((int)threadIdx.x) >> 4)] * input1_shared[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 64)]));\n  mediate0_local[6] = (mediate0_local[6] + (input0_shared[(((int)threadIdx.x) >> 4)] * input1_shared[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 96)]));\n  mediate0_local[1] = (mediate0_local[1] + (input0_shared[(((int)threadIdx.x) >> 4)] * input1_shared[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 1)]));\n  mediate0_local[3] = (mediate0_local[3] + (input0_shared[(((int)threadIdx.x) >> 4)] * input1_shared[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 33)]));\n  mediate0_local[5] = (mediate0_local[5] + (input0_shared[(((int)threadIdx.x) >> 4)] * input1_shared[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 65)]));\n  mediate0_local[7] = (mediate0_local[7] + (input0_shared[(((int)threadIdx.x) >> 4)] * input1_shared[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 97)]));\n  __syncthreads();\n  output0[(((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2))] = mediate0_local[0];\n  output0[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 32)] = mediate0_local[2];\n  output0[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 64)] = mediate0_local[4];\n  output0[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 96)] = mediate0_local[6];\n  output0[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 1)] = mediate0_local[1];\n  output0[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 33)] = mediate0_local[3];\n  output0[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 65)] = mediate0_local[5];\n  output0[((((((int)threadIdx.x) >> 4) * 128) + ((((int)threadIdx.x) & 15) * 2)) + 97)] = mediate0_local[7];\n  __syncthreads();\n}\n\n__device__ void Group13_2_Reshape_Reshape_154(half* __restrict__ input0, half* __restrict__ output0, char* shared) {\n  half* input0_shared = input0;\n  output0[((((int)blockIdx.x) * 1024) + (((int)threadIdx.x) * 2))] = input0_shared[(((int)threadIdx.x) * 2)];\n  output0[(((((int)blockIdx.x) * 1024) + (((int)threadIdx.x) * 2)) + 256)] = input0_shared[((((int)threadIdx.x) * 2) + 256)];\n  output0[(((((int)blockIdx.x) * 1024) + (((int)threadIdx.x) * 2)) + 512)] = input0_shared[((((int)threadIdx.x) * 2) + 512)];\n  output0[(((((int)blockIdx.x) * 1024) + (((int)threadIdx.x) * 2)) + 768)] = input0_shared[((((int)threadIdx.x) * 2) + 768)];\n  output0[(((((int)blockIdx.x) * 1024) + (((int)threadIdx.x) * 2)) + 1)] = input0_shared[((((int)threadIdx.x) * 2) + 1)];\n  output0[(((((int)blockIdx.x) * 1024) + (((int)threadIdx.x) * 2)) + 257)] = input0_shared[((((int)threadIdx.x) * 2) + 257)];\n  output0[(((((int)blockIdx.x) * 1024) + (((int)threadIdx.x) * 2)) + 513)] = input0_shared[((((int)threadIdx.x) * 2) + 513)];\n  output0[(((((int)blockIdx.x) * 1024) + (((int)threadIdx.x) * 2)) + 769)] = input0_shared[((((int)threadIdx.x) * 2) + 769)];\n}\n\n__global__ void __launch_bounds__(128) Group13(half* input0, half* input1, half* output0) {\n  __shared__ char shared[2080];\n  Group13_0_Reshape_Reshape_Reshape_Reshape_Broadcast_Reshape_Reshape_Broadcast_142(input1, (half*)(shared+0), shared+0);\n  Group13_1_BatchMatMul_Reshape_156(input0, (half*)(shared+0), (half*)(shared+0), shared+2048);\n  Group13_2_Reshape_Reshape_154((half*)(shared+0), output0, shared+2048);\n}\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      8,
+      1,
+      1
+    ],
+    "latency": 0.0030690908897668123,
+    "name": "Group13",
+    "gain": 0.004454951034858823
+  },
+  {
+    "nodes": [
+      157
+    ],
+    "node_names": [
+      "Dot_Add_Convert_Reshape_Broadcast_Power_157"
+    ],
+    "group_id": 14,
+    "input_desc": [
+      [
+        157,
+        0
+      ],
+      [
+        157,
+        1
+      ],
+      [
+        157,
+        2
+      ],
+      [
+        157,
+        3
+      ]
+    ],
+    "output_desc": [
+      [
+        157,
+        0
+      ],
+      [
+        157,
+        1
+      ],
+      [
+        157,
+        2
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group14(float* __restrict__ input0, half* __restrict__ input1, half* __restrict__ input2, half* __restrict__ input3, half* __restrict__ output_proxy, float* __restrict__ output_proxy_1, float* __restrict__ output_proxy_2) {\n  half normal_reduce_temp0[1];\n  __shared__ half input1_shared[128];\n  __shared__ half input2_shared[8192];\n  half red_buf0[1];\n  normal_reduce_temp0[0] = __float2half_rn(0.000000e+00f);\n  for (int K_outer = 0; K_outer < 64; ++K_outer) {\n    __syncthreads();\n    input1_shared[((((int)threadIdx.y) * 2) + ((int)threadIdx.x))] = input1[(((K_outer * 128) + (((int)threadIdx.y) * 2)) + ((int)threadIdx.x))];\n    *(uint4*)(input2_shared + ((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8))) = *(uint4*)(input2 + (((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)));\n    *(uint4*)(input2_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 1024)) = *(uint4*)(input2 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 131072));\n    *(uint4*)(input2_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 2048)) = *(uint4*)(input2 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 262144));\n    *(uint4*)(input2_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 3072)) = *(uint4*)(input2 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 393216));\n    *(uint4*)(input2_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 4096)) = *(uint4*)(input2 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 524288));\n    *(uint4*)(input2_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 5120)) = *(uint4*)(input2 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 655360));\n    *(uint4*)(input2_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 6144)) = *(uint4*)(input2 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 786432));\n    *(uint4*)(input2_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 7168)) = *(uint4*)(input2 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 917504));\n    __syncthreads();\n    for (int K_inner_outer = 0; K_inner_outer < 64; ++K_inner_outer) {\n      normal_reduce_temp0[0] = (normal_reduce_temp0[0] + (input1_shared[((K_inner_outer * 2) + ((int)threadIdx.x))] * input2_shared[(((K_inner_outer * 128) + (((int)threadIdx.x) * 64)) + ((int)threadIdx.y))]));\n    }\n  }\n  uint mask[1];\n  half t0[1];\n  red_buf0[0] = normal_reduce_temp0[0];\n  mask[0] = (__activemask() & ((uint)(3 << (((int)threadIdx.y) * 2))));\n  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 1, 32);\n  red_buf0[0] = (red_buf0[0] + t0[0]);\n  red_buf0[0] = __shfl_sync(mask[0], red_buf0[0], (((int)threadIdx.y) * 2), 32);\n  output_proxy[((((int)blockIdx.x) * 64) + ((int)threadIdx.y))] = (input3[((((int)blockIdx.x) * 64) + ((int)threadIdx.y))] + red_buf0[0]);\n  output_proxy_1[((((int)blockIdx.x) * 64) + ((int)threadIdx.y))] = ((float)(input3[((((int)blockIdx.x) * 64) + ((int)threadIdx.y))] + red_buf0[0]));\n  output_proxy_2[((((int)blockIdx.x) * 64) + ((int)threadIdx.y))] = powf(((float)(input3[((((int)blockIdx.x) * 64) + ((int)threadIdx.y))] + red_buf0[0])), input0[0]);\n}\n\n",
+    "block_size": [
+      2,
+      64,
+      1
+    ],
+    "grid_size": [
+      128,
+      1,
+      1
+    ],
+    "latency": 0.16409599781036377,
+    "name": "Group14",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      139
+    ],
+    "node_names": [
+      "Sum_Reshape_Divide_139"
+    ],
+    "group_id": 15,
+    "input_desc": [
+      [
+        139,
+        0
+      ],
+      [
+        139,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        139,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group3(float* __restrict__ input0, float* __restrict__ input1, float* __restrict__ output0) {\n  float normal_reduce_temp0[1];\n  __shared__ float input1_shared[4096];\n  __shared__ float red_buf0[128];\n  normal_reduce_temp0[0] = 0.000000e+00f;\n  for (int N2_outer = 0; N2_outer < 2; ++N2_outer) {\n    __syncthreads();\n    *(float4*)(input1_shared + (((int)threadIdx.x) * 4)) = *(float4*)(input1 + ((N2_outer * 4096) + (((int)threadIdx.x) * 4)));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 512)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 512));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 1024)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 1024));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 1536)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 1536));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 2048)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 2048));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 2560)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 2560));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 3072)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 3072));\n    *(float4*)(input1_shared + ((((int)threadIdx.x) * 4) + 3584)) = *(float4*)(input1 + (((N2_outer * 4096) + (((int)threadIdx.x) * 4)) + 3584));\n    __syncthreads();\n    for (int N2_inner_outer = 0; N2_inner_outer < 32; ++N2_inner_outer) {\n      normal_reduce_temp0[0] = (normal_reduce_temp0[0] + input1_shared[((N2_inner_outer * 128) + ((int)threadIdx.x))]);\n    }\n  }\n  __syncthreads();\n  ((volatile float*)red_buf0)[((int)threadIdx.x)] = normal_reduce_temp0[0];\n  __syncthreads();\n  if (((int)threadIdx.x) < 64) {\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 64)]);\n  }\n  __syncthreads();\n  if (((int)threadIdx.x) < 32) {\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 32)]);\n  }\n  __syncthreads();\n  if (((int)threadIdx.x) < 16) {\n    float w_16_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 16)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_16_0;\n    float w_8_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 8)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_8_0;\n    float w_4_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 4)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_4_0;\n    float w_2_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 2)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_2_0;\n    float w_1_0 = (((volatile float*)red_buf0)[((int)threadIdx.x)] + ((volatile float*)red_buf0)[(((int)threadIdx.x) + 1)]);\n    ((volatile float*)red_buf0)[((int)threadIdx.x)] = w_1_0;\n  }\n  __syncthreads();\n  output0[0] = (((volatile float*)red_buf0)[0] / input0[0]);\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      1,
+      1,
+      1
+    ],
+    "latency": 0.004710400011390448,
+    "name": "Group3",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      140
+    ],
+    "node_names": [
+      "Reshape_Reshape_Add_Sqrt_Reshape_Broadcast_Divide_Convert_Reshape_Multiply_140"
+    ],
+    "group_id": 16,
+    "input_desc": [
+      [
+        140,
+        0
+      ],
+      [
+        140,
+        1
+      ],
+      [
+        140,
+        2
+      ],
+      [
+        140,
+        3
+      ]
+    ],
+    "output_desc": [
+      [
+        140,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group16(half* __restrict__ input0, float* __restrict__ input1, float* __restrict__ input2, float* __restrict__ input3, half* __restrict__ output0) {\n  output0[((((int)blockIdx.x) * 128) + ((int)threadIdx.x))] = (input0[((((int)blockIdx.x) * 128) + ((int)threadIdx.x))] * ((half)(input3[((((int)blockIdx.x) * 128) + ((int)threadIdx.x))] / sqrtf((input2[0] + input1[0])))));\n}\n\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      64,
+      1,
+      1
+    ],
+    "latency": 0.0031999999191612005,
+    "name": "Group16",
+    "gain": 0
+  },
+  {
+    "nodes": [
+      138,
+      125,
+      129
+    ],
+    "node_names": [
+      "Dot_Sigmoid_Multiply_138",
+      "Dot_125",
+      "Multiply_129"
+    ],
+    "group_id": 17,
+    "input_desc": [
+      [
+        138,
+        0
+      ],
+      [
+        138,
+        1
+      ],
+      [
+        125,
+        0
+      ],
+      [
+        125,
+        1
+      ]
+    ],
+    "output_desc": [
+      [
+        129,
+        0
+      ]
+    ],
+    "code": "__device__ void Group17_0_Dot_Sigmoid_Multiply_138(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0, char* shared) {\n  half mediate0_local[2];\n  half* input0_shared = (half*)(shared+0);\n  half* input1_shared = (half*)(shared+128);\n  mediate0_local[0] = __float2half_rn(0.000000e+00f);\n  mediate0_local[1] = __float2half_rn(0.000000e+00f);\n  for (int K_outer = 0; K_outer < 128; ++K_outer) {\n    __syncthreads();\n    if (((int)threadIdx.x) < 64) {\n      input0_shared[((int)threadIdx.x)] = input0[((K_outer * 64) + ((int)threadIdx.x))];\n    }\n    *(uint4*)(input1_shared + (((int)threadIdx.x) * 8)) = *(uint4*)(input1 + ((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 1024)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 114688));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 2048)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 229376));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 3072)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 344064));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 4096)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 458752));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 5120)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 573440));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 6144)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 688128));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 7168)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 802816));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 8192)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 917504));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 9216)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1032192));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 10240)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1146880));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 11264)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1261568));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 12288)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1376256));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 13312)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1490944));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 14336)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1605632));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 15360)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1720320));\n    __syncthreads();\n    for (int K_inner = 0; K_inner < 64; ++K_inner) {\n      mediate0_local[0] = (mediate0_local[0] + (input0_shared[K_inner] * input1_shared[((K_inner * 256) + (((int)threadIdx.x) * 2))]));\n      mediate0_local[1] = (mediate0_local[1] + (input0_shared[K_inner] * input1_shared[(((K_inner * 256) + (((int)threadIdx.x) * 2)) + 1)]));\n    }\n  }\n  __syncthreads();\n  output0[(((int)threadIdx.x) * 2)] = (mediate0_local[0] * (__float2half_rn(1.000000e+00f) / (__float2half_rn(1.000000e+00f) + hexp((__float2half_rn(0.000000e+00f) - mediate0_local[0])))));\n  output0[((((int)threadIdx.x) * 2) + 1)] = (mediate0_local[1] * (__float2half_rn(1.000000e+00f) / (__float2half_rn(1.000000e+00f) + hexp((__float2half_rn(0.000000e+00f) - mediate0_local[1])))));\n  __syncthreads();\n}\n\n__device__ void Group17_1_Dot_125(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0, char* shared) {\n  half output0_local[2];\n  half* input0_shared = (half*)(shared+0);\n  half* input1_shared = (half*)(shared+128);\n  output0_local[0] = __float2half_rn(0.000000e+00f);\n  output0_local[1] = __float2half_rn(0.000000e+00f);\n  for (int K_outer = 0; K_outer < 128; ++K_outer) {\n    __syncthreads();\n    if (((int)threadIdx.x) < 64) {\n      input0_shared[((int)threadIdx.x)] = input0[((K_outer * 64) + ((int)threadIdx.x))];\n    }\n    *(uint4*)(input1_shared + (((int)threadIdx.x) * 8)) = *(uint4*)(input1 + ((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 1024)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 114688));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 2048)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 229376));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 3072)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 344064));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 4096)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 458752));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 5120)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 573440));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 6144)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 688128));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 7168)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 802816));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 8192)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 917504));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 9216)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1032192));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 10240)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1146880));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 11264)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1261568));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 12288)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1376256));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 13312)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1490944));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 14336)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1605632));\n    *(uint4*)(input1_shared + ((((int)threadIdx.x) * 8) + 15360)) = *(uint4*)(input1 + (((((K_outer * 1835008) + ((((int)threadIdx.x) >> 5) * 28672)) + (((int)blockIdx.x) * 256)) + ((((int)threadIdx.x) & 31) * 8)) + 1720320));\n    __syncthreads();\n    for (int K_inner = 0; K_inner < 64; ++K_inner) {\n      output0_local[0] = (output0_local[0] + (input0_shared[K_inner] * input1_shared[((K_inner * 256) + (((int)threadIdx.x) * 2))]));\n      output0_local[1] = (output0_local[1] + (input0_shared[K_inner] * input1_shared[(((K_inner * 256) + (((int)threadIdx.x) * 2)) + 1)]));\n    }\n  }\n  __syncthreads();\n  output0[(((int)threadIdx.x) * 2)] = output0_local[0];\n  output0[((((int)threadIdx.x) * 2) + 1)] = output0_local[1];\n  __syncthreads();\n}\n\n__device__ void Group17_2_Multiply_129(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ output0, char* shared) {\n  half* input0_shared = input0;\n  half* input1_shared = input1;\n  output0[((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 2))] = (input0_shared[(((int)threadIdx.x) * 2)] * input1_shared[(((int)threadIdx.x) * 2)]);\n  output0[(((((int)blockIdx.x) * 256) + (((int)threadIdx.x) * 2)) + 1)] = (input0_shared[((((int)threadIdx.x) * 2) + 1)] * input1_shared[((((int)threadIdx.x) * 2) + 1)]);\n}\n\n__global__ void __launch_bounds__(128) Group17(half* input0, half* input1, half* input2, half* input3, half* output0) {\n  __shared__ char shared[33408];\n  Group17_0_Dot_Sigmoid_Multiply_138(input0, input1, (half*)(shared+0), shared+0);\n  Group17_1_Dot_125(input2, input3, (half*)(shared+512), shared+512);\n  Group17_2_Multiply_129((half*)(shared+0), (half*)(shared+512), output0, shared+1024);\n}\n",
+    "block_size": [
+      128,
+      1,
+      1
+    ],
+    "grid_size": [
+      112,
+      1,
+      1
+    ],
+    "latency": 1.0673387050628662,
+    "name": "Group17",
+    "gain": 0.00843012984842062
+  },
+  {
+    "nodes": [
+      137
+    ],
+    "node_names": [
+      "Dot_Add_137"
+    ],
+    "group_id": 18,
+    "input_desc": [
+      [
+        137,
+        0
+      ],
+      [
+        137,
+        1
+      ],
+      [
+        137,
+        2
+      ]
+    ],
+    "output_desc": [
+      [
+        137,
+        0
+      ]
+    ],
+    "code": "__global__ void __launch_bounds__(128) Group18(half* __restrict__ input0, half* __restrict__ input1, half* __restrict__ input2, half* __restrict__ output0) {\n  half normal_reduce_temp0[1];\n  __shared__ half input0_shared[128];\n  __shared__ half input1_shared[8192];\n  half red_buf0[1];\n  normal_reduce_temp0[0] = __float2half_rn(0.000000e+00f);\n  for (int K_outer = 0; K_outer < 224; ++K_outer) {\n    __syncthreads();\n    input0_shared[((((int)threadIdx.y) * 2) + ((int)threadIdx.x))] = input0[(((K_outer * 128) + (((int)threadIdx.y) * 2)) + ((int)threadIdx.x))];\n    *(uint4*)(input1_shared + ((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8))) = *(uint4*)(input1 + (((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 1024)) = *(uint4*)(input1 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 131072));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 2048)) = *(uint4*)(input1 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 262144));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 3072)) = *(uint4*)(input1 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 393216));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 4096)) = *(uint4*)(input1 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 524288));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 5120)) = *(uint4*)(input1 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 655360));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 6144)) = *(uint4*)(input1 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 786432));\n    *(uint4*)(input1_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 8)) + 7168)) = *(uint4*)(input1 + ((((((K_outer * 1048576) + ((((int)threadIdx.y) >> 2) * 8192)) + (((int)blockIdx.x) * 64)) + ((((int)threadIdx.y) & 3) * 16)) + (((int)threadIdx.x) * 8)) + 917504));\n    __syncthreads();\n    for (int K_inner_outer = 0; K_inner_outer < 64; ++K_inner_outer) {\n      normal_reduce_temp0[0] = (normal_reduce_temp0[0] + (input0_shared[((K_inner_outer * 2) + ((int)threadIdx.x))] * input1_shared[(((K_inner_outer * 128) + (((int)threadIdx.x) * 64)) + ((int)threadIdx.y))]));\n    }\n  }\n  uint mask[1];\n  half t0[1];\n  red_buf0[0] = normal_reduce_temp0[0];\n  mask[0] = (__activemask() & ((uint)(3 << (((int)threadIdx.y) * 2))));\n  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 1, 32);\n  red_buf0[0] = (red_buf0[0] + t0[0]);\n  red_buf0[0] = __shfl_sync(mask[0], red_buf0[0], (((int)threadIdx.y) * 2), 32);\n  output0[((((int)blockIdx.x) * 64) + ((int)threadIdx.y))] = (input2[((((int)blockIdx.x) * 64) + ((int)threadIdx.y))] + red_buf0[0]);\n}\n\n",
+    "block_size": [
+      2,
+      64,
+      1
+    ],
+    "grid_size": [
+      128,
+      1,
+      1
+    ],
+    "latency": 0.5470143556594849,
+    "name": "Group18",
+    "gain": 0
+  }
+]

@@ -46,4 +46,4 @@ with torch.no_grad(), torch.autocast("cuda"):
 print("Compiling done, start inference")
 
 while True:
-    _ = compiled_model(input_ids)
+    _ = compiled_model(input_ids, alibi, attention_mask)

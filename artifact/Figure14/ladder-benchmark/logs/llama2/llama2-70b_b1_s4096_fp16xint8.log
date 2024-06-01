@@ -1,0 +1,165 @@
+Testing model: llama2-70b
+Debug and built model will be saved in progress/e2e/llama2-70b/ladder_with_fake_dense_dequantize_fq_0_int_8_-1_bs1_seq4096_ci_False
+/root/Ladder/3rdparty/tvm/python/tvm/target/target.py:397: UserWarning: Try specifying cuda arch by adding 'arch=sm_xx' to your target.
+  warnings.warn("Try specifying cuda arch by adding 'arch=sm_xx' to your target.")
+{"bits": 8, "format": "int", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 8, "format": "int", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 8, "format": "int", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 8, "format": "int", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 8, "format": "int", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 8, "format": "int", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+{"bits": 8, "format": "int", "out_dtype": "float16", "group_size": -1, "transpose_b": 1, "transpose_a": 0}
+2024-05-15 11:46:23 [ladder:DEBUG]: lhs or rhs is constant
+2024-05-15 11:46:23 [ladder:DEBUG]: lhs or rhs is constant
+32
+Output115, 
+reshape113, reshape112, add114, layout_transform111, 
+ladder.perfect_quant_linear110, 
+exp53, subtract52, 
+divide50, Constant49, reshape48, 
+expand_dims41, add40, reshape43, multiply39, concatenate38, strided_slice37, transpose44, negative36, transpose46, reshape45, broadcast_to42, strided_slice35, multiply34, 
+transpose33, reshape32, reshape31, reshape30, layout_transform29, 
+max51, 
+add26, concatenate24, strided_slice23, negative22, reshape27, multiply25, strided_slice21, multiply20, 
+nn.batch_matmul47, 
+transpose19, reshape18, reshape17, reshape16, layout_transform15, 
+ladder.perfect_quant_linear28, 
+ladder.layout_transform13, layout_transform12, reshape11, multiply10, cast9, multiply8, 
+divide7, sqrt6, add5, Constant4, mean3, Constant1, 
+reshape99, reshape98, layout_transform97, 
+ladder.perfect_quant_linear14, 
+layout_transform108, ladder.layout_transform109, reshape107, multiply106, reshape105, reshape104, layout_transform103, multiply101, sigmoid100, 
+multiply2, cast0, 
+sum54, 
+reshape58, cast57, cast56, divide55, 
+ladder.perfect_quant_linear59, 
+transpose69, reshape67, expand_dims65, broadcast_to66, transpose64, reshape63, reshape62, reshape61, reshape68, layout_transform60, 
+nn.batch_matmul70, 
+layout_transform75, reshape74, ladder.layout_transform76, reshape73, transpose72, reshape71, 
+ladder.perfect_quant_linear77, 
+add81, reshape80, reshape79, layout_transform78, 
+multiply84, cast82, 
+divide89, add87, sqrt88, Constant86, mean85, Constant83, 
+multiply92, cast91, multiply90, 
+ladder.layout_transform95, layout_transform94, reshape93, 
+ladder.perfect_quant_linear96, 
+ladder.perfect_quant_linear102, 
+batch_matmul is not optimized for this platform.
+batch_matmul is not optimized for this platform.
+2024-05-15 11:46:24 [ladder:DEBUG]: candidate nodes: [<Node, cast_multiply_0>, <Node, mean_add_sqrt_divide_1>, <Node, multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2>, <Node, ladder_perfect_quant_linear_3>, <Node, layout_transform_reshape_reshape_reshape_transpose_4>, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5>, <Node, ladder_perfect_quant_linear_6>, <Node, layout_transform_reshape_reshape_reshape_transpose_7>, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8>, <Node, nn_batch_matmul_9>, <Node, reshape_divide_10>, <Node, max_11>, <Node, subtract_exp_12>, <Node, sum_13>, <Node, divide_cast_cast_reshape_14>, <Node, ladder_perfect_quant_linear_15>, <Node, layout_transform_reshape_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>, <Node, nn_batch_matmul_17>, <Node, reshape_transpose_reshape_reshape_layout_transform_ladder_layout_transform_18>, <Node, ladder_perfect_quant_linear_19>, <Node, layout_transform_reshape_reshape_add_20>, <Node, cast_multiply_21>, <Node, mean_add_sqrt_divide_22>, <Node, multiply_cast_multiply_23>, <Node, reshape_layout_transform_ladder_layout_transform_24>, <Node, ladder_perfect_quant_linear_25>, <Node, layout_transform_reshape_reshape_26>, <Node, ladder_perfect_quant_linear_27>, <Node, sigmoid_multiply_layout_transform_reshape_reshape_multiply_reshape_layout_transform_ladder_layout_transform_28>, <Node, ladder_perfect_quant_linear_29>, <Node, layout_transform_reshape_reshape_add_30>, <Node, Output >]
+2024-05-15 11:46:24 [ladder:DEBUG]: tune candidate nodes: [<Node, PlaceHolder >, <Node, cast_multiply_0>, <Node, mean_add_sqrt_divide_1>, <Node, PlaceHolder >, <Node, multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_3>, <Node, layout_transform_reshape_reshape_reshape_transpose_4>, <Node, PlaceHolder >, <Node, PlaceHolder >, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_6>, <Node, layout_transform_reshape_reshape_reshape_transpose_7>, <Node, PlaceHolder >, <Node, PlaceHolder >, <Node, multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8>, <Node, nn_batch_matmul_9>, <Node, reshape_divide_10>, <Node, max_11>, <Node, subtract_exp_12>, <Node, sum_13>, <Node, divide_cast_cast_reshape_14>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_15>, <Node, layout_transform_reshape_reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16>, <Node, nn_batch_matmul_17>, <Node, reshape_transpose_reshape_reshape_layout_transform_ladder_layout_transform_18>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_19>, <Node, PlaceHolder >, <Node, layout_transform_reshape_reshape_add_20>, <Node, cast_multiply_21>, <Node, mean_add_sqrt_divide_22>, <Node, PlaceHolder >, <Node, multiply_cast_multiply_23>, <Node, reshape_layout_transform_ladder_layout_transform_24>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_25>, <Node, layout_transform_reshape_reshape_26>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_27>, <Node, sigmoid_multiply_layout_transform_reshape_reshape_multiply_reshape_layout_transform_ladder_layout_transform_28>, <Node, PlaceHolder >, <Node, ladder_perfect_quant_linear_29>, <Node, layout_transform_reshape_reshape_add_30>, <Node, Output >]
+Processing:   0%|          | 0/47 [00:00<?, ?it/s]                                                  2024-05-15 11:46:24 [ladder:INFO]: Tuning ['cast_multiply_0', 'mean_add_sqrt_divide_1', 'multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2']
+Processing:   0%|          | 0/47 [00:00<?, ?it/s]                                                  2024-05-15 11:46:24 [ladder:INFO]: Tuning ['cast_multiply_0', 'mean_add_sqrt_divide_1']
+Processing:   0%|          | 0/47 [00:00<?, ?it/s]                                                  2024-05-15 11:46:30 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 1, 8192], 'thread': [1, 1, 128], 'rstep': []}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 1, 1], 'thread': [1, 1, 1], 'rstep': [8192], 'reduce_thread': [128], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:05<?, ?it/s]                                                  2024-05-15 11:46:32 [ladder:DEBUG]: 0.13742080330848694
+Processing:   0%|          | 0/47 [00:07<?, ?it/s]                                                  2024-05-15 11:46:32 [ladder:DEBUG]: Best Config: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 1, 8192], 'thread': [1, 1, 128], 'rstep': []}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 1, 1], 'thread': [1, 1, 1], 'rstep': [8192], 'reduce_thread': [128], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:07<?, ?it/s]                                                  2024-05-15 11:46:32 [ladder:INFO]: result: 0.13742080330848694
+Processing:   0%|          | 0/47 [00:07<?, ?it/s]                                                  2024-05-15 11:46:32 [ladder:INFO]: Tuning ['cast_multiply_0']
+Processing:   0%|          | 0/47 [00:07<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 1, 128], 'thread': [1, 1, 128], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: 0.22988799214363098
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 2, 64], 'thread': [1, 2, 64], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: 0.2329869568347931
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 1, 64], 'thread': [1, 1, 64], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: 0.39178240299224854
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 1, 4096], 'thread': [1, 1, 128], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: 0.24974220991134644
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 2, 2048], 'thread': [1, 2, 64], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: 0.24860446155071259
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 4, 1024], 'thread': [1, 4, 32], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: 0.24405333399772644
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 8, 512], 'thread': [1, 8, 16], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: 0.2481493353843689
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 16, 256], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: 0.25088000297546387
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 32, 128], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: 0.2562275528907776
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 64, 64], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: 0.2586168944835663
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 1, 2048], 'thread': [1, 1, 128], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: 0.2456137090921402
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:51 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 2, 1024], 'thread': [1, 2, 64], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.24481476843357086
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 4, 512], 'thread': [1, 4, 32], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.24229414761066437
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 8, 256], 'thread': [1, 8, 16], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.24229414761066437
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 16, 128], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.25563427805900574
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 32, 64], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.2586781680583954
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 1, 1024], 'thread': [1, 1, 128], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.24041244387626648
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 2, 512], 'thread': [1, 2, 64], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.24076800048351288
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 4, 256], 'thread': [1, 4, 32], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.23654399812221527
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 8, 128], 'thread': [1, 8, 16], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.2449280023574829
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 16, 64], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.25036799907684326
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 1, 512], 'thread': [1, 1, 128], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.23842133581638336
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 2, 256], 'thread': [1, 2, 64], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.23899023234844208
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 4, 128], 'thread': [1, 4, 32], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.23694221675395966
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 8, 64], 'thread': [1, 8, 16], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.24166400730609894
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 1, 256], 'thread': [1, 1, 128], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.23405715823173523
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 2, 128], 'thread': [1, 2, 64], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.23868508636951447
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 4, 64], 'thread': [1, 4, 32], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.2393600046634674
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 1, 8192], 'thread': [1, 1, 128], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.25456640124320984
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 2, 4096], 'thread': [1, 2, 64], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.2424832135438919
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 4, 2048], 'thread': [1, 4, 32], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.24309758841991425
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 8, 1024], 'thread': [1, 8, 16], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.23961599171161652
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 16, 512], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.2506752014160156
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 32, 256], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.25272318720817566
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 64, 128], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.2576383948326111
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 128, 64], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.26009601354599
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 4, 32], 'thread': [1, 4, 32], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.2390817403793335
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 2, 32], 'thread': [1, 2, 32], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.39189082384109497
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 128, 32], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.2731519937515259
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 64, 32], 'thread': [1, 16, 8], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: 0.26883938908576965
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:DEBUG]: Best Config: {'globals': {'Rasterization': <NoRasterization>}, <Node, cast_multiply_0>: {'block': [1, 1, 128], 'thread': [1, 1, 128], 'rstep': []}}
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:INFO]: result: 0.22988799214363098
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:52 [ladder:INFO]: Tuning ['mean_add_sqrt_divide_1']
+Processing:   0%|          | 0/47 [00:27<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 2, 1], 'thread': [1, 2, 1], 'rstep': [2048], 'reduce_thread': [64], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: 0.08721066266298294
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 1, 1], 'thread': [1, 1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: 0.08482133597135544
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 4, 1], 'thread': [1, 4, 1], 'rstep': [1024], 'reduce_thread': [32], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: 0.08806399255990982
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 16, 1], 'thread': [1, 16, 1], 'rstep': [256], 'reduce_thread': [8], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: 0.09245257079601288
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 8, 1], 'thread': [1, 8, 1], 'rstep': [512], 'reduce_thread': [16], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: 0.0870399996638298
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 32, 1], 'thread': [1, 32, 1], 'rstep': [128], 'reduce_thread': [4], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: 0.14284799993038177
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 64, 1], 'thread': [1, 64, 1], 'rstep': [64], 'reduce_thread': [2], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: 0.2954971492290497
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 128, 1], 'thread': [1, 128, 1], 'rstep': [32], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: 0.399616003036499
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: {'globals': {'Rasterization': <NoRasterization>}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 256, 1], 'thread': [1, 128, 1], 'rstep': [32], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: 0.6330026984214783
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:DEBUG]: Best Config: {'globals': {'Rasterization': <NoRasterization>}, <Node, mean_add_sqrt_divide_1>: {'block': [1, 1, 1], 'thread': [1, 1, 1], 'rstep': [4096], 'reduce_thread': [128], 'vectorize': {'p0': 4}}}
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:INFO]: result: 0.08482133597135544
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:INFO]: Tuning ['cast_multiply_0', 'mean_add_sqrt_divide_1', 'multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2']
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]                                                  2024-05-15 11:46:57 [ladder:INFO]: Fusion group created: 0 ['cast_multiply_0', 'mean_add_sqrt_divide_1']
+Processing:   0%|          | 0/47 [00:33<?, ?it/s]Processing:   4%|▍         | 2/47 [00:33<12:28, 16.62s/it]                                                          2024-05-15 11:46:57 [ladder:INFO]: Tuning ['multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2', 'ladder_perfect_quant_linear_3', 'ladder_perfect_quant_linear_6', 'ladder_perfect_quant_linear_15']
+Processing:   4%|▍         | 2/47 [00:33<12:28, 16.62s/it]                                                          2024-05-15 11:46:57 [ladder:INFO]: Tuning ['multiply_cast_multiply_reshape_layout_transform_ladder_layout_transform_2']
+Processing:   4%|▍         | 2/47 [00:33<12:28, 16.62s/it]

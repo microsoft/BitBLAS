@@ -1,0 +1,14 @@
+Measure the memory for bloom batch 1 seq 1 under vllm
+Traceback (most recent call last):
+  File "/root/Ladder/artifact/Figure11/vllm-benchmark/benchmark_bloom.py", line 7, in <module>
+    from vllm.model_executor.models.bloom import BloomForCausalLM
+  File "/root/Ladder/artifact/baseline_framework/vLLM/vllm/model_executor/__init__.py", line 2, in <module>
+    from vllm.model_executor.model_loader import get_model
+  File "/root/Ladder/artifact/baseline_framework/vLLM/vllm/model_executor/model_loader.py", line 10, in <module>
+    from vllm.model_executor.models import *
+  File "/root/Ladder/artifact/baseline_framework/vLLM/vllm/model_executor/models/__init__.py", line 5, in <module>
+    from vllm.model_executor.models.falcon import FalconForCausalLM
+  File "/root/Ladder/artifact/baseline_framework/vLLM/vllm/model_executor/models/falcon.py", line 27, in <module>
+    from transformers import FalconConfig as HF_FalconConfig
+ImportError: cannot import name 'FalconConfig' from 'transformers' (/opt/conda/lib/python3.10/site-packages/transformers/__init__.py)
+{'bloom_vllm_1_1': 20047}

@@ -39,7 +39,7 @@ if async_propagation:
 
 def run(prefix, arch, quant_type, quant_config, convert_int=False):
     onnx_model = onnx.load(osp.join(prefix, "model.onnx"))
-    mod, params = relay.frontend.from_onnx(onnx_model, convert_config={"use_welder_matmul": True})
+    mod, params = relay.frontend.from_onnx(onnx_model, convert_config={"use_welder_matmul": False})
     write_mod(mod, log_path, "load_from_onnx")
 
     if args.cublas:
@@ -85,7 +85,8 @@ def run(prefix, arch, quant_type, quant_config, convert_int=False):
     write_mod(mod, log_path, "LadderConvImplicitGemm")
     mod = ladder.relay.transform.WelderConvImplicitGemm()(mod)
     write_mod(mod, log_path, "WelderConvImplicitGemm")
-    mod = ladder.relay.transform.LadderFakeQuantConv(quant_config=quant_config, quant_type=quant_type, convert_int=convert_int)(mod)
+    if args.fake_quant > -1:
+        mod = ladder.relay.transform.LadderFakeQuantConv(quant_config=quant_config, quant_type=quant_type, convert_int=convert_int)(mod)
     write_mod(mod, log_path, "LadderFakeQuantConv")
     mod = relay.transform.FoldConstant()(mod)
     write_mod(mod, log_path, "FoldConstant")

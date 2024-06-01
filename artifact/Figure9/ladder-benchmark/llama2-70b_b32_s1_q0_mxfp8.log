@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure9/ladder/checkpoints/llama2-70b/ladder_with_fake_dense_dequantize_fq_0_mxfp_8_-1_bs32_seq1_ci_False_cf_True
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   7.0374       7.0356       7.0478       7.0286       0.0063   
+               

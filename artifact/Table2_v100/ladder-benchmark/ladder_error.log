@@ -1,0 +1,357 @@
+['nn_max_pool2d_2', 'welder_C2DImplicitGemm_3', 'welder_C2DImplicitGemm_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_max_pool2d_2>: {'block': [1, 1, 14, 64], 'thread': [1, 1, 2, 64], 'rstep': [3, 3]}, <Node, welder_C2DImplicitGemm_3>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'vectorize': {'p1': 8}}, <Node, welder_C2DImplicitGemm_8>: {'block': [14, 256], 'thread': [2, 64], 'rstep': [32], 'step': [1, 2], 'vectorize': {'p1': 8}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, welder_C2DImplicitGemm_8>, Tensor(shape=[1, 56, 56, 64], op.name=p0), 1792, 401408)
+
+['nn_max_pool2d_2', 'welder_C2DImplicitGemm_3', 'welder_C2DImplicitGemm_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_max_pool2d_2>: {'block': [1, 1, 2, 64], 'thread': [1, 1, 2, 64], 'rstep': [3, 3]}, <Node, welder_C2DImplicitGemm_3>: {'block': [2, 64], 'thread': [2, 64], 'rstep': [64], 'vectorize': {'p1': 8}}, <Node, welder_C2DImplicitGemm_8>: {'block': [2, 256], 'thread': [1, 128], 'rstep': [32], 'step': [1, 2], 'vectorize': {'p1': 8}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, welder_C2DImplicitGemm_8>, Tensor(shape=[1, 56, 56, 64], op.name=p0), 256, 401408)
+
+['nn_max_pool2d_2', 'welder_C2DImplicitGemm_3', 'welder_C2DImplicitGemm_8']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, nn_max_pool2d_2>: {'block': [1, 1, 1, 64], 'thread': [1, 1, 1, 64], 'rstep': [3, 3]}, <Node, welder_C2DImplicitGemm_3>: {'block': [1, 64], 'thread': [1, 64], 'rstep': [64], 'vectorize': {'p1': 8}}, <Node, welder_C2DImplicitGemm_8>: {'block': [1, 256], 'thread': [1, 64], 'rstep': [32], 'step': [1, 2], 'vectorize': {'p1': 8}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, welder_C2DImplicitGemm_8>, Tensor(shape=[1, 56, 56, 64], op.name=p0), 128, 7168)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [112, 16], 'warp': [16, 16], 'wmma': [16, 8, 16], 'use_cutlass': True, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 24>}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 2, 56, 16], 'thread': [1, 2, 7, 16], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 5376, 15680)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [112, 32], 'warp': [112, 8], 'wmma': [16, 8, 16], 'use_cutlass': True, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 2, 56, 32], 'thread': [1, 2, 2, 32], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 8960, 17696)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [224, 16], 'warp': [112, 8], 'wmma': [16, 8, 16], 'use_cutlass': True, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 24>}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 4, 56, 16], 'thread': [1, 4, 2, 16], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 10752, 31360)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [224, 8], 'warp': [32, 8], 'wmma': [16, 8, 16], 'use_cutlass': True, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 16>}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 4, 56, 8], 'thread': [1, 4, 7, 8], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 7168, 34048)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [224, 32], 'warp': [112, 16], 'wmma': [16, 8, 16], 'use_cutlass': True, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 4, 56, 32], 'thread': [1, 4, 1, 32], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 17920, 35392)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [8, 32], 'warp': [8, 32], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {2: <Stride, 0, 40>}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 1, 8, 32], 'thread': [1, 1, 1, 32], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 640, 1264)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [192], 'vectorize': {'data': 2, 'p1': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 1, 28, 32], 'thread': [1, 1, 4, 32], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 1792, 3584)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'vectorize': {'data': 4, 'p1': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 1, 56, 16], 'thread': [1, 1, 8, 16], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 1792, 7168)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'step': [1, 2], 'vectorize': {'data': 4, 'p1': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 1, 56, 32], 'thread': [1, 1, 4, 32], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 3584, 7168)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [64], 'step': [1, 2], 'vectorize': {'data': 8, 'p1': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 2, 56, 16], 'thread': [1, 2, 4, 16], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 3584, 14336)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [112, 8], 'thread': [16, 8], 'rstep': [64], 'vectorize': {'data': 8, 'p1': 4}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 2, 56, 8], 'thread': [1, 2, 8, 8], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 1792, 14336)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [112, 32], 'thread': [16, 8], 'rstep': [64], 'step': [1, 2], 'vectorize': {'data': 8, 'p1': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 2, 56, 32], 'thread': [1, 2, 2, 32], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 7168, 14336)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [224, 16], 'thread': [32, 4], 'rstep': [64], 'step': [1, 2], 'vectorize': {'data': 8, 'p1': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 4, 56, 16], 'thread': [1, 4, 2, 16], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 7168, 28672)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [224, 8], 'thread': [32, 4], 'rstep': [64], 'step': [1, 2], 'vectorize': {'data': 8, 'p1': 4}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 4, 56, 8], 'thread': [1, 4, 4, 8], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 3584, 28672)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [224, 4], 'thread': [32, 4], 'rstep': [64], 'vectorize': {'data': 8, 'p1': 2}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 4, 56, 4], 'thread': [1, 4, 8, 4], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 1792, 28672)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [224, 32], 'thread': [16, 8], 'rstep': [64], 'step': [1, 2], 'vectorize': {'data': 8, 'p1': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 4, 56, 32], 'thread': [1, 4, 1, 32], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 14336, 28672)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [392, 16], 'thread': [8, 16], 'rstep': [64], 'vectorize': {'data': 4, 'p1': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 7, 56, 16], 'thread': [1, 1, 8, 16], 'rstep': []}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 12544, 50176)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [392, 8], 'thread': [56, 2], 'rstep': [64], 'step': [1, 2], 'vectorize': {'data': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 7, 56, 8], 'thread': [1, 7, 2, 8], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 6272, 50176)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [8, 32], 'thread': [4, 32], 'rstep': [192], 'step': [2, 1], 'vectorize': {'data': 4, 'p1': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 1, 8, 32], 'thread': [1, 1, 4, 32], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 512, 1024)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [192], 'step': [1, 2], 'vectorize': {'data': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 1, 14, 32], 'thread': [1, 1, 7, 16], 'rstep': [], 'step': [1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 896, 1792)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [448, 8], 'thread': [64, 2], 'rstep': [64], 'step': [1, 2], 'vectorize': {'data': 8, 'p1': 4}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 8, 56, 8], 'thread': [1, 8, 2, 8], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 7168, 57344)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [392, 32], 'thread': [8, 16], 'rstep': [64], 'step': [1, 2], 'vectorize': {'data': 4, 'p1': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 7, 56, 32], 'thread': [1, 1, 4, 32], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 25088, 50176)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [28, 16], 'thread': [7, 16], 'rstep': [192], 'step': [2, 1], 'vectorize': {'data': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 1, 28, 16], 'thread': [1, 1, 7, 16], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 896, 3584)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [56, 8], 'thread': [14, 8], 'rstep': [192], 'step': [2, 1], 'vectorize': {'data': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 1, 56, 8], 'thread': [1, 1, 14, 8], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 896, 7168)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [112, 4], 'thread': [28, 4], 'rstep': [64], 'step': [2, 1], 'vectorize': {'data': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 2, 56, 4], 'thread': [1, 2, 14, 4], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 896, 14336)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [7, 32], 'thread': [7, 16], 'rstep': [192], 'step': [1, 2], 'vectorize': {'data': 4}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 1, 7, 32], 'thread': [1, 1, 7, 16], 'rstep': [], 'step': [1, 1, 1, 2]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 448, 896)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5>: {'block': [14, 16], 'thread': [7, 16], 'rstep': [192], 'step': [2, 1], 'vectorize': {'data': 8}}, <Node, reshape_multiply_add_nn_relu_6>: {'block': [1, 1, 14, 16], 'thread': [1, 1, 7, 16], 'rstep': [], 'step': [1, 1, 2, 1]}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 33, in call_build
+    cpresult = cgen.compile(
+  File "/root/Ladder/python/ladder/code_generator.py", line 199, in compile
+    raise Exception(
+Exception: ('Shared memory mismatched', <Node, reshape_multiply_add_nn_relu_6>, Tensor(shape=[3136, 64], op.name=p0), 448, 1792)
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5__reshape_multiply_add_nn_relu_6>: {'block': [8, 64], 'warp': [8, 32], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {4: <Stride, 0, 72>}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5__reshape_multiply_add_nn_relu_6>: {'block': [56, 64], 'warp': [8, 64], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {4: <Stride, 0, 72>}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+
+['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+{'globals': {'Rasterization': <NoRasterization>}, <Node, welder_C2DImplicitGemm_5__reshape_multiply_add_nn_relu_6>: {'block': [8, 32], 'warp': [8, 32], 'wmma': [8, 32, 16], 'use_cutlass': False, 'rstep': [32], 'use_tc': '80', 'strides': {4: <Stride, 0, 40>}}}
+Traceback (most recent call last):
+  File "/root/Ladder/3rdparty/tvm/python/tvm/exec/popen_worker.py", line 87, in main
+    result = fn(*args, **kwargs)
+  File "/root/Ladder/python/ladder/engine/multiproc_tunner.py", line 37, in call_build
+    cpresult.code,
+AttributeError: 'NoneType' object has no attribute 'code'
+

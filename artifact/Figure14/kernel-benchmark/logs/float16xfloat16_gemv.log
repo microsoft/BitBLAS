@@ -1,18 +1,18 @@
-[BitBLAS] The best latency of top 1 is 0.010 ms
-[BitBLAS] The best latency of top 20 is 0.010 ms
+[BitBLAS] The best latency of top 1 is 0.013 ms
+[BitBLAS] The best latency of top 20 is 0.009 ms
 Time cost of Dlight default schedule: 5200.000 ms
-[BitBLAS] The best latency of top 1 is 0.081 ms
-[BitBLAS] The best latency of top 20 is 0.081 ms
+[BitBLAS] The best latency of top 1 is 0.082 ms
+[BitBLAS] The best latency of top 20 is 0.082 ms
 Time cost of Dlight default schedule: 5200.000 ms
-[BitBLAS] The best latency of top 1 is 0.267 ms
-[BitBLAS] The best latency of top 20 is 0.267 ms
+[BitBLAS] The best latency of top 1 is 0.270 ms
+[BitBLAS] The best latency of top 20 is 0.266 ms
 Time cost of Dlight default schedule: 5200.000 ms
-[BitBLAS] The best latency of top 1 is 0.274 ms
-[BitBLAS] The best latency of top 20 is 0.271 ms
+[BitBLAS] The best latency of top 1 is 0.269 ms
+[BitBLAS] The best latency of top 20 is 0.269 ms
 Time cost of Dlight default schedule: 5200.000 ms
 PrimFunc                     Input Arguments              BitBLAS Top20 Tune Time      BitBLAS Top1 Latency         BitBLAS Top20 Latency        DefaultDLight Tune Time      DefaultDLight Latency        
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-matmul_nt                    1-1024-8192-float16-float16   7.498438358306885 s         0.010 ms                     0.010 ms                     13.14                        5.200e+03 ms                 
-matmul_nt                    1-8192-8192-float16-float16   7.8565003871917725 s        0.081 ms                     0.081 ms                     13.14                        5.200e+03 ms                 
-matmul_nt                    1-28672-8192-float16-float16  12.62666392326355 s         0.267 ms                     0.267 ms                     13.14                        5.200e+03 ms                 
-matmul_nt                    1-8192-28672-float16-float16  9.480523109436035 s         0.274 ms                     0.271 ms                     13.14                        5.200e+03 ms                 
+matmul_nt                    1-1024-8192-float16-float16   7.445230484008789 s         0.013 ms                     0.009 ms                     13.14                        5.200e+03 ms                 
+matmul_nt                    1-8192-8192-float16-float16   7.782293796539307 s         0.082 ms                     0.082 ms                     13.14                        5.200e+03 ms                 
+matmul_nt                    1-28672-8192-float16-float16  12.28829574584961 s         0.270 ms                     0.266 ms                     13.14                        5.200e+03 ms                 
+matmul_nt                    1-8192-28672-float16-float16  9.344907283782959 s         0.269 ms                     0.269 ms                     13.14                        5.200e+03 ms                 

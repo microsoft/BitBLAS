@@ -134,7 +134,7 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         out_i, ok_i = sch.split(out_i, factors=[None, wmma_m])
         out_j, ok_j = sch.split(out_j, factors=[None, wmma_n])
         sch.reorder(out_i, out_j, ok_i, ok_j)
-        sch.unroll(out_j)
+        # sch.unroll(out_j)
         
         sch.reverse_compute_at(
             C_shared,
@@ -186,8 +186,8 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
             i, kernel_i = sch.split(i, factors=[None, sub_i])
             j, kernel_j = sch.split(j, factors=[None, sub_j])
             sch.reorder(i, j, kernel_i, kernel_j)
-            sch.unroll(i)
-            sch.unroll(j)
+            # sch.unroll(i)
+            # sch.unroll(j)
             return (i, j, kernel_i, kernel_j)
 
 

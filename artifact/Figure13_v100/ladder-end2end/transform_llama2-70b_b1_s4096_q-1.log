@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/Figure13_v100/ladder-end2end/../../checkpoints/Figure13_v100/transform/llama2_bs1_seq4096_async
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+  103.3931     103.0627     105.1199     102.6396      0.9072   
+               

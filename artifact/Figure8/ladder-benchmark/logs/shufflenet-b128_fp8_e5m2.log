@@ -1,8 +1,5 @@
-usage: ladder_with_fake_conv_dequantize.py [-h] [--prefix PREFIX]
-                                           [--arch ARCH] [--cublas] [--cudnn]
-                                           [--nhwc] [--bits BITS]
-                                           [--convert_int] [--format FORMAT]
-                                           [--fake_quant FAKE_QUANT]
-                                           [--async_propagation]
-                                           [--prebuilt_path PREBUILT_PATH]
-ladder_with_fake_conv_dequantize.py: error: unrecognized arguments: -fake_quant 0
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure8/ladder/checkpoints/shufflenet_fq_0_fp_e5m2_8_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   3.3589       3.3589       3.3593       3.3586       0.0003   
+               

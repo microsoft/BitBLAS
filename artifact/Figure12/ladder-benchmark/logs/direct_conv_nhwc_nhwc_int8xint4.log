@@ -1,0 +1,3353 @@
+direct_conv_nhwc_nhwc_int8xint4.py
+n: 1, f: 64, h: 56, w: 56, c: 64, kh: 3, kw: 3, s: 1, d: 1, p: 0, oh: 54, ow: 54
+{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 16], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.04894720017910004
+{<Node, ladder_conv2d_reshape_bias>: {'block': [54, 8], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.045875199139118195
+{<Node, ladder_conv2d_reshape_bias>: {'block': [36, 16], 'thread': [9, 16], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.059801600873470306
+{<Node, ladder_conv2d_reshape_bias>: {'block': [108, 4], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.11366400122642517
+{<Node, ladder_conv2d_reshape_bias>: {'block': [81, 8], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.08028160035610199
+{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 8], 'thread': [27, 4], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.10690560191869736
+{<Node, ladder_conv2d_reshape_bias>: {'block': [108, 8], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.06621866673231125
+{<Node, ladder_conv2d_reshape_bias>: {'block': [54, 16], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.03747839853167534
+{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 32], 'thread': [9, 16], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.07372800260782242
+{<Node, ladder_conv2d_reshape_bias>: {'block': [162, 4], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.0682239979505539
+{<Node, ladder_conv2d_reshape_bias>: {'block': [36, 8], 'thread': [18, 8], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.06430719792842865
+{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 8], 'thread': [18, 8], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.15590399503707886
+{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 32], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.04259840026497841
+{<Node, ladder_conv2d_reshape_bias>: {'block': [162, 8], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.05000533163547516
+{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 16], 'thread': [9, 16], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.13892267644405365
+{<Node, ladder_conv2d_reshape_bias>: {'block': [81, 16], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.07024639844894409
+{<Node, ladder_conv2d_reshape_bias>: {'block': [54, 4], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.06992457062005997
+{<Node, ladder_conv2d_reshape_bias>: {'block': [36, 32], 'thread': [4, 32], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 8}}}
+0.07618559896945953
+{<Node, ladder_conv2d_reshape_bias>: {'block': [108, 16], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.04428799822926521
+{<Node, ladder_conv2d_reshape_bias>: {'block': [36, 4], 'thread': [36, 4], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.14988799393177032
+{<Node, ladder_conv2d_reshape_bias>: {'block': [243, 2], 'thread': [81, 1], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.13987840712070465
+{<Node, ladder_conv2d_reshape_bias>: {'block': [27, 4], 'thread': [27, 4], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.15447771549224854
+{<Node, ladder_conv2d_reshape_bias>: {'block': [243, 4], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.06685256958007812
+{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 16], 'thread': [9, 16], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.24093256890773773
+{<Node, ladder_conv2d_reshape_bias>: {'block': [54, 32], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.05488640069961548
+{<Node, ladder_conv2d_reshape_bias>: {'block': [243, 8], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.04648960009217262
+{<Node, ladder_conv2d_reshape_bias>: {'block': [162, 16], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.038656000047922134
+{<Node, ladder_conv2d_reshape_bias>: {'block': [108, 2], 'thread': [54, 2], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.2036622166633606
+{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 16], 'thread': [6, 16], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.12840959429740906
+{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 8], 'thread': [12, 8], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.14862629771232605
+{<Node, ladder_conv2d_reshape_bias>: {'block': [81, 4], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.07290880382061005
+{<Node, ladder_conv2d_reshape_bias>: {'block': [324, 2], 'thread': [54, 2], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.12310755252838135
+{<Node, ladder_conv2d_reshape_bias>: {'block': [18, 4], 'thread': [18, 4], 'rstep': [576], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.10304000228643417
+{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 64], 'thread': [9, 16], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 16}}}
+0.12513279914855957
+{<Node, ladder_conv2d_reshape_bias>: {'block': [324, 4], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.08616228401660919
+{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 8], 'thread': [9, 8], 'rstep': [576], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.13209600746631622
+{<Node, ladder_conv2d_reshape_bias>: {'block': [12, 64], 'thread': [4, 32], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.1157120019197464
+{<Node, ladder_conv2d_reshape_bias>: {'block': [81, 32], 'thread': [27, 4], 'rstep': [192], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.053247999399900436
+{<Node, ladder_conv2d_reshape_bias>: {'block': [9, 32], 'thread': [9, 16], 'rstep': [576], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.22912000119686127
+{<Node, ladder_conv2d_reshape_bias>: {'block': [324, 8], 'thread': [27, 4], 'rstep': [96], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.04894720017910004
+code:  __global__ void __launch_bounds__(108) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int T_conv_local[24];
+  __shared__ signed char data_shared[31104];
+  __shared__ signed char B_decode_shared[768];
+  T_conv_local[0] = 0;
+  T_conv_local[12] = 0;
+  T_conv_local[1] = 0;
+  T_conv_local[13] = 0;
+  T_conv_local[2] = 0;
+  T_conv_local[14] = 0;
+  T_conv_local[3] = 0;
+  T_conv_local[15] = 0;
+  T_conv_local[4] = 0;
+  T_conv_local[16] = 0;
+  T_conv_local[5] = 0;
+  T_conv_local[17] = 0;
+  T_conv_local[6] = 0;
+  T_conv_local[18] = 0;
+  T_conv_local[7] = 0;
+  T_conv_local[19] = 0;
+  T_conv_local[8] = 0;
+  T_conv_local[20] = 0;
+  T_conv_local[9] = 0;
+  T_conv_local[21] = 0;
+  T_conv_local[10] = 0;
+  T_conv_local[22] = 0;
+  T_conv_local[11] = 0;
+  T_conv_local[23] = 0;
+  for (int k_0 = 0; k_0 < 6; ++k_0) {
+    __syncthreads();
+    *(int4*)(data_shared + (((int)threadIdx.x) * 16)) = *(int4*)(input + ((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 1728)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 1152));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 3456)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 2304));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 5184)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 3584));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 6912)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 4736));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 8640)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 5888));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 10368)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 7168));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 12096)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 8320));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 13824)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 9472));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 15552)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 10752));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 17280)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 11904));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 19008)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 13056));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 20736)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 14336));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 22464)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 15488));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 24192)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 16640));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 25920)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 17920));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 27648)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 19072));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 29376)) = *(int4*)(input + (((((((((int)blockIdx.x) >> 3) * 21504) + ((k_0 >> 1) * 3584)) + (((((k_0 & 1) * 96) + ((((int)threadIdx.x) % 6) * 16)) >> 6) * 64)) + ((((int)threadIdx.x) / 6) * 64)) + (((k_0 * 32) + ((((int)threadIdx.x) % 6) * 16)) & 63)) + 20224));
+    B_decode_shared[((int)threadIdx.x)] = ((weight[(((((((int)blockIdx.x) & 7) * 2304) + ((((int)threadIdx.x) / 96) * 288)) + (k_0 * 48)) + ((((int)threadIdx.x) % 96) >> 1))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 108)] = ((weight[(((((((int)blockIdx.x) & 7) * 2304) + (((((int)threadIdx.x) + 108) / 96) * 288)) + (k_0 * 48)) + (((((int)threadIdx.x) >> 1) + 6) % 48))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 216)] = ((weight[(((((((int)blockIdx.x) & 7) * 2304) + (((((int)threadIdx.x) + 216) / 96) * 288)) + (k_0 * 48)) + (((((int)threadIdx.x) >> 1) + 12) % 48))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 324)] = ((weight[(((((((int)blockIdx.x) & 7) * 2304) + (((((int)threadIdx.x) + 324) / 96) * 288)) + (k_0 * 48)) + (((((int)threadIdx.x) >> 1) + 18) % 48))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 432)] = ((weight[(((((((int)blockIdx.x) & 7) * 2304) + (((((int)threadIdx.x) + 432) / 96) * 288)) + (k_0 * 48)) + (((((int)threadIdx.x) >> 1) + 24) % 48))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 540)] = ((weight[(((((((int)blockIdx.x) & 7) * 2304) + (((((int)threadIdx.x) + 540) / 96) * 288)) + (k_0 * 48)) + (((((int)threadIdx.x) >> 1) + 30) % 48))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 648)] = ((weight[(((((((int)blockIdx.x) & 7) * 2304) + (((((int)threadIdx.x) + 648) / 96) * 288)) + (k_0 * 48)) + (((((int)threadIdx.x) >> 1) + 36) % 48))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    if (((int)threadIdx.x) < 12) {
+      B_decode_shared[(((int)threadIdx.x) + 756)] = ((weight[(((((((int)blockIdx.x) & 7) * 2304) + (k_0 * 48)) + (((int)threadIdx.x) >> 1)) + 2058)] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    }
+    __syncthreads();
+    for (int k_1 = 0; k_1 < 96; ++k_1) {
+      T_conv_local[0] = (T_conv_local[0] + (((int)data_shared[(((((int)threadIdx.x) >> 2) * 96) + k_1)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[12] = (T_conv_local[12] + (((int)data_shared[(((((int)threadIdx.x) >> 2) * 96) + k_1)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[1] = (T_conv_local[1] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 2592)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[13] = (T_conv_local[13] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 2592)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[2] = (T_conv_local[2] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 5184)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[14] = (T_conv_local[14] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 5184)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[3] = (T_conv_local[3] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 7776)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[15] = (T_conv_local[15] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 7776)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[4] = (T_conv_local[4] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 10368)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[16] = (T_conv_local[16] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 10368)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[5] = (T_conv_local[5] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 12960)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[17] = (T_conv_local[17] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 12960)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[6] = (T_conv_local[6] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 15552)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[18] = (T_conv_local[18] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 15552)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[7] = (T_conv_local[7] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 18144)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[19] = (T_conv_local[19] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 18144)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[8] = (T_conv_local[8] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 20736)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[20] = (T_conv_local[20] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 20736)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[9] = (T_conv_local[9] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 23328)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[21] = (T_conv_local[21] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 23328)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[10] = (T_conv_local[10] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 25920)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[22] = (T_conv_local[22] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 25920)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+      T_conv_local[11] = (T_conv_local[11] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 28512)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 96) + k_1)])));
+      T_conv_local[23] = (T_conv_local[23] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 96) + k_1) + 28512)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 3) * 96) + k_1) + 384)])));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 4)] = T_conv_local[12];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 1728)] = T_conv_local[1];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 1732)] = T_conv_local[13];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 3456)] = T_conv_local[2];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 3460)] = T_conv_local[14];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 5184)] = T_conv_local[3];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 5188)] = T_conv_local[15];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 6912)] = T_conv_local[4];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 6916)] = T_conv_local[16];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 8640)] = T_conv_local[5];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 8644)] = T_conv_local[17];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 10368)] = T_conv_local[6];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 10372)] = T_conv_local[18];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 12096)] = T_conv_local[7];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 12100)] = T_conv_local[19];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 13824)] = T_conv_local[8];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 13828)] = T_conv_local[20];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 15552)] = T_conv_local[9];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 15556)] = T_conv_local[21];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 17280)] = T_conv_local[10];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 17284)] = T_conv_local[22];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 19008)] = T_conv_local[11];
+  T_conv[((((((((int)blockIdx.x) >> 3) * 20736) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 7) * 8)) + (((int)threadIdx.x) & 3)) + 19012)] = T_conv_local[23];
+}
+
+
+top1: 0.04894720017910004 	top10: 0.03747839853167534
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [54, 16], 'thread': [27, 4], 'rstep': [288], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+best latency: 0.03747839853167534
+5.217219647750203 tflops, 3.5980825156897955 %
+n: 1, f: 64, h: 56, w: 56, c: 64, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 56, ow: 56
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 8}}}
+0.012492800131440163
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.0177803635597229
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 8}}}
+0.018353231251239777
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 4}}}
+0.015596306882798672
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.012629333883523941
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 8}}}
+0.012202666141092777
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 16}}}
+0.018245818093419075
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 32], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.011170908808708191
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 4}}}
+0.012653714045882225
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 4}}}
+0.020401230081915855
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.03031040169298649
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.01621333323419094
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 16], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.014643199741840363
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.030326154083013535
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.013125818222761154
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 8], 'thread': [49, 2], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.01408000010997057
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 16], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.02037760056555271
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 8], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 4}}}
+0.013824000023305416
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.021969454362988472
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 16], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 8}}}
+0.02851446159183979
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'B_decode': 16}}}
+0.019046399742364883
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 8], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.014336000196635723
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.017203200608491898
+{<Node, ladder_conv2d_reshape_bias>: {'block': [64, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 8}}}
+0.009557333774864674
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.013165714219212532
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.02112000063061714
+{<Node, ladder_conv2d_reshape_bias>: {'block': [32, 4], 'thread': [32, 4], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 2}}}
+0.020772572606801987
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 8], 'thread': [8, 8], 'rstep': [64], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.018090667203068733
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 16], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.03276799991726875
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.01275345403701067
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 8], 'thread': [7, 8], 'rstep': [64], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.02099199965596199
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 16], 'thread': [14, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.011946666985750198
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 4], 'thread': [49, 2], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.019968001171946526
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 4], 'thread': [28, 4], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.021503999829292297
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 32], 'thread': [7, 16], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 4}}}
+0.032896000891923904
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 8}}}
+0.01169066596776247
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4], 'thread': [16, 4], 'rstep': [64], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 2}}}
+0.015667200088500977
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4], 'thread': [14, 4], 'rstep': [64], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 8}}}
+0.017180444672703743
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 16}}}
+0.01955839991569519
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 4], 'thread': [28, 4], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.019285334274172783
+code:  __global__ void __launch_bounds__(112) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int T_conv_local[2];
+  __shared__ signed char data_shared[3584];
+  __shared__ signed char B_decode_shared[256];
+  T_conv_local[0] = 0;
+  T_conv_local[1] = 0;
+  *(int4*)(data_shared + (((int)threadIdx.x) * 16)) = *(int4*)(input + (((((int)blockIdx.x) >> 4) * 3584) + (((int)threadIdx.x) * 16)));
+  *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 1792)) = *(int4*)(input + ((((((int)blockIdx.x) >> 4) * 3584) + (((int)threadIdx.x) * 16)) + 1792));
+  B_decode_shared[((int)threadIdx.x)] = ((weight[(((((int)blockIdx.x) & 15) * 128) + (((int)threadIdx.x) >> 1))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+  B_decode_shared[(((int)threadIdx.x) + 112)] = ((weight[((((((int)blockIdx.x) & 15) * 128) + (((((int)threadIdx.x) + 112) >> 6) * 32)) + (((((int)threadIdx.x) >> 1) + 24) & 31))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+  if (((int)threadIdx.x) < 32) {
+    B_decode_shared[(((int)threadIdx.x) + 224)] = ((weight[(((((((int)blockIdx.x) & 15) * 128) + (((((int)threadIdx.x) + 224) >> 6) * 32)) + (((int)threadIdx.x) >> 1)) + 16)] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+  }
+  __syncthreads();
+  for (int k_1 = 0; k_1 < 64; ++k_1) {
+    T_conv_local[0] = (T_conv_local[0] + (((int)data_shared[(((((int)threadIdx.x) >> 2) * 64) + k_1)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 64) + k_1)])));
+    T_conv_local[1] = (T_conv_local[1] + (((int)data_shared[((((((int)threadIdx.x) >> 2) * 64) + k_1) + 1792)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 3) * 64) + k_1)])));
+  }
+  T_conv[(((((((int)blockIdx.x) >> 4) * 3584) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 15) * 4)) + (((int)threadIdx.x) & 3))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 4) * 3584) + ((((int)threadIdx.x) >> 2) * 64)) + ((((int)blockIdx.x) & 15) * 4)) + (((int)threadIdx.x) & 3)) + 1792)] = T_conv_local[1];
+}
+
+
+top1: 0.012492800131440163 	top10: 0.009557333774864674
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [64, 16], 'thread': [16, 8], 'rstep': [64], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 8}}}
+best latency: 0.009557333774864674
+2.4447216454239573 tflops, 1.6860149278785912 %
+n: 1, f: 128, h: 28, w: 28, c: 128, kh: 3, kw: 3, s: 1, d: 1, p: 0, oh: 26, ow: 26
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 4], 'thread': [26, 4], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.23306241631507874
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 8], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.2024960070848465
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 16], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.265830397605896
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 8], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.15411199629306793
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 8], 'thread': [13, 8], 'rstep': [1152], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.3065856099128723
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 16], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.15769599378108978
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 4], 'thread': [26, 4], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.28706133365631104
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 16], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.11076266318559647
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 2], 'thread': [52, 2], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.40725943446159363
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 2], 'thread': [169, 1], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.4777984023094177
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 4], 'thread': [169, 1], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.34877440333366394
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 4], 'thread': [13, 4], 'rstep': [1152], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.20357120037078857
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 32], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.2433023899793625
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 8], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.17715199291706085
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 32], 'thread': [13, 8], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.14172159135341644
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 2], 'thread': [26, 2], 'rstep': [384], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.2393600046634674
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 32], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.1812479943037033
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 16], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.2309119999408722
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 2], 'thread': [169, 1], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.6502400040626526
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 2], 'thread': [13, 2], 'rstep': [1152], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.15114238858222961
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 1], 'thread': [52, 1], 'rstep': [384], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.392192006111145
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 4], 'thread': [26, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.3048594295978546
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 8], 'thread': [26, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.32481279969215393
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [2, 64], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.4896768033504486
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 1], 'thread': [169, 1], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.7559167742729187
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 32], 'thread': [4, 32], 'rstep': [384], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.7995392084121704
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 8], 'thread': [4, 8], 'rstep': [1152], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 8}}}
+0.20295679569244385
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 64], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.2467840015888214
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 16], 'thread': [4, 16], 'rstep': [1152], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.3733504116535187
+{<Node, ladder_conv2d_reshape_bias>: {'block': [169, 32], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.3209215998649597
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 64], 'thread': [2, 64], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 16}}}
+0.18472960591316223
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4], 'thread': [4, 4], 'rstep': [1152], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 4}}}
+0.11816960573196411
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 16], 'thread': [26, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.3691520094871521
+{<Node, ladder_conv2d_reshape_bias>: {'block': [52, 64], 'thread': [4, 32], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.3844096064567566
+{<Node, ladder_conv2d_reshape_bias>: {'block': [26, 1], 'thread': [26, 1], 'rstep': [384], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.21442560851573944
+{<Node, ladder_conv2d_reshape_bias>: {'block': [13, 1], 'thread': [13, 1], 'rstep': [1152], 'reduce_thread': [9], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.13557758927345276
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2], 'thread': [4, 2], 'rstep': [1152], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+0.0813056007027626
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 1], 'thread': [169, 1], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.9433088302612305
+{<Node, ladder_conv2d_reshape_bias>: {'block': [338, 32], 'thread': [13, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.45260801911354065
+{<Node, ladder_conv2d_reshape_bias>: {'block': [2, 8], 'thread': [2, 8], 'rstep': [1152], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'data': 2, 'B_decode': 8}}}
+0.12206079810857773
+code:  __global__ void __launch_bounds__(128) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int normal_reduce_temp0[1];
+  __shared__ signed char data_shared[2304];
+  __shared__ signed char B_decode_shared[9216];
+  int red_buf0[1];
+  normal_reduce_temp0[0] = 0;
+  *(char2*)(data_shared + ((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2))) = *(char2*)(input + (((((((int)blockIdx.x) / 208) * 3584) + (((((int)blockIdx.x) % 208) >> 4) * 256)) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)));
+  *(char2*)(data_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 256)) = *(char2*)(input + ((((((((((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 256) / 384) * 3584) + ((((int)blockIdx.x) / 208) * 3584)) + (((((int)blockIdx.x) % 208) >> 4) * 256)) + ((((((int)threadIdx.y) >> 3) + 2) % 3) * 128)) + ((((int)threadIdx.y) & 7) * 16)) + (((int)threadIdx.x) * 2)));
+  *(char2*)(data_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 512)) = *(char2*)(input + ((((((((((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 512) / 384) * 3584) + ((((int)blockIdx.x) / 208) * 3584)) + (((((int)blockIdx.x) % 208) >> 4) * 256)) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 128));
+  *(char2*)(data_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 768)) = *(char2*)(input + ((((((((int)blockIdx.x) / 208) * 3584) + (((((int)blockIdx.x) % 208) >> 4) * 256)) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 7168));
+  *(char2*)(data_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 1024)) = *(char2*)(input + ((((((((((((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 1024) % 1152) / 384) * 3584) + ((((int)blockIdx.x) / 208) * 3584)) + (((((int)blockIdx.x) % 208) >> 4) * 256)) + (((((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 1024) / 1152) * 128)) + ((((((int)threadIdx.y) >> 3) + 2) % 3) * 128)) + ((((int)threadIdx.y) & 7) * 16)) + (((int)threadIdx.x) * 2)));
+  *(char2*)(data_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 1280)) = *(char2*)(input + (((((((((int)blockIdx.x) / 208) * 3584) + (((((int)blockIdx.x) % 208) >> 4) * 256)) + (((((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 1280) / 1152) * 128)) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 128));
+  *(char2*)(data_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 1536)) = *(char2*)(input + (((((((((int)blockIdx.x) / 208) * 3584) + (((((int)blockIdx.x) % 208) >> 4) * 256)) + (((((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 1536) / 1152) * 128)) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3584));
+  *(char2*)(data_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 1792)) = *(char2*)(input + (((((((((((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 640) / 384) * 3584) + ((((int)blockIdx.x) / 208) * 3584)) + (((((int)blockIdx.x) % 208) >> 4) * 256)) + (((((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 1792) / 1152) * 128)) + ((((((int)threadIdx.y) >> 3) + 2) % 3) * 128)) + ((((int)threadIdx.y) & 7) * 16)) + (((int)threadIdx.x) * 2)));
+  *(char2*)(data_shared + (((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 2048)) = *(char2*)(input + (((((((((((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 896) / 384) * 3584) + ((((int)blockIdx.x) / 208) * 3584)) + (((((int)blockIdx.x) % 208) >> 4) * 256)) + (((((((int)threadIdx.y) * 16) + (((int)threadIdx.x) * 2)) + 2048) / 1152) * 128)) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 128));
+  int __1;
+    int __2;
+      int4 __3;
+        int4 __4 = make_int4(((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)), ((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)), ((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)), ((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)));
+        int4 __5;
+          int4 __6 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __7 = make_int4(2, 2, 2, 2);
+          __5.x = (__6.x%__7.x);
+          __5.y = (__6.y%__7.y);
+          __5.z = (__6.z%__7.z);
+          __5.w = (__6.w%__7.w);
+        int4 __8;
+          int4 __9 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __10 = make_int4(2, 2, 2, 2);
+          __8.x = (__9.x/__10.x);
+          __8.y = (__9.y/__10.y);
+          __8.z = (__9.z/__10.z);
+          __8.w = (__9.w/__10.w);
+        int4 __11;
+        ushort4 __12;
+          ushort4 __13;
+            ushort4 __14;
+              int4 __15 = make_int4(2, 2, 2, 2);
+              int4 __16 = make_int4(0, 0, 0, 0);
+              __14.x = (__15.x>=__16.x);
+              __14.y = (__15.y>=__16.y);
+              __14.z = (__15.z>=__16.z);
+              __14.w = (__15.w>=__16.w);
+            ushort4 __17;
+              int4 __18 = make_int4(0, 0, 0, 0);
+              __17.x = (__5.x>=__18.x);
+              __17.y = (__5.y>=__18.y);
+              __17.z = (__5.z>=__18.z);
+              __17.w = (__5.w>=__18.w);
+            __13.x = (__14.x&&__17.x);
+            __13.y = (__14.y&&__17.y);
+            __13.z = (__14.z&&__17.z);
+            __13.w = (__14.w&&__17.w);
+          ushort4 __19;
+            ushort4 __20;
+              int4 __21 = make_int4(2, 2, 2, 2);
+              int4 __22 = make_int4(0, 0, 0, 0);
+              __20.x = (__21.x<__22.x);
+              __20.y = (__21.y<__22.y);
+              __20.z = (__21.z<__22.z);
+              __20.w = (__21.w<__22.w);
+            ushort4 __23;
+              int4 __24 = make_int4(0, 0, 0, 0);
+              __23.x = (__5.x<=__24.x);
+              __23.y = (__5.y<=__24.y);
+              __23.z = (__5.z<=__24.z);
+              __23.w = (__5.w<=__24.w);
+            __19.x = (__20.x&&__23.x);
+            __19.y = (__20.y&&__23.y);
+            __19.z = (__20.z&&__23.z);
+            __19.w = (__20.w&&__23.w);
+          __12.x = (__13.x||__19.x);
+          __12.y = (__13.y||__19.y);
+          __12.z = (__13.z||__19.z);
+          __12.w = (__13.w||__19.w);
+        int4 __25;
+          int4 __26 = make_int4(1, 1, 1, 1);
+          __25.x = (__8.x-__26.x);
+          __25.y = (__8.y-__26.y);
+          __25.z = (__8.z-__26.z);
+          __25.w = (__8.w-__26.w);
+        __11.x = (bool(__12.x)?__8.x:__25.x);
+        __11.y = (bool(__12.y)?__8.y:__25.y);
+        __11.z = (bool(__12.z)?__8.z:__25.z);
+        __11.w = (bool(__12.w)?__8.w:__25.w);
+        __3.x = (__4.x+__11.x);
+        __3.y = (__4.y+__11.y);
+        __3.z = (__4.z+__11.z);
+        __3.w = (__4.w+__11.w);
+      int __27 = ((0x000000ff << 0) & (weight[__3.x] << 0))|((0x000000ff << 8) & (weight[__3.y] << 8))|((0x000000ff << 16) & (weight[__3.z] << 16))|((0x000000ff << 24) & (weight[__3.w] << 24));
+      int __28;
+      int4 __29;
+        int4 __30;
+          int4 __31 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __32 = make_int4(2, 2, 2, 2);
+          __30.x = (__31.x%__32.x);
+          __30.y = (__31.y%__32.y);
+          __30.z = (__31.z%__32.z);
+          __30.w = (__31.w%__32.w);
+        int4 __33;
+        ushort4 __34;
+          ushort4 __35;
+            ushort4 __36;
+              int4 __37 = make_int4(2, 2, 2, 2);
+              int4 __38 = make_int4(0, 0, 0, 0);
+              __36.x = (__37.x>=__38.x);
+              __36.y = (__37.y>=__38.y);
+              __36.z = (__37.z>=__38.z);
+              __36.w = (__37.w>=__38.w);
+            ushort4 __39;
+              int4 __40 = make_int4(0, 0, 0, 0);
+              __39.x = (__30.x>=__40.x);
+              __39.y = (__30.y>=__40.y);
+              __39.z = (__30.z>=__40.z);
+              __39.w = (__30.w>=__40.w);
+            __35.x = (__36.x&&__39.x);
+            __35.y = (__36.y&&__39.y);
+            __35.z = (__36.z&&__39.z);
+            __35.w = (__36.w&&__39.w);
+          ushort4 __41;
+            ushort4 __42;
+              int4 __43 = make_int4(2, 2, 2, 2);
+              int4 __44 = make_int4(0, 0, 0, 0);
+              __42.x = (__43.x<__44.x);
+              __42.y = (__43.y<__44.y);
+              __42.z = (__43.z<__44.z);
+              __42.w = (__43.w<__44.w);
+            ushort4 __45;
+              int4 __46 = make_int4(0, 0, 0, 0);
+              __45.x = (__30.x<=__46.x);
+              __45.y = (__30.y<=__46.y);
+              __45.z = (__30.z<=__46.z);
+              __45.w = (__30.w<=__46.w);
+            __41.x = (__42.x&&__45.x);
+            __41.y = (__42.y&&__45.y);
+            __41.z = (__42.z&&__45.z);
+            __41.w = (__42.w&&__45.w);
+          __34.x = (__35.x||__41.x);
+          __34.y = (__35.y||__41.y);
+          __34.z = (__35.z||__41.z);
+          __34.w = (__35.w||__41.w);
+        int4 __47;
+          int4 __48 = make_int4(2, 2, 2, 2);
+          __47.x = (__30.x+__48.x);
+          __47.y = (__30.y+__48.y);
+          __47.z = (__30.z+__48.z);
+          __47.w = (__30.w+__48.w);
+        __33.x = (bool(__34.x)?__30.x:__47.x);
+        __33.y = (bool(__34.y)?__30.y:__47.y);
+        __33.z = (bool(__34.z)?__30.z:__47.z);
+        __33.w = (bool(__34.w)?__30.w:__47.w);
+        int4 __49 = make_int4(4, 4, 4, 4);
+        __29.x = (__33.x*__49.x);
+        __29.y = (__33.y*__49.y);
+        __29.z = (__33.z*__49.z);
+        __29.w = (__33.w*__49.w);
+      __28=((signed char)(__29.x) << 0);
+      __28=__28 & ~(0x000000ff << 8) |((signed char)(__29.y) << 8);
+      __28=__28 & ~(0x000000ff << 16) |((signed char)(__29.z) << 16);
+      __28=__28 & ~(0x000000ff << 24) |((signed char)(__29.w) << 24);
+      __2=((((char)(__27 >> 0)) >> ((char)(__28 >> 0))) << 0);
+      __2=__2 & ~(0x000000ff << 8) |((((char)(__27 >> 8)) >> ((char)(__28 >> 8))) << 8);
+      __2=__2 & ~(0x000000ff << 16) |((((char)(__27 >> 16)) >> ((char)(__28 >> 16))) << 16);
+      __2=__2 & ~(0x000000ff << 24) |((((char)(__27 >> 24)) >> ((char)(__28 >> 24))) << 24);
+    int __50 = (int)252645135;
+    __1=((((char)(__2 >> 0)) & ((char)(__50 >> 0))) << 0);
+    __1=__1 & ~(0x000000ff << 8) |((((char)(__2 >> 8)) & ((char)(__50 >> 8))) << 8);
+    __1=__1 & ~(0x000000ff << 16) |((((char)(__2 >> 16)) & ((char)(__50 >> 16))) << 16);
+    __1=__1 & ~(0x000000ff << 24) |((((char)(__2 >> 24)) & ((char)(__50 >> 24))) << 24);
+  *(int*)(B_decode_shared + ((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4))) = __1;
+  int __51;
+    int __52;
+      int4 __53;
+        int4 __54 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 256), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 256), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 256), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 256));
+        int4 __55;
+          int4 __56 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __57 = make_int4(2, 2, 2, 2);
+          __55.x = (__56.x%__57.x);
+          __55.y = (__56.y%__57.y);
+          __55.z = (__56.z%__57.z);
+          __55.w = (__56.w%__57.w);
+        int4 __58;
+          int4 __59 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __60 = make_int4(2, 2, 2, 2);
+          __58.x = (__59.x/__60.x);
+          __58.y = (__59.y/__60.y);
+          __58.z = (__59.z/__60.z);
+          __58.w = (__59.w/__60.w);
+        int4 __61;
+        ushort4 __62;
+          ushort4 __63;
+            ushort4 __64;
+              int4 __65 = make_int4(2, 2, 2, 2);
+              int4 __66 = make_int4(0, 0, 0, 0);
+              __64.x = (__65.x>=__66.x);
+              __64.y = (__65.y>=__66.y);
+              __64.z = (__65.z>=__66.z);
+              __64.w = (__65.w>=__66.w);
+            ushort4 __67;
+              int4 __68 = make_int4(0, 0, 0, 0);
+              __67.x = (__55.x>=__68.x);
+              __67.y = (__55.y>=__68.y);
+              __67.z = (__55.z>=__68.z);
+              __67.w = (__55.w>=__68.w);
+            __63.x = (__64.x&&__67.x);
+            __63.y = (__64.y&&__67.y);
+            __63.z = (__64.z&&__67.z);
+            __63.w = (__64.w&&__67.w);
+          ushort4 __69;
+            ushort4 __70;
+              int4 __71 = make_int4(2, 2, 2, 2);
+              int4 __72 = make_int4(0, 0, 0, 0);
+              __70.x = (__71.x<__72.x);
+              __70.y = (__71.y<__72.y);
+              __70.z = (__71.z<__72.z);
+              __70.w = (__71.w<__72.w);
+            ushort4 __73;
+              int4 __74 = make_int4(0, 0, 0, 0);
+              __73.x = (__55.x<=__74.x);
+              __73.y = (__55.y<=__74.y);
+              __73.z = (__55.z<=__74.z);
+              __73.w = (__55.w<=__74.w);
+            __69.x = (__70.x&&__73.x);
+            __69.y = (__70.y&&__73.y);
+            __69.z = (__70.z&&__73.z);
+            __69.w = (__70.w&&__73.w);
+          __62.x = (__63.x||__69.x);
+          __62.y = (__63.y||__69.y);
+          __62.z = (__63.z||__69.z);
+          __62.w = (__63.w||__69.w);
+        int4 __75;
+          int4 __76 = make_int4(1, 1, 1, 1);
+          __75.x = (__58.x-__76.x);
+          __75.y = (__58.y-__76.y);
+          __75.z = (__58.z-__76.z);
+          __75.w = (__58.w-__76.w);
+        __61.x = (bool(__62.x)?__58.x:__75.x);
+        __61.y = (bool(__62.y)?__58.y:__75.y);
+        __61.z = (bool(__62.z)?__58.z:__75.z);
+        __61.w = (bool(__62.w)?__58.w:__75.w);
+        __53.x = (__54.x+__61.x);
+        __53.y = (__54.y+__61.y);
+        __53.z = (__54.z+__61.z);
+        __53.w = (__54.w+__61.w);
+      int __77 = ((0x000000ff << 0) & (weight[__53.x] << 0))|((0x000000ff << 8) & (weight[__53.y] << 8))|((0x000000ff << 16) & (weight[__53.z] << 16))|((0x000000ff << 24) & (weight[__53.w] << 24));
+      int __78;
+      int4 __79;
+        int4 __80;
+          int4 __81 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __82 = make_int4(2, 2, 2, 2);
+          __80.x = (__81.x%__82.x);
+          __80.y = (__81.y%__82.y);
+          __80.z = (__81.z%__82.z);
+          __80.w = (__81.w%__82.w);
+        int4 __83;
+        ushort4 __84;
+          ushort4 __85;
+            ushort4 __86;
+              int4 __87 = make_int4(2, 2, 2, 2);
+              int4 __88 = make_int4(0, 0, 0, 0);
+              __86.x = (__87.x>=__88.x);
+              __86.y = (__87.y>=__88.y);
+              __86.z = (__87.z>=__88.z);
+              __86.w = (__87.w>=__88.w);
+            ushort4 __89;
+              int4 __90 = make_int4(0, 0, 0, 0);
+              __89.x = (__80.x>=__90.x);
+              __89.y = (__80.y>=__90.y);
+              __89.z = (__80.z>=__90.z);
+              __89.w = (__80.w>=__90.w);
+            __85.x = (__86.x&&__89.x);
+            __85.y = (__86.y&&__89.y);
+            __85.z = (__86.z&&__89.z);
+            __85.w = (__86.w&&__89.w);
+          ushort4 __91;
+            ushort4 __92;
+              int4 __93 = make_int4(2, 2, 2, 2);
+              int4 __94 = make_int4(0, 0, 0, 0);
+              __92.x = (__93.x<__94.x);
+              __92.y = (__93.y<__94.y);
+              __92.z = (__93.z<__94.z);
+              __92.w = (__93.w<__94.w);
+            ushort4 __95;
+              int4 __96 = make_int4(0, 0, 0, 0);
+              __95.x = (__80.x<=__96.x);
+              __95.y = (__80.y<=__96.y);
+              __95.z = (__80.z<=__96.z);
+              __95.w = (__80.w<=__96.w);
+            __91.x = (__92.x&&__95.x);
+            __91.y = (__92.y&&__95.y);
+            __91.z = (__92.z&&__95.z);
+            __91.w = (__92.w&&__95.w);
+          __84.x = (__85.x||__91.x);
+          __84.y = (__85.y||__91.y);
+          __84.z = (__85.z||__91.z);
+          __84.w = (__85.w||__91.w);
+        int4 __97;
+          int4 __98 = make_int4(2, 2, 2, 2);
+          __97.x = (__80.x+__98.x);
+          __97.y = (__80.y+__98.y);
+          __97.z = (__80.z+__98.z);
+          __97.w = (__80.w+__98.w);
+        __83.x = (bool(__84.x)?__80.x:__97.x);
+        __83.y = (bool(__84.y)?__80.y:__97.y);
+        __83.z = (bool(__84.z)?__80.z:__97.z);
+        __83.w = (bool(__84.w)?__80.w:__97.w);
+        int4 __99 = make_int4(4, 4, 4, 4);
+        __79.x = (__83.x*__99.x);
+        __79.y = (__83.y*__99.y);
+        __79.z = (__83.z*__99.z);
+        __79.w = (__83.w*__99.w);
+      __78=((signed char)(__79.x) << 0);
+      __78=__78 & ~(0x000000ff << 8) |((signed char)(__79.y) << 8);
+      __78=__78 & ~(0x000000ff << 16) |((signed char)(__79.z) << 16);
+      __78=__78 & ~(0x000000ff << 24) |((signed char)(__79.w) << 24);
+      __52=((((char)(__77 >> 0)) >> ((char)(__78 >> 0))) << 0);
+      __52=__52 & ~(0x000000ff << 8) |((((char)(__77 >> 8)) >> ((char)(__78 >> 8))) << 8);
+      __52=__52 & ~(0x000000ff << 16) |((((char)(__77 >> 16)) >> ((char)(__78 >> 16))) << 16);
+      __52=__52 & ~(0x000000ff << 24) |((((char)(__77 >> 24)) >> ((char)(__78 >> 24))) << 24);
+    int __100 = (int)252645135;
+    __51=((((char)(__52 >> 0)) & ((char)(__100 >> 0))) << 0);
+    __51=__51 & ~(0x000000ff << 8) |((((char)(__52 >> 8)) & ((char)(__100 >> 8))) << 8);
+    __51=__51 & ~(0x000000ff << 16) |((((char)(__52 >> 16)) & ((char)(__100 >> 16))) << 16);
+    __51=__51 & ~(0x000000ff << 24) |((((char)(__52 >> 24)) & ((char)(__100 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 512)) = __51;
+  int __101;
+    int __102;
+      int4 __103;
+        int4 __104 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 512), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 512), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 512), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 512));
+        int4 __105;
+          int4 __106 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __107 = make_int4(2, 2, 2, 2);
+          __105.x = (__106.x%__107.x);
+          __105.y = (__106.y%__107.y);
+          __105.z = (__106.z%__107.z);
+          __105.w = (__106.w%__107.w);
+        int4 __108;
+          int4 __109 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __110 = make_int4(2, 2, 2, 2);
+          __108.x = (__109.x/__110.x);
+          __108.y = (__109.y/__110.y);
+          __108.z = (__109.z/__110.z);
+          __108.w = (__109.w/__110.w);
+        int4 __111;
+        ushort4 __112;
+          ushort4 __113;
+            ushort4 __114;
+              int4 __115 = make_int4(2, 2, 2, 2);
+              int4 __116 = make_int4(0, 0, 0, 0);
+              __114.x = (__115.x>=__116.x);
+              __114.y = (__115.y>=__116.y);
+              __114.z = (__115.z>=__116.z);
+              __114.w = (__115.w>=__116.w);
+            ushort4 __117;
+              int4 __118 = make_int4(0, 0, 0, 0);
+              __117.x = (__105.x>=__118.x);
+              __117.y = (__105.y>=__118.y);
+              __117.z = (__105.z>=__118.z);
+              __117.w = (__105.w>=__118.w);
+            __113.x = (__114.x&&__117.x);
+            __113.y = (__114.y&&__117.y);
+            __113.z = (__114.z&&__117.z);
+            __113.w = (__114.w&&__117.w);
+          ushort4 __119;
+            ushort4 __120;
+              int4 __121 = make_int4(2, 2, 2, 2);
+              int4 __122 = make_int4(0, 0, 0, 0);
+              __120.x = (__121.x<__122.x);
+              __120.y = (__121.y<__122.y);
+              __120.z = (__121.z<__122.z);
+              __120.w = (__121.w<__122.w);
+            ushort4 __123;
+              int4 __124 = make_int4(0, 0, 0, 0);
+              __123.x = (__105.x<=__124.x);
+              __123.y = (__105.y<=__124.y);
+              __123.z = (__105.z<=__124.z);
+              __123.w = (__105.w<=__124.w);
+            __119.x = (__120.x&&__123.x);
+            __119.y = (__120.y&&__123.y);
+            __119.z = (__120.z&&__123.z);
+            __119.w = (__120.w&&__123.w);
+          __112.x = (__113.x||__119.x);
+          __112.y = (__113.y||__119.y);
+          __112.z = (__113.z||__119.z);
+          __112.w = (__113.w||__119.w);
+        int4 __125;
+          int4 __126 = make_int4(1, 1, 1, 1);
+          __125.x = (__108.x-__126.x);
+          __125.y = (__108.y-__126.y);
+          __125.z = (__108.z-__126.z);
+          __125.w = (__108.w-__126.w);
+        __111.x = (bool(__112.x)?__108.x:__125.x);
+        __111.y = (bool(__112.y)?__108.y:__125.y);
+        __111.z = (bool(__112.z)?__108.z:__125.z);
+        __111.w = (bool(__112.w)?__108.w:__125.w);
+        __103.x = (__104.x+__111.x);
+        __103.y = (__104.y+__111.y);
+        __103.z = (__104.z+__111.z);
+        __103.w = (__104.w+__111.w);
+      int __127 = ((0x000000ff << 0) & (weight[__103.x] << 0))|((0x000000ff << 8) & (weight[__103.y] << 8))|((0x000000ff << 16) & (weight[__103.z] << 16))|((0x000000ff << 24) & (weight[__103.w] << 24));
+      int __128;
+      int4 __129;
+        int4 __130;
+          int4 __131 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __132 = make_int4(2, 2, 2, 2);
+          __130.x = (__131.x%__132.x);
+          __130.y = (__131.y%__132.y);
+          __130.z = (__131.z%__132.z);
+          __130.w = (__131.w%__132.w);
+        int4 __133;
+        ushort4 __134;
+          ushort4 __135;
+            ushort4 __136;
+              int4 __137 = make_int4(2, 2, 2, 2);
+              int4 __138 = make_int4(0, 0, 0, 0);
+              __136.x = (__137.x>=__138.x);
+              __136.y = (__137.y>=__138.y);
+              __136.z = (__137.z>=__138.z);
+              __136.w = (__137.w>=__138.w);
+            ushort4 __139;
+              int4 __140 = make_int4(0, 0, 0, 0);
+              __139.x = (__130.x>=__140.x);
+              __139.y = (__130.y>=__140.y);
+              __139.z = (__130.z>=__140.z);
+              __139.w = (__130.w>=__140.w);
+            __135.x = (__136.x&&__139.x);
+            __135.y = (__136.y&&__139.y);
+            __135.z = (__136.z&&__139.z);
+            __135.w = (__136.w&&__139.w);
+          ushort4 __141;
+            ushort4 __142;
+              int4 __143 = make_int4(2, 2, 2, 2);
+              int4 __144 = make_int4(0, 0, 0, 0);
+              __142.x = (__143.x<__144.x);
+              __142.y = (__143.y<__144.y);
+              __142.z = (__143.z<__144.z);
+              __142.w = (__143.w<__144.w);
+            ushort4 __145;
+              int4 __146 = make_int4(0, 0, 0, 0);
+              __145.x = (__130.x<=__146.x);
+              __145.y = (__130.y<=__146.y);
+              __145.z = (__130.z<=__146.z);
+              __145.w = (__130.w<=__146.w);
+            __141.x = (__142.x&&__145.x);
+            __141.y = (__142.y&&__145.y);
+            __141.z = (__142.z&&__145.z);
+            __141.w = (__142.w&&__145.w);
+          __134.x = (__135.x||__141.x);
+          __134.y = (__135.y||__141.y);
+          __134.z = (__135.z||__141.z);
+          __134.w = (__135.w||__141.w);
+        int4 __147;
+          int4 __148 = make_int4(2, 2, 2, 2);
+          __147.x = (__130.x+__148.x);
+          __147.y = (__130.y+__148.y);
+          __147.z = (__130.z+__148.z);
+          __147.w = (__130.w+__148.w);
+        __133.x = (bool(__134.x)?__130.x:__147.x);
+        __133.y = (bool(__134.y)?__130.y:__147.y);
+        __133.z = (bool(__134.z)?__130.z:__147.z);
+        __133.w = (bool(__134.w)?__130.w:__147.w);
+        int4 __149 = make_int4(4, 4, 4, 4);
+        __129.x = (__133.x*__149.x);
+        __129.y = (__133.y*__149.y);
+        __129.z = (__133.z*__149.z);
+        __129.w = (__133.w*__149.w);
+      __128=((signed char)(__129.x) << 0);
+      __128=__128 & ~(0x000000ff << 8) |((signed char)(__129.y) << 8);
+      __128=__128 & ~(0x000000ff << 16) |((signed char)(__129.z) << 16);
+      __128=__128 & ~(0x000000ff << 24) |((signed char)(__129.w) << 24);
+      __102=((((char)(__127 >> 0)) >> ((char)(__128 >> 0))) << 0);
+      __102=__102 & ~(0x000000ff << 8) |((((char)(__127 >> 8)) >> ((char)(__128 >> 8))) << 8);
+      __102=__102 & ~(0x000000ff << 16) |((((char)(__127 >> 16)) >> ((char)(__128 >> 16))) << 16);
+      __102=__102 & ~(0x000000ff << 24) |((((char)(__127 >> 24)) >> ((char)(__128 >> 24))) << 24);
+    int __150 = (int)252645135;
+    __101=((((char)(__102 >> 0)) & ((char)(__150 >> 0))) << 0);
+    __101=__101 & ~(0x000000ff << 8) |((((char)(__102 >> 8)) & ((char)(__150 >> 8))) << 8);
+    __101=__101 & ~(0x000000ff << 16) |((((char)(__102 >> 16)) & ((char)(__150 >> 16))) << 16);
+    __101=__101 & ~(0x000000ff << 24) |((((char)(__102 >> 24)) & ((char)(__150 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 1024)) = __101;
+  int __151;
+    int __152;
+      int4 __153;
+        int4 __154 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 768), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 768), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 768), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 768));
+        int4 __155;
+          int4 __156 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __157 = make_int4(2, 2, 2, 2);
+          __155.x = (__156.x%__157.x);
+          __155.y = (__156.y%__157.y);
+          __155.z = (__156.z%__157.z);
+          __155.w = (__156.w%__157.w);
+        int4 __158;
+          int4 __159 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __160 = make_int4(2, 2, 2, 2);
+          __158.x = (__159.x/__160.x);
+          __158.y = (__159.y/__160.y);
+          __158.z = (__159.z/__160.z);
+          __158.w = (__159.w/__160.w);
+        int4 __161;
+        ushort4 __162;
+          ushort4 __163;
+            ushort4 __164;
+              int4 __165 = make_int4(2, 2, 2, 2);
+              int4 __166 = make_int4(0, 0, 0, 0);
+              __164.x = (__165.x>=__166.x);
+              __164.y = (__165.y>=__166.y);
+              __164.z = (__165.z>=__166.z);
+              __164.w = (__165.w>=__166.w);
+            ushort4 __167;
+              int4 __168 = make_int4(0, 0, 0, 0);
+              __167.x = (__155.x>=__168.x);
+              __167.y = (__155.y>=__168.y);
+              __167.z = (__155.z>=__168.z);
+              __167.w = (__155.w>=__168.w);
+            __163.x = (__164.x&&__167.x);
+            __163.y = (__164.y&&__167.y);
+            __163.z = (__164.z&&__167.z);
+            __163.w = (__164.w&&__167.w);
+          ushort4 __169;
+            ushort4 __170;
+              int4 __171 = make_int4(2, 2, 2, 2);
+              int4 __172 = make_int4(0, 0, 0, 0);
+              __170.x = (__171.x<__172.x);
+              __170.y = (__171.y<__172.y);
+              __170.z = (__171.z<__172.z);
+              __170.w = (__171.w<__172.w);
+            ushort4 __173;
+              int4 __174 = make_int4(0, 0, 0, 0);
+              __173.x = (__155.x<=__174.x);
+              __173.y = (__155.y<=__174.y);
+              __173.z = (__155.z<=__174.z);
+              __173.w = (__155.w<=__174.w);
+            __169.x = (__170.x&&__173.x);
+            __169.y = (__170.y&&__173.y);
+            __169.z = (__170.z&&__173.z);
+            __169.w = (__170.w&&__173.w);
+          __162.x = (__163.x||__169.x);
+          __162.y = (__163.y||__169.y);
+          __162.z = (__163.z||__169.z);
+          __162.w = (__163.w||__169.w);
+        int4 __175;
+          int4 __176 = make_int4(1, 1, 1, 1);
+          __175.x = (__158.x-__176.x);
+          __175.y = (__158.y-__176.y);
+          __175.z = (__158.z-__176.z);
+          __175.w = (__158.w-__176.w);
+        __161.x = (bool(__162.x)?__158.x:__175.x);
+        __161.y = (bool(__162.y)?__158.y:__175.y);
+        __161.z = (bool(__162.z)?__158.z:__175.z);
+        __161.w = (bool(__162.w)?__158.w:__175.w);
+        __153.x = (__154.x+__161.x);
+        __153.y = (__154.y+__161.y);
+        __153.z = (__154.z+__161.z);
+        __153.w = (__154.w+__161.w);
+      int __177 = ((0x000000ff << 0) & (weight[__153.x] << 0))|((0x000000ff << 8) & (weight[__153.y] << 8))|((0x000000ff << 16) & (weight[__153.z] << 16))|((0x000000ff << 24) & (weight[__153.w] << 24));
+      int __178;
+      int4 __179;
+        int4 __180;
+          int4 __181 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __182 = make_int4(2, 2, 2, 2);
+          __180.x = (__181.x%__182.x);
+          __180.y = (__181.y%__182.y);
+          __180.z = (__181.z%__182.z);
+          __180.w = (__181.w%__182.w);
+        int4 __183;
+        ushort4 __184;
+          ushort4 __185;
+            ushort4 __186;
+              int4 __187 = make_int4(2, 2, 2, 2);
+              int4 __188 = make_int4(0, 0, 0, 0);
+              __186.x = (__187.x>=__188.x);
+              __186.y = (__187.y>=__188.y);
+              __186.z = (__187.z>=__188.z);
+              __186.w = (__187.w>=__188.w);
+            ushort4 __189;
+              int4 __190 = make_int4(0, 0, 0, 0);
+              __189.x = (__180.x>=__190.x);
+              __189.y = (__180.y>=__190.y);
+              __189.z = (__180.z>=__190.z);
+              __189.w = (__180.w>=__190.w);
+            __185.x = (__186.x&&__189.x);
+            __185.y = (__186.y&&__189.y);
+            __185.z = (__186.z&&__189.z);
+            __185.w = (__186.w&&__189.w);
+          ushort4 __191;
+            ushort4 __192;
+              int4 __193 = make_int4(2, 2, 2, 2);
+              int4 __194 = make_int4(0, 0, 0, 0);
+              __192.x = (__193.x<__194.x);
+              __192.y = (__193.y<__194.y);
+              __192.z = (__193.z<__194.z);
+              __192.w = (__193.w<__194.w);
+            ushort4 __195;
+              int4 __196 = make_int4(0, 0, 0, 0);
+              __195.x = (__180.x<=__196.x);
+              __195.y = (__180.y<=__196.y);
+              __195.z = (__180.z<=__196.z);
+              __195.w = (__180.w<=__196.w);
+            __191.x = (__192.x&&__195.x);
+            __191.y = (__192.y&&__195.y);
+            __191.z = (__192.z&&__195.z);
+            __191.w = (__192.w&&__195.w);
+          __184.x = (__185.x||__191.x);
+          __184.y = (__185.y||__191.y);
+          __184.z = (__185.z||__191.z);
+          __184.w = (__185.w||__191.w);
+        int4 __197;
+          int4 __198 = make_int4(2, 2, 2, 2);
+          __197.x = (__180.x+__198.x);
+          __197.y = (__180.y+__198.y);
+          __197.z = (__180.z+__198.z);
+          __197.w = (__180.w+__198.w);
+        __183.x = (bool(__184.x)?__180.x:__197.x);
+        __183.y = (bool(__184.y)?__180.y:__197.y);
+        __183.z = (bool(__184.z)?__180.z:__197.z);
+        __183.w = (bool(__184.w)?__180.w:__197.w);
+        int4 __199 = make_int4(4, 4, 4, 4);
+        __179.x = (__183.x*__199.x);
+        __179.y = (__183.y*__199.y);
+        __179.z = (__183.z*__199.z);
+        __179.w = (__183.w*__199.w);
+      __178=((signed char)(__179.x) << 0);
+      __178=__178 & ~(0x000000ff << 8) |((signed char)(__179.y) << 8);
+      __178=__178 & ~(0x000000ff << 16) |((signed char)(__179.z) << 16);
+      __178=__178 & ~(0x000000ff << 24) |((signed char)(__179.w) << 24);
+      __152=((((char)(__177 >> 0)) >> ((char)(__178 >> 0))) << 0);
+      __152=__152 & ~(0x000000ff << 8) |((((char)(__177 >> 8)) >> ((char)(__178 >> 8))) << 8);
+      __152=__152 & ~(0x000000ff << 16) |((((char)(__177 >> 16)) >> ((char)(__178 >> 16))) << 16);
+      __152=__152 & ~(0x000000ff << 24) |((((char)(__177 >> 24)) >> ((char)(__178 >> 24))) << 24);
+    int __200 = (int)252645135;
+    __151=((((char)(__152 >> 0)) & ((char)(__200 >> 0))) << 0);
+    __151=__151 & ~(0x000000ff << 8) |((((char)(__152 >> 8)) & ((char)(__200 >> 8))) << 8);
+    __151=__151 & ~(0x000000ff << 16) |((((char)(__152 >> 16)) & ((char)(__200 >> 16))) << 16);
+    __151=__151 & ~(0x000000ff << 24) |((((char)(__152 >> 24)) & ((char)(__200 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 1536)) = __151;
+  int __201;
+    int __202;
+      int4 __203;
+        int4 __204 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1024), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1024), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1024), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1024));
+        int4 __205;
+          int4 __206 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __207 = make_int4(2, 2, 2, 2);
+          __205.x = (__206.x%__207.x);
+          __205.y = (__206.y%__207.y);
+          __205.z = (__206.z%__207.z);
+          __205.w = (__206.w%__207.w);
+        int4 __208;
+          int4 __209 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __210 = make_int4(2, 2, 2, 2);
+          __208.x = (__209.x/__210.x);
+          __208.y = (__209.y/__210.y);
+          __208.z = (__209.z/__210.z);
+          __208.w = (__209.w/__210.w);
+        int4 __211;
+        ushort4 __212;
+          ushort4 __213;
+            ushort4 __214;
+              int4 __215 = make_int4(2, 2, 2, 2);
+              int4 __216 = make_int4(0, 0, 0, 0);
+              __214.x = (__215.x>=__216.x);
+              __214.y = (__215.y>=__216.y);
+              __214.z = (__215.z>=__216.z);
+              __214.w = (__215.w>=__216.w);
+            ushort4 __217;
+              int4 __218 = make_int4(0, 0, 0, 0);
+              __217.x = (__205.x>=__218.x);
+              __217.y = (__205.y>=__218.y);
+              __217.z = (__205.z>=__218.z);
+              __217.w = (__205.w>=__218.w);
+            __213.x = (__214.x&&__217.x);
+            __213.y = (__214.y&&__217.y);
+            __213.z = (__214.z&&__217.z);
+            __213.w = (__214.w&&__217.w);
+          ushort4 __219;
+            ushort4 __220;
+              int4 __221 = make_int4(2, 2, 2, 2);
+              int4 __222 = make_int4(0, 0, 0, 0);
+              __220.x = (__221.x<__222.x);
+              __220.y = (__221.y<__222.y);
+              __220.z = (__221.z<__222.z);
+              __220.w = (__221.w<__222.w);
+            ushort4 __223;
+              int4 __224 = make_int4(0, 0, 0, 0);
+              __223.x = (__205.x<=__224.x);
+              __223.y = (__205.y<=__224.y);
+              __223.z = (__205.z<=__224.z);
+              __223.w = (__205.w<=__224.w);
+            __219.x = (__220.x&&__223.x);
+            __219.y = (__220.y&&__223.y);
+            __219.z = (__220.z&&__223.z);
+            __219.w = (__220.w&&__223.w);
+          __212.x = (__213.x||__219.x);
+          __212.y = (__213.y||__219.y);
+          __212.z = (__213.z||__219.z);
+          __212.w = (__213.w||__219.w);
+        int4 __225;
+          int4 __226 = make_int4(1, 1, 1, 1);
+          __225.x = (__208.x-__226.x);
+          __225.y = (__208.y-__226.y);
+          __225.z = (__208.z-__226.z);
+          __225.w = (__208.w-__226.w);
+        __211.x = (bool(__212.x)?__208.x:__225.x);
+        __211.y = (bool(__212.y)?__208.y:__225.y);
+        __211.z = (bool(__212.z)?__208.z:__225.z);
+        __211.w = (bool(__212.w)?__208.w:__225.w);
+        __203.x = (__204.x+__211.x);
+        __203.y = (__204.y+__211.y);
+        __203.z = (__204.z+__211.z);
+        __203.w = (__204.w+__211.w);
+      int __227 = ((0x000000ff << 0) & (weight[__203.x] << 0))|((0x000000ff << 8) & (weight[__203.y] << 8))|((0x000000ff << 16) & (weight[__203.z] << 16))|((0x000000ff << 24) & (weight[__203.w] << 24));
+      int __228;
+      int4 __229;
+        int4 __230;
+          int4 __231 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __232 = make_int4(2, 2, 2, 2);
+          __230.x = (__231.x%__232.x);
+          __230.y = (__231.y%__232.y);
+          __230.z = (__231.z%__232.z);
+          __230.w = (__231.w%__232.w);
+        int4 __233;
+        ushort4 __234;
+          ushort4 __235;
+            ushort4 __236;
+              int4 __237 = make_int4(2, 2, 2, 2);
+              int4 __238 = make_int4(0, 0, 0, 0);
+              __236.x = (__237.x>=__238.x);
+              __236.y = (__237.y>=__238.y);
+              __236.z = (__237.z>=__238.z);
+              __236.w = (__237.w>=__238.w);
+            ushort4 __239;
+              int4 __240 = make_int4(0, 0, 0, 0);
+              __239.x = (__230.x>=__240.x);
+              __239.y = (__230.y>=__240.y);
+              __239.z = (__230.z>=__240.z);
+              __239.w = (__230.w>=__240.w);
+            __235.x = (__236.x&&__239.x);
+            __235.y = (__236.y&&__239.y);
+            __235.z = (__236.z&&__239.z);
+            __235.w = (__236.w&&__239.w);
+          ushort4 __241;
+            ushort4 __242;
+              int4 __243 = make_int4(2, 2, 2, 2);
+              int4 __244 = make_int4(0, 0, 0, 0);
+              __242.x = (__243.x<__244.x);
+              __242.y = (__243.y<__244.y);
+              __242.z = (__243.z<__244.z);
+              __242.w = (__243.w<__244.w);
+            ushort4 __245;
+              int4 __246 = make_int4(0, 0, 0, 0);
+              __245.x = (__230.x<=__246.x);
+              __245.y = (__230.y<=__246.y);
+              __245.z = (__230.z<=__246.z);
+              __245.w = (__230.w<=__246.w);
+            __241.x = (__242.x&&__245.x);
+            __241.y = (__242.y&&__245.y);
+            __241.z = (__242.z&&__245.z);
+            __241.w = (__242.w&&__245.w);
+          __234.x = (__235.x||__241.x);
+          __234.y = (__235.y||__241.y);
+          __234.z = (__235.z||__241.z);
+          __234.w = (__235.w||__241.w);
+        int4 __247;
+          int4 __248 = make_int4(2, 2, 2, 2);
+          __247.x = (__230.x+__248.x);
+          __247.y = (__230.y+__248.y);
+          __247.z = (__230.z+__248.z);
+          __247.w = (__230.w+__248.w);
+        __233.x = (bool(__234.x)?__230.x:__247.x);
+        __233.y = (bool(__234.y)?__230.y:__247.y);
+        __233.z = (bool(__234.z)?__230.z:__247.z);
+        __233.w = (bool(__234.w)?__230.w:__247.w);
+        int4 __249 = make_int4(4, 4, 4, 4);
+        __229.x = (__233.x*__249.x);
+        __229.y = (__233.y*__249.y);
+        __229.z = (__233.z*__249.z);
+        __229.w = (__233.w*__249.w);
+      __228=((signed char)(__229.x) << 0);
+      __228=__228 & ~(0x000000ff << 8) |((signed char)(__229.y) << 8);
+      __228=__228 & ~(0x000000ff << 16) |((signed char)(__229.z) << 16);
+      __228=__228 & ~(0x000000ff << 24) |((signed char)(__229.w) << 24);
+      __202=((((char)(__227 >> 0)) >> ((char)(__228 >> 0))) << 0);
+      __202=__202 & ~(0x000000ff << 8) |((((char)(__227 >> 8)) >> ((char)(__228 >> 8))) << 8);
+      __202=__202 & ~(0x000000ff << 16) |((((char)(__227 >> 16)) >> ((char)(__228 >> 16))) << 16);
+      __202=__202 & ~(0x000000ff << 24) |((((char)(__227 >> 24)) >> ((char)(__228 >> 24))) << 24);
+    int __250 = (int)252645135;
+    __201=((((char)(__202 >> 0)) & ((char)(__250 >> 0))) << 0);
+    __201=__201 & ~(0x000000ff << 8) |((((char)(__202 >> 8)) & ((char)(__250 >> 8))) << 8);
+    __201=__201 & ~(0x000000ff << 16) |((((char)(__202 >> 16)) & ((char)(__250 >> 16))) << 16);
+    __201=__201 & ~(0x000000ff << 24) |((((char)(__202 >> 24)) & ((char)(__250 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 2048)) = __201;
+  int __251;
+    int __252;
+      int4 __253;
+        int4 __254 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1280), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1280), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1280), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1280));
+        int4 __255;
+          int4 __256 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __257 = make_int4(2, 2, 2, 2);
+          __255.x = (__256.x%__257.x);
+          __255.y = (__256.y%__257.y);
+          __255.z = (__256.z%__257.z);
+          __255.w = (__256.w%__257.w);
+        int4 __258;
+          int4 __259 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __260 = make_int4(2, 2, 2, 2);
+          __258.x = (__259.x/__260.x);
+          __258.y = (__259.y/__260.y);
+          __258.z = (__259.z/__260.z);
+          __258.w = (__259.w/__260.w);
+        int4 __261;
+        ushort4 __262;
+          ushort4 __263;
+            ushort4 __264;
+              int4 __265 = make_int4(2, 2, 2, 2);
+              int4 __266 = make_int4(0, 0, 0, 0);
+              __264.x = (__265.x>=__266.x);
+              __264.y = (__265.y>=__266.y);
+              __264.z = (__265.z>=__266.z);
+              __264.w = (__265.w>=__266.w);
+            ushort4 __267;
+              int4 __268 = make_int4(0, 0, 0, 0);
+              __267.x = (__255.x>=__268.x);
+              __267.y = (__255.y>=__268.y);
+              __267.z = (__255.z>=__268.z);
+              __267.w = (__255.w>=__268.w);
+            __263.x = (__264.x&&__267.x);
+            __263.y = (__264.y&&__267.y);
+            __263.z = (__264.z&&__267.z);
+            __263.w = (__264.w&&__267.w);
+          ushort4 __269;
+            ushort4 __270;
+              int4 __271 = make_int4(2, 2, 2, 2);
+              int4 __272 = make_int4(0, 0, 0, 0);
+              __270.x = (__271.x<__272.x);
+              __270.y = (__271.y<__272.y);
+              __270.z = (__271.z<__272.z);
+              __270.w = (__271.w<__272.w);
+            ushort4 __273;
+              int4 __274 = make_int4(0, 0, 0, 0);
+              __273.x = (__255.x<=__274.x);
+              __273.y = (__255.y<=__274.y);
+              __273.z = (__255.z<=__274.z);
+              __273.w = (__255.w<=__274.w);
+            __269.x = (__270.x&&__273.x);
+            __269.y = (__270.y&&__273.y);
+            __269.z = (__270.z&&__273.z);
+            __269.w = (__270.w&&__273.w);
+          __262.x = (__263.x||__269.x);
+          __262.y = (__263.y||__269.y);
+          __262.z = (__263.z||__269.z);
+          __262.w = (__263.w||__269.w);
+        int4 __275;
+          int4 __276 = make_int4(1, 1, 1, 1);
+          __275.x = (__258.x-__276.x);
+          __275.y = (__258.y-__276.y);
+          __275.z = (__258.z-__276.z);
+          __275.w = (__258.w-__276.w);
+        __261.x = (bool(__262.x)?__258.x:__275.x);
+        __261.y = (bool(__262.y)?__258.y:__275.y);
+        __261.z = (bool(__262.z)?__258.z:__275.z);
+        __261.w = (bool(__262.w)?__258.w:__275.w);
+        __253.x = (__254.x+__261.x);
+        __253.y = (__254.y+__261.y);
+        __253.z = (__254.z+__261.z);
+        __253.w = (__254.w+__261.w);
+      int __277 = ((0x000000ff << 0) & (weight[__253.x] << 0))|((0x000000ff << 8) & (weight[__253.y] << 8))|((0x000000ff << 16) & (weight[__253.z] << 16))|((0x000000ff << 24) & (weight[__253.w] << 24));
+      int __278;
+      int4 __279;
+        int4 __280;
+          int4 __281 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __282 = make_int4(2, 2, 2, 2);
+          __280.x = (__281.x%__282.x);
+          __280.y = (__281.y%__282.y);
+          __280.z = (__281.z%__282.z);
+          __280.w = (__281.w%__282.w);
+        int4 __283;
+        ushort4 __284;
+          ushort4 __285;
+            ushort4 __286;
+              int4 __287 = make_int4(2, 2, 2, 2);
+              int4 __288 = make_int4(0, 0, 0, 0);
+              __286.x = (__287.x>=__288.x);
+              __286.y = (__287.y>=__288.y);
+              __286.z = (__287.z>=__288.z);
+              __286.w = (__287.w>=__288.w);
+            ushort4 __289;
+              int4 __290 = make_int4(0, 0, 0, 0);
+              __289.x = (__280.x>=__290.x);
+              __289.y = (__280.y>=__290.y);
+              __289.z = (__280.z>=__290.z);
+              __289.w = (__280.w>=__290.w);
+            __285.x = (__286.x&&__289.x);
+            __285.y = (__286.y&&__289.y);
+            __285.z = (__286.z&&__289.z);
+            __285.w = (__286.w&&__289.w);
+          ushort4 __291;
+            ushort4 __292;
+              int4 __293 = make_int4(2, 2, 2, 2);
+              int4 __294 = make_int4(0, 0, 0, 0);
+              __292.x = (__293.x<__294.x);
+              __292.y = (__293.y<__294.y);
+              __292.z = (__293.z<__294.z);
+              __292.w = (__293.w<__294.w);
+            ushort4 __295;
+              int4 __296 = make_int4(0, 0, 0, 0);
+              __295.x = (__280.x<=__296.x);
+              __295.y = (__280.y<=__296.y);
+              __295.z = (__280.z<=__296.z);
+              __295.w = (__280.w<=__296.w);
+            __291.x = (__292.x&&__295.x);
+            __291.y = (__292.y&&__295.y);
+            __291.z = (__292.z&&__295.z);
+            __291.w = (__292.w&&__295.w);
+          __284.x = (__285.x||__291.x);
+          __284.y = (__285.y||__291.y);
+          __284.z = (__285.z||__291.z);
+          __284.w = (__285.w||__291.w);
+        int4 __297;
+          int4 __298 = make_int4(2, 2, 2, 2);
+          __297.x = (__280.x+__298.x);
+          __297.y = (__280.y+__298.y);
+          __297.z = (__280.z+__298.z);
+          __297.w = (__280.w+__298.w);
+        __283.x = (bool(__284.x)?__280.x:__297.x);
+        __283.y = (bool(__284.y)?__280.y:__297.y);
+        __283.z = (bool(__284.z)?__280.z:__297.z);
+        __283.w = (bool(__284.w)?__280.w:__297.w);
+        int4 __299 = make_int4(4, 4, 4, 4);
+        __279.x = (__283.x*__299.x);
+        __279.y = (__283.y*__299.y);
+        __279.z = (__283.z*__299.z);
+        __279.w = (__283.w*__299.w);
+      __278=((signed char)(__279.x) << 0);
+      __278=__278 & ~(0x000000ff << 8) |((signed char)(__279.y) << 8);
+      __278=__278 & ~(0x000000ff << 16) |((signed char)(__279.z) << 16);
+      __278=__278 & ~(0x000000ff << 24) |((signed char)(__279.w) << 24);
+      __252=((((char)(__277 >> 0)) >> ((char)(__278 >> 0))) << 0);
+      __252=__252 & ~(0x000000ff << 8) |((((char)(__277 >> 8)) >> ((char)(__278 >> 8))) << 8);
+      __252=__252 & ~(0x000000ff << 16) |((((char)(__277 >> 16)) >> ((char)(__278 >> 16))) << 16);
+      __252=__252 & ~(0x000000ff << 24) |((((char)(__277 >> 24)) >> ((char)(__278 >> 24))) << 24);
+    int __300 = (int)252645135;
+    __251=((((char)(__252 >> 0)) & ((char)(__300 >> 0))) << 0);
+    __251=__251 & ~(0x000000ff << 8) |((((char)(__252 >> 8)) & ((char)(__300 >> 8))) << 8);
+    __251=__251 & ~(0x000000ff << 16) |((((char)(__252 >> 16)) & ((char)(__300 >> 16))) << 16);
+    __251=__251 & ~(0x000000ff << 24) |((((char)(__252 >> 24)) & ((char)(__300 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 2560)) = __251;
+  int __301;
+    int __302;
+      int4 __303;
+        int4 __304 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1536), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1536), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1536), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1536));
+        int4 __305;
+          int4 __306 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __307 = make_int4(2, 2, 2, 2);
+          __305.x = (__306.x%__307.x);
+          __305.y = (__306.y%__307.y);
+          __305.z = (__306.z%__307.z);
+          __305.w = (__306.w%__307.w);
+        int4 __308;
+          int4 __309 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __310 = make_int4(2, 2, 2, 2);
+          __308.x = (__309.x/__310.x);
+          __308.y = (__309.y/__310.y);
+          __308.z = (__309.z/__310.z);
+          __308.w = (__309.w/__310.w);
+        int4 __311;
+        ushort4 __312;
+          ushort4 __313;
+            ushort4 __314;
+              int4 __315 = make_int4(2, 2, 2, 2);
+              int4 __316 = make_int4(0, 0, 0, 0);
+              __314.x = (__315.x>=__316.x);
+              __314.y = (__315.y>=__316.y);
+              __314.z = (__315.z>=__316.z);
+              __314.w = (__315.w>=__316.w);
+            ushort4 __317;
+              int4 __318 = make_int4(0, 0, 0, 0);
+              __317.x = (__305.x>=__318.x);
+              __317.y = (__305.y>=__318.y);
+              __317.z = (__305.z>=__318.z);
+              __317.w = (__305.w>=__318.w);
+            __313.x = (__314.x&&__317.x);
+            __313.y = (__314.y&&__317.y);
+            __313.z = (__314.z&&__317.z);
+            __313.w = (__314.w&&__317.w);
+          ushort4 __319;
+            ushort4 __320;
+              int4 __321 = make_int4(2, 2, 2, 2);
+              int4 __322 = make_int4(0, 0, 0, 0);
+              __320.x = (__321.x<__322.x);
+              __320.y = (__321.y<__322.y);
+              __320.z = (__321.z<__322.z);
+              __320.w = (__321.w<__322.w);
+            ushort4 __323;
+              int4 __324 = make_int4(0, 0, 0, 0);
+              __323.x = (__305.x<=__324.x);
+              __323.y = (__305.y<=__324.y);
+              __323.z = (__305.z<=__324.z);
+              __323.w = (__305.w<=__324.w);
+            __319.x = (__320.x&&__323.x);
+            __319.y = (__320.y&&__323.y);
+            __319.z = (__320.z&&__323.z);
+            __319.w = (__320.w&&__323.w);
+          __312.x = (__313.x||__319.x);
+          __312.y = (__313.y||__319.y);
+          __312.z = (__313.z||__319.z);
+          __312.w = (__313.w||__319.w);
+        int4 __325;
+          int4 __326 = make_int4(1, 1, 1, 1);
+          __325.x = (__308.x-__326.x);
+          __325.y = (__308.y-__326.y);
+          __325.z = (__308.z-__326.z);
+          __325.w = (__308.w-__326.w);
+        __311.x = (bool(__312.x)?__308.x:__325.x);
+        __311.y = (bool(__312.y)?__308.y:__325.y);
+        __311.z = (bool(__312.z)?__308.z:__325.z);
+        __311.w = (bool(__312.w)?__308.w:__325.w);
+        __303.x = (__304.x+__311.x);
+        __303.y = (__304.y+__311.y);
+        __303.z = (__304.z+__311.z);
+        __303.w = (__304.w+__311.w);
+      int __327 = ((0x000000ff << 0) & (weight[__303.x] << 0))|((0x000000ff << 8) & (weight[__303.y] << 8))|((0x000000ff << 16) & (weight[__303.z] << 16))|((0x000000ff << 24) & (weight[__303.w] << 24));
+      int __328;
+      int4 __329;
+        int4 __330;
+          int4 __331 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __332 = make_int4(2, 2, 2, 2);
+          __330.x = (__331.x%__332.x);
+          __330.y = (__331.y%__332.y);
+          __330.z = (__331.z%__332.z);
+          __330.w = (__331.w%__332.w);
+        int4 __333;
+        ushort4 __334;
+          ushort4 __335;
+            ushort4 __336;
+              int4 __337 = make_int4(2, 2, 2, 2);
+              int4 __338 = make_int4(0, 0, 0, 0);
+              __336.x = (__337.x>=__338.x);
+              __336.y = (__337.y>=__338.y);
+              __336.z = (__337.z>=__338.z);
+              __336.w = (__337.w>=__338.w);
+            ushort4 __339;
+              int4 __340 = make_int4(0, 0, 0, 0);
+              __339.x = (__330.x>=__340.x);
+              __339.y = (__330.y>=__340.y);
+              __339.z = (__330.z>=__340.z);
+              __339.w = (__330.w>=__340.w);
+            __335.x = (__336.x&&__339.x);
+            __335.y = (__336.y&&__339.y);
+            __335.z = (__336.z&&__339.z);
+            __335.w = (__336.w&&__339.w);
+          ushort4 __341;
+            ushort4 __342;
+              int4 __343 = make_int4(2, 2, 2, 2);
+              int4 __344 = make_int4(0, 0, 0, 0);
+              __342.x = (__343.x<__344.x);
+              __342.y = (__343.y<__344.y);
+              __342.z = (__343.z<__344.z);
+              __342.w = (__343.w<__344.w);
+            ushort4 __345;
+              int4 __346 = make_int4(0, 0, 0, 0);
+              __345.x = (__330.x<=__346.x);
+              __345.y = (__330.y<=__346.y);
+              __345.z = (__330.z<=__346.z);
+              __345.w = (__330.w<=__346.w);
+            __341.x = (__342.x&&__345.x);
+            __341.y = (__342.y&&__345.y);
+            __341.z = (__342.z&&__345.z);
+            __341.w = (__342.w&&__345.w);
+          __334.x = (__335.x||__341.x);
+          __334.y = (__335.y||__341.y);
+          __334.z = (__335.z||__341.z);
+          __334.w = (__335.w||__341.w);
+        int4 __347;
+          int4 __348 = make_int4(2, 2, 2, 2);
+          __347.x = (__330.x+__348.x);
+          __347.y = (__330.y+__348.y);
+          __347.z = (__330.z+__348.z);
+          __347.w = (__330.w+__348.w);
+        __333.x = (bool(__334.x)?__330.x:__347.x);
+        __333.y = (bool(__334.y)?__330.y:__347.y);
+        __333.z = (bool(__334.z)?__330.z:__347.z);
+        __333.w = (bool(__334.w)?__330.w:__347.w);
+        int4 __349 = make_int4(4, 4, 4, 4);
+        __329.x = (__333.x*__349.x);
+        __329.y = (__333.y*__349.y);
+        __329.z = (__333.z*__349.z);
+        __329.w = (__333.w*__349.w);
+      __328=((signed char)(__329.x) << 0);
+      __328=__328 & ~(0x000000ff << 8) |((signed char)(__329.y) << 8);
+      __328=__328 & ~(0x000000ff << 16) |((signed char)(__329.z) << 16);
+      __328=__328 & ~(0x000000ff << 24) |((signed char)(__329.w) << 24);
+      __302=((((char)(__327 >> 0)) >> ((char)(__328 >> 0))) << 0);
+      __302=__302 & ~(0x000000ff << 8) |((((char)(__327 >> 8)) >> ((char)(__328 >> 8))) << 8);
+      __302=__302 & ~(0x000000ff << 16) |((((char)(__327 >> 16)) >> ((char)(__328 >> 16))) << 16);
+      __302=__302 & ~(0x000000ff << 24) |((((char)(__327 >> 24)) >> ((char)(__328 >> 24))) << 24);
+    int __350 = (int)252645135;
+    __301=((((char)(__302 >> 0)) & ((char)(__350 >> 0))) << 0);
+    __301=__301 & ~(0x000000ff << 8) |((((char)(__302 >> 8)) & ((char)(__350 >> 8))) << 8);
+    __301=__301 & ~(0x000000ff << 16) |((((char)(__302 >> 16)) & ((char)(__350 >> 16))) << 16);
+    __301=__301 & ~(0x000000ff << 24) |((((char)(__302 >> 24)) & ((char)(__350 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 3072)) = __301;
+  int __351;
+    int __352;
+      int4 __353;
+        int4 __354 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1792), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1792), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1792), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 1792));
+        int4 __355;
+          int4 __356 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __357 = make_int4(2, 2, 2, 2);
+          __355.x = (__356.x%__357.x);
+          __355.y = (__356.y%__357.y);
+          __355.z = (__356.z%__357.z);
+          __355.w = (__356.w%__357.w);
+        int4 __358;
+          int4 __359 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __360 = make_int4(2, 2, 2, 2);
+          __358.x = (__359.x/__360.x);
+          __358.y = (__359.y/__360.y);
+          __358.z = (__359.z/__360.z);
+          __358.w = (__359.w/__360.w);
+        int4 __361;
+        ushort4 __362;
+          ushort4 __363;
+            ushort4 __364;
+              int4 __365 = make_int4(2, 2, 2, 2);
+              int4 __366 = make_int4(0, 0, 0, 0);
+              __364.x = (__365.x>=__366.x);
+              __364.y = (__365.y>=__366.y);
+              __364.z = (__365.z>=__366.z);
+              __364.w = (__365.w>=__366.w);
+            ushort4 __367;
+              int4 __368 = make_int4(0, 0, 0, 0);
+              __367.x = (__355.x>=__368.x);
+              __367.y = (__355.y>=__368.y);
+              __367.z = (__355.z>=__368.z);
+              __367.w = (__355.w>=__368.w);
+            __363.x = (__364.x&&__367.x);
+            __363.y = (__364.y&&__367.y);
+            __363.z = (__364.z&&__367.z);
+            __363.w = (__364.w&&__367.w);
+          ushort4 __369;
+            ushort4 __370;
+              int4 __371 = make_int4(2, 2, 2, 2);
+              int4 __372 = make_int4(0, 0, 0, 0);
+              __370.x = (__371.x<__372.x);
+              __370.y = (__371.y<__372.y);
+              __370.z = (__371.z<__372.z);
+              __370.w = (__371.w<__372.w);
+            ushort4 __373;
+              int4 __374 = make_int4(0, 0, 0, 0);
+              __373.x = (__355.x<=__374.x);
+              __373.y = (__355.y<=__374.y);
+              __373.z = (__355.z<=__374.z);
+              __373.w = (__355.w<=__374.w);
+            __369.x = (__370.x&&__373.x);
+            __369.y = (__370.y&&__373.y);
+            __369.z = (__370.z&&__373.z);
+            __369.w = (__370.w&&__373.w);
+          __362.x = (__363.x||__369.x);
+          __362.y = (__363.y||__369.y);
+          __362.z = (__363.z||__369.z);
+          __362.w = (__363.w||__369.w);
+        int4 __375;
+          int4 __376 = make_int4(1, 1, 1, 1);
+          __375.x = (__358.x-__376.x);
+          __375.y = (__358.y-__376.y);
+          __375.z = (__358.z-__376.z);
+          __375.w = (__358.w-__376.w);
+        __361.x = (bool(__362.x)?__358.x:__375.x);
+        __361.y = (bool(__362.y)?__358.y:__375.y);
+        __361.z = (bool(__362.z)?__358.z:__375.z);
+        __361.w = (bool(__362.w)?__358.w:__375.w);
+        __353.x = (__354.x+__361.x);
+        __353.y = (__354.y+__361.y);
+        __353.z = (__354.z+__361.z);
+        __353.w = (__354.w+__361.w);
+      int __377 = ((0x000000ff << 0) & (weight[__353.x] << 0))|((0x000000ff << 8) & (weight[__353.y] << 8))|((0x000000ff << 16) & (weight[__353.z] << 16))|((0x000000ff << 24) & (weight[__353.w] << 24));
+      int __378;
+      int4 __379;
+        int4 __380;
+          int4 __381 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __382 = make_int4(2, 2, 2, 2);
+          __380.x = (__381.x%__382.x);
+          __380.y = (__381.y%__382.y);
+          __380.z = (__381.z%__382.z);
+          __380.w = (__381.w%__382.w);
+        int4 __383;
+        ushort4 __384;
+          ushort4 __385;
+            ushort4 __386;
+              int4 __387 = make_int4(2, 2, 2, 2);
+              int4 __388 = make_int4(0, 0, 0, 0);
+              __386.x = (__387.x>=__388.x);
+              __386.y = (__387.y>=__388.y);
+              __386.z = (__387.z>=__388.z);
+              __386.w = (__387.w>=__388.w);
+            ushort4 __389;
+              int4 __390 = make_int4(0, 0, 0, 0);
+              __389.x = (__380.x>=__390.x);
+              __389.y = (__380.y>=__390.y);
+              __389.z = (__380.z>=__390.z);
+              __389.w = (__380.w>=__390.w);
+            __385.x = (__386.x&&__389.x);
+            __385.y = (__386.y&&__389.y);
+            __385.z = (__386.z&&__389.z);
+            __385.w = (__386.w&&__389.w);
+          ushort4 __391;
+            ushort4 __392;
+              int4 __393 = make_int4(2, 2, 2, 2);
+              int4 __394 = make_int4(0, 0, 0, 0);
+              __392.x = (__393.x<__394.x);
+              __392.y = (__393.y<__394.y);
+              __392.z = (__393.z<__394.z);
+              __392.w = (__393.w<__394.w);
+            ushort4 __395;
+              int4 __396 = make_int4(0, 0, 0, 0);
+              __395.x = (__380.x<=__396.x);
+              __395.y = (__380.y<=__396.y);
+              __395.z = (__380.z<=__396.z);
+              __395.w = (__380.w<=__396.w);
+            __391.x = (__392.x&&__395.x);
+            __391.y = (__392.y&&__395.y);
+            __391.z = (__392.z&&__395.z);
+            __391.w = (__392.w&&__395.w);
+          __384.x = (__385.x||__391.x);
+          __384.y = (__385.y||__391.y);
+          __384.z = (__385.z||__391.z);
+          __384.w = (__385.w||__391.w);
+        int4 __397;
+          int4 __398 = make_int4(2, 2, 2, 2);
+          __397.x = (__380.x+__398.x);
+          __397.y = (__380.y+__398.y);
+          __397.z = (__380.z+__398.z);
+          __397.w = (__380.w+__398.w);
+        __383.x = (bool(__384.x)?__380.x:__397.x);
+        __383.y = (bool(__384.y)?__380.y:__397.y);
+        __383.z = (bool(__384.z)?__380.z:__397.z);
+        __383.w = (bool(__384.w)?__380.w:__397.w);
+        int4 __399 = make_int4(4, 4, 4, 4);
+        __379.x = (__383.x*__399.x);
+        __379.y = (__383.y*__399.y);
+        __379.z = (__383.z*__399.z);
+        __379.w = (__383.w*__399.w);
+      __378=((signed char)(__379.x) << 0);
+      __378=__378 & ~(0x000000ff << 8) |((signed char)(__379.y) << 8);
+      __378=__378 & ~(0x000000ff << 16) |((signed char)(__379.z) << 16);
+      __378=__378 & ~(0x000000ff << 24) |((signed char)(__379.w) << 24);
+      __352=((((char)(__377 >> 0)) >> ((char)(__378 >> 0))) << 0);
+      __352=__352 & ~(0x000000ff << 8) |((((char)(__377 >> 8)) >> ((char)(__378 >> 8))) << 8);
+      __352=__352 & ~(0x000000ff << 16) |((((char)(__377 >> 16)) >> ((char)(__378 >> 16))) << 16);
+      __352=__352 & ~(0x000000ff << 24) |((((char)(__377 >> 24)) >> ((char)(__378 >> 24))) << 24);
+    int __400 = (int)252645135;
+    __351=((((char)(__352 >> 0)) & ((char)(__400 >> 0))) << 0);
+    __351=__351 & ~(0x000000ff << 8) |((((char)(__352 >> 8)) & ((char)(__400 >> 8))) << 8);
+    __351=__351 & ~(0x000000ff << 16) |((((char)(__352 >> 16)) & ((char)(__400 >> 16))) << 16);
+    __351=__351 & ~(0x000000ff << 24) |((((char)(__352 >> 24)) & ((char)(__400 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 3584)) = __351;
+  int __401;
+    int __402;
+      int4 __403;
+        int4 __404 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2048), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2048), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2048), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2048));
+        int4 __405;
+          int4 __406 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __407 = make_int4(2, 2, 2, 2);
+          __405.x = (__406.x%__407.x);
+          __405.y = (__406.y%__407.y);
+          __405.z = (__406.z%__407.z);
+          __405.w = (__406.w%__407.w);
+        int4 __408;
+          int4 __409 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __410 = make_int4(2, 2, 2, 2);
+          __408.x = (__409.x/__410.x);
+          __408.y = (__409.y/__410.y);
+          __408.z = (__409.z/__410.z);
+          __408.w = (__409.w/__410.w);
+        int4 __411;
+        ushort4 __412;
+          ushort4 __413;
+            ushort4 __414;
+              int4 __415 = make_int4(2, 2, 2, 2);
+              int4 __416 = make_int4(0, 0, 0, 0);
+              __414.x = (__415.x>=__416.x);
+              __414.y = (__415.y>=__416.y);
+              __414.z = (__415.z>=__416.z);
+              __414.w = (__415.w>=__416.w);
+            ushort4 __417;
+              int4 __418 = make_int4(0, 0, 0, 0);
+              __417.x = (__405.x>=__418.x);
+              __417.y = (__405.y>=__418.y);
+              __417.z = (__405.z>=__418.z);
+              __417.w = (__405.w>=__418.w);
+            __413.x = (__414.x&&__417.x);
+            __413.y = (__414.y&&__417.y);
+            __413.z = (__414.z&&__417.z);
+            __413.w = (__414.w&&__417.w);
+          ushort4 __419;
+            ushort4 __420;
+              int4 __421 = make_int4(2, 2, 2, 2);
+              int4 __422 = make_int4(0, 0, 0, 0);
+              __420.x = (__421.x<__422.x);
+              __420.y = (__421.y<__422.y);
+              __420.z = (__421.z<__422.z);
+              __420.w = (__421.w<__422.w);
+            ushort4 __423;
+              int4 __424 = make_int4(0, 0, 0, 0);
+              __423.x = (__405.x<=__424.x);
+              __423.y = (__405.y<=__424.y);
+              __423.z = (__405.z<=__424.z);
+              __423.w = (__405.w<=__424.w);
+            __419.x = (__420.x&&__423.x);
+            __419.y = (__420.y&&__423.y);
+            __419.z = (__420.z&&__423.z);
+            __419.w = (__420.w&&__423.w);
+          __412.x = (__413.x||__419.x);
+          __412.y = (__413.y||__419.y);
+          __412.z = (__413.z||__419.z);
+          __412.w = (__413.w||__419.w);
+        int4 __425;
+          int4 __426 = make_int4(1, 1, 1, 1);
+          __425.x = (__408.x-__426.x);
+          __425.y = (__408.y-__426.y);
+          __425.z = (__408.z-__426.z);
+          __425.w = (__408.w-__426.w);
+        __411.x = (bool(__412.x)?__408.x:__425.x);
+        __411.y = (bool(__412.y)?__408.y:__425.y);
+        __411.z = (bool(__412.z)?__408.z:__425.z);
+        __411.w = (bool(__412.w)?__408.w:__425.w);
+        __403.x = (__404.x+__411.x);
+        __403.y = (__404.y+__411.y);
+        __403.z = (__404.z+__411.z);
+        __403.w = (__404.w+__411.w);
+      int __427 = ((0x000000ff << 0) & (weight[__403.x] << 0))|((0x000000ff << 8) & (weight[__403.y] << 8))|((0x000000ff << 16) & (weight[__403.z] << 16))|((0x000000ff << 24) & (weight[__403.w] << 24));
+      int __428;
+      int4 __429;
+        int4 __430;
+          int4 __431 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __432 = make_int4(2, 2, 2, 2);
+          __430.x = (__431.x%__432.x);
+          __430.y = (__431.y%__432.y);
+          __430.z = (__431.z%__432.z);
+          __430.w = (__431.w%__432.w);
+        int4 __433;
+        ushort4 __434;
+          ushort4 __435;
+            ushort4 __436;
+              int4 __437 = make_int4(2, 2, 2, 2);
+              int4 __438 = make_int4(0, 0, 0, 0);
+              __436.x = (__437.x>=__438.x);
+              __436.y = (__437.y>=__438.y);
+              __436.z = (__437.z>=__438.z);
+              __436.w = (__437.w>=__438.w);
+            ushort4 __439;
+              int4 __440 = make_int4(0, 0, 0, 0);
+              __439.x = (__430.x>=__440.x);
+              __439.y = (__430.y>=__440.y);
+              __439.z = (__430.z>=__440.z);
+              __439.w = (__430.w>=__440.w);
+            __435.x = (__436.x&&__439.x);
+            __435.y = (__436.y&&__439.y);
+            __435.z = (__436.z&&__439.z);
+            __435.w = (__436.w&&__439.w);
+          ushort4 __441;
+            ushort4 __442;
+              int4 __443 = make_int4(2, 2, 2, 2);
+              int4 __444 = make_int4(0, 0, 0, 0);
+              __442.x = (__443.x<__444.x);
+              __442.y = (__443.y<__444.y);
+              __442.z = (__443.z<__444.z);
+              __442.w = (__443.w<__444.w);
+            ushort4 __445;
+              int4 __446 = make_int4(0, 0, 0, 0);
+              __445.x = (__430.x<=__446.x);
+              __445.y = (__430.y<=__446.y);
+              __445.z = (__430.z<=__446.z);
+              __445.w = (__430.w<=__446.w);
+            __441.x = (__442.x&&__445.x);
+            __441.y = (__442.y&&__445.y);
+            __441.z = (__442.z&&__445.z);
+            __441.w = (__442.w&&__445.w);
+          __434.x = (__435.x||__441.x);
+          __434.y = (__435.y||__441.y);
+          __434.z = (__435.z||__441.z);
+          __434.w = (__435.w||__441.w);
+        int4 __447;
+          int4 __448 = make_int4(2, 2, 2, 2);
+          __447.x = (__430.x+__448.x);
+          __447.y = (__430.y+__448.y);
+          __447.z = (__430.z+__448.z);
+          __447.w = (__430.w+__448.w);
+        __433.x = (bool(__434.x)?__430.x:__447.x);
+        __433.y = (bool(__434.y)?__430.y:__447.y);
+        __433.z = (bool(__434.z)?__430.z:__447.z);
+        __433.w = (bool(__434.w)?__430.w:__447.w);
+        int4 __449 = make_int4(4, 4, 4, 4);
+        __429.x = (__433.x*__449.x);
+        __429.y = (__433.y*__449.y);
+        __429.z = (__433.z*__449.z);
+        __429.w = (__433.w*__449.w);
+      __428=((signed char)(__429.x) << 0);
+      __428=__428 & ~(0x000000ff << 8) |((signed char)(__429.y) << 8);
+      __428=__428 & ~(0x000000ff << 16) |((signed char)(__429.z) << 16);
+      __428=__428 & ~(0x000000ff << 24) |((signed char)(__429.w) << 24);
+      __402=((((char)(__427 >> 0)) >> ((char)(__428 >> 0))) << 0);
+      __402=__402 & ~(0x000000ff << 8) |((((char)(__427 >> 8)) >> ((char)(__428 >> 8))) << 8);
+      __402=__402 & ~(0x000000ff << 16) |((((char)(__427 >> 16)) >> ((char)(__428 >> 16))) << 16);
+      __402=__402 & ~(0x000000ff << 24) |((((char)(__427 >> 24)) >> ((char)(__428 >> 24))) << 24);
+    int __450 = (int)252645135;
+    __401=((((char)(__402 >> 0)) & ((char)(__450 >> 0))) << 0);
+    __401=__401 & ~(0x000000ff << 8) |((((char)(__402 >> 8)) & ((char)(__450 >> 8))) << 8);
+    __401=__401 & ~(0x000000ff << 16) |((((char)(__402 >> 16)) & ((char)(__450 >> 16))) << 16);
+    __401=__401 & ~(0x000000ff << 24) |((((char)(__402 >> 24)) & ((char)(__450 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 4096)) = __401;
+  int __451;
+    int __452;
+      int4 __453;
+        int4 __454 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2304), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2304), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2304), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2304));
+        int4 __455;
+          int4 __456 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __457 = make_int4(2, 2, 2, 2);
+          __455.x = (__456.x%__457.x);
+          __455.y = (__456.y%__457.y);
+          __455.z = (__456.z%__457.z);
+          __455.w = (__456.w%__457.w);
+        int4 __458;
+          int4 __459 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __460 = make_int4(2, 2, 2, 2);
+          __458.x = (__459.x/__460.x);
+          __458.y = (__459.y/__460.y);
+          __458.z = (__459.z/__460.z);
+          __458.w = (__459.w/__460.w);
+        int4 __461;
+        ushort4 __462;
+          ushort4 __463;
+            ushort4 __464;
+              int4 __465 = make_int4(2, 2, 2, 2);
+              int4 __466 = make_int4(0, 0, 0, 0);
+              __464.x = (__465.x>=__466.x);
+              __464.y = (__465.y>=__466.y);
+              __464.z = (__465.z>=__466.z);
+              __464.w = (__465.w>=__466.w);
+            ushort4 __467;
+              int4 __468 = make_int4(0, 0, 0, 0);
+              __467.x = (__455.x>=__468.x);
+              __467.y = (__455.y>=__468.y);
+              __467.z = (__455.z>=__468.z);
+              __467.w = (__455.w>=__468.w);
+            __463.x = (__464.x&&__467.x);
+            __463.y = (__464.y&&__467.y);
+            __463.z = (__464.z&&__467.z);
+            __463.w = (__464.w&&__467.w);
+          ushort4 __469;
+            ushort4 __470;
+              int4 __471 = make_int4(2, 2, 2, 2);
+              int4 __472 = make_int4(0, 0, 0, 0);
+              __470.x = (__471.x<__472.x);
+              __470.y = (__471.y<__472.y);
+              __470.z = (__471.z<__472.z);
+              __470.w = (__471.w<__472.w);
+            ushort4 __473;
+              int4 __474 = make_int4(0, 0, 0, 0);
+              __473.x = (__455.x<=__474.x);
+              __473.y = (__455.y<=__474.y);
+              __473.z = (__455.z<=__474.z);
+              __473.w = (__455.w<=__474.w);
+            __469.x = (__470.x&&__473.x);
+            __469.y = (__470.y&&__473.y);
+            __469.z = (__470.z&&__473.z);
+            __469.w = (__470.w&&__473.w);
+          __462.x = (__463.x||__469.x);
+          __462.y = (__463.y||__469.y);
+          __462.z = (__463.z||__469.z);
+          __462.w = (__463.w||__469.w);
+        int4 __475;
+          int4 __476 = make_int4(1, 1, 1, 1);
+          __475.x = (__458.x-__476.x);
+          __475.y = (__458.y-__476.y);
+          __475.z = (__458.z-__476.z);
+          __475.w = (__458.w-__476.w);
+        __461.x = (bool(__462.x)?__458.x:__475.x);
+        __461.y = (bool(__462.y)?__458.y:__475.y);
+        __461.z = (bool(__462.z)?__458.z:__475.z);
+        __461.w = (bool(__462.w)?__458.w:__475.w);
+        __453.x = (__454.x+__461.x);
+        __453.y = (__454.y+__461.y);
+        __453.z = (__454.z+__461.z);
+        __453.w = (__454.w+__461.w);
+      int __477 = ((0x000000ff << 0) & (weight[__453.x] << 0))|((0x000000ff << 8) & (weight[__453.y] << 8))|((0x000000ff << 16) & (weight[__453.z] << 16))|((0x000000ff << 24) & (weight[__453.w] << 24));
+      int __478;
+      int4 __479;
+        int4 __480;
+          int4 __481 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __482 = make_int4(2, 2, 2, 2);
+          __480.x = (__481.x%__482.x);
+          __480.y = (__481.y%__482.y);
+          __480.z = (__481.z%__482.z);
+          __480.w = (__481.w%__482.w);
+        int4 __483;
+        ushort4 __484;
+          ushort4 __485;
+            ushort4 __486;
+              int4 __487 = make_int4(2, 2, 2, 2);
+              int4 __488 = make_int4(0, 0, 0, 0);
+              __486.x = (__487.x>=__488.x);
+              __486.y = (__487.y>=__488.y);
+              __486.z = (__487.z>=__488.z);
+              __486.w = (__487.w>=__488.w);
+            ushort4 __489;
+              int4 __490 = make_int4(0, 0, 0, 0);
+              __489.x = (__480.x>=__490.x);
+              __489.y = (__480.y>=__490.y);
+              __489.z = (__480.z>=__490.z);
+              __489.w = (__480.w>=__490.w);
+            __485.x = (__486.x&&__489.x);
+            __485.y = (__486.y&&__489.y);
+            __485.z = (__486.z&&__489.z);
+            __485.w = (__486.w&&__489.w);
+          ushort4 __491;
+            ushort4 __492;
+              int4 __493 = make_int4(2, 2, 2, 2);
+              int4 __494 = make_int4(0, 0, 0, 0);
+              __492.x = (__493.x<__494.x);
+              __492.y = (__493.y<__494.y);
+              __492.z = (__493.z<__494.z);
+              __492.w = (__493.w<__494.w);
+            ushort4 __495;
+              int4 __496 = make_int4(0, 0, 0, 0);
+              __495.x = (__480.x<=__496.x);
+              __495.y = (__480.y<=__496.y);
+              __495.z = (__480.z<=__496.z);
+              __495.w = (__480.w<=__496.w);
+            __491.x = (__492.x&&__495.x);
+            __491.y = (__492.y&&__495.y);
+            __491.z = (__492.z&&__495.z);
+            __491.w = (__492.w&&__495.w);
+          __484.x = (__485.x||__491.x);
+          __484.y = (__485.y||__491.y);
+          __484.z = (__485.z||__491.z);
+          __484.w = (__485.w||__491.w);
+        int4 __497;
+          int4 __498 = make_int4(2, 2, 2, 2);
+          __497.x = (__480.x+__498.x);
+          __497.y = (__480.y+__498.y);
+          __497.z = (__480.z+__498.z);
+          __497.w = (__480.w+__498.w);
+        __483.x = (bool(__484.x)?__480.x:__497.x);
+        __483.y = (bool(__484.y)?__480.y:__497.y);
+        __483.z = (bool(__484.z)?__480.z:__497.z);
+        __483.w = (bool(__484.w)?__480.w:__497.w);
+        int4 __499 = make_int4(4, 4, 4, 4);
+        __479.x = (__483.x*__499.x);
+        __479.y = (__483.y*__499.y);
+        __479.z = (__483.z*__499.z);
+        __479.w = (__483.w*__499.w);
+      __478=((signed char)(__479.x) << 0);
+      __478=__478 & ~(0x000000ff << 8) |((signed char)(__479.y) << 8);
+      __478=__478 & ~(0x000000ff << 16) |((signed char)(__479.z) << 16);
+      __478=__478 & ~(0x000000ff << 24) |((signed char)(__479.w) << 24);
+      __452=((((char)(__477 >> 0)) >> ((char)(__478 >> 0))) << 0);
+      __452=__452 & ~(0x000000ff << 8) |((((char)(__477 >> 8)) >> ((char)(__478 >> 8))) << 8);
+      __452=__452 & ~(0x000000ff << 16) |((((char)(__477 >> 16)) >> ((char)(__478 >> 16))) << 16);
+      __452=__452 & ~(0x000000ff << 24) |((((char)(__477 >> 24)) >> ((char)(__478 >> 24))) << 24);
+    int __500 = (int)252645135;
+    __451=((((char)(__452 >> 0)) & ((char)(__500 >> 0))) << 0);
+    __451=__451 & ~(0x000000ff << 8) |((((char)(__452 >> 8)) & ((char)(__500 >> 8))) << 8);
+    __451=__451 & ~(0x000000ff << 16) |((((char)(__452 >> 16)) & ((char)(__500 >> 16))) << 16);
+    __451=__451 & ~(0x000000ff << 24) |((((char)(__452 >> 24)) & ((char)(__500 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 4608)) = __451;
+  int __501;
+    int __502;
+      int4 __503;
+        int4 __504 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2560), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2560), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2560), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2560));
+        int4 __505;
+          int4 __506 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __507 = make_int4(2, 2, 2, 2);
+          __505.x = (__506.x%__507.x);
+          __505.y = (__506.y%__507.y);
+          __505.z = (__506.z%__507.z);
+          __505.w = (__506.w%__507.w);
+        int4 __508;
+          int4 __509 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __510 = make_int4(2, 2, 2, 2);
+          __508.x = (__509.x/__510.x);
+          __508.y = (__509.y/__510.y);
+          __508.z = (__509.z/__510.z);
+          __508.w = (__509.w/__510.w);
+        int4 __511;
+        ushort4 __512;
+          ushort4 __513;
+            ushort4 __514;
+              int4 __515 = make_int4(2, 2, 2, 2);
+              int4 __516 = make_int4(0, 0, 0, 0);
+              __514.x = (__515.x>=__516.x);
+              __514.y = (__515.y>=__516.y);
+              __514.z = (__515.z>=__516.z);
+              __514.w = (__515.w>=__516.w);
+            ushort4 __517;
+              int4 __518 = make_int4(0, 0, 0, 0);
+              __517.x = (__505.x>=__518.x);
+              __517.y = (__505.y>=__518.y);
+              __517.z = (__505.z>=__518.z);
+              __517.w = (__505.w>=__518.w);
+            __513.x = (__514.x&&__517.x);
+            __513.y = (__514.y&&__517.y);
+            __513.z = (__514.z&&__517.z);
+            __513.w = (__514.w&&__517.w);
+          ushort4 __519;
+            ushort4 __520;
+              int4 __521 = make_int4(2, 2, 2, 2);
+              int4 __522 = make_int4(0, 0, 0, 0);
+              __520.x = (__521.x<__522.x);
+              __520.y = (__521.y<__522.y);
+              __520.z = (__521.z<__522.z);
+              __520.w = (__521.w<__522.w);
+            ushort4 __523;
+              int4 __524 = make_int4(0, 0, 0, 0);
+              __523.x = (__505.x<=__524.x);
+              __523.y = (__505.y<=__524.y);
+              __523.z = (__505.z<=__524.z);
+              __523.w = (__505.w<=__524.w);
+            __519.x = (__520.x&&__523.x);
+            __519.y = (__520.y&&__523.y);
+            __519.z = (__520.z&&__523.z);
+            __519.w = (__520.w&&__523.w);
+          __512.x = (__513.x||__519.x);
+          __512.y = (__513.y||__519.y);
+          __512.z = (__513.z||__519.z);
+          __512.w = (__513.w||__519.w);
+        int4 __525;
+          int4 __526 = make_int4(1, 1, 1, 1);
+          __525.x = (__508.x-__526.x);
+          __525.y = (__508.y-__526.y);
+          __525.z = (__508.z-__526.z);
+          __525.w = (__508.w-__526.w);
+        __511.x = (bool(__512.x)?__508.x:__525.x);
+        __511.y = (bool(__512.y)?__508.y:__525.y);
+        __511.z = (bool(__512.z)?__508.z:__525.z);
+        __511.w = (bool(__512.w)?__508.w:__525.w);
+        __503.x = (__504.x+__511.x);
+        __503.y = (__504.y+__511.y);
+        __503.z = (__504.z+__511.z);
+        __503.w = (__504.w+__511.w);
+      int __527 = ((0x000000ff << 0) & (weight[__503.x] << 0))|((0x000000ff << 8) & (weight[__503.y] << 8))|((0x000000ff << 16) & (weight[__503.z] << 16))|((0x000000ff << 24) & (weight[__503.w] << 24));
+      int __528;
+      int4 __529;
+        int4 __530;
+          int4 __531 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __532 = make_int4(2, 2, 2, 2);
+          __530.x = (__531.x%__532.x);
+          __530.y = (__531.y%__532.y);
+          __530.z = (__531.z%__532.z);
+          __530.w = (__531.w%__532.w);
+        int4 __533;
+        ushort4 __534;
+          ushort4 __535;
+            ushort4 __536;
+              int4 __537 = make_int4(2, 2, 2, 2);
+              int4 __538 = make_int4(0, 0, 0, 0);
+              __536.x = (__537.x>=__538.x);
+              __536.y = (__537.y>=__538.y);
+              __536.z = (__537.z>=__538.z);
+              __536.w = (__537.w>=__538.w);
+            ushort4 __539;
+              int4 __540 = make_int4(0, 0, 0, 0);
+              __539.x = (__530.x>=__540.x);
+              __539.y = (__530.y>=__540.y);
+              __539.z = (__530.z>=__540.z);
+              __539.w = (__530.w>=__540.w);
+            __535.x = (__536.x&&__539.x);
+            __535.y = (__536.y&&__539.y);
+            __535.z = (__536.z&&__539.z);
+            __535.w = (__536.w&&__539.w);
+          ushort4 __541;
+            ushort4 __542;
+              int4 __543 = make_int4(2, 2, 2, 2);
+              int4 __544 = make_int4(0, 0, 0, 0);
+              __542.x = (__543.x<__544.x);
+              __542.y = (__543.y<__544.y);
+              __542.z = (__543.z<__544.z);
+              __542.w = (__543.w<__544.w);
+            ushort4 __545;
+              int4 __546 = make_int4(0, 0, 0, 0);
+              __545.x = (__530.x<=__546.x);
+              __545.y = (__530.y<=__546.y);
+              __545.z = (__530.z<=__546.z);
+              __545.w = (__530.w<=__546.w);
+            __541.x = (__542.x&&__545.x);
+            __541.y = (__542.y&&__545.y);
+            __541.z = (__542.z&&__545.z);
+            __541.w = (__542.w&&__545.w);
+          __534.x = (__535.x||__541.x);
+          __534.y = (__535.y||__541.y);
+          __534.z = (__535.z||__541.z);
+          __534.w = (__535.w||__541.w);
+        int4 __547;
+          int4 __548 = make_int4(2, 2, 2, 2);
+          __547.x = (__530.x+__548.x);
+          __547.y = (__530.y+__548.y);
+          __547.z = (__530.z+__548.z);
+          __547.w = (__530.w+__548.w);
+        __533.x = (bool(__534.x)?__530.x:__547.x);
+        __533.y = (bool(__534.y)?__530.y:__547.y);
+        __533.z = (bool(__534.z)?__530.z:__547.z);
+        __533.w = (bool(__534.w)?__530.w:__547.w);
+        int4 __549 = make_int4(4, 4, 4, 4);
+        __529.x = (__533.x*__549.x);
+        __529.y = (__533.y*__549.y);
+        __529.z = (__533.z*__549.z);
+        __529.w = (__533.w*__549.w);
+      __528=((signed char)(__529.x) << 0);
+      __528=__528 & ~(0x000000ff << 8) |((signed char)(__529.y) << 8);
+      __528=__528 & ~(0x000000ff << 16) |((signed char)(__529.z) << 16);
+      __528=__528 & ~(0x000000ff << 24) |((signed char)(__529.w) << 24);
+      __502=((((char)(__527 >> 0)) >> ((char)(__528 >> 0))) << 0);
+      __502=__502 & ~(0x000000ff << 8) |((((char)(__527 >> 8)) >> ((char)(__528 >> 8))) << 8);
+      __502=__502 & ~(0x000000ff << 16) |((((char)(__527 >> 16)) >> ((char)(__528 >> 16))) << 16);
+      __502=__502 & ~(0x000000ff << 24) |((((char)(__527 >> 24)) >> ((char)(__528 >> 24))) << 24);
+    int __550 = (int)252645135;
+    __501=((((char)(__502 >> 0)) & ((char)(__550 >> 0))) << 0);
+    __501=__501 & ~(0x000000ff << 8) |((((char)(__502 >> 8)) & ((char)(__550 >> 8))) << 8);
+    __501=__501 & ~(0x000000ff << 16) |((((char)(__502 >> 16)) & ((char)(__550 >> 16))) << 16);
+    __501=__501 & ~(0x000000ff << 24) |((((char)(__502 >> 24)) & ((char)(__550 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 5120)) = __501;
+  int __551;
+    int __552;
+      int4 __553;
+        int4 __554 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2816), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2816), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2816), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 2816));
+        int4 __555;
+          int4 __556 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __557 = make_int4(2, 2, 2, 2);
+          __555.x = (__556.x%__557.x);
+          __555.y = (__556.y%__557.y);
+          __555.z = (__556.z%__557.z);
+          __555.w = (__556.w%__557.w);
+        int4 __558;
+          int4 __559 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __560 = make_int4(2, 2, 2, 2);
+          __558.x = (__559.x/__560.x);
+          __558.y = (__559.y/__560.y);
+          __558.z = (__559.z/__560.z);
+          __558.w = (__559.w/__560.w);
+        int4 __561;
+        ushort4 __562;
+          ushort4 __563;
+            ushort4 __564;
+              int4 __565 = make_int4(2, 2, 2, 2);
+              int4 __566 = make_int4(0, 0, 0, 0);
+              __564.x = (__565.x>=__566.x);
+              __564.y = (__565.y>=__566.y);
+              __564.z = (__565.z>=__566.z);
+              __564.w = (__565.w>=__566.w);
+            ushort4 __567;
+              int4 __568 = make_int4(0, 0, 0, 0);
+              __567.x = (__555.x>=__568.x);
+              __567.y = (__555.y>=__568.y);
+              __567.z = (__555.z>=__568.z);
+              __567.w = (__555.w>=__568.w);
+            __563.x = (__564.x&&__567.x);
+            __563.y = (__564.y&&__567.y);
+            __563.z = (__564.z&&__567.z);
+            __563.w = (__564.w&&__567.w);
+          ushort4 __569;
+            ushort4 __570;
+              int4 __571 = make_int4(2, 2, 2, 2);
+              int4 __572 = make_int4(0, 0, 0, 0);
+              __570.x = (__571.x<__572.x);
+              __570.y = (__571.y<__572.y);
+              __570.z = (__571.z<__572.z);
+              __570.w = (__571.w<__572.w);
+            ushort4 __573;
+              int4 __574 = make_int4(0, 0, 0, 0);
+              __573.x = (__555.x<=__574.x);
+              __573.y = (__555.y<=__574.y);
+              __573.z = (__555.z<=__574.z);
+              __573.w = (__555.w<=__574.w);
+            __569.x = (__570.x&&__573.x);
+            __569.y = (__570.y&&__573.y);
+            __569.z = (__570.z&&__573.z);
+            __569.w = (__570.w&&__573.w);
+          __562.x = (__563.x||__569.x);
+          __562.y = (__563.y||__569.y);
+          __562.z = (__563.z||__569.z);
+          __562.w = (__563.w||__569.w);
+        int4 __575;
+          int4 __576 = make_int4(1, 1, 1, 1);
+          __575.x = (__558.x-__576.x);
+          __575.y = (__558.y-__576.y);
+          __575.z = (__558.z-__576.z);
+          __575.w = (__558.w-__576.w);
+        __561.x = (bool(__562.x)?__558.x:__575.x);
+        __561.y = (bool(__562.y)?__558.y:__575.y);
+        __561.z = (bool(__562.z)?__558.z:__575.z);
+        __561.w = (bool(__562.w)?__558.w:__575.w);
+        __553.x = (__554.x+__561.x);
+        __553.y = (__554.y+__561.y);
+        __553.z = (__554.z+__561.z);
+        __553.w = (__554.w+__561.w);
+      int __577 = ((0x000000ff << 0) & (weight[__553.x] << 0))|((0x000000ff << 8) & (weight[__553.y] << 8))|((0x000000ff << 16) & (weight[__553.z] << 16))|((0x000000ff << 24) & (weight[__553.w] << 24));
+      int __578;
+      int4 __579;
+        int4 __580;
+          int4 __581 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __582 = make_int4(2, 2, 2, 2);
+          __580.x = (__581.x%__582.x);
+          __580.y = (__581.y%__582.y);
+          __580.z = (__581.z%__582.z);
+          __580.w = (__581.w%__582.w);
+        int4 __583;
+        ushort4 __584;
+          ushort4 __585;
+            ushort4 __586;
+              int4 __587 = make_int4(2, 2, 2, 2);
+              int4 __588 = make_int4(0, 0, 0, 0);
+              __586.x = (__587.x>=__588.x);
+              __586.y = (__587.y>=__588.y);
+              __586.z = (__587.z>=__588.z);
+              __586.w = (__587.w>=__588.w);
+            ushort4 __589;
+              int4 __590 = make_int4(0, 0, 0, 0);
+              __589.x = (__580.x>=__590.x);
+              __589.y = (__580.y>=__590.y);
+              __589.z = (__580.z>=__590.z);
+              __589.w = (__580.w>=__590.w);
+            __585.x = (__586.x&&__589.x);
+            __585.y = (__586.y&&__589.y);
+            __585.z = (__586.z&&__589.z);
+            __585.w = (__586.w&&__589.w);
+          ushort4 __591;
+            ushort4 __592;
+              int4 __593 = make_int4(2, 2, 2, 2);
+              int4 __594 = make_int4(0, 0, 0, 0);
+              __592.x = (__593.x<__594.x);
+              __592.y = (__593.y<__594.y);
+              __592.z = (__593.z<__594.z);
+              __592.w = (__593.w<__594.w);
+            ushort4 __595;
+              int4 __596 = make_int4(0, 0, 0, 0);
+              __595.x = (__580.x<=__596.x);
+              __595.y = (__580.y<=__596.y);
+              __595.z = (__580.z<=__596.z);
+              __595.w = (__580.w<=__596.w);
+            __591.x = (__592.x&&__595.x);
+            __591.y = (__592.y&&__595.y);
+            __591.z = (__592.z&&__595.z);
+            __591.w = (__592.w&&__595.w);
+          __584.x = (__585.x||__591.x);
+          __584.y = (__585.y||__591.y);
+          __584.z = (__585.z||__591.z);
+          __584.w = (__585.w||__591.w);
+        int4 __597;
+          int4 __598 = make_int4(2, 2, 2, 2);
+          __597.x = (__580.x+__598.x);
+          __597.y = (__580.y+__598.y);
+          __597.z = (__580.z+__598.z);
+          __597.w = (__580.w+__598.w);
+        __583.x = (bool(__584.x)?__580.x:__597.x);
+        __583.y = (bool(__584.y)?__580.y:__597.y);
+        __583.z = (bool(__584.z)?__580.z:__597.z);
+        __583.w = (bool(__584.w)?__580.w:__597.w);
+        int4 __599 = make_int4(4, 4, 4, 4);
+        __579.x = (__583.x*__599.x);
+        __579.y = (__583.y*__599.y);
+        __579.z = (__583.z*__599.z);
+        __579.w = (__583.w*__599.w);
+      __578=((signed char)(__579.x) << 0);
+      __578=__578 & ~(0x000000ff << 8) |((signed char)(__579.y) << 8);
+      __578=__578 & ~(0x000000ff << 16) |((signed char)(__579.z) << 16);
+      __578=__578 & ~(0x000000ff << 24) |((signed char)(__579.w) << 24);
+      __552=((((char)(__577 >> 0)) >> ((char)(__578 >> 0))) << 0);
+      __552=__552 & ~(0x000000ff << 8) |((((char)(__577 >> 8)) >> ((char)(__578 >> 8))) << 8);
+      __552=__552 & ~(0x000000ff << 16) |((((char)(__577 >> 16)) >> ((char)(__578 >> 16))) << 16);
+      __552=__552 & ~(0x000000ff << 24) |((((char)(__577 >> 24)) >> ((char)(__578 >> 24))) << 24);
+    int __600 = (int)252645135;
+    __551=((((char)(__552 >> 0)) & ((char)(__600 >> 0))) << 0);
+    __551=__551 & ~(0x000000ff << 8) |((((char)(__552 >> 8)) & ((char)(__600 >> 8))) << 8);
+    __551=__551 & ~(0x000000ff << 16) |((((char)(__552 >> 16)) & ((char)(__600 >> 16))) << 16);
+    __551=__551 & ~(0x000000ff << 24) |((((char)(__552 >> 24)) & ((char)(__600 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 5632)) = __551;
+  int __601;
+    int __602;
+      int4 __603;
+        int4 __604 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3072), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3072), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3072), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3072));
+        int4 __605;
+          int4 __606 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __607 = make_int4(2, 2, 2, 2);
+          __605.x = (__606.x%__607.x);
+          __605.y = (__606.y%__607.y);
+          __605.z = (__606.z%__607.z);
+          __605.w = (__606.w%__607.w);
+        int4 __608;
+          int4 __609 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __610 = make_int4(2, 2, 2, 2);
+          __608.x = (__609.x/__610.x);
+          __608.y = (__609.y/__610.y);
+          __608.z = (__609.z/__610.z);
+          __608.w = (__609.w/__610.w);
+        int4 __611;
+        ushort4 __612;
+          ushort4 __613;
+            ushort4 __614;
+              int4 __615 = make_int4(2, 2, 2, 2);
+              int4 __616 = make_int4(0, 0, 0, 0);
+              __614.x = (__615.x>=__616.x);
+              __614.y = (__615.y>=__616.y);
+              __614.z = (__615.z>=__616.z);
+              __614.w = (__615.w>=__616.w);
+            ushort4 __617;
+              int4 __618 = make_int4(0, 0, 0, 0);
+              __617.x = (__605.x>=__618.x);
+              __617.y = (__605.y>=__618.y);
+              __617.z = (__605.z>=__618.z);
+              __617.w = (__605.w>=__618.w);
+            __613.x = (__614.x&&__617.x);
+            __613.y = (__614.y&&__617.y);
+            __613.z = (__614.z&&__617.z);
+            __613.w = (__614.w&&__617.w);
+          ushort4 __619;
+            ushort4 __620;
+              int4 __621 = make_int4(2, 2, 2, 2);
+              int4 __622 = make_int4(0, 0, 0, 0);
+              __620.x = (__621.x<__622.x);
+              __620.y = (__621.y<__622.y);
+              __620.z = (__621.z<__622.z);
+              __620.w = (__621.w<__622.w);
+            ushort4 __623;
+              int4 __624 = make_int4(0, 0, 0, 0);
+              __623.x = (__605.x<=__624.x);
+              __623.y = (__605.y<=__624.y);
+              __623.z = (__605.z<=__624.z);
+              __623.w = (__605.w<=__624.w);
+            __619.x = (__620.x&&__623.x);
+            __619.y = (__620.y&&__623.y);
+            __619.z = (__620.z&&__623.z);
+            __619.w = (__620.w&&__623.w);
+          __612.x = (__613.x||__619.x);
+          __612.y = (__613.y||__619.y);
+          __612.z = (__613.z||__619.z);
+          __612.w = (__613.w||__619.w);
+        int4 __625;
+          int4 __626 = make_int4(1, 1, 1, 1);
+          __625.x = (__608.x-__626.x);
+          __625.y = (__608.y-__626.y);
+          __625.z = (__608.z-__626.z);
+          __625.w = (__608.w-__626.w);
+        __611.x = (bool(__612.x)?__608.x:__625.x);
+        __611.y = (bool(__612.y)?__608.y:__625.y);
+        __611.z = (bool(__612.z)?__608.z:__625.z);
+        __611.w = (bool(__612.w)?__608.w:__625.w);
+        __603.x = (__604.x+__611.x);
+        __603.y = (__604.y+__611.y);
+        __603.z = (__604.z+__611.z);
+        __603.w = (__604.w+__611.w);
+      int __627 = ((0x000000ff << 0) & (weight[__603.x] << 0))|((0x000000ff << 8) & (weight[__603.y] << 8))|((0x000000ff << 16) & (weight[__603.z] << 16))|((0x000000ff << 24) & (weight[__603.w] << 24));
+      int __628;
+      int4 __629;
+        int4 __630;
+          int4 __631 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __632 = make_int4(2, 2, 2, 2);
+          __630.x = (__631.x%__632.x);
+          __630.y = (__631.y%__632.y);
+          __630.z = (__631.z%__632.z);
+          __630.w = (__631.w%__632.w);
+        int4 __633;
+        ushort4 __634;
+          ushort4 __635;
+            ushort4 __636;
+              int4 __637 = make_int4(2, 2, 2, 2);
+              int4 __638 = make_int4(0, 0, 0, 0);
+              __636.x = (__637.x>=__638.x);
+              __636.y = (__637.y>=__638.y);
+              __636.z = (__637.z>=__638.z);
+              __636.w = (__637.w>=__638.w);
+            ushort4 __639;
+              int4 __640 = make_int4(0, 0, 0, 0);
+              __639.x = (__630.x>=__640.x);
+              __639.y = (__630.y>=__640.y);
+              __639.z = (__630.z>=__640.z);
+              __639.w = (__630.w>=__640.w);
+            __635.x = (__636.x&&__639.x);
+            __635.y = (__636.y&&__639.y);
+            __635.z = (__636.z&&__639.z);
+            __635.w = (__636.w&&__639.w);
+          ushort4 __641;
+            ushort4 __642;
+              int4 __643 = make_int4(2, 2, 2, 2);
+              int4 __644 = make_int4(0, 0, 0, 0);
+              __642.x = (__643.x<__644.x);
+              __642.y = (__643.y<__644.y);
+              __642.z = (__643.z<__644.z);
+              __642.w = (__643.w<__644.w);
+            ushort4 __645;
+              int4 __646 = make_int4(0, 0, 0, 0);
+              __645.x = (__630.x<=__646.x);
+              __645.y = (__630.y<=__646.y);
+              __645.z = (__630.z<=__646.z);
+              __645.w = (__630.w<=__646.w);
+            __641.x = (__642.x&&__645.x);
+            __641.y = (__642.y&&__645.y);
+            __641.z = (__642.z&&__645.z);
+            __641.w = (__642.w&&__645.w);
+          __634.x = (__635.x||__641.x);
+          __634.y = (__635.y||__641.y);
+          __634.z = (__635.z||__641.z);
+          __634.w = (__635.w||__641.w);
+        int4 __647;
+          int4 __648 = make_int4(2, 2, 2, 2);
+          __647.x = (__630.x+__648.x);
+          __647.y = (__630.y+__648.y);
+          __647.z = (__630.z+__648.z);
+          __647.w = (__630.w+__648.w);
+        __633.x = (bool(__634.x)?__630.x:__647.x);
+        __633.y = (bool(__634.y)?__630.y:__647.y);
+        __633.z = (bool(__634.z)?__630.z:__647.z);
+        __633.w = (bool(__634.w)?__630.w:__647.w);
+        int4 __649 = make_int4(4, 4, 4, 4);
+        __629.x = (__633.x*__649.x);
+        __629.y = (__633.y*__649.y);
+        __629.z = (__633.z*__649.z);
+        __629.w = (__633.w*__649.w);
+      __628=((signed char)(__629.x) << 0);
+      __628=__628 & ~(0x000000ff << 8) |((signed char)(__629.y) << 8);
+      __628=__628 & ~(0x000000ff << 16) |((signed char)(__629.z) << 16);
+      __628=__628 & ~(0x000000ff << 24) |((signed char)(__629.w) << 24);
+      __602=((((char)(__627 >> 0)) >> ((char)(__628 >> 0))) << 0);
+      __602=__602 & ~(0x000000ff << 8) |((((char)(__627 >> 8)) >> ((char)(__628 >> 8))) << 8);
+      __602=__602 & ~(0x000000ff << 16) |((((char)(__627 >> 16)) >> ((char)(__628 >> 16))) << 16);
+      __602=__602 & ~(0x000000ff << 24) |((((char)(__627 >> 24)) >> ((char)(__628 >> 24))) << 24);
+    int __650 = (int)252645135;
+    __601=((((char)(__602 >> 0)) & ((char)(__650 >> 0))) << 0);
+    __601=__601 & ~(0x000000ff << 8) |((((char)(__602 >> 8)) & ((char)(__650 >> 8))) << 8);
+    __601=__601 & ~(0x000000ff << 16) |((((char)(__602 >> 16)) & ((char)(__650 >> 16))) << 16);
+    __601=__601 & ~(0x000000ff << 24) |((((char)(__602 >> 24)) & ((char)(__650 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 6144)) = __601;
+  int __651;
+    int __652;
+      int4 __653;
+        int4 __654 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3328), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3328), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3328), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3328));
+        int4 __655;
+          int4 __656 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __657 = make_int4(2, 2, 2, 2);
+          __655.x = (__656.x%__657.x);
+          __655.y = (__656.y%__657.y);
+          __655.z = (__656.z%__657.z);
+          __655.w = (__656.w%__657.w);
+        int4 __658;
+          int4 __659 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __660 = make_int4(2, 2, 2, 2);
+          __658.x = (__659.x/__660.x);
+          __658.y = (__659.y/__660.y);
+          __658.z = (__659.z/__660.z);
+          __658.w = (__659.w/__660.w);
+        int4 __661;
+        ushort4 __662;
+          ushort4 __663;
+            ushort4 __664;
+              int4 __665 = make_int4(2, 2, 2, 2);
+              int4 __666 = make_int4(0, 0, 0, 0);
+              __664.x = (__665.x>=__666.x);
+              __664.y = (__665.y>=__666.y);
+              __664.z = (__665.z>=__666.z);
+              __664.w = (__665.w>=__666.w);
+            ushort4 __667;
+              int4 __668 = make_int4(0, 0, 0, 0);
+              __667.x = (__655.x>=__668.x);
+              __667.y = (__655.y>=__668.y);
+              __667.z = (__655.z>=__668.z);
+              __667.w = (__655.w>=__668.w);
+            __663.x = (__664.x&&__667.x);
+            __663.y = (__664.y&&__667.y);
+            __663.z = (__664.z&&__667.z);
+            __663.w = (__664.w&&__667.w);
+          ushort4 __669;
+            ushort4 __670;
+              int4 __671 = make_int4(2, 2, 2, 2);
+              int4 __672 = make_int4(0, 0, 0, 0);
+              __670.x = (__671.x<__672.x);
+              __670.y = (__671.y<__672.y);
+              __670.z = (__671.z<__672.z);
+              __670.w = (__671.w<__672.w);
+            ushort4 __673;
+              int4 __674 = make_int4(0, 0, 0, 0);
+              __673.x = (__655.x<=__674.x);
+              __673.y = (__655.y<=__674.y);
+              __673.z = (__655.z<=__674.z);
+              __673.w = (__655.w<=__674.w);
+            __669.x = (__670.x&&__673.x);
+            __669.y = (__670.y&&__673.y);
+            __669.z = (__670.z&&__673.z);
+            __669.w = (__670.w&&__673.w);
+          __662.x = (__663.x||__669.x);
+          __662.y = (__663.y||__669.y);
+          __662.z = (__663.z||__669.z);
+          __662.w = (__663.w||__669.w);
+        int4 __675;
+          int4 __676 = make_int4(1, 1, 1, 1);
+          __675.x = (__658.x-__676.x);
+          __675.y = (__658.y-__676.y);
+          __675.z = (__658.z-__676.z);
+          __675.w = (__658.w-__676.w);
+        __661.x = (bool(__662.x)?__658.x:__675.x);
+        __661.y = (bool(__662.y)?__658.y:__675.y);
+        __661.z = (bool(__662.z)?__658.z:__675.z);
+        __661.w = (bool(__662.w)?__658.w:__675.w);
+        __653.x = (__654.x+__661.x);
+        __653.y = (__654.y+__661.y);
+        __653.z = (__654.z+__661.z);
+        __653.w = (__654.w+__661.w);
+      int __677 = ((0x000000ff << 0) & (weight[__653.x] << 0))|((0x000000ff << 8) & (weight[__653.y] << 8))|((0x000000ff << 16) & (weight[__653.z] << 16))|((0x000000ff << 24) & (weight[__653.w] << 24));
+      int __678;
+      int4 __679;
+        int4 __680;
+          int4 __681 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __682 = make_int4(2, 2, 2, 2);
+          __680.x = (__681.x%__682.x);
+          __680.y = (__681.y%__682.y);
+          __680.z = (__681.z%__682.z);
+          __680.w = (__681.w%__682.w);
+        int4 __683;
+        ushort4 __684;
+          ushort4 __685;
+            ushort4 __686;
+              int4 __687 = make_int4(2, 2, 2, 2);
+              int4 __688 = make_int4(0, 0, 0, 0);
+              __686.x = (__687.x>=__688.x);
+              __686.y = (__687.y>=__688.y);
+              __686.z = (__687.z>=__688.z);
+              __686.w = (__687.w>=__688.w);
+            ushort4 __689;
+              int4 __690 = make_int4(0, 0, 0, 0);
+              __689.x = (__680.x>=__690.x);
+              __689.y = (__680.y>=__690.y);
+              __689.z = (__680.z>=__690.z);
+              __689.w = (__680.w>=__690.w);
+            __685.x = (__686.x&&__689.x);
+            __685.y = (__686.y&&__689.y);
+            __685.z = (__686.z&&__689.z);
+            __685.w = (__686.w&&__689.w);
+          ushort4 __691;
+            ushort4 __692;
+              int4 __693 = make_int4(2, 2, 2, 2);
+              int4 __694 = make_int4(0, 0, 0, 0);
+              __692.x = (__693.x<__694.x);
+              __692.y = (__693.y<__694.y);
+              __692.z = (__693.z<__694.z);
+              __692.w = (__693.w<__694.w);
+            ushort4 __695;
+              int4 __696 = make_int4(0, 0, 0, 0);
+              __695.x = (__680.x<=__696.x);
+              __695.y = (__680.y<=__696.y);
+              __695.z = (__680.z<=__696.z);
+              __695.w = (__680.w<=__696.w);
+            __691.x = (__692.x&&__695.x);
+            __691.y = (__692.y&&__695.y);
+            __691.z = (__692.z&&__695.z);
+            __691.w = (__692.w&&__695.w);
+          __684.x = (__685.x||__691.x);
+          __684.y = (__685.y||__691.y);
+          __684.z = (__685.z||__691.z);
+          __684.w = (__685.w||__691.w);
+        int4 __697;
+          int4 __698 = make_int4(2, 2, 2, 2);
+          __697.x = (__680.x+__698.x);
+          __697.y = (__680.y+__698.y);
+          __697.z = (__680.z+__698.z);
+          __697.w = (__680.w+__698.w);
+        __683.x = (bool(__684.x)?__680.x:__697.x);
+        __683.y = (bool(__684.y)?__680.y:__697.y);
+        __683.z = (bool(__684.z)?__680.z:__697.z);
+        __683.w = (bool(__684.w)?__680.w:__697.w);
+        int4 __699 = make_int4(4, 4, 4, 4);
+        __679.x = (__683.x*__699.x);
+        __679.y = (__683.y*__699.y);
+        __679.z = (__683.z*__699.z);
+        __679.w = (__683.w*__699.w);
+      __678=((signed char)(__679.x) << 0);
+      __678=__678 & ~(0x000000ff << 8) |((signed char)(__679.y) << 8);
+      __678=__678 & ~(0x000000ff << 16) |((signed char)(__679.z) << 16);
+      __678=__678 & ~(0x000000ff << 24) |((signed char)(__679.w) << 24);
+      __652=((((char)(__677 >> 0)) >> ((char)(__678 >> 0))) << 0);
+      __652=__652 & ~(0x000000ff << 8) |((((char)(__677 >> 8)) >> ((char)(__678 >> 8))) << 8);
+      __652=__652 & ~(0x000000ff << 16) |((((char)(__677 >> 16)) >> ((char)(__678 >> 16))) << 16);
+      __652=__652 & ~(0x000000ff << 24) |((((char)(__677 >> 24)) >> ((char)(__678 >> 24))) << 24);
+    int __700 = (int)252645135;
+    __651=((((char)(__652 >> 0)) & ((char)(__700 >> 0))) << 0);
+    __651=__651 & ~(0x000000ff << 8) |((((char)(__652 >> 8)) & ((char)(__700 >> 8))) << 8);
+    __651=__651 & ~(0x000000ff << 16) |((((char)(__652 >> 16)) & ((char)(__700 >> 16))) << 16);
+    __651=__651 & ~(0x000000ff << 24) |((((char)(__652 >> 24)) & ((char)(__700 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 6656)) = __651;
+  int __701;
+    int __702;
+      int4 __703;
+        int4 __704 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3584), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3584), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3584), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3584));
+        int4 __705;
+          int4 __706 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __707 = make_int4(2, 2, 2, 2);
+          __705.x = (__706.x%__707.x);
+          __705.y = (__706.y%__707.y);
+          __705.z = (__706.z%__707.z);
+          __705.w = (__706.w%__707.w);
+        int4 __708;
+          int4 __709 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __710 = make_int4(2, 2, 2, 2);
+          __708.x = (__709.x/__710.x);
+          __708.y = (__709.y/__710.y);
+          __708.z = (__709.z/__710.z);
+          __708.w = (__709.w/__710.w);
+        int4 __711;
+        ushort4 __712;
+          ushort4 __713;
+            ushort4 __714;
+              int4 __715 = make_int4(2, 2, 2, 2);
+              int4 __716 = make_int4(0, 0, 0, 0);
+              __714.x = (__715.x>=__716.x);
+              __714.y = (__715.y>=__716.y);
+              __714.z = (__715.z>=__716.z);
+              __714.w = (__715.w>=__716.w);
+            ushort4 __717;
+              int4 __718 = make_int4(0, 0, 0, 0);
+              __717.x = (__705.x>=__718.x);
+              __717.y = (__705.y>=__718.y);
+              __717.z = (__705.z>=__718.z);
+              __717.w = (__705.w>=__718.w);
+            __713.x = (__714.x&&__717.x);
+            __713.y = (__714.y&&__717.y);
+            __713.z = (__714.z&&__717.z);
+            __713.w = (__714.w&&__717.w);
+          ushort4 __719;
+            ushort4 __720;
+              int4 __721 = make_int4(2, 2, 2, 2);
+              int4 __722 = make_int4(0, 0, 0, 0);
+              __720.x = (__721.x<__722.x);
+              __720.y = (__721.y<__722.y);
+              __720.z = (__721.z<__722.z);
+              __720.w = (__721.w<__722.w);
+            ushort4 __723;
+              int4 __724 = make_int4(0, 0, 0, 0);
+              __723.x = (__705.x<=__724.x);
+              __723.y = (__705.y<=__724.y);
+              __723.z = (__705.z<=__724.z);
+              __723.w = (__705.w<=__724.w);
+            __719.x = (__720.x&&__723.x);
+            __719.y = (__720.y&&__723.y);
+            __719.z = (__720.z&&__723.z);
+            __719.w = (__720.w&&__723.w);
+          __712.x = (__713.x||__719.x);
+          __712.y = (__713.y||__719.y);
+          __712.z = (__713.z||__719.z);
+          __712.w = (__713.w||__719.w);
+        int4 __725;
+          int4 __726 = make_int4(1, 1, 1, 1);
+          __725.x = (__708.x-__726.x);
+          __725.y = (__708.y-__726.y);
+          __725.z = (__708.z-__726.z);
+          __725.w = (__708.w-__726.w);
+        __711.x = (bool(__712.x)?__708.x:__725.x);
+        __711.y = (bool(__712.y)?__708.y:__725.y);
+        __711.z = (bool(__712.z)?__708.z:__725.z);
+        __711.w = (bool(__712.w)?__708.w:__725.w);
+        __703.x = (__704.x+__711.x);
+        __703.y = (__704.y+__711.y);
+        __703.z = (__704.z+__711.z);
+        __703.w = (__704.w+__711.w);
+      int __727 = ((0x000000ff << 0) & (weight[__703.x] << 0))|((0x000000ff << 8) & (weight[__703.y] << 8))|((0x000000ff << 16) & (weight[__703.z] << 16))|((0x000000ff << 24) & (weight[__703.w] << 24));
+      int __728;
+      int4 __729;
+        int4 __730;
+          int4 __731 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __732 = make_int4(2, 2, 2, 2);
+          __730.x = (__731.x%__732.x);
+          __730.y = (__731.y%__732.y);
+          __730.z = (__731.z%__732.z);
+          __730.w = (__731.w%__732.w);
+        int4 __733;
+        ushort4 __734;
+          ushort4 __735;
+            ushort4 __736;
+              int4 __737 = make_int4(2, 2, 2, 2);
+              int4 __738 = make_int4(0, 0, 0, 0);
+              __736.x = (__737.x>=__738.x);
+              __736.y = (__737.y>=__738.y);
+              __736.z = (__737.z>=__738.z);
+              __736.w = (__737.w>=__738.w);
+            ushort4 __739;
+              int4 __740 = make_int4(0, 0, 0, 0);
+              __739.x = (__730.x>=__740.x);
+              __739.y = (__730.y>=__740.y);
+              __739.z = (__730.z>=__740.z);
+              __739.w = (__730.w>=__740.w);
+            __735.x = (__736.x&&__739.x);
+            __735.y = (__736.y&&__739.y);
+            __735.z = (__736.z&&__739.z);
+            __735.w = (__736.w&&__739.w);
+          ushort4 __741;
+            ushort4 __742;
+              int4 __743 = make_int4(2, 2, 2, 2);
+              int4 __744 = make_int4(0, 0, 0, 0);
+              __742.x = (__743.x<__744.x);
+              __742.y = (__743.y<__744.y);
+              __742.z = (__743.z<__744.z);
+              __742.w = (__743.w<__744.w);
+            ushort4 __745;
+              int4 __746 = make_int4(0, 0, 0, 0);
+              __745.x = (__730.x<=__746.x);
+              __745.y = (__730.y<=__746.y);
+              __745.z = (__730.z<=__746.z);
+              __745.w = (__730.w<=__746.w);
+            __741.x = (__742.x&&__745.x);
+            __741.y = (__742.y&&__745.y);
+            __741.z = (__742.z&&__745.z);
+            __741.w = (__742.w&&__745.w);
+          __734.x = (__735.x||__741.x);
+          __734.y = (__735.y||__741.y);
+          __734.z = (__735.z||__741.z);
+          __734.w = (__735.w||__741.w);
+        int4 __747;
+          int4 __748 = make_int4(2, 2, 2, 2);
+          __747.x = (__730.x+__748.x);
+          __747.y = (__730.y+__748.y);
+          __747.z = (__730.z+__748.z);
+          __747.w = (__730.w+__748.w);
+        __733.x = (bool(__734.x)?__730.x:__747.x);
+        __733.y = (bool(__734.y)?__730.y:__747.y);
+        __733.z = (bool(__734.z)?__730.z:__747.z);
+        __733.w = (bool(__734.w)?__730.w:__747.w);
+        int4 __749 = make_int4(4, 4, 4, 4);
+        __729.x = (__733.x*__749.x);
+        __729.y = (__733.y*__749.y);
+        __729.z = (__733.z*__749.z);
+        __729.w = (__733.w*__749.w);
+      __728=((signed char)(__729.x) << 0);
+      __728=__728 & ~(0x000000ff << 8) |((signed char)(__729.y) << 8);
+      __728=__728 & ~(0x000000ff << 16) |((signed char)(__729.z) << 16);
+      __728=__728 & ~(0x000000ff << 24) |((signed char)(__729.w) << 24);
+      __702=((((char)(__727 >> 0)) >> ((char)(__728 >> 0))) << 0);
+      __702=__702 & ~(0x000000ff << 8) |((((char)(__727 >> 8)) >> ((char)(__728 >> 8))) << 8);
+      __702=__702 & ~(0x000000ff << 16) |((((char)(__727 >> 16)) >> ((char)(__728 >> 16))) << 16);
+      __702=__702 & ~(0x000000ff << 24) |((((char)(__727 >> 24)) >> ((char)(__728 >> 24))) << 24);
+    int __750 = (int)252645135;
+    __701=((((char)(__702 >> 0)) & ((char)(__750 >> 0))) << 0);
+    __701=__701 & ~(0x000000ff << 8) |((((char)(__702 >> 8)) & ((char)(__750 >> 8))) << 8);
+    __701=__701 & ~(0x000000ff << 16) |((((char)(__702 >> 16)) & ((char)(__750 >> 16))) << 16);
+    __701=__701 & ~(0x000000ff << 24) |((((char)(__702 >> 24)) & ((char)(__750 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 7168)) = __701;
+  int __751;
+    int __752;
+      int4 __753;
+        int4 __754 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3840), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3840), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3840), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 3840));
+        int4 __755;
+          int4 __756 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __757 = make_int4(2, 2, 2, 2);
+          __755.x = (__756.x%__757.x);
+          __755.y = (__756.y%__757.y);
+          __755.z = (__756.z%__757.z);
+          __755.w = (__756.w%__757.w);
+        int4 __758;
+          int4 __759 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __760 = make_int4(2, 2, 2, 2);
+          __758.x = (__759.x/__760.x);
+          __758.y = (__759.y/__760.y);
+          __758.z = (__759.z/__760.z);
+          __758.w = (__759.w/__760.w);
+        int4 __761;
+        ushort4 __762;
+          ushort4 __763;
+            ushort4 __764;
+              int4 __765 = make_int4(2, 2, 2, 2);
+              int4 __766 = make_int4(0, 0, 0, 0);
+              __764.x = (__765.x>=__766.x);
+              __764.y = (__765.y>=__766.y);
+              __764.z = (__765.z>=__766.z);
+              __764.w = (__765.w>=__766.w);
+            ushort4 __767;
+              int4 __768 = make_int4(0, 0, 0, 0);
+              __767.x = (__755.x>=__768.x);
+              __767.y = (__755.y>=__768.y);
+              __767.z = (__755.z>=__768.z);
+              __767.w = (__755.w>=__768.w);
+            __763.x = (__764.x&&__767.x);
+            __763.y = (__764.y&&__767.y);
+            __763.z = (__764.z&&__767.z);
+            __763.w = (__764.w&&__767.w);
+          ushort4 __769;
+            ushort4 __770;
+              int4 __771 = make_int4(2, 2, 2, 2);
+              int4 __772 = make_int4(0, 0, 0, 0);
+              __770.x = (__771.x<__772.x);
+              __770.y = (__771.y<__772.y);
+              __770.z = (__771.z<__772.z);
+              __770.w = (__771.w<__772.w);
+            ushort4 __773;
+              int4 __774 = make_int4(0, 0, 0, 0);
+              __773.x = (__755.x<=__774.x);
+              __773.y = (__755.y<=__774.y);
+              __773.z = (__755.z<=__774.z);
+              __773.w = (__755.w<=__774.w);
+            __769.x = (__770.x&&__773.x);
+            __769.y = (__770.y&&__773.y);
+            __769.z = (__770.z&&__773.z);
+            __769.w = (__770.w&&__773.w);
+          __762.x = (__763.x||__769.x);
+          __762.y = (__763.y||__769.y);
+          __762.z = (__763.z||__769.z);
+          __762.w = (__763.w||__769.w);
+        int4 __775;
+          int4 __776 = make_int4(1, 1, 1, 1);
+          __775.x = (__758.x-__776.x);
+          __775.y = (__758.y-__776.y);
+          __775.z = (__758.z-__776.z);
+          __775.w = (__758.w-__776.w);
+        __761.x = (bool(__762.x)?__758.x:__775.x);
+        __761.y = (bool(__762.y)?__758.y:__775.y);
+        __761.z = (bool(__762.z)?__758.z:__775.z);
+        __761.w = (bool(__762.w)?__758.w:__775.w);
+        __753.x = (__754.x+__761.x);
+        __753.y = (__754.y+__761.y);
+        __753.z = (__754.z+__761.z);
+        __753.w = (__754.w+__761.w);
+      int __777 = ((0x000000ff << 0) & (weight[__753.x] << 0))|((0x000000ff << 8) & (weight[__753.y] << 8))|((0x000000ff << 16) & (weight[__753.z] << 16))|((0x000000ff << 24) & (weight[__753.w] << 24));
+      int __778;
+      int4 __779;
+        int4 __780;
+          int4 __781 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __782 = make_int4(2, 2, 2, 2);
+          __780.x = (__781.x%__782.x);
+          __780.y = (__781.y%__782.y);
+          __780.z = (__781.z%__782.z);
+          __780.w = (__781.w%__782.w);
+        int4 __783;
+        ushort4 __784;
+          ushort4 __785;
+            ushort4 __786;
+              int4 __787 = make_int4(2, 2, 2, 2);
+              int4 __788 = make_int4(0, 0, 0, 0);
+              __786.x = (__787.x>=__788.x);
+              __786.y = (__787.y>=__788.y);
+              __786.z = (__787.z>=__788.z);
+              __786.w = (__787.w>=__788.w);
+            ushort4 __789;
+              int4 __790 = make_int4(0, 0, 0, 0);
+              __789.x = (__780.x>=__790.x);
+              __789.y = (__780.y>=__790.y);
+              __789.z = (__780.z>=__790.z);
+              __789.w = (__780.w>=__790.w);
+            __785.x = (__786.x&&__789.x);
+            __785.y = (__786.y&&__789.y);
+            __785.z = (__786.z&&__789.z);
+            __785.w = (__786.w&&__789.w);
+          ushort4 __791;
+            ushort4 __792;
+              int4 __793 = make_int4(2, 2, 2, 2);
+              int4 __794 = make_int4(0, 0, 0, 0);
+              __792.x = (__793.x<__794.x);
+              __792.y = (__793.y<__794.y);
+              __792.z = (__793.z<__794.z);
+              __792.w = (__793.w<__794.w);
+            ushort4 __795;
+              int4 __796 = make_int4(0, 0, 0, 0);
+              __795.x = (__780.x<=__796.x);
+              __795.y = (__780.y<=__796.y);
+              __795.z = (__780.z<=__796.z);
+              __795.w = (__780.w<=__796.w);
+            __791.x = (__792.x&&__795.x);
+            __791.y = (__792.y&&__795.y);
+            __791.z = (__792.z&&__795.z);
+            __791.w = (__792.w&&__795.w);
+          __784.x = (__785.x||__791.x);
+          __784.y = (__785.y||__791.y);
+          __784.z = (__785.z||__791.z);
+          __784.w = (__785.w||__791.w);
+        int4 __797;
+          int4 __798 = make_int4(2, 2, 2, 2);
+          __797.x = (__780.x+__798.x);
+          __797.y = (__780.y+__798.y);
+          __797.z = (__780.z+__798.z);
+          __797.w = (__780.w+__798.w);
+        __783.x = (bool(__784.x)?__780.x:__797.x);
+        __783.y = (bool(__784.y)?__780.y:__797.y);
+        __783.z = (bool(__784.z)?__780.z:__797.z);
+        __783.w = (bool(__784.w)?__780.w:__797.w);
+        int4 __799 = make_int4(4, 4, 4, 4);
+        __779.x = (__783.x*__799.x);
+        __779.y = (__783.y*__799.y);
+        __779.z = (__783.z*__799.z);
+        __779.w = (__783.w*__799.w);
+      __778=((signed char)(__779.x) << 0);
+      __778=__778 & ~(0x000000ff << 8) |((signed char)(__779.y) << 8);
+      __778=__778 & ~(0x000000ff << 16) |((signed char)(__779.z) << 16);
+      __778=__778 & ~(0x000000ff << 24) |((signed char)(__779.w) << 24);
+      __752=((((char)(__777 >> 0)) >> ((char)(__778 >> 0))) << 0);
+      __752=__752 & ~(0x000000ff << 8) |((((char)(__777 >> 8)) >> ((char)(__778 >> 8))) << 8);
+      __752=__752 & ~(0x000000ff << 16) |((((char)(__777 >> 16)) >> ((char)(__778 >> 16))) << 16);
+      __752=__752 & ~(0x000000ff << 24) |((((char)(__777 >> 24)) >> ((char)(__778 >> 24))) << 24);
+    int __800 = (int)252645135;
+    __751=((((char)(__752 >> 0)) & ((char)(__800 >> 0))) << 0);
+    __751=__751 & ~(0x000000ff << 8) |((((char)(__752 >> 8)) & ((char)(__800 >> 8))) << 8);
+    __751=__751 & ~(0x000000ff << 16) |((((char)(__752 >> 16)) & ((char)(__800 >> 16))) << 16);
+    __751=__751 & ~(0x000000ff << 24) |((((char)(__752 >> 24)) & ((char)(__800 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 7680)) = __751;
+  int __801;
+    int __802;
+      int4 __803;
+        int4 __804 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 4096), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 4096), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 4096), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 4096));
+        int4 __805;
+          int4 __806 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __807 = make_int4(2, 2, 2, 2);
+          __805.x = (__806.x%__807.x);
+          __805.y = (__806.y%__807.y);
+          __805.z = (__806.z%__807.z);
+          __805.w = (__806.w%__807.w);
+        int4 __808;
+          int4 __809 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __810 = make_int4(2, 2, 2, 2);
+          __808.x = (__809.x/__810.x);
+          __808.y = (__809.y/__810.y);
+          __808.z = (__809.z/__810.z);
+          __808.w = (__809.w/__810.w);
+        int4 __811;
+        ushort4 __812;
+          ushort4 __813;
+            ushort4 __814;
+              int4 __815 = make_int4(2, 2, 2, 2);
+              int4 __816 = make_int4(0, 0, 0, 0);
+              __814.x = (__815.x>=__816.x);
+              __814.y = (__815.y>=__816.y);
+              __814.z = (__815.z>=__816.z);
+              __814.w = (__815.w>=__816.w);
+            ushort4 __817;
+              int4 __818 = make_int4(0, 0, 0, 0);
+              __817.x = (__805.x>=__818.x);
+              __817.y = (__805.y>=__818.y);
+              __817.z = (__805.z>=__818.z);
+              __817.w = (__805.w>=__818.w);
+            __813.x = (__814.x&&__817.x);
+            __813.y = (__814.y&&__817.y);
+            __813.z = (__814.z&&__817.z);
+            __813.w = (__814.w&&__817.w);
+          ushort4 __819;
+            ushort4 __820;
+              int4 __821 = make_int4(2, 2, 2, 2);
+              int4 __822 = make_int4(0, 0, 0, 0);
+              __820.x = (__821.x<__822.x);
+              __820.y = (__821.y<__822.y);
+              __820.z = (__821.z<__822.z);
+              __820.w = (__821.w<__822.w);
+            ushort4 __823;
+              int4 __824 = make_int4(0, 0, 0, 0);
+              __823.x = (__805.x<=__824.x);
+              __823.y = (__805.y<=__824.y);
+              __823.z = (__805.z<=__824.z);
+              __823.w = (__805.w<=__824.w);
+            __819.x = (__820.x&&__823.x);
+            __819.y = (__820.y&&__823.y);
+            __819.z = (__820.z&&__823.z);
+            __819.w = (__820.w&&__823.w);
+          __812.x = (__813.x||__819.x);
+          __812.y = (__813.y||__819.y);
+          __812.z = (__813.z||__819.z);
+          __812.w = (__813.w||__819.w);
+        int4 __825;
+          int4 __826 = make_int4(1, 1, 1, 1);
+          __825.x = (__808.x-__826.x);
+          __825.y = (__808.y-__826.y);
+          __825.z = (__808.z-__826.z);
+          __825.w = (__808.w-__826.w);
+        __811.x = (bool(__812.x)?__808.x:__825.x);
+        __811.y = (bool(__812.y)?__808.y:__825.y);
+        __811.z = (bool(__812.z)?__808.z:__825.z);
+        __811.w = (bool(__812.w)?__808.w:__825.w);
+        __803.x = (__804.x+__811.x);
+        __803.y = (__804.y+__811.y);
+        __803.z = (__804.z+__811.z);
+        __803.w = (__804.w+__811.w);
+      int __827 = ((0x000000ff << 0) & (weight[__803.x] << 0))|((0x000000ff << 8) & (weight[__803.y] << 8))|((0x000000ff << 16) & (weight[__803.z] << 16))|((0x000000ff << 24) & (weight[__803.w] << 24));
+      int __828;
+      int4 __829;
+        int4 __830;
+          int4 __831 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __832 = make_int4(2, 2, 2, 2);
+          __830.x = (__831.x%__832.x);
+          __830.y = (__831.y%__832.y);
+          __830.z = (__831.z%__832.z);
+          __830.w = (__831.w%__832.w);
+        int4 __833;
+        ushort4 __834;
+          ushort4 __835;
+            ushort4 __836;
+              int4 __837 = make_int4(2, 2, 2, 2);
+              int4 __838 = make_int4(0, 0, 0, 0);
+              __836.x = (__837.x>=__838.x);
+              __836.y = (__837.y>=__838.y);
+              __836.z = (__837.z>=__838.z);
+              __836.w = (__837.w>=__838.w);
+            ushort4 __839;
+              int4 __840 = make_int4(0, 0, 0, 0);
+              __839.x = (__830.x>=__840.x);
+              __839.y = (__830.y>=__840.y);
+              __839.z = (__830.z>=__840.z);
+              __839.w = (__830.w>=__840.w);
+            __835.x = (__836.x&&__839.x);
+            __835.y = (__836.y&&__839.y);
+            __835.z = (__836.z&&__839.z);
+            __835.w = (__836.w&&__839.w);
+          ushort4 __841;
+            ushort4 __842;
+              int4 __843 = make_int4(2, 2, 2, 2);
+              int4 __844 = make_int4(0, 0, 0, 0);
+              __842.x = (__843.x<__844.x);
+              __842.y = (__843.y<__844.y);
+              __842.z = (__843.z<__844.z);
+              __842.w = (__843.w<__844.w);
+            ushort4 __845;
+              int4 __846 = make_int4(0, 0, 0, 0);
+              __845.x = (__830.x<=__846.x);
+              __845.y = (__830.y<=__846.y);
+              __845.z = (__830.z<=__846.z);
+              __845.w = (__830.w<=__846.w);
+            __841.x = (__842.x&&__845.x);
+            __841.y = (__842.y&&__845.y);
+            __841.z = (__842.z&&__845.z);
+            __841.w = (__842.w&&__845.w);
+          __834.x = (__835.x||__841.x);
+          __834.y = (__835.y||__841.y);
+          __834.z = (__835.z||__841.z);
+          __834.w = (__835.w||__841.w);
+        int4 __847;
+          int4 __848 = make_int4(2, 2, 2, 2);
+          __847.x = (__830.x+__848.x);
+          __847.y = (__830.y+__848.y);
+          __847.z = (__830.z+__848.z);
+          __847.w = (__830.w+__848.w);
+        __833.x = (bool(__834.x)?__830.x:__847.x);
+        __833.y = (bool(__834.y)?__830.y:__847.y);
+        __833.z = (bool(__834.z)?__830.z:__847.z);
+        __833.w = (bool(__834.w)?__830.w:__847.w);
+        int4 __849 = make_int4(4, 4, 4, 4);
+        __829.x = (__833.x*__849.x);
+        __829.y = (__833.y*__849.y);
+        __829.z = (__833.z*__849.z);
+        __829.w = (__833.w*__849.w);
+      __828=((signed char)(__829.x) << 0);
+      __828=__828 & ~(0x000000ff << 8) |((signed char)(__829.y) << 8);
+      __828=__828 & ~(0x000000ff << 16) |((signed char)(__829.z) << 16);
+      __828=__828 & ~(0x000000ff << 24) |((signed char)(__829.w) << 24);
+      __802=((((char)(__827 >> 0)) >> ((char)(__828 >> 0))) << 0);
+      __802=__802 & ~(0x000000ff << 8) |((((char)(__827 >> 8)) >> ((char)(__828 >> 8))) << 8);
+      __802=__802 & ~(0x000000ff << 16) |((((char)(__827 >> 16)) >> ((char)(__828 >> 16))) << 16);
+      __802=__802 & ~(0x000000ff << 24) |((((char)(__827 >> 24)) >> ((char)(__828 >> 24))) << 24);
+    int __850 = (int)252645135;
+    __801=((((char)(__802 >> 0)) & ((char)(__850 >> 0))) << 0);
+    __801=__801 & ~(0x000000ff << 8) |((((char)(__802 >> 8)) & ((char)(__850 >> 8))) << 8);
+    __801=__801 & ~(0x000000ff << 16) |((((char)(__802 >> 16)) & ((char)(__850 >> 16))) << 16);
+    __801=__801 & ~(0x000000ff << 24) |((((char)(__802 >> 24)) & ((char)(__850 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 8192)) = __801;
+  int __851;
+    int __852;
+      int4 __853;
+        int4 __854 = make_int4((((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 4352), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 4352), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 4352), (((((((int)blockIdx.x) & 15) * 4608) + (((int)threadIdx.y) * 16)) + (((int)threadIdx.x) * 2)) + 4352));
+        int4 __855;
+          int4 __856 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __857 = make_int4(2, 2, 2, 2);
+          __855.x = (__856.x%__857.x);
+          __855.y = (__856.y%__857.y);
+          __855.z = (__856.z%__857.z);
+          __855.w = (__856.w%__857.w);
+        int4 __858;
+          int4 __859 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __860 = make_int4(2, 2, 2, 2);
+          __858.x = (__859.x/__860.x);
+          __858.y = (__859.y/__860.y);
+          __858.z = (__859.z/__860.z);
+          __858.w = (__859.w/__860.w);
+        int4 __861;
+        ushort4 __862;
+          ushort4 __863;
+            ushort4 __864;
+              int4 __865 = make_int4(2, 2, 2, 2);
+              int4 __866 = make_int4(0, 0, 0, 0);
+              __864.x = (__865.x>=__866.x);
+              __864.y = (__865.y>=__866.y);
+              __864.z = (__865.z>=__866.z);
+              __864.w = (__865.w>=__866.w);
+            ushort4 __867;
+              int4 __868 = make_int4(0, 0, 0, 0);
+              __867.x = (__855.x>=__868.x);
+              __867.y = (__855.y>=__868.y);
+              __867.z = (__855.z>=__868.z);
+              __867.w = (__855.w>=__868.w);
+            __863.x = (__864.x&&__867.x);
+            __863.y = (__864.y&&__867.y);
+            __863.z = (__864.z&&__867.z);
+            __863.w = (__864.w&&__867.w);
+          ushort4 __869;
+            ushort4 __870;
+              int4 __871 = make_int4(2, 2, 2, 2);
+              int4 __872 = make_int4(0, 0, 0, 0);
+              __870.x = (__871.x<__872.x);
+              __870.y = (__871.y<__872.y);
+              __870.z = (__871.z<__872.z);
+              __870.w = (__871.w<__872.w);
+            ushort4 __873;
+              int4 __874 = make_int4(0, 0, 0, 0);
+              __873.x = (__855.x<=__874.x);
+              __873.y = (__855.y<=__874.y);
+              __873.z = (__855.z<=__874.z);
+              __873.w = (__855.w<=__874.w);
+            __869.x = (__870.x&&__873.x);
+            __869.y = (__870.y&&__873.y);
+            __869.z = (__870.z&&__873.z);
+            __869.w = (__870.w&&__873.w);
+          __862.x = (__863.x||__869.x);
+          __862.y = (__863.y||__869.y);
+          __862.z = (__863.z||__869.z);
+          __862.w = (__863.w||__869.w);
+        int4 __875;
+          int4 __876 = make_int4(1, 1, 1, 1);
+          __875.x = (__858.x-__876.x);
+          __875.y = (__858.y-__876.y);
+          __875.z = (__858.z-__876.z);
+          __875.w = (__858.w-__876.w);
+        __861.x = (bool(__862.x)?__858.x:__875.x);
+        __861.y = (bool(__862.y)?__858.y:__875.y);
+        __861.z = (bool(__862.z)?__858.z:__875.z);
+        __861.w = (bool(__862.w)?__858.w:__875.w);
+        __853.x = (__854.x+__861.x);
+        __853.y = (__854.y+__861.y);
+        __853.z = (__854.z+__861.z);
+        __853.w = (__854.w+__861.w);
+      int __877 = ((0x000000ff << 0) & (weight[__853.x] << 0))|((0x000000ff << 8) & (weight[__853.y] << 8))|((0x000000ff << 16) & (weight[__853.z] << 16))|((0x000000ff << 24) & (weight[__853.w] << 24));
+      int __878;
+      int4 __879;
+        int4 __880;
+          int4 __881 = make_int4((0)+(1*0), (0)+(1*1), (0)+(1*2), (0)+(1*3));
+          int4 __882 = make_int4(2, 2, 2, 2);
+          __880.x = (__881.x%__882.x);
+          __880.y = (__881.y%__882.y);
+          __880.z = (__881.z%__882.z);
+          __880.w = (__881.w%__882.w);
+        int4 __883;
+        ushort4 __884;
+          ushort4 __885;
+            ushort4 __886;
+              int4 __887 = make_int4(2, 2, 2, 2);
+              int4 __888 = make_int4(0, 0, 0, 0);
+              __886.x = (__887.x>=__888.x);
+              __886.y = (__887.y>=__888.y);
+              __886.z = (__887.z>=__888.z);
+              __886.w = (__887.w>=__888.w);
+            ushort4 __889;
+              int4 __890 = make_int4(0, 0, 0, 0);
+              __889.x = (__880.x>=__890.x);
+              __889.y = (__880.y>=__890.y);
+              __889.z = (__880.z>=__890.z);
+              __889.w = (__880.w>=__890.w);
+            __885.x = (__886.x&&__889.x);
+            __885.y = (__886.y&&__889.y);
+            __885.z = (__886.z&&__889.z);
+            __885.w = (__886.w&&__889.w);
+          ushort4 __891;
+            ushort4 __892;
+              int4 __893 = make_int4(2, 2, 2, 2);
+              int4 __894 = make_int4(0, 0, 0, 0);
+              __892.x = (__893.x<__894.x);
+              __892.y = (__893.y<__894.y);
+              __892.z = (__893.z<__894.z);
+              __892.w = (__893.w<__894.w);
+            ushort4 __895;
+              int4 __896 = make_int4(0, 0, 0, 0);
+              __895.x = (__880.x<=__896.x);
+              __895.y = (__880.y<=__896.y);
+              __895.z = (__880.z<=__896.z);
+              __895.w = (__880.w<=__896.w);
+            __891.x = (__892.x&&__895.x);
+            __891.y = (__892.y&&__895.y);
+            __891.z = (__892.z&&__895.z);
+            __891.w = (__892.w&&__895.w);
+          __884.x = (__885.x||__891.x);
+          __884.y = (__885.y||__891.y);
+          __884.z = (__885.z||__891.z);
+          __884.w = (__885.w||__891.w);
+        int4 __897;
+          int4 __898 = make_int4(2, 2, 2, 2);
+          __897.x = (__880.x+__898.x);
+          __897.y = (__880.y+__898.y);
+          __897.z = (__880.z+__898.z);
+          __897.w = (__880.w+__898.w);
+        __883.x = (bool(__884.x)?__880.x:__897.x);
+        __883.y = (bool(__884.y)?__880.y:__897.y);
+        __883.z = (bool(__884.z)?__880.z:__897.z);
+        __883.w = (bool(__884.w)?__880.w:__897.w);
+        int4 __899 = make_int4(4, 4, 4, 4);
+        __879.x = (__883.x*__899.x);
+        __879.y = (__883.y*__899.y);
+        __879.z = (__883.z*__899.z);
+        __879.w = (__883.w*__899.w);
+      __878=((signed char)(__879.x) << 0);
+      __878=__878 & ~(0x000000ff << 8) |((signed char)(__879.y) << 8);
+      __878=__878 & ~(0x000000ff << 16) |((signed char)(__879.z) << 16);
+      __878=__878 & ~(0x000000ff << 24) |((signed char)(__879.w) << 24);
+      __852=((((char)(__877 >> 0)) >> ((char)(__878 >> 0))) << 0);
+      __852=__852 & ~(0x000000ff << 8) |((((char)(__877 >> 8)) >> ((char)(__878 >> 8))) << 8);
+      __852=__852 & ~(0x000000ff << 16) |((((char)(__877 >> 16)) >> ((char)(__878 >> 16))) << 16);
+      __852=__852 & ~(0x000000ff << 24) |((((char)(__877 >> 24)) >> ((char)(__878 >> 24))) << 24);
+    int __900 = (int)252645135;
+    __851=((((char)(__852 >> 0)) & ((char)(__900 >> 0))) << 0);
+    __851=__851 & ~(0x000000ff << 8) |((((char)(__852 >> 8)) & ((char)(__900 >> 8))) << 8);
+    __851=__851 & ~(0x000000ff << 16) |((((char)(__852 >> 16)) & ((char)(__900 >> 16))) << 16);
+    __851=__851 & ~(0x000000ff << 24) |((((char)(__852 >> 24)) & ((char)(__900 >> 24))) << 24);
+  *(int*)(B_decode_shared + (((((int)threadIdx.y) * 32) + (((int)threadIdx.x) * 4)) + 8704)) = __851;
+  __syncthreads();
+  for (int k_inner_outer = 0; k_inner_outer < 144; ++k_inner_outer) {
+    normal_reduce_temp0[0] = (normal_reduce_temp0[0] + (((int)data_shared[((((((int)threadIdx.y) >> 3) * 1152) + (k_inner_outer * 8)) + ((int)threadIdx.x))]) * ((int)B_decode_shared[((((((int)threadIdx.y) & 7) * 1152) + (k_inner_outer * 8)) + ((int)threadIdx.x))])));
+  }
+  uint mask[1];
+  int t0[1];
+  red_buf0[0] = normal_reduce_temp0[0];
+  mask[0] = (__activemask() & ((uint)(255 << (((int)threadIdx.y) * 8))));
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 4, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 2, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  t0[0] = __shfl_down_sync(mask[0], red_buf0[0], 1, 32);
+  red_buf0[0] = (red_buf0[0] + t0[0]);
+  red_buf0[0] = __shfl_sync(mask[0], red_buf0[0], (((int)threadIdx.y) * 8), 32);
+  T_conv[(((((((int)blockIdx.x) >> 4) * 256) + ((((int)threadIdx.y) >> 3) * 128)) + ((((int)blockIdx.x) & 15) * 8)) + (((int)threadIdx.y) & 7))] = red_buf0[0];
+}
+
+
+top1: 0.23306241631507874 	top10: 0.0813056007027626
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 2], 'thread': [4, 2], 'rstep': [1152], 'reduce_thread': [16], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 2}}}
+best latency: 0.0813056007027626
+2.2300718257970815 tflops, 1.5379805695152287 %
+n: 1, f: 128, h: 28, w: 28, c: 512, kh: 1, kw: 1, s: 1, d: 1, p: 0, oh: 28, ow: 28
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 16], 'thread': [16, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.1253376007080078
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 32], 'thread': [8, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.21119999885559082
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 16], 'thread': [14, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.10690560191869736
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 32], 'thread': [7, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.16322560608386993
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 16], 'thread': [8, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.22297599911689758
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 8], 'thread': [16, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.14858239889144897
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 32], 'thread': [8, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.11340799927711487
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 16], 'thread': [14, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.14975999295711517
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 8], 'thread': [8, 8], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.1154559999704361
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 32], 'thread': [4, 32], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.13429029285907745
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 8], 'thread': [49, 2], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.10199040174484253
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 8], 'thread': [14, 8], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.10444799810647964
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 8], 'thread': [14, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.158427432179451
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 64], 'thread': [4, 32], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.3991551995277405
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 16], 'thread': [7, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.24268798530101776
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 32], 'thread': [4, 32], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.4059135913848877
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 64], 'thread': [7, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.3012607991695404
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 8], 'thread': [14, 8], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.11724799871444702
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 64], 'thread': [4, 32], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.20480000972747803
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 8], 'thread': [7, 8], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.13021866977214813
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 16], 'thread': [7, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.09574399888515472
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 16], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.0979200005531311
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 32], 'thread': [7, 16], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.2557951807975769
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 16], 'thread': [4, 16], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.19387733936309814
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 4], 'thread': [16, 4], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.09398044645786285
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 64], 'thread': [2, 64], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 4, 'B_decode': 16}}}
+0.13465599715709686
+{<Node, ladder_conv2d_reshape_bias>: {'block': [16, 64], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.10772480070590973
+{<Node, ladder_conv2d_reshape_bias>: {'block': [14, 4], 'thread': [14, 4], 'rstep': [512], 'reduce_thread': [2], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.1010834351181984
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 8], 'thread': [4, 8], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.10585600137710571
+{<Node, ladder_conv2d_reshape_bias>: {'block': [8, 4], 'thread': [8, 4], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.07247644662857056
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 32], 'thread': [7, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.08314879983663559
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 4], 'thread': [28, 4], 'rstep': [512], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.15132445096969604
+{<Node, ladder_conv2d_reshape_bias>: {'block': [56, 32], 'thread': [8, 16], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.08045714348554611
+{<Node, ladder_conv2d_reshape_bias>: {'block': [7, 4], 'thread': [7, 4], 'rstep': [512], 'reduce_thread': [4], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.08153600245714188
+{<Node, ladder_conv2d_reshape_bias>: {'block': [28, 64], 'thread': [4, 32], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 8, 'B_decode': 16}}}
+0.11673600226640701
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 4], 'thread': [49, 2], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.1345279961824417
+{<Node, ladder_conv2d_reshape_bias>: {'block': [112, 4], 'thread': [28, 4], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.14802488684654236
+{<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4], 'thread': [4, 4], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+0.06280533224344254
+{<Node, ladder_conv2d_reshape_bias>: {'block': [98, 8], 'thread': [14, 8], 'rstep': [128], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.1043199971318245
+{<Node, ladder_conv2d_reshape_bias>: {'block': [49, 4], 'thread': [49, 2], 'rstep': [256], 'block_order': <NoRasterization>, 'vectorize': {'data': 16}}}
+0.12712228298187256
+code:  __global__ void __launch_bounds__(98) Fused(int8_t* __restrict__ input, int8_t* __restrict__ weight, int* __restrict__ T_conv) {
+  
+  int T_conv_local[2];
+  __shared__ signed char data_shared[12544];
+  __shared__ signed char B_decode_shared[1024];
+  T_conv_local[0] = 0;
+  T_conv_local[1] = 0;
+  for (int k_0 = 0; k_0 < 2; ++k_0) {
+    __syncthreads();
+    *(int4*)(data_shared + (((int)threadIdx.x) * 16)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((int)threadIdx.x) >> 4) * 512)) + (k_0 * 256)) + ((((int)threadIdx.x) & 15) * 16)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 1568)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 1568) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 32) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 3136)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 3136) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 64) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 4704)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 4704) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 96) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 6272)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 6272) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 128) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 7840)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 7840) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 160) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 9408)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 9408) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 192) & 255)));
+    *(int4*)(data_shared + ((((int)threadIdx.x) * 16) + 10976)) = *(int4*)(input + (((((((int)blockIdx.x) >> 5) * 25088) + ((((((int)threadIdx.x) * 16) + 10976) >> 8) * 512)) + (k_0 * 256)) + (((((int)threadIdx.x) * 16) + 224) & 255)));
+    B_decode_shared[((int)threadIdx.x)] = ((weight[((((((int)blockIdx.x) & 31) * 1024) + (k_0 * 128)) + (((int)threadIdx.x) >> 1))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 98)] = ((weight[(((((((int)blockIdx.x) & 31) * 1024) + (k_0 * 128)) + (((int)threadIdx.x) >> 1)) + 49)] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 196)] = ((weight[(((((((int)blockIdx.x) & 31) * 1024) + (((((int)threadIdx.x) + 196) >> 8) * 256)) + (k_0 * 128)) + (((((int)threadIdx.x) >> 1) + 98) & 127))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 294)] = ((weight[((((((((int)blockIdx.x) & 31) * 1024) + (((((int)threadIdx.x) + 294) >> 8) * 256)) + (k_0 * 128)) + (((int)threadIdx.x) >> 1)) + 19)] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 392)] = ((weight[((((((((int)blockIdx.x) & 31) * 1024) + (((((int)threadIdx.x) + 392) >> 8) * 256)) + (k_0 * 128)) + (((int)threadIdx.x) >> 1)) + 68)] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 490)] = ((weight[(((((((int)blockIdx.x) & 31) * 1024) + (((((int)threadIdx.x) + 490) >> 8) * 256)) + (k_0 * 128)) + (((((int)threadIdx.x) >> 1) + 117) & 127))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 588)] = ((weight[((((((((int)blockIdx.x) & 31) * 1024) + (((((int)threadIdx.x) + 588) >> 8) * 256)) + (k_0 * 128)) + (((int)threadIdx.x) >> 1)) + 38)] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 686)] = ((weight[(((((((int)blockIdx.x) & 31) * 1024) + (((((int)threadIdx.x) + 686) >> 8) * 256)) + (k_0 * 128)) + (((((int)threadIdx.x) >> 1) + 87) & 127))] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 784)] = ((weight[((((((((int)blockIdx.x) & 31) * 1024) + (((((int)threadIdx.x) + 784) >> 8) * 256)) + (k_0 * 128)) + (((int)threadIdx.x) >> 1)) + 8)] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    B_decode_shared[(((int)threadIdx.x) + 882)] = ((weight[((((((((int)blockIdx.x) & 31) * 1024) + (((((int)threadIdx.x) + 882) >> 8) * 256)) + (k_0 * 128)) + (((int)threadIdx.x) >> 1)) + 57)] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    if (((int)threadIdx.x) < 44) {
+      B_decode_shared[(((int)threadIdx.x) + 980)] = ((weight[((((((((int)blockIdx.x) & 31) * 1024) + (((((int)threadIdx.x) + 980) >> 8) * 256)) + (k_0 * 128)) + (((int)threadIdx.x) >> 1)) + 106)] >> ((signed char)((((int)threadIdx.x) & 1) * 4))) & (signed char)15);
+    }
+    __syncthreads();
+    for (int k_1 = 0; k_1 < 256; ++k_1) {
+      T_conv_local[0] = (T_conv_local[0] + (((int)data_shared[(((((int)threadIdx.x) >> 1) * 256) + k_1)]) * ((int)B_decode_shared[(((((int)threadIdx.x) & 1) * 256) + k_1)])));
+      T_conv_local[1] = (T_conv_local[1] + (((int)data_shared[(((((int)threadIdx.x) >> 1) * 256) + k_1)]) * ((int)B_decode_shared[((((((int)threadIdx.x) & 1) * 256) + k_1) + 512)])));
+    }
+  }
+  T_conv[(((((((int)blockIdx.x) >> 5) * 6272) + ((((int)threadIdx.x) >> 1) * 128)) + ((((int)blockIdx.x) & 31) * 4)) + (((int)threadIdx.x) & 1))] = T_conv_local[0];
+  T_conv[((((((((int)blockIdx.x) >> 5) * 6272) + ((((int)threadIdx.x) >> 1) * 128)) + ((((int)blockIdx.x) & 31) * 4)) + (((int)threadIdx.x) & 1)) + 2)] = T_conv_local[1];
+}
+
+
+top1: 0.1253376007080078 	top10: 0.06280533224344254
+--------------------------------------------------------------------------------
+best config: {<Node, ladder_conv2d_reshape_bias>: {'block': [4, 4], 'thread': [4, 4], 'rstep': [512], 'reduce_thread': [8], 'block_order': <NoRasterization>, 'vectorize': {'data': 16, 'B_decode': 16}}}
+best latency: 0.06280533224344254
+1.4880915309156828 tflops, 1.0262700213211606 %
+1_64_56_56_64_3_3_1_1_0	0.03747839853167534
+1_64_56_56_64_1_1_1_1_0	0.009557333774864674
+1_128_28_28_128_3_3_1_1_0	0.0813056007027626
+1_512_28_28_128_1_1_1_1_0	0.06280533224344254

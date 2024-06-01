@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import os
-from configs import models
+from cudnn_configs import models
 
 welder_path = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "..", "..", "baseline_framework", "WELDER"
@@ -48,14 +48,14 @@ for model_name, model_path in models.items():
 
         f.write(f"# Step 1: Getting the model block\n")
         f.write(
-            f"{welder_nnfusion_path}/build/src/tools/nnfusion/nnfusion {model_path} -f onnx -ftune_output_file=model.json > get_model_block.log 2>&1\n\n"
+            f"{welder_nnfusion_path}/build/src/tools/nnfusion/nnfusion {model_path} -f onnx -ftune_output_file=model.json > get_model_block.log -ffusion_skiplist='Dot,BatchMatMul,Convolution' 2>&1\n\n"
         )
 
         f.write(f"# Step 2: Running the compiler\n")
         f.write("echo 'Running the compilation'\n")
         f.write(f"START_TIME=$(date +%s)\n")
         f.write(
-            f"python3 -m run_compiler model.json tuned.json --device 0 --topk 20 > run_compiler.log 2>&1\n"
+            f"python3 -m run_compiler model.json tuned.json --device 0 --topk 20 | tee run_compiler.log \n"
         )
         f.write(f"END_TIME=$(date +%s)\n")
         f.write(
@@ -65,10 +65,10 @@ for model_name, model_path in models.items():
         f.write(f"# Step 3: Code generation\n")
         f.write("echo 'Running Code Generation'\n")
         f.write(
-            f"{welder_nnfusion_path}/build/src/tools/nnfusion/nnfusion {model_path} -f onnx -ftune_output_file=/dev/null -ftune_input_file=tuned.json -fwarmup_step=5 -frun_step=10 > codegen.log 2>&1\n"
+            f"{welder_nnfusion_path}/build/src/tools/nnfusion/nnfusion {model_path} -f onnx -ftune_output_file=/dev/null -ftune_input_file=tuned.json -fwarmup_step=5 -frun_step=10 -ffusion_skiplist='Dot,BatchMatMul,Convolution' > codegen.log 2>&1\n"
         )
         f.write(
-            f"cd nnfusion_rt/cuda_codegen;cmake . -DCUDA_ARCH='-gencode arch=compute_80,code=compute_80';make;./main_test > run.log \n"
+            f"cd nnfusion_rt/cuda_codegen;cmake . -DCUDA_ARCH='-gencode arch=compute_70,code=compute_70';make;./main_test > run.log \n"
         )
         f.write(f"cp run.log ../../\n")
         f.write(f"cd ../../; rm -rf nnfusion_rt\n\n")

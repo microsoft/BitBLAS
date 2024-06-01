@@ -20,3 +20,5 @@ temp/
 output
 .tmp/*
 debug/*
+*.cu
+*.log

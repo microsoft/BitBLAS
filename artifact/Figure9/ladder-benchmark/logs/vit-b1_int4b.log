@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure9/ladder/checkpoints/vit-b1_fq_0_int4b_4_ci_False_holistic_fp16
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   1.0864       1.0799       1.1218       1.0749       0.0179   
+               

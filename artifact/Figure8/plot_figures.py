@@ -309,6 +309,7 @@ providers_bs1_seq1 = ["BS1 SEQ1"]
 providers_bs32_seq1 = ["BS32 SEQ1"]
 providers_bs1_seq4096 = ["BS1 SEQ4096"]
 
+print(times_data)
 times_data_bs1_seq1 = [(label, [times[0]]) for label, times in times_data]
 times_data_bs32_seq1 = [(label, [times[1]]) for label, times in times_data]
 times_data_bs1_seq4096 = [(label, [times[2]]) for label, times in times_data]
@@ -889,7 +890,7 @@ fig.legend(
     labels_other,
     loc="upper center",
     bbox_to_anchor=(0.5, 0.52),
-    ncol=len(labels_other) // 2,
+    ncol=6,
     fontsize=legend_fontsize,
     frameon=True,
 )
@@ -898,11 +899,11 @@ fig.legend(
 plt.subplots_adjust(top=0.85, bottom=0.15)
 
 plt.savefig(
-    "pdf/end2end_a100.pdf",
+    "pdf/figure8_end2end_a100.pdf",
     bbox_inches="tight",
 )
 plt.savefig(
-    "png/end2end_a100.png",
+    "png/figure8_end2end_a100.png",
     bbox_inches="tight",
     transparent=False,
     dpi=255,

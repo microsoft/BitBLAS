@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/Figure14_v100/ladder-benchmark/../../checkpoints/Figure14_v100/ladder//ladder_with_fake_dense_dequantize_fq_0_int4b_4_-1_bs1_seq4096_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+  653.8411     653.6399     655.0858     653.1158      0.6626   
+               

@@ -53,8 +53,8 @@ class TIRElementWiseScheduler(TIRSchedulerBase):
             vthd_axis = vthd_axis[0:2] + [sch.fuse(*vthd_axis[2:])]
         for i, ax in enumerate(vthd_axis):
             sch.bind(ax, "vthread" + ['.x', '.y', '.z'][i])
-        for ax in tile_axis:
-            sch.unroll(ax)
+        # for ax in tile_axis:
+        #     sch.unroll(ax)
 
         write_sch(sch, "unroll")
 

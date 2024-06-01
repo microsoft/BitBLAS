@@ -1,0 +1,49 @@
+Testing model: llama2-70b
+Traceback (most recent call last):
+  File "./ladder_with_fake_dense_dequantize.py", line 192, in <module>
+    run(path, arch, async_propagate=args.async_propagation, fake_quant=args.fake_quant, quant_config=quant_config, convert_int=args.convert_int)
+  File "./ladder_with_fake_dense_dequantize.py", line 75, in run
+    mod = ladder.relay.transform.LadderFakeQuant(quant_type=fake_quant, quant_config=quant_config, convert_int=convert_int, convert_float=args.convert_float)(mod)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/ir/transform.py", line 161, in __call__
+    return _ffi_transform_api.RunPass(self, mod)
+  File "/root/Ladder/3rdparty/tvm/python/tvm/_ffi/_ctypes/packed_func.py", line 237, in __call__
+    raise get_last_ffi_error()
+tvm._ffi.base.TVMError: Traceback (most recent call last):
+  10: TVMFuncCall
+  9: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::IRModule (tvm::transform::Pass, tvm::IRModule)>::AssignTypedLambda<tvm::transform::{lambda(tvm::transform::Pass, tvm::IRModule)#7}>(tvm::transform::{lambda(tvm::transform::Pass, tvm::IRModule)#7}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  8: tvm::transform::Pass::operator()(tvm::IRModule) const
+  7: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  6: tvm::relay::transform::FunctionPassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  5: tvm::transform::Pass::operator()(tvm::IRModule) const
+  4: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  3: tvm::transform::ModulePassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  2: _ZN3tvm7runtime13PackedFuncObj9ExtractorINS0_16PackedFuncSubObjIZNS0_15TypedPackedFuncIFNS_8IRModuleES5_NS_9transform11PassContextEEE17AssignTypedLambdaIZNS_5relay9transform9InferTypeEvEUlS5_RKS7_E_EEvT_EUlRKNS0_7TVMArgsEPNS0_11TVMRetValueEE_EEE4CallEPKS1_SH_SL_
+  1: tvm::relay::TypeInferencer::Infer(tvm::GlobalVar, tvm::relay::Function)
+  0: tvm::relay::TypeSolver::Solve() [clone .cold]
+  12: TVMFuncCall
+  11: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<tvm::IRModule (tvm::transform::Pass, tvm::IRModule)>::AssignTypedLambda<tvm::transform::{lambda(tvm::transform::Pass, tvm::IRModule)#7}>(tvm::transform::{lambda(tvm::transform::Pass, tvm::IRModule)#7}, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, tvm::runtime::TVMRetValue)
+  10: tvm::transform::Pass::operator()(tvm::IRModule) const
+  9: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  8: tvm::relay::transform::FunctionPassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  7: tvm::transform::Pass::operator()(tvm::IRModule) const
+  6: tvm::transform::Pass::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  5: tvm::transform::ModulePassNode::operator()(tvm::IRModule, tvm::transform::PassContext const&) const
+  4: _ZN3tvm7runtime13PackedFuncObj9ExtractorINS0_16PackedFuncSubObjIZNS0_15TypedPackedFuncIFNS_8IRModuleES5_NS_9transform11PassContextEEE17AssignTypedLambdaIZNS_5relay9transform9InferTypeEvEUlS5_RKS7_E_EEvT_EUlRKNS0_7TVMArgsEPNS0_11TVMRetValueEE_EEE4CallEPKS1_SH_SL_
+  3: tvm::relay::TypeInferencer::Infer(tvm::GlobalVar, tvm::relay::Function)
+  2: tvm::relay::TypeSolver::Solve()
+  1: tvm::runtime::PackedFuncObj::Extractor<tvm::runtime::PackedFuncSubObj<tvm::runtime::TypedPackedFunc<bool (tvm::runtime::Array<tvm::Type, void> const&, int, tvm::Attrs const&, tvm::TypeReporter const&)>::AssignTypedLambda<bool (*)(tvm::runtime::Array<tvm::Type, void> const&, int, tvm::Attrs const&, tvm::TypeReporter const&)>(bool (*)(tvm::runtime::Array<tvm::Type, void> const&, int, tvm::Attrs const&, tvm::TypeReporter const&))::{lambda(tvm::runtime::TVMArgs const&, tvm::runtime::TVMRetValue*)#1}> >::Call(tvm::runtime::PackedFuncObj const*, tvm::runtime::TVMArgs, tvm::runtime::TVMRetValue*)
+  0: tvm::relay::ReshapeRel(tvm::runtime::Array<tvm::Type, void> const&, int, tvm::Attrs const&, tvm::TypeReporter const&)
+  File "/root/Ladder/3rdparty/tvm/src/relay/analysis/type_solver.cc", line 624
+TVMError: 
+---------------------------------------------------------------
+An error occurred during the execution of TVM.
+For more information, please see: https://tvm.apache.org/docs/errors.html
+---------------------------------------------------------------
+  Check failed: (false) is false: [18:54:24] /root/Ladder/3rdparty/tvm/src/relay/op/tensor/transform.cc:794: 
+---------------------------------------------------------------
+An error occurred during the execution of TVM.
+For more information, please see: https://tvm.apache.org/docs/errors.html
+---------------------------------------------------------------
+
+  Check failed: oshape_sum == data_shape_sum (131072 vs. 8192) : Input tensor shape(1,8192) and reshaped shape(1,256,16,32) are not compatible!
+

@@ -1,0 +1,1 @@
+vllm llama run b32 s1 avg: 1.1555004119873047 ms

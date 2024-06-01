@@ -1,149 +1,300 @@
 import os
 import json
 import re
-from reproduce_result import (
-        llama_providers,
-        llama_times_data,
-        bloom_providers,
-        bloom_times_data
-    )
+import logging
+logger = logging.getLogger(__name__)
+# set logger to show the line number
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+llama_providers = ["BS1 SEQ1", "BS32 SEQ1", "BS1 SEQ4096"]
+bloom_providers = ["BS1 SEQ1", "BS32 SEQ1", "BS1 SEQ4096"]
 
-llama_70b_b1s1_logs = './tensorrt-benchmark/logs/llama-70b-layer1-seq1-bs1.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(llama_70b_b1s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b1 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b1)
+_ = """
+llama_providers = ['BS1 SEQ1', 'BS32 SEQ1', 'BS1 SEQ4096']
+llama_times_data = [
+    ('PyTorch-Inductor', [-1, -1, -1]),
+    ('ONNXRuntime', [-1, -1, -1]),
+    ('TensorRT', [-1, -1, -1]),
+    ('vLLM', [-1, -1, -1]),
+    ('vLLM-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Welder', [-1, -1, -1]),
+    ('Bitter', [-1, -1, -1]),
+    ('Bitter-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{NF4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{FP8}$A$_{FP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{INT1}$A$_{INT8}$', [-1, -1, -1]),
+]
 
-llama_70b_b32s1_logs = './tensorrt-benchmark/logs/llama-70b-layer1-seq1-bs32.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(llama_70b_b32s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b32 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b32)
+bloom_providers = ['BS1 SEQ1', 'BS32 SEQ1', 'BS1 SEQ4096']
+bloom_times_data = [
+    ('PyTorch-Inductor', [-1, -1, -1]),
+    ('ONNXRuntime', [-1, -1, -1]),
+    ('TensorRT', [-1, -1, -1]),
+    ('vLLM', [-1, -1, -1]),
+    ('vLLM-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Welder', [-1, -1, -1]),
+    ('Bitter', [-1, -1, -1]),
+    ('Bitter-W$_{INT4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{NF4}$A$_{FP16}$', [-1, -1, -1]),
+    ('Bitter-W$_{FP8}$A$_{FP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{MXFP8}$A$_{MXFP8}$', [-1, -1, -1]),
+    ('Bitter-W$_{INT1}$A$_{INT8}$', [-1, -1, -1]),
+]
+"""
 
-llama_70b_b1s4096_logs = './tensorrt-benchmark/logs/llama-70b-layer1-seq4096-bs1.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(llama_70b_b1s4096_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b4096 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b4096)
+exec(_)
+# update the pytorch inductor results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        print(f"PyTorch-Inductor {model} batch size {batch_size} seq len {seq_len}")
+        log_path = f"./logs/{model}_pytorch_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        print(log_path)
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[0][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[0][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[0][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[0][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
-llama_times_data[2] = ('TensorRT', [tensorrt_time_b1, tensorrt_time_b32, tensorrt_time_b4096])
+# update the onnxruntime results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        print(f"OnnxRuntime {model} batch size {batch_size} seq len {seq_len}")
+        log_path = f"./logs/{model}_onnxruntime_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[1][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[1][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[1][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[1][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
-bloom_176b_b1s1_logs = './tensorrt-benchmark/logs/bloom-176b-layer1-seq1-bs1.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(bloom_176b_b1s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b1 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b1)
+# update the tensorrt results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_tensorrt_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[2][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[2][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[2][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[2][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
-bloom_176b_b32s1_logs = './tensorrt-benchmark/logs/bloom-176b-layer1-seq1-bs32.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(bloom_176b_b32s1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b32 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b32)
+# update the welder results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_welder_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[5][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[5][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[5][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[5][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            
+# update the vllm results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_vllm_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[3][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[3][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[3][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[3][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
-bloom_176b_b1s4096_logs = './tensorrt-benchmark/logs/bloom-176b-layer1-seq4096-bs1.log'
-pattern = r"mean = [\d]+\.[\d]+ ms"
-with open(bloom_176b_b1s4096_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if "GPU Compute Time" in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                tensorrt_time_b4096 = float(matches[0].split(' ')[-2])
-print(tensorrt_time_b4096)
+            
+# update the vllm_fp16xint4 results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_vllm_fp16_int4_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[4][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[4][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[4][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[4][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
-bloom_times_data[2] = ('TensorRT', [tensorrt_time_b1, tensorrt_time_b32, tensorrt_time_b4096])
+# update the welder results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_ladder_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            print(f"File {log_path} does not exist")
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[5][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[5][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[5][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[5][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
-## update welder results
-## not tuned yet.
 
-## update ladder results
-## not tuned yet
+# update the ladder_fp16 results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_ladder_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[6][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[6][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[6][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[6][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
+# update the ladder_fp16_int4 results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_ladder_fp16_int4_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[7][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[7][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[7][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[7][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
-## update amos results
-resnet_50_b1_logs = './amos-benchmark/logs/resnet50_b1.log'
-### match x(float) from Whole graph cost is x ms 
-pattern = r"Whole graph cost is [\d]+\.[\d]+ ms"
-with open(resnet_50_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Whole graph cost is' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                amos_time_b1 = float(matches[0].split(' ')[-2])
-print(amos_time_b1)
+# update the ladder_fp16_nf4 results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_ladder_fp16_nf4_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[8][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[8][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[8][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[8][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
-resnet_50_b128_logs = './amos-benchmark/logs/resnet50_b128.log'
-### match x(float) from Whole graph cost is x ms
-pattern = r"Whole graph cost is [\d]+\.[\d]+ ms"
-with open(resnet_50_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Whole graph cost is' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                amos_time_b128 = float(matches[0].split(' ')[-2])
-print(amos_time_b128)
-resnet_times_data[3] = ('AMOS', [amos_time_b1, amos_time_b128])
+# update the ladder_fp8_fp8 results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_ladder_fp8_fp8_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[9][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[9][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[9][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[9][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
-shufflenet_b1_logs = './amos-benchmark/logs/shufflenet_v2_b1.log'
-### match x(float) from Whole graph cost is x ms
-pattern = r"Whole graph cost is [\d]+\.[\d]+ ms"
-with open(shufflenet_b1_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Whole graph cost is' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                amos_time_b1 = float(matches[0].split(' ')[-2])
-print(amos_time_b1)
+# update the ladder_fp16_mxfp8xmxfp8 results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_ladder_mxfp8_mxfp8_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[10][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[10][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[10][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[10][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+            
+# update the ladder_fp16_int8xint1 results
+for model in ["llama", "bloom"]:
+    for batch_size, seq_len in [
+            (1, 1),
+            (32, 1),
+            (1, 4096)
+        ]:
+        log_path = f"./logs/{model}_ladder_int8_int1_b{batch_size}_s{seq_len}_data.json"
+        if not os.path.exists(log_path):
+            continue
+        data = list(json.load(open(log_path)).values())[-1]
+        if model == "llama":
+            llama_times_data[11][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(llama_times_data[11][1][llama_providers.index(f"BS{batch_size} SEQ{seq_len}")])
+        elif model == "bloom":
+            bloom_times_data[11][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")] = data
+            print(bloom_times_data[11][1][bloom_providers.index(f"BS{batch_size} SEQ{seq_len}")])
 
-shufflenet_b128_logs = './amos-benchmark/logs/shufflenet_v2_b128.log'
-### match x(float) from Whole graph cost is x ms
-pattern = r"Whole graph cost is [\d]+\.[\d]+ ms"
-with open(shufflenet_b128_logs, 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        if 'Whole graph cost is' in line:
-            matches = re.findall(pattern, line)
-            if matches:
-                amos_time_b128 = float(matches[0].split(' ')[-2])
-print(amos_time_b128)
 
 # write the results to back
-
 reproduced_results = f"""
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+
 llama_providers = {llama_providers}
 llama_times_data = {llama_times_data}
 
 bloom_providers = {bloom_providers}
 bloom_times_data = {bloom_times_data}
-
 """
+
+with open("reproduce_result/__init__.py", "w") as f:
+    f.write(reproduced_results)

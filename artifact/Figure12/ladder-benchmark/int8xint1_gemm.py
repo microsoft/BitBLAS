@@ -121,7 +121,12 @@ vit_shapes = [
     [6400, 1536, 1536],
 ]
 
-shapes = llama2_shapes + bloom_shapes + text_encoder_shapes + vae_encoder_shapes + vae_decoder_shapes + Conformer_shapes + vit_shapes
+shapes = [
+    [32, 14336, 57344],
+    [4096, 14336, 57344],
+    [32, 8192, 28672],
+    [4096, 8192, 28672],
+]
 perf_map = []
 for M, N, K in shapes:
     def ladder_gemm(M, N, K, wmma_m, wmma_n, wmma_k):
@@ -172,8 +177,9 @@ for M, N, K in shapes:
     output_args = [args[-1]]
     node = IRNode([None for _ in input_args], args, "ladder_matmul")
     node.add_tag("tensorCoreConfig", [2, 3])
-    node.add_tag("ladder_config", (True, True))
+    node.add_tag("ladder_config", (True, True, 2))
     node.add_tag("consistent_config", (True, False))
+    node.add_tag(("fast_decoding", True))
     # node.add_tag("ladder_config", (False, False))
     output_nodes = [OutputNode(node)]
     policy = LadderPolicy(output_nodes, arch)

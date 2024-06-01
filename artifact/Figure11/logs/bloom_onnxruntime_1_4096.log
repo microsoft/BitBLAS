@@ -1,0 +1,2 @@
+Measure the memory for bloom batch 1 seq 4096 under onnxruntime
+{'bloom_onnxruntime_1_4096': 66008}

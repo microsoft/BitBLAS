@@ -1,0 +1,5 @@
+Running from prebuilt model: /root/Ladder/artifact/Figure8/../checkpoints/Figure8/ladder/checkpoints/vit_fq_0_mxfp_8_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   4.5083       4.5083       4.5086       4.5081       0.0002   
+               

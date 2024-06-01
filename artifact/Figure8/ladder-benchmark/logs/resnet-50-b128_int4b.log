@@ -1,1 +1,5 @@
-Running from prebuilt model: /home/t-leiwang/ladder_workspace/Ladder/artifact/Figure8/../checkpoints/Figure8/ladder/checkpoints/resnet-50_fq_0_int4b_4_ci_False
+Running from prebuilt model: /root/Ladder/artifact/checkpoints/Figure8/ladder/checkpoints/resnet-50_fq_0_int4b_4_ci_False
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   6.1345       6.1343       6.1352       6.1341       0.0004   
+               

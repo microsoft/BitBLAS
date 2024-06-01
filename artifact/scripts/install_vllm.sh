@@ -9,8 +9,8 @@ cd ./baseline_framework/vLLM
 
 git checkout d1690fc997bbe074f007ffe2a6eb83591f7f8c99
 
+export MAX_JOBS=6
+
 pip install -e .
 
 cd ../..
-
-pip install transformers==4.30.0

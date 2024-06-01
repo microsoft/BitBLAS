@@ -1,0 +1,933 @@
+[
+  {
+    "idx": 0,
+    "name": "cast_multiply_0",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            1,
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "mean_add_sqrt_divide_1",
+        "shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float32"
+        ]
+      },
+      {
+        "name": "multiply_cast_multiply_reshape_cast_cast_reshape_2",
+        "shapes": [
+          [
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 1,
+    "name": "mean_add_sqrt_divide_1",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "multiply_cast_multiply_reshape_cast_cast_reshape_2",
+        "shapes": [
+          [
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 2,
+    "name": "multiply_cast_multiply_reshape_cast_cast_reshape_2",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "ladder_quant_linear_cast_3",
+        "shapes": [
+          [
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      },
+      {
+        "name": "ladder_quant_linear_cast_6",
+        "shapes": [
+          [
+            1,
+            1024
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      },
+      {
+        "name": "ladder_quant_linear_cast_15",
+        "shapes": [
+          [
+            1,
+            1024
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 3,
+    "name": "ladder_quant_linear_cast_3",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            8192,
+            1024
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "reshape_reshape_transpose_4",
+        "shapes": [
+          [
+            1,
+            64,
+            1,
+            128
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 4,
+    "name": "reshape_reshape_transpose_4",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5",
+        "shapes": [
+          [
+            64,
+            1,
+            128
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 5,
+    "name": "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_reshape_5",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            1,
+            1,
+            1,
+            128
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      },
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            1,
+            1,
+            1,
+            128
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "nn_batch_matmul_9",
+        "shapes": [
+          [
+            64,
+            1,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 6,
+    "name": "ladder_quant_linear_cast_6",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            1024,
+            1024
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "reshape_reshape_transpose_7",
+        "shapes": [
+          [
+            1,
+            8,
+            1,
+            128
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 7,
+    "name": "reshape_reshape_transpose_7",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8",
+        "shapes": [
+          [
+            64,
+            1,
+            128
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 8,
+    "name": "multiply_strided_slice_negative_strided_slice_concatenate_multiply_add_expand_dims_broadcast_to_reshape_transpose_reshape_transpose_8",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            1,
+            1,
+            1,
+            128
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      },
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            1,
+            1,
+            1,
+            128
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "nn_batch_matmul_9",
+        "shapes": [
+          [
+            64,
+            1,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 9,
+    "name": "nn_batch_matmul_9",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "reshape_divide_10",
+        "shapes": [
+          [
+            1,
+            64,
+            1,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 10,
+    "name": "reshape_divide_10",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "max_11",
+        "shapes": [
+          [
+            1,
+            64,
+            1,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      },
+      {
+        "name": "subtract_exp_12",
+        "shapes": [
+          [
+            1,
+            64,
+            1,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 11,
+    "name": "max_11",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "subtract_exp_12",
+        "shapes": [
+          [
+            1,
+            64,
+            1,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 12,
+    "name": "subtract_exp_12",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "sum_13",
+        "shapes": [
+          [
+            1,
+            64,
+            1,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      },
+      {
+        "name": "divide_cast_cast_reshape_14",
+        "shapes": [
+          [
+            64,
+            1,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 13,
+    "name": "sum_13",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "divide_cast_cast_reshape_14",
+        "shapes": [
+          [
+            64,
+            1,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 14,
+    "name": "divide_cast_cast_reshape_14",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "nn_batch_matmul_17",
+        "shapes": [
+          [
+            64,
+            1,
+            128
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 15,
+    "name": "ladder_quant_linear_cast_15",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            1024,
+            1024
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
+        "shapes": [
+          [
+            64,
+            128,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 16,
+    "name": "reshape_reshape_transpose_expand_dims_broadcast_to_reshape_reshape_transpose_16",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "nn_batch_matmul_17",
+        "shapes": [
+          [
+            64,
+            1,
+            128
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 17,
+    "name": "nn_batch_matmul_17",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "reshape_transpose_reshape_reshape_cast_cast_reshape_18",
+        "shapes": [
+          [
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 18,
+    "name": "reshape_transpose_reshape_reshape_cast_cast_reshape_18",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "ladder_quant_linear_cast_19",
+        "shapes": [
+          [
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 19,
+    "name": "ladder_quant_linear_cast_19",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            8192,
+            1024
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "reshape_add_20",
+        "shapes": [
+          [
+            1,
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 20,
+    "name": "reshape_add_20",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            1,
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "cast_multiply_21",
+        "shapes": [
+          [
+            1,
+            1,
+            8192
+          ],
+          [
+            1,
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float32",
+          "float32"
+        ]
+      },
+      {
+        "name": "reshape_add_30",
+        "shapes": [
+          [
+            1,
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 21,
+    "name": "cast_multiply_21",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "mean_add_sqrt_divide_22",
+        "shapes": [
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "dtypes": [
+          "float32"
+        ]
+      },
+      {
+        "name": "multiply_cast_multiply_23",
+        "shapes": [
+          [
+            1,
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 22,
+    "name": "mean_add_sqrt_divide_22",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "multiply_cast_multiply_23",
+        "shapes": [
+          [
+            1,
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 23,
+    "name": "multiply_cast_multiply_23",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "reshape_cast_cast_reshape_24",
+        "shapes": [
+          [
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 24,
+    "name": "reshape_cast_cast_reshape_24",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "ladder_quant_linear_cast_25",
+        "shapes": [
+          [
+            1,
+            28672
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      },
+      {
+        "name": "ladder_quant_linear_cast_27",
+        "shapes": [
+          [
+            1,
+            28672
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 25,
+    "name": "ladder_quant_linear_cast_25",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            28672,
+            1024
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "reshape_26",
+        "shapes": [
+          [
+            1,
+            1,
+            28672
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 26,
+    "name": "reshape_26",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "sigmoid_multiply_reshape_multiply_reshape_cast_cast_reshape_28",
+        "shapes": [
+          [
+            1,
+            28672
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 27,
+    "name": "ladder_quant_linear_cast_27",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            28672,
+            1024
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "sigmoid_multiply_reshape_multiply_reshape_cast_cast_reshape_28",
+        "shapes": [
+          [
+            1,
+            28672
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 28,
+    "name": "sigmoid_multiply_reshape_multiply_reshape_cast_cast_reshape_28",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "ladder_quant_linear_cast_29",
+        "shapes": [
+          [
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 29,
+    "name": "ladder_quant_linear_cast_29",
+    "inputs": [
+      {
+        "name": "PlaceHolder ",
+        "shapes": [
+          [
+            8192,
+            3584
+          ]
+        ],
+        "dtypes": [
+          "int8"
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "reshape_add_30",
+        "shapes": [
+          [
+            1,
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 30,
+    "name": "reshape_add_30",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "Output ",
+        "shapes": [
+          [
+            1,
+            1,
+            8192
+          ]
+        ],
+        "dtypes": [
+          "float16"
+        ]
+      }
+    ]
+  },
+  {
+    "idx": 31,
+    "name": "Output ",
+    "inputs": [],
+    "outputs": []
+  }
+]

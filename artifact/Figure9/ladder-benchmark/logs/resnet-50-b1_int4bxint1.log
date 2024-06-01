@@ -1,0 +1,452 @@
+/root/Ladder/3rdparty/tvm/python/tvm/target/target.py:397: UserWarning: Try specifying cuda arch by adding 'arch=sm_xx' to your target.
+  warnings.warn("Try specifying cuda arch by adding 'arch=sm_xx' to your target.")
+[23:07:35] /root/Ladder/3rdparty/tvm/src/relay/transforms/convert_layout.cc:99: Warning: Desired layout(s) not specified for op: nn.max_pool2d
+[23:07:35] /root/Ladder/3rdparty/tvm/src/relay/transforms/convert_layout.cc:99: Warning: Desired layout(s) not specified for op: nn.global_avg_pool2d
+82
+Output255, 
+add254, 
+Opaque253, 
+nn.batch_flatten252, layout_transform251, 
+nn.global_avg_pool2d250, 
+nn.relu249, add248, add247, multiply246, nn.conv2d245, 
+nn.relu244, add243, multiply242, nn.conv2d241, 
+nn.relu240, add239, multiply238, nn.conv2d237, 
+nn.relu236, add235, add234, multiply233, nn.conv2d232, 
+nn.relu231, add230, multiply229, nn.conv2d228, 
+nn.relu227, multiply225, add226, nn.conv2d224, 
+nn.relu223, add222, add221, multiply220, nn.conv2d219, 
+add218, multiply217, nn.conv2d216, 
+nn.relu215, add214, multiply213, nn.conv2d212, 
+nn.relu211, add210, multiply209, nn.conv2d208, 
+add205, nn.relu207, multiply204, add206, nn.conv2d203, 
+nn.relu202, add201, multiply200, nn.conv2d199, 
+nn.relu198, add197, multiply196, nn.conv2d195, 
+nn.relu194, add193, add192, multiply191, nn.conv2d190, 
+nn.relu189, multiply187, add188, nn.conv2d186, 
+nn.relu185, add184, multiply183, nn.conv2d182, 
+nn.relu181, add180, add179, multiply178, nn.conv2d177, 
+add175, multiply174, nn.relu176, nn.conv2d173, 
+welder.C2DImplicitGemm72, 
+nn.relu103, add102, multiply101, reshape100, 
+welder.C2DImplicitGemm68, 
+nn.relu98, add97, multiply96, reshape95, 
+welder.C2DImplicitGemm63, 
+nn.relu93, add92, add91, multiply90, reshape89, 
+welder.C2DImplicitGemm58, 
+nn.relu87, add86, multiply85, reshape84, 
+nn.relu77, add76, add75, multiply74, reshape73, add71, multiply70, reshape69, 
+welder.C2DImplicitGemm47, 
+welder.C2DImplicitGemm52, 
+nn.relu82, add81, multiply80, reshape79, 
+nn.relu67, add66, multiply65, reshape64, 
+welder.C2DImplicitGemm42, 
+nn.relu62, add61, multiply60, reshape59, 
+welder.C2DImplicitGemm36, 
+nn.relu57, add56, add55, multiply54, reshape53, 
+welder.C2DImplicitGemm31, 
+layout_transform0, 
+nn.relu41, add40, add39, multiply38, reshape37, 
+welder.C2DImplicitGemm16, 
+welder.C2DImplicitGemm20, 
+nn.relu46, add45, multiply44, reshape43, 
+nn.relu4, multiply2, add3, nn.conv2d1, 
+nn.relu15, add14, multiply13, reshape12, 
+nn.relu10, add9, multiply8, reshape7, 
+welder.C2DImplicitGemm26, 
+nn.relu51, add50, multiply49, reshape48, 
+nn.max_pool2d5, 
+nn.relu25, multiply22, reshape21, add19, multiply18, add24, add23, reshape17, 
+nn.relu35, add34, multiply33, reshape32, 
+welder.C2DImplicitGemm11, 
+welder.C2DImplicitGemm6, 
+add29, multiply28, nn.relu30, reshape27, 
+welder.C2DImplicitGemm78, 
+nn.relu109, add108, add107, multiply106, reshape105, 
+welder.C2DImplicitGemm83, 
+nn.relu114, add113, multiply112, reshape111, 
+welder.C2DImplicitGemm88, 
+nn.relu119, add118, multiply117, reshape116, 
+welder.C2DImplicitGemm94, 
+nn.relu125, add124, add123, multiply122, reshape121, 
+welder.C2DImplicitGemm99, 
+nn.relu130, add129, multiply128, reshape127, 
+welder.C2DImplicitGemm104, 
+welder.C2DImplicitGemm110, 
+welder.C2DImplicitGemm115, 
+welder.C2DImplicitGemm120, 
+welder.C2DImplicitGemm126, 
+nn.relu134, multiply132, add133, nn.conv2d131, 
+add137, multiply136, nn.conv2d135, 
+nn.relu142, add141, add140, multiply139, nn.conv2d138, 
+nn.relu146, add145, multiply144, nn.conv2d143, 
+add149, nn.relu150, multiply148, nn.conv2d147, 
+nn.relu155, add154, add153, multiply152, nn.conv2d151, 
+nn.relu159, add158, multiply157, nn.conv2d156, 
+nn.relu163, add162, multiply161, nn.conv2d160, 
+nn.relu168, add167, add166, multiply165, nn.conv2d164, 
+nn.relu172, multiply170, add171, nn.conv2d169, 
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+conv2d is not optimized for this platform.
+Processing:   0%|          | 0/244 [00:00<?, ?it/s]                                                   2024-05-13 23:08:06 [ladder:INFO]: Tuning ['layout_transform_0', 'nn_conv2d_multiply_add_nn_relu_1']
+Processing:   0%|          | 0/244 [00:00<?, ?it/s]                                                   2024-05-13 23:08:06 [ladder:INFO]: Tuning ['layout_transform_0']
+Processing:   0%|          | 0/244 [00:00<?, ?it/s]                                                   2024-05-13 23:08:35 [ladder:INFO]: result: 0.003297777846455574
+Processing:   0%|          | 0/244 [00:28<?, ?it/s]                                                   2024-05-13 23:08:35 [ladder:INFO]: Fusion group created: 0 ['layout_transform_0']
+Processing:   0%|          | 0/244 [00:28<?, ?it/s]Processing:   1%|          | 2/244 [00:28<58:01, 14.39s/it]                                                           2024-05-13 23:08:35 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_1', 'nn_max_pool2d_2']
+Processing:   1%|          | 2/244 [00:28<58:01, 14.39s/it]                                                           2024-05-13 23:08:35 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_1']
+Processing:   1%|          | 2/244 [00:28<58:01, 14.39s/it]                                                           2024-05-13 23:09:12 [ladder:INFO]: result: 0.02293119952082634
+Processing:   1%|          | 2/244 [01:05<58:01, 14.39s/it]                                                           2024-05-13 23:09:12 [ladder:INFO]: Fusion group created: 1 ['nn_conv2d_multiply_add_nn_relu_1']
+Processing:   1%|          | 2/244 [01:05<58:01, 14.39s/it]Processing:   2%|▏         | 6/244 [01:05<41:47, 10.54s/it]                                                           2024-05-13 23:09:12 [ladder:INFO]: Tuning ['nn_max_pool2d_2', 'welder_C2DImplicitGemm_3', 'welder_C2DImplicitGemm_8']
+Processing:   2%|▏         | 6/244 [01:05<41:47, 10.54s/it]                                                           2024-05-13 23:09:21 [ladder:INFO]: result: 0.018636800348758698
+Processing:   2%|▏         | 6/244 [01:15<41:47, 10.54s/it]                                                           2024-05-13 23:09:21 [ladder:INFO]: Tuning ['nn_max_pool2d_2']
+Processing:   2%|▏         | 6/244 [01:15<41:47, 10.54s/it]                                                           2024-05-13 23:09:47 [ladder:INFO]: result: 0.005700570996850729
+Processing:   2%|▏         | 6/244 [01:41<41:47, 10.54s/it]                                                           2024-05-13 23:09:47 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_3']
+Processing:   2%|▏         | 6/244 [01:41<41:47, 10.54s/it]                                                           2024-05-13 23:10:13 [ladder:INFO]: result: 0.0058026667684316635
+Processing:   2%|▏         | 6/244 [02:06<41:47, 10.54s/it]                                                           2024-05-13 23:10:13 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_8']
+Processing:   2%|▏         | 6/244 [02:06<41:47, 10.54s/it]                                                           2024-05-13 23:10:40 [ladder:INFO]: result: 0.008390399627387524
+Processing:   2%|▏         | 6/244 [02:34<41:47, 10.54s/it]                                                           2024-05-13 23:10:40 [ladder:INFO]: Tuning ['nn_max_pool2d_2', 'welder_C2DImplicitGemm_3', 'reshape_multiply_add_nn_relu_4', 'welder_C2DImplicitGemm_8']
+Processing:   2%|▏         | 6/244 [02:34<41:47, 10.54s/it]                                                           2024-05-13 23:10:40 [ladder:INFO]: Tuning ['nn_max_pool2d_2', 'welder_C2DImplicitGemm_3', 'reshape_multiply_add_nn_relu_4', 'welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6', 'welder_C2DImplicitGemm_7', 'welder_C2DImplicitGemm_8', 'reshape_multiply_add_reshape_multiply_add_add_nn_relu_9']
+Processing:   2%|▏         | 6/244 [02:34<41:47, 10.54s/it]                                                           2024-05-13 23:10:40 [ladder:INFO]: Fusion group created: 2 ['nn_max_pool2d_2', 'welder_C2DImplicitGemm_3', 'welder_C2DImplicitGemm_8']
+Processing:   2%|▏         | 6/244 [02:34<41:47, 10.54s/it]Processing:   3%|▎         | 7/244 [02:34<1:46:11, 26.88s/it]                                                             2024-05-13 23:10:40 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_4', 'welder_C2DImplicitGemm_5']
+Processing:   3%|▎         | 7/244 [02:34<1:46:11, 26.88s/it]                                                             2024-05-13 23:10:40 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_4']
+Processing:   3%|▎         | 7/244 [02:34<1:46:11, 26.88s/it]                                                             2024-05-13 23:11:05 [ladder:INFO]: result: 0.0031621819362044334
+Processing:   3%|▎         | 7/244 [02:59<1:46:11, 26.88s/it]                                                             2024-05-13 23:11:05 [ladder:INFO]: Fusion group created: 3 ['reshape_multiply_add_nn_relu_4']
+Processing:   3%|▎         | 7/244 [02:59<1:46:11, 26.88s/it]Processing:   5%|▍         | 12/244 [02:59<53:18, 13.79s/it]                                                             2024-05-13 23:11:05 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+Processing:   5%|▍         | 12/244 [02:59<53:18, 13.79s/it]                                                            2024-05-13 23:11:21 [ladder:INFO]: result: 0.028680000454187393
+Processing:   5%|▍         | 12/244 [03:15<53:18, 13.79s/it]                                                            2024-05-13 23:11:21 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+Processing:   5%|▍         | 12/244 [03:15<53:18, 13.79s/it]                                                            2024-05-13 23:11:45 [ladder:INFO]: result: 0.014745600521564484
+Processing:   5%|▍         | 12/244 [03:39<53:18, 13.79s/it]                                                            2024-05-13 23:11:45 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_5']
+Processing:   5%|▍         | 12/244 [03:39<53:18, 13.79s/it]                                                            2024-05-13 23:12:14 [ladder:INFO]: result: 0.014534400776028633
+Processing:   5%|▍         | 12/244 [04:07<53:18, 13.79s/it]                                                            2024-05-13 23:12:14 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_6']
+Processing:   5%|▍         | 12/244 [04:07<53:18, 13.79s/it]                                                            2024-05-13 23:12:14 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6', 'welder_C2DImplicitGemm_7']
+Processing:   5%|▍         | 12/244 [04:07<53:18, 13.79s/it]                                                            2024-05-13 23:12:14 [ladder:INFO]: Fusion group created: 4 ['welder_C2DImplicitGemm_5', 'reshape_multiply_add_nn_relu_6']
+Processing:   5%|▍         | 12/244 [04:07<53:18, 13.79s/it]Processing:   6%|▌         | 14/244 [04:07<1:12:55, 19.02s/it]                                                              2024-05-13 23:12:14 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_7', 'reshape_multiply_add_reshape_multiply_add_add_nn_relu_9']
+Processing:   6%|▌         | 14/244 [04:07<1:12:55, 19.02s/it]                                                              2024-05-13 23:12:30 [ladder:INFO]: result: 0.014534400776028633
+Processing:   6%|▌         | 14/244 [04:24<1:12:55, 19.02s/it]                                                              2024-05-13 23:12:30 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_7', 'reshape_multiply_add_reshape_multiply_add_add_nn_relu_9']
+Processing:   6%|▌         | 14/244 [04:24<1:12:55, 19.02s/it]                                                              2024-05-13 23:12:39 [ladder:INFO]: result: 0.014534400776028633
+Processing:   6%|▌         | 14/244 [04:32<1:12:55, 19.02s/it]                                                              2024-05-13 23:12:39 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_7']
+Processing:   6%|▌         | 14/244 [04:32<1:12:55, 19.02s/it]                                                              2024-05-13 23:12:39 [ladder:INFO]: Tuning ['reshape_multiply_add_reshape_multiply_add_add_nn_relu_9']
+Processing:   6%|▌         | 14/244 [04:32<1:12:55, 19.02s/it]                                                              2024-05-13 23:13:06 [ladder:INFO]: result: 0.0049493336118757725
+Processing:   6%|▌         | 14/244 [05:00<1:12:55, 19.02s/it]                                                              2024-05-13 23:13:06 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_7']
+Processing:   6%|▌         | 14/244 [05:00<1:12:55, 19.02s/it]                                                              2024-05-13 23:13:06 [ladder:INFO]: Fusion group created: 5 ['welder_C2DImplicitGemm_7']
+Processing:   6%|▌         | 14/244 [05:00<1:12:55, 19.02s/it]Processing:   8%|▊         | 19/244 [05:00<55:56, 14.92s/it]                                                              2024-05-13 23:13:06 [ladder:INFO]: Tuning ['reshape_multiply_add_reshape_multiply_add_add_nn_relu_9', 'welder_C2DImplicitGemm_10', 'reshape_multiply_add_nn_relu_11', 'welder_C2DImplicitGemm_12', 'reshape_multiply_add_nn_relu_13', 'welder_C2DImplicitGemm_14', 'reshape_multiply_add_add_nn_relu_15']
+Processing:   8%|▊         | 19/244 [05:00<55:56, 14.92s/it]                                                            2024-05-13 23:13:06 [ladder:INFO]: Tuning ['reshape_multiply_add_reshape_multiply_add_add_nn_relu_9']
+Processing:   8%|▊         | 19/244 [05:00<55:56, 14.92s/it]                                                            2024-05-13 23:13:06 [ladder:INFO]: Fusion group created: 6 ['reshape_multiply_add_reshape_multiply_add_add_nn_relu_9']
+Processing:   8%|▊         | 19/244 [05:00<55:56, 14.92s/it]Processing:  11%|█         | 26/244 [05:00<27:47,  7.65s/it]                                                            2024-05-13 23:13:06 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_10', 'reshape_multiply_add_nn_relu_11']
+Processing:  11%|█         | 26/244 [05:00<27:47,  7.65s/it]                                                            2024-05-13 23:13:21 [ladder:INFO]: result: 0.013715200126171112
+Processing:  11%|█         | 26/244 [05:15<27:47,  7.65s/it]                                                            2024-05-13 23:13:21 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_10', 'reshape_multiply_add_nn_relu_11']
+Processing:  11%|█         | 26/244 [05:15<27:47,  7.65s/it]Processing:  11%|█         | 26/244 [05:20<27:47,  7.65s/it]                                                            2024-05-13 23:13:44 [ladder:INFO]: result: 0.009824000298976898
+Processing:  11%|█         | 26/244 [05:38<27:47,  7.65s/it]                                                            2024-05-13 23:13:44 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_10']
+Processing:  11%|█         | 26/244 [05:38<27:47,  7.65s/it]                                                            2024-05-13 23:14:11 [ladder:INFO]: result: 0.009824000298976898
+Processing:  11%|█         | 26/244 [06:05<27:47,  7.65s/it]                                                            2024-05-13 23:14:11 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_11']
+Processing:  11%|█         | 26/244 [06:05<27:47,  7.65s/it]                                                            2024-05-13 23:14:11 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_10', 'reshape_multiply_add_nn_relu_11', 'welder_C2DImplicitGemm_12']
+Processing:  11%|█         | 26/244 [06:05<27:47,  7.65s/it]                                                            2024-05-13 23:14:11 [ladder:INFO]: Fusion group created: 7 ['welder_C2DImplicitGemm_10', 'reshape_multiply_add_nn_relu_11']
+Processing:  11%|█         | 26/244 [06:05<27:47,  7.65s/it]Processing:  11%|█▏        | 28/244 [06:05<42:24, 11.78s/it]                                                            2024-05-13 23:14:11 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_12', 'reshape_multiply_add_nn_relu_13']
+Processing:  11%|█▏        | 28/244 [06:05<42:24, 11.78s/it]                                                            2024-05-13 23:14:11 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_12', 'reshape_multiply_add_nn_relu_13']
+Processing:  11%|█▏        | 28/244 [06:05<42:24, 11.78s/it]                                                            2024-05-13 23:14:11 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_12']
+Processing:  11%|█▏        | 28/244 [06:05<42:24, 11.78s/it]                                                            2024-05-13 23:14:11 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_13']
+Processing:  11%|█▏        | 28/244 [06:05<42:24, 11.78s/it]                                                            2024-05-13 23:14:11 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_12', 'reshape_multiply_add_nn_relu_13', 'welder_C2DImplicitGemm_14']
+Processing:  11%|█▏        | 28/244 [06:05<42:24, 11.78s/it]                                                            2024-05-13 23:14:11 [ladder:INFO]: Fusion group created: 8 ['welder_C2DImplicitGemm_12', 'reshape_multiply_add_nn_relu_13']
+Processing:  11%|█▏        | 28/244 [06:05<42:24, 11.78s/it]                                                            2024-05-13 23:14:11 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_14', 'reshape_multiply_add_add_nn_relu_15']
+Processing:  11%|█▏        | 28/244 [06:05<42:24, 11.78s/it]                                                            2024-05-13 23:14:25 [ladder:INFO]: result: 0.013510400429368019
+Processing:  11%|█▏        | 28/244 [06:19<42:24, 11.78s/it]                                                            2024-05-13 23:14:25 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_14', 'reshape_multiply_add_add_nn_relu_15']
+Processing:  11%|█▏        | 28/244 [06:19<42:24, 11.78s/it]                                                            2024-05-13 23:14:33 [ladder:INFO]: result: 0.014124800451099873
+Processing:  11%|█▏        | 28/244 [06:27<42:24, 11.78s/it]                                                            2024-05-13 23:14:33 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_14']
+Processing:  11%|█▏        | 28/244 [06:27<42:24, 11.78s/it]                                                            2024-05-13 23:14:33 [ladder:INFO]: Tuning ['reshape_multiply_add_add_nn_relu_15']
+Processing:  11%|█▏        | 28/244 [06:27<42:24, 11.78s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: result: 0.004946666769683361
+Processing:  11%|█▏        | 28/244 [06:54<42:24, 11.78s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_14']
+Processing:  11%|█▏        | 28/244 [06:54<42:24, 11.78s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Fusion group created: 9 ['welder_C2DImplicitGemm_14']
+Processing:  11%|█▏        | 28/244 [06:54<42:24, 11.78s/it]Processing:  16%|█▌        | 38/244 [06:54<27:43,  8.08s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['reshape_multiply_add_add_nn_relu_15', 'welder_C2DImplicitGemm_16', 'reshape_multiply_add_nn_relu_17', 'welder_C2DImplicitGemm_18', 'reshape_multiply_add_nn_relu_19', 'welder_C2DImplicitGemm_20', 'reshape_multiply_add_add_nn_relu_21']
+Processing:  16%|█▌        | 38/244 [06:54<27:43,  8.08s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['reshape_multiply_add_add_nn_relu_15']
+Processing:  16%|█▌        | 38/244 [06:54<27:43,  8.08s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Fusion group created: 10 ['reshape_multiply_add_add_nn_relu_15']
+Processing:  16%|█▌        | 38/244 [06:54<27:43,  8.08s/it]Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_16', 'reshape_multiply_add_nn_relu_17']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_16', 'reshape_multiply_add_nn_relu_17']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_16']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_17']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_16', 'reshape_multiply_add_nn_relu_17', 'welder_C2DImplicitGemm_18']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Fusion group created: 11 ['welder_C2DImplicitGemm_16', 'reshape_multiply_add_nn_relu_17']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_18', 'reshape_multiply_add_nn_relu_19']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_18', 'reshape_multiply_add_nn_relu_19']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_18']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_19']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_18', 'reshape_multiply_add_nn_relu_19', 'welder_C2DImplicitGemm_20']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Fusion group created: 12 ['welder_C2DImplicitGemm_18', 'reshape_multiply_add_nn_relu_19']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_20', 'reshape_multiply_add_add_nn_relu_21']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_20', 'reshape_multiply_add_add_nn_relu_21']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_20']
+Processing:  17%|█▋        | 41/244 [06:54<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['reshape_multiply_add_add_nn_relu_21']
+Processing:  17%|█▋        | 41/244 [06:55<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_20']
+Processing:  17%|█▋        | 41/244 [06:55<22:11,  6.56s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Fusion group created: 13 ['welder_C2DImplicitGemm_20']
+Processing:  17%|█▋        | 41/244 [06:55<22:11,  6.56s/it]Processing:  22%|██▏       | 53/244 [06:55<10:04,  3.16s/it]                                                            2024-05-13 23:15:01 [ladder:INFO]: Tuning ['reshape_multiply_add_add_nn_relu_21', 'welder_C2DImplicitGemm_22', 'welder_C2DImplicitGemm_27']
+Processing:  22%|██▏       | 53/244 [06:55<10:04,  3.16s/it]                                                            2024-05-13 23:15:02 [ladder:INFO]: Tuning ['reshape_multiply_add_add_nn_relu_21']
+Processing:  22%|██▏       | 53/244 [06:55<10:04,  3.16s/it]                                                            2024-05-13 23:15:02 [ladder:INFO]: Fusion group created: 14 ['reshape_multiply_add_add_nn_relu_21']
+Processing:  22%|██▏       | 53/244 [06:55<10:04,  3.16s/it]                                                            2024-05-13 23:15:02 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_22', 'reshape_multiply_add_nn_relu_23']
+Processing:  22%|██▏       | 53/244 [06:55<10:04,  3.16s/it]Processing:  22%|██▏       | 53/244 [07:10<10:04,  3.16s/it]                                                            2024-05-13 23:15:17 [ladder:INFO]: result: 0.01576959900557995
+Processing:  22%|██▏       | 53/244 [07:10<10:04,  3.16s/it]                                                            2024-05-13 23:15:17 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_22', 'reshape_multiply_add_nn_relu_23']
+Processing:  22%|██▏       | 53/244 [07:10<10:04,  3.16s/it]                                                            2024-05-13 23:15:39 [ladder:INFO]: result: 0.012895999476313591
+Processing:  22%|██▏       | 53/244 [07:32<10:04,  3.16s/it]                                                            2024-05-13 23:15:39 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_22']
+Processing:  22%|██▏       | 53/244 [07:32<10:04,  3.16s/it]                                                            2024-05-13 23:16:08 [ladder:INFO]: result: 0.012895999476313591
+Processing:  22%|██▏       | 53/244 [08:02<10:04,  3.16s/it]                                                            2024-05-13 23:16:08 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_23']
+Processing:  22%|██▏       | 53/244 [08:02<10:04,  3.16s/it]                                                            2024-05-13 23:16:34 [ladder:INFO]: result: 0.0035813332069665194
+Processing:  22%|██▏       | 53/244 [08:27<10:04,  3.16s/it]                                                            2024-05-13 23:16:34 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_22', 'reshape_multiply_add_nn_relu_23', 'welder_C2DImplicitGemm_24']
+Processing:  22%|██▏       | 53/244 [08:27<10:04,  3.16s/it]                                                            2024-05-13 23:16:34 [ladder:INFO]: Fusion group created: 15 ['welder_C2DImplicitGemm_22', 'reshape_multiply_add_nn_relu_23']
+Processing:  22%|██▏       | 53/244 [08:27<10:04,  3.16s/it]Processing:  24%|██▍       | 58/244 [08:27<21:04,  6.80s/it]                                                            2024-05-13 23:16:34 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_24', 'reshape_multiply_add_nn_relu_25']
+Processing:  24%|██▍       | 58/244 [08:27<21:04,  6.80s/it]                                                            2024-05-13 23:16:51 [ladder:INFO]: result: 0.04044799879193306
+Processing:  24%|██▍       | 58/244 [08:44<21:04,  6.80s/it]                                                            2024-05-13 23:16:51 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_24', 'reshape_multiply_add_nn_relu_25']
+Processing:  24%|██▍       | 58/244 [08:44<21:04,  6.80s/it]                                                            2024-05-13 23:17:16 [ladder:INFO]: result: 0.03140266612172127
+Processing:  24%|██▍       | 58/244 [09:09<21:04,  6.80s/it]                                                            2024-05-13 23:17:16 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_24']
+Processing:  24%|██▍       | 58/244 [09:09<21:04,  6.80s/it]                                                            2024-05-13 23:17:44 [ladder:INFO]: result: 0.02744320034980774
+Processing:  24%|██▍       | 58/244 [09:38<21:04,  6.80s/it]                                                            2024-05-13 23:17:44 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_25']
+Processing:  24%|██▍       | 58/244 [09:38<21:04,  6.80s/it]                                                            2024-05-13 23:18:08 [ladder:INFO]: result: 0.0029279999434947968
+Processing:  24%|██▍       | 58/244 [10:02<21:04,  6.80s/it]                                                            2024-05-13 23:18:08 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_24']
+Processing:  24%|██▍       | 58/244 [10:02<21:04,  6.80s/it]                                                            2024-05-13 23:18:08 [ladder:INFO]: Fusion group created: 16 ['welder_C2DImplicitGemm_24']
+Processing:  24%|██▍       | 58/244 [10:02<21:04,  6.80s/it]Processing:  26%|██▌       | 63/244 [10:02<29:39,  9.83s/it]                                                            2024-05-13 23:18:08 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_25', 'welder_C2DImplicitGemm_26']
+Processing:  26%|██▌       | 63/244 [10:02<29:39,  9.83s/it]                                                            2024-05-13 23:18:18 [ladder:INFO]: result: 0.04668799787759781
+Processing:  26%|██▌       | 63/244 [10:11<29:39,  9.83s/it]                                                            2024-05-13 23:18:18 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_26']
+Processing:  26%|██▌       | 63/244 [10:11<29:39,  9.83s/it]                                                            2024-05-13 23:18:46 [ladder:INFO]: result: 0.010649600066244602
+Processing:  26%|██▌       | 63/244 [10:39<29:39,  9.83s/it]                                                            2024-05-13 23:18:46 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_25']
+Processing:  26%|██▌       | 63/244 [10:39<29:39,  9.83s/it]                                                            2024-05-13 23:18:46 [ladder:INFO]: Fusion group created: 17 ['reshape_multiply_add_nn_relu_25']
+Processing:  26%|██▌       | 63/244 [10:39<29:39,  9.83s/it]Processing:  27%|██▋       | 66/244 [10:39<30:34, 10.31s/it]                                                            2024-05-13 23:18:46 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_26', 'welder_C2DImplicitGemm_27', 'reshape_multiply_add_reshape_multiply_add_add_nn_relu_28']
+Processing:  27%|██▋       | 66/244 [10:39<30:34, 10.31s/it]                                                            2024-05-13 23:18:59 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_26']
+Processing:  27%|██▋       | 66/244 [10:52<30:34, 10.31s/it]                                                            2024-05-13 23:18:59 [ladder:INFO]: Fusion group created: 18 ['welder_C2DImplicitGemm_26']
+Processing:  27%|██▋       | 66/244 [10:52<30:34, 10.31s/it]Processing:  28%|██▊       | 68/244 [10:52<28:38,  9.76s/it]                                                            2024-05-13 23:18:59 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_27', 'reshape_multiply_add_reshape_multiply_add_add_nn_relu_28']
+Processing:  28%|██▊       | 68/244 [10:52<28:38,  9.76s/it]                                                            2024-05-13 23:19:09 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_27', 'reshape_multiply_add_reshape_multiply_add_add_nn_relu_28']
+Processing:  28%|██▊       | 68/244 [11:02<28:38,  9.76s/it]                                                            2024-05-13 23:19:28 [ladder:INFO]: result: 0.019654400646686554
+Processing:  28%|██▊       | 68/244 [11:22<28:38,  9.76s/it]                                                            2024-05-13 23:19:28 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_27']
+Processing:  28%|██▊       | 68/244 [11:22<28:38,  9.76s/it]                                                            2024-05-13 23:19:55 [ladder:INFO]: result: 0.01597439870238304
+Processing:  28%|██▊       | 68/244 [11:49<28:38,  9.76s/it]                                                            2024-05-13 23:19:55 [ladder:INFO]: Tuning ['reshape_multiply_add_reshape_multiply_add_add_nn_relu_28']
+Processing:  28%|██▊       | 68/244 [11:49<28:38,  9.76s/it]                                                            2024-05-13 23:20:23 [ladder:INFO]: result: 0.0038684445898979902
+Processing:  28%|██▊       | 68/244 [12:17<28:38,  9.76s/it]                                                            2024-05-13 23:20:23 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_27', 'reshape_multiply_add_reshape_multiply_add_add_nn_relu_28', 'welder_C2DImplicitGemm_29', 'reshape_multiply_add_nn_relu_30', 'welder_C2DImplicitGemm_31', 'reshape_multiply_add_nn_relu_32', 'welder_C2DImplicitGemm_33', 'reshape_multiply_add_add_nn_relu_34']
+Processing:  28%|██▊       | 68/244 [12:17<28:38,  9.76s/it]                                                            2024-05-13 23:20:23 [ladder:INFO]: Fusion group created: 19 ['welder_C2DImplicitGemm_27', 'reshape_multiply_add_reshape_multiply_add_add_nn_relu_28']
+Processing:  28%|██▊       | 68/244 [12:17<28:38,  9.76s/it]Processing:  29%|██▊       | 70/244 [12:17<44:32, 15.36s/it]                                                            2024-05-13 23:20:23 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_29', 'reshape_multiply_add_nn_relu_30']
+Processing:  29%|██▊       | 70/244 [12:17<44:32, 15.36s/it]                                                            2024-05-13 23:20:40 [ladder:INFO]: result: 0.018835199996829033
+Processing:  29%|██▊       | 70/244 [12:34<44:32, 15.36s/it]                                                            2024-05-13 23:20:40 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_29', 'reshape_multiply_add_nn_relu_30']
+Processing:  29%|██▊       | 70/244 [12:34<44:32, 15.36s/it]                                                            2024-05-13 23:21:04 [ladder:INFO]: result: 0.016172800213098526
+Processing:  29%|██▊       | 70/244 [12:57<44:32, 15.36s/it]                                                            2024-05-13 23:21:04 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_29']
+Processing:  29%|██▊       | 70/244 [12:57<44:32, 15.36s/it]                                                            2024-05-13 23:21:31 [ladder:INFO]: result: 0.014534400776028633
+Processing:  29%|██▊       | 70/244 [13:24<44:32, 15.36s/it]                                                            2024-05-13 23:21:31 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_30']
+Processing:  29%|██▊       | 70/244 [13:24<44:32, 15.36s/it]                                                            2024-05-13 23:21:31 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_29', 'reshape_multiply_add_nn_relu_30', 'welder_C2DImplicitGemm_31']
+Processing:  29%|██▊       | 70/244 [13:24<44:32, 15.36s/it]                                                            2024-05-13 23:21:31 [ladder:INFO]: Fusion group created: 20 ['welder_C2DImplicitGemm_29', 'reshape_multiply_add_nn_relu_30']
+Processing:  29%|██▊       | 70/244 [13:24<44:32, 15.36s/it]Processing:  32%|███▏      | 77/244 [13:24<35:21, 12.70s/it]                                                            2024-05-13 23:21:31 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_31', 'reshape_multiply_add_nn_relu_32']
+Processing:  32%|███▏      | 77/244 [13:24<35:21, 12.70s/it]                                                            2024-05-13 23:21:45 [ladder:INFO]: result: 0.05345280095934868
+Processing:  32%|███▏      | 77/244 [13:39<35:21, 12.70s/it]                                                            2024-05-13 23:21:45 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_31', 'reshape_multiply_add_nn_relu_32']
+Processing:  32%|███▏      | 77/244 [13:39<35:21, 12.70s/it]                                                            2024-05-13 23:22:08 [ladder:INFO]: result: 0.03686400130391121
+Processing:  32%|███▏      | 77/244 [14:02<35:21, 12.70s/it]                                                            2024-05-13 23:22:08 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_31']
+Processing:  32%|███▏      | 77/244 [14:02<35:21, 12.70s/it]                                                            2024-05-13 23:22:34 [ladder:INFO]: result: 0.028677335008978844
+Processing:  32%|███▏      | 77/244 [14:28<35:21, 12.70s/it]                                                            2024-05-13 23:22:34 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_32']
+Processing:  32%|███▏      | 77/244 [14:28<35:21, 12.70s/it]                                                            2024-05-13 23:22:34 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_31']
+Processing:  32%|███▏      | 77/244 [14:28<35:21, 12.70s/it]                                                            2024-05-13 23:22:34 [ladder:INFO]: Fusion group created: 21 ['welder_C2DImplicitGemm_31']
+Processing:  32%|███▏      | 77/244 [14:28<35:21, 12.70s/it]Processing:  34%|███▎      | 82/244 [14:28<34:19, 12.71s/it]                                                            2024-05-13 23:22:34 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_32', 'welder_C2DImplicitGemm_33']
+Processing:  34%|███▎      | 82/244 [14:28<34:19, 12.71s/it]                                                            2024-05-13 23:22:34 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_33']
+Processing:  34%|███▎      | 82/244 [14:28<34:19, 12.71s/it]                                                            2024-05-13 23:22:34 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_32']
+Processing:  34%|███▎      | 82/244 [14:28<34:19, 12.71s/it]                                                            2024-05-13 23:22:34 [ladder:INFO]: Fusion group created: 22 ['reshape_multiply_add_nn_relu_32']
+Processing:  34%|███▎      | 82/244 [14:28<34:19, 12.71s/it]                                                            2024-05-13 23:22:34 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_33', 'reshape_multiply_add_add_nn_relu_34']
+Processing:  34%|███▎      | 82/244 [14:28<34:19, 12.71s/it]                                                            2024-05-13 23:22:43 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_33', 'reshape_multiply_add_add_nn_relu_34']
+Processing:  34%|███▎      | 82/244 [14:36<34:19, 12.71s/it]                                                            2024-05-13 23:23:00 [ladder:INFO]: result: 0.012287999503314495
+Processing:  34%|███▎      | 82/244 [14:54<34:19, 12.71s/it]                                                            2024-05-13 23:23:00 [ladder:INFO]: Tuning ['reshape_multiply_add_add_nn_relu_34']
+Processing:  34%|███▎      | 82/244 [14:54<34:19, 12.71s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: result: 0.003702153917402029
+Processing:  34%|███▎      | 82/244 [15:19<34:19, 12.71s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_33', 'reshape_multiply_add_add_nn_relu_34', 'welder_C2DImplicitGemm_35', 'reshape_multiply_add_nn_relu_36', 'welder_C2DImplicitGemm_37', 'reshape_multiply_add_nn_relu_38', 'welder_C2DImplicitGemm_39', 'reshape_multiply_add_add_nn_relu_40']
+Processing:  34%|███▎      | 82/244 [15:19<34:19, 12.71s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Fusion group created: 23 ['welder_C2DImplicitGemm_33', 'reshape_multiply_add_add_nn_relu_34']
+Processing:  34%|███▎      | 82/244 [15:19<34:19, 12.71s/it]Processing:  36%|███▌      | 87/244 [15:19<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_35', 'reshape_multiply_add_nn_relu_36']
+Processing:  36%|███▌      | 87/244 [15:19<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_35', 'reshape_multiply_add_nn_relu_36']
+Processing:  36%|███▌      | 87/244 [15:19<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_35']
+Processing:  36%|███▌      | 87/244 [15:19<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_36']
+Processing:  36%|███▌      | 87/244 [15:19<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_35', 'reshape_multiply_add_nn_relu_36', 'welder_C2DImplicitGemm_37']
+Processing:  36%|███▌      | 87/244 [15:19<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Fusion group created: 24 ['welder_C2DImplicitGemm_35', 'reshape_multiply_add_nn_relu_36']
+Processing:  36%|███▌      | 87/244 [15:19<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_37', 'reshape_multiply_add_nn_relu_38']
+Processing:  36%|███▌      | 87/244 [15:19<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_37', 'reshape_multiply_add_nn_relu_38']
+Processing:  36%|███▌      | 87/244 [15:20<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_37']
+Processing:  36%|███▌      | 87/244 [15:20<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_38']
+Processing:  36%|███▌      | 87/244 [15:20<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_37']
+Processing:  36%|███▌      | 87/244 [15:20<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Fusion group created: 25 ['welder_C2DImplicitGemm_37']
+Processing:  36%|███▌      | 87/244 [15:20<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_38', 'welder_C2DImplicitGemm_39']
+Processing:  36%|███▌      | 87/244 [15:20<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_39']
+Processing:  36%|███▌      | 87/244 [15:20<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_38']
+Processing:  36%|███▌      | 87/244 [15:20<31:17, 11.96s/it]                                                            2024-05-13 23:23:26 [ladder:INFO]: Fusion group created: 26 ['reshape_multiply_add_nn_relu_38']
+Processing:  36%|███▌      | 87/244 [15:20<31:17, 11.96s/it]Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_39', 'reshape_multiply_add_add_nn_relu_40']
+Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_39', 'reshape_multiply_add_add_nn_relu_40']
+Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['reshape_multiply_add_add_nn_relu_40']
+Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_39', 'reshape_multiply_add_add_nn_relu_40', 'welder_C2DImplicitGemm_41', 'reshape_multiply_add_nn_relu_42', 'welder_C2DImplicitGemm_43', 'reshape_multiply_add_nn_relu_44', 'welder_C2DImplicitGemm_45', 'reshape_multiply_add_add_nn_relu_46']
+Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Fusion group created: 27 ['welder_C2DImplicitGemm_39', 'reshape_multiply_add_add_nn_relu_40']
+Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_41', 'reshape_multiply_add_nn_relu_42']
+Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_41', 'reshape_multiply_add_nn_relu_42']
+Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_41']
+Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_42']
+Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_41', 'reshape_multiply_add_nn_relu_42', 'welder_C2DImplicitGemm_43']
+Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Fusion group created: 28 ['welder_C2DImplicitGemm_41', 'reshape_multiply_add_nn_relu_42']
+Processing:  41%|████      | 100/244 [15:20<13:16,  5.53s/it]Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_43', 'reshape_multiply_add_nn_relu_44']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_43', 'reshape_multiply_add_nn_relu_44']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_43']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_44']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_43']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Fusion group created: 29 ['welder_C2DImplicitGemm_43']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_44', 'welder_C2DImplicitGemm_45']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_45']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_44']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Fusion group created: 30 ['reshape_multiply_add_nn_relu_44']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_45', 'reshape_multiply_add_add_nn_relu_46']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_45', 'reshape_multiply_add_add_nn_relu_46']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['reshape_multiply_add_add_nn_relu_46']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_45', 'reshape_multiply_add_add_nn_relu_46', 'welder_C2DImplicitGemm_47', 'reshape_multiply_add_nn_relu_48', 'nn_conv2d_multiply_add_nn_relu_49', 'nn_conv2d_multiply_add_50', 'nn_conv2d_multiply_add_add_nn_relu_51']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Fusion group created: 31 ['welder_C2DImplicitGemm_45', 'reshape_multiply_add_add_nn_relu_46']
+Processing:  44%|████▍     | 108/244 [15:20<08:30,  3.76s/it]Processing:  48%|████▊     | 117/244 [15:20<05:16,  2.49s/it]                                                             2024-05-13 23:23:26 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_47', 'reshape_multiply_add_nn_relu_48']
+Processing:  48%|████▊     | 117/244 [15:20<05:16,  2.49s/it]                                                             2024-05-13 23:23:40 [ladder:INFO]: result: 0.03501439839601517
+Processing:  48%|████▊     | 117/244 [15:33<05:16,  2.49s/it]                                                             2024-05-13 23:23:40 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_47', 'reshape_multiply_add_nn_relu_48']
+Processing:  48%|████▊     | 117/244 [15:33<05:16,  2.49s/it]Processing:  48%|████▊     | 117/244 [15:40<05:16,  2.49s/it]                                                             2024-05-13 23:24:01 [ladder:INFO]: result: 0.021299200132489204
+Processing:  48%|████▊     | 117/244 [15:55<05:16,  2.49s/it]                                                             2024-05-13 23:24:01 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_47']
+Processing:  48%|████▊     | 117/244 [15:55<05:16,  2.49s/it]                                                             2024-05-13 23:24:28 [ladder:INFO]: result: 0.01966080069541931
+Processing:  48%|████▊     | 117/244 [16:22<05:16,  2.49s/it]                                                             2024-05-13 23:24:28 [ladder:INFO]: Tuning ['reshape_multiply_add_nn_relu_48']
+Processing:  48%|████▊     | 117/244 [16:22<05:16,  2.49s/it]                                                             2024-05-13 23:24:54 [ladder:INFO]: result: 0.003142857225611806
+Processing:  48%|████▊     | 117/244 [16:47<05:16,  2.49s/it]                                                             2024-05-13 23:24:54 [ladder:INFO]: Tuning ['welder_C2DImplicitGemm_47', 'reshape_multiply_add_nn_relu_48', 'nn_conv2d_multiply_add_nn_relu_49']
+Processing:  48%|████▊     | 117/244 [16:47<05:16,  2.49s/it]                                                             2024-05-13 23:24:54 [ladder:INFO]: Fusion group created: 32 ['welder_C2DImplicitGemm_47', 'reshape_multiply_add_nn_relu_48']
+Processing:  48%|████▊     | 117/244 [16:47<05:16,  2.49s/it]Processing:  50%|█████     | 122/244 [16:47<11:32,  5.68s/it]                                                             2024-05-13 23:24:54 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_49', 'nn_conv2d_multiply_add_50']
+Processing:  50%|█████     | 122/244 [16:47<11:32,  5.68s/it]                                                             2024-05-13 23:24:54 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_49']
+Processing:  50%|█████     | 122/244 [16:48<11:32,  5.68s/it]                                                             2024-05-13 23:25:31 [ladder:INFO]: result: 0.06451199948787689
+Processing:  50%|█████     | 122/244 [17:24<11:32,  5.68s/it]                                                             2024-05-13 23:25:31 [ladder:INFO]: Fusion group created: 33 ['nn_conv2d_multiply_add_nn_relu_49']
+Processing:  50%|█████     | 122/244 [17:24<11:32,  5.68s/it]Processing:  53%|█████▎    | 129/244 [17:24<10:39,  5.56s/it]                                                             2024-05-13 23:25:31 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_50', 'nn_conv2d_multiply_add_add_nn_relu_51']
+Processing:  53%|█████▎    | 129/244 [17:24<10:39,  5.56s/it]                                                             2024-05-13 23:50:56 [ladder:INFO]: result: 0.04771200194954872
+Processing:  53%|█████▎    | 129/244 [42:49<10:39,  5.56s/it]                                                             2024-05-13 23:50:56 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_50']
+Processing:  53%|█████▎    | 129/244 [42:49<10:39,  5.56s/it]                                                             2024-05-13 23:51:23 [ladder:INFO]: result: 0.012895999476313591
+Processing:  53%|█████▎    | 129/244 [43:16<10:39,  5.56s/it]                                                             2024-05-13 23:51:23 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_51']
+Processing:  53%|█████▎    | 129/244 [43:16<10:39,  5.56s/it]                                                             2024-05-13 23:51:51 [ladder:INFO]: result: 0.03020000085234642
+Processing:  53%|█████▎    | 129/244 [43:45<10:39,  5.56s/it]                                                             2024-05-13 23:51:51 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_50']
+Processing:  53%|█████▎    | 129/244 [43:45<10:39,  5.56s/it]                                                             2024-05-13 23:51:51 [ladder:INFO]: Fusion group created: 34 ['nn_conv2d_multiply_add_50']
+Processing:  53%|█████▎    | 129/244 [43:45<10:39,  5.56s/it]Processing:  55%|█████▍    | 133/244 [43:45<2:31:29, 81.89s/it]                                                               2024-05-13 23:51:51 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_51', 'nn_conv2d_multiply_add_nn_relu_52', 'nn_conv2d_multiply_add_nn_relu_53', 'nn_conv2d_multiply_add_add_nn_relu_54']
+Processing:  55%|█████▍    | 133/244 [43:45<2:31:29, 81.89s/it]                                                               2024-05-13 23:51:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_51']
+Processing:  55%|█████▍    | 133/244 [43:45<2:31:29, 81.89s/it]                                                               2024-05-13 23:51:52 [ladder:INFO]: Fusion group created: 35 ['nn_conv2d_multiply_add_add_nn_relu_51']
+Processing:  55%|█████▍    | 133/244 [43:45<2:31:29, 81.89s/it]Processing:  56%|█████▌    | 137/244 [43:45<1:54:06, 63.99s/it]                                                               2024-05-13 23:51:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_52', 'nn_conv2d_multiply_add_nn_relu_53']
+Processing:  56%|█████▌    | 137/244 [43:45<1:54:06, 63.99s/it]                                                               2024-05-13 23:51:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_52']
+Processing:  56%|█████▌    | 137/244 [43:45<1:54:06, 63.99s/it]Processing:  56%|█████▌    | 137/244 [44:00<1:54:06, 63.99s/it]                                                               2024-05-13 23:52:19 [ladder:INFO]: result: 0.025388801470398903
+Processing:  56%|█████▌    | 137/244 [44:12<1:54:06, 63.99s/it]                                                               2024-05-13 23:52:19 [ladder:INFO]: Fusion group created: 36 ['nn_conv2d_multiply_add_nn_relu_52']
+Processing:  56%|█████▌    | 137/244 [44:12<1:54:06, 63.99s/it]Processing:  58%|█████▊    | 141/244 [44:12<1:26:28, 50.37s/it]                                                               2024-05-13 23:52:19 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_53', 'nn_conv2d_multiply_add_add_nn_relu_54']
+Processing:  58%|█████▊    | 141/244 [44:12<1:26:28, 50.37s/it]                                                               2024-05-13 23:52:19 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_53']
+Processing:  58%|█████▊    | 141/244 [44:13<1:26:28, 50.37s/it]                                                               2024-05-13 23:52:47 [ladder:INFO]: result: 0.051206398755311966
+Processing:  58%|█████▊    | 141/244 [44:40<1:26:28, 50.37s/it]                                                               2024-05-13 23:52:47 [ladder:INFO]: Fusion group created: 37 ['nn_conv2d_multiply_add_nn_relu_53']
+Processing:  58%|█████▊    | 141/244 [44:40<1:26:28, 50.37s/it]Processing:  59%|█████▉    | 145/244 [44:40<1:04:57, 39.37s/it]                                                               2024-05-13 23:52:47 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_54', 'nn_conv2d_multiply_add_nn_relu_55', 'nn_conv2d_multiply_add_nn_relu_56', 'nn_conv2d_multiply_add_add_nn_relu_57']
+Processing:  59%|█████▉    | 145/244 [44:40<1:04:57, 39.37s/it]                                                               2024-05-13 23:52:47 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_54']
+Processing:  59%|█████▉    | 145/244 [44:40<1:04:57, 39.37s/it]                                                               2024-05-13 23:53:14 [ladder:INFO]: result: 0.013305599801242352
+Processing:  59%|█████▉    | 145/244 [45:08<1:04:57, 39.37s/it]                                                               2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 38 ['nn_conv2d_multiply_add_add_nn_relu_54']
+Processing:  59%|█████▉    | 145/244 [45:08<1:04:57, 39.37s/it]Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                               2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_55', 'nn_conv2d_multiply_add_nn_relu_56']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_55']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 39 ['nn_conv2d_multiply_add_nn_relu_55']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_56', 'nn_conv2d_multiply_add_add_nn_relu_57']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_56']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 40 ['nn_conv2d_multiply_add_nn_relu_56']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_57', 'nn_conv2d_multiply_add_nn_relu_58', 'nn_conv2d_multiply_add_nn_relu_59', 'nn_conv2d_multiply_add_add_nn_relu_60']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_57']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 41 ['nn_conv2d_multiply_add_add_nn_relu_57']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_58', 'nn_conv2d_multiply_add_nn_relu_59']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_58']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 42 ['nn_conv2d_multiply_add_nn_relu_58']
+Processing:  61%|██████    | 149/244 [45:08<48:37, 30.71s/it]Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_59', 'nn_conv2d_multiply_add_add_nn_relu_60']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_59']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 43 ['nn_conv2d_multiply_add_nn_relu_59']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_60', 'nn_conv2d_multiply_add_nn_relu_61', 'nn_conv2d_multiply_add_nn_relu_62', 'nn_conv2d_multiply_add_add_nn_relu_63']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_60']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 44 ['nn_conv2d_multiply_add_add_nn_relu_60']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_61', 'nn_conv2d_multiply_add_nn_relu_62']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_61']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 45 ['nn_conv2d_multiply_add_nn_relu_61']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_62', 'nn_conv2d_multiply_add_add_nn_relu_63']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_62']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 46 ['nn_conv2d_multiply_add_nn_relu_62']
+Processing:  68%|██████▊   | 165/244 [45:08<16:02, 12.19s/it]Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_63', 'nn_conv2d_multiply_add_nn_relu_64', 'nn_conv2d_multiply_add_nn_relu_65', 'nn_conv2d_multiply_add_add_nn_relu_66']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_63']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 47 ['nn_conv2d_multiply_add_add_nn_relu_63']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_64', 'nn_conv2d_multiply_add_nn_relu_65']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_64']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 48 ['nn_conv2d_multiply_add_nn_relu_64']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_65', 'nn_conv2d_multiply_add_add_nn_relu_66']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_65']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Fusion group created: 49 ['nn_conv2d_multiply_add_nn_relu_65']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:14 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_66', 'nn_conv2d_multiply_add_nn_relu_67', 'nn_conv2d_multiply_add_nn_relu_68', 'nn_conv2d_multiply_add_69', 'nn_conv2d_multiply_add_add_nn_relu_70']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:15 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_66']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]                                                             2024-05-13 23:53:15 [ladder:INFO]: Fusion group created: 50 ['nn_conv2d_multiply_add_add_nn_relu_66']
+Processing:  74%|███████▍  | 181/244 [45:08<06:52,  6.55s/it]Processing:  81%|████████  | 197/244 [45:08<03:05,  3.95s/it]                                                             2024-05-13 23:53:15 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_67', 'nn_conv2d_multiply_add_nn_relu_68']
+Processing:  81%|████████  | 197/244 [45:08<03:05,  3.95s/it]                                                             2024-05-13 23:53:15 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_67']
+Processing:  81%|████████  | 197/244 [45:08<03:05,  3.95s/it]Processing:  81%|████████  | 197/244 [45:20<03:05,  3.95s/it]                                                             2024-05-13 23:53:44 [ladder:INFO]: result: 0.03153280168771744
+Processing:  81%|████████  | 197/244 [45:38<03:05,  3.95s/it]                                                             2024-05-13 23:53:44 [ladder:INFO]: Fusion group created: 51 ['nn_conv2d_multiply_add_nn_relu_67']
+Processing:  81%|████████  | 197/244 [45:38<03:05,  3.95s/it]Processing:  82%|████████▏ | 201/244 [45:38<03:08,  4.38s/it]                                                             2024-05-13 23:53:44 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_68', 'nn_conv2d_multiply_add_69']
+Processing:  82%|████████▏ | 201/244 [45:38<03:08,  4.38s/it]                                                             2024-05-13 23:53:44 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_68']
+Processing:  82%|████████▏ | 201/244 [45:38<03:08,  4.38s/it]                                                             2024-05-13 23:54:16 [ladder:INFO]: result: 0.09133440256118774
+Processing:  82%|████████▏ | 201/244 [46:10<03:08,  4.38s/it]                                                             2024-05-13 23:54:16 [ladder:INFO]: Fusion group created: 52 ['nn_conv2d_multiply_add_nn_relu_68']
+Processing:  82%|████████▏ | 201/244 [46:10<03:08,  4.38s/it]Processing:  84%|████████▍ | 205/244 [46:10<03:12,  4.93s/it]                                                             2024-05-13 23:54:16 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_69', 'nn_conv2d_multiply_add_add_nn_relu_70']
+Processing:  84%|████████▍ | 205/244 [46:10<03:12,  4.93s/it]                                                             2024-05-13 23:55:29 [ladder:INFO]: result: 0.08170880377292633
+Processing:  84%|████████▍ | 205/244 [47:23<03:12,  4.93s/it]                                                             2024-05-13 23:55:29 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_69']
+Processing:  84%|████████▍ | 205/244 [47:23<03:12,  4.93s/it]                                                             2024-05-13 23:55:52 [ladder:INFO]: result: 0.025591999292373657
+Processing:  84%|████████▍ | 205/244 [47:46<03:12,  4.93s/it]                                                             2024-05-13 23:55:52 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_70']
+Processing:  84%|████████▍ | 205/244 [47:46<03:12,  4.93s/it]                                                             2024-05-13 23:56:18 [ladder:INFO]: result: 0.05119999870657921
+Processing:  84%|████████▍ | 205/244 [48:11<03:12,  4.93s/it]                                                             2024-05-13 23:56:18 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_69']
+Processing:  84%|████████▍ | 205/244 [48:11<03:12,  4.93s/it]                                                             2024-05-13 23:56:18 [ladder:INFO]: Fusion group created: 53 ['nn_conv2d_multiply_add_69']
+Processing:  84%|████████▍ | 205/244 [48:11<03:12,  4.93s/it]Processing:  86%|████████▌ | 209/244 [48:11<05:30,  9.44s/it]                                                             2024-05-13 23:56:18 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_70', 'nn_conv2d_multiply_add_nn_relu_71', 'nn_conv2d_multiply_add_nn_relu_72', 'nn_conv2d_multiply_add_add_nn_relu_73']
+Processing:  86%|████████▌ | 209/244 [48:11<05:30,  9.44s/it]                                                             2024-05-13 23:56:18 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_70']
+Processing:  86%|████████▌ | 209/244 [48:11<05:30,  9.44s/it]                                                             2024-05-13 23:56:18 [ladder:INFO]: Fusion group created: 54 ['nn_conv2d_multiply_add_add_nn_relu_70']
+Processing:  86%|████████▌ | 209/244 [48:11<05:30,  9.44s/it]Processing:  87%|████████▋ | 213/244 [48:11<03:53,  7.54s/it]                                                             2024-05-13 23:56:18 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_71', 'nn_conv2d_multiply_add_nn_relu_72']
+Processing:  87%|████████▋ | 213/244 [48:11<03:53,  7.54s/it]                                                             2024-05-13 23:56:18 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_71']
+Processing:  87%|████████▋ | 213/244 [48:11<03:53,  7.54s/it]Processing:  87%|████████▋ | 213/244 [48:30<03:53,  7.54s/it]                                                             2024-05-13 23:56:41 [ladder:INFO]: result: 0.03891200199723244
+Processing:  87%|████████▋ | 213/244 [48:35<03:53,  7.54s/it]                                                             2024-05-13 23:56:41 [ladder:INFO]: Fusion group created: 55 ['nn_conv2d_multiply_add_nn_relu_71']
+Processing:  87%|████████▋ | 213/244 [48:35<03:53,  7.54s/it]Processing:  89%|████████▉ | 217/244 [48:35<03:13,  7.15s/it]                                                             2024-05-13 23:56:41 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_72', 'nn_conv2d_multiply_add_add_nn_relu_73']
+Processing:  89%|████████▉ | 217/244 [48:35<03:13,  7.15s/it]                                                             2024-05-13 23:56:41 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_72']
+Processing:  89%|████████▉ | 217/244 [48:35<03:13,  7.15s/it]                                                             2024-05-13 23:57:07 [ladder:INFO]: result: 0.08028160035610199
+Processing:  89%|████████▉ | 217/244 [49:01<03:13,  7.15s/it]                                                             2024-05-13 23:57:07 [ladder:INFO]: Fusion group created: 56 ['nn_conv2d_multiply_add_nn_relu_72']
+Processing:  89%|████████▉ | 217/244 [49:01<03:13,  7.15s/it]Processing:  91%|█████████ | 221/244 [49:01<02:41,  7.00s/it]                                                             2024-05-13 23:57:07 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_73', 'nn_conv2d_multiply_add_nn_relu_74', 'nn_conv2d_multiply_add_nn_relu_75', 'nn_conv2d_multiply_add_add_nn_relu_76']
+Processing:  91%|█████████ | 221/244 [49:01<02:41,  7.00s/it]                                                             2024-05-13 23:57:07 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_73']
+Processing:  91%|█████████ | 221/244 [49:01<02:41,  7.00s/it]                                                             2024-05-13 23:57:31 [ladder:INFO]: result: 0.025401601567864418
+Processing:  91%|█████████ | 221/244 [49:25<02:41,  7.00s/it]                                                             2024-05-13 23:57:31 [ladder:INFO]: Fusion group created: 57 ['nn_conv2d_multiply_add_add_nn_relu_73']
+Processing:  91%|█████████ | 221/244 [49:25<02:41,  7.00s/it]Processing:  92%|█████████▏| 225/244 [49:25<02:07,  6.73s/it]                                                             2024-05-13 23:57:31 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_74', 'nn_conv2d_multiply_add_nn_relu_75']
+Processing:  92%|█████████▏| 225/244 [49:25<02:07,  6.73s/it]                                                             2024-05-13 23:57:31 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_74']
+Processing:  92%|█████████▏| 225/244 [49:25<02:07,  6.73s/it]                                                             2024-05-13 23:57:31 [ladder:INFO]: Fusion group created: 58 ['nn_conv2d_multiply_add_nn_relu_74']
+Processing:  92%|█████████▏| 225/244 [49:25<02:07,  6.73s/it]                                                             2024-05-13 23:57:31 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_75', 'nn_conv2d_multiply_add_add_nn_relu_76']
+Processing:  92%|█████████▏| 225/244 [49:25<02:07,  6.73s/it]                                                             2024-05-13 23:57:31 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_nn_relu_75']
+Processing:  92%|█████████▏| 225/244 [49:25<02:07,  6.73s/it]                                                             2024-05-13 23:57:31 [ladder:INFO]: Fusion group created: 59 ['nn_conv2d_multiply_add_nn_relu_75']
+Processing:  92%|█████████▏| 225/244 [49:25<02:07,  6.73s/it]                                                             2024-05-13 23:57:31 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_76', 'nn_global_avg_pool2d_77']
+Processing:  92%|█████████▏| 225/244 [49:25<02:07,  6.73s/it]                                                             2024-05-13 23:57:54 [ladder:INFO]: result: 0.03091840073466301
+Processing:  92%|█████████▏| 225/244 [49:47<02:07,  6.73s/it]                                                             2024-05-13 23:57:54 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_76']
+Processing:  92%|█████████▏| 225/244 [49:47<02:07,  6.73s/it]                                                             2024-05-13 23:57:54 [ladder:INFO]: Tuning ['nn_global_avg_pool2d_77']
+Processing:  92%|█████████▏| 225/244 [49:47<02:07,  6.73s/it]                                                             2024-05-13 23:58:03 [ladder:INFO]: result: 0.0034443638287484646
+Processing:  92%|█████████▏| 225/244 [49:56<02:07,  6.73s/it]                                                             2024-05-13 23:58:03 [ladder:INFO]: Tuning ['nn_conv2d_multiply_add_add_nn_relu_76']
+Processing:  92%|█████████▏| 225/244 [49:56<02:07,  6.73s/it]                                                             2024-05-13 23:58:03 [ladder:INFO]: Fusion group created: 60 ['nn_conv2d_multiply_add_add_nn_relu_76']
+Processing:  92%|█████████▏| 225/244 [49:56<02:07,  6.73s/it]Processing:  97%|█████████▋| 237/244 [49:56<00:32,  4.59s/it]                                                             2024-05-13 23:58:03 [ladder:INFO]: Tuning ['nn_global_avg_pool2d_77', 'layout_transform_nn_batch_flatten_78']
+Processing:  97%|█████████▋| 237/244 [49:56<00:32,  4.59s/it]                                                             2024-05-13 23:58:07 [ladder:INFO]: result: 0.007460571359843016
+Processing:  97%|█████████▋| 237/244 [50:01<00:32,  4.59s/it]                                                             2024-05-13 23:58:07 [ladder:INFO]: Tuning ['nn_global_avg_pool2d_77', 'layout_transform_nn_batch_flatten_78']
+Processing:  97%|█████████▋| 237/244 [50:01<00:32,  4.59s/it]                                                             2024-05-13 23:58:13 [ladder:INFO]: result: 0.0036571428645402193
+Processing:  97%|█████████▋| 237/244 [50:06<00:32,  4.59s/it]                                                             2024-05-13 23:58:13 [ladder:INFO]: Tuning ['layout_transform_nn_batch_flatten_78']
+Processing:  97%|█████████▋| 237/244 [50:06<00:32,  4.59s/it]                                                             2024-05-13 23:58:21 [ladder:INFO]: result: 0.0024064001627266407
+Processing:  97%|█████████▋| 237/244 [50:14<00:32,  4.59s/it]                                                             2024-05-13 23:58:21 [ladder:INFO]: Fusion group created: 61 ['nn_global_avg_pool2d_77', 'layout_transform_nn_batch_flatten_78']
+Processing:  97%|█████████▋| 237/244 [50:14<00:32,  4.59s/it]Processing:  98%|█████████▊| 238/244 [50:14<00:32,  5.37s/it]                                                             2024-05-13 23:58:21 [ladder:INFO]: Skipping node Opaque_79
+Processing:  98%|█████████▊| 238/244 [50:14<00:32,  5.37s/it]                                                             2024-05-13 23:58:21 [ladder:INFO]: Fusion group created: 62 ['Opaque_79']
+Processing:  98%|█████████▊| 238/244 [50:14<00:32,  5.37s/it]                                                             2024-05-13 23:58:21 [ladder:INFO]: Tuning ['add_80']
+Processing:  98%|█████████▊| 238/244 [50:14<00:32,  5.37s/it]                                                             2024-05-13 23:58:31 [ladder:INFO]: result: 0.0023696841672062874
+Processing:  98%|█████████▊| 238/244 [50:25<00:32,  5.37s/it]                                                             2024-05-13 23:58:31 [ladder:INFO]: Fusion group created: 63 ['add_80']
+Processing:  98%|█████████▊| 238/244 [50:25<00:32,  5.37s/it]Processing: 100%|█████████▉| 243/244 [50:25<00:04,  4.41s/it]Processing: 100%|██████████| 244/244 [50:25<00:00, 12.40s/it]
+Execution time summary:
+ mean (ms)   median (ms)    max (ms)     min (ms)     std (ms)  
+   1.4414       1.4411       1.4436       1.4407       0.0011   
+               
+Tune time: 3029.3952054977417
