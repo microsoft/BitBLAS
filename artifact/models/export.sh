@@ -5,6 +5,7 @@
 
 pip install einops
 pip install timm
+
 pip install onnxconverter-common
 pip install transformers==4.35.0
 
