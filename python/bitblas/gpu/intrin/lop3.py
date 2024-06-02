@@ -1483,7 +1483,11 @@ LOP3_FAST_DECODE_INT2_TO_INT8_TO_INT8_L16_INTRIN = ("lop3_fast_decode_i2_to_int8
 TensorIntrin.register(
     LOP3_FAST_DECODE_INT2_TO_INT8_TO_INT8_L16_INTRIN,
     *get_fast_decode_intrin(
-        source_bit=2, source_format="int", storage_dtype="int8", target_dtype="int8", loops_extent=16),
+        source_bit=2,
+        source_format="int",
+        storage_dtype="int8",
+        target_dtype="int8",
+        loops_extent=16),
 )
 
 LOP3_FAST_DECODE_UINT1_TO_INT8_TO_INT8_L16_INTRIN = ("lop3_fast_decode_u1_to_int8_to_i8_l16_")
@@ -1497,9 +1501,12 @@ LOP3_FAST_DECODE_INT1_TO_INT8_TO_INT8_L16_INTRIN = ("lop3_fast_decode_i1_to_int8
 TensorIntrin.register(
     LOP3_FAST_DECODE_INT1_TO_INT8_TO_INT8_L16_INTRIN,
     *get_fast_decode_intrin(
-        source_bit=1, source_format="int", storage_dtype="int8", target_dtype="int8", loops_extent=16),
+        source_bit=1,
+        source_format="int",
+        storage_dtype="int8",
+        target_dtype="int8",
+        loops_extent=16),
 )
-
 
 LOP3_FAST_DECODE_INT4_TO_INT8_TO_FP16_L8_INTRIN = ("lop3_fast_decode_i4_to_int8_to_f16_l8_")
 TensorIntrin.register(
@@ -1545,6 +1552,32 @@ TensorIntrin.register(
     LOP3_FAST_DECODE_INT2_TO_INT8_TO_FP16_L8_SCALE_INTRIN,
     *get_fast_decode_intrin(
         source_bit=2,
+        storage_dtype="int8",
+        source_format="int",
+        target_dtype="float16",
+        loops_extent=8,
+        with_scale=True,
+    ),
+)
+
+LOP3_FAST_DECODE_INT1_TO_INT8_TO_FP16_L8_INTRIN = ("lop3_fast_decode_i1_to_int8_to_f16_l8_")
+TensorIntrin.register(
+    LOP3_FAST_DECODE_INT1_TO_INT8_TO_FP16_L8_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=1,
+        storage_dtype="int8",
+        source_format="int",
+        target_dtype="float16",
+        loops_extent=8,
+    ),
+)
+
+LOP3_FAST_DECODE_INT1_TO_INT8_TO_FP16_L8_SCALE_INTRIN = (
+    "lop3_fast_decode_i1_to_int8_to_f16_l8_scale_")
+TensorIntrin.register(
+    LOP3_FAST_DECODE_INT1_TO_INT8_TO_FP16_L8_SCALE_INTRIN,
+    *get_fast_decode_intrin(
+        source_bit=1,
         storage_dtype="int8",
         source_format="int",
         target_dtype="float16",

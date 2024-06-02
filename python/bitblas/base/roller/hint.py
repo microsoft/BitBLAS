@@ -6,6 +6,7 @@ from . import PrimFuncNode
 import numpy as np
 from .rasterization import *
 
+
 class TensorCoreExtraConfig:
     """
     This class is used to store extra information for tensorcore
@@ -228,7 +229,8 @@ class Hint(object):
     def complete_config(self, node: PrimFuncNode):
         # analysis pass context, for int8 mma, we should merge static shared memory
         merge_static_smem = False
-        if self.use_tc and self.intrin_info.in_dtype == "int8":
+        # int32 and float32 accum may take too much shared memory
+        if self.use_tc and self.intrin_info.out_dtype in ["float32", "int32"]:
             merge_static_smem = True
         self.pass_context = {"tir.merge_static_smem": merge_static_smem}
         return self

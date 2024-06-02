@@ -297,6 +297,8 @@ class TensorCorePolicy(DefaultPolicy):
         intrin_info = node.get_tag("intrin_info")
         if intrin_info:
             codegen_dict.intrin_info = IntrinInfo(**intrin_info)
+            if intrin_info["out_dtype"] in ["float32"]:
+                codegen_dict.shared_scope = "shared.dyn"
         # smem capacity
         if td.smem_cost > self.arch.smem_cap:
             codegen_dict.shared_scope = "shared.dyn"
