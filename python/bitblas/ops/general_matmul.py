@@ -148,9 +148,18 @@ class MatmulConfig:
             object.__setattr__(self, "zeros_mode", "original")
 
     def __initialize_fast_decoding(self, fast_decoding: Optional[bool]):
+
+        def is_not_fast_decoding_supported():
+            conditions = []
+            conditions.append("int" not in self.W_dtype)
+            conditions.append(self.W_dtype == self.A_dtype)
+            # int8,uint8 also do not implement and also do not require fast decoding
+            conditions.append(self.W_dtype in ["int8", "uint8"])
+            return any(conditions)
+
         if fast_decoding is not None:
             object.__setattr__(self, "fast_decoding", fast_decoding)
-        elif ("int" not in self.W_dtype or self.W_dtype == self.A_dtype):
+        elif is_not_fast_decoding_supported():
             object.__setattr__(self, "fast_decoding", False)
         else:
             object.__setattr__(self, "fast_decoding", True)
@@ -450,7 +459,7 @@ class Matmul(Operator):
         source_format, bit = self.source_format, self.bit
 
         # Process integer source format
-        if source_format == "int":
+        if source_format == "int" and bit < 8:
             assert not self.with_scaling, "scale should be False for int source format"
             assert not self.with_zeros, "zeros should be False for int source format"
             maxq = 2**(bit - 1)

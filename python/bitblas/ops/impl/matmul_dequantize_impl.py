@@ -33,6 +33,7 @@ def matmul_nt_dequantize_b(
     with_bias=False,
     zeros_mode="original",
 ):
+    assert bit in [1, 2, 4, 8], "Unsupported bit: {}".format(bit)
     if not isinstance(M, int):
         M = tvm.te.var("m")
 
@@ -78,13 +79,20 @@ def matmul_nt_dequantize_b(
                 dtype=in_dtype,
             )
         elif source_format == "uint":
-            w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
-                bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
+            if bit == 8:
+                # 8 bit does not need to be compressed
+                w = B[n, k].astype(in_dtype)
+            else:
+                w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
         elif source_format == "int":
             if bit == 1:
                 # Dequantize int1 to -1 and 1. Without this step, the values would be 0 and 1, identical to uint1.
                 w = _tir_packed_int_to_int_convert(storage_type, storage_nbit)(
                     bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
+            elif bit == 8:
+                # 8 bit does not need to be compressed
+                w = B[n, k].astype(in_dtype)
             else:
                 w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
                     bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
@@ -187,6 +195,7 @@ def matmul_nt_dequantize_b_propagate_b(
     zeros_mode="original",
     transform_kind: TransformKind = TransformKind.IntraWarpTransform,
 ):
+    assert bit in [1, 2, 4, 8], "Unsupported bit: {}".format(bit)
     if not isinstance(M, int):
         M = tvm.te.var("m")
 
@@ -241,17 +250,24 @@ def matmul_nt_dequantize_b_propagate_b(
 
     def decode_func(n, k):
         if source_format == "uint":
-            w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
-                bit,
-                B_reindex[n, k // n_float_per_elem],
-                k % n_float_per_elem,
-                dtype=in_dtype,
-            )
+            if bit == 8:
+                # 8 bit does not need to be compressed
+                w = B_reindex[n, k].astype(in_dtype)
+            else:
+                w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    bit,
+                    B_reindex[n, k // n_float_per_elem],
+                    k % n_float_per_elem,
+                    dtype=in_dtype,
+                )
         elif source_format == "int":
             if bit == 1:
                 # Dequantize int1 to -1 and 1. Without this step, the values would be 0 and 1, identical to uint1.
                 w = _tir_packed_int_to_int_convert(storage_type, storage_nbit)(
                     bit, B_reindex[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
+            elif bit == 8:
+                # 8 bit does not need to be compressed
+                w = B_reindex[n, k].astype(in_dtype)
             else:
                 w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
                     bit,
@@ -360,6 +376,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     transform_kind_input: TransformKind = TransformKind.IntraWarpTransform,
     transform_kind_weight: TransformKind = TransformKind.IntraWarpTransform,
 ):
+    assert bit in [1, 2, 4, 8], "Unsupported bit: {}".format(bit)
     if not isinstance(M, int):
         M = tvm.te.var("m")
 
@@ -429,17 +446,24 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
 
     def decode_func(n, k):
         if source_format == "uint":
-            w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
-                bit,
-                B_reindex[n, k // n_float_per_elem],
-                k % n_float_per_elem,
-                dtype=in_dtype,
-            )
+            if bit == 8:
+                # 8 bit does not need to be compressed
+                w = B_reindex[n, k].astype(in_dtype)
+            else:
+                w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    bit,
+                    B_reindex[n, k // n_float_per_elem],
+                    k % n_float_per_elem,
+                    dtype=in_dtype,
+                )
         elif source_format == "int":
             # Dequantize int1 to -1 and 1. Without this step, the values would be 0 and 1, identical to uint1.
             if bit == 1:
                 w = _tir_packed_int_to_int_convert(storage_type, storage_nbit)(
                     bit, B_reindex[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
+            elif bit == 8:
+                # 8 bit does not need to be compressed
+                w = B_reindex[n, k].astype(in_dtype)
             else:
                 w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
                     bit,

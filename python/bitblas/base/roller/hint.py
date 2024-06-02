@@ -6,6 +6,7 @@ from . import PrimFuncNode
 import numpy as np
 from .rasterization import *
 
+
 class TensorCoreExtraConfig:
     """
     This class is used to store extra information for tensorcore
