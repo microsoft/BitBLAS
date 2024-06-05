@@ -99,7 +99,7 @@ def test_matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_d
     torch.random.manual_seed(0)
     matmul_config = MatmulConfigWithSplitK(
         k_split=SplitK,
-        M=M,
+        M=[1, 16],
         N=N,
         K=K,
         A_dtype=A_dtype,
