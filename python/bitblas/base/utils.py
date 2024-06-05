@@ -19,7 +19,7 @@ from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 import tempfile
 import itertools
 from tvm.ir.supply import GlobalVarSupply
-from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4
+from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
 import logging
 
 logger = logging.getLogger(__name__)
@@ -205,6 +205,7 @@ def apply_and_build_parallel(func,
         def tvm_callback_cuda_postproc(code, _):
             code = tensor_replace_dp4a(code)
             code = tensor_remove_make_int4(code)
+            code = tensor_remove_make_int2(code)
             return code
 
         with tvm.transform.PassContext(config={"tir.use_async_copy": True, **config.pass_context}):
