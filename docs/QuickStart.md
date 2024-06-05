@@ -12,6 +12,9 @@ Here is an example for a $W_{INT4}A_{FP16}$ mixed-precision matrix multiplicatio
 import bitblas
 import torch
 
+# enabling debug output
+
+bitblas.set_debug_level("Debug")
 matmul_config = bitblas.MatmulConfig(
     M=1,  # M dimension
     N=1024,  # N dimension
@@ -125,6 +128,9 @@ Here is an example to define a ```bitblas.Linear``` of $W_{INT4}A_{FP16}$:
 import bitblas
 import torch
 
+# enabling debug output
+bitblas.set_debug_level("Debug")
+
 model = bitblas.Linear(
     in_features=1024,
     out_features=1024,
@@ -177,6 +183,9 @@ import torch
 from auto_gptq.nn_modules.qlinear.qlinear_cuda_old import (
     QuantLinear as CudaOldQuantLinear,
 )
+
+# enabling debug output
+bitblas.set_debug_level("Debug")
 
 in_features = 1024
 out_features = 1024

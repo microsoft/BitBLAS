@@ -232,15 +232,18 @@ class Linear(nn.Module):
             A = A.half()
         # can be lifted to post init.
         self.init_params()
-
+        
         if output is None:
             output = torch.empty(
                 A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
         m = ctypes.c_int32(reduce(operator.mul, A.shape[:-1], 1))
         A = self.bitblas_matmul.transform_input(A)
+        stream = torch.cuda.current_stream()
+        
         A_void = ctypes.c_void_p(A.data_ptr())
+        stream_handle = ctypes.c_void_p(stream.cuda_stream)
         # m is the product of the last n - 1 dimensions of A
-        self.bitblas_matmul.lib.call(A_void, *self.q_params, ctypes.c_void_p(output.data_ptr()), m)
+        self.bitblas_matmul.lib.call(A_void, *self.q_params, ctypes.c_void_p(output.data_ptr()), m, stream_handle)
 
         return output
 
