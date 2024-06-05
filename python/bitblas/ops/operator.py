@@ -15,6 +15,7 @@ import numpy as np
 from ..base import fast_tune, fast_tune_with_dynamic_range
 from copy import deepcopy
 from bitblas.base.roller.arch import get_arch
+from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from bitblas.wrapper import CUDASourceWrapper, CUDASourceWrapperWithDynamic
 from dataclasses import dataclass
 from enum import IntEnum
@@ -333,3 +334,33 @@ class Operator(ABC):
     @property
     def prim_func(self):
         return self.prim_func_mod["main"]
+
+
+class OPExecutorCPU:
+    """
+    A class to execute a sequence of operators on the CPU.
+    """
+    def __init__(self, operators: Optional[List[Operator]] = None):
+        if operators is None:
+            operators = []
+        self.operators = operators
+
+    def append(self, op):
+        self.operators.append(op)
+
+    def is_none(self):
+        return len(self.operators) == 0
+
+    def forward(self, weight):
+        inputs = [weight]
+        for op in self.operators:
+            inputs.append(tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
+            inputs = [op.forward(*inputs)]
+        return inputs[-1]
+
+    def __call__(self, *args: Any, **kwds: Any) -> Any:
+        return self.forward(*args, **kwds)
+
+    @property
+    def size(self):
+        return len(self.operators)
