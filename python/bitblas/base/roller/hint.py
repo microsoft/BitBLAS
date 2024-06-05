@@ -211,6 +211,12 @@ class Hint(object):
             setattr(self, k, v)
         return self
 
+    def tensorcore_legalization(self):
+        # only keep the last 2 axes for tensorcore
+        self.warp = self.warp[-2:]
+        self.block = self.block[-2:]
+        return self
+
     @property
     def raxis_order(self) -> List[int]:
         if self._raxis_order != []:
