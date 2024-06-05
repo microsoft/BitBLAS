@@ -10,7 +10,7 @@ from .operator import Operator, TransformKind, OPExecutorCPU
 from .impl.matmul_dequantize_impl import (
     select_implementation as weight_dequantize_implementation,)
 from .impl.matmul_impl import select_implementation as consistent_implementation
-from ..base.utils import tensor_replace_dp4a, tensor_remove_make_int4
+from ..base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
 from bitblas.utils.target_detector import auto_detect_nvidia_target
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
@@ -398,6 +398,7 @@ class Matmul(Operator):
     def post_process(self, code: str) -> str:
         code = tensor_replace_dp4a(code)
         code = tensor_remove_make_int4(code)
+        code = tensor_remove_make_int2(code)
         return code
 
     def retrieve_weight_shape(self):
