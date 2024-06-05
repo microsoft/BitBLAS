@@ -17,10 +17,23 @@ from ..base.analysis import (
     get_reduction_blocks,
 )
 from tvm.target.target import Target
-from tvm.tir import IndexMap
+from tvm.tir import IndexMap, Var
+from tvm.tir.stmt_functor import pre_order_visit
 import logging
 
 logger = logging.getLogger(__name__)
+
+def collect_vars_from_expr(prim_expr):
+    vars = []
+
+    def callback(node):
+        if isinstance(node, Var):
+            vars.append(node)
+        return True
+
+    pre_order_visit(prim_expr, callback)
+
+    return vars
 
 
 def _is_one(x: PrimExpr) -> bool:
@@ -337,9 +350,16 @@ def get_index_map(block: tir.Block,
                 return True
         return False
 
+    def has_common_reduce(var: Var) -> bool:
+        vars = collect_vars_from_expr(var)
+        for v in vars:
+            if is_common_reduce(v):
+                return True
+        return False
+
     def check_last_trait(region: List[Range]):
         axes = get_ordered_axes(region)
-        return is_common_reduce(axes[-1])
+        return has_common_reduce(axes[-1])
 
     def infer_layout(layout: str, region: List[Range], kind: str = "A"):
         """
@@ -583,10 +603,18 @@ def get_tensorized_func_and_tags(
                     return True
             return False
 
+        def has_common_reduce(var: Var) -> bool:
+            vars = collect_vars_from_expr(var)
+            for v in vars:
+                if is_common_reduce(v):
+                    return True
+            return False
+        
         def check_last_trait(region: List[Range]):
             axes = get_ordered_axes(region)
-            return is_common_reduce(axes[-1])
+            return has_common_reduce(axes[-1])
 
+        
         intrin_info: dict = {}
         in_dtype, out_dtype = get_in_out_dtypes(block_stmt)
         intrin_info["in_dtype"] = in_dtype
