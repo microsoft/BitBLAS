@@ -5,14 +5,13 @@ from tvm.target import Target
 import operator
 from functools import reduce
 from bitblas.base.roller.arch.cuda import CUDA
-from typing import Any, List, Literal, Optional, Tuple, Union
-from .operator import Operator, TransformKind
+from typing import Any, Literal, Optional, Tuple, Union
+from .operator import Operator, TransformKind, OPExecutorCPU
 from .impl.matmul_dequantize_impl import (
     select_implementation as weight_dequantize_implementation,)
 from .impl.matmul_impl import select_implementation as consistent_implementation
 from ..base.utils import tensor_replace_dp4a, tensor_remove_make_int4
 from bitblas.utils.target_detector import auto_detect_nvidia_target
-from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 from .lop3_permutate import LOP3Permutate, LOP3PermutateConfig
@@ -40,34 +39,6 @@ NATIVE_COMPUTE_PATTERNS = [
 
 def is_native_compute(A_dtype, W_dtype) -> bool:
     return (A_dtype, W_dtype) in NATIVE_COMPUTE_PATTERNS
-
-
-class OPExecutorCPU:
-
-    def __init__(self, operators: Optional[List[Operator]] = None):
-        if operators is None:
-            operators = []
-        self.operators = operators
-
-    def append(self, op):
-        self.operators.append(op)
-
-    def is_none(self):
-        return len(self.operators) == 0
-
-    def forward(self, weight):
-        inputs = [weight]
-        for op in self.operators:
-            inputs.append(tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
-            inputs = [op.forward(*inputs)]
-        return inputs[-1]
-
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
-        return self.forward(*args, **kwds)
-
-    @property
-    def size(self):
-        return len(self.operators)
 
 
 @dataclass(frozen=True)
@@ -528,9 +499,11 @@ class Matmul(Operator):
             m = reduce(operator.mul, A.shape[:-1], 1)
             args.append(m)
 
+        stream = torch.cuda.current_stream()
+
         if self.lib is None:
             self._forward_from_torch_func(*args)
-        self._forward_from_prebuild_lib(*args)
+        self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
 
         return output
 

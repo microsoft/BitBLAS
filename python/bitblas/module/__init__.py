@@ -11,7 +11,7 @@ import torch.nn as nn
 
 logger = getLogger(__name__)
 
-from typing import List, Union
+from typing import List, Union, Optional
 
 from bitblas.cache import global_operator_cache, get_database_path
 from bitblas import Matmul, MatmulConfig
@@ -67,7 +67,7 @@ class Linear(nn.Module):
         opt_M: Union[int, List[int]] = opt_M,
         # performance related configs
         enable_tuning: bool = True,
-        fast_decoding: bool = True,
+        fast_decoding: Optional[bool] = None,
         propagate_b: bool = False,
     ):
         """
