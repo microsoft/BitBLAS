@@ -6,14 +6,10 @@ from tvm import te, DataType
 from tvm.tir import IndexMap
 from bitblas.ops.operator import TransformKind
 from bitblas.gpu.matmul_analysis import get_propagate_map
-from bitblas.quantization import (
-    _tir_packed_int_to_int_convert,
-    _tir_packed_to_signed_convert,
-    _tir_packed_to_unsigned_convert,
-    _tir_u32_to_f4_to_f16,
-    _tir_u8_to_f8_e4m3_to_f16,
-    _tir_packed_to_unsigned_convert_with_zeros,
-)
+from bitblas.quantization import (_tir_packed_int_to_int_convert, _tir_packed_to_signed_convert,
+                                  _tir_packed_to_unsigned_convert, _tir_u32_to_f4_to_f16,
+                                  _tir_u8_to_f8_e4m3_to_f16)
+
 
 def matmul_nt_dequantize_b(
     Batch,
@@ -47,7 +43,6 @@ def matmul_nt_dequantize_b(
     LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
     Scale = te.placeholder((Batch, N, K // group_size), name="Scale", dtype=in_dtype)
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
-
 
     def decode_func(b, n, k):
         if source_format == "uint":
@@ -187,11 +182,16 @@ def matmul_nt_dequantize_b_propagate_b(
         group_size = K
     qr = r * bit // storage_nbit
     A = te.placeholder((Batch, M, K), name="A", dtype=in_dtype)
-    B = te.placeholder((Batch, N // l, (K // scaling_factor) // qr, l, qr), name="B", dtype=storage_dtype)
+    B = te.placeholder((Batch, N // l, (K // scaling_factor) // qr, l, qr),
+                       name="B",
+                       dtype=storage_dtype)
     LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
     Scale = te.placeholder((Batch, N, K // group_size), name="Scale", dtype=in_dtype)
     Zeros = te.placeholder((Batch, N, K // group_size), name="Zeros", dtype=in_dtype)
-    Bias = te.placeholder((Batch, N,), name="Bias", dtype=in_dtype)
+    Bias = te.placeholder((
+        Batch,
+        N,
+    ), name="Bias", dtype=in_dtype)
 
     def fcompute(b, i, j):
         warp_i, warp_j = i % l, j % qr
@@ -223,7 +223,10 @@ def matmul_nt_dequantize_b_propagate_b(
             if bit == 1:
                 # Dequantize int1 to -1 and 1. Without this step, the values would be 0 and 1, identical to uint1.
                 w = _tir_packed_int_to_int_convert(storage_type, storage_nbit)(
-                    bit, B_reindex[b, n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
+                    bit,
+                    B_reindex[b, n, k // n_float_per_elem],
+                    k % n_float_per_elem,
+                    dtype=in_dtype)
             elif bit == 8:
                 # 8 bit does not need to be compressed
                 w = B_reindex[b, n, k].astype(in_dtype)

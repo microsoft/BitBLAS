@@ -3,7 +3,7 @@
 from tvm.target import Target
 import operator
 from functools import reduce
-from typing import Any, Optional,  Union
+from typing import Any, Optional, Union
 from .operator import TransformKind
 from .impl.matmul_splitk_impl import select_implementation as consistent_implementation
 from .impl.matmul_dequantize_splitk_impl import select_implementation as weight_dequantize_implementation
@@ -17,9 +17,10 @@ logger = logging.getLogger(__name__)
 
 WORKSPACE_SIZE = 1024 * 1024 * 256
 
+
 @dataclass(frozen=True)
 class MatmulConfigWithSplitK(MatmulConfig):
-    k_split: int = 1 # split K dimension
+    k_split: int = 1  # split K dimension
 
 
 class MatmulWithSplitK(Matmul):
@@ -158,8 +159,10 @@ class MatmulWithSplitK(Matmul):
             args.append(self.lut)
 
         if output is None:
-            output = torch.empty((self.k_split, ) + 
-                A.shape[:-1] + (self.N,), dtype=self.torch_output_dtype, device=A.device)
+            output = torch.empty(
+                (self.k_split,) + A.shape[:-1] + (self.N,),
+                dtype=self.torch_output_dtype,
+                device=A.device)
         if scale is not None:
             args.append(scale)
         if zeros is not None:
@@ -171,7 +174,7 @@ class MatmulWithSplitK(Matmul):
         if self.dynamic_range is not None:
             m = reduce(operator.mul, A.shape[:-1], 1)
             args.append(m)
-        
+
         stream = torch.cuda.current_stream()
 
         if self.lib is None:

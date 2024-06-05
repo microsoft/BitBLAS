@@ -289,7 +289,7 @@ class Operator(ABC):
         ]
         ctypes_args.append(ctypes.c_void_p(stream))
         self.lib.call(*ctypes_args)
-    
+
     def call_lib(self, *args, stream=0):
         self.lib.call(*args, ctypes.c_void_p(stream))
 
@@ -340,6 +340,7 @@ class OPExecutorCPU:
     """
     A class to execute a sequence of operators on the CPU.
     """
+
     def __init__(self, operators: Optional[List[Operator]] = None):
         if operators is None:
             operators = []

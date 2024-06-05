@@ -3,7 +3,6 @@
 # pre-transformed tir expression of matmul
 import tvm
 from tvm import te
-from bitblas.gpu.matmul_analysis import get_propagate_map
 from bitblas.ops.operator import TransformKind
 
 
@@ -27,7 +26,8 @@ def matmul_nt(
     k = te.reduce_axis((0, K), name="k")
     C = te.compute(
         (Batch, M, N),
-        lambda b, i, j: te.sum(A[b, i, k].astype(accum_dtype) * B[b, j, k].astype(accum_dtype), axis=k),
+        lambda b, i, j: te.sum(
+            A[b, i, k].astype(accum_dtype) * B[b, j, k].astype(accum_dtype), axis=k),
         name="C",
     )
     last_output = C

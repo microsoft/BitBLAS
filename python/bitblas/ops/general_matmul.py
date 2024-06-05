@@ -40,6 +40,7 @@ NATIVE_COMPUTE_PATTERNS = [
 def is_native_compute(A_dtype, W_dtype) -> bool:
     return (A_dtype, W_dtype) in NATIVE_COMPUTE_PATTERNS
 
+
 @dataclass(frozen=True)
 class MatmulConfig:
     M: Union[int, Tuple[int]] = None
@@ -497,7 +498,7 @@ class Matmul(Operator):
         if self.dynamic_range is not None:
             m = reduce(operator.mul, A.shape[:-1], 1)
             args.append(m)
-        
+
         stream = torch.cuda.current_stream()
 
         if self.lib is None:

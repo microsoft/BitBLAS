@@ -8,7 +8,7 @@ from enum import Enum
 from typing import List, Optional, Set, Union, Tuple, Dict
 from tvm import tir
 from tvm.ir import Range
-from tvm.tir import IterVar, PrimExpr, Var, BufferRegion
+from tvm.tir import IterVar, PrimExpr, Var, BufferRegion, IndexMap
 from tvm.tir.analysis import undefined_vars
 from tvm.tir.schedule.schedule import BlockRV
 from ..base.analysis import (
@@ -17,11 +17,11 @@ from ..base.analysis import (
     get_reduction_blocks,
 )
 from tvm.target.target import Target
-from tvm.tir import IndexMap, Var
 from tvm.tir.stmt_functor import pre_order_visit
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 def collect_vars_from_expr(prim_expr):
     vars = []
@@ -352,10 +352,7 @@ def get_index_map(block: tir.Block,
 
     def has_common_reduce(var: Var) -> bool:
         vars = collect_vars_from_expr(var)
-        for v in vars:
-            if is_common_reduce(v):
-                return True
-        return False
+        return any(is_common_reduce(v) for v in vars)
 
     def check_last_trait(region: List[Range]):
         axes = get_ordered_axes(region)
@@ -605,16 +602,12 @@ def get_tensorized_func_and_tags(
 
         def has_common_reduce(var: Var) -> bool:
             vars = collect_vars_from_expr(var)
-            for v in vars:
-                if is_common_reduce(v):
-                    return True
-            return False
-        
+            return any(is_common_reduce(v) for v in vars)
+
         def check_last_trait(region: List[Range]):
             axes = get_ordered_axes(region)
             return has_common_reduce(axes[-1])
 
-        
         intrin_info: dict = {}
         in_dtype, out_dtype = get_in_out_dtypes(block_stmt)
         intrin_info["in_dtype"] = in_dtype

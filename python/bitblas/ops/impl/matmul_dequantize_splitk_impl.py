@@ -2,18 +2,11 @@
 # Licensed under the MIT License.
 # pre-transformed tir expression of matmul
 import tvm
-from tvm import te, DataType
-from tvm.tir import IndexMap
-from bitblas.ops.operator import TransformKind
-from bitblas.gpu.matmul_analysis import get_propagate_map
-from bitblas.quantization import (
-    _tir_packed_int_to_int_convert,
-    _tir_packed_to_signed_convert,
-    _tir_packed_to_unsigned_convert,
-    _tir_u32_to_f4_to_f16,
-    _tir_u8_to_f8_e4m3_to_f16,
-    _tir_packed_to_unsigned_convert_with_zeros,
-)
+from tvm import te
+from bitblas.quantization import (_tir_packed_int_to_int_convert, _tir_packed_to_signed_convert,
+                                  _tir_packed_to_unsigned_convert, _tir_u32_to_f4_to_f16,
+                                  _tir_u8_to_f8_e4m3_to_f16)
+
 
 def matmul_nt_dequantize_b(
     SplitK,
@@ -47,7 +40,6 @@ def matmul_nt_dequantize_b(
     LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
     Scale = te.placeholder((N, K // group_size), name="Scale", dtype=in_dtype)
     Bias = te.placeholder((N,), name="Bias", dtype=in_dtype)
-
 
     def decode_func(n, k):
         if source_format == "uint":
@@ -98,7 +90,8 @@ def matmul_nt_dequantize_b(
     C = te.compute(
         (SplitK, M, N),
         lambda sk, i, j: te.sum(
-            A[i, sk * RK + k].astype(accum_dtype) * B_decode[j, sk * RK + k].astype(accum_dtype), axis=k),
+            A[i, sk * RK + k].astype(accum_dtype) * B_decode[j, sk * RK + k].astype(accum_dtype),
+            axis=k),
         name="C",
     )
     D = te.compute((SplitK, M, N), lambda b, i, j: C[b, i, j].astype(out_dtype), name="D")
