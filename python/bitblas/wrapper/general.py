@@ -287,7 +287,10 @@ class CUDASourceWrapper(object):
         # Determine the shared memory size, defaulting to 0 if not specified
         smem_str = 0 if self.dynamic_smem_buf is None else self.dynamic_smem_buf
         # Format the CUDA kernel launch string
-        call_str = "if ({} == 0) return; \n\t\t".format(list(dynamic_symbolic_set)[0])
+        if len(dynamic_symbolic_set) != 0:
+            call_str = "if ({} == 0) return; \n\t\t".format(list(dynamic_symbolic_set)[0])
+        else:
+            call_str = ""
         call_str += "{}<<<{}, {}, {}, stream>>>({});".format(function_name, grid_str, block_str, smem_str,
                                                        call_args)
         # Create the host function wrapper for the CUDA kernel
