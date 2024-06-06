@@ -775,7 +775,8 @@ class GEMV(GPUScheduleRule):
             return None
 
         block_info = block_infos[0]
-        if len(block_info.iters) not in [2, 3]:
+        if len(block_info.iters) not in [2, 3, 4]:
+            # either [SK, B, S, R] = [SK, B, S, R] * [SK, B, R]
             # either [B, S, R] = [B, S, R] * [B, R]
             # or [S, R] = [S, R] * [R]
             return None

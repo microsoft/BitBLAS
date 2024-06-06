@@ -110,6 +110,11 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         if len(sch.get_loops(block_b)) == 3:
             i = sch.get_loops(block_b)[0]
             sch.bind(i, "blockIdx.z")
+        elif len(sch.get_loops(block_b)) == 4:
+            # splitk case
+            sk, i = sch.get_loops(block_b)[:2]
+            sch.bind(sk, "blockIdx.y")
+            sch.bind(i, "blockIdx.z")
 
         # get target dequantize buffer's idx
         def get_idx(weight_decode_info: Dict):
@@ -274,6 +279,14 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
         if len(sch.get_loops(block_b)) == 3:
             i = sch.get_loops(block_b)[0]
             sch.bind(i, "blockIdx.z")
+        elif len(sch.get_loops(block_b)) == 4:
+            # splitk case
+            sk, i = sch.get_loops(block_b)[:2]
+            sch.bind(sk, "blockIdx.y")
+            sch.bind(i, "blockIdx.z")
+            assert len(config.thread) == 2, "SplitK only support 2D thread config"
+            num_warps = int(num_warps // config.thread[0])
+
 
         # get target dequantize buffer's idx
         def get_idx(weight_decode_info: Dict):
