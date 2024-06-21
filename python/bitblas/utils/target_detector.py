@@ -35,7 +35,7 @@ def get_gpu_model_from_nvidia_smi(gpu_id: int = 0):
 
     gpus = output.split("\n")
 
-    # for multiple cpus, CUDA_DEVICE_ORDER=PCI_BUS_ID must be set to match nvidia-smi or else wrong
+    # for multiple gpus, CUDA_DEVICE_ORDER=PCI_BUS_ID must be set to match nvidia-smi or else wrong
     # gpu is returned for gpu_id
     if len(gpus) > 0 and os.environ.get("CUDA_DEVICE_ORDER") != "PCI_BUS_ID":
         raise EnvironmentError("Multi-gpu environment must set `CUDA_DEVICE_ORDER=PCI_BUS_ID`.")
