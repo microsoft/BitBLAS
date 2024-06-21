@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
+import os
 import subprocess
 from typing import List
 from thefuzz import process
@@ -33,9 +33,14 @@ def get_gpu_model_from_nvidia_smi(gpu_id: int = 0):
         logger.info("nvidia-smi failed with error: %s", e)
         return None
 
-    # Return the name of the first GPU if multiple are present
-    return output.split("\n")[0]
+    result = output.split("\n")
 
+    # for multiple cpus, CUDA_DEVICE_ORDER=PCI_BUS_ID must be set to match nvidia-smi or else gpu_id is
+    # most likely incorrect and the wrong gpu
+    if len(result) > 0 and os.environ.get("CUDA_DEVICE_ORDER") != 'PCI_BUS_ID':
+        raise EnvironmentError("Multi-gpu environment must set `CUDA_DEVICE_ORDER=PCI_BUS_ID`.")
+
+    return result[0]
 
 def find_best_match(tags, query):
     """
