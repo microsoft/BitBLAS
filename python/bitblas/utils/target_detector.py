@@ -40,6 +40,9 @@ def get_gpu_model_from_nvidia_smi(gpu_id: int = 0):
     if len(result) > 0 and os.environ.get("CUDA_DEVICE_ORDER") != "PCI_BUS_ID":
         raise EnvironmentError("Multi-gpu environment must set `CUDA_DEVICE_ORDER=PCI_BUS_ID`.")
 
+    if gpu_id >= len(result) or gpu_id < 0:
+        raise ValueError(f"Passed gpu_id:{gpu_id} but there are {len(result)} detected Nvidia gpus.")
+
     return result[0]
 
 def find_best_match(tags, query):
