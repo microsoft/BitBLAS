@@ -40,6 +40,7 @@ from .module import Linear  # noqa: F401
 import logging
 from tqdm import tqdm
 
+
 class TqdmLoggingHandler(logging.Handler):
     """ Custom logging handler that directs log output to tqdm progress bar to avoid interference. """
 
@@ -61,6 +62,7 @@ def set_log_level(level):
     
     Args:
         level (str or int): Can be the string name of the level (e.g., 'INFO') or the actual level (e.g., logging.INFO).
+        OPTIONS: 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
     """
     if isinstance(level, str):
         level = getattr(logging, level.upper(), logging.INFO)

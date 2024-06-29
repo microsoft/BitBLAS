@@ -154,18 +154,20 @@ class Hint(object):
         self.arch = None
         self.use_tc = None  # todo(lei): this should be renamed.
 
-        # special axes tiling info
+        # Special axes tiling info
         self.block = []
         self.thread = []
-        # special axes for tensorCore
+        # Special axes for MMA
         self.warp = []
-        # reduce axes tiling info
+        # Reduce axes tiling info
         self.rstep = []
         self.reduce_thread = []
         self.rasterization_plan = NoRasterization()
         self.cached_tensors = []
         self.output_strides = {}
         self.schedule_stages = None
+        # Config for block reduction
+        self.block_reduction_depth = None  # type: int
 
         # Experimental
         self._raxis_order = []
