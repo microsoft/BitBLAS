@@ -66,7 +66,7 @@ def _bind_thread_based_on_config(sch, block, block_row_warps, block_col_warps, w
 
 
 def _bind_thread_based_with_block_reduce_on_config(sch, block, block_row_warps, block_col_warps,
-                                                   warp_size):
+                                                   warp_size, reduce_k):
     # assume the block loops has been fused
     last_loop = sch.get_loops(block)[-1]
     loop_extent = sch.get(last_loop).extent
@@ -105,6 +105,11 @@ def _bind_thread_based_with_block_reduce_on_config(sch, block, block_row_warps, 
         sch.bind(B_shared_ty, "threadIdx.y")
     elif B_shared_ty:
         sch.bind(B_shared_ty, "threadIdx.y")
+    
+    if loop_extent // reduce_k >= 1 and loop_extent % reduce_k == 0:
+        last_loop, B_shared_tk = sch.split(last_loop, factors=[None, reduce_k])
+        sch.bind(B_shared_tk, "threadIdx.z")
+        loop_extent = sch.get(last_loop).extent
 
     sch.unroll(last_loop)
     sch.annotate(last_loop, "pragma_unroll_explicit", False)
@@ -662,7 +667,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
     def sch_dequantize_in_register_with_config(
         self,
         func: tir.PrimFunc,
-        config,
+        config: Hint,
     ):
         """
         For devices without async copy, we can use a simple dequantize schedule without shared memory prefetch.
@@ -1151,7 +1156,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
     def sch_shared_memory_prefetch_with_config(
         self,
         func: tir.PrimFunc,
-        config,
+        config: Hint,
     ):
         """
         For A100 Like devices, the shared memory prefetch(async) is required
@@ -1167,10 +1172,13 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 V
             compute
         """
+        if hasattr(config, "block_reduction_depth") and config.block_reduction_depth is not None:
+            return self.sch_shared_memory_prefetch_block_reduction_with_config(func, config)
+
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
             get_mma_intrin_group,)
         from .intrin import get_lop3_intrin_group
-
+        
         import_source: List[str] = []
 
         sch = tir.Schedule(func)
@@ -1704,10 +1712,10 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             )
         return sch
 
-    def sch_shared_memory_prefetch_with_block_reduce_with_config(
+    def sch_shared_memory_prefetch_block_reduction_with_config(
         self,
         func: tir.PrimFunc,
-        config,
+        config: Hint,
     ):
         """
         For A100 Like devices, the shared memory prefetch(async) is required
@@ -1799,8 +1807,10 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         block_col_warps = config.block[1] // warp_col_tiles
         stage = config.pipeline_stage
         use_async = config.use_async
+        assert (config.block_reduction_depth is not None), "block_reduction_depth is required"
         chunk = config.rstep[0]
-        reduce_k = 1
+        reduce_k = config.block_reduction_depth
+        chunk = config.rstep[0] // reduce_k
 
         micro_size_x, micro_size_y, micro_size_k = intrin_group["micro_kernel"]
 
@@ -1932,14 +1942,14 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         i_factors, j_factors, k_factors = (
             [None, 1, block_row_warps, warp_row_tiles // micro_size_x],
             [1, None, block_col_warps, warp_col_tiles // micro_size_y],
-            [reduce_k, None, chunk // micro_size_k],
+            [None, (reduce_k * chunk) // micro_size_k],
         )
 
         num_ty = i_factors[2]
         num_tz = j_factors[2]
         x_pad_factor = i_factors[2] * i_factors[3]
         y_pad_factor = j_factors[2] * j_factors[3]
-        k_pad_factor = k_factors[2]
+        k_pad_factor = k_factors[1]
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
         if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):
@@ -1973,9 +1983,10 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
         i0, i1, i2, i3 = sch.split(i, factors=i_factors)
         j0, j1, j2, j3 = sch.split(j, factors=j_factors)
-        kr, k0, k1 = sch.split(k, k_factors)
+        k0, k1 = sch.split(k, k_factors)
+        k0, kr = sch.split(k0, [None, reduce_k])
 
-        sch.reorder(i0, j0, i1, j1, i2, j2, k0, k1, i3, j3)
+        sch.reorder(i0, j0, i1, j1, i2, j2, kr, k0, k1, i3, j3)
 
         block_idy = sch.fuse(i0, j0)
         block_idx = sch.fuse(i1, j1)
@@ -1985,8 +1996,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         sch.bind(batch, "blockIdx.z")
         sch.bind(block_idx, "blockIdx.x")
         sch.bind(block_idy, "blockIdx.y")
-        thread_idy = sch.fuse(thread_idy, thread_idz)
-        j2 = thread_idy
+        thread_idz = j2 = thread_idy = sch.fuse(thread_idy, thread_idz)
         sch.bind(thread_idy, "threadIdx.y")
         sch.bind(kr, "threadIdx.z")
 
@@ -2020,12 +2030,13 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             ndim = len(sch.get(block_read).iter_vars)
             fused = sch.fuse(*sch.get_loops(block_read)[-ndim:])
 
-            f_0, f_1, f_2, f_3, f_4 = sch.split(
-                fused, factors=[None, num_ty, num_tz, warp_size, vec_len])
+            f_0, f_r, f_1, f_2, f_3, f_4 = sch.split(
+                fused, factors=[None, reduce_k, num_ty, num_tz, warp_size, vec_len])
 
             sch.bind(f_3, "threadIdx.x")
-            f_1 = sch.fuse(f_1, f_2)
+            f_1 = f_2 = sch.fuse(f_1, f_2)
             sch.bind(f_1, "threadIdx.y")
+            sch.bind(f_r, "threadIdx.z")
             sch.vectorize(f_4)
             sch.unroll(f_0)
             sch.annotate(f_0, "pragma_unroll_explicit", False)
@@ -2131,7 +2142,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 pad_offset = 8 if intrin_info.in_dtype == "float16" else 16
                 sch.storage_align(block_shared, 0, axis=-2, factor=16, offset=pad_offset)
             sch.bind(B_shared_tx, "threadIdx.x")
-            B_shared_ty = sch.fuse(B_shared_ty, B_shared_tz)
+            B_shared_tz = B_shared_ty = sch.fuse(B_shared_ty, B_shared_tz)
             sch.bind(B_shared_ty, "threadIdx.y")
             sch.vectorize(sch.get_loops(block_shared)[-1])
             sch.vectorize(sch.get_loops(block_shared_local_local)[-1])
@@ -2141,7 +2152,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             _ = sch.fuse(*sch.get_loops(block_shared_local_local_shared)[-ndim:])
 
             _bind_thread_based_with_block_reduce_on_config(sch, block_shared_local_local_shared,
-                                                           num_ty, num_tz, warp_size)
+                                                           num_ty, num_tz, warp_size, reduce_k)
 
             # cache small tensors, e.g. LUT
             if b_idx:
@@ -2266,7 +2277,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
     def apply_config(  # pylint: disable=too-many-locals,missing-docstring
         self,
         func: tir.PrimFunc,
-        config,
+        config: Hint,
     ) -> Optional[tir.Schedule]:
 
         def check_sm_version(arch: str) -> int:

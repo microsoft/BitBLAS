@@ -708,7 +708,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
     ) -> Optional[tir.Schedule]:
         if "dequantize_info" in func.attrs:
             dequantize_rule = MatmulTensorizationMMAWithDequantizeInfo()
-            return dequantize_rule.apply_config(func, config)
+            return dequantize_rule.sch_shared_memory_prefetch_block_reduction_with_config(func, config)
 
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
             get_mma_intrin_group,)
@@ -896,12 +896,13 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             ndim = len(sch.get(block_read).iter_vars)
             fused = sch.fuse(*sch.get_loops(block_read)[-ndim:])
 
-            f_0, f_1, f_2, f_3, f_4 = sch.split(
-                fused, factors=[num_ty, num_tz, None, warp_size, vec_len])
+            f_r, f_0, f_1, f_2, f_3, f_4 = sch.split(
+                fused, factors=[reduce_k, num_ty, num_tz, None, warp_size, vec_len])
 
             sch.bind(f_3, "threadIdx.x")
             f_0 = f_1 = sch.fuse(f_0, f_1)
             sch.bind(f_0, "threadIdx.y")
+            sch.bind(f_r, "threadIdx.z")
             sch.vectorize(f_4)
             sch.unroll(f_2)
             # Apply Swizzling
