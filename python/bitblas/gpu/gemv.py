@@ -21,7 +21,7 @@
 # Modifications Copyright (c) Microsoft.
 # The code below is mostly copied from apache/tvm gemv.py in dlight.
 """A rule for GEMV and DecodeGEMV."""
-import re
+
 from functools import reduce
 from typing import List, Optional, Union, Dict
 

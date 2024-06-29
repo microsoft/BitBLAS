@@ -1579,7 +1579,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
             sch.compute_at(block_shared_local_local_shared, k0, preserve_unit_loops=True)
             ndim = len(sch.get(block_shared_local_local_shared).iter_vars)
-            fused = sch.fuse(*sch.get_loops(block_shared_local_local_shared)[-ndim:])
+            _ = sch.fuse(*sch.get_loops(block_shared_local_local_shared)[-ndim:])
 
             _bind_thread_based_on_config(sch, block_shared_local_local_shared, num_ty, num_tz,
                                          warp_size)
@@ -2138,7 +2138,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
             sch.compute_at(block_shared_local_local_shared, k0, preserve_unit_loops=True)
             ndim = len(sch.get(block_shared_local_local_shared).iter_vars)
-            fused = sch.fuse(*sch.get_loops(block_shared_local_local_shared)[-ndim:])
+            _ = sch.fuse(*sch.get_loops(block_shared_local_local_shared)[-ndim:])
 
             _bind_thread_based_with_block_reduce_on_config(sch, block_shared_local_local_shared,
                                                            num_ty, num_tz, warp_size)
