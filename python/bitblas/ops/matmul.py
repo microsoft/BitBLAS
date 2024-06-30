@@ -7,7 +7,7 @@ from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from typing import List, Union, Optional, Any, Tuple
 from .operator import Operator, TransformKind
 from .impl.matmul_impl import select_implementation
-from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4
+from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
 import logging
@@ -189,6 +189,7 @@ class Matmul(Operator):
     def post_process(self, code: str) -> str:
         code = tensor_replace_dp4a(code)
         code = tensor_remove_make_int4(code)
+        code = tensor_remove_make_int2(code)
         return code
 
     def _profile_latency_with_dynamic_range(self) -> List:

@@ -171,4 +171,6 @@ def test_matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum
 
 # fmt: on
 if __name__ == "__main__":
-    bitblas.testing.main()
+    # bitblas.testing.main()
+    test_matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, None, None,
+         None, None)

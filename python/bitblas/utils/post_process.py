@@ -27,3 +27,12 @@ def tensor_remove_make_int4(source: str) -> str:
         "make_int4(0, 0, 0, 0)",
     )
     return source
+
+def tensor_remove_make_int2(source: str) -> str:
+    # remove make_int4 with 16 signed char arguments
+    # TODO(lei): this is a stuff that should be fixed in the tvm in the future
+    source = source.replace(
+        "make_int2((signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0, (signed char)0)",
+        "make_int2(0, 0)",
+    )
+    return source

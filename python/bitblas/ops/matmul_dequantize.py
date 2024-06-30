@@ -6,7 +6,7 @@ from bitblas.base.roller.arch.cuda import CUDA
 from typing import Any, List, Literal, Optional, Tuple, Union
 from .operator import Operator, TransformKind
 from .impl.matmul_dequantize_impl import select_implementation
-from ..base.utils import tensor_replace_dp4a, tensor_remove_make_int4
+from ..base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from dataclasses import dataclass
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig
@@ -234,6 +234,7 @@ class MatmulWeightOnlyDequantize(Operator):
     def post_process(self, code: str) -> str:
         code = tensor_replace_dp4a(code)
         code = tensor_remove_make_int4(code)
+        code = tensor_remove_make_int2(code)
         return code
 
     def retrieve_weight_shape(self):

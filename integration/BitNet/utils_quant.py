@@ -119,7 +119,6 @@ class BitLinear(nn.Linear):
         return out
 
     def forward_fp32_simulated(self, input):
-        print("input: ", input)
         quant_input = self.activation_quant(input, self.input_bits).detach()
         quant_weight = self.weight_quant(self.weight).detach()
 
@@ -139,6 +138,8 @@ class BitLinear(nn.Linear):
         return out
 
     def forward(self, input):
+        # return self.forward_fp32_simulated(input)
+
         quant_input = self.activation_quant(input, self.input_bits).detach()
         fp32_out = self.bitblas_matmul(quant_input, self.weight)
         sw = self.sw
