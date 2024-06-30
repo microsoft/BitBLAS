@@ -31,12 +31,13 @@ def unpack_qzeros(qzeros, bits):
         device=qzeros.device,
         requires_grad=False,
     )
-
     for col in range(unpacked_zeros.shape[1]):
         i = col % elems_per_int32
-        unpacked_zeros[:, col] = (qzeros[:, col // elems_per_int32] >> (bits * i)) & 0xF
+        unpacked_zeros[:, col] = (qzeros[:, col // elems_per_int32] >> (bits * i))
 
-    return unpacked_zeros + 1
+    # Follow the instruction in AutoGPTQ qlinear_cuda_old.py line 303
+    # NOTE: It appears that casting after the `unpacked_zeros  + 1` is important.
+    return torch.bitwise_and(unpacked_zeros + 1, 2**bits - 1)
 
 
 class Linear(nn.Module):
@@ -232,18 +233,19 @@ class Linear(nn.Module):
             A = A.half()
         # can be lifted to post init.
         self.init_params()
-        
+
         if output is None:
             output = torch.empty(
                 A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
         m = ctypes.c_int32(reduce(operator.mul, A.shape[:-1], 1))
         A = self.bitblas_matmul.transform_input(A)
         stream = torch.cuda.current_stream()
-        
+
         A_void = ctypes.c_void_p(A.data_ptr())
         stream_handle = ctypes.c_void_p(stream.cuda_stream)
         # m is the product of the last n - 1 dimensions of A
-        self.bitblas_matmul.lib.call(A_void, *self.q_params, ctypes.c_void_p(output.data_ptr()), m, stream_handle)
+        self.bitblas_matmul.lib.call(A_void, *self.q_params, ctypes.c_void_p(output.data_ptr()), m,
+                                     stream_handle)
 
         return output
 
