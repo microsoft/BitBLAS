@@ -25,6 +25,7 @@ class TensorCorePolicy(DefaultPolicy):
         self.wmma_k = 16
         self.pipeline_stage: int = 1
         self.use_async_copy: bool = False
+        self.block_reduction_depth: Optional[int] = None
         self._legalize_info()
 
     def _legalize_info(self):
@@ -44,6 +45,11 @@ class TensorCorePolicy(DefaultPolicy):
                 self.use_async_copy = True
             else:
                 self.use_async_copy = False
+        # TODO: block reduction depth is not used for now.
+        # As there still exists some performance issues for block reduction.
+        # block_reduction_depth = self.prim_func_node.get_tag("block_reduction_depth")
+        # if block_reduction_depth:
+        #     self.block_reduction_depth = block_reduction_depth
 
     def _compute_tc_strides(
         self,
@@ -114,6 +120,7 @@ class TensorCorePolicy(DefaultPolicy):
 
         smem_limit = min(self.arch.max_smem_usage // td.block_per_SM, self.arch.smem_cap)
         rstep_map = td.rstep_map.copy()
+        is_block_reduction = self.block_reduction_depth is not None
 
         def _optimize(node, rstep):
             all_steps = self.get_node_reduce_step_candidates(node)
@@ -177,6 +184,13 @@ class TensorCorePolicy(DefaultPolicy):
             if len(node.raxis) > 0:
                 rstep = _optimize(node, rstep_map)
                 rstep_map = rstep
+
+        if is_block_reduction:
+            # If block reduction, we should constrain the max value is 64
+            # Otherwise it will introduce an issue of cuda invalid args.
+            MAX_REDUCE_K = 64
+            for k in rstep_map:
+                rstep_map[k] = min(rstep_map[k], MAX_REDUCE_K)
         td.rstep_map = rstep_map
         td.smem_cost, td.cached_tensors_map = self._compute_shared_memory_usage(td)
         return
@@ -289,6 +303,7 @@ class TensorCorePolicy(DefaultPolicy):
         codegen_dict.warp = warp_tile
         codegen_dict.use_tc = True
         codegen_dict.pipeline_stage = self.pipeline_stage
+        codegen_dict.block_reduction_depth = self.block_reduction_depth
         codegen_dict.use_async = self.use_async_copy
         codegen_dict.rstep = [int(rsteps[ax.var.name]) for ax in node.raxis]
         codegen_dict.cached_tensors = td.cached_tensors_map[node]

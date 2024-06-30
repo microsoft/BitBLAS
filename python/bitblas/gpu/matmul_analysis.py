@@ -619,6 +619,16 @@ def get_tensorized_func_and_tags(
         if func.attrs is not None and "weight_transform_kind" in func.attrs:
             intrin_info["weight_transform_kind"] = func.attrs["weight_transform_kind"]
         tags["intrin_info"] = intrin_info
+        # Analysis Block Reduction Optimization
+        # Currently, we only support block reduction depth 2 for small M
+        # When the func is a dequantize like ops, we should consider the M
+        if hasattr(func.attrs, "dequantize_info"):
+            for arg in func.params:
+                inp_shape = func.buffer_map[arg].shape
+                M = inp_shape[0]
+                if isinstance(M, tir.IntImm) and M <= 128:
+                    tags["block_reduction_depth"] = 2
+                break
 
         return tags
 

@@ -205,6 +205,10 @@ class Hint(object):
             dic["raxis_order"] = self._raxis_order
         if self.vectorize != {}:
             dic["vectorize"] = self.vectorize
+        if self.pipeline_stage != 1:
+            dic["pipeline_stage"] = self.pipeline_stage
+        if self.block_reduction_depth is not None:
+            dic["block_reduction_depth"] = self.block_reduction_depth
         return dic
 
     def from_dict(self, dic: Dict) -> "Hint":

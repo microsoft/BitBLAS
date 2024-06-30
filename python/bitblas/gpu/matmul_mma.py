@@ -708,7 +708,8 @@ class MatmulTensorizationMMA(GPUScheduleRule):
     ) -> Optional[tir.Schedule]:
         if "dequantize_info" in func.attrs:
             dequantize_rule = MatmulTensorizationMMAWithDequantizeInfo()
-            return dequantize_rule.sch_shared_memory_prefetch_block_reduction_with_config(func, config)
+            return dequantize_rule.sch_shared_memory_prefetch_block_reduction_with_config(
+                func, config)
 
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
             get_mma_intrin_group,)
@@ -799,7 +800,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             # inject_permuted_layout only support float16 currently
             if dtype == "float16" or dtype == "int8":
                 # introduce the constraint of reduce_k because reduce_k will doubling the size of
-                if chunk * DataType(dtype).bits != (512):
+                if (chunk * reduce_k) * DataType(dtype).bits != (512):
                     # currently the swizzle rule only support 512 bit.
                     return False
                 # if we use smooth layout, we don't need to do swizzling

@@ -105,7 +105,7 @@ def _bind_thread_based_with_block_reduce_on_config(sch, block, block_row_warps, 
         sch.bind(B_shared_ty, "threadIdx.y")
     elif B_shared_ty:
         sch.bind(B_shared_ty, "threadIdx.y")
-    
+
     if loop_extent // reduce_k >= 1 and loop_extent % reduce_k == 0:
         last_loop, B_shared_tk = sch.split(last_loop, factors=[None, reduce_k])
         sch.bind(B_shared_tk, "threadIdx.z")
@@ -1178,7 +1178,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
             get_mma_intrin_group,)
         from .intrin import get_lop3_intrin_group
-        
+
         import_source: List[str] = []
 
         sch = tir.Schedule(func)
@@ -1750,7 +1750,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
         main_block = reduction_blocks[0]
         # always enable shared memory rewrite
-        cache_write_required = False
+        cache_write_required = True
 
         # Check Dequantize Info
         # TODO(leiwang): this is a hack to get the configuration, can be improved by writing a pass to analysis the dequantize block.
@@ -1808,7 +1808,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         stage = config.pipeline_stage
         use_async = config.use_async
         assert (config.block_reduction_depth is not None), "block_reduction_depth is required"
-        chunk = config.rstep[0]
         reduce_k = config.block_reduction_depth
         chunk = config.rstep[0] // reduce_k
 
@@ -1824,7 +1823,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         def can_enable_swizzle(dtype: str, smooth: bool):
             # inject_permuted_layout only support float16 currently
             if dtype == "float16" or dtype == "int8":
-                if chunk * DataType(dtype).bits != 512:
+                if (chunk * reduce_k) * DataType(dtype).bits != 512:
                     # currently the swizzle rule only support 512 bit.
                     return False
                 # if we use smooth layout, we don't need to do swizzling
@@ -1942,7 +1941,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         i_factors, j_factors, k_factors = (
             [None, 1, block_row_warps, warp_row_tiles // micro_size_x],
             [1, None, block_col_warps, warp_col_tiles // micro_size_y],
-            [None, (reduce_k * chunk) // micro_size_k],
+            [None, chunk // micro_size_k],
         )
 
         num_ty = i_factors[2]
@@ -1986,7 +1985,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         k0, k1 = sch.split(k, k_factors)
         k0, kr = sch.split(k0, [None, reduce_k])
 
-        sch.reorder(i0, j0, i1, j1, i2, j2, kr, k0, k1, i3, j3)
+        sch.reorder(i0, j0, i1, j1, i2, j2, kr, i3, j3, k0, k1)
 
         block_idy = sch.fuse(i0, j0)
         block_idx = sch.fuse(i1, j1)
@@ -2136,14 +2135,15 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.annotate(block_shared, ann_key="permuted_layout", ann_val=can_swizzle_b)
             union_len = (2 + 4) if intrin_info.smooth_b else (2 + 2)
             B_shared_fused = sch.fuse(*sch.get_loops(block_shared)[-union_len:-2])
-            _, B_shared_ty, B_shared_tz, B_shared_tx = sch.split(
-                B_shared_fused, factors=[None, num_ty, num_tz, warp_size])
+            _, B_shared_rk, B_shared_ty, B_shared_tz, B_shared_tx = sch.split(
+                B_shared_fused, factors=[None, reduce_k, num_ty, num_tz, warp_size])
             if not (can_swizzle_b or intrin_info.smooth_b):
                 pad_offset = 8 if intrin_info.in_dtype == "float16" else 16
                 sch.storage_align(block_shared, 0, axis=-2, factor=16, offset=pad_offset)
             sch.bind(B_shared_tx, "threadIdx.x")
             B_shared_tz = B_shared_ty = sch.fuse(B_shared_ty, B_shared_tz)
             sch.bind(B_shared_ty, "threadIdx.y")
+            sch.bind(B_shared_rk, "threadIdx.z")
             sch.vectorize(sch.get_loops(block_shared)[-1])
             sch.vectorize(sch.get_loops(block_shared_local_local)[-1])
 
