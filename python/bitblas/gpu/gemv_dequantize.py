@@ -287,7 +287,6 @@ class GEMVWithDequantizeInfo(GPUScheduleRule):
             assert len(config.thread) == 2, "SplitK only support 2D thread config"
             num_warps = int(num_warps // config.thread[0])
 
-
         # get target dequantize buffer's idx
         def get_idx(weight_decode_info: Dict):
             # for LUT dequantize, the expr is LUT(w), the idx is 1

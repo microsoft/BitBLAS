@@ -154,18 +154,20 @@ class Hint(object):
         self.arch = None
         self.use_tc = None  # todo(lei): this should be renamed.
 
-        # special axes tiling info
+        # Special axes tiling info
         self.block = []
         self.thread = []
-        # special axes for tensorCore
+        # Special axes for MMA
         self.warp = []
-        # reduce axes tiling info
+        # Reduce axes tiling info
         self.rstep = []
         self.reduce_thread = []
         self.rasterization_plan = NoRasterization()
         self.cached_tensors = []
         self.output_strides = {}
         self.schedule_stages = None
+        # Config for block reduction
+        self.block_reduction_depth = None  # type: int
 
         # Experimental
         self._raxis_order = []
@@ -203,6 +205,10 @@ class Hint(object):
             dic["raxis_order"] = self._raxis_order
         if self.vectorize != {}:
             dic["vectorize"] = self.vectorize
+        if self.pipeline_stage != 1:
+            dic["pipeline_stage"] = self.pipeline_stage
+        if self.block_reduction_depth is not None:
+            dic["block_reduction_depth"] = self.block_reduction_depth
         return dic
 
     def from_dict(self, dic: Dict) -> "Hint":

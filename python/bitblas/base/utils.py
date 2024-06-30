@@ -168,6 +168,7 @@ def apply_and_build_parallel(func,
                              arch,
                              num_repeats=3,
                              max_workers=10,
+                             timeout=30,
                              data_distribution="uniform") -> CompileResult:
     cpresults = []
 
@@ -187,10 +188,10 @@ def apply_and_build_parallel(func,
 
     with ThreadPoolExecutor(max_workers=4) as scheduler:
         futures = {scheduler.submit(_apply_schedule, func, config) for config in configs}
-        for future in as_completed(futures):
+        for future in as_completed(futures, timeout=timeout):
             _sched.append(future.result())
 
-    builder = PopenPoolExecutor(max_workers=max_workers)
+    builder = PopenPoolExecutor(max_workers=max_workers, timeout=timeout)
 
     # build in process parallel
     def _build(context) -> str:

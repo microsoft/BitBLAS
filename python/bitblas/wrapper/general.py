@@ -291,8 +291,8 @@ class CUDASourceWrapper(object):
             call_str = "if ({} == 0) return; \n\t\t".format(list(dynamic_symbolic_set)[0])
         else:
             call_str = ""
-        call_str += "{}<<<{}, {}, {}, stream>>>({});".format(function_name, grid_str, block_str, smem_str,
-                                                       call_args)
+        call_str += "{}<<<{}, {}, {}, stream>>>({});".format(function_name, grid_str, block_str,
+                                                             smem_str, call_args)
         # Create the host function wrapper for the CUDA kernel
         host_func = """
     extern "C" void call({}) {{
@@ -410,9 +410,7 @@ extern "C" void init() {{
             (symbolic,) = list(dynamic_symbolic_set)
             range_str = opt_shapes[symbolic]
             if last_range == 0:
-                call_str = "if ({} == 0) return; \n".format(
-                    symbolic,
-                )
+                call_str = "if ({} == 0) return; \n".format(symbolic,)
                 call_str += "if ({} <= {}) {{\n\t\t\t {}<<<{}, {}, {}, stream>>>({}); \n\t\t}}\n".format(
                     symbolic,
                     range_str,

@@ -4,7 +4,7 @@
 import tvm
 from tvm.target import Target
 from .arch_base import TileDevice
-from typing import List, Dict
+from typing import List, Dict, Union
 
 
 def check_sm_version(arch: str) -> int:
@@ -28,7 +28,9 @@ class TensorInstruction(object):
 
 class CUDA(TileDevice):
 
-    def __init__(self, target: Target):
+    def __init__(self, target: Union[Target, str]):
+        if isinstance(target, str):
+            target = tvm.target.Target(target)
         self.target = target
         self.sm_version = check_sm_version(self.target.arch)
         device = tvm.runtime.cuda(0)

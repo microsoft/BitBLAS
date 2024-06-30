@@ -41,6 +41,7 @@ def test_matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtyp
     matmul = MatmulWithSplitK(config=matmul_config, enable_tuning=False)
     assert get_codegen_result(matmul)
 
+
 @pytest.mark.parametrize(
     "SPlitK,M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
     [
@@ -83,6 +84,7 @@ def test_matmul_torch_forward_consistent(SplitK, M, N, K, A_dtype, W_dtype, accu
     output_torch = torch.matmul(inputs[0], inputs[1].t() if layout == "nt" else inputs[1])
     torch.testing.assert_close(output_bitblas, output_torch, rtol=1e-2, atol=1e-1)
 
+
 @pytest.mark.parametrize(
     "SPlitK,M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
     [
@@ -93,8 +95,8 @@ def test_matmul_torch_forward_consistent(SplitK, M, N, K, A_dtype, W_dtype, accu
     ],
 )
 def test_matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
-                                         layout, with_bias, group_size, with_scaling, with_zeros,
-                                         zeros_mode):
+                                      layout, with_bias, group_size, with_scaling, with_zeros,
+                                      zeros_mode):
     import torch
     torch.random.manual_seed(0)
     matmul_config = MatmulConfigWithSplitK(
@@ -119,6 +121,7 @@ def test_matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_d
 
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
+
     def map_torch_type(intype):
 
         typemap = {
@@ -144,6 +147,10 @@ def test_matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_d
     print("torch_ref_out", ref_out)
     print("bitblas_out", bitblas_out)
     
+    matmul.forward(torch_a, torch_b, output=bitblas_out)
+    print("torch_ref_out", ref_out)
+    print("bitblas_out", bitblas_out)
+
     matmul.forward(torch_a, torch_b, output=bitblas_out)
     print("torch_ref_out", ref_out)
     print("bitblas_out", bitblas_out)
