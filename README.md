@@ -55,22 +55,22 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 
 ## Support Matrix
 
-| **A_dtype** | **W_dtype** | **Accum_dtype** | **Out_dtype** | **BitBLAS<br>Support** | **Tested<br>Platform** |
-|:-----------:|:-----------:|:---------------:|:---------------:|:----------------------:|:----------------------:|
-|     FP16    |     FP16    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     FP16    |   FP4_E2M1  |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     FP16    |   FP8_E4M3  |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     FP16    |     INT8    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     FP16    |     UINT4/INT4    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     FP16    |     UINT2/INT2    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     FP16    |     UINT1    |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     FP16    |     NF4     |       FP16      |       FP16      |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     INT8    |     INT8    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     INT8    |     UINT4/INT4    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     INT8    |     UINT2/INT2    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|     INT8    |     UINT1    |      INT32      |    FP32/INT32/FP16/INT8   |          **√**         |   V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
-|   FP8_E4M3  |     FP8_E4M3    |      FP32    |    FP32/FP16   |          **√**         |   RTX 4090(SM_89) |
-|     FP8_E5M2    |     FP8_E5M2    |      FP32      |    FP32/FP16   |          **√**         |   RTX 4090(SM_89) |
+| **A_dtype** | **W_dtype** | **Accum_dtype** |     **Out_dtype**    | **BitBLAS Support** |                  **Tested Platform**                 |
+|:-----------:|:-----------:|:---------------:|:--------------------:|:-------------------:|:----------------------------------------------------:|
+|     FP16    |     FP16    |    FP32/FP16    |         FP16         |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     FP16    |   FP4_E2M1  |    FP32/FP16    |         FP16         |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     FP16    |   FP8_E4M3  |    FP32/FP16    |         FP16         |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     FP16    |     INT8    |    FP32/FP16    |         FP16         |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     FP16    |  UINT4/INT4 |    FP32/FP16    |         FP16         |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     FP16    |  UINT2/INT2 |    FP32/FP16    |         FP16         |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     FP16    |    UINT1    |    FP32/FP16    |         FP16         |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     FP16    |     NF4     |    FP32/FP16    |         FP16         |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     INT8    |     INT8    |      INT32      | FP32/INT32/FP16/INT8 |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     INT8    |  UINT4/INT4 |      INT32      | FP32/INT32/FP16/INT8 |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     INT8    |  UINT2/INT2 |      INT32      | FP32/INT32/FP16/INT8 |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|     INT8    |    UINT1    |      INT32      | FP32/INT32/FP16/INT8 |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
+|   FP8_E4M3  |   FP8_E4M3  |       FP32      |       FP32/FP16      |        **√**        |                    RTX 4090(SM_89)                   |
+|   FP8_E5M2  |   FP8_E5M2  |       FP32      |       FP32/FP16      |        **√**        |                    RTX 4090(SM_89)                   |
 
 We are continuously expanding the support matrix. If you have any specific requirements, please feel free to open an issue or PR.
 
