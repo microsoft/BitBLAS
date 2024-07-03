@@ -197,6 +197,17 @@ def setup_llvm_for_tvm():
     return extract_path, llvm_config_path
 
 
+def create_softlink(tvm_path="3rdparty/tvm/python/tvm", bitblas_path="bitblas/tvm"):
+    """Create softlink for bitblas."""
+    try:
+        # check if the soft link already exists
+        if os.path.exists(bitblas_path):
+            os.remove(bitblas_path)
+        subprocess.check_call(["ln", "-s", tvm_path, bitblas_path])
+    except subprocess.CalledProcessError as error:
+        raise RuntimeError("Failed to create soft link") from error
+
+
 class BitBLASInstallCommand(install):
     """Customized setuptools install command - builds TVM after setting up LLVM."""
 
@@ -209,6 +220,8 @@ class BitBLASInstallCommand(install):
         build_tvm(llvm_path)
         # Continue with the standard installation process
         install.run(self)
+        # Create softlink for bitblas
+        create_softlink(tvm_path="3rdparty/tvm/python/tvm", bitblas_path="bitblas/tvm")
 
 
 class BitBLASBuilPydCommand(build_py):
@@ -222,6 +235,9 @@ class BitBLASBuilPydCommand(build_py):
         _, llvm_path = setup_llvm_for_tvm()
         # Build TVM
         build_tvm(llvm_path)
+        # Create softlink for bitblas
+        create_softlink(tvm_path="3rdparty/tvm/python/tvm", bitblas_path="bitblas/tvm")
+
         # Copy the built TVM to the package directory
         TVM_PREBUILD_ITEMS = [
             "3rdparty/tvm/build/libtvm_runtime.so",
