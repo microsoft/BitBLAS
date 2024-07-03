@@ -7,7 +7,7 @@ from queue import PriorityQueue
 from typing import Iterable, Dict, List, Optional
 
 import numpy as np
-import tvm
+from bitblas import tvm
 
 from ..arch import TileDevice
 from ..bestfit import BestFit

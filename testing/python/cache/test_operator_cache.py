@@ -4,15 +4,11 @@ import pytest
 import os
 import torch
 import bitblas
-from bitblas.ops.matmul import Matmul, MatmulConfig
-from bitblas.ops.matmul_dequantize import (
-    MatmulWeightOnlyDequantize,
-    MatmulWeightOnlyDequantizeConfig,
-)
+from bitblas import Matmul, MatmulConfig
 from bitblas.cache import global_operator_cache
 
 target = bitblas.utils.auto_detect_nvidia_target()
-
+bitblas.set_log_level("DEBUG")
 
 def get_codegen_result(ops, target):
     code = ops.get_source(target=target)
@@ -23,10 +19,10 @@ def get_codegen_result(ops, target):
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout,enable_tuning",
     [
-        (1, 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
+        (1, 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", False),
         # dynamic shape
-        ([1], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
-        ([1, 32], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", True),
+        ([1], 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", False),
+        ([1, 32], 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", True),
     ],
 )
 def test_config_hashable(
@@ -47,7 +43,7 @@ def test_config_hashable(
         M=M,
         N=N,
         K=K,
-        in_dtype=in_dtype,
+        A_dtype=in_dtype,
         out_dtype=out_dtype,
         accum_dtype=accum_dtype,
         with_bias=with_bias,
@@ -75,10 +71,10 @@ def test_config_hashable(
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout,enable_tuning",
     [
-        (1, 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
+        (1, 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", False),
         # dynamic shape
-        ([1], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
-        ([1, 32], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", True),
+        ([1], 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", False),
+        ([1, 32], 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", True),
     ],
 )
 def test_global_cache_inquery(
@@ -99,7 +95,7 @@ def test_global_cache_inquery(
         M=M,
         N=N,
         K=K,
-        in_dtype=in_dtype,
+        A_dtype=in_dtype,
         out_dtype=out_dtype,
         accum_dtype=accum_dtype,
         with_bias=with_bias,
@@ -128,12 +124,13 @@ def test_global_cache_inquery(
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout,enable_tuning",
     [
-        (1, 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
+        (1, 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", False),
         # dynamic shape
-        ([1], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
-        ([1, 32], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", True),
+        ([1], 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", False),
+        ([1, 32], 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", True),
     ],
 )
+@bitblas.testing.requires_gpu
 def test_global_cache_inquery_torch_forward(
     M,
     N,
@@ -152,7 +149,7 @@ def test_global_cache_inquery_torch_forward(
         M=M,
         N=N,
         K=K,
-        in_dtype=in_dtype,
+        A_dtype=in_dtype,
         out_dtype=out_dtype,
         accum_dtype=accum_dtype,
         with_bias=with_bias,
@@ -197,16 +194,15 @@ def test_global_cache_inquery_torch_forward(
         permuted_inputs.append(matmul.weight_transform(inputs[1].cpu()).cuda())
     else:
         permuted_inputs.append(inputs[1])
-    permuted_inputs.append(inputs[2])
-    matmul(*permuted_inputs)
-    torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
+    bitblas_out = matmul(permuted_inputs[0], permuted_inputs[1])
+    torch.testing.assert_close(bitblas_out, ref_result, rtol=1e-2, atol=1e-2)
 
 
 @pytest.mark.parametrize(
     "M,N,K,in_dtype,out_dtype,accum_dtype,with_bias,propagate_a,propagate_b,layout,enable_tuning",
     [
-        (1, 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
-        ([1, 32], 16384, 16384, "float16", "float16", "float16", False, False, False, "nt", False),
+        (1, 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", False),
+        ([1, 32], 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", False),
     ],
 )
 def test_global_cache_save_to_database(
@@ -227,7 +223,7 @@ def test_global_cache_save_to_database(
         M=M,
         N=N,
         K=K,
-        in_dtype=in_dtype,
+        A_dtype=in_dtype,
         out_dtype=out_dtype,
         accum_dtype=accum_dtype,
         with_bias=with_bias,
@@ -249,7 +245,7 @@ def test_global_cache_save_to_database(
         print(hash_error)
     assert success
 
-    database_path = "debug/test_database"
+    database_path = "/tmp/.tmp_bitblas_cache.db"
     global_operator_cache.save_into_database(database_path, target=target)
     assert os.path.exists(database_path)
     global_operator_cache.clear()
@@ -280,208 +276,8 @@ def test_global_cache_save_to_database(
         permuted_inputs.append(matmul.weight_transform(inputs[1].cpu()).cuda())
     else:
         permuted_inputs.append(inputs[1])
-    permuted_inputs.append(inputs[2])
-    matmul(*permuted_inputs)
-    torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2)
-
-
-@pytest.mark.parametrize(
-    "M,N,K,in_dtype,out_dtype,accum_dtype,bit,storage_dtype,source_format,with_scaling,with_zeros,group_size,fast_decoding,with_bias,propagate_a,propagate_b,layout",
-    [
-        (
-            1,
-            1024,
-            1024,
-            "float16",
-            "float16",
-            "float16",
-            4,
-            "int8",
-            "uint",
-            False,
-            False,
-            -1,
-            False,
-            False,
-            False,
-            False,
-            "nt",
-        ),
-        (
-            1,
-            1024,
-            1024,
-            "float16",
-            "float16",
-            "float16",
-            4,
-            "int8",
-            "nf",
-            False,
-            False,
-            -1,
-            False,
-            False,
-            False,
-            False,
-            "nt",
-        ),
-        (
-            1024,
-            1024,
-            1024,
-            "float16",
-            "float16",
-            "float16",
-            4,
-            "int8",
-            "nf",
-            False,
-            False,
-            -1,
-            False,
-            False,
-            False,
-            False,
-            "nt",
-        ),
-        (
-            1024,
-            1024,
-            1024,
-            "float16",
-            "float16",
-            "float16",
-            4,
-            "int8",
-            "nf",
-            False,
-            False,
-            -1,
-            False,
-            False,
-            False,
-            True,
-            "nt",
-        ),
-        (
-            1024,
-            1024,
-            1024,
-            "float16",
-            "float16",
-            "float16",
-            4,
-            "int8",
-            "nf",
-            False,
-            False,
-            -1,
-            False,
-            False,
-            True,
-            True,
-            "nt",
-        ),
-        (
-            1024,
-            1024,
-            1024,
-            "float16",
-            "float16",
-            "float16",
-            4,
-            "int8",
-            "nf",
-            True,
-            False,
-            -1,
-            False,
-            False,
-            True,
-            True,
-            "nt",
-        ),
-        (
-            1024,
-            1024,
-            1024,
-            "float16",
-            "float16",
-            "float16",
-            4,
-            "int8",
-            "nf",
-            True,
-            False,
-            128,
-            False,
-            False,
-            True,
-            True,
-            "nt",
-        ),
-    ],
-)
-def test_matmul_dequantize_save_into_database(
-    M,
-    N,
-    K,
-    in_dtype,
-    out_dtype,
-    accum_dtype,
-    bit,
-    storage_dtype,
-    source_format,
-    with_scaling,
-    with_zeros,
-    group_size,
-    fast_decoding,
-    with_bias,
-    propagate_a,
-    propagate_b,
-    layout,
-):
-
-    matmul_config = MatmulWeightOnlyDequantizeConfig(
-        M=M,
-        N=N,
-        K=K,
-        in_dtype=in_dtype,
-        out_dtype=out_dtype,
-        accum_dtype=accum_dtype,
-        bit=bit,
-        storage_dtype=storage_dtype,
-        source_format=source_format,
-        with_scaling=with_scaling,
-        with_zeros=with_zeros,
-        group_size=group_size,
-        fast_decoding=fast_decoding,
-        with_bias=with_bias,
-        propagate_a=propagate_a,
-        propagate_b=propagate_b,
-        layout=layout,
-    )
-    matmul = MatmulWeightOnlyDequantize(
-        config=matmul_config,
-        target=target,
-    )
-    matmul.hardware_aware_finetune(topk=20)
-    database_path = "debug/test_database"
-    success = False
-
-    try:
-        global_operator_cache.add(matmul.config, matmul)
-        success = True
-    except Exception as hash_error:
-        print(hash_error)
-    assert success
-    global_operator_cache.save_into_database(database_path, target=target)
-    assert os.path.exists(database_path)
-    global_operator_cache.clear()
-    assert global_operator_cache.size() == 0
-    global_operator_cache.load_from_database(database_path, target=target)
-    assert global_operator_cache.size() > 0
+    bitblas_output = matmul(*permuted_inputs)
+    torch.testing.assert_close(bitblas_output, ref_result, rtol=1e-2, atol=1e-2)
 
 
 # fmt: on

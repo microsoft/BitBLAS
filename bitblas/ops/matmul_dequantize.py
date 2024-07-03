@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
+from bitblas import tvm
 from tvm.target import Target
 from bitblas.base.roller.arch.cuda import CUDA
 from typing import Any, List, Literal, Optional, Tuple, Union

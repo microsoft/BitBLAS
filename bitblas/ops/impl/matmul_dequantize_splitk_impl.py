@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 # pre-transformed tir expression of matmul
-import tvm
+from bitblas import tvm
 from tvm import te
 from bitblas.quantization import (_tir_packed_int_to_int_convert, _tir_packed_to_signed_convert,
                                   _tir_packed_to_unsigned_convert, _tir_u32_to_f4_to_f16,

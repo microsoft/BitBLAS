@@ -4,8 +4,8 @@ from tvm.script import ir as I
 from tvm.script import tir as T
 from tvm.script import relax as R
 
-import tvm
-import tvm.testing
+from bitblas import tvm
+from bitblas import tvm.testing
 from tvm import relax
 from tvm.script import ir as I, relax as R, tir as T
 from tvm import tir

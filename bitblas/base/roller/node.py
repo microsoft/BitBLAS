@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 """PrimFunc Wrapper and Block information Analaysis"""
 
-import tvm
+from bitblas import tvm
 from tvm import tir
 from tvm.tir import IterVar, PrimFunc
 from typing import Any, Dict, List, Tuple, Optional

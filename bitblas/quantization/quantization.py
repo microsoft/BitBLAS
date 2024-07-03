@@ -21,7 +21,7 @@
 # pylint: disable=invalid-name,missing-function-docstring,unused-variable
 """TIR computation utilities for quantization."""
 
-import tvm
+from bitblas import tvm
 from tvm import tir
 
 

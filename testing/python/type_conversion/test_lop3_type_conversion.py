@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
+from bitblas import tvm
 from tvm.script import tir as T
 import bitblas
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy

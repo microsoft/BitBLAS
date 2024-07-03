@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 # pre-transformed tir expression of matmul
-import tvm
+from bitblas import tvm
 from tvm import te, tir
 
 

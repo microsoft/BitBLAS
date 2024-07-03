@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
+from bitblas import tvm
 from tvm.target import Target
 import operator
 from functools import reduce
