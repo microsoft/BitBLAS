@@ -130,7 +130,6 @@ def test_global_cache_inquery(
         ([1, 32], 1024, 1024, "float16", "float16", "float16", False, False, False, "nt", True),
     ],
 )
-@bitblas.testing.requires_gpu
 def test_global_cache_inquery_torch_forward(
     M,
     N,

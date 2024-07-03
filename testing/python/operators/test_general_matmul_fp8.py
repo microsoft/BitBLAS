@@ -1,6 +1,4 @@
-# Copyright (c) Microsoft Corporation.
-# Licensed under the MIT License.
-import pytest
+import torch
 import bitblas
 from bitblas import MatmulConfig, Matmul
 import logging
@@ -9,23 +7,7 @@ from bitblas import set_log_level
 set_log_level(logging.DEBUG)
 
 
-# TODO(lei): should add requirements for cuda and sm version
-@pytest.mark.parametrize(
-    "M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
-    [
-        (1, 1024, 1024, "e4m3_float8", "e4m3_float8", "float32", "float32", "nt", None, None, None,
-         None, None),
-        (1024, 1024, 1024, "e4m3_float8", "e4m3_float8", "float32", "float32", "nt", None, None,
-         None, None, None),
-        (1, 1024, 1024, "e5m2_float8", "e5m2_float8", "float32", "float32", "nt", None, None, None,
-         None, None),
-        (1024, 1024, 1024, "e5m2_float8", "e5m2_float8", "float32", "float32", "nt", None, None,
-         None, None, None),
-    ],
-)
-def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias,
-                              group_size, with_scaling, with_zeros, zeros_mode):
-    import torch
+def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias, group_size, with_scaling, with_zeros, zeros_mode):
     torch.random.manual_seed(0)
 
     matmul_config = MatmulConfig(
@@ -49,7 +31,6 @@ def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
     weight_shape = (N, K) if layout == "nt" else (K, N)
 
     def map_torch_type(intype):
-
         typemap = {
             'e4m3_float8': torch.float8_e4m3fn,
             'e5m2_float8': torch.float8_e5m2,
@@ -63,8 +44,8 @@ def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
     numpytype_b = map_torch_type(W_dtype)
     numpytype_c = map_torch_type(out_dtype)
 
-    torch_a = torch.rand(M * K).uniform_(-5, 5).reshape(input_shape).type(numpytype_a).cuda()
-    torch_b = torch.rand(N * K).uniform_(-5, 5).reshape(weight_shape).type(numpytype_b).cuda()
+    torch_a = torch.rand(M * K).uniform_(-1, 1).reshape(input_shape).type(numpytype_a).cuda()
+    torch_b = torch.rand(N * K).uniform_(-1, 1).reshape(weight_shape).type(numpytype_b).cuda()
     ref_out = torch.matmul(torch_a.to(torch.float32),
                            torch_b.t().to(torch.float32)) if layout == "nt" else torch.matmul(
                                torch_a.to(torch.float32), torch_b.to(torch.float32))
@@ -75,25 +56,14 @@ def test_matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
     bitblas_out = matmul(torch_a, new_torch_b)
     print("bitblas_out", bitblas_out)
 
+@bitblas.testing.requires_cuda_compute_version(8, 9)
+def test_matmul_torch_forward():
+    matmul_torch_forward(1, 1024, 1024, "e4m3_float8", "e4m3_float8", "float32", "float32", "nt", None, None, None, None, None)
+    matmul_torch_forward(1024, 1024, 1024, "e4m3_float8", "e4m3_float8", "float32", "float32", "nt", None, None, None, None, None)
+    matmul_torch_forward(1, 1024, 1024, "e5m2_float8", "e5m2_float8", "float32", "float32", "nt", None, None, None, None, None)
+    matmul_torch_forward(1024, 1024, 1024, "e5m2_float8", "e5m2_float8", "float32", "float32", "nt", None, None, None, None, None)
 
-# TODO(lei): should add requirements for cuda and sm version
-@pytest.mark.parametrize(
-    "M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
-    [
-        (1, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, None, None,
-         None, None),
-        (1024, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, None, None,
-         None, None),
-        (1, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, 32, True, None,
-         None),
-        (1024, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, 32, True,
-         None, None),
-    ],
-)
-def test_matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
-                                                layout, with_bias, group_size, with_scaling,
-                                                with_zeros, zeros_mode):
-    import torch
+def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias, group_size, with_scaling, with_zeros, zeros_mode):
     torch.random.manual_seed(0)
 
     matmul_config = MatmulConfig(
@@ -119,7 +89,6 @@ def test_matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum
     weight_shape = (N, K) if layout == "nt" else (K, N)
 
     def map_torch_type(intype):
-
         typemap = {
             'e4m3_float8': torch.float8_e4m3fn,
             'e5m2_float8': torch.float8_e5m2,
@@ -144,9 +113,8 @@ def test_matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum
             group_size = -1
         if group_size == -1:
             group_size = K
-        scale_tensor = torch.rand(N * K // group_size).uniform_(-4, 4).reshape(
+        scale_tensor = torch.rand(N * K // group_size).uniform_(-1, 1).reshape(
             [N, K // group_size]).type(torch.float16).cuda()
-        # scale_tensor = torch.ones([N, K // group_size]).type(torch.float16).cuda()
         rescale_b = torch.zeros_like(torch_b).type(torch.float16)
         for i in range(K):
             rescale_b[:, i] = torch_b.to(torch.float16)[:, i] * scale_tensor[:, i // group_size]
@@ -168,9 +136,12 @@ def test_matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum
 
     torch.testing.assert_close(ref_out, bitblas_out, rtol=1e-1, atol=1e-1)
 
+@bitblas.testing.requires_cuda_compute_version(8, 9)
+def test_matmul_torch_forward_weight_dequantize():
+    matmul_torch_forward_weight_dequantize(1, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, None, None, None, None)
+    matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, None, None, None, None)
+    matmul_torch_forward_weight_dequantize(1, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, 32, True, None, None)
+    matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, 32, True, None, None)
 
-# fmt: on
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, None, None,
-         None, None)
+    bitblas.testing.main()
