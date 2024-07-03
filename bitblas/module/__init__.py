@@ -231,21 +231,24 @@ class Linear(nn.Module):
     def forward(self, A, output=None):
         if A.dtype != torch.float16:
             A = A.half()
-        # can be lifted to post init.
-        self.init_params()
-
-        if output is None:
-            output = torch.empty(
-                A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
-        m = ctypes.c_int32(reduce(operator.mul, A.shape[:-1], 1))
         A = self.bitblas_matmul.transform_input(A)
         stream = torch.cuda.current_stream()
 
         A_void = ctypes.c_void_p(A.data_ptr())
         stream_handle = ctypes.c_void_p(stream.cuda_stream)
+        # can be lifted to post init.
+        self.init_params()
+        args = [A_void, *self.q_params]
+        if output is None:
+            output = torch.empty(
+                A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
+        args.append(ctypes.c_void_p(output.data_ptr()))
+        if self.bitblas_matmul.dynamic_range is not None:
+            m = reduce(operator.mul, A.shape[:-1], 1)
+            args.append(m)
+        args.append(stream_handle)
         # m is the product of the last n - 1 dimensions of A
-        self.bitblas_matmul.lib.call(A_void, *self.q_params, ctypes.c_void_p(output.data_ptr()), m,
-                                     stream_handle)
+        self.bitblas_matmul.lib.call(*args)
 
         return output
 

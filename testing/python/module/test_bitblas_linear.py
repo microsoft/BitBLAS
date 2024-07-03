@@ -9,7 +9,7 @@ import torch.nn as nn
 import pytest
 
 torch.manual_seed(0)
-
+bitblas.set_log_level("DEBUG")
 
 @pytest.mark.parametrize(
     "m, in_features, out_features, bias",
