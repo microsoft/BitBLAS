@@ -197,7 +197,7 @@ def setup_llvm_for_tvm():
     return extract_path, llvm_config_path
 
 
-def create_softlink(tvm_path="3rdparty/tvm/python/tvm", bitblas_path="bitblas/tvm"):
+def create_softlink(tvm_path="../3rdparty/tvm/python/tvm", bitblas_path="bitblas/tvm"):
     """Create softlink for bitblas."""
     try:
         # check if the soft link already exists
@@ -221,7 +221,7 @@ class BitBLASInstallCommand(install):
         # Continue with the standard installation process
         install.run(self)
         # Create softlink for bitblas
-        create_softlink(tvm_path="3rdparty/tvm/python/tvm", bitblas_path="bitblas/tvm")
+        create_softlink(tvm_path="../3rdparty/tvm/python/tvm", bitblas_path="bitblas/tvm")
 
 
 class BitBLASBuilPydCommand(build_py):
@@ -236,7 +236,7 @@ class BitBLASBuilPydCommand(build_py):
         # Build TVM
         build_tvm(llvm_path)
         # Create softlink for bitblas
-        create_softlink(tvm_path="3rdparty/tvm/python/tvm", bitblas_path="bitblas/tvm")
+        create_softlink(tvm_path="../3rdparty/tvm/python/tvm", bitblas_path="bitblas/tvm")
 
         # Copy the built TVM to the package directory
         TVM_PREBUILD_ITEMS = [
