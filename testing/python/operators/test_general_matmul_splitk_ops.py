@@ -11,16 +11,7 @@ def get_codegen_result(ops):
 
 
 # fmt: off
-@pytest.mark.parametrize(
-    "M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
-    [
-        (1, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
-         None),
-        (16, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
-         None),
-    ],
-)
-def test_matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout,
+def matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout,
                                 with_bias, group_size, with_scaling, with_zeros, zeros_mode):
 
     matmul_config = MatmulConfigWithSplitK(
@@ -37,21 +28,21 @@ def test_matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtyp
         with_scaling=with_scaling,
         with_zeros=with_zeros,
         zeros_mode=zeros_mode,
+        propagate_a=False,
+        propagate_b=False,
     )
     matmul = MatmulWithSplitK(config=matmul_config, enable_tuning=False)
     assert get_codegen_result(matmul)
 
 
-@pytest.mark.parametrize(
-    "SPlitK,M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
-    [
-        (1, 1, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False,
-         False, None),
-        (4, 1, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False,
-         False, None),
-    ],
-)
-def test_matmul_torch_forward_consistent(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
+def test_matmul_codegen_default():
+    matmul_codegen_default(1, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
+         None)
+    matmul_codegen_default(16, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
+        None)
+
+
+def matmul_torch_forward_consistent(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
                                          layout, with_bias, group_size, with_scaling, with_zeros,
                                          zeros_mode):
     import torch
@@ -71,6 +62,8 @@ def test_matmul_torch_forward_consistent(SplitK, M, N, K, A_dtype, W_dtype, accu
         with_scaling=with_scaling,
         with_zeros=with_zeros,
         zeros_mode=zeros_mode,
+        propagate_a=False,
+        propagate_b=False,
     )
     matmul = MatmulWithSplitK(config=matmul_config, enable_tuning=False)
 
@@ -84,17 +77,13 @@ def test_matmul_torch_forward_consistent(SplitK, M, N, K, A_dtype, W_dtype, accu
     output_torch = torch.matmul(inputs[0], inputs[1].t() if layout == "nt" else inputs[1])
     torch.testing.assert_close(output_bitblas, output_torch, rtol=1e-2, atol=1e-1)
 
+def test_matmul_torch_forward_consistent():
+    matmul_torch_forward_consistent(1, 1, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False,
+         False, None)
+    matmul_torch_forward_consistent(4, 1, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False,
+         False, None)
 
-@pytest.mark.parametrize(
-    "SPlitK,M,N,K,A_dtype,W_dtype,accum_dtype,out_dtype,layout,with_bias,group_size,with_scaling,with_zeros,zeros_mode",
-    [
-        (1, 16, 4096, 12800, "float16", "e4m3_float8", "float32", "float16", "nt", False, -1, False,
-         False, None),
-        (4, 16, 4096, 12800, "float16", "e4m3_float8", "float32", "float16", "nt", False, -1, False,
-         False, None),
-    ],
-)
-def test_matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
+def matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
                                       layout, with_bias, group_size, with_scaling, with_zeros,
                                       zeros_mode):
     import torch
@@ -157,6 +146,12 @@ def test_matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_d
 
     torch.testing.assert_close(bitblas_out, ref_out, rtol=1e0, atol=1e-1)
 
+@bitblas.testing.requires_cuda_compute_version(8, 9)
+def test_matmul_torch_forward_fp8e4m3():
+    matmul_torch_forward_fp8e4m3(1, 16, 4096, 12800, "e4m3_float8", "e4m3_float8", "float32", "float16", "nt", False, -1, False,
+         False, None)
+    matmul_torch_forward_fp8e4m3(4, 16, 4096, 12800, "e4m3_float8", "e4m3_float8", "float32", "float16", "nt", False, -1, False,
+         False, None)
 
 # fmt: on
 if __name__ == "__main__":

@@ -1,12 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+import bitblas
 from bitblas import tvm
 import torch
 import numpy as np
-from bitblas import tvm.testing
 from tvm.script import tir as T
-import os
-from tvm import te
 import numpy as np
 
 
@@ -226,4 +224,5 @@ def test_lop3_interleave_weight():
     np.testing.assert_allclose(tvm_interleaved_b_np_int8, interleaved_weight, atol=1e-5)
 
 
-test_lop3_interleave_weight()
+if __name__ == "__main__":
+    bitblas.testing.main()

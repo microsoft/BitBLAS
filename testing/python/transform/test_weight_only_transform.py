@@ -1,16 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+from bitblas import tvm
+
 from tvm.script import ir as I
 from tvm.script import tir as T
 from tvm.script import relax as R
-
-from bitblas import tvm
-from bitblas import tvm.testing
 from tvm import relax
-from tvm.script import ir as I, relax as R, tir as T
-from tvm import tir
-from tvm.ir import IRModule
-from tvm.ir.transform import PassContext, module_pass
 from bitblas.base.utils import get_dummy_input_arrays
 from copy import deepcopy
 import bitblas
@@ -329,16 +324,16 @@ def test_dequantize_matmul_transform(transform_level=2):
     input_tensors = get_dummy_input_arrays(ref_mod["main"], device)
     print(relax_mod)
     print("=======================ref llvm result=======================")
-    # ref_res = get_ref_result(ref_mod, input_tensors)
-    # print("ref_mod", ref_res)
-    # bitblas_res = get_ref_result(relax_mod, input_tensors)
-    # print("bitblas_res", bitblas_res)
+    ref_res = get_ref_result(ref_mod, input_tensors)
+    print("ref_mod", ref_res)
+    bitblas_res = get_ref_result(relax_mod, input_tensors)
+    print("bitblas_res", bitblas_res)
     print("=======================default gpu result=======================")
-    # ref_res = get_default_result(ref_mod, input_tensors, dispatch_target, device)
-    # print("ref_mod", ref_res)
-    # bitblas_res = get_default_result(relax_mod, input_tensors, dispatch_target, device)
-    # print("bitblas_res", bitblas_res)
-    # print("=======================fast tune gpu result=======================")
+    ref_res = get_default_result(ref_mod, input_tensors, dispatch_target, device)
+    print("ref_mod", ref_res)
+    bitblas_res = get_default_result(relax_mod, input_tensors, dispatch_target, device)
+    print("bitblas_res", bitblas_res)
+    print("=======================fast tune gpu result=======================")
     ref_res = get_fast_tune_result(ref_mod, input_tensors, dispatch_target, device)
     print("ref_mod", ref_res)
     print(relax_mod)
@@ -348,6 +343,5 @@ def test_dequantize_matmul_transform(transform_level=2):
     print("bitblas_res", bitblas_res)
 
 
-# test_lop3_transform()
-# test_matmul_transform()
-test_dequantize_matmul_transform()
+if __name__ == "__main__":
+    bitblas.testing.main()
