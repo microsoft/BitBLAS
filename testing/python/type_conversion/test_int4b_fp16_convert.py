@@ -5,8 +5,6 @@ from bitblas import tvm
 import torch
 import numpy as np
 from tvm.script import tir as T
-import os
-from tvm import te
 import numpy as np
 
 
