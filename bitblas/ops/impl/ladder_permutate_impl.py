@@ -49,6 +49,7 @@ def select_implementation(
     inp = te.placeholder((M, N // scaling_factor), name="inp", dtype=storage_dtype)
     args = [inp]
 
+    assert transform_kind != 0, "Permute only apply when transform_kind >= 1"
     if transform_kind >= 1:
         arg = args[-1]
 
