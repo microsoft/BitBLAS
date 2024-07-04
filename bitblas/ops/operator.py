@@ -106,8 +106,7 @@ class Operator(ABC):
                         **self.pass_context
                 }):
                     rt_mod = tvm.build(self.optimized_func, target=target, name=self.name)
-            except Exception as e:
-                rt_build_error = e  # noqa
+            except Exception: # noqa: F841
                 logger.debug(
                     "Failed to build optimized function for CUDA target with default schedule, Please consider enable hardware aware tuning!"
                 )
