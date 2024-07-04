@@ -3,8 +3,8 @@
 import numpy as np
 import pytest
 
-import tvm
-import tvm.testing
+from bitblas import tvm
+from bitblas import tvm.testing
 from tvm.ir import assert_structural_equal
 from tvm.runtime import const
 from tvm.tir import IndexMap, IntImm, floordiv, floormod

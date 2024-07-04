@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from abc import ABC, abstractmethod
-import tvm
+from bitblas import tvm
 from tvm import IRModule
 from tvm.target import Target
 from tvm.tir import PrimFunc

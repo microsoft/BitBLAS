@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
+from bitblas import tvm
 from tvm.target import Target
 import operator
 from functools import reduce
@@ -89,7 +89,10 @@ class MatmulConfig:
     def __initialize_propagate(self, propagate_a: Optional[TransformKind],
                                propagate_b: Optional[TransformKind]):
         MICRO_KERNEL_SIZE = 16
-        if (isinstance(self.M, int) and (self.M % MICRO_KERNEL_SIZE) == 0 and
+        if propagate_b is not None and propagate_b == TransformKind.NonTransform:
+            # Currently we do not support propagate_a when propagate_b is not transformed.
+            object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
+        elif (isinstance(self.M, int) and (self.M % MICRO_KERNEL_SIZE) == 0 and
             (self.K % MICRO_KERNEL_SIZE) == 0):
             object.__setattr__(self, "propagate_a", TransformKind.IntraWarpTransform)
         else:

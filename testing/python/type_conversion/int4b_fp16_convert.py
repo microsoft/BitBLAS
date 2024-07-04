@@ -1,9 +1,9 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
+from bitblas import tvm
 import torch
 import numpy as np
-import tvm.testing
+from bitblas import tvm.testing
 from tvm.script import tir as T
 import os
 from tvm import te

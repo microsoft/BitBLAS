@@ -7,7 +7,7 @@ from bitblas.ops.matmul_dequantize import (
     MatmulWeightOnlyDequantize,
     MatmulWeightOnlyDequantizeConfig,
 )
-import tvm
+from bitblas import tvm
 import logging
 from bitblas import set_log_level
 

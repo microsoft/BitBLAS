@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-import tvm
+from bitblas import tvm
 import os
 from tvm.contrib.popen_pool import PopenPoolExecutor, StatusKind
 from concurrent.futures import ThreadPoolExecutor, as_completed

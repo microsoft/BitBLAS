@@ -21,7 +21,7 @@
 # pylint: disable=missing-docstring
 """A RMS norm schedule rule for GPU operators."""
 
-import tvm
+from bitblas import tvm
 from tvm import tir
 from tvm.tir import Block, BufferStore
 from tvm.tir.expr import Cast, BufferLoad, Call

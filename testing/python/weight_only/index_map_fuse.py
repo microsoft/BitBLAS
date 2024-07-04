@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
+from bitblas import tvm
 from tvm.script import tir as T
 from tvm.tir import IndexMap
 from tvm.tir.tensor_intrin.cuda import (

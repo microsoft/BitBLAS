@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
+from bitblas import tvm
 import numpy as np
 from tvm.target import Target
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch

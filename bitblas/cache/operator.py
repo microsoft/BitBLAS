@@ -8,7 +8,7 @@ import json
 import tempfile
 from hashlib import sha256
 import shutil
-import tvm
+from bitblas import tvm
 from tvm.contrib.tar import tar
 import logging
 

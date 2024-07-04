@@ -3,7 +3,7 @@
 import pytest
 import bitblas
 from bitblas.ops.ladder_permutate import LadderPermutate, LadderPermutateConfig
-import tvm
+from bitblas import tvm
 
 target = tvm.target.Target("llvm")
 

@@ -9,7 +9,7 @@ import os
 import shutil
 import tempfile
 import os.path as osp
-import tvm
+from bitblas import tvm
 from tvm import tir
 from tvm import meta_schedule as ms
 from tvm.ir import IRModule

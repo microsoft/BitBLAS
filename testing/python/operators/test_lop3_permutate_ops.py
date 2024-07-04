@@ -4,7 +4,7 @@ import pytest
 import bitblas
 from bitblas.ops.lop3_permutate import LOP3Permutate, LOP3PermutateConfig
 
-import tvm
+from bitblas import tvm
 target = tvm.target.Target("llvm")
 
 # fmt: off

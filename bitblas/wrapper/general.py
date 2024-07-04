@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import tvm
+from bitblas import tvm
 from typing import Optional, List, Dict, Union
 from tvm import IRModule
 from bitblas import TileDevice

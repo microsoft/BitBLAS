@@ -143,7 +143,7 @@ def test_matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_d
                                torch_a.to(torch.float32), torch_b.to(torch.float32))
     ref_out = ref_out.to(torch.float16)
     bitblas_out = torch.empty_like(ref_out)
-    matmul.forward(torch_a, torch_b, output=bitblas_out)
+    matmul.forward(torch_a, torch_b)
     print("torch_ref_out", ref_out)
     print("bitblas_out", bitblas_out)
     
