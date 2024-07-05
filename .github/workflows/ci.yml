@@ -21,14 +21,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+        python -m pip install wheel setuptools
 
     - name: Run format
       run: ./format.sh
 
-    - name: Run install
+    - name: Install project in editable mode
       run: |
-        python -m pip install --upgrade pip
-        pip install wheel setuptools
         pip install -e .
     
     # - name: Run cpp tests
