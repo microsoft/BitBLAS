@@ -64,7 +64,13 @@ format_changed() {
     #
     # `diff-filter=ACM` and $MERGEBASE is to ensure we only format files that
     # exist on both branches.
-    MERGEBASE="$(git merge-base origin/main HEAD)"
+    if git show-ref --verify --quiet refs/remotes/origin/main; then
+        BASE_BRANCH="origin/main"
+    else
+        BASE_BRANCH="main"
+    fi
+
+    MERGEBASE="$(git merge-base $BASE_BRANCH HEAD)"
 
     if ! git diff --diff-filter=ACM --quiet --exit-code "$MERGEBASE" -- '*.py' '*.pyi' &>/dev/null; then
         git diff --name-only --diff-filter=ACM "$MERGEBASE" -- '*.py' '*.pyi' | xargs -P 5 \
@@ -110,7 +116,13 @@ spell_check_changed() {
     #
     # `diff-filter=ACM` and $MERGEBASE is to ensure we only lint files that
     # exist on both branches.
-    MERGEBASE="$(git merge-base origin/main HEAD)"
+    if git show-ref --verify --quiet refs/remotes/origin/main; then
+        BASE_BRANCH="origin/main"
+    else
+        BASE_BRANCH="main"
+    fi
+
+    MERGEBASE="$(git merge-base $BASE_BRANCH HEAD)"
 
     if ! git diff --diff-filter=ACM --quiet --exit-code "$MERGEBASE" -- '*.py' '*.pyi' &>/dev/null; then
         git diff --name-only --diff-filter=ACM "$MERGEBASE" -- '*.py' '*.pyi' | xargs \
@@ -148,7 +160,13 @@ lint_changed() {
     #
     # `diff-filter=ACM` and $MERGEBASE is to ensure we only lint files that
     # exist on both branches.
-    MERGEBASE="$(git merge-base origin/main HEAD)"
+    if git show-ref --verify --quiet refs/remotes/origin/main; then
+        BASE_BRANCH="origin/main"
+    else
+        BASE_BRANCH="main"
+    fi
+
+    MERGEBASE="$(git merge-base $BASE_BRANCH HEAD)"
 
     if ! git diff --diff-filter=ACM --quiet --exit-code "$MERGEBASE" -- '*.py' '*.pyi' &>/dev/null; then
         git diff --name-only --diff-filter=ACM "$MERGEBASE" -- '*.py' '*.pyi' | xargs \
