@@ -26,7 +26,7 @@ jobs:
       run: ./format.sh
 
     - name: Run install
-      run: ./install.sh
+      run: pip install -e .
     
     # - name: Run cpp tests
     #   run: |
