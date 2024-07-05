@@ -1,0 +1,67 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  format-check:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Create virtual environment
+      run: python -m venv bitblas_ci
+
+    - name: Activate virtual environment and install dependencies
+      run: |
+        source bitblas_ci/bin/activate
+        python -m pip install --upgrade pip
+        if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
+
+    - name: Run format check
+      run: |
+        source bitblas_ci/bin/activate
+        ./format.sh
+
+  build-test:
+    runs-on: self-hosted
+    needs: format-check
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Create virtual environment
+      run: python -m venv bitblas_ci
+
+    - name: Activate virtual environment and install dependencies
+      run: |
+        source bitblas_ci/bin/activate
+        python -m pip install --upgrade pip
+        if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
+
+    - name: Install project in wheel mode
+      run: |
+        source bitblas_ci/bin/activate
+        python -m pip install .
+
+    - name: Run tests
+      run: |
+        source bitblas_ci/bin/activate
+        cd testing/python
+        python -m pytest

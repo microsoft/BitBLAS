@@ -8,7 +8,6 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 from setuptools.command.build_py import build_py
 from setuptools.command.sdist import sdist
-from wheel.bdist_wheel import bdist_wheel
 import distutils.dir_util
 from typing import List
 import re
@@ -66,7 +65,7 @@ def get_nvcc_cuda_version():
 
 
 def get_bitblas_version(with_cuda=True, with_system_info=True) -> str:
-    version = find_version(get_path("python/bitblas", "__init__.py"))
+    version = find_version(get_path("bitblas", "__init__.py"))
     local_version_parts = []
     if with_system_info:
         local_version_parts.append(get_system_info().replace("-", "."))
@@ -209,8 +208,6 @@ class BitBLASInstallCommand(install):
         build_tvm(llvm_path)
         # Continue with the standard installation process
         install.run(self)
-        # Create softlink for bitblas
-        create_softlink(tvm_path="../3rdparty/tvm/python/tvm", bitblas_path="bitblas/tvm")
 
 
 class BitBLASBuilPydCommand(build_py):
@@ -224,8 +221,6 @@ class BitBLASBuilPydCommand(build_py):
         _, llvm_path = setup_llvm_for_tvm()
         # Build TVM
         build_tvm(llvm_path)
-        # Create softlink for bitblas
-        create_softlink(tvm_path="../3rdparty/tvm/python/tvm", bitblas_path="bitblas/tvm")
 
         # Copy the built TVM to the package directory
         TVM_PREBUILD_ITEMS = [
@@ -268,15 +263,15 @@ class BitBLASSdistCommand(sdist):
 
 setup(
     name=PACKAGE_NAME,
-    version=get_bitblas_version(with_cuda=False, with_system_info=False) if PYPI_BUILD else get_bitblas_version(),
-    packages=find_packages(where="python"),
-    package_dir={"": "python"},
+    version=get_bitblas_version(with_cuda=False, with_system_info=False)
+    if PYPI_BUILD else get_bitblas_version(),
+    packages=find_packages(where="."),
+    package_dir={"": "."},
     author="Microsoft Research",
     description="A light weight framework to generate high performance CUDA/HIP code for BLAS operators.",
     long_description=read_readme(),
     long_description_content_type='text/markdown',
-    platforms=["Environment :: GPU :: NVIDIA CUDA", 
-               "Operating System :: POSIX :: Linux"],
+    platforms=["Environment :: GPU :: NVIDIA CUDA", "Operating System :: POSIX :: Linux"],
     license="MIT",
     keywords="BLAS, CUDA, HIP, Code Generation, TVM",
     url="https://github.com/microsoft/BitBLAS",

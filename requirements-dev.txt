@@ -28,3 +28,5 @@ tornado
 torch
 thefuzz
 tabulate
+wheel
+setuptools
