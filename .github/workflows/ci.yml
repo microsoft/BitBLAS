@@ -24,3 +24,14 @@ jobs:
 
     - name: Run format
       run: ./format.sh
+
+    - name: Run install
+      run: ./install.sh
+    
+    # - name: Run cpp tests
+    #   run: |
+    #     cd testing/cpp
+    #     mkdir build
+    #     cd build
+    #     cmake ..
+    #     make -j
