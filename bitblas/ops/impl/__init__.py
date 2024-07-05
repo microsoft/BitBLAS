@@ -1,3 +1,3 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-from .lop3_permutate_impl import tir_interleave_weight
+from .lop3_permutate_impl import tir_interleave_weight  # noqa: F401
