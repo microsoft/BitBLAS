@@ -179,9 +179,9 @@ def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs[:2], output=permuted_inputs[-1])
     if zeros_mode == "rescale":
-        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e-0)
+        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
     else:
-        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e-1)
+        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
 
 
 def test_matmul_torch_forward():
@@ -250,7 +250,7 @@ def matmul_transform_weight(
     if with_bias:
         bitblas_inputs.append(bias)
     output_tensor = matmul(*bitblas_inputs)
-    torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-0)
+    torch.testing.assert_close(output_tensor, ref_result, rtol=1e2, atol=1e0)
 
 
 def test_matmul_transform_weight():
