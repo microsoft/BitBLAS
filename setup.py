@@ -8,7 +8,6 @@ from setuptools import setup, find_packages
 from setuptools.command.install import install
 from setuptools.command.build_py import build_py
 from setuptools.command.sdist import sdist
-from wheel.bdist_wheel import bdist_wheel
 import distutils.dir_util
 from typing import List
 import re
@@ -264,15 +263,15 @@ class BitBLASSdistCommand(sdist):
 
 setup(
     name=PACKAGE_NAME,
-    version=get_bitblas_version(with_cuda=False, with_system_info=False) if PYPI_BUILD else get_bitblas_version(),
+    version=get_bitblas_version(with_cuda=False, with_system_info=False)
+    if PYPI_BUILD else get_bitblas_version(),
     packages=find_packages(where="."),
     package_dir={"": "."},
     author="Microsoft Research",
     description="A light weight framework to generate high performance CUDA/HIP code for BLAS operators.",
     long_description=read_readme(),
     long_description_content_type='text/markdown',
-    platforms=["Environment :: GPU :: NVIDIA CUDA", 
-               "Operating System :: POSIX :: Linux"],
+    platforms=["Environment :: GPU :: NVIDIA CUDA", "Operating System :: POSIX :: Linux"],
     license="MIT",
     keywords="BLAS, CUDA, HIP, Code Generation, TVM",
     url="https://github.com/microsoft/BitBLAS",
