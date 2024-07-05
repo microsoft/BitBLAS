@@ -27,7 +27,8 @@ jobs:
 
     - name: Run install
       run: |
-        pip install wheel
+        python -m pip install --upgrade pip
+        pip install wheel setuptools
         pip install -e .
     
     # - name: Run cpp tests
