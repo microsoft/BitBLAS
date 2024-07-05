@@ -35,3 +35,9 @@ jobs:
       run: |
         source bitblas_ci/bin/activate
         python -m pip install .
+    
+    - name: Run tests
+      run: |
+        source bitblas_ci/bin/activate
+        cd testing/python
+        python -m pytest
