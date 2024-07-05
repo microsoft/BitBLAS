@@ -5,11 +5,10 @@ from bitblas import tvm
 from tvm import te
 from bitblas.ops.operator import TransformKind
 from .base import TIRScriptEmitter, TIRScriptSelector
-from bitblas import tvm
-from tvm import te
-from bitblas.ops.operator import TransformKind
+
 
 class BatchMatMulEmitter(TIRScriptEmitter):
+
     def __init__(
         self,
         batch,
@@ -32,7 +31,7 @@ class BatchMatMulEmitter(TIRScriptEmitter):
         self.with_bias = with_bias
         self.layout = layout
         self._validate_layout()
-        
+
     @staticmethod
     def _validate_dimension(dim, name):
         if not isinstance(dim, int):
@@ -48,7 +47,8 @@ class BatchMatMulEmitter(TIRScriptEmitter):
     def _create_placeholders(self):
         A = te.placeholder((self.batch, self.M, self.K), name="A", dtype=self.in_dtype)
         B = te.placeholder((self.batch, self.N, self.K), name="B", dtype=self.in_dtype)
-        Bias = te.placeholder((self.N,), name="Bias", dtype=self.in_dtype) if self.with_bias else None
+        Bias = te.placeholder(
+            (self.N,), name="Bias", dtype=self.in_dtype) if self.with_bias else None
         return A, B, Bias
 
     def _compute_matmul(self, A, B):
@@ -63,12 +63,16 @@ class BatchMatMulEmitter(TIRScriptEmitter):
 
     def _apply_bias(self, C, Bias):
         if self.with_bias:
-            return te.compute((self.batch, self.M, self.N), lambda b, i, j: C[b, i, j] + Bias[j], name="E")
+            return te.compute((self.batch, self.M, self.N),
+                              lambda b, i, j: C[b, i, j] + Bias[j],
+                              name="E")
         return C
 
     def _convert_dtype(self, tensor):
         if self.accum_dtype != self.out_dtype:
-            return te.compute((self.batch, self.M, self.N), lambda b, i, j: tensor[b, i, j].astype(self.out_dtype), name="D")
+            return te.compute((self.batch, self.M, self.N),
+                              lambda b, i, j: tensor[b, i, j].astype(self.out_dtype),
+                              name="D")
         return tensor
 
     def emit(self):
@@ -84,7 +88,10 @@ class BatchMatMulEmitter(TIRScriptEmitter):
 
 
 class BatchMatMulSelector(TIRScriptSelector):
-    def __init__(self, propagate_a: TransformKind = TransformKind.NonTransform, propagate_b: TransformKind = TransformKind.NonTransform):
+
+    def __init__(self,
+                 propagate_a: TransformKind = TransformKind.NonTransform,
+                 propagate_b: TransformKind = TransformKind.NonTransform):
         self.propagate_a = propagate_a
         self.propagate_b = propagate_b
 
@@ -102,8 +109,10 @@ class BatchMatMulSelector(TIRScriptSelector):
     ):
         if layout == "nn":
             if self.propagate_a or self.propagate_b:
-                raise ValueError("Currently only support propagate_a=False and propagate_b=False for layout=nn")
-            return BatchMatMulEmitter(batch, M, N, K, in_dtype, out_dtype, accum_dtype, with_bias, layout).emit()
+                raise ValueError(
+                    "Currently only support propagate_a=False and propagate_b=False for layout=nn")
+            return BatchMatMulEmitter(batch, M, N, K, in_dtype, out_dtype, accum_dtype, with_bias,
+                                      layout).emit()
         elif layout == "nt":
             if self.propagate_a and self.propagate_b:
                 raise ValueError("Currently only support propagate_a or propagate_b for layout=nt")
@@ -112,9 +121,11 @@ class BatchMatMulSelector(TIRScriptSelector):
             elif self.propagate_b:
                 raise ValueError("Currently only support propagate_b=False for layout=nt")
             else:
-                return BatchMatMulEmitter(batch, M, N, K, in_dtype, out_dtype, accum_dtype, with_bias, layout).emit()
+                return BatchMatMulEmitter(batch, M, N, K, in_dtype, out_dtype, accum_dtype,
+                                          with_bias, layout).emit()
         else:
             raise ValueError(f"Unsupported layout: {layout}")
+
 
 def select_implementation(
     Batch=1,
