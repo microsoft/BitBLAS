@@ -66,7 +66,7 @@ def get_nvcc_cuda_version():
 
 
 def get_bitblas_version(with_cuda=True, with_system_info=True) -> str:
-    version = find_version(get_path("python/bitblas", "__init__.py"))
+    version = find_version(get_path("bitblas", "__init__.py"))
     local_version_parts = []
     if with_system_info:
         local_version_parts.append(get_system_info().replace("-", "."))
@@ -269,8 +269,8 @@ class BitBLASSdistCommand(sdist):
 setup(
     name=PACKAGE_NAME,
     version=get_bitblas_version(with_cuda=False, with_system_info=False) if PYPI_BUILD else get_bitblas_version(),
-    packages=find_packages(where="python"),
-    package_dir={"": "python"},
+    packages=find_packages(where="."),
+    package_dir={"": "."},
     author="Microsoft Research",
     description="A light weight framework to generate high performance CUDA/HIP code for BLAS operators.",
     long_description=read_readme(),

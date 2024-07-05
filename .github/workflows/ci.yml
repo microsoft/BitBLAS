@@ -11,33 +11,27 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-        
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.9'
 
-    - name: Install dependencies
+    - name: Create virtual environment
+      run: python -m venv bitblas_ci
+
+    - name: Activate virtual environment and install dependencies
       run: |
+        source bitblas_ci/bin/activate
         python -m pip install --upgrade pip
         if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
 
-    - name: Print pip and wheel versions
-      run: |
-        pip --version
-        python -c "import wheel; print(wheel.__version__)"
-
     - name: Run format
-      run: ./format.sh
-
-    - name: Install project in editable mode
       run: |
-        python -m pip install -e .
-    
-    # - name: Run cpp tests
-    #   run: |
-    #     cd testing/cpp
-    #     mkdir build
-    #     cd build
-    #     cmake ..
-    #     make -j
+        source bitblas_ci/bin/activate
+        ./format.sh
+
+    - name: Install project in wheel mode
+      run: |
+        source bitblas_ci/bin/activate
+        python -m pip install .
