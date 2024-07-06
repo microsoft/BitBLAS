@@ -65,12 +65,3 @@ jobs:
         source bitblas_ci/bin/activate
         cd testing/python
         python -m pytest
-
-  # Control notifications
-  notify:
-    runs-on: self-hosted
-    needs: [format-check, build-test]
-    if: failure()
-    steps:
-    - name: Notification
-      run: echo "Jobs failed, but no email will be sent."
