@@ -15,8 +15,10 @@ from bitblas.quantization import (
     _tir_packed_to_unsigned_convert_with_zeros,
 )
 
+
 # TODO: The following code should be refactored.
 class MatMulNTDequantizeEmitter:
+
     def __init__(
         self,
         M,
@@ -52,8 +54,8 @@ class MatMulNTDequantizeEmitter:
         self.fast_decoding = fast_decoding
         self.with_bias = with_bias
         self.zeros_mode = zeros_mode
-        self.propagate_a = propagate_a
-        self.propagate_b = propagate_b
+        self.propagate_a = self._legalize_transform_kind(propagate_a)
+        self.propagate_b = self._legalize_transform_kind(propagate_b)
 
         self._validate_bit()
         self._validate_layout()
@@ -69,62 +71,169 @@ class MatMulNTDequantizeEmitter:
             raise ValueError(f"Unsupported bit: {self.bit}")
 
     def _validate_layout(self):
-        if self.layout not in ["nt"]:
-            raise ValueError(f"Unsupported layout: {self.layout}")
+        # TODO: extend the dequantize operators into General Layout
+        pass
+    
+    def _legalize_group_size(self):
+        if self.group_size == -1:
+            self.group_size = self.K
+
+    def _legalize_transform_kind(self, propagate):
+        if propagate is None:
+            return TransformKind.NonTransform
+        if isinstance(propagate, bool):
+            return (TransformKind.IntraWarpTransform if propagate else TransformKind.NonTransform)
+        elif isinstance(propagate, int):
+            return TransformKind(propagate)
 
     def _create_placeholders(self):
-        storage_nbit = int("".join(c for c in self.storage_dtype if c.isdigit()))
-        n_float_per_elem = storage_nbit // self.bit
+        storage_dtype = self.storage_dtype
+        storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
+        in_dtype = self.in_dtype
+        bit = self.bit
+        l = r = 16  # noqa: E741
+        if in_dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
+            l, r = 16, 32  # noqa: E741
 
-        A = te.placeholder((self.M, self.K), name="A", dtype=self.in_dtype)
-        B = te.placeholder((self.N, self.K // storage_nbit * self.bit), name="B", dtype=self.storage_dtype)
-        LUT = te.placeholder((1 << self.bit,), name="LUT", dtype=self.in_dtype)
-        Scale = te.placeholder((self.N, self.K // self.group_size), name="Scale", dtype=self.in_dtype)
-        Zeros = te.placeholder((self.N, self.K // self.group_size), name="Zeros", dtype=self.in_dtype)
-        QZeros = te.placeholder(((self.K // self.group_size), self.N // storage_nbit * self.bit),
+        A = te.placeholder((self.M, self.K), name="A", dtype=in_dtype)
+        B = te.placeholder((self.N, self.K // storage_nbit * bit),
+                           name="B",
+                           dtype=storage_dtype)
+        if self.propagate_a:
+            A = te.placeholder((self.M // l, self.K // r, l, r), name="A", dtype=in_dtype)
+        if self.propagate_b:
+            target_dtype = DataType(in_dtype)
+            scaling_factor = 1
+            if bit > 0 and bit < target_dtype.bits:
+                scaling_factor = ((target_dtype.bits // bit) * DataType(storage_dtype).bits // target_dtype.bits)
+            qr = r * bit // storage_nbit
+            B = te.placeholder((self.N // l, (self.K // scaling_factor) // qr, l, qr), name="B", dtype=storage_dtype) 
+
+        LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
+        Scale = te.placeholder((self.N, self.K // self.group_size), name="Scale", dtype=in_dtype)
+        Zeros = te.placeholder((self.N, self.K // self.group_size), name="Zeros", dtype=in_dtype)
+        QZeros = te.placeholder(((self.K // self.group_size), self.N // storage_nbit * bit),
                                 name="QZeros",
                                 dtype=self.storage_dtype)
-        Bias = te.placeholder((self.N,), name="Bias", dtype=self.in_dtype)
-        return A, B, LUT, Scale, Zeros, QZeros, Bias, storage_nbit, n_float_per_elem
+        Bias = te.placeholder((self.N,), name="Bias", dtype=in_dtype)
+        return A, B, LUT, Scale, Zeros, QZeros, Bias
 
-    def _decode_func(self, B, LUT, Scale, Zeros, QZeros, storage_nbit, n_float_per_elem):
-        w = None
+    def _propagate_input(self, tensor, transform_kind=TransformKind.NonTransform, matrix_name="A"):
+        if transform_kind == TransformKind.NonTransform:
+            return tensor
+        in_dtype = self.in_dtype
+        l = r = 16  # noqa: E741
+        if in_dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
+            l, r = 16, 32  # noqa: E741
+        _, inversed_index_map = get_propagate_map(
+            trans=False, dtype=in_dtype, matrix_name=matrix_name)
+
+        def fcompute(i, j):
+            warp_i, warp_j = i % l, j % r
+            spatial_args = i // l, j // r
+            if transform_kind >= TransformKind.IntraWarpTransform:
+                warp_i, warp_j = inversed_index_map.map_indices([warp_i, warp_j])
+            new_index = (*spatial_args, warp_i, warp_j)
+            return tensor[new_index]
+
+        return te.compute(
+            (self.M, self.K),
+            fcompute,
+            name=f"{matrix_name}_reindex",
+        )
+
+    def _propagage_weight(self, tensor, transform_kind=TransformKind.NonTransform, matrix_name="B"):
+        if transform_kind == TransformKind.NonTransform:
+            return tensor
+        in_dtype = self.in_dtype
+        bit = self.bit
+        storage_dtype = self.storage_dtype
+        storage_nbit = int("".join(c for c in self.storage_dtype if c.isdigit()))
+
+        l = r = 16  # noqa: E741
+        if in_dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
+            l, r = 16, 32  # noqa: E741
+        _, inversed_index_map = get_propagate_map(
+            trans=True, dtype=in_dtype, matrix_name=matrix_name)
+        target_dtype = DataType(in_dtype)
+        scaling_factor = 1
+        if bit > 0 and bit < target_dtype.bits:
+            scaling_factor = ((target_dtype.bits // bit) * DataType(storage_dtype).bits //
+                              target_dtype.bits)
+            initial_indices = inversed_index_map.initial_indices
+            scaling_final_indices = inversed_index_map.map_indices(
+                initial_indices[:-1] + [initial_indices[-1] * scaling_factor])
+            scaling_final_indices = scaling_final_indices[:-1] + [
+                scaling_final_indices[-1] // scaling_factor
+            ]
+            inversed_index_map = IndexMap(
+                initial_indices,
+                scaling_final_indices,
+                None,
+            )
+
+        qr = r * bit // storage_nbit
+
+        def fcompute(i, j):
+            warp_i, warp_j = i % l, j % qr
+            spatial_args = i // l, j // qr
+            if transform_kind >= TransformKind.IntraWarpTransform:
+                warp_i, warp_j = inversed_index_map.map_indices([warp_i, warp_j])
+            new_index = (*spatial_args, warp_i, warp_j)
+            return tensor[new_index]
+
+        return te.compute(
+            (self.N, self.K // storage_nbit * bit),
+            fcompute,
+            name=f"{matrix_name}_reindex",
+        )
+
+    def _decode_func(self, B, LUT, Scale, Zeros, QZeros):
+        bit = self.bit
+        in_dtype = self.in_dtype
+        storage_dtype = self.storage_dtype
+        storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
+        storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
+        n_float_per_elem = storage_nbit // bit
+
+        # TODO: Move the decode function into a more general place
         def decode(n, k):
+            w = None
             if self.with_zeros and self.zeros_mode == "quantized":
-                qzeros_dequantize = _tir_packed_to_unsigned_convert(self.storage_dtype, storage_nbit)(
-                    self.bit,
+                qzeros_dequantize = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    bit,
                     QZeros[k, n // n_float_per_elem],
                     n % n_float_per_elem,
                     dtype=self.storage_dtype,
                 )
-                w = _tir_packed_to_unsigned_convert_with_zeros(self.storage_dtype, storage_nbit)(
-                    self.bit,
+                w = _tir_packed_to_unsigned_convert_with_zeros(storage_type, storage_nbit)(
+                    bit,
                     B[n, k // n_float_per_elem],
                     k % n_float_per_elem,
                     qzeros_dequantize,
-                    dtype=self.in_dtype,
+                    dtype=in_dtype,
                 )
             elif self.source_format == "uint":
-                if self.bit == 8:
-                    w = B[n, k].astype(self.in_dtype)
-                w = _tir_packed_to_unsigned_convert(self.storage_dtype, storage_nbit)(
-                    self.bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=self.in_dtype)
+                if bit == 8:
+                    w = B[n, k].astype(in_dtype)
+                w = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
             elif self.source_format == "int":
-                if self.bit == 1:
-                    w = _tir_packed_int_to_int_convert(self.storage_dtype, storage_nbit)(
-                        self.bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=self.in_dtype)
-                if self.bit == 8:
-                    w = B[n, k].astype(self.in_dtype)
-                w = _tir_packed_to_signed_convert(self.storage_dtype, storage_nbit)(
-                    self.bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=self.in_dtype)
+                if bit == 1:
+                    w = _tir_packed_int_to_int_convert(storage_type, storage_nbit)(
+                        bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
+                if bit == 8:
+                    w = B[n, k].astype(in_dtype)
+                w = _tir_packed_to_signed_convert(storage_type, storage_nbit)(
+                    bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
             elif self.source_format == "fp":
                 w = _tir_u32_to_f4_to_f16(
-                    self.bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=self.in_dtype)
+                    bit, B[n, k // n_float_per_elem], k % n_float_per_elem, dtype=in_dtype)
             elif self.source_format == "fp_e4m3":
-                w = _tir_u8_to_f8_e4m3_to_f16(self.bit, B[n, k], dtype=self.in_dtype)
+                w = _tir_u8_to_f8_e4m3_to_f16(bit, B[n, k], dtype=in_dtype)
             elif self.source_format == "nf":
-                index = _tir_packed_to_unsigned_convert(self.storage_dtype, storage_nbit)(
-                    self.bit,
+                index = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    bit,
                     B[n, k // n_float_per_elem],
                     k % n_float_per_elem,
                     dtype="int32",
@@ -132,7 +241,9 @@ class MatMulNTDequantizeEmitter:
                 w = LUT[index]
             else:
                 raise ValueError(f"Unsupported source_format: {self.source_format}")
-            
+
+            assert w is not None, "w is None"
+
             group_size = self.group_size
             zeros_mode = self.zeros_mode
 
@@ -167,7 +278,9 @@ class MatMulNTDequantizeEmitter:
 
     def _convert_dtype(self, tensor):
         if self.accum_dtype != self.out_dtype:
-            return te.compute((self.M, self.N), lambda i, j: tensor[i, j].astype(self.out_dtype), name="D")
+            return te.compute((self.M, self.N),
+                              lambda i, j: tensor[i, j].astype(self.out_dtype),
+                              name="D")
         return tensor
 
     def _apply_bias(self, tensor, Bias):
@@ -176,9 +289,12 @@ class MatMulNTDequantizeEmitter:
         return tensor
 
     def emit(self):
-        A, B, LUT, Scale, Zeros, QZeros, Bias, storage_nbit, n_float_per_elem = self._create_placeholders()
-        B_decode = self._decode_func(B, LUT, Scale, Zeros, QZeros, storage_nbit, n_float_per_elem)
-        C = self._compute_matmul(A, B_decode)
+        A, B, LUT, Scale, Zeros, QZeros, Bias = self._create_placeholders()
+        A_reindex = self._propagate_input(A, self.propagate_a, "A")
+        B_reindex = self._propagage_weight(B, self.propagate_b, "B")
+
+        B_decode = self._decode_func(B_reindex, LUT, Scale, Zeros, QZeros)
+        C = self._compute_matmul(A_reindex, B_decode)
         D = self._convert_dtype(C)
         last_output = self._apply_bias(D, Bias)
 
@@ -212,7 +328,12 @@ class MatMulNTDequantizeEmitter:
                 }
             },
         )
+        if self.propagate_a:
+            func = func.with_attr("input_transform_kind", self.propagate_a.value)
+        if self.propagate_b:
+            func = func.with_attr("weight_transform_kind", self.propagate_b.value)
         return tvm.IRModule.from_expr(func)
+
 
 def matmul_nt_dequantize_b(
     M,
@@ -335,9 +456,12 @@ def matmul_nt_dequantize_b(
             A[i, k].astype(accum_dtype) * B_decode[j, k].astype(accum_dtype), axis=k),
         name="C",
     )
-    D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+
+    last_output = C
+    if accum_dtype != out_dtype:
+        D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+        last_output = D
     args = [A, B]
-    last_output = D
     if source_format == "nf":
         args.append(LUT)
     if with_scaling:
@@ -517,9 +641,11 @@ def matmul_nt_dequantize_b_propagate_b(
             A[i, k].astype(accum_dtype) * B_decode[j, k].astype(accum_dtype), axis=k),
         name="C",
     )
-    D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+    last_output = C
+    if accum_dtype != out_dtype:
+        D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+        last_output = D
     args = [A, B]
-    last_output = D
     if source_format == "nf":
         args.append(LUT)
     if with_scaling:
@@ -715,9 +841,11 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
         ),
         name="C",
     )
-    D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+    last_output = C
+    if accum_dtype != out_dtype:
+        D = te.compute((M, N), lambda i, j: C[i, j].astype(out_dtype), name="D")
+        last_output = D
     args = [A, B]
-    last_output = D
     if source_format == "nf":
         args.append(LUT)
     if with_scaling:

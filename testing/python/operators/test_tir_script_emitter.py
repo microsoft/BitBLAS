@@ -1,18 +1,13 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-from bitblas.ops.impl.matmul_dequantize_impl import (
-    MatMulNTDequantizeEmitter,
-    matmul_nt_dequantize_b,
-    matmul_nt_dequantize_b_propagate_b,
-    matmul_nt_dequantize_b_propagate_a_propagate_b,
-)
 from bitblas import tvm
 import logging
 from bitblas import set_log_level
 
 set_log_level(logging.DEBUG)
 
-def compare_tir_scripts_and_emitter(
+
+def check_eual_ref_scripts_with_emitter(
     M,
     N,
     K,
@@ -28,8 +23,26 @@ def compare_tir_scripts_and_emitter(
     fast_decoding,
     with_bias,
     zeros_mode,
+    propagate_a,
+    propagate_b,
 ):
-    tir_script_func = matmul_nt_dequantize_b(
+    from bitblas.ops.impl.matmul_dequantize_impl import (
+        MatMulNTDequantizeEmitter,
+        matmul_nt_dequantize_b,
+        matmul_nt_dequantize_b_propagate_b,
+        matmul_nt_dequantize_b_propagate_a_propagate_b,
+    )
+    func = None
+    if propagate_a and propagate_b:
+        func = matmul_nt_dequantize_b_propagate_a_propagate_b
+    elif propagate_b:
+        func = matmul_nt_dequantize_b_propagate_b
+    else:
+        func = matmul_nt_dequantize_b
+
+    assert func is not None, "No function found for the given configuration"
+
+    ref_func = func(
         M,
         N,
         K,
@@ -46,8 +59,8 @@ def compare_tir_scripts_and_emitter(
         with_bias,
         zeros_mode,
     )
-    
-    emitter_func = MatMulNTDequantizeEmitter(
+
+    emit_func = MatMulNTDequantizeEmitter(
         M,
         N,
         K,
@@ -63,6 +76,21 @@ def compare_tir_scripts_and_emitter(
         fast_decoding,
         with_bias,
         zeros_mode,
+        propagate_a=propagate_a,
+        propagate_b=propagate_b,
     ).emit()
-    
-    tvm.ir.assert_structural_equal(tir_script_func, emitter_func)
+
+    tvm.ir.assert_structural_equal(ref_func, emit_func)
+
+
+def test_check_eual_ref_scripts_with_emitter():
+    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "nf", True, False, -1, False, False, "original", False, False)
+    check_eual_ref_scripts_with_emitter(16384, 16384, 16384, "float16", "float16", "float16", 4, "int8", "nf", True, False, -1, False, False, "original", False, False)
+    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", True, False, -1, False, False, "original", False, False)
+    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", True, False, -1, False, False, "original", False, False)
+    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", True, False, -1, False, False, "original", False, True)
+    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", True, False, -1, False, False, "original", False, True)
+    check_eual_ref_scripts_with_emitter(1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", True, False, -1, False, False, "original", True, True)
+
+if __name__ == "__main__":
+    test_check_eual_ref_scripts_with_emitter()
