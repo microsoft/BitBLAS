@@ -73,7 +73,7 @@ class MatMulNTDequantizeEmitter:
     def _validate_layout(self):
         # TODO: extend the dequantize operators into General Layout
         pass
-    
+
     def _legalize_group_size(self):
         if self.group_size == -1:
             self.group_size = self.K
@@ -96,18 +96,19 @@ class MatMulNTDequantizeEmitter:
             l, r = 16, 32  # noqa: E741
 
         A = te.placeholder((self.M, self.K), name="A", dtype=in_dtype)
-        B = te.placeholder((self.N, self.K // storage_nbit * bit),
-                           name="B",
-                           dtype=storage_dtype)
+        B = te.placeholder((self.N, self.K // storage_nbit * bit), name="B", dtype=storage_dtype)
         if self.propagate_a:
             A = te.placeholder((self.M // l, self.K // r, l, r), name="A", dtype=in_dtype)
         if self.propagate_b:
             target_dtype = DataType(in_dtype)
             scaling_factor = 1
             if bit > 0 and bit < target_dtype.bits:
-                scaling_factor = ((target_dtype.bits // bit) * DataType(storage_dtype).bits // target_dtype.bits)
+                scaling_factor = ((target_dtype.bits // bit) * DataType(storage_dtype).bits //
+                                  target_dtype.bits)
             qr = r * bit // storage_nbit
-            B = te.placeholder((self.N // l, (self.K // scaling_factor) // qr, l, qr), name="B", dtype=storage_dtype) 
+            B = te.placeholder((self.N // l, (self.K // scaling_factor) // qr, l, qr),
+                               name="B",
+                               dtype=storage_dtype)
 
         LUT = te.placeholder((1 << bit,), name="LUT", dtype=in_dtype)
         Scale = te.placeholder((self.N, self.K // self.group_size), name="Scale", dtype=in_dtype)

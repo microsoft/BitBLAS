@@ -84,13 +84,28 @@ def check_eual_ref_scripts_with_emitter(
 
 
 def test_check_eual_ref_scripts_with_emitter():
-    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "nf", True, False, -1, False, False, "original", False, False)
-    check_eual_ref_scripts_with_emitter(16384, 16384, 16384, "float16", "float16", "float16", 4, "int8", "nf", True, False, -1, False, False, "original", False, False)
-    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", True, False, -1, False, False, "original", False, False)
-    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", True, False, -1, False, False, "original", False, False)
-    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", True, False, -1, False, False, "original", False, True)
-    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint", True, False, -1, False, False, "original", False, True)
-    check_eual_ref_scripts_with_emitter(1024, 1024, 1024, "float16", "float16", "float16", 4, "int8", "uint", True, False, -1, False, False, "original", True, True)
+    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8",
+                                        "nf", True, False, -1, False, False, "original", False,
+                                        False)
+    check_eual_ref_scripts_with_emitter(16384, 16384, 16384, "float16", "float16", "float16", 4,
+                                        "int8", "nf", True, False, -1, False, False, "original",
+                                        False, False)
+    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8",
+                                        "uint", True, False, -1, False, False, "original", False,
+                                        False)
+    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8",
+                                        "uint", True, False, -1, False, False, "original", False,
+                                        False)
+    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8",
+                                        "uint", True, False, -1, False, False, "original", False,
+                                        True)
+    check_eual_ref_scripts_with_emitter(1, 16384, 16384, "float16", "float16", "float16", 4, "int8",
+                                        "uint", True, False, -1, False, False, "original", False,
+                                        True)
+    check_eual_ref_scripts_with_emitter(1024, 1024, 1024, "float16", "float16", "float16", 4,
+                                        "int8", "uint", True, False, -1, False, False, "original",
+                                        True, True)
+
 
 if __name__ == "__main__":
     test_check_eual_ref_scripts_with_emitter()
