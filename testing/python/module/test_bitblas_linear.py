@@ -10,6 +10,7 @@ import torch.nn as nn
 torch.manual_seed(0)
 bitblas.set_log_level("DEBUG")
 
+
 def correctness_consistent(m, in_features, out_features, bias):
     linear_torch = (nn.Linear(in_features, out_features, bias=bias).to(torch.float16).cuda())
     linear_bitblas = BitBLASLinear(
@@ -43,6 +44,7 @@ def test_correctness_consistent():
     correctness_consistent(1, 1024, 1024, True)
     correctness_consistent(1024, 1024, 1024, True)
     correctness_consistent([1, 1024], 1024, 1024, True)
+
 
 def correctness_weight_only_dequantize(
     m,
