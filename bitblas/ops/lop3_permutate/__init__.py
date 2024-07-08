@@ -2,8 +2,8 @@
 # Licensed under the MIT License.
 from tvm.target import Target
 from typing import Literal, Union
-from .operator import Operator
-from .impl.lop3_permutate_impl import select_implementation
+from ..operator import Operator
+from .lop3_permutate_impl import select_implementation
 from dataclasses import dataclass
 import torch
 

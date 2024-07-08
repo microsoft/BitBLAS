@@ -2,8 +2,8 @@
 # Licensed under the MIT License.
 from tvm.target import Target
 from typing import Literal, Union
-from .operator import Operator
-from .impl.ladder_permutate_impl import select_implementation
+from ..operator import Operator
+from .ladder_permutate_impl import select_implementation
 from dataclasses import dataclass
 
 

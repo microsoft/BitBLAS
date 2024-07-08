@@ -148,7 +148,7 @@ class Matmul(Operator):
 
         input_executors = TransformExecutorCPU()
         if self.ladder_permutate_a is not None:
-            input_executors.append(self.ladder_permutate_b)
+            input_executors.append(self.ladder_permutate_a)
 
         self.input_executors = input_executors
 
