@@ -21,9 +21,7 @@ def general_compress_to_int8(lowprecision_weight, source_bits=4):
     )
     for j in range(lowprecision_weight.shape[-1] // elems_per_byte):
         for k in range(elems_per_byte):
-            int8_weight[:, j] |= lowprecision_weight[:, j * elems_per_byte + k] << (
-                source_bits * k
-            )
+            int8_weight[:, j] |= lowprecision_weight[:, j * elems_per_byte + k] << (source_bits * k)
     return int8_weight
 
 
@@ -80,17 +78,11 @@ def tir_interleave_weight(N=2, K=16, bits=4, target_dtype="float16"):
             with T.block("B"):
                 v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])
                 offset = v2 * elems_per_group + v3
-                shift = (offset % num_groups) * bits_stride + (
-                    offset // num_groups
-                ) * bits
-                B[v0, v1] = B[v0, v1] | (
-                    ((A[v0, v1] >> (bits * offset)) & mask) << shift
-                )
+                shift = (offset % num_groups) * bits_stride + (offset // num_groups) * bits
+                B[v0, v1] = B[v0, v1] | (((A[v0, v1] >> (bits * offset)) & mask) << shift)
 
     @T.prim_func
-    def interleave_weight_f16_2b(
-        A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")
-    ):
+    def interleave_weight_f16_2b(A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")):
         B_tmp_1 = T.alloc_buffer((N, QK), "int32", scope="local")
         B_tmp_2 = T.alloc_buffer((N, QK), "int32", scope="local")
         B_tmp_3 = T.alloc_buffer((N, QK), "int32", scope="local")
@@ -98,12 +90,8 @@ def tir_interleave_weight(N=2, K=16, bits=4, target_dtype="float16"):
             with T.block("B_tmp"):
                 v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])
                 offset = v2 * elems_per_group + v3
-                shift = (offset % num_groups) * bits_stride + (
-                    offset // num_groups
-                ) * bits
-                B[v0, v1] = B[v0, v1] | (
-                    ((A[v0, v1] >> (bits * offset)) & mask) << shift
-                )
+                shift = (offset % num_groups) * bits_stride + (offset // num_groups) * bits
+                B[v0, v1] = B[v0, v1] | (((A[v0, v1] >> (bits * offset)) & mask) << shift)
 
         for ax0, ax1 in T.grid(N, QK):
             with T.block("B"):
@@ -114,9 +102,7 @@ def tir_interleave_weight(N=2, K=16, bits=4, target_dtype="float16"):
                 B[v0, v1] = B_tmp_1[v0, v1] | B_tmp_2[v0, v1] | B_tmp_3[v0, v1]
 
     @T.prim_func
-    def interleave_weight_f16_1b(
-        A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")
-    ):
+    def interleave_weight_f16_1b(A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")):
         B_tmp_1 = T.alloc_buffer((N, QK), "int32", scope="local")
         B_tmp_2 = T.alloc_buffer((N, QK), "int32", scope="local")
         B_tmp_3 = T.alloc_buffer((N, QK), "int32", scope="local")
@@ -128,12 +114,8 @@ def tir_interleave_weight(N=2, K=16, bits=4, target_dtype="float16"):
             with T.block("B_tmp"):
                 v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])
                 offset = v2 * elems_per_group + v3
-                shift = (offset % num_groups) * bits_stride + (
-                    offset // num_groups
-                ) * bits
-                B[v0, v1] = B[v0, v1] | (
-                    ((A[v0, v1] >> (bits * offset)) & mask) << shift
-                )
+                shift = (offset % num_groups) * bits_stride + (offset // num_groups) * bits
+                B[v0, v1] = B[v0, v1] | (((A[v0, v1] >> (bits * offset)) & mask) << shift)
 
         for ax0, ax1 in T.grid(N, QK):
             with T.block("B"):
@@ -152,13 +134,10 @@ def tir_interleave_weight(N=2, K=16, bits=4, target_dtype="float16"):
                     | B_tmp_4[v0, v1]
                     | B_tmp_5[v0, v1]
                     | B_tmp_6[v0, v1]
-                    | B_tmp_7[v0, v1]
-                )
+                    | B_tmp_7[v0, v1])
 
     @T.prim_func
-    def interleave_weight_int8_1b(
-        A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")
-    ):
+    def interleave_weight_int8_1b(A: T.Buffer((N, QK), "int32"), B: T.Buffer((N, QK), "int32")):
         B_tmp_1 = T.alloc_buffer((N, QK), "int32", scope="local")
         B_tmp_2 = T.alloc_buffer((N, QK), "int32", scope="local")
         B_tmp_3 = T.alloc_buffer((N, QK), "int32", scope="local")
@@ -168,12 +147,8 @@ def tir_interleave_weight(N=2, K=16, bits=4, target_dtype="float16"):
             with T.block("B_tmp"):
                 v0, v1, v2, v3 = T.axis.remap("SSSS", [ax0, ax1, ax2, ax3])
                 offset = v2 * elems_per_group + v3
-                shift = (offset % num_groups) * bits_stride + (
-                    offset // num_groups
-                ) * bits
-                B[v0, v1] = B[v0, v1] | (
-                    ((A[v0, v1] >> (bits * offset)) & mask) << shift
-                )
+                shift = (offset % num_groups) * bits_stride + (offset // num_groups) * bits
+                B[v0, v1] = B[v0, v1] | (((A[v0, v1] >> (bits * offset)) & mask) << shift)
 
         for ax0, ax1 in T.grid(N, QK):
             with T.block("B"):
@@ -188,8 +163,7 @@ def tir_interleave_weight(N=2, K=16, bits=4, target_dtype="float16"):
                     | B_tmp_2[v0, v1]
                     | B_tmp_3[v0, v1]
                     | B_tmp_4[v0, v1]
-                    | B_tmp_5[v0, v1]
-                )
+                    | B_tmp_5[v0, v1])
 
     if target_dtype == "float16" and bits == 2:
         return interleave_weight_f16_2b
@@ -207,7 +181,7 @@ def test_lop3_interleave_weight():
     K = 16
     target_dtype = "float16"
     torch.manual_seed(0)
-    uint_max = 2 ** (source_nbits) - 1
+    uint_max = 2**(source_nbits) - 1
     raw_data = torch.randint(0, uint_max, (N, K), dtype=torch.int8).cpu().numpy()
     compressed_b = general_compress_to_int8(raw_data, source_nbits)
     interleaved_weight = interleave_weight(compressed_b, source_nbits, target_dtype)
