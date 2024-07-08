@@ -5,7 +5,6 @@ from bitblas import tvm
 import torch
 import numpy as np
 from tvm.script import tir as T
-import numpy as np
 
 
 def general_compress_to_int8(lowprecision_weight, source_bits=4):
