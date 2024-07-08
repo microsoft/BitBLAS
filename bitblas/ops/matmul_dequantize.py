@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 from bitblas import tvm
 from tvm.target import Target
-from bitblas.base.roller.arch.cuda import CUDA
+from bitblas.base.arch.cuda import CUDA
 from typing import Any, List, Literal, Optional, Tuple, Union
 from .operator import Operator, TransformKind
 from .impl.matmul_dequantize_impl import select_implementation
@@ -197,17 +197,6 @@ class MatmulWeightOnlyDequantize(Operator):
 
         if enable_tuning:
             self.hardware_aware_finetune()
-
-    def _build_default_module(self, target: Target):
-        try:
-            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
-        except Exception:
-            self.optimized_func = None
-            logger.warning(
-                "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
-            )
-
-        self._build_runtime_module(target)
 
     def _select_implementation(self):
         return select_implementation(

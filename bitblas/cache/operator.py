@@ -76,7 +76,11 @@ class OperatorCache:
         return database_path
 
     def _determine_arch_str(self, op_inst, target):
-        return (target if target else "-".join(list(op_inst.target.keys) + [op_inst.target.arch]))
+        return (
+            target
+            if target
+            else "-".join(list(op_inst.target.keys) + [op_inst.target.arch])
+        )
 
     def _ensure_directory(self, path):
         os.makedirs(path, exist_ok=True)
@@ -107,21 +111,25 @@ class OperatorCache:
         with open(optimized_file_path, "w") as optimized_file:
             if op_inst.optimized_func is not None:
                 optimized_file.write(op_inst.optimized_func.script(show_meta=False))
-        if op_inst.wrapper.lib_name is not None:
+        if op_inst.wrapper.libpath is not None:
             # copy lib name to the same directory as the artifact
-            src_name = op_inst.wrapper.src_name
+            srcpath = op_inst.wrapper.srcpath
             shutil.copy(
-                src_name,
+                srcpath,
                 os.path.join(config_path, os.path.basename("wrapper_source.cu")),
             )
-            lib_name = op_inst.wrapper.lib_name
+            libpath = op_inst.wrapper.libpath
             shutil.copy(
-                lib_name,
+                libpath,
                 os.path.join(config_path, os.path.basename("wrapper_compiled.so")),
             )
 
     def _determine_target_arch_str(self, target):
-        return (target if isinstance(target, str) else "-".join(list(target.keys) + [target.arch]))
+        return (
+            target
+            if isinstance(target, str)
+            else "-".join(list(target.keys) + [target.arch])
+        )
 
     def _load_operators_from_arch_path(self, arch_path, target):
         for root, dirs, _ in os.walk(arch_path):
@@ -130,7 +138,7 @@ class OperatorCache:
                 self._load_operator(config_path, target)
 
     def _load_operator(self, config_path, target):
-        mapping, config, rt_mod, src_name, lib_name = None, None, None, None, None
+        mapping, config, rt_mod, srcpath, libpath = None, None, None, None, None
         for file in os.listdir(config_path):
             full_path = os.path.join(config_path, file)
             if file == "mapping.json":
@@ -142,19 +150,27 @@ class OperatorCache:
             elif file.endswith(".tar"):
                 rt_mod = tvm.runtime.load_module(full_path)
             elif file == "wrapper_compiled.so":
-                lib_name = full_path
+                libpath = full_path
             elif file == "wrapper_source.cu":
-                src_name = full_path
+                srcpath = full_path
 
         if mapping and config and rt_mod:
-            self._instantiate_and_add_operator(mapping, config, rt_mod, src_name, lib_name, target)
+            self._instantiate_and_add_operator(
+                mapping, config, rt_mod, srcpath, libpath, target
+            )
 
-    def _instantiate_and_add_operator(self, mapping, config, rt_mod, src_name, lib_name, target):
+    def _instantiate_and_add_operator(
+        self, mapping, config, rt_mod, srcpath, libpath, target
+    ):
         config_cls = getattr(bitblas, mapping["config_type"])
         operator_cls = getattr(bitblas, mapping["operator_type"])
         op_inst = operator_cls(
-            config=config_cls(**config), target=target, enable_tuning=False, from_database=True)
-        op_inst.update_runtime_module(rt_mod, src_name=src_name, lib_name=lib_name)
+            config=config_cls(**config),
+            target=target,
+            enable_tuning=False,
+            from_database=True,
+        )
+        op_inst.update_runtime_module(rt_mod, srcpath=srcpath, libpath=libpath)
         self.add(config_cls(**config), op_inst)
 
 

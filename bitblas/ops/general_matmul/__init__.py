@@ -6,7 +6,7 @@ import operator
 from functools import reduce
 from bitblas.base.arch.cuda import CUDA
 from typing import Any, Literal, Optional, Tuple, Union
-from ..operator import Operator, TransformKind, OPExecutorCPU
+from ..operator import OperatorConfig, Operator, TransformKind, OPExecutorCPU
 from .tirscript.matmul_dequantize_impl import select_implementation as weight_dequantize_implementation
 from .tirscript.matmul_impl import select_implementation as consistent_implementation
 from ...base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
@@ -41,7 +41,7 @@ def is_native_compute(A_dtype, W_dtype) -> bool:
 
 
 @dataclass(frozen=True)
-class MatmulConfig:
+class MatmulConfig(OperatorConfig):
     M: Union[int, Tuple[int]] = None
     N: int = None
     K: int = None
@@ -185,7 +185,7 @@ class MatmulConfig:
 
 class Matmul(Operator):
 
-    # TODO(lei): This should be improved into a general datatype.
+    # TODO(lei): This should be improved into a general datatype class.
     BITBLAS_TRICK_DTYPE_MAP = {
         "float64": ("fp", 64),
         "float32": ("fp", 32),
@@ -281,6 +281,7 @@ class Matmul(Operator):
         self.ladder_permutate_b = self._assign_ladder_permutate_b(target, enable_tuning)
         self.lop3_permutate = self._assign_lop3_permutate(target, enable_tuning)
         # create cpu weight executors
+        self.input_executors = self._create_input_executors()
         self.weight_executors = self._create_weight_executors()
 
         if enable_tuning:
@@ -354,6 +355,12 @@ class Matmul(Operator):
             )
         return None
 
+    def _create_input_executors(self):
+        input_executors = OPExecutorCPU()
+        if self.propagate_a is not TransformKind.NonTransform:
+            input_executors.append(self.ladder_permutate_a)
+        return input_executors
+    
     def _create_weight_executors(self):
         weight_executors = OPExecutorCPU()
         if self.fast_decoding:
@@ -361,17 +368,6 @@ class Matmul(Operator):
         if self.propagate_b is not TransformKind.NonTransform:
             weight_executors.append(self.ladder_permutate_b)
         return weight_executors
-
-    def _build_default_module(self, target: Target):
-        try:
-            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
-        except Exception:
-            self.optimized_func = None
-            logger.warning(
-                "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
-            )
-
-        self._build_runtime_module(target)
 
     def _select_implementation(self):
         if is_native_compute(self.A_dtype, self.W_dtype):
