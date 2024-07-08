@@ -878,6 +878,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     func = func.with_attr("weight_transform_kind", transform_kind_weight.value)
     return tvm.IRModule.from_expr(func)
 
+
 # Should be refactored with Emitter
 def select_implementation(
     M=None,
