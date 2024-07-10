@@ -32,8 +32,7 @@ class TransformKind(IntEnum):
 @dataclass(frozen=True)
 class OperatorConfig:
     """Base class for operator configurations. Used for typing."""
-
-    backend: Optional[str] = "tir"  # Avaliable backends: tir, cuda, tile-languange.
+    pass
 
 
 class Operator(ABC):
@@ -99,12 +98,11 @@ class Operator(ABC):
 
             try:
                 # Use a specific TVM pass context for CUDA platforms
-                with tvm.transform.PassContext(
-                    config={"tir.use_async_copy": True, **self.pass_context}
-                ):
-                    rt_mod = tvm.build(
-                        self.optimized_func, target=target, name=self.name
-                    )
+                with tvm.transform.PassContext(config={
+                        "tir.use_async_copy": True,
+                        **self.pass_context
+                }):
+                    rt_mod = tvm.build(self.optimized_func, target=target, name=self.name)
             except Exception:  # noqa: F841
                 logger.debug(
                     "Failed to build optimized function for CUDA target with default schedule, Please consider enable hardware aware tuning!"
@@ -118,20 +116,15 @@ class Operator(ABC):
             self.rt_mod = rt_mod
             # Initialize a time evaluator with the built module, specifying the device and the number of runs
             self.time_evaluator = rt_mod.time_evaluator(
-                rt_mod.entry_name, self.arch.device, number=10
-            )
+                rt_mod.entry_name, self.arch.device, number=10)
             self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
             self.torch_func = to_pytorch_func(rt_mod)
             if self.arch.platform == "CUDA":
                 try:
                     is_dynamic = (
-                        self.dynamic_range is not None
-                        and len(self.optimized_func.functions) > 1
-                    )
+                        self.dynamic_range is not None and len(self.optimized_func.functions) > 1)
                     self.wrapper.assign_optimized_module(self.optimized_func)
-                    wrapped_source = self.wrapper.wrap(
-                       self.get_source(target), is_dynamic
-                    )
+                    wrapped_source = self.wrapper.wrap(self.get_source(target), is_dynamic)
                     self.lib_generator.update_lib_code(wrapped_source)
                     self.lib_generator.compile_lib()
                     self.lib = self.lib_generator.load_lib()
@@ -140,10 +133,7 @@ class Operator(ABC):
                 except Exception as e:
                     build_runtime_library_error = e
                     logger.debug(
-                        "Failed to build runtime library {}".format(
-                            build_runtime_library_error
-                        )
-                    )
+                        "Failed to build runtime library {}".format(build_runtime_library_error))
 
         return rt_mod
 
@@ -157,8 +147,7 @@ class Operator(ABC):
                     bitblas.gpu.Reduction(),
                     bitblas.gpu.GeneralReduction(),
                     bitblas.gpu.Fallback(),
-                )(mod_for_opt)
-            )
+                )(mod_for_opt))
 
         if optimized_mod is not None:
             return optimized_mod
@@ -166,9 +155,7 @@ class Operator(ABC):
 
     def _build_default_module(self, target: Target):
         try:
-            self.optimized_func = self.apply_default_schedule(
-                self.prim_func_mod, target
-            )
+            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
         except Exception:
             self.optimized_func = None
             logger.warning(
@@ -180,9 +167,11 @@ class Operator(ABC):
     def post_process(self, code: str) -> str:
         return code
 
-    def apply_fast_tuning(
-        self, func: PrimFunc, target: Target, topk: int = 20, parallel_build=True
-    ) -> IRModule:
+    def apply_fast_tuning(self,
+                          func: PrimFunc,
+                          target: Target,
+                          topk: int = 20,
+                          parallel_build=True) -> IRModule:
         _, best = fast_tune(func, target, topk=topk, parallel_build=parallel_build)
         if best is not None:
             return best.sch.mod
@@ -197,27 +186,25 @@ class Operator(ABC):
         dynamic_range: Dict[str, List[int]] = None,
     ):
         optimized_mod = fast_tune_with_dynamic_range(
-            func, target, topk=topk, parallel_build=True, dynamic_range=dynamic_range
-        )
+            func, target, topk=topk, parallel_build=True, dynamic_range=dynamic_range)
         if optimized_mod is not None:
             return optimized_mod
         return None
 
-    def hardware_aware_finetune(
-        self, topk: int = 20, target: tvm.target.Target = None, parallel_build=True
-    ):
+    def hardware_aware_finetune(self,
+                                topk: int = 20,
+                                target: tvm.target.Target = None,
+                                parallel_build=True):
         if target is None:
             target = self.target
         dynamic_range = self.dynamic_range
         func = self.prim_func
         if dynamic_range is not None:
             self.optimized_func = self.apply_fast_tuning_with_dynamic_range(
-                func, target, topk, dynamic_range
-            )
+                func, target, topk, dynamic_range)
         else:
             self.optimized_func = self.apply_fast_tuning(
-                func, target, topk, parallel_build=parallel_build
-            )
+                func, target, topk, parallel_build=parallel_build)
         self._build_runtime_module(self.target)
 
     def get_profile_tensors(self, dynamic_symbolic_constrains: Optional[Dict] = None):
@@ -257,18 +244,14 @@ class Operator(ABC):
             numpy_dtype = map_numpy_type(arg.dtype)
             profile_tensors.append(
                 tvm.nd.array(
-                    np.random.uniform(0, 1, [var_warpper(i) for i in arg.shape]).astype(
-                        numpy_dtype
-                    ),
+                    np.random.uniform(0, 1,
+                                      [var_warpper(i) for i in arg.shape]).astype(numpy_dtype),
                     device=device,
-                )
-            )
+                ))
         self.profile_tensors = profile_tensors
         return profile_tensors
 
-    def profile_latency(
-        self, dynamic_symbolic_constrains: Optional[Dict] = None
-    ) -> str:
+    def profile_latency(self, dynamic_symbolic_constrains: Optional[Dict] = None) -> str:
         if dynamic_symbolic_constrains is None:
             dynamic_symbolic_constrains = {}
         profile_tensors = self.get_profile_tensors(dynamic_symbolic_constrains)
@@ -299,8 +282,7 @@ class Operator(ABC):
 
     def _forward_from_prebuild_lib(self, *args, stream=0):
         ctypes_args = [
-            ctypes.c_void_p(arr.data_ptr()) if not isinstance(arr, int) else arr
-            for arr in args
+            ctypes.c_void_p(arr.data_ptr()) if not isinstance(arr, int) else arr for arr in args
         ]
         ctypes_args.append(ctypes.c_void_p(stream))
         self.lib.call(*ctypes_args)
@@ -316,9 +298,7 @@ class Operator(ABC):
 
     def update_runtime_module(self, rt_mod, srcpath=None, libpath=None):
         self.rt_mod = rt_mod
-        self.time_evaluator = rt_mod.time_evaluator(
-            rt_mod.entry_name, self.arch.device, number=10
-        )
+        self.time_evaluator = rt_mod.time_evaluator(rt_mod.entry_name, self.arch.device, number=10)
         self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
         self.torch_func = to_pytorch_func(rt_mod)
         if srcpath is not None:
@@ -337,17 +317,13 @@ class Operator(ABC):
         return self.prim_func_mod["main"]
 
     @property
-    def backend(self):
-        return self.config.backend
-
-    @property
     def srcpath(self):
         return self.lib_generator.get_source_path()
 
     @property
     def libpath(self):
         return self.lib_generator.get_lib_path()
-    
+
     @property
     def wrapped_source(self):
         return self.lib_generator.lib_code

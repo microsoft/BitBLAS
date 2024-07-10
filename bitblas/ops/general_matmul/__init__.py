@@ -215,6 +215,7 @@ class Matmul(Operator):
         target: Optional[Union[str, Target]] = None,
         enable_tuning: bool = True,
         from_database: bool = False,
+        backend: str = "tir",
     ):
         # if from database, we should disable default schedule
         # to save compilation time
@@ -227,6 +228,7 @@ class Matmul(Operator):
 
         self.source_format = source_format
         self.bit = bit
+        self.backend = backend
         super().__init__(name, config, target)
 
         if source_format == "int" and self.with_zeros:
@@ -238,6 +240,10 @@ class Matmul(Operator):
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
 
+        self.dispatch_tir(target, from_database, source_format, enable_tuning)
+
+    def dispatch_tir(self, target: Target, from_database: bool = False, source_format: str = "uint", enable_tuning: bool = True):
+        '''Dispatch the tir script implementation'''
         self.arch = CUDA(target)
 
         if isinstance(self.M, Tuple):
@@ -289,7 +295,7 @@ class Matmul(Operator):
 
         # output data type
         self.torch_output_dtype = getattr(torch, self.out_dtype)
-
+        
     def _alloc_workspace(self):
         return torch.empty(WORKSPACE_SIZE, dtype=torch.float16).cuda()
 

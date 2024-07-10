@@ -1,12 +1,14 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-# TODO: Not Implemented Yet 
+# TODO: Not Implemented Yet
 from bitblas.ops.operator import TransformKind
 from bitblas.base import TileDevice
+from .template import i4_scale_template_source
+
 
 class MatmulDequantizeCudaEmitter:
-    
+
     def __init__(
         self,
         M,
@@ -55,34 +57,42 @@ class MatmulDequantizeCudaEmitter:
             return (TransformKind.IntraWarpTransform if propagate else TransformKind.NonTransform)
         elif isinstance(propagate, int):
             return TransformKind(propagate)
-    
-    def is_available(self, arch:TileDevice):
-        conditons = []
+
+    def is_available(self, arch: TileDevice):
+        conditions = []
         # group size must be -1, 128, k
-        conditons.append(self.group_size in [-1, 128, self.K])
+        conditions.append(self.group_size in [-1, 128, self.K])
         # source format must be int
-        conditons.append(self.source_format == "int")
+        conditions.append(self.source_format == "int")
         # with scaling must be true
-        conditons.append(self.with_scaling)
+        conditions.append(self.with_scaling)
         # with zeros must be false
-        conditons.append(not self.with_zeros)
+        conditions.append(not self.with_zeros)
         # bit must be 4
-        conditons.append(self.bit == 4)
+        conditions.append(self.bit == 4)
         # in_dtype must be float16
-        conditons.append(self.in_dtype == "float16")
+        conditions.append(self.in_dtype == "float16")
         # out_dtype must be float16
-        conditons.append(self.out_dtype == "float16")
+        conditions.append(self.out_dtype == "float16")
         # accum_dtype must be float32
-        conditons.append(self.accum_dtype == "float32")
+        conditions.append(self.accum_dtype == "float32")
         # sm version must be 80 (A100)
-        conditons.append(self.arch.sm_version == 80)
-        return all(conditons)
-    
+        conditions.append(self.arch.sm_version == 80)
+        return all(conditions)
+
     def get_weight_transform(self):
         raise NotImplementedError
 
     def get_scale_transform(self):
         raise NotImplementedError
-    
+
     def get_wrapped_source(self):
-        raise NotImplementedError
+        wrapped_source = f"""
+        extern "C" void init() {{
+
+        }}
+        extern "C" void call(half* __restrict__ A, int8_t* __restrict__ B, half* __restrict__ Scale, half* __restrict__ C, int m, void* workspace, cudaStream_t stream=cudaStreamDefault) {{
+            marlin_cuda(A, B, C, Scale, m, {self.N}, {self.K}, workspace, {self.group_size}, 0, -1, -1, 108, 16);
+        }}
+        """
+        return i4_scale_template_source + wrapped_source

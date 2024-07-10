@@ -7,6 +7,7 @@ from tvm.driver import lower
 from tvm.target import Target
 from typing import Tuple, List
 
+
 def get_annotated_device_mod(mod: IRModule, target: Target) -> "IRModule":
     """
     Lower the given IRModule and create a device module for the specified target.

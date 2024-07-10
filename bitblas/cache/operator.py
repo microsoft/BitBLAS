@@ -76,11 +76,7 @@ class OperatorCache:
         return database_path
 
     def _determine_arch_str(self, op_inst, target):
-        return (
-            target
-            if target
-            else "-".join(list(op_inst.target.keys) + [op_inst.target.arch])
-        )
+        return (target if target else "-".join(list(op_inst.target.keys) + [op_inst.target.arch]))
 
     def _ensure_directory(self, path):
         os.makedirs(path, exist_ok=True)
@@ -125,11 +121,7 @@ class OperatorCache:
             )
 
     def _determine_target_arch_str(self, target):
-        return (
-            target
-            if isinstance(target, str)
-            else "-".join(list(target.keys) + [target.arch])
-        )
+        return (target if isinstance(target, str) else "-".join(list(target.keys) + [target.arch]))
 
     def _load_operators_from_arch_path(self, arch_path, target):
         for root, dirs, _ in os.walk(arch_path):
@@ -155,13 +147,9 @@ class OperatorCache:
                 srcpath = full_path
 
         if mapping and config and rt_mod:
-            self._instantiate_and_add_operator(
-                mapping, config, rt_mod, srcpath, libpath, target
-            )
+            self._instantiate_and_add_operator(mapping, config, rt_mod, srcpath, libpath, target)
 
-    def _instantiate_and_add_operator(
-        self, mapping, config, rt_mod, srcpath, libpath, target
-    ):
+    def _instantiate_and_add_operator(self, mapping, config, rt_mod, srcpath, libpath, target):
         config_cls = getattr(bitblas, mapping["config_type"])
         operator_cls = getattr(bitblas, mapping["operator_type"])
         op_inst = operator_cls(

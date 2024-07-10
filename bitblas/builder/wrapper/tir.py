@@ -8,22 +8,10 @@ from bitblas.utils import match_global_kernel
 from bitblas.utils.rtmod_analysis import get_annotated_device_mod
 import re
 from .base import BaseWrapper
-from abc import ABC, abstractmethod
-from bitblas import tvm
-from tvm import IRModule
-from tvm.target import Target
-from tvm.tir import PrimFunc
-from tvm.contrib.dlpack import to_pytorch_func
-from tvm._ffi.base import _LIB, raise_last_ffi_error
-from tvm._ffi._ctypes.types import TVMValue, ArgTypeCode
-from typing import List, Dict, Optional
 import logging
 
 logger = logging.getLogger(__name__)
 
-
-import logging
-logger = logging.getLogger(__name__)
 
 class TIRCUDASourceWrapper(object):
     _TYPE_MAP = {
@@ -185,6 +173,7 @@ class TIRCUDASourceWrapper(object):
     @property
     def prim_func(self):
         return self.mod["main"]
+
 
 class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
 
@@ -395,8 +384,9 @@ extern "C" void call({}) {{
     def prim_func(self):
         return self.mod["main"]
 
+
 class TIRWrapper(BaseWrapper):
-    
+
     def __init__(self, arch: TileDevice):
         super().__init__()
         self.optimized_mod = None
@@ -407,7 +397,7 @@ class TIRWrapper(BaseWrapper):
         self.optimized_mod = optimized_mod
 
     # Get Scheduled Rt Module and return source to be compiled
-    def wrap(self, c_source:str, is_dynamic: bool = False):
+    def wrap(self, c_source: str, is_dynamic: bool = False):
         wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
         wrapper = wrapper_class(self.optimized_mod, c_source, self.arch)
         return wrapper.lib_code

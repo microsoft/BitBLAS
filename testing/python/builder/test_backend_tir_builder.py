@@ -5,12 +5,14 @@ from bitblas import MatmulConfig, Matmul
 import logging
 from bitblas import set_log_level
 from bitblas.builder.backend.tir import TIRBackend
+
 set_log_level(logging.DEBUG)
 
 
 def get_codegen_result(ops):
     code = ops.get_source()
     return code
+
 
 def matmul_backend_code_wrap(
     M,
@@ -36,14 +38,17 @@ def matmul_backend_code_wrap(
         with_bias=with_bias,
     )
     matmul = Matmul(config=matmul_config, enable_tuning=False)
-    backend = TIRBackend(config=matmul_config, optimized_mod=matmul.optimized_func, arch=matmul.arch)
+    backend = TIRBackend(
+        config=matmul_config, optimized_mod=matmul.optimized_func, arch=matmul.arch)
     wrapped_code = backend.wrap(matmul.get_source(), is_dynamic=isinstance(M, list))
     assert "void call" in wrapped_code
+
 
 def test_matmul_transform_weight():
     matmul_backend_code_wrap(1, 768, 768, "float16", "uint4", "float16", "float16", False)
     matmul_backend_code_wrap(768, 768, 768, "float16", "uint4", "float16", "float16", False)
     matmul_backend_code_wrap([1, 768], 768, 768, "float16", "uint4", "float16", "float16", False)
+
 
 # fmt: on
 if __name__ == "__main__":

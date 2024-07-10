@@ -18,7 +18,7 @@ class LibraryGenerator(object):
 
     def __init__(self, arch: TileDevice):
         self.arch = arch
-    
+
     def update_lib_code(self, lib_code: str):
         self.lib_code = lib_code
 
@@ -67,6 +67,6 @@ class LibraryGenerator(object):
 
     def get_source_path(self):
         return self.srcpath
-    
+
     def get_lib_path(self):
         return self.libpath
