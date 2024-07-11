@@ -309,6 +309,7 @@ class Operator(ABC):
             self.lib_generator.set_lib_path(libpath)
             self.lib = ctypes.CDLL(libpath)
             self.lib.init()
+        # TODO: update the lib code from srcpath
 
     @abstractmethod
     def _select_implementation(self) -> IRModule:
