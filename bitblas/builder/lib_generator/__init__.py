@@ -70,3 +70,9 @@ class LibraryGenerator(object):
 
     def get_lib_path(self):
         return self.libpath
+
+    def set_lib_path(self, libpath):
+        self.libpath = libpath
+    
+    def set_src_path(self, srcpath):
+        self.srcpath = srcpath

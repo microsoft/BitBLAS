@@ -302,9 +302,11 @@ class Operator(ABC):
         self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
         self.torch_func = to_pytorch_func(rt_mod)
         if srcpath is not None:
-            self.srcpath = srcpath
+            assert self.lib_generator is not None, "lib_generator is not initialized"
+            self.lib_generator.set_src_path(srcpath)
         if libpath is not None:
-            self.libpath = libpath
+            assert self.lib_generator is not None, "lib_generator is not initialized"
+            self.lib_generator.set_lib_path(libpath)
             self.lib = ctypes.CDLL(libpath)
             self.lib.init()
 
