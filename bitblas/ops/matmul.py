@@ -148,7 +148,7 @@ class Matmul(Operator):
 
         input_executors = TransformExecutorCPU()
         if self.ladder_permutate_a is not None:
-            input_executors.append(self.ladder_permutate_b)
+            input_executors.append(self.ladder_permutate_a)
 
         self.input_executors = input_executors
 
@@ -160,17 +160,6 @@ class Matmul(Operator):
 
         if enable_tuning:
             self.hardware_aware_finetune()
-
-    def _build_default_module(self, target: Target):
-        try:
-            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
-        except Exception:
-            self.optimized_func = None
-            logger.warning(
-                "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
-            )
-
-        self._build_runtime_module(target)
 
     def _select_implementation(self):
         return select_implementation(

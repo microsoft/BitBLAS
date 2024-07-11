@@ -5,7 +5,7 @@ from bitblas import tvm
 from typing import Dict, List, Tuple, Optional
 import numpy as np
 
-from ..arch import TileDevice
+from ...arch import TileDevice
 from ..hint import Hint, Stride, TileDict, IntrinInfo
 from ..node import PrimFuncNode
 from .common import coalesced_factor, factorize, get_all_factors

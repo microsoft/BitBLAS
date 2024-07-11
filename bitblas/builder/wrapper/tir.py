@@ -4,123 +4,32 @@ from bitblas import tvm
 from typing import Optional, List, Dict, Union
 from tvm import IRModule
 from bitblas import TileDevice
-from tvm.runtime import ndarray
 from bitblas.utils import match_global_kernel
+from bitblas.utils.rtmod_analysis import get_annotated_device_mod
 import re
-import ctypes
-import os
-import tempfile
-import subprocess
+from .base import BaseWrapper
 import logging
-from tvm.driver import lower
-from tvm.target import Target
 
 logger = logging.getLogger(__name__)
 
-_TYPE_MAP = {
-    "float32": "float",
-    "float16": "half",
-    "bfloat16": "__nv_bfloat162",
-    "e4m3_float8": "__nv_fp8_e4m3",
-    "e5m2_float8": "__nv_fp8_e5m2",
-    "float64": "double",
-    "int64": "int64_t",
-    "int32": "int",
-    "uint32": "unsigned int",
-    "bool": "int8_t",
-    "int8": "int8_t",
-    "uint8": "uint8_t",
-    "int16": "int16_t",
-    "uchar": "uint8_t",
-}
 
-
-def get_annotated_device_mod(mod: IRModule, target: Target):
-    """
-    Lower the given IRModule and create a device module for the specified target.
-
-    Parameters:
-    - mod: The input IRModule.
-    - target: The compilation target.
-
-    Returns:
-    - A device module ready for execution.
-    """
-    input_mod = lower(mod)
-    target_input_mod = {target: input_mod}
-    annotated_mods = {}
-    runtime = None
-    target_host = None
-    for tgt, mod in target_input_mod.items():
-        if not isinstance(tgt, (str, Target)):
-            raise ValueError("The key of inputs must be str or "
-                             "Target when inputs is dict.")
-        if not isinstance(mod, tvm.IRModule):
-            raise ValueError("inputs must be Schedule, IRModule, "
-                             "or dict of str to IRModule.")
-        annotated_mods[tgt] = mod.with_attr("runtime", runtime)
-    annotated_mods, target_host = Target.canon_target_map_and_host(annotated_mods, target_host)
-    if not target_host:
-        for tar, _ in annotated_mods.items():
-            device_type = ndarray.device(tar.kind.name, 0).device_type
-            if device_type == ndarray.cpu(0).device_type:
-                target_host = tar
-                break
-    if not target_host:
-        target_host = "llvm" if tvm.runtime.enabled("llvm") else "stackvm"
-    annotated_mods, target_host = Target.canon_target_map_and_host(annotated_mods, target_host)
-    for target, mod in annotated_mods.items():
-        mixed_mod_passes = tvm.get_global_func("driver.mixed_mod_passes")
-        device_mod_passes = tvm.get_global_func("driver.device_mod_passes")
-        mod = mixed_mod_passes(mod, target)(mod)
-        device_mod = device_mod_passes(mod, target)(mod)
-    return device_mod
-
-
-def get_thread_block_information(mod: IRModule):
-    """
-    Extracts the thread block and grid dimensions for the reduction block within a given IRModule.
-
-    Parameters:
-    - mod: The input IRModule from which to extract thread block and grid information.
-
-    Returns:
-    A tuple containing two lists:
-    - The first list contains the dimensions of the thread block (threadIdx.x, threadIdx.y, threadIdx.z).
-    - The second list contains the dimensions of the grid (blockIdx.x, blockIdx.y, blockIdx.z).
-    """
-
-    # Initialize the schedule from the IRModule
-    sch = tvm.tir.Schedule(mod)
-
-    # Get the root block and its child blocks
-    root_block = sch.get_block("root")
-    child_blocks = sch.get_child_blocks(root_block)
-
-    # Initialize default block and grid dimensions (1, 1, 1)
-    block_dims, grid_dims = [1, 1, 1], [1, 1, 1]
-
-    for block in child_blocks:
-        # Get the loops surrounding the main block
-        loops = sch.get_loops(block)
-
-        # Iterate over each loop to extract thread and block bindings
-        for loop in loops:
-            stmt = sch.get(loop)
-            thread_binding = stmt.thread_binding
-            extent = int(stmt.extent)
-
-            # Skip loops without thread binding
-            if thread_binding:
-                if "threadIdx" in thread_binding.thread_tag:
-                    block_dims["xyz".index(thread_binding.thread_tag[-1])] = extent
-                elif "blockIdx" in thread_binding.thread_tag:
-                    grid_dims["xyz".index(thread_binding.thread_tag[-1])] = extent
-
-    return block_dims, grid_dims
-
-
-class CUDASourceWrapper(object):
+class TIRCUDASourceWrapper(object):
+    _TYPE_MAP = {
+        "float32": "float",
+        "float16": "half",
+        "bfloat16": "__nv_bfloat162",
+        "e4m3_float8": "__nv_fp8_e4m3",
+        "e5m2_float8": "__nv_fp8_e5m2",
+        "float64": "double",
+        "int64": "int64_t",
+        "int32": "int",
+        "uint32": "unsigned int",
+        "bool": "int8_t",
+        "int8": "int8_t",
+        "uint8": "uint8_t",
+        "int16": "int16_t",
+        "uchar": "uint8_t",
+    }
 
     def __init__(self, optimized_mod: IRModule, source: str, arch: TileDevice):
         self.mod = optimized_mod
@@ -134,48 +43,6 @@ class CUDASourceWrapper(object):
         self.srcpath: Optional[str] = None
         self.libpath: Optional[str] = None
         self.lib_code: Optional[str] = self.update_lib_code(source)
-
-    def load_lib(self):
-        return ctypes.CDLL(self.libpath)
-
-    def remove_lib(self):
-        if self.libpath:
-            os.remove(self.libpath)
-        self.libpath = None
-
-    def compile_lib(self, timeout: float = None):
-        arch = self.arch
-        src = tempfile.NamedTemporaryFile(mode="w", suffix=".cu", delete=False)
-        compute_version = arch.compute_capability
-        libpath = src.name.replace(".cu", ".so")
-
-        command = [
-            "nvcc",
-            "-std=c++17",
-            "-Xcudafe",
-            "--diag_suppress=177",
-            "--compiler-options",
-            "'-fPIC'",
-            "-lineinfo",
-            "--shared",
-            src.name,
-            "-lcuda",
-            f"-gencode=arch=compute_{compute_version},code=compute_{compute_version}",
-            "-o",
-            libpath,
-        ]
-        src.write(self.lib_code)
-        src.flush()
-        try:
-            ret = subprocess.run(command, timeout=timeout)
-        except subprocess.TimeoutExpired:
-            logger.warning(f"Compilation Timeout! {command}")
-            return None
-        if ret.returncode != 0:
-            logger.warning(f"Compilation Failed! {command}")
-            return None
-        self.srcpath = src.name
-        self.libpath = libpath
 
     def parse_source_information(self):
         device_mod = get_annotated_device_mod(self.mod, self.arch.target)
@@ -241,7 +108,7 @@ class CUDASourceWrapper(object):
             buffer = self.prim_func.buffer_map[param]
             function_args.append({
                 "name": buffer.name,
-                "type": _TYPE_MAP[buffer.dtype] + "* __restrict__",
+                "type": self._TYPE_MAP[buffer.dtype] + "* __restrict__",
             })
 
         dynamic_symbolic_set = self.get_dynamic_symbolic_set(self.prim_func)
@@ -308,7 +175,7 @@ class CUDASourceWrapper(object):
         return self.mod["main"]
 
 
-class CUDASourceWrapperWithDynamic(CUDASourceWrapper):
+class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
 
     def __init__(self, optimized_mod: IRModule, source: str, arch: TileDevice):
         super().__init__(optimized_mod, source, arch)
@@ -352,7 +219,7 @@ extern "C" void init() {{
             buffer = self.prim_func.buffer_map[param]
             function_args.append({
                 "name": buffer.name,
-                "type": _TYPE_MAP[buffer.dtype] + "* __restrict__",
+                "type": self._TYPE_MAP[buffer.dtype] + "* __restrict__",
             })
         # Add dynamic symbols as integer arguments
         for dyn_sym in dynamic_symbolic_set:
@@ -516,3 +383,22 @@ extern "C" void call({}) {{
     @property
     def prim_func(self):
         return self.mod["main"]
+
+
+class TIRWrapper(BaseWrapper):
+
+    def __init__(self, arch: TileDevice):
+        super().__init__()
+        self.optimized_mod = None
+        self.arch = arch
+        self.lib = None
+
+    def assign_optimized_module(self, optimized_mod: IRModule):
+        self.optimized_mod = optimized_mod
+
+    # Get Scheduled Rt Module and return source to be compiled
+    def wrap(self, c_source: str, is_dynamic: bool = False):
+        assert self.optimized_mod is not None, "Please assign optimized module first."
+        wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
+        wrapper = wrapper_class(self.optimized_mod, c_source, self.arch)
+        return wrapper.lib_code

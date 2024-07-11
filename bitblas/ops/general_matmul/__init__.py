@@ -4,17 +4,16 @@ from bitblas import tvm
 from tvm.target import Target
 import operator
 from functools import reduce
-from bitblas.base.roller.arch.cuda import CUDA
+from bitblas.base.arch.cuda import CUDA
 from typing import Any, Literal, Optional, Tuple, Union
-from .operator import Operator, TransformKind, OPExecutorCPU
-from .impl.matmul_dequantize_impl import (
-    select_implementation as weight_dequantize_implementation,)
-from .impl.matmul_impl import select_implementation as consistent_implementation
-from ..base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
+from ..operator import OperatorConfig, Operator, TransformKind, OPExecutorCPU
+from .tirscript.matmul_dequantize_impl import select_implementation as weight_dequantize_implementation
+from .tirscript.matmul_impl import select_implementation as consistent_implementation
+from ...base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
 from bitblas.utils.target_detector import auto_detect_nvidia_target
 from dataclasses import dataclass
-from .ladder_permutate import LadderPermutate, LadderPermutateConfig
-from .lop3_permutate import LOP3Permutate, LOP3PermutateConfig
+from ..ladder_permutate import LadderPermutate, LadderPermutateConfig
+from ..lop3_permutate import LOP3Permutate, LOP3PermutateConfig
 import logging
 import torch
 
@@ -42,7 +41,7 @@ def is_native_compute(A_dtype, W_dtype) -> bool:
 
 
 @dataclass(frozen=True)
-class MatmulConfig:
+class MatmulConfig(OperatorConfig):
     M: Union[int, Tuple[int]] = None
     N: int = None
     K: int = None
@@ -186,7 +185,7 @@ class MatmulConfig:
 
 class Matmul(Operator):
 
-    # TODO(lei): This should be improved into a general datatype.
+    # TODO(lei): This should be improved into a general datatype class.
     BITBLAS_TRICK_DTYPE_MAP = {
         "float64": ("fp", 64),
         "float32": ("fp", 32),
@@ -216,6 +215,7 @@ class Matmul(Operator):
         target: Optional[Union[str, Target]] = None,
         enable_tuning: bool = True,
         from_database: bool = False,
+        backend: str = "tir",
     ):
         # if from database, we should disable default schedule
         # to save compilation time
@@ -228,6 +228,7 @@ class Matmul(Operator):
 
         self.source_format = source_format
         self.bit = bit
+        self.backend = backend
         super().__init__(name, config, target)
 
         if source_format == "int" and self.with_zeros:
@@ -239,6 +240,10 @@ class Matmul(Operator):
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
 
+        self.dispatch_tir(target, from_database, source_format, enable_tuning)
+
+    def dispatch_tir(self, target: Target, from_database: bool = False, source_format: str = "uint", enable_tuning: bool = True):
+        '''Dispatch the tir script implementation'''
         self.arch = CUDA(target)
 
         if isinstance(self.M, Tuple):
@@ -252,77 +257,6 @@ class Matmul(Operator):
             self._build_default_module(target)
 
         self.workspace = None
-        if self.propagate_a:
-            # for general purpose, we use propagate_a to control the ladder permutation.
-            ladder_permutate_config = LadderPermutateConfig(
-                M=self.M,
-                N=self.K,
-                datatype=self.A_dtype,
-                storage_dtype=self.A_dtype,
-                propagate_kind="A",
-                transpose_matrix=False,
-                transform_kind=self.propagate_a,
-            )
-            self.ladder_permutate_a = LadderPermutate(
-                config=ladder_permutate_config,
-                target=target,
-                enable_tuning=enable_tuning,
-            )
-            self.workspace = torch.empty(WORKSPACE_SIZE, dtype=torch.float16).cuda()
-        else:
-            self.ladder_permutate_a = None
-
-        if self.propagate_b:
-            ladder_permutate_config = LadderPermutateConfig(
-                M=self.N,
-                N=self.K,
-                datatype=self.A_dtype,
-                dequantize_bits=self.bit,
-                storage_dtype=self.storage_dtype,
-                propagate_kind="B",
-                transpose_matrix=self.layout == "nt",
-                transform_kind=self.propagate_b,
-            )
-            self.ladder_permutate_b = LadderPermutate(
-                config=ladder_permutate_config,
-                target=tvm.target.Target("llvm"),
-            )
-        else:
-            self.ladder_permutate_b = None
-
-        if self.fast_decoding:
-            assert self.source_format in ["int", "uint"]
-            lop3_permutate_config = LOP3PermutateConfig(
-                M=self.N,
-                N=self.K,
-                datatype=self.A_dtype,
-                dequantize_bits=self.bit,
-                storage_dtype=self.storage_dtype,
-            )
-            self.lop3_permutate = LOP3Permutate(
-                config=lop3_permutate_config,
-                target=tvm.target.Target("llvm"),
-            )
-        else:
-            self.lop3_permutate = None
-
-        input_executors = OPExecutorCPU()
-        if self.ladder_permutate_a is not None:
-            input_executors.append(self.ladder_permutate_a)
-        self.input_executors = input_executors
-
-        weight_executors = OPExecutorCPU()
-        if self.lop3_permutate is not None:
-            weight_executors.append(self.lop3_permutate)
-
-        if self.ladder_permutate_b is not None:
-            weight_executors.append(self.ladder_permutate_b)
-
-        self.weight_executors = weight_executors
-
-        if enable_tuning:
-            self.hardware_aware_finetune()
-
         if source_format == "nf":
             self.lut = torch.tensor(
                 [
@@ -348,19 +282,98 @@ class Matmul(Operator):
         else:
             self.lut = None
 
+        # create permutate_opertors
+        self.ladder_permutate_a = self._assign_ladder_permutate_a(target, enable_tuning)
+        self.ladder_permutate_b = self._assign_ladder_permutate_b(target, enable_tuning)
+        self.lop3_permutate = self._assign_lop3_permutate(target, enable_tuning)
+        # create cpu weight executors
+        self.input_executors = self._create_input_executors()
+        self.weight_executors = self._create_weight_executors()
+
+        if enable_tuning:
+            self.hardware_aware_finetune()
+
         # output data type
         self.torch_output_dtype = getattr(torch, self.out_dtype)
+        
+    def _alloc_workspace(self):
+        return torch.empty(WORKSPACE_SIZE, dtype=torch.float16).cuda()
 
-    def _build_default_module(self, target: Target):
-        try:
-            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
-        except Exception:
-            self.optimized_func = None
-            logger.warning(
-                "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
+    def _assign_ladder_permutate_a(self, target: Target, enable_tuning: bool):
+        ladder_permutate_a = None
+        if self.propagate_a:
+            # for general purpose, we use propagate_a to control the ladder permutation.
+            ladder_permutate_config = LadderPermutateConfig(
+                M=self.M,
+                N=self.K,
+                datatype=self.A_dtype,
+                storage_dtype=self.A_dtype,
+                propagate_kind="A",
+                transpose_matrix=False,
+                transform_kind=self.propagate_a,
             )
+            ladder_permutate_a = LadderPermutate(
+                config=ladder_permutate_config,
+                target=target,
+                enable_tuning=enable_tuning,
+            )
+            self.workspace = self._alloc_workspace()
+        return ladder_permutate_a
+    
+    def _assign_ladder_permutate_b(self, target: Target, enable_tuning: bool):
+        # unused variables
+        del target
+        del enable_tuning
 
-        self._build_runtime_module(target)
+        if self.propagate_b:
+            ladder_permutate_config = LadderPermutateConfig(
+                M=self.N,
+                N=self.K,
+                datatype=self.A_dtype,
+                dequantize_bits=self.bit,
+                storage_dtype=self.storage_dtype,
+                propagate_kind="B",
+                transpose_matrix=self.layout == "nt",
+                transform_kind=self.propagate_b,
+            )
+            return LadderPermutate(
+                config=ladder_permutate_config,
+                target=tvm.target.Target("llvm"),
+            )
+        return None
+
+    def _assign_lop3_permutate(self, target: Target, enable_tuning: bool):
+        # unused variables
+        del target
+        del enable_tuning
+        if self.fast_decoding:
+            assert self.source_format in ["int", "uint"]
+            lop3_permutate_config = LOP3PermutateConfig(
+                M=self.N,
+                N=self.K,
+                datatype=self.A_dtype,
+                dequantize_bits=self.bit,
+                storage_dtype=self.storage_dtype,
+            )
+            return LOP3Permutate(
+                config=lop3_permutate_config,
+                target=tvm.target.Target("llvm"),
+            )
+        return None
+
+    def _create_input_executors(self):
+        input_executors = OPExecutorCPU()
+        if self.propagate_a is not TransformKind.NonTransform:
+            input_executors.append(self.ladder_permutate_a)
+        return input_executors
+    
+    def _create_weight_executors(self):
+        weight_executors = OPExecutorCPU()
+        if self.fast_decoding:
+            weight_executors.append(self.lop3_permutate)
+        if self.propagate_b is not TransformKind.NonTransform:
+            weight_executors.append(self.ladder_permutate_b)
+        return weight_executors
 
     def _select_implementation(self):
         if is_native_compute(self.A_dtype, self.W_dtype):
