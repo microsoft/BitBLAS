@@ -398,6 +398,7 @@ class TIRWrapper(BaseWrapper):
 
     # Get Scheduled Rt Module and return source to be compiled
     def wrap(self, c_source: str, is_dynamic: bool = False):
+        assert self.optimized_mod is not None, "Please assign optimized module first."
         wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
         wrapper = wrapper_class(self.optimized_mod, c_source, self.arch)
         return wrapper.lib_code

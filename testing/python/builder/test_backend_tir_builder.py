@@ -4,7 +4,7 @@ import bitblas
 from bitblas import MatmulConfig, Matmul
 import logging
 from bitblas import set_log_level
-from bitblas.builder.backend.tir import TIRBackend
+from bitblas.builder.wrapper import TIRWrapper
 
 set_log_level(logging.DEBUG)
 
@@ -38,8 +38,8 @@ def matmul_backend_code_wrap(
         with_bias=with_bias,
     )
     matmul = Matmul(config=matmul_config, enable_tuning=False)
-    backend = TIRBackend(
-        config=matmul_config, optimized_mod=matmul.optimized_func, arch=matmul.arch)
+    backend = TIRWrapper(arch=matmul.arch)
+    backend.assign_optimized_module(matmul.optimized_func)
     wrapped_code = backend.wrap(matmul.get_source(), is_dynamic=isinstance(M, list))
     assert "void call" in wrapped_code
 
@@ -53,4 +53,3 @@ def test_matmul_transform_weight():
 # fmt: on
 if __name__ == "__main__":
     bitblas.testing.main()
-    test_matmul_transform_weight()
