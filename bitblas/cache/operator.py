@@ -15,7 +15,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 BITBLAS_DATABASE_PATH = os.path.expanduser("~/.cache/bitblas")
-
+BITBLAS_WRAPPED_SOURCE_NAME = "wrapper_source.cu"
+BITBLAS_WRAPPED_COMPILED_NAME = "wrapper_compiled.so"
 
 class OperatorCache:
     """
@@ -107,17 +108,17 @@ class OperatorCache:
         with open(optimized_file_path, "w") as optimized_file:
             if op_inst.optimized_func is not None:
                 optimized_file.write(op_inst.optimized_func.script(show_meta=False))
-        if op_inst.wrapper.libpath is not None:
+        if op_inst.libpath is not None:
             # copy lib name to the same directory as the artifact
-            srcpath = op_inst.wrapper.srcpath
+            srcpath = op_inst.srcpath
             shutil.copy(
                 srcpath,
-                os.path.join(config_path, os.path.basename("wrapper_source.cu")),
+                os.path.join(config_path, os.path.basename(BITBLAS_WRAPPED_SOURCE_NAME)),
             )
-            libpath = op_inst.wrapper.libpath
+            libpath = op_inst.libpath
             shutil.copy(
                 libpath,
-                os.path.join(config_path, os.path.basename("wrapper_compiled.so")),
+                os.path.join(config_path, os.path.basename(BITBLAS_WRAPPED_COMPILED_NAME)),
             )
 
     def _determine_target_arch_str(self, target):
@@ -141,9 +142,9 @@ class OperatorCache:
                     config = json.load(f)
             elif file.endswith(".tar"):
                 rt_mod = tvm.runtime.load_module(full_path)
-            elif file == "wrapper_compiled.so":
+            elif file == BITBLAS_WRAPPED_COMPILED_NAME:
                 libpath = full_path
-            elif file == "wrapper_source.cu":
+            elif file == BITBLAS_WRAPPED_SOURCE_NAME:
                 srcpath = full_path
 
         if mapping and config and rt_mod:

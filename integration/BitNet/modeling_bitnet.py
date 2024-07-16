@@ -49,13 +49,24 @@ from transformers.utils import (
     replace_return_docstrings,
 )
 from configuration_bitnet import BitnetConfig
-from utils_quant import BitLinear
+from utils_quant import BitLinear, BitLinearBitBLAS
+from transformers.utils.hub import cached_file
 
 
 if is_flash_attn_2_available():
     from flash_attn import flash_attn_func, flash_attn_varlen_func
     from flash_attn.bert_padding import index_first_axis, pad_input, unpad_input  # noqa: F401
 
+def find_layers(module, layers=None, name=""):
+    if not layers:
+        layers = [nn.Linear]
+    for layer in layers:
+        if isinstance(module, layer):
+            return {name: module}
+    res = {}
+    for name1, child in module.named_children():
+        res.update(find_layers(child, layers=layers, name=name + "." + name1 if name != "" else name1))
+    return res
 
 logger = logging.get_logger(__name__)
 
@@ -538,7 +549,6 @@ class BitnetFlashAttention2(BitnetAttention):
         )
 
 
-
 LLAMA_ATTENTION_CLASSES = {
     "eager": BitnetAttention,
     "flash_attention_2": BitnetFlashAttention2,
@@ -961,7 +971,7 @@ class BitnetForCausalLM(BitnetPreTrainedModel):
         self.model = BitnetModel(config)
         self.vocab_size = config.vocab_size
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
-
+        self.quantized = False
         # Initialize weights and apply final processing
         self.post_init()
 
@@ -1164,12 +1174,112 @@ class BitnetForCausalLM(BitnetPreTrainedModel):
             )
         return reordered_past
 
-    
+    @staticmethod
+    def recursive_set(model, name, attr):
+        '''
+            set layers.25.mlp.up_proj to attr
+        '''
+
+        names = name.split('.')
+        obj = model
+        for n in names[:-1]:
+            obj = getattr(obj, n)
+        setattr(obj, names[-1], attr)
+
+    def quantize(self):
+        for name, module in self.model.named_modules():
+            # if is bitnet layer
+            if isinstance(module, BitLinear):
+                # create quantized version of the layer
+                print("Quantizing module", name)
+                bitblas_linear = BitLinearBitBLAS.from_bit_linear(
+                    module
+                )
+                print("Replacing module", name, "with a quantized version")
+                self.recursive_set(self.model, name, bitblas_linear)
+        self.quantized = True
+
     def _post_process_weights(self):
         for name, module in self.model.named_modules():
             if hasattr(module, "post_process_weights"):
                 print("Post processing weights for module", name)
                 module.post_process_weights()
+
+    def _replace_weight_param_with_qweight(self):
+        for name, module in self.model.named_modules():
+            if hasattr(module, "replace_weight_param_with_qweight"):
+                print("Replacing weight param with qweight for module", name)
+                module.replace_weight_param_with_qweight()
+
+    @classmethod
+    def from_quantized(cls,
+        model_name_or_path: Optional[str],
+        trust_remote_code: bool = False,
+        **kwargs,
+    ):
+        """load quantized model from local disk"""
+        # Parameters related to loading from Hugging Face Hub
+        cache_dir = kwargs.pop("cache_dir", None)
+        force_download = kwargs.pop("force_download", False)
+        resume_download = kwargs.pop("resume_download", False)
+        proxies = kwargs.pop("proxies", None)
+        local_files_only = kwargs.pop("local_files_only", False)
+        use_auth_token = kwargs.pop("use_auth_token", None)
+        revision = kwargs.pop("revision", None)
+        subfolder = kwargs.pop("subfolder", "")
+        commit_hash = kwargs.pop("_commit_hash", None)
+
+        cached_file_kwargs = {
+            "cache_dir": cache_dir,
+            "force_download": force_download,
+            "proxies": proxies,
+            "resume_download": resume_download,
+            "local_files_only": local_files_only,
+            "use_auth_token": use_auth_token,
+            "revision": revision,
+            "subfolder": subfolder,
+            "_raise_exceptions_for_missing_entries": False,
+            "_commit_hash": commit_hash,
+        }
+        # == step1: prepare configs and file names == #
+        config: BitnetConfig = BitnetConfig.from_pretrained(
+            model_name_or_path,
+            trust_remote_code=trust_remote_code,
+            **cached_file_kwargs,
+        )
+        # only load from remote instead of local
+        # TODO(lei): add local support
+        quantize_file = cached_file(
+            model_name_or_path,
+            "quantize_config.json"
+        )
+        assert quantize_file is not None, "quantize config file not found"
+        import json
+        # get quantize format
+        with open(quantize_file, "r") as f:
+            quant_config = json.load(f)
+        checkpoint_format = quant_config["checkpoint_format"]
+        assert checkpoint_format in ["bitblas"], "quantize format not supported"
+
+        import accelerate        
+        if checkpoint_format == "bitblas":
+            model = cls(config)
+            for name, module in model.named_modules():
+                if isinstance(module, BitLinear):
+                    # create quantized version of the layer
+                    print("Quantizing module", name)
+                    bitblas_linear = BitLinearBitBLAS.from_bit_linear(
+                        module
+                    )
+                    print("Replacing module", name, "with a quantized version")
+                    model.recursive_set(model, name, bitblas_linear)
+            accelerate.utils.modeling.load_checkpoint_in_model(
+                model,
+                checkpoint=model_name_or_path,
+                offload_state_dict=True,
+                offload_buffers=True,
+            )
+            return model
 
 @add_start_docstrings(
     """
