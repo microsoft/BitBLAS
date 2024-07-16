@@ -6,14 +6,12 @@
 
 import torch
 from torch import nn
-import bitblas
 from bitblas.cache import global_operator_cache, get_database_path
 from bitblas import Matmul, MatmulConfig
 from bitblas import auto_detect_nvidia_target
 from logging import getLogger
 
 logger = getLogger(__name__)
-bitblas.set_log_level("INFO")
 BITBLAS_TARGET = auto_detect_nvidia_target()
 BITBLAS_DATABASE_PATH = get_database_path()
 
@@ -36,14 +34,22 @@ def activation_quant(x, num_bits=8):
     return result.type(dtype)
 
 
-# BitBLAS BitLinear
-class BitLinear(nn.Linear):
+class BitLinearBitBLAS(nn.Module):
 
-    def __init__(self, *kargs, weight_bits=1, input_bits=8, **kwargs):
-        super(BitLinear, self).__init__(*kargs, **kwargs)
+    def __init__(
+        self,
+        in_features: int,
+        out_features: int,
+        weight_bits=1,
+        input_bits=8,
+        **kwargs,
+    ):
+        super().__init__()
         """
         RMSNorm is placed outside BitLinear
         """
+        self.in_features = in_features
+        self.out_features = out_features
         self.weight_bits = weight_bits
         self.input_bits = input_bits
         matmul_config = MatmulConfig(
@@ -64,6 +70,7 @@ class BitLinear(nn.Linear):
         ENABLE_TUNING = True
         self.bitblas_matmul = self._get_or_create_bitblas_operator(matmul_config, ENABLE_TUNING)
 
+        self.format = "bitnet"
         self.Qp = 2**(self.input_bits - 1) - 1
 
     def _get_or_create_bitblas_operator(self, config, enable_tuning):
@@ -86,14 +93,46 @@ class BitLinear(nn.Linear):
             print("BitBLAS Operator found in global_operator_cache.")
         return bitblas_matmul
 
+    def replace_weight_param_with_qweight(self):
+        if hasattr(self, "weight"):
+            del self.weight
+        quant_weight = torch.empty(self.bitblas_matmul.retrieve_weight_shape())
+        self.qweight = nn.Parameter(quant_weight, requires_grad=False)
+        self.format = "bitblas"
+
+    @classmethod
+    def from_bit_linear(cls, bitlinear):
+        bitblas_linear = cls(
+            bitlinear.in_features, bitlinear.out_features, weight_bits=1, input_bits=8)
+        sw, qweight = bitblas_linear.create_bitblas_weights(bitlinear.weight)
+        bitblas_linear.register_buffer("qweight", qweight)
+        bitblas_linear.register_buffer("sw", sw)
+        if bitlinear.bias is not None:
+            bitblas_linear.register_buffer("bias", bitlinear.bias)
+        else:
+            bitblas_linear.bias = None
+        return bitblas_linear
+
+    def create_bitblas_weights(self, weight):
+        sw = 1 / weight.abs().mean().clamp(min=1e-5)
+        quant_weight = self.weight_quant(weight).detach()
+        quant_weight = self.bitblas_matmul.transform_weight(quant_weight)
+        qweight = nn.Parameter(quant_weight, requires_grad=False)
+        return sw, qweight
+
     def post_process_weights(self):
         sw = 1 / self.weight.abs().mean().clamp(min=1e-5)
         self.sw = sw
         quant_weight = self.weight_quant(self.weight).detach()
         quant_weight = self.bitblas_matmul.transform_weight(quant_weight)
-        self.weight = nn.Parameter(quant_weight, requires_grad=False)
+        # remove self.weight and replace it with quant_weight
+        if hasattr(self, "weight"):
+            del self.weight
+        self.qweight = nn.Parameter(quant_weight, requires_grad=False)
+        self.format = "bitblas"
 
-    def weight_quant(self, weight):
+    @staticmethod
+    def weight_quant(weight):
         weight = weight.float()
         s = 1 / weight.abs().mean().clamp(min=1e-5)
         result = (weight * s).round().clamp(-1, 1)
@@ -139,9 +178,8 @@ class BitLinear(nn.Linear):
 
     def forward(self, input):
         # return self.forward_fp32_simulated(input)
-
         quant_input = self.activation_quant(input, self.input_bits).detach()
-        fp32_out = self.bitblas_matmul(quant_input, self.weight)
+        fp32_out = self.bitblas_matmul(quant_input, self.qweight)
         sw = self.sw
         Qp = self.Qp
         si = Qp / input.abs().max(dim=-1, keepdim=True).values.clamp(min=1e-5)
@@ -154,25 +192,25 @@ class BitLinear(nn.Linear):
         return out
 
 
-# # Naive BitLinear from HuggingFace
-# class BitLinear(nn.Linear):
+# Naive BitLinear from HuggingFace
+class BitLinear(nn.Linear):
 
-#     def __init__(self, *kargs, weight_bits=1, input_bits=8, **kwargs):
-#         super(BitLinear, self).__init__(*kargs, **kwargs)
-#         """
-#         RMSNorm is placed outside BitLinear
-#         """
-#         self.weight_bits = weight_bits
-#         self.input_bits = input_bits
+    def __init__(self, *kargs, weight_bits=1, input_bits=8, **kwargs):
+        super(BitLinear, self).__init__(*kargs, **kwargs)
+        """
+        RMSNorm is placed outside BitLinear
+        """
+        self.weight_bits = weight_bits
+        self.input_bits = input_bits
 
-#     def forward(self, input):
+    def forward(self, input):
 
-#         quant_input = input + (activation_quant(input, self.input_bits) - input).detach()
-#         quant_weight = self.weight + (weight_quant(self.weight, self.weight_bits) -
-#                                       self.weight).detach()
+        quant_input = input + (activation_quant(input, self.input_bits) - input).detach()
+        quant_weight = self.weight + (weight_quant(self.weight, self.weight_bits) -
+                                      self.weight).detach()
 
-#         out = nn.functional.linear(quant_input, quant_weight)
-#         if not self.bias is None:
-#             out += self.bias.view(1, -1).expand_as(out)
+        out = nn.functional.linear(quant_input, quant_weight)
+        if self.bias is not None:
+            out += self.bias.view(1, -1).expand_as(out)
 
-#         return out
+        return out
