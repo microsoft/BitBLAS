@@ -5,11 +5,9 @@ import torch
 import bitblas
 from modeling_bitnet import BitnetForCausalLM
 from tokenization_bitnet import BitnetTokenizer
-from transformers.utils.hub import cached_file
 import os
 from transformers import GenerationConfig
 import time
-import json
 
 filepath = os.path.abspath(__file__)
 dirpath = os.path.dirname(filepath)
@@ -18,20 +16,14 @@ torch.set_grad_enabled(False)
 bitblas.set_log_level("INFO")
 
 model_name_or_path = "BitBLASModel/open_llama_3b_1.58bits"
-saved_model_path = os.path.join(
-    dirpath, "models", f"{model_name_or_path}_bitblas"
-)
+saved_model_path = os.path.join(dirpath, "models", f"{model_name_or_path}_bitblas")
 
 
 def generate_text(model, tokenizer, prompt, max_length=100):
-    input_ids = tokenizer.encode(prompt, return_tensors="pt").to(
-        model.lm_head.weight.device
-    )
+    input_ids = tokenizer.encode(prompt, return_tensors="pt").to(model.lm_head.weight.device)
     # Generate cos and sin values
     seq_length = input_ids.size(1)
-    position_ids = torch.arange(
-        seq_length, dtype=torch.long, device=input_ids.device
-    )
+    position_ids = torch.arange(seq_length, dtype=torch.long, device=input_ids.device)
     position_ids = position_ids.unsqueeze(0).expand_as(input_ids)
 
     generation_config = GenerationConfig(
@@ -60,12 +52,8 @@ def generate_text(model, tokenizer, prompt, max_length=100):
 
 def main():
     # load quantized model
-    qmodel = BitnetForCausalLM.from_quantized(
-        saved_model_path,
-    ).cuda().half()
-    tokenizer = BitnetTokenizer.from_pretrained(
-        model_name_or_path, use_fast=False
-    )
+    qmodel = BitnetForCausalLM.from_quantized(saved_model_path,).cuda().half()
+    tokenizer = BitnetTokenizer.from_pretrained(model_name_or_path, use_fast=False)
     # print("original model generated text:")
     # print(generate_text(model, tokenizer, "Hi, ", max_length=100))
     input_ids = torch.ones((1, 1), dtype=torch.long).cuda()

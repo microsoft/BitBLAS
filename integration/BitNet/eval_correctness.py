@@ -1,7 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-import argparse
 import torch
 import bitblas
 from modeling_bitnet import BitnetForCausalLM
@@ -11,6 +10,7 @@ import time
 
 torch.set_grad_enabled(False)
 bitblas.set_log_level("INFO")
+
 
 def generate_text(model, tokenizer, prompt, max_length=100):
     input_ids = tokenizer.encode(prompt, return_tensors="pt").to(model.lm_head.weight.device)
@@ -69,7 +69,10 @@ def profile(model, input_data):
         times = get_runtime(num_repeats)
     return np.mean(times)
 
+
 model_path = '1bitLLM/bitnet_b1_58-3B'
+
+
 def main():
     model = BitnetForCausalLM.from_pretrained(
         model_path,
@@ -79,7 +82,6 @@ def main():
     with torch.no_grad():
         model._post_process_weights()
 
-    # input_id = torch.ones(1, 1).long().cuda()
     tokenizer = BitnetTokenizer.from_pretrained(model_path, use_fast=False)
     input_id = tokenizer("Hello")['input_ids']
     input_id = torch.tensor(input_id).unsqueeze(0).cuda()
@@ -87,7 +89,6 @@ def main():
     print(output)
 
     print(generate_text(model, tokenizer, "Hello", max_length=100))
-    
 
 
 if __name__ == '__main__':

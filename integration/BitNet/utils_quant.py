@@ -6,7 +6,6 @@
 
 import torch
 from torch import nn
-import bitblas
 from bitblas.cache import global_operator_cache, get_database_path
 from bitblas import Matmul, MatmulConfig
 from bitblas import auto_detect_nvidia_target
@@ -103,7 +102,8 @@ class BitLinearBitBLAS(nn.Module):
 
     @classmethod
     def from_bit_linear(cls, bitlinear):
-        bitblas_linear = cls(bitlinear.in_features, bitlinear.out_features, weight_bits=1, input_bits=8)
+        bitblas_linear = cls(
+            bitlinear.in_features, bitlinear.out_features, weight_bits=1, input_bits=8)
         sw, qweight = bitblas_linear.create_bitblas_weights(bitlinear.weight)
         bitblas_linear.register_buffer("qweight", qweight)
         bitblas_linear.register_buffer("sw", sw)
@@ -111,7 +111,7 @@ class BitLinearBitBLAS(nn.Module):
             bitblas_linear.register_buffer("bias", bitlinear.bias)
         else:
             bitblas_linear.bias = None
-        return bitblas_linear 
+        return bitblas_linear
 
     def create_bitblas_weights(self, weight):
         sw = 1 / weight.abs().mean().clamp(min=1e-5)
@@ -210,7 +210,7 @@ class BitLinear(nn.Linear):
                                       self.weight).detach()
 
         out = nn.functional.linear(quant_input, quant_weight)
-        if not self.bias is None:
+        if self.bias is not None:
             out += self.bias.view(1, -1).expand_as(out)
 
         return out

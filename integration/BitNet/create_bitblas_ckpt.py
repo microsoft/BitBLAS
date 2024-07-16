@@ -18,9 +18,8 @@ torch.set_grad_enabled(False)
 bitblas.set_log_level("INFO")
 
 model_name_or_path = "BitBLASModel/open_llama_3b_1.58bits"
-saved_model_path = os.path.join(
-    dirpath, "models", f"{model_name_or_path}_bitblas"
-)
+saved_model_path = os.path.join(dirpath, "models", f"{model_name_or_path}_bitblas")
+
 
 def generate_text(model, tokenizer, prompt, max_length=100):
     input_ids = tokenizer.encode(prompt, return_tensors="pt").to(model.lm_head.weight.device)
@@ -59,13 +58,8 @@ def main():
             model_name_or_path,
             use_flash_attention_2=True,
             torch_dtype=torch.float16,
-        )
-        .cuda()
-        .half()
-    )
-    tokenizer = BitnetTokenizer.from_pretrained(
-        model_name_or_path, use_fast=False
-    )
+        ).cuda().half())
+    tokenizer = BitnetTokenizer.from_pretrained(model_name_or_path, use_fast=False)
 
     # print("original model generated text:")
     # print(generate_text(model, tokenizer, "Hi, ", max_length=100))
@@ -107,9 +101,7 @@ def main():
         file_path = cached_file(model_name_or_path, file)
         os.system(f"cp {file_path} {saved_model_path}")
     # load quantized model
-    qmodel = BitnetForCausalLM.from_quantized(
-        saved_model_path,
-    ).cuda().half()
+    qmodel = BitnetForCausalLM.from_quantized(saved_model_path,).cuda().half()
     print("quantized model generated text:")
     print(generate_text(qmodel, tokenizer, "Hi, ", max_length=100))
 
