@@ -176,7 +176,7 @@ def build_tvm(llvm_config_path):
     # Set LLVM path and enable CUDA in config.cmake
     with open("config.cmake", "a") as config_file:
         config_file.write(f"set(USE_LLVM {llvm_config_path})\n")
-        config_file.write("set(USE_CUDA ON)\n")
+        config_file.write("set(USE_CUDA /usr/local/cuda)\n")
     # Run CMake and make
     try:
         subprocess.check_call(["cmake", ".."])
