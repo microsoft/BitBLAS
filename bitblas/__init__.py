@@ -4,14 +4,12 @@ import sys
 import os
 
 # installing tvm
-install_tvm_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tvm")
+install_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tvm")
 if os.path.exists(install_tvm_path) and install_tvm_path not in sys.path:
     os.environ["PYTHONPATH"] = install_tvm_path + "/python:" + os.environ.get("PYTHONPATH", "")
     sys.path.insert(0, install_tvm_path + "/python")
 
-develop_tvm_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "tvm")
+develop_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "tvm")
 if os.path.exists(develop_tvm_path) and develop_tvm_path not in sys.path:
     os.environ["PYTHONPATH"] = develop_tvm_path + "/python:" + os.environ.get("PYTHONPATH", "")
     sys.path.insert(0, develop_tvm_path + "/python")
@@ -30,7 +28,6 @@ from .base import (
     try_inline,  # noqa: F401
     try_inline_contiguous_spatial,  # noqa: F401
 )
-
 
 from . import testing  # noqa: F401
 from .utils import auto_detect_nvidia_target  # noqa: F401
