@@ -180,7 +180,7 @@ def build_tvm(llvm_config_path):
     # Run CMake and make
     try:
         subprocess.check_call(["cmake", ".."])
-        subprocess.check_call(["make", "-j"])
+        subprocess.check_call(["make", "-j$(nproc)"])
     except subprocess.CalledProcessError as error:
         raise RuntimeError("Failed to build TVM") from error
     finally:
