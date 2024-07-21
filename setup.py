@@ -18,6 +18,7 @@ import sys
 import urllib.request
 from distutils.version import LooseVersion
 import platform
+import multiprocessing
 
 # Environment variables False/True
 PYPI_BUILD = os.environ.get("PYPI_BUILD", "False").lower() == "true"
@@ -180,7 +181,8 @@ def build_tvm(llvm_config_path):
     # Run CMake and make
     try:
         subprocess.check_call(["cmake", ".."])
-        subprocess.check_call(["make", "-j$(nproc)"])
+        num_jobs = multiprocessing.cpu_count()
+        subprocess.check_call(["make", f"-j{num_jobs}"])
     except subprocess.CalledProcessError as error:
         raise RuntimeError("Failed to build TVM") from error
     finally:
