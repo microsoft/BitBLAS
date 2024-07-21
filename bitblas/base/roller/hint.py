@@ -211,11 +211,12 @@ class Hint(object):
             dic["block_reduction_depth"] = self.block_reduction_depth
         return dic
 
-    def from_dict(self, dic: Dict) -> "Hint":
-        self.__init__()
+    @classmethod
+    def from_dict(cls, dic: Dict) -> "Hint":
+        hint = cls()
         for k, v in dic.items():
-            setattr(self, k, v)
-        return self
+            setattr(hint, k, v)
+        return hint
 
     def tensorcore_legalization(self):
         # only keep the last 2 axes for tensorcore

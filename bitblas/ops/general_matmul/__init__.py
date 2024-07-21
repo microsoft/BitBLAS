@@ -92,7 +92,7 @@ class MatmulConfig(OperatorConfig):
             # Currently we do not support propagate_a when propagate_b is not transformed.
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
         elif (isinstance(self.M, int) and (self.M % MICRO_KERNEL_SIZE) == 0 and
-            (self.K % MICRO_KERNEL_SIZE) == 0):
+              (self.K % MICRO_KERNEL_SIZE) == 0):
             object.__setattr__(self, "propagate_a", TransformKind.IntraWarpTransform)
         else:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
@@ -128,6 +128,9 @@ class MatmulConfig(OperatorConfig):
             conditions.append(self.W_dtype == self.A_dtype)
             # int8,uint8 also do not implement and also do not require fast decoding
             conditions.append(self.W_dtype in ["int8", "uint8"])
+            # if the w_dtype is int4/uint4 and the a_dtype is int8
+            # we do not require fast decoding
+            conditions.append(self.W_dtype in ["int4", "uint4"] and self.A_dtype in ["int8"])
             return any(conditions)
 
         if fast_decoding is not None:
@@ -242,7 +245,11 @@ class Matmul(Operator):
 
         self.dispatch_tir(target, from_database, source_format, enable_tuning)
 
-    def dispatch_tir(self, target: Target, from_database: bool = False, source_format: str = "uint", enable_tuning: bool = True):
+    def dispatch_tir(self,
+                     target: Target,
+                     from_database: bool = False,
+                     source_format: str = "uint",
+                     enable_tuning: bool = True):
         '''Dispatch the tir script implementation'''
         self.arch = CUDA(target)
 
@@ -295,7 +302,7 @@ class Matmul(Operator):
 
         # output data type
         self.torch_output_dtype = getattr(torch, self.out_dtype)
-        
+
     def _alloc_workspace(self):
         return torch.empty(WORKSPACE_SIZE, dtype=torch.float16).cuda()
 
@@ -319,7 +326,7 @@ class Matmul(Operator):
             )
             self.workspace = self._alloc_workspace()
         return ladder_permutate_a
-    
+
     def _assign_ladder_permutate_b(self, target: Target, enable_tuning: bool):
         # unused variables
         del target
@@ -366,7 +373,7 @@ class Matmul(Operator):
         if self.propagate_a is not TransformKind.NonTransform:
             input_executors.append(self.ladder_permutate_a)
         return input_executors
-    
+
     def _create_weight_executors(self):
         weight_executors = OPExecutorCPU()
         if self.fast_decoding:
