@@ -128,6 +128,9 @@ class MatmulConfig(OperatorConfig):
             conditions.append(self.W_dtype == self.A_dtype)
             # int8,uint8 also do not implement and also do not require fast decoding
             conditions.append(self.W_dtype in ["int8", "uint8"])
+            # if the w_dtype is int4/uint4 and the a_dtype is int8
+            # we do not require fast decoding
+            conditions.append(self.W_dtype in ["int4", "uint4"] and self.A_dtype in ["int8"])
             return any(conditions)
 
         if fast_decoding is not None:
