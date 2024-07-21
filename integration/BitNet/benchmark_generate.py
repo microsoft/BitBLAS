@@ -15,8 +15,9 @@ bitblas.set_log_level("INFO")
 
 def generate_text_batch(model, tokenizer, prompts, max_length=100):
     # Encode the input prompts as a batch
-    input_ids = tokenizer(prompts, return_tensors="pt", padding=True, truncation=True).input_ids.to(model.device)
-    
+    input_ids = tokenizer(
+        prompts, return_tensors="pt", padding=True, truncation=True).input_ids.to(model.device)
+
     # Generate cos and sin values (commented out as not used in generation)
     seq_length = input_ids.size(1)
     position_ids = torch.arange(seq_length, dtype=torch.long, device=input_ids.device)
@@ -39,7 +40,9 @@ def generate_text_batch(model, tokenizer, prompts, max_length=100):
     end_time = time.time()
 
     # Decode the output ids to text
-    generated_texts = [tokenizer.decode(output_id, skip_special_tokens=True) for output_id in output_ids]
+    generated_texts = [
+        tokenizer.decode(output_id, skip_special_tokens=True) for output_id in output_ids
+    ]
 
     generation_time = end_time - start_time
     num_tokens = sum(len(output_id) for output_id in output_ids)
@@ -49,6 +52,7 @@ def generate_text_batch(model, tokenizer, prompts, max_length=100):
     print(f"Tokens per second: {tokens_per_second:.2f}")
 
     return generated_texts
+
 
 def profile(model, input_data):
 
@@ -100,7 +104,7 @@ def main():
     prompt = ""
     for _ in range(in_seq_len):
         prompt += "Hello "
-    
+
     prompts = []
     for _ in range(bs):
         prompts.append(prompt)

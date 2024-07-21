@@ -289,13 +289,16 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     C = te.compute(
         (SplitK, M, N),
         lambda sk, i, j: te.sum(
-            A_reindex[i, sk * RK + k].astype(accum_dtype) * B_decode[j, sk * RK + k].astype(accum_dtype),
+            A_reindex[i, sk * RK + k].astype(accum_dtype) * B_decode[j, sk * RK + k].astype(
+                accum_dtype),
             axis=k),
         name="C",
     )
     last_output = C
     if accum_dtype != out_dtype:
-        D = te.compute((SplitK, M, N), lambda b, i, j: last_output[b, i, j].astype(out_dtype), name="D")
+        D = te.compute((SplitK, M, N),
+                       lambda b, i, j: last_output[b, i, j].astype(out_dtype),
+                       name="D")
         last_output = D
 
     args = [A, B]

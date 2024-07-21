@@ -210,7 +210,7 @@ class Hint(object):
         if self.block_reduction_depth is not None:
             dic["block_reduction_depth"] = self.block_reduction_depth
         return dic
-    
+
     @classmethod
     def from_dict(cls, dic: Dict) -> "Hint":
         hint = cls()
