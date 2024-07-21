@@ -1991,13 +1991,13 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         block_idx = sch.fuse(i1, j1)
         thread_idy = i2
         thread_idz = j2
-        
+
         sch.bind(batch, "blockIdx.z")
         sch.bind(block_idx, "blockIdx.x")
         sch.bind(block_idy, "blockIdx.y")
         thread_idz = j2 = thread_idy = sch.fuse(thread_idy, thread_idz)
         sch.bind(thread_idy, "threadIdx.y")
-        
+
         def smooth_layout_recover(block, scope, l=16, r=16, enable=True):  # noqa: E741
             if not enable:
                 return
@@ -2062,7 +2062,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             # global -> local -> shared
             block_shared = sch.cache_read(block, idx, shared_scope)
             sch.compute_at(block_shared, k0, preserve_unit_loops=True)
-
 
             # TODO(lei): the factor should be analyzed more deeper.
             decode_factor = get_coalesced_veclen(sch.get(block_shared))
@@ -2166,7 +2165,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         _ = decode_fetch_to_shared(block_outer, 1)
 
         # Put the thread binding after the shared memory prefetch
-        # Otherwise there's a axis mssing bug behind tvm
+        # Otherwise there's a axis missing bug behind tvm
         sch.bind(kr, "threadIdx.z")
         # create read cache to load matrix from shared memory to wmma fragments
         A_mat = sch.cache_read(block_outer, 0, "warp")
