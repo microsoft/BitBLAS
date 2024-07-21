@@ -26,6 +26,9 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
 
+    - name: Update submodules recursively
+      run: git submodule update --init --recursive
+
     - name: Run format check
       run: |
         source bitblas_ci/bin/activate
