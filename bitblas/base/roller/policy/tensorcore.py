@@ -14,6 +14,7 @@ from ..rasterization import NoRasterization, Rasterization2DColumn
 
 logger = logging.getLogger(__name__)
 
+
 class TensorCorePolicy(DefaultPolicy):
 
     def __init__(self,
@@ -121,7 +122,6 @@ class TensorCorePolicy(DefaultPolicy):
 
         smem_limit = min(self.arch.max_smem_usage // td.block_per_SM, self.arch.smem_cap)
         rstep_map = td.rstep_map.copy()
-        is_block_reduction = self.block_reduction_depth is not None
 
         def _optimize(node, rstep):
             all_steps = self.get_node_reduce_step_candidates(node)

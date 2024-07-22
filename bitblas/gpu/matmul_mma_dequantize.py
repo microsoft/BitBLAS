@@ -2001,6 +2001,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         # Put the thread binding after the shared memory prefetch
         # Otherwise there's a axis missing bug behind tvm
         sch.bind(kr, "threadIdx.z")
+
         def smooth_layout_recover(block, scope, l=16, r=16, enable=True):  # noqa: E741
             if not enable:
                 return
