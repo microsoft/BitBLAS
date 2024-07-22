@@ -1986,7 +1986,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         k0, kr = sch.split(k0, [None, reduce_k])
 
         sch.reorder(i0, j0, i1, j1, i2, j2, kr, k0, k1, i3, j3)
-        # sch.reorder(i0, j0, i1, j1, i2, j2, k0, k1, i3, j3)
+
         block_idy = sch.fuse(i0, j0)
         block_idx = sch.fuse(i1, j1)
         thread_idy = i2
