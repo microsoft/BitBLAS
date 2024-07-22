@@ -29,9 +29,8 @@ def matmul(
     import tvm.tl.language as T
 
     @T.prim_func
-    def main(
-        A: T.Buffer(A_shape, dtypeAB), B: T.Buffer(B_shape, dtypeAB), C: T.Buffer((M, N), dtypeC)
-    ):
+    def main(A: T.Buffer(A_shape, dtypeAB), B: T.Buffer(B_shape, dtypeAB), C: T.Buffer((M, N),
+                                                                                       dtypeC)):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
             A_shared = T.alloc_shared(A_shared_shape, dtypeAB)
             B_shared = T.alloc_shared(B_shared_shape, dtypeAB)
@@ -156,21 +155,18 @@ def test_gemm_f32f32f32_tn():
 
 
 def test_pad_aligned_f16f16f16_nn():
-    run_gemm(
-        512 - 8, 1024 - 32, 768 - 24, False, False, "float16", "float16", "float16", 128, 256, 32, 2
-    )
+    run_gemm(512 - 8, 1024 - 32, 768 - 24, False, False, "float16", "float16", "float16", 128, 256,
+             32, 2)
 
 
 def test_pad_f16f16f16_nn():
-    run_gemm(
-        512 - 9, 1024 - 7, 768 - 5, False, False, "float16", "float16", "float16", 128, 256, 32, 2
-    )
+    run_gemm(512 - 9, 1024 - 7, 768 - 5, False, False, "float16", "float16", "float16", 128, 256,
+             32, 2)
 
 
 def test_pad_f16f16f32_nn():
-    run_gemm(
-        512 + 19, 1024 + 17, 768 + 15, False, False, "float16", "float16", "float32", 128, 64, 32
-    )
+    run_gemm(512 + 19, 1024 + 17, 768 + 15, False, False, "float16", "float16", "float32", 128, 64,
+             32)
 
 
 if __name__ == "__main__":
