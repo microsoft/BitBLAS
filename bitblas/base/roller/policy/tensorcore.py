@@ -4,13 +4,15 @@
 from bitblas import tvm
 from typing import Dict, List, Tuple, Optional
 import numpy as np
-
+import logging
 from ...arch import TileDevice
 from ..hint import Hint, Stride, TileDict, IntrinInfo
 from ..node import PrimFuncNode
 from .common import coalesced_factor, factorize, get_all_factors
 from .default import DefaultPolicy
 from ..rasterization import NoRasterization, Rasterization2DColumn
+
+logger = logging.getLogger(__name__)
 
 
 class TensorCorePolicy(DefaultPolicy):
@@ -47,9 +49,9 @@ class TensorCorePolicy(DefaultPolicy):
                 self.use_async_copy = False
         # TODO: block reduction depth is not used for now.
         # As there still exists some performance issues for block reduction.
-        # block_reduction_depth = self.prim_func_node.get_tag("block_reduction_depth")
-        # if block_reduction_depth:
-        #     self.block_reduction_depth = block_reduction_depth
+        block_reduction_depth = self.prim_func_node.get_tag("block_reduction_depth")
+        if block_reduction_depth:
+            self.block_reduction_depth = block_reduction_depth
 
     def _compute_tc_strides(
         self,
@@ -120,7 +122,6 @@ class TensorCorePolicy(DefaultPolicy):
 
         smem_limit = min(self.arch.max_smem_usage // td.block_per_SM, self.arch.smem_cap)
         rstep_map = td.rstep_map.copy()
-        is_block_reduction = self.block_reduction_depth is not None
 
         def _optimize(node, rstep):
             all_steps = self.get_node_reduce_step_candidates(node)
@@ -185,12 +186,12 @@ class TensorCorePolicy(DefaultPolicy):
                 rstep = _optimize(node, rstep_map)
                 rstep_map = rstep
 
-        if is_block_reduction:
-            # If block reduction, we should constrain the max value is 64
-            # Otherwise it will introduce an issue of cuda invalid args.
-            MAX_REDUCE_K = 64
-            for k in rstep_map:
-                rstep_map[k] = min(rstep_map[k], MAX_REDUCE_K)
+        # if is_block_reduction:
+        #     # If block reduction, we should constrain the max value is 64
+        #     # Otherwise it will introduce an issue of cuda invalid args.
+        #     MAX_REDUCE_K = 64
+        #     for k in rstep_map:
+        #         rstep_map[k] = min(rstep_map[k], MAX_REDUCE_K)
         td.rstep_map = rstep_map
         td.smem_cost, td.cached_tensors_map = self._compute_shared_memory_usage(td)
         return
@@ -315,7 +316,12 @@ class TensorCorePolicy(DefaultPolicy):
             if intrin_info["out_dtype"] in ["float32"]:
                 codegen_dict.shared_scope = "shared.dyn"
         # smem capacity
-        if td.smem_cost > self.arch.smem_cap:
+        # TODO: This is a dummy mul which avoid reusing some shared memory.
+        # Should be removed in the future.
+        if td.smem_cost > (self.arch.smem_cap * 1.3):
+            info_message = f"Tile Dict: {td.output_tile} Shared memory exceeds the static capacity," \
+                " use dynamic shared memory."
+            logger.info(info_message)
             codegen_dict.shared_scope = "shared.dyn"
 
         codegen_dict.complete_config(node)
