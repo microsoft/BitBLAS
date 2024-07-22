@@ -239,6 +239,16 @@ class BitBLASBuilPydCommand(build_py):
             "3rdparty/tvm/mypy.ini",
             "3rdparty/tvm/pyproject.toml",
             "3rdparty/tvm/version.py",
+            "3rdparty/tvm/common.h",
+            "3rdparty/tvm/copy.h",
+            "3rdparty/tvm/copy_sm90.h",
+            "3rdparty/tvm/gemm.h",
+            "3rdparty/tvm/gemm_sm70.h",
+            "3rdparty/tvm/gemm_sm80.h",
+            "3rdparty/tvm/gemm_sm90.h",
+            "3rdparty/tvm/ldsm.h",
+            "3rdparty/tvm/reduce.h",
+            "3rdparty/tvm/threadblock_swizzle.h"
         ]
         for item in TVM_PREBUILD_ITEMS:
             source_dir = os.path.join(ROOT_DIR, item)
