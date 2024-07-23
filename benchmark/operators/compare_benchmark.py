@@ -85,13 +85,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--base",
-        default="df7e9aa61e3db411ac3f2fd98a1854a36194ef0c",
         type=str,
         help="the base commit id",
     )
     parser.add_argument(
         "--head",
-        default="1c033654d15dc98707edeaabfcd8951b3a800734",
         type=str,
         help="the head commit id",
     )
