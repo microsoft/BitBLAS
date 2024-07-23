@@ -2,3 +2,7 @@
 	path = 3rdparty/tvm
 	url = https://github.com/LeiWang1999/tvm
 	branch = bitblas_tl
+[submodule "3rdparty/cutlass"]
+	path = 3rdparty/cutlass
+	url = https://github.com/NVIDIA/cutlass.git
+	branch = v3.2.2
