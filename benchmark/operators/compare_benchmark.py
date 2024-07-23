@@ -55,23 +55,42 @@ def compare(base: BitblasMatmulOpsBenchmark, head: BitblasMatmulOpsBenchmark):
                 sum(op_config.M) /
                 len(op_config.M) if isinstance(op_config.M, Tuple) else op_config.M)
 
-            base_latency = base.benchmark_results[name][i][0]
+            try:
+                base_latency = base.benchmark_results[name][i][0]
+            except IndexError:
+                print(f"Operator {name} not found in benchmark sets")
+                base_latency = None
+
             if latency is not None:
                 throughput = (2 * benchmark_M * op_config.N * op_config.K / (latency * 1e-3) / 1e12)
-                base_throughput = (2 * benchmark_M * op_config.N * op_config.K /
-                                   (base_latency * 1e-3) / 1e12)
-                throughput = f"{throughput:.3f}{get_suffix(base_throughput, throughput)}"
+                if base_latency is not None:
+                    base_throughput = (2 * benchmark_M * op_config.N * op_config.K /
+                                    (base_latency * 1e-3) / 1e12)
+                    throughput = f"{throughput:.3f}{get_suffix(base_throughput, throughput)}"
+                else:
+                    throughput = f"{throughput:.3f}"
             else:
                 throughput = "N/A"
 
-            if base_latency is not None:
-                latency_str = f"{latency:.3f}{get_suffix(base_latency, latency)}"
+            if latency is not None:
+                if base_latency is not None:
+                    latency_str = f"{latency:.3f}{get_suffix(base_latency, latency)}"
+                else:
+                    latency_str = f"{latency:.3f}"
             else:
                 latency_str = "N/A"
 
-            base_tuning_time = base.benchmark_results[name][i][1]
+            try:
+                base_tuning_time = base.benchmark_results[name][i][1]
+            except IndexError:
+                print(f"Operator {name} not found in benchmark sets")
+                base_tuning_time = None
+
             if tuning_time is not None:
-                tuning_time_str = f"{tuning_time:.3f}{get_suffix(base_tuning_time, tuning_time)}"
+                if base_tuning_time is not None:
+                    tuning_time_str = f"{tuning_time:.3f}{get_suffix(base_tuning_time, tuning_time)}"
+                else:
+                    tuning_time_str = f"{tuning_time:.3f}"
             else:
                 tuning_time_str = "N/A"
 
