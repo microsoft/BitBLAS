@@ -6,6 +6,7 @@ from benchmark_ops_matmul import BitblasMatmulOpsBenchmark, HELPER_MESSAGE
 from tabulate import tabulate
 from typing import Tuple
 
+
 def compare(base: BitblasMatmulOpsBenchmark, head: BitblasMatmulOpsBenchmark):
     """Generate and print a report of the benchmark results."""
     for name, results in head.benchmark_results.items():
@@ -23,7 +24,7 @@ def compare(base: BitblasMatmulOpsBenchmark, head: BitblasMatmulOpsBenchmark):
             symbol = "↑" if head > base else "↓" if head < base else "="
             ratio = f"{((head - base) / base) * 100:.2f}%" if base is not None else "N/A"
             return f"{symbol}({ratio})"
-        
+
         def legalize_shape(M, N, K, dyn_prof_shape):
             """Generate a string representation of the operator shape.
 
@@ -57,16 +58,17 @@ def compare(base: BitblasMatmulOpsBenchmark, head: BitblasMatmulOpsBenchmark):
             base_latency = base.benchmark_results[name][i][0]
             if latency is not None:
                 throughput = (2 * benchmark_M * op_config.N * op_config.K / (latency * 1e-3) / 1e12)
-                base_throughput = (2 * benchmark_M * op_config.N * op_config.K / (base_latency * 1e-3) / 1e12)
+                base_throughput = (2 * benchmark_M * op_config.N * op_config.K /
+                                   (base_latency * 1e-3) / 1e12)
                 throughput = f"{throughput:.3f}{get_suffix(base_throughput, throughput)}"
             else:
                 throughput = "N/A"
-            
+
             if base_latency is not None:
                 latency_str = f"{latency:.3f}{get_suffix(base_latency, latency)}"
             else:
                 latency_str = "N/A"
-            
+
             base_tuning_time = base.benchmark_results[name][i][1]
             if tuning_time is not None:
                 tuning_time_str = f"{tuning_time:.3f}{get_suffix(base_tuning_time, tuning_time)}"
@@ -77,6 +79,7 @@ def compare(base: BitblasMatmulOpsBenchmark, head: BitblasMatmulOpsBenchmark):
 
         print(tabulate(table_data, headers="firstrow", tablefmt="fancy_grid"))
         print(HELPER_MESSAGE)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -94,12 +97,8 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
 
-    base_benchmark = BitblasMatmulOpsBenchmark.deserialize_from_logs(
-        args.base
-    )
+    base_benchmark = BitblasMatmulOpsBenchmark.deserialize_from_logs(args.base)
 
-    head_benchmark = BitblasMatmulOpsBenchmark.deserialize_from_logs(
-        args.head
-    )
+    head_benchmark = BitblasMatmulOpsBenchmark.deserialize_from_logs(args.head)
 
     compare(base_benchmark, head_benchmark)
