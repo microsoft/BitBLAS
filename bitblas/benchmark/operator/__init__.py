@@ -26,7 +26,7 @@ class BitblasOperatorBenchmarkBase(ABC):
     enable_hardware_aware_tuning: bool = False
 
     # Log path
-    log_path: Optional[str] = None
+    log_path: Optional[str] = path.join(get_default_cache_path(), "benchmark")
 
     @abstractmethod
     def prepare_benchmark_sets(self):
@@ -53,7 +53,6 @@ class BitblasOperatorBenchmarkBase(ABC):
 
     def run(self, report=True, serialize=True, enable_tuning: bool = False):
         """Run the benchmark process."""
-        self.log_path = path.join(get_default_cache_path(), "benchmark")
 
         if not path.exists(self.log_path):
             makedirs(self.log_path)
@@ -135,11 +134,6 @@ class BitblasOperatorBenchmarkBase(ABC):
         """Serialize the benchmark results."""
         pass
 
-    @abstractmethod
-    def deserialize_results(self) -> None:
-        """Deserialize the benchmark results."""
-        pass
-
     def enable_tuning(self):
         """Enable hardware-aware tuning."""
         self.enable_hardware_aware_tuning = True
@@ -151,3 +145,11 @@ class BitblasOperatorBenchmarkBase(ABC):
     def set_log_path(self, log_path: str):
         """Set the log path."""
         self.log_path = log_path
+
+    def set_benchmark_target(self, target: str):
+        """Set the benchmark target."""
+        self.benchmark_target = target
+
+    def set_benchmark_results(self, results: Dict[str, List[Tuple[Optional[float], Optional[float]]]]):
+        """Set the benchmark results."""
+        self.benchmark_results = results

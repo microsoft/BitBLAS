@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  benchmark_main:
+  benchmark:
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/run-benchmark')
     runs-on: self-hosted
 
@@ -14,10 +14,36 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: main
+
+      - name: Get base branch commit ID
+        id: get_base_commit
+        run: echo "BASE_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
+
+      - name: Activate virtual environment and install dependencies
+        run: |
+          source bitblas_benchmark/bin/activate
+          python -m pip install --upgrade pip
+          if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
+
+      - name: Install project in wheel mode
+        run: |
+          source bitblas_benchmark/bin/activate
+          python -m pip install .
+      
+      - name: Matmul Benchmark
+        run: |
+          source bitblas_benchmark/bin/activate
+          cd benchmark/operators
+          python ./benchmark_ops_matmul.py
+
+      - name: Get PR branch commit ID
+        id: get_pr_commit
+        run: echo "PR_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: Create virtual environment
         run: python -m venv bitblas_benchmark
@@ -32,8 +58,27 @@ jobs:
         run: |
           source bitblas_benchmark/bin/activate
           python -m pip install .
-        
+      
       - name: Matmul Benchmark
-        source bitblas_benchmark/bin/activate
-        cd benchmark/operators
-        python ./benchmark_ops_matmul.py
+        run: |
+          source bitblas_benchmark/bin/activate
+          cd benchmark/operators
+          python ./benchmark_ops_matmul.py
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh
+
+      - name: Authenticate GitHub CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh auth login --with-token <<< $GITHUB_TOKEN
+
+      - name: Post benchmark results
+        run: |
+          cat benchmark_results.txt
+          gh pr comment ${{ github.event.issue.number }} --body "$(cat benchmark_results.txt)"
