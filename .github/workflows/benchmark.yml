@@ -24,11 +24,16 @@ jobs:
       
       - name: Activate virtual environment and install dependencies
         run: |
-          source bitblas_ci/bin/activate
+          source bitblas_benchmark/bin/activate
           python -m pip install --upgrade pip
           if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
 
       - name: Install project in wheel mode
         run: |
-          source bitblas_ci/bin/activate
+          source bitblas_benchmark/bin/activate
           python -m pip install .
+        
+      - name: Matmul Benchmark
+        source bitblas_benchmark/bin/activate
+        cd benchmark/operators
+        python ./benchmark_ops_matmul.py
