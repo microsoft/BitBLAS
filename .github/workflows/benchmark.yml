@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  benchmark:
+  benchmark_base:
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/run-benchmark')
     runs-on: self-hosted
 
@@ -17,7 +17,13 @@ jobs:
 
       - name: Get base branch commit ID
         id: get_base_commit
-        run: echo "BASE_COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
+        run: echo "BASE_COMMIT_ID=$(git rev-parse HEAD)" > base_commit_id.txt
+
+      - name: Upload base commit ID
+        uses: actions/upload-artifact@v3
+        with:
+          name: base-commit-id
+          path: base_commit_id.txt
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -44,14 +50,32 @@ jobs:
           cd benchmark/operators
           python ./benchmark_ops_matmul.py
 
+  benchmark_head:
+    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/run-benchmark')
+    needs: benchmark_base
+    runs-on: self-hosted
+
+    steps:
       - name: Checkout PR branch code
         uses: actions/checkout@v2
         with:
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - name: Get PR branch commit ID
         id: get_pr_commit
-        run: echo "PR_COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
+        run: echo "PR_COMMIT_ID=$(git rev-parse HEAD)" > pr_commit_id.txt
+
+      - name: Upload PR commit ID
+        uses: actions/upload-artifact@v3
+        with:
+          name: pr-commit-id
+          path: pr_commit_id.txt
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
 
       - name: Create virtual environment
         run: python -m venv bitblas_benchmark
@@ -73,17 +97,49 @@ jobs:
           cd benchmark/operators
           python ./benchmark_ops_matmul.py
 
+  benchmark_compare:
+    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/run-benchmark')
+    needs: [benchmark_base, benchmark_head]
+    runs-on: self-hosted
+
+    steps:
+      - name: Download commit IDs
+        uses: actions/download-artifact@v3
+        with:
+          name: base-commit-id
+          path: .
+
+      - name: Download PR commit ID
+        uses: actions/download-artifact@v3
+        with:
+          name: pr-commit-id
+          path: .
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Create virtual environment
+        run: python -m venv bitblas_benchmark
+
+      - name: Activate virtual environment and install dependencies
+        run: |
+          source bitblas_benchmark/bin/activate
+          python -m pip install --upgrade pip
+          if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
+
       - name: Compare benchmark results
         run: |
           source bitblas_benchmark/bin/activate
           cd benchmark/operators
-          python ./compare_benchmark.py --base ${{ env.BASE_COMMIT_ID }} --head ${{ env.PR_COMMIT_ID }} 2>&1 | tee compare_results.txt
+          python ./compare_benchmark.py --base $(cat base_commit_id.txt) --head $(cat pr_commit_id.txt) 2>&1 | tee compare_results.txt
 
       - name: Authenticate GitHub CLI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh auth login --with-token <<< $GITHUB_TOKEN
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
       - name: Post benchmark results
         run: |
