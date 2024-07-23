@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-from .operator import Operator  # noqa: F401
+from .operator import Operator, OperatorConfig  # noqa: F401
 from .matmul import Matmul, MatmulConfig  # noqa: F401
 from .matmul_dequantize import MatmulWeightOnlyDequantize, MatmulWeightOnlyDequantizeConfig  # noqa: F401
 from .ladder_permutate import LadderPermutate, LadderPermutateConfig  # noqa: F401
