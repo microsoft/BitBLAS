@@ -217,4 +217,4 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
 
 
 if __name__ == "__main__":
-    BitblasMatmulOpsBenchmark().run(enable_tuning=True)
+    BitblasMatmulOpsBenchmark().run(enable_tuning=False)
