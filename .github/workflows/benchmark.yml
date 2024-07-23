@@ -52,7 +52,10 @@ jobs:
       - name: Get PR branch commit ID
         id: get_pr_commit
         run: echo "PR_COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
-      
+
+      - name: Create virtual environment
+        run: python -m venv bitblas_benchmark
+
       - name: Activate virtual environment and install dependencies
         run: |
           source bitblas_benchmark/bin/activate
