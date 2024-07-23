@@ -19,6 +19,7 @@ while the "N-K_M" format denotes a dynamic shape operator where only the M dimen
 In this context, "_M" represents the specific M shape used for dynamic profiling.
 """
 
+
 class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
 
     BENCHMARK_RESULTS_FILE = "benchmark_results.json"
@@ -52,14 +53,9 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
             "FP16xFP16_ACCFP16_NT",
             [
                 self.generate_op_unit(
-                    self.generate_operator_config(
-                        "FP16xFP16_ACCFP16_NT", 16384, 16384, 16384
-                    ),
-                ),
+                    self.generate_operator_config("FP16xFP16_ACCFP16_NT", 16384, 16384, 16384),),
                 self.generate_op_unit(
-                    self.generate_operator_config(
-                        "FP16xFP16_ACCFP16_NT", [1, 1024], 16384, 16384
-                    ),
+                    self.generate_operator_config("FP16xFP16_ACCFP16_NT", [1, 1024], 16384, 16384),
                     dynamic_profiling_shape={"M": 1024},
                 ),
             ],
@@ -151,9 +147,7 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
             for i, (latency, tuning_time) in enumerate(results):
                 op_config = self.benchmark_sets[name][i][1]
                 dyn_prof_shape = self.benchmark_sets[name][i][2]
-                shape = legalize_shape(
-                    op_config.M, op_config.N, op_config.K, dyn_prof_shape
-                )
+                shape = legalize_shape(op_config.M, op_config.N, op_config.K, dyn_prof_shape)
 
                 benchmark_M = (
                     sum(op_config.M) /
