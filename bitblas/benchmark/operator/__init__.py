@@ -150,6 +150,7 @@ class BitblasOperatorBenchmarkBase(ABC):
         """Set the benchmark target."""
         self.benchmark_target = target
 
-    def set_benchmark_results(self, results: Dict[str, List[Tuple[Optional[float], Optional[float]]]]):
+    def set_benchmark_results(self, results: Dict[str, List[Tuple[Optional[float],
+                                                                  Optional[float]]]]):
         """Set the benchmark results."""
         self.benchmark_results = results

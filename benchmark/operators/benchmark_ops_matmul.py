@@ -87,7 +87,7 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
         )
 
         # Save benchmark shapes into JSON
-        shapes : Dict[List[List[Union[List, int], int, int]]] = {}
+        shapes: Dict[List[List[Union[List, int], int, int]]] = {}
 
         # Iterate through the benchmark results to extract the shapes
         for name, results in self.benchmark_results.items():
@@ -117,7 +117,8 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
         commit_id_path = f"CommitID_{commit_id}"
         log_commit_path = path.join(benchmark.log_path, commit_id_path)
 
-        benchmark.benchmark_results = cls._load_json(path.join(log_commit_path, cls.BENCHMARK_RESULTS_FILE))
+        benchmark.benchmark_results = cls._load_json(
+            path.join(log_commit_path, cls.BENCHMARK_RESULTS_FILE))
 
         shapes_file = path.join(log_commit_path, cls.BENCHMARK_SHAPES_FILE)
 
@@ -130,16 +131,14 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
                         name,
                         [
                             benchmark.generate_op_unit(
-                                benchmark.generate_operator_config(
-                                    name, M, N, K
-                                ),
+                                benchmark.generate_operator_config(name, M, N, K),
                                 dynamic_profiling_shape=dyn_prof_shape,
                             )
                         ],
                     )
 
-        benchmark.benchmark_target = cls._load_json(path.join(log_commit_path,
-                                                          cls.BENCHMARK_DEVICE_FILE))["device"]
+        benchmark.benchmark_target = cls._load_json(
+            path.join(log_commit_path, cls.BENCHMARK_DEVICE_FILE))["device"]
 
         return benchmark
 
