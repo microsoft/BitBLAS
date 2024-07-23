@@ -47,7 +47,7 @@ jobs:
       - name: Checkout PR branch code
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
 
       - name: Get PR branch commit ID
         id: get_pr_commit
