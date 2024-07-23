@@ -207,19 +207,33 @@ class Operator(ABC):
                 func, target, topk, parallel_build=parallel_build)
         self._build_runtime_module(self.target)
 
-    def get_profile_tensors(self, dynamic_symbolic_constrains: Optional[Dict] = None):
-        if dynamic_symbolic_constrains is None:
-            dynamic_symbolic_constrains = {}
+    def get_profile_tensors(self, dynamic_symbolic_constraints: Optional[Dict] = None):
+        if dynamic_symbolic_constraints is None:
+            dynamic_symbolic_constraints = {}
         func = self.prim_func
         device = self.arch.device
 
         def var_warpper(v):
             if isinstance(v, tvm.tir.Var):
-                if v.name in dynamic_symbolic_constrains:
-                    return dynamic_symbolic_constrains[v.name]
+                if v.name in dynamic_symbolic_constraints:
+                    return dynamic_symbolic_constraints[v.name]
                 assert "opt_shapes" in func.attrs
                 assert v.name in func.attrs["opt_shapes"]
-                return func.attrs["opt_shapes"][v.name].value
+                if isinstance(func.attrs["opt_shapes"][v.name], tvm.tir.IntImm):
+                    return func.attrs["opt_shapes"][v.name].value
+                elif isinstance(func.attrs["opt_shapes"][v.name], tvm.ir.container.Array):
+                    avg_shape: int = 0
+                    for i in func.attrs["opt_shapes"][v.name]:
+                        avg_shape += i.value
+                    avg_shape = avg_shape // len(func.attrs["opt_shapes"][v.name])
+                    _info_message = f"Doesn't provide dynamic symbolic constrains for {v.name} when do benchmarking, "\
+                        f"use average shape {avg_shape}"
+                    logger.info(_info_message)
+                    return avg_shape
+                else:
+                    raise RuntimeError("Not supported type: ",
+                                       type(func.attrs["opt_shapes"][v.name]))
+
             elif isinstance(v, tvm.tir.IntImm):
                 return v.value
             else:
@@ -251,10 +265,10 @@ class Operator(ABC):
         self.profile_tensors = profile_tensors
         return profile_tensors
 
-    def profile_latency(self, dynamic_symbolic_constrains: Optional[Dict] = None) -> str:
-        if dynamic_symbolic_constrains is None:
-            dynamic_symbolic_constrains = {}
-        profile_tensors = self.get_profile_tensors(dynamic_symbolic_constrains)
+    def profile_latency(self, dynamic_symbolic_constraints: Optional[Dict] = None) -> str:
+        if dynamic_symbolic_constraints is None:
+            dynamic_symbolic_constraints = {}
+        profile_tensors = self.get_profile_tensors(dynamic_symbolic_constraints)
         latency = self.time_evaluator(*profile_tensors).mean * 1e3
         return latency
 
