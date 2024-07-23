@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+from bitblas.utils import get_default_cache_path
 from bitblas.ops.operator import OperatorConfig, Operator
 from dataclasses import asdict
 import os
@@ -14,7 +15,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-BITBLAS_DATABASE_PATH = os.path.expanduser("~/.cache/bitblas")
+BITBLAS_DATABASE_PATH = get_default_cache_path()
 BITBLAS_WRAPPED_SOURCE_NAME = "wrapper_source.cu"
 BITBLAS_WRAPPED_COMPILED_NAME = "wrapper_compiled.so"
 
