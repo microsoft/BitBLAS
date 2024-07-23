@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 
 from bitblas.benchmark import BitblasOperatorBenchmarkBase
-from bitblas.ops import Matmul, MatmulConfig
+from bitblas import Matmul, MatmulConfig
 from bitblas.utils import get_commit_id
 from bitblas import set_log_level
 from tabulate import tabulate
@@ -12,6 +12,12 @@ from typing import Tuple
 
 set_log_level("DEBUG")
 
+HELPER_MESSAGE = """
+**Note**: Bitblas supports dynamic shape tensors as input, resulting in two possible formats for the \
+"Shape (M-N-K / N-K_M)" column in the report. The "M-N-K" format indicates a static shape operator, \
+while the "N-K_M" format denotes a dynamic shape operator where only the M dimension is dynamic. \
+In this context, "_M" represents the specific M shape used for dynamic profiling.
+"""
 
 class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
 
@@ -21,8 +27,19 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
 
     config_map = {
         "FP16xFP16_ACCFP16_NT": {
-            "in_dtype": "float16",
-            "out_dtype": "float16",
+            "A_dtype": "float16",
+            "W_dtype": "float16",
+            "accum_dtype": "float16",
+        },
+        "INT8xINT8_ACCINT32_NT": {
+            "A_dtype": "int8",
+            "W_dtype": "int8",
+            "accum_dtype": "int32",
+            "out_dtype": "int8",
+        },
+        "FP16xINT4_ACCINT32_NT": {
+            "A_dtype": "float16",
+            "W_dtype": "int4",
             "accum_dtype": "float16",
         }
     }
@@ -31,13 +48,19 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
 
     def prepare_benchmark_sets(self):
         """Prepare benchmark sets."""
-        self.disable_tuning()
         self.add_benchmark_set(
             "FP16xFP16_ACCFP16_NT",
             [
-                (
-                    Matmul,
-                    self.generate_operator_config("FP16xFP16_ACCFP16_NT", [1, 1024], 16384, 16384),
+                self.generate_op_unit(
+                    self.generate_operator_config(
+                        "FP16xFP16_ACCFP16_NT", 16384, 16384, 16384
+                    ),
+                ),
+                self.generate_op_unit(
+                    self.generate_operator_config(
+                        "FP16xFP16_ACCFP16_NT", [1, 1024], 16384, 16384
+                    ),
+                    dynamic_profiling_shape={"M": 1024},
                 ),
             ],
         )
@@ -46,7 +69,7 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
         """Generate configuration for the given operator."""
         if name not in self.config_map:
             raise ValueError(f"Operator {name} not found in config map")
-        return MatmulConfig(
+        return self.get_operator_config()(
             M=M,
             N=N,
             K=K,
@@ -108,16 +131,29 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
             table_data = [
                 ["TAG:", name, "Device:", self.benchmark_target],
                 [
-                    "Shape (M-N-K)",
+                    "Shape (M-N-K / N-K_M)",
                     "Time (ms)",
                     "Throughput (TFLOPS)",
                     "Tune Time (s)",
                 ],
             ]
 
+            def legalize_shape(M, N, K, dyn_prof_shape):
+                if isinstance(M, int):
+                    return f"{M}-{N}-{K}"
+                elif dyn_prof_shape:
+                    return f"{N}-{K}_{dyn_prof_shape['M']}"
+                else:
+                    assert isinstance(M, Tuple)
+                    opt_m = sum(M) / len(M)
+                    return f"{N}-{K}_{opt_m}"
+
             for i, (latency, tuning_time) in enumerate(results):
                 op_config = self.benchmark_sets[name][i][1]
-                shape = f"{op_config.M}-{op_config.N}-{op_config.K}"
+                dyn_prof_shape = self.benchmark_sets[name][i][2]
+                shape = legalize_shape(
+                    op_config.M, op_config.N, op_config.K, dyn_prof_shape
+                )
 
                 benchmark_M = (
                     sum(op_config.M) /
@@ -132,6 +168,7 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
                 table_data.append([shape, latency_str, throughput, tuning_time_str])
 
             print(tabulate(table_data, headers="firstrow", tablefmt="fancy_grid"))
+            print(HELPER_MESSAGE)
 
     def get_operator(self):
         """Return the Matmul operator."""
@@ -141,6 +178,11 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
         """Return the Matmul operator configuration."""
         return MatmulConfig
 
+    def make_operator(self, operator: Matmul, config: MatmulConfig) -> Matmul:
+        """Make an Matmul instance."""
+        # Disable default tuning when do benchmark
+        return operator(config, target=self.benchmark_target, enable_tuning=False)
+
 
 if __name__ == "__main__":
-    BitblasMatmulOpsBenchmark().run()
+    BitblasMatmulOpsBenchmark().run(enable_tuning=True)

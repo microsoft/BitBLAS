@@ -10,15 +10,21 @@ from bitblas.utils import get_default_cache_path
 from bitblas import auto_detect_nvidia_target
 from bitblas import tvm as tvm
 
+
 class BitblasOperatorBenchmarkBase(ABC):
-    # Separate benchmark sets for different operators
-    benchmark_sets: Dict[str, List[Tuple[Operator, OperatorConfig]]] = {}
+    # Separate benchmark sets for different operators, where the last key represents
+    # the dynamic profing shape
+    benchmark_sets: Dict[
+        str, List[Tuple[Operator, OperatorConfig, Optional[int]]]
+    ] = {}
 
     # Currently we only support NVIDIA target for benchmarking
     benchmark_target: str = auto_detect_nvidia_target()
 
     # Benchmark results: a list of tuples, each containing latency and tuning time
-    benchmark_results: Dict[str, List[Tuple[Optional[float], Optional[float]]]] = {}
+    benchmark_results: Dict[
+        str, List[Tuple[Optional[float], Optional[float]]]
+    ] = {}
 
     # Enable hardware-aware tuning
     enable_hardware_aware_tuning: bool = False
@@ -26,14 +32,25 @@ class BitblasOperatorBenchmarkBase(ABC):
     # Log path
     log_path: Optional[str] = None
 
-    # Dynamic symbolic constraints
-    dynamic_symbolic_constraints: Optional[Dict] = None
-
     @abstractmethod
     def prepare_benchmark_sets(self):
         pass
 
-    def add_benchmark_set(self, name: str, benchmark_set: List[Tuple[Operator, OperatorConfig]]):
+    def generate_op_unit(
+        self,
+        config: OperatorConfig,
+        dynamic_profiling_shape: Optional[Dict[str, int]] = None,
+    ) -> Tuple[Operator, OperatorConfig, Optional[Dict[str, int]]]:
+        """Generate a benchmark element for an operator."""
+        return self.get_operator(), config, dynamic_profiling_shape
+
+    def add_benchmark_set(
+        self,
+        name: str,
+        benchmark_set: List[
+            Tuple[Operator, OperatorConfig, Optional[Dict[str, int]]]
+        ],
+    ):
         """Add a benchmark set to the collection."""
         if name in self.benchmark_sets:
             self.benchmark_sets[name].extend(benchmark_set)
@@ -49,16 +66,16 @@ class BitblasOperatorBenchmarkBase(ABC):
 
         if enable_tuning:
             self.enable_tuning()
-        
+
         self.prepare_benchmark_sets()
         self.benchmark()
-        
+
         if report:
             self.report()
-        
+
         if serialize:
             self.serialize_results()
-        
+
         self.cleanup()
 
     @abstractmethod
@@ -73,20 +90,32 @@ class BitblasOperatorBenchmarkBase(ABC):
     def benchmark(self):
         """Run benchmarks on all benchmark sets."""
         for name, benchmark_set in self.benchmark_sets.items():
-            self.benchmark_results[name] = [self.run_benchmark(op, config) for op, config in benchmark_set]
+            self.benchmark_results[name] = [
+                self.run_benchmark(op, config, opt) for op, config, opt in benchmark_set
+            ]
 
-    def run_benchmark(self, operator: Operator, config: OperatorConfig) -> Optional[float]:
+    def make_operator(
+        self, operator: Operator, config: OperatorConfig
+    ) -> Operator:
+        """Make an operator instance."""
+        return operator(config, target=self.benchmark_target)
+
+    def run_benchmark(
+        self, operator: Operator, config: OperatorConfig, dynamic_profiling_shape: Optional[Dict[str, int]]=None,
+    ) -> Optional[float]:
         """Run a single benchmark."""
-        op_inst = operator(config, target=self.benchmark_target)
+        op_inst = self.make_operator(operator, config)
         tuning_time = None
-        
+
         if self.enable_hardware_aware_tuning:
             start = perf_counter()
             op_inst.hardware_aware_finetune(topk=20, parallel_build=True)
             tuning_time = perf_counter() - start
-        
-        latency = op_inst.profile_latency(dynamic_symbolic_constraints=self.dynamic_symbolic_constraints)
-        
+
+        latency = op_inst.profile_latency(
+            dynamic_symbolic_constraints=dynamic_profiling_shape
+        )
+
         return latency, tuning_time
 
     @abstractmethod
@@ -99,12 +128,16 @@ class BitblasOperatorBenchmarkBase(ABC):
         """Get the configuration for the operator."""
         raise NotImplementedError
 
-    def get_benchmark_sets(self, name: Optional[str] = None) -> List[Tuple[Operator, OperatorConfig]]:
+    def get_benchmark_sets(
+        self, name: Optional[str] = None
+    ) -> List[Tuple[Operator, OperatorConfig]]:
         """Retrieve benchmark sets by name, or all if name is None."""
         if name is None:
             return self.benchmark_sets
         else:
-            assert name in self.benchmark_sets, f"Operator {name} not found in benchmark sets"
+            assert (
+                name in self.benchmark_sets
+            ), f"Operator {name} not found in benchmark sets"
             return self.benchmark_sets[name]
 
     @abstractmethod
@@ -128,7 +161,3 @@ class BitblasOperatorBenchmarkBase(ABC):
     def set_log_path(self, log_path: str):
         """Set the log path."""
         self.log_path = log_path
-
-    def set_dynamic_symbolic_constraints(self, dynamic_symbolic_constraints: Dict):
-        """Set dynamic symbolic constraints."""
-        self.dynamic_symbolic_constraints = dynamic_symbolic_constraints
