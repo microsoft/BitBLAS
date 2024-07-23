@@ -8,7 +8,7 @@ from bitblas import set_log_level
 from tabulate import tabulate
 import json
 from os import path, makedirs
-from typing import Tuple
+from typing import Tuple, Dict, List, Union
 
 set_log_level("DEBUG")
 
@@ -87,9 +87,16 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
         )
 
         # Save benchmark shapes into JSON
-        shapes = [(config.M, config.N, config.K)
-                  for name, results in self.benchmark_results.items() for i, _ in enumerate(results)
-                  for config in [self.benchmark_sets[name][i][1]]]
+        shapes: Dict[List[List[Union[List, int], int, int]]] = {}
+
+        # Iterate through the benchmark results to extract the shapes
+        for name, results in self.benchmark_results.items():
+            shapes[name] = []
+            for i, _ in enumerate(results):
+                config = self.benchmark_sets[name][i][1]
+                dyn_prof_shape = self.benchmark_sets[name][i][2]
+                shapes[name].append([config.M, config.N, config.K, dyn_prof_shape])
+
         self._save_json(shapes, path.join(log_commit_path, self.BENCHMARK_SHAPES_FILE))
 
         # Save device info into JSON
@@ -103,20 +110,40 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
         with open(file_path, "w") as f:
             json.dump(data, f)
 
-    def deserialize_results(self, log_path: str) -> None:
+    @classmethod
+    def deserialize_from_logs(cls, commit_id: str) -> None:
         """Deserialize benchmark results from JSON files."""
-        self.benchmark_results = self._load_json(path.join(log_path, self.BENCHMARK_RESULTS_FILE))
+        benchmark = cls()
+        commit_id_path = f"CommitID_{commit_id}"
+        log_commit_path = path.join(benchmark.log_path, commit_id_path)
 
-        shapes_file = path.join(log_path, self.BENCHMARK_SHAPES_FILE)
+        benchmark.benchmark_results = cls._load_json(
+            path.join(log_commit_path, cls.BENCHMARK_RESULTS_FILE))
+
+        shapes_file = path.join(log_commit_path, cls.BENCHMARK_SHAPES_FILE)
+
         with open(shapes_file, "r") as f:
             shapes = json.load(f)
-            # TODO: Reconstruction of benchmark_sets from shapes
-            del shapes
+            for name, shape_list in shapes.items():
+                for shape in shape_list:
+                    M, N, K, dyn_prof_shape = shape
+                    benchmark.add_benchmark_set(
+                        name,
+                        [
+                            benchmark.generate_op_unit(
+                                benchmark.generate_operator_config(name, M, N, K),
+                                dynamic_profiling_shape=dyn_prof_shape,
+                            )
+                        ],
+                    )
 
-        self.benchmark_target = self._load_json(path.join(log_path,
-                                                          self.BENCHMARK_DEVICE_FILE))["device"]
+        benchmark.benchmark_target = cls._load_json(
+            path.join(log_commit_path, cls.BENCHMARK_DEVICE_FILE))["device"]
 
-    def _load_json(self, file_path):
+        return benchmark
+
+    @staticmethod
+    def _load_json(file_path):
         """Helper function to load JSON data from a file."""
         with open(file_path, "r") as f:
             return json.load(f)
