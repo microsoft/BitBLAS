@@ -113,7 +113,9 @@ if __name__ == '__main__':
         help="the head commit id",
     )
     args = parser.parse_args()
-
+    
+    print(f"Comparing base commit {args.base} with head commit {args.head}")
+    
     base_benchmark = BitblasMatmulOpsBenchmark.deserialize_from_logs(args.base)
 
     head_benchmark = BitblasMatmulOpsBenchmark.deserialize_from_logs(args.head)
