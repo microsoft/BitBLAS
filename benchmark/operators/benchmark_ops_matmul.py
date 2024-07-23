@@ -53,14 +53,9 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
             "FP16xFP16_ACCFP16_NT",
             [
                 self.generate_op_unit(
-                    self.generate_operator_config(
-                        "FP16xFP16_ACCFP16_NT", 16384, 16384, 16384
-                    ),
-                ),
+                    self.generate_operator_config("FP16xFP16_ACCFP16_NT", 16384, 16384, 16384),),
                 self.generate_op_unit(
-                    self.generate_operator_config(
-                        "FP16xFP16_ACCFP16_NT", [1, 1024], 16384, 16384
-                    ),
+                    self.generate_operator_config("FP16xFP16_ACCFP16_NT", [1, 1024], 16384, 16384),
                     dynamic_profiling_shape={"M": 1024},
                 ),
             ],
@@ -92,15 +87,10 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
         )
 
         # Save benchmark shapes into JSON
-        shapes = [
-            (config.M, config.N, config.K)
-            for name, results in self.benchmark_results.items()
-            for i, _ in enumerate(results)
-            for config in [self.benchmark_sets[name][i][1]]
-        ]
-        self._save_json(
-            shapes, path.join(log_commit_path, self.BENCHMARK_SHAPES_FILE)
-        )
+        shapes = [(config.M, config.N, config.K)
+                  for name, results in self.benchmark_results.items() for i, _ in enumerate(results)
+                  for config in [self.benchmark_sets[name][i][1]]]
+        self._save_json(shapes, path.join(log_commit_path, self.BENCHMARK_SHAPES_FILE))
 
         # Save device info into JSON
         self._save_json(
@@ -115,9 +105,7 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
 
     def deserialize_results(self, log_path: str) -> None:
         """Deserialize benchmark results from JSON files."""
-        self.benchmark_results = self._load_json(
-            path.join(log_path, self.BENCHMARK_RESULTS_FILE)
-        )
+        self.benchmark_results = self._load_json(path.join(log_path, self.BENCHMARK_RESULTS_FILE))
 
         shapes_file = path.join(log_path, self.BENCHMARK_SHAPES_FILE)
         with open(shapes_file, "r") as f:
@@ -125,9 +113,8 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
             # TODO: Reconstruction of benchmark_sets from shapes
             del shapes
 
-        self.benchmark_target = self._load_json(
-            path.join(log_path, self.BENCHMARK_DEVICE_FILE)
-        )["device"]
+        self.benchmark_target = self._load_json(path.join(log_path,
+                                                          self.BENCHMARK_DEVICE_FILE))["device"]
 
     def _load_json(self, file_path):
         """Helper function to load JSON data from a file."""
@@ -171,33 +158,21 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
             for i, (latency, tuning_time) in enumerate(results):
                 op_config = self.benchmark_sets[name][i][1]
                 dyn_prof_shape = self.benchmark_sets[name][i][2]
-                shape = legalize_shape(
-                    op_config.M, op_config.N, op_config.K, dyn_prof_shape
-                )
+                shape = legalize_shape(op_config.M, op_config.N, op_config.K, dyn_prof_shape)
 
                 benchmark_M = (
-                    sum(op_config.M) / len(op_config.M)
-                    if isinstance(op_config.M, Tuple)
-                    else op_config.M
-                )
+                    sum(op_config.M) /
+                    len(op_config.M) if isinstance(op_config.M, Tuple) else op_config.M)
 
                 throughput = (
                     f"{(2 * benchmark_M * op_config.N * op_config.K / (latency * 1e-3) / 1e12):.3f}"
-                    if latency
-                    else "N/A"
-                )
+                    if latency else "N/A")
                 latency_str = "N/A" if latency is None else f"{latency:.3f}"
-                tuning_time_str = (
-                    "N/A" if tuning_time is None else f"{tuning_time:.3f}"
-                )
+                tuning_time_str = ("N/A" if tuning_time is None else f"{tuning_time:.3f}")
 
-                table_data.append(
-                    [shape, latency_str, throughput, tuning_time_str]
-                )
+                table_data.append([shape, latency_str, throughput, tuning_time_str])
 
-            print(
-                tabulate(table_data, headers="firstrow", tablefmt="fancy_grid")
-            )
+            print(tabulate(table_data, headers="firstrow", tablefmt="fancy_grid"))
             print(HELPER_MESSAGE)
 
     def get_operator(self):
@@ -211,9 +186,7 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
     def make_operator(self, operator: Matmul, config: MatmulConfig) -> Matmul:
         """Make an Matmul instance."""
         # Disable default tuning when do benchmark
-        return operator(
-            config, target=self.benchmark_target, enable_tuning=False
-        )
+        return operator(config, target=self.benchmark_target, enable_tuning=False)
 
 
 if __name__ == "__main__":
