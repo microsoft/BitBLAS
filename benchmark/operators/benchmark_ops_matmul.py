@@ -61,6 +61,18 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
             ],
         )
 
+        self.add_benchmark_set(
+            "INT8xINT8_ACCINT32_NT",
+            [
+                self.generate_op_unit(
+                    self.generate_operator_config("INT8xINT8_ACCINT32_NT", 16384, 16384, 16384),),
+                self.generate_op_unit(
+                    self.generate_operator_config("INT8xINT8_ACCINT32_NT", [1, 1024], 16384, 16384),
+                    dynamic_profiling_shape={"M": 1024},
+                ),
+            ],
+        )
+
     def generate_operator_config(self, name: str, M, N, K) -> MatmulConfig:
         """Generate configuration for the given operator."""
         if name not in self.config_map:
