@@ -50,16 +50,9 @@ jobs:
           cd benchmark/operators
           python ./benchmark_ops_matmul.py
 
-  benchmark_head:
-    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/run-benchmark')
-    needs: benchmark_base
-    runs-on: self-hosted
-
-    steps:
       - name: Checkout PR branch code
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - name: Get PR branch commit ID
