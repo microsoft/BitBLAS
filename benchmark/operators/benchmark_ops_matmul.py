@@ -38,38 +38,109 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
             "accum_dtype": "int32",
             "out_dtype": "int8",
         },
-        "FP16xINT4_ACCINT32_NT": {
+        "FP16xUINT4_ACCFP16_NT": {
             "A_dtype": "float16",
-            "W_dtype": "int4",
+            "W_dtype": "uint4",
             "accum_dtype": "float16",
+        },
+        "FP16xUINT2_ACCFP16_NT": {
+            "A_dtype": "float16",
+            "W_dtype": "uint2",
+            "accum_dtype": "float16",
+        },
+        "INT8xUINT2_ACCINT32_NT": {
+            "A_dtype": "int8",
+            "W_dtype": "uint2",
+            "accum_dtype": "int32",
+            "out_dtype": "int8",
         },
     }
 
     CURRENT_COMMIT_ID = get_commit_id()
+
+    def prepare_set_group_4x(self, name: str, M, N, K) -> List:
+        return [
+            self.generate_op_unit(self.generate_operator_config(name, 1, N, K)),
+            self.generate_op_unit(self.generate_operator_config(name, M, N, K)),
+            self.generate_op_unit(
+                self.generate_operator_config(name, [1, M], N, K),
+                dynamic_profiling_shape={"m": 1},
+            ),
+            self.generate_op_unit(
+                self.generate_operator_config(name, [1, M], N, K),
+                dynamic_profiling_shape={"m": M},
+            ),
+        ]
+
+    def prepare_set_group_llm(self, name: str, N, K) -> List:
+        return [
+            self.generate_op_unit(self.generate_operator_config(name, 1, N, K)),
+            self.generate_op_unit(self.generate_operator_config(name, 16, N, K)),
+            self.generate_op_unit(self.generate_operator_config(name, 32, N, K)),
+            self.generate_op_unit(self.generate_operator_config(name, 64, N, K)),
+            self.generate_op_unit(self.generate_operator_config(name, 128, N, K)),
+            self.generate_op_unit(self.generate_operator_config(name, 2048, N, K)),
+            self.generate_op_unit(
+                self.generate_operator_config(name, [1, 16], N, K),
+                dynamic_profiling_shape={"m": 1},
+            ),
+            self.generate_op_unit(
+                self.generate_operator_config(name, [1, 32], N, K),
+                dynamic_profiling_shape={"m": 32},
+            ),
+            self.generate_op_unit(
+                self.generate_operator_config(name, [1, 64], N, K),
+                dynamic_profiling_shape={"m": 64},
+            ),
+            self.generate_op_unit(
+                self.generate_operator_config(name, [1, 128], N, K),
+                dynamic_profiling_shape={"m": 128},
+            ),
+            self.generate_op_unit(
+                self.generate_operator_config(name, [1, 2048], N, K),
+                dynamic_profiling_shape={"m": 2048},
+            ),
+        ]
 
     def prepare_benchmark_sets(self):
         """Prepare benchmark sets."""
         self.add_benchmark_set(
             "FP16xFP16_ACCFP16_NT",
             [
-                self.generate_op_unit(
-                    self.generate_operator_config("FP16xFP16_ACCFP16_NT", 16384, 16384, 16384),),
-                self.generate_op_unit(
-                    self.generate_operator_config("FP16xFP16_ACCFP16_NT", [1, 1024], 16384, 16384),
-                    dynamic_profiling_shape={"M": 1024},
-                ),
+                *self.prepare_set_group_4x("FP16xFP16_ACCFP16_NT", 16384, 16384, 16384),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 3200, 3200),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 8640, 3200),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 3200, 8640),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 5120, 5120),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 13824, 5120),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 5120, 13824),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 6656, 6656),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 17920, 6656),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 6656, 17920),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 1024, 8192),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 8192, 8192),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 28672, 8192),
+                *self.prepare_set_group_llm("FP16xFP16_ACCFP16_NT", 8192, 28672),
             ],
         )
 
         self.add_benchmark_set(
             "INT8xINT8_ACCINT32_NT",
             [
-                self.generate_op_unit(
-                    self.generate_operator_config("INT8xINT8_ACCINT32_NT", 16384, 16384, 16384),),
-                self.generate_op_unit(
-                    self.generate_operator_config("INT8xINT8_ACCINT32_NT", [1, 1024], 16384, 16384),
-                    dynamic_profiling_shape={"M": 1024},
-                ),
+                *self.prepare_set_group_4x("INT8xINT8_ACCINT32_NT", 16384, 16384, 16384),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 3200, 3200),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 8640, 3200),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 3200, 8640),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 5120, 5120),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 13824, 5120),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 5120, 13824),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 6656, 6656),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 17920, 6656),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 6656, 17920),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 1024, 8192),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 8192, 8192),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 28672, 8192),
+                *self.prepare_set_group_llm("INT8xINT8_ACCINT32_NT", 8192, 28672),
             ],
         )
 
@@ -180,15 +251,15 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
                     M: The M dimension (can be an int or a tuple).
                     N: The N dimension (must be an int).
                     K: The K dimension (must be an int).
-                    dyn_prof_shape: The dynamic profiling shape (dict with 'M' key if M is dynamic).
+                    dyn_prof_shape: The dynamic profiling shape (dict with "m" key if M is dynamic).
 
                 Returns:
                     A string representing the shape in either 'M-N-K' or 'N-K_M' format.
                 """
                 if isinstance(M, int):
                     return f"{M}-{N}-{K}"
-                elif dyn_prof_shape and "M" in dyn_prof_shape:
-                    return f"{N}-{K}_{dyn_prof_shape['M']}"
+                elif dyn_prof_shape and "m" in dyn_prof_shape:
+                    return f"{N}-{K}_{dyn_prof_shape['m']}"
                 else:
                     # Calculate the average of tuple M
                     opt_m = sum(M) / len(M)
@@ -207,7 +278,7 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
                     f"{(2 * benchmark_M * op_config.N * op_config.K / (latency * 1e-3) / 1e12):.3f}"
                     if latency else "N/A")
                 latency_str = "N/A" if latency is None else f"{latency:.3f}"
-                tuning_time_str = ("N/A" if tuning_time is None else f"{tuning_time:.3f}")
+                tuning_time_str = "N/A" if tuning_time is None else f"{tuning_time:.3f}"
 
                 table_data.append([shape, latency_str, throughput, tuning_time_str])
 

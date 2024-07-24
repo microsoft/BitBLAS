@@ -65,7 +65,7 @@ def compare(base: BitblasMatmulOpsBenchmark, head: BitblasMatmulOpsBenchmark):
                 throughput = (2 * benchmark_M * op_config.N * op_config.K / (latency * 1e-3) / 1e12)
                 if base_latency is not None:
                     base_throughput = (2 * benchmark_M * op_config.N * op_config.K /
-                                    (base_latency * 1e-3) / 1e12)
+                                       (base_latency * 1e-3) / 1e12)
                     throughput = f"{throughput:.3f}{get_suffix(base_throughput, throughput)}"
                 else:
                     throughput = f"{throughput:.3f}"
@@ -113,9 +113,9 @@ if __name__ == '__main__':
         help="the head commit id",
     )
     args = parser.parse_args()
-    
+
     print(f"Comparing base commit {args.base} with head commit {args.head}")
-    
+
     base_benchmark = BitblasMatmulOpsBenchmark.deserialize_from_logs(args.base)
 
     head_benchmark = BitblasMatmulOpsBenchmark.deserialize_from_logs(args.head)

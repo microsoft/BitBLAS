@@ -47,7 +47,6 @@ class Operator(ABC):
         self.optimized_func = None
         self.rt_mod = None
         self.time_evaluator = None
-        self.profile_tensors = None
         self.arch = get_arch(target) if target else None
         self.dynamic_range = None
         self.pass_context: Dict = {}
@@ -262,7 +261,6 @@ class Operator(ABC):
                                       [var_warpper(i) for i in arg.shape]).astype(numpy_dtype),
                     device=device,
                 ))
-        self.profile_tensors = profile_tensors
         return profile_tensors
 
     def profile_latency(self, dynamic_symbolic_constraints: Optional[Dict] = None) -> str:
@@ -270,6 +268,9 @@ class Operator(ABC):
             dynamic_symbolic_constraints = {}
         profile_tensors = self.get_profile_tensors(dynamic_symbolic_constraints)
         latency = self.time_evaluator(*profile_tensors).mean * 1e3
+        # release the memory
+        for tensor in profile_tensors:
+            del tensor
         return latency
 
     def _tensor_adapter(self, tensor, device):
@@ -324,6 +325,9 @@ class Operator(ABC):
             self.lib = ctypes.CDLL(libpath)
             self.lib.init()
         # TODO: update the lib code from srcpath
+
+    def cleanup(self):
+        raise NotImplementedError
 
     @abstractmethod
     def _select_implementation(self) -> IRModule:

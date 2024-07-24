@@ -306,6 +306,11 @@ class Matmul(Operator):
     def _alloc_workspace(self):
         return torch.empty(WORKSPACE_SIZE, dtype=torch.float16).cuda()
 
+    def _free_workspace(self):
+        # release the workspace if it is None
+        if self.workspace is not None:
+            self.workspace = None
+
     def _assign_ladder_permutate_a(self, target: Target, enable_tuning: bool):
         ladder_permutate_a = None
         if self.propagate_a:
@@ -533,6 +538,9 @@ class Matmul(Operator):
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         return self.forward(*args, **kwds)
+
+    def cleanup(self):
+        self._free_workspace()
 
     @property
     def M(self):
