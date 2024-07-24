@@ -108,6 +108,8 @@ class BitblasOperatorBenchmarkBase(ABC):
 
         latency = op_inst.profile_latency(dynamic_symbolic_constraints=dynamic_profiling_shape)
 
+        op_inst.cleanup()
+
         return latency, tuning_time
 
     @abstractmethod

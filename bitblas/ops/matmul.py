@@ -209,7 +209,6 @@ class Matmul(Operator):
                                           [var_warpper(i, m) for i in arg.shape]).astype(arg.dtype),
                         device=device,
                     ))
-            self.profile_tensors = profile_tensors
             latency = self.time_evaluator(*profile_tensors).mean * 1e3
             benchmark_latencies.append({"m": m, "latency": latency})
         # ms

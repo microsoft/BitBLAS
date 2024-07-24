@@ -51,12 +51,14 @@ class CompileResult:
         self.mod = mod
         self.code = mod.imported_modules[0].get_source() if mod else None
         self.latency = 1e9
-        self.profile_tensors = []
         self.time_evaluator = None
 
-    def profile(self):
-        profile_tensors = self.profile_tensors
-        return self.time_evaluator(*profile_tensors).mean * 1e3
+    def profile(self, data_distribution="uniform"):
+        func = self.sch.mod["main"]
+        device = self.config.arch.device
+        profile_tensors = get_dummy_input_arrays(func, device, distribution=data_distribution)
+        latency = self.time_evaluator(*profile_tensors).mean * 1e3
+        return latency
 
 
 def _apply_config(
@@ -172,7 +174,6 @@ def apply_and_build_parallel(func,
                              data_distribution="uniform") -> CompileResult:
     cpresults = []
 
-    profile_tensors = get_dummy_input_arrays(func, arch.device, distribution=data_distribution)
     max_workers = min(len(configs), os.cpu_count(), max_workers)
 
     # apply config in thread parallel
@@ -242,7 +243,6 @@ def apply_and_build_parallel(func,
             cpresult = CompileResult(config, sch, rt_mod)
             timer_cuda_mod = rt_mod.time_evaluator(
                 rt_mod.entry_name, arch.device, number=num_repeats)
-            cpresult.profile_tensors = profile_tensors
             cpresult.time_evaluator = timer_cuda_mod
             cpresult.code = code
             cpresults.append(cpresult)
@@ -256,7 +256,7 @@ def apply_and_build_parallel(func,
     for cpresult in cpresults:
         config = cpresult.config
         try:
-            latency = cpresult.profile()
+            latency = cpresult.profile(data_distribution=data_distribution)
         except Exception as e_mesg:
             logger.debug(f"Evaluation with config failed {e_mesg}")
             continue
