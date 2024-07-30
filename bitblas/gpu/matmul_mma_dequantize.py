@@ -8,13 +8,13 @@ from contextlib import suppress
 
 from tvm import tir, DataType
 
-from ..base.roller.hint import Hint, IntrinInfo
+from bitblas.base.roller.hint import Hint, IntrinInfo
 from tvm.target import Target
-from ..base.roller.rasterization import NoRasterization
-from ..base import analysis
-from .base import GPUScheduleRule
-from ..base.analysis import get_coalesced_veclen
-from .matmul_analysis import (
+from bitblas.base.roller.rasterization import NoRasterization
+from bitblas.base import analysis
+from bitblas.gpu.base import GPUScheduleRule
+from bitblas.base.analysis import get_coalesced_veclen
+from bitblas.gpu.matmul_analysis import (
     auto_inline_consumer_chain,
     auto_inline_producers,
     get_reduction_blocks,
