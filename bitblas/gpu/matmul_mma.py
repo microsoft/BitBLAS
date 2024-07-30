@@ -8,13 +8,13 @@ from typing import Literal, Optional, List
 from tvm import tir, DataType
 from tvm.target import Target
 
-from ..base.roller import Hint
-from ..base.roller.rasterization import NoRasterization
-from ..base import analysis
-from .base import GPUScheduleRule
-from .matmul_mma_dequantize import MatmulTensorizationMMAWithDequantizeInfo
-from ..base.analysis import get_coalesced_veclen
-from .matmul_analysis import (
+from bitblas.base.roller import Hint
+from bitblas.base.roller.rasterization import NoRasterization
+from bitblas.base import analysis
+from bitblas.gpu.base import GPUScheduleRule
+from bitblas.gpu.matmul_mma_dequantize import MatmulTensorizationMMAWithDequantizeInfo
+from bitblas.base.analysis import get_coalesced_veclen
+from bitblas.gpu.matmul_analysis import (
     auto_inline_consumer_chain,
     is_transpose_block,
     is_identity_block,
