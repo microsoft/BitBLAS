@@ -36,7 +36,7 @@ from .base import (
 )
 
 from . import testing  # noqa: F401
-from .utils import auto_detect_nvidia_target  # noqa: F401
+from .utils import auto_detect_nvidia_target, apply_transform_on_input  # noqa: F401
 from .ops.general_matmul import MatmulConfig, Matmul  # noqa: F401
 from .ops.general_matmul_splitk import MatmulConfigWithSplitK, MatmulWithSplitK  # noqa: F401
 from .ops.matmul_dequantize import MatmulWeightOnlyDequantizeConfig, MatmulWeightOnlyDequantize  # noqa: F401
