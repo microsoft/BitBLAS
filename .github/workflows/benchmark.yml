@@ -51,6 +51,12 @@ jobs:
           cd benchmark/operators
           python ./benchmark_ops_matmul.py
 
+  benchmark_head:
+    # On pull requests and if the comment starts with `/run-benchmark`
+    runs-on: self-hosted
+    depends-on: [benchmark_base]
+
+    steps:
       - name: Checkout PR branch code
         uses: actions/checkout@v2
         with:
