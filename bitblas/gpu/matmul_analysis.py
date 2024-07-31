@@ -733,10 +733,12 @@ def get_propagate_map(trans: bool = True, dtype="float16", matrix_name="A", inde
     inversed_index_map = ldmatrix_index_map.inverse([row, col])
     return ldmatrix_index_map, inversed_index_map
 
+
 # This function is used to get the index map for the stage3 of the
 # Ladder weight propagation, which can be used to avoid the ldmatrix
 # Instructions.
 def get_ladder_stage3_map(dtype="float16", index_dtype="int32"):
+
     def shared_32x8_to_mma_32x8_layout(i, j):
         thread_id = (i % 8) * 4 + (j // 2)
         local_id = (i // 8) * 2 + (j % 2)
@@ -776,7 +778,6 @@ def get_ladder_stage3_map(dtype="float16", index_dtype="int32"):
         new_kernel_i = (new_thread_id * 16 + new_local_id) // 32
         new_kernel_j = (new_thread_id * 16 + new_local_id) % 32
         return new_kernel_i, new_kernel_j
-
 
     if dtype == "float16":
         stage3_index_map = ladder_stage3_permutation_16x16_32x8_32x8_16x16
