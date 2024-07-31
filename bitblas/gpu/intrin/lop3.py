@@ -1239,7 +1239,8 @@ def get_fast_decode_intrin(
                 )
 
     return fast_decode_desc, fast_decode_impl
-    
+
+
 # Define the intrin definitions
 intrin_definitions = [
     # (source_bit, storage_dtype, target_dtype, loops_extent, storage_scope, source_format, with_scale, with_zeros, zeros_mode)
@@ -1275,6 +1276,7 @@ intrin_definitions = [
     (1, "int8", "float16", 8, "local", "int", False, False, "original"),
 ]
 
+
 # Register the intrin
 def initialize_tensor_intrin():
     registered_intrins: List[str] = []
@@ -1284,11 +1286,8 @@ def initialize_tensor_intrin():
 
         # Construct the name
         name_parts = [
-            "lop3_fast_decode",
-            f"{source_format[0]}{source_bit}",
-            f"to_{storage_dtype}",
-            f"to_{target_dtype}",
-            f"l{loops_extent}"
+            "lop3_fast_decode", f"{source_format[0]}{source_bit}", f"to_{storage_dtype}",
+            f"to_{target_dtype}", f"l{loops_extent}"
         ]
         if with_scale:
             name_parts.append("scale")
@@ -1298,7 +1297,7 @@ def initialize_tensor_intrin():
             name_parts.append("warp")
 
         name = "_".join(part for part in name_parts if part) + "_"
-        
+
         # Get intrin desc and implementation
         intrin = get_fast_decode_intrin(
             source_bit=source_bit,
@@ -1309,16 +1308,17 @@ def initialize_tensor_intrin():
             with_scale=with_scale,
             with_zeros=with_zeros,
             zeros_mode=zeros_mode,
-            storage_scope=storage_scope
-        )
-        
+            storage_scope=storage_scope)
+
         # Register the intrin
         TensorIntrin.register(name, *intrin)
         registered_intrins.append(name)
 
     return registered_intrins
 
+
 registered_intrins = initialize_tensor_intrin()
+
 
 def get_lop3_intrin_group(
     out_dtype: Literal["float16", "int8"],
