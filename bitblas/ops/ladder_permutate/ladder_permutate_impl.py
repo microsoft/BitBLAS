@@ -1,6 +1,9 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-from bitblas.gpu.matmul_analysis import get_propagate_map
+from bitblas.gpu.matmul_analysis import (
+    get_propagate_map,
+    get_ladder_stage3_map,
+)
 from typing import Literal
 from tvm import te, IRModule, DataType
 from tvm.tir import IndexMap
@@ -26,17 +29,22 @@ def select_implementation(
     if datatype in ["int8", "e4m3_float8", "e5m2_float8"]:
         l, r = 16, 32  # noqa: E741
     intra_index_map, _ = get_propagate_map(
-        transpose_matrix, dtype=datatype, matrix_name=propagate_kind)
+        transpose_matrix, dtype=datatype, matrix_name=propagate_kind
+    )
 
     target_dtype = DataType(datatype)
     scaling_factor = 1
     if dequantize_bits > 0 and dequantize_bits < target_dtype.bits:
-        scaling_factor = ((target_dtype.bits // dequantize_bits) * DataType(storage_dtype).bits //
-                          target_dtype.bits)
+        scaling_factor = (
+            (target_dtype.bits // dequantize_bits)
+            * DataType(storage_dtype).bits
+            // target_dtype.bits
+        )
         r = r // scaling_factor
         initial_indices = intra_index_map.initial_indices
-        scaling_final_indices = intra_index_map.map_indices(initial_indices[:-1] +
-                                                            [initial_indices[-1] * scaling_factor])
+        scaling_final_indices = intra_index_map.map_indices(
+            initial_indices[:-1] + [initial_indices[-1] * scaling_factor]
+        )
         scaling_final_indices = scaling_final_indices[:-1] + [
             scaling_final_indices[-1] // scaling_factor
         ]
@@ -75,6 +83,25 @@ def select_implementation(
             name="intra_warp_permutate",
         )
         args.append(intra_warp)
+    if transform_kind >= 3:
+        arg = args[-1]
+        _, ladder_stage3_map_inverse = get_ladder_stage3_map(dtype=datatype)
+
+        def fcompute(*args):
+            warp_i, warp_j = args[-2:]
+            spatial_args = args[:-2]
+            permutate_i, permutate_j = ladder_stage3_map_inverse.map_indices(
+                [warp_i, warp_j]
+            )
+            new_index = (*spatial_args, permutate_i, permutate_j)
+            return arg[new_index]
+
+        out = te.compute(
+            (M, N // scaling_factor),
+            fcompute,
+            name="permutate",
+        )
+        args.append(out)
     args = [args[0], args[-1]]
 
     func = te.create_prim_func(args)
