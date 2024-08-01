@@ -69,5 +69,5 @@ torch.onnx.export(
     input_ids,
     f"{dir_name}/model.onnx",
     export_params=True,
-    opset_version=13
+    opset_version=14
 )
