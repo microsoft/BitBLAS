@@ -13,7 +13,7 @@ class LOP3PermutateConfig:
     M: int
     N: int
     datatype: Literal["float16", "int8"] = "float16"
-    storage_dtype: Literal["int8", "uint8", "int32", "uint32"] = "int32"
+    storage_dtype: Literal["int8", "uint8", "int32", "uint32"] = "int8"
     dequantize_bits: int = 4
 
 
@@ -27,11 +27,11 @@ class LOP3Permutate(Operator):
     ):
         # consider to warp the arguments to MatmulConfig
         super().__init__(name, config, target)
-
+        
+        target = self.target
         if target.kind.name != "llvm":
             raise ValueError("Currently only support llvm target for Permutation")
 
-        self.target = target
         self._build_runtime_module(target)
 
     def _select_implementation(self):
