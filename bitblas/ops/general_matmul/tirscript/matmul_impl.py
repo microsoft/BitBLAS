@@ -7,6 +7,7 @@ from bitblas.gpu.matmul_analysis import get_propagate_map
 from bitblas.ops.operator import TransformKind
 from typing import Union
 
+
 def matmul_nn(
     M,
     N,

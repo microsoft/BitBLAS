@@ -29,24 +29,19 @@ def select_implementation(
     if datatype in ["int8", "e4m3_float8", "e5m2_float8"]:
         l, r = 16, 32  # noqa: E741
     intra_index_map, _ = get_propagate_map(
-        transpose_matrix, dtype=datatype, matrix_name=propagate_kind
-    )
+        transpose_matrix, dtype=datatype, matrix_name=propagate_kind)
 
     ladder_stage3_map, _ = get_ladder_stage3_map(dtype=datatype)
 
     target_dtype = DataType(datatype)
     scaling_factor = 1
     if dequantize_bits > 0 and dequantize_bits < target_dtype.bits:
-        scaling_factor = (
-            (target_dtype.bits // dequantize_bits)
-            * DataType(storage_dtype).bits
-            // target_dtype.bits
-        )
+        scaling_factor = ((target_dtype.bits // dequantize_bits) * DataType(storage_dtype).bits //
+                          target_dtype.bits)
         r = r // scaling_factor
         initial_indices = intra_index_map.initial_indices
-        scaling_final_indices = intra_index_map.map_indices(
-            initial_indices[:-1] + [initial_indices[-1] * scaling_factor]
-        )
+        scaling_final_indices = intra_index_map.map_indices(initial_indices[:-1] +
+                                                            [initial_indices[-1] * scaling_factor])
         scaling_final_indices = scaling_final_indices[:-1] + [
             scaling_final_indices[-1] // scaling_factor
         ]
@@ -58,8 +53,7 @@ def select_implementation(
 
         initial_indices = ladder_stage3_map.initial_indices
         scaling_final_indices = ladder_stage3_map.map_indices(
-            initial_indices[:-1] + [initial_indices[-1] * scaling_factor]
-        )
+            initial_indices[:-1] + [initial_indices[-1] * scaling_factor])
         scaling_final_indices = scaling_final_indices[:-1] + [
             scaling_final_indices[-1] // scaling_factor
         ]
@@ -106,9 +100,7 @@ def select_implementation(
         def fcompute(*args):
             warp_i, warp_j = args[-2:]
             spatial_args = args[:-2]
-            permutate_i, permutate_j = ladder_stage3_map_inverse.map_indices(
-                [warp_i, warp_j]
-            )
+            permutate_i, permutate_j = ladder_stage3_map_inverse.map_indices([warp_i, warp_j])
             new_index = (*spatial_args, permutate_i, permutate_j)
             return arg[new_index]
 

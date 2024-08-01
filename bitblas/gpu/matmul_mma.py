@@ -29,6 +29,7 @@ from .matmul_analysis import (
     get_propagate_map,
 )
 
+
 def get_index_map_3d(index_map, l=16, r=16):  # noqa: E741
 
     def index_map_3d(b, i, j):
@@ -346,8 +347,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             return dequantize_rule.apply_config(func, config)
 
         is_cross_thread_reduce = (
-            hasattr(config, "block_reduction_depth") and config.block_reduction_depth is not None
-        )
+            hasattr(config, "block_reduction_depth") and config.block_reduction_depth is not None)
         block_reduction_depth = config.block_reduction_depth if is_cross_thread_reduce else 1
 
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
@@ -403,7 +403,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         input_transform_kind = intrin_info.input_transform_kind
         weight_transform_kind = intrin_info.weight_transform_kind
         assert input_transform_kind <= TransformKind.IntraWarpTransform, "Only support up to intra-warp transform"
-        
+
         intrin_group = get_mma_intrin_group(
             load_scope=shared_scope,
             store_scope=shared_scope if cache_write_required else "global",
@@ -544,7 +544,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
             if reduce_k > 1:
                 f_r, f_0, f_1, f_2, f_3, f_4 = sch.split(
-                fused, factors=[reduce_k, num_ty, num_tz, None, warp_size, vec_len])
+                    fused, factors=[reduce_k, num_ty, num_tz, None, warp_size, vec_len])
                 sch.bind(f_3, "threadIdx.x")
                 f_0 = f_1 = sch.fuse(f_0, f_1)
                 sch.bind(f_0, "threadIdx.y")

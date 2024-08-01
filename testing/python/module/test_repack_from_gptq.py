@@ -1,27 +1,22 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
-from bitblas import Linear as BitBLASLinear
 import torch
-import torch.nn as nn
 
 try:
     import auto_gptq  # noqa
-except ImportError:
-    raise ImportError("Please install auto-gptq by running `pip install auto-gptq`")
+except ImportError as e:
+    raise ImportError("Please install auto-gptq by running `pip install auto-gptq`") from e
 
 from auto_gptq.nn_modules.qlinear.qlinear_cuda_old import (
-    QuantLinear as CudaOldQuantLinear,
-)
+    QuantLinear as CudaOldQuantLinear,)
 
 torch.manual_seed(0)
 bitblas.set_log_level("DEBUG")
 
 
 def assert_output_with_gptq(m, in_features, out_features, group_size):
-    _, linear, s, _ = bitblas.quantization.gen_quant4(
-        in_features, out_features, group_size
-    )
+    _, linear, s, _ = bitblas.quantization.gen_quant4(in_features, out_features, group_size)
 
     zeros = torch.full((in_features // group_size, out_features), 7, dtype=torch.int32)
 

@@ -27,7 +27,7 @@ class LOP3Permutate(Operator):
     ):
         # consider to warp the arguments to MatmulConfig
         super().__init__(name, config, target)
-        
+
         target = self.target
         if target.kind.name != "llvm":
             raise ValueError("Currently only support llvm target for Permutation")
