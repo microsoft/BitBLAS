@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import pytest
+
 import bitblas
 from bitblas.ops.general_matmul_splitk import MatmulWithSplitK, MatmulConfigWithSplitK
 
