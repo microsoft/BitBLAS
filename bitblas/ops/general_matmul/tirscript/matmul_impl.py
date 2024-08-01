@@ -5,7 +5,7 @@ from bitblas import tvm
 from tvm import te
 from bitblas.gpu.matmul_analysis import get_propagate_map
 from bitblas.ops.operator import TransformKind
-
+from typing import Union
 
 def matmul_nn(
     M,
@@ -307,9 +307,14 @@ def select_implementation(
     accum_dtype="float16",
     with_bias=False,
     layout="nt",
-    propagate_a: TransformKind = TransformKind.NonTransform,
-    propagate_b: TransformKind = TransformKind.NonTransform,
+    propagate_a: Union[int, TransformKind] = TransformKind.NonTransform,
+    propagate_b: Union[int, TransformKind] = TransformKind.NonTransform,
 ):
+    if isinstance(propagate_a, int):
+        propagate_a = TransformKind(propagate_a)
+    if isinstance(propagate_b, int):
+        propagate_b = TransformKind(propagate_b)
+
     if layout == "nn":
         if propagate_a or propagate_b:
             raise ValueError(

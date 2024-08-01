@@ -8,13 +8,14 @@ from typing import Literal, Optional, List
 from tvm import tir, DataType
 from tvm.target import Target
 
-from bitblas.base.roller import Hint
-from bitblas.base.roller.rasterization import NoRasterization
-from bitblas.base import analysis
-from bitblas.gpu.base import GPUScheduleRule
-from bitblas.gpu.matmul_mma_dequantize import MatmulTensorizationMMAWithDequantizeInfo
-from bitblas.base.analysis import get_coalesced_veclen
-from bitblas.gpu.matmul_analysis import (
+from ..ops.operator import TransformKind
+from ..base.roller import Hint
+from ..base.roller.rasterization import NoRasterization
+from ..base import analysis
+from .base import GPUScheduleRule
+from .matmul_mma_dequantize import MatmulTensorizationMMAWithDequantizeInfo
+from ..base.analysis import get_coalesced_veclen
+from .matmul_analysis import (
     auto_inline_consumer_chain,
     is_transpose_block,
     is_identity_block,
@@ -27,7 +28,6 @@ from bitblas.gpu.matmul_analysis import (
     normalize_to_matmul,
     get_propagate_map,
 )
-
 
 def get_index_map_3d(index_map, l=16, r=16):  # noqa: E741
 
@@ -400,6 +400,10 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         shared_scope = config.shared_scope
 
         intrin_info = config.intrin_info
+        input_transform_kind = intrin_info.input_transform_kind
+        weight_transform_kind = intrin_info.weight_transform_kind
+        assert input_transform_kind <= TransformKind.IntraWarpTransform, "Only support up to intra-warp transform"
+        
         intrin_group = get_mma_intrin_group(
             load_scope=shared_scope,
             store_scope=shared_scope if cache_write_required else "global",
@@ -412,7 +416,6 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             smooth_b=intrin_info.smooth_b,
             not_use_mma_store_intrinic=False,
         )
-
         # Start Schedule
         # Step 0. Get schedule config.
 
@@ -682,9 +685,16 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         i0, i1 = sch.split(i, factors=[None, b_lr[0]])
         j0, j1 = sch.split(j, factors=[None, b_lr[1]])
         sch.reorder(i0, j0, i1, j1)
-        bb = sch.blockize(i1)
-        sch.annotate(bb, ann_key="permuted_layout", ann_val=can_swizzle_b)
-        sch.tensorize(bb, intrin_group["load_b"])
+        if weight_transform_kind >= TransformKind.LDMatrixTransform:
+            fused = sch.fuse(i1, j1)
+            vec_len = get_coalesced_veclen(sch.get(B_mat))
+            f0, f1, f2 = sch.split(fused, factors=[None, warp_size, vec_len])
+            sch.bind(f1, "threadIdx.x")
+            sch.vectorize(f2)
+        else:
+            bb = sch.blockize(i1)
+            sch.annotate(bb, ann_key="permuted_layout", ann_val=can_swizzle_b)
+            sch.tensorize(bb, intrin_group["load_b"])
 
         def tensorize_init_store_compute():
             sch.tensorize(sch.get_loops(block_init_c_inner)[-2], intrin_group["init"])
