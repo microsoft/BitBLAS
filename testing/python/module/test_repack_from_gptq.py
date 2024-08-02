@@ -4,7 +4,7 @@ import bitblas
 import torch
 
 try:
-    import auto_gptq  # noqa
+    import auto_gptq  # noqa: F401
 except ImportError as e:
     raise ImportError("Please install auto-gptq by running `pip install auto-gptq`") from e
 
