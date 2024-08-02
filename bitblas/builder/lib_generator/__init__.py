@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from typing import Optional
-from bitblas import TileDevice
+from bitblas.base.arch import TileDevice
 import ctypes
 import os
 import tempfile

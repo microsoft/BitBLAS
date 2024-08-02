@@ -3,12 +3,13 @@
 from bitblas import tvm
 from typing import Optional, List, Dict, Union
 from tvm import IRModule
-from bitblas import TileDevice
+from bitblas.base.arch import TileDevice
 from bitblas.utils import match_global_kernel
 from bitblas.utils.rtmod_analysis import get_annotated_device_mod
 import re
-from .base import BaseWrapper
 import logging
+
+from .base import BaseWrapper
 
 logger = logging.getLogger(__name__)
 

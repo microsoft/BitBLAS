@@ -1,6 +1,9 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-from bitblas.gpu.matmul_analysis import get_propagate_map
+from bitblas.gpu.matmul_analysis import (
+    get_propagate_map,
+    get_ladder_stage3_map,
+)
 from typing import Literal
 from tvm import te, IRModule, DataType
 from tvm.tir import IndexMap
@@ -28,6 +31,8 @@ def select_implementation(
     intra_index_map, _ = get_propagate_map(
         transpose_matrix, dtype=datatype, matrix_name=propagate_kind)
 
+    ladder_stage3_map, _ = get_ladder_stage3_map(dtype=datatype)
+
     target_dtype = DataType(datatype)
     scaling_factor = 1
     if dequantize_bits > 0 and dequantize_bits < target_dtype.bits:
@@ -45,6 +50,20 @@ def select_implementation(
             scaling_final_indices,
             None,
         )
+
+        initial_indices = ladder_stage3_map.initial_indices
+        scaling_final_indices = ladder_stage3_map.map_indices(
+            initial_indices[:-1] + [initial_indices[-1] * scaling_factor])
+        scaling_final_indices = scaling_final_indices[:-1] + [
+            scaling_final_indices[-1] // scaling_factor
+        ]
+        ladder_stage3_map = IndexMap(
+            initial_indices,
+            scaling_final_indices,
+            None,
+        )
+
+    ladder_stage3_map_inverse = ladder_stage3_map.inverse([l, r])
 
     inp = te.placeholder((M, N // scaling_factor), name="inp", dtype=storage_dtype)
     args = [inp]
@@ -75,6 +94,22 @@ def select_implementation(
             name="intra_warp_permutate",
         )
         args.append(intra_warp)
+    if transform_kind >= 3:
+        arg = args[-1]
+
+        def fcompute(*args):
+            warp_i, warp_j = args[-2:]
+            spatial_args = args[:-2]
+            permutate_i, permutate_j = ladder_stage3_map_inverse.map_indices([warp_i, warp_j])
+            new_index = (*spatial_args, permutate_i, permutate_j)
+            return arg[new_index]
+
+        out = te.compute(
+            (M // l, (N // scaling_factor) // r, l, r),
+            fcompute,
+            name="permutate",
+        )
+        args.append(out)
     args = [args[0], args[-1]]
 
     func = te.create_prim_func(args)

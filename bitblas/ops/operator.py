@@ -10,7 +10,7 @@ import bitblas
 import ctypes
 from typing import List, Dict, Any, Optional
 import numpy as np
-from ..base import fast_tune, fast_tune_with_dynamic_range
+from bitblas.base import fast_tune, fast_tune_with_dynamic_range
 from copy import deepcopy
 from bitblas.base.arch import get_arch
 from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
@@ -27,6 +27,7 @@ class TransformKind(IntEnum):
     NonTransform = 0
     InterWarpTransform = 1
     IntraWarpTransform = 2
+    LDMatrixTransform = 3
 
 
 @dataclass(frozen=True)

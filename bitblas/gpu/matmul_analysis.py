@@ -734,6 +734,63 @@ def get_propagate_map(trans: bool = True, dtype="float16", matrix_name="A", inde
     return ldmatrix_index_map, inversed_index_map
 
 
+# This function is used to get the index map for the stage3 of the
+# Ladder weight propagation, which can be used to avoid the ldmatrix
+# Instructions.
+def get_ladder_stage3_map(dtype="float16", index_dtype="int32"):
+
+    def shared_32x8_to_mma_32x8_layout(i, j):
+        thread_id = (i % 8) * 4 + (j // 2)
+        local_id = (i // 8) * 2 + (j % 2)
+        return thread_id, local_id
+
+    def shared_32x16_to_mma_32x16_layout(i, j):
+        thread_id = (i % 8) * 4 + (j // 4)
+        local_id = (i // 8) * 4 + (j % 4)
+        return thread_id, local_id
+
+    assert dtype in [
+        "float16",
+        "int8",
+        "e4m3_float8",
+        "e5m2_float8",
+    ], "Only support float16, int8, e4m3_float8, e5m2_float8"
+    if dtype == "float16":
+        stage3_layout = shared_32x8_to_mma_32x8_layout
+    elif dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
+        stage3_layout = shared_32x16_to_mma_32x16_layout
+    else:
+        raise ValueError("Unknown dtype ", dtype)
+
+    # IntraWarp memory layout was occurred by ldmatrix, we should lift the ld_matrix out
+    def ladder_stage3_permutation_16x16_32x8_32x8_16x16(kernel_i, kernel_j):
+        thread_id = kernel_i * 2 + kernel_j // 8
+        local_id = kernel_j % 8
+        new_thread_id, new_local_id = stage3_layout(thread_id, local_id)
+        new_kernel_i = (new_thread_id * 8 + new_local_id) // 16
+        new_kernel_j = (new_thread_id * 8 + new_local_id) % 16
+        return new_kernel_i, new_kernel_j
+
+    def ladder_stage3_permutation_16x32_32x16_32x16_16x32(kernel_i, kernel_j):
+        thread_id = kernel_i * 2 + kernel_j // 16
+        local_id = kernel_j % 16
+        new_thread_id, new_local_id = stage3_layout(thread_id, local_id)
+        new_kernel_i = (new_thread_id * 16 + new_local_id) // 32
+        new_kernel_j = (new_thread_id * 16 + new_local_id) % 32
+        return new_kernel_i, new_kernel_j
+
+    if dtype == "float16":
+        stage3_index_map = ladder_stage3_permutation_16x16_32x8_32x8_16x16
+    else:
+        stage3_index_map = ladder_stage3_permutation_16x32_32x16_32x16_16x32
+
+    stage3_index_map = IndexMap.from_func(stage3_index_map, index_dtype=index_dtype)
+    # TODO(lei): index_dtype should be analyzed from the schedule
+    row, col = [16, 16] if dtype == "float16" else [16, 32]
+    inversed_index_map = stage3_index_map.inverse([row, col])
+    return stage3_index_map, inversed_index_map
+
+
 def layout_propagate_chain(
     sch: tir.Schedule,
     start_block: BlockRV,

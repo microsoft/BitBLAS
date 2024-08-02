@@ -51,6 +51,13 @@ jobs:
           cd benchmark/operators
           python ./benchmark_ops_matmul.py
 
+  benchmark_head:
+    # On pull requests and if the comment starts with `/run-benchmark`
+    if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/run-benchmark')
+    runs-on: self-hosted
+    depends-on: [benchmark_base]
+
+    steps:
       - name: Checkout PR branch code
         uses: actions/checkout@v2
         with:
@@ -92,7 +99,7 @@ jobs:
           python ./benchmark_ops_matmul.py
 
   benchmark_compare:
-    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/run-benchmark')
+    if: github.event.issue.pull_request != null && contains(github.event.comment.body, '/run-benchmark')
     needs: [benchmark_base, benchmark_head]
     runs-on: self-hosted
 
