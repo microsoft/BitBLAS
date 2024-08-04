@@ -86,7 +86,7 @@ def test_ladder_permutate_profile_latency_cuda():
                                           "nvidia-mma")
     ladder_permutate_profile_latency_cuda(1024, 1024, "float16", -1, "float16", "A", True, 2,
                                           "nvidia-mma")
-    ladder_permutate_profile_latency_cuda(1024, 1024, "float16", 4, "uint32", "A", True, 2,
+    ladder_permutate_profile_latency_cuda(1024, 1024, "float16", 4, "int8", "A", True, 2,
                                           "nvidia-mma")
 
 

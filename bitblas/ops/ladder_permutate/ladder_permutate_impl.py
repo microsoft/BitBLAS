@@ -63,7 +63,6 @@ def select_implementation(
             None,
         )
 
-    ladder_stage3_map_inverse = ladder_stage3_map.inverse([l, r])
 
     inp = te.placeholder((M, N // scaling_factor), name="inp", dtype=storage_dtype)
     args = [inp]
@@ -96,6 +95,8 @@ def select_implementation(
         args.append(intra_warp)
     if transform_kind >= 3:
         arg = args[-1]
+
+        ladder_stage3_map_inverse = ladder_stage3_map.inverse([l, r])
 
         def fcompute(*args):
             warp_i, warp_j = args[-2:]

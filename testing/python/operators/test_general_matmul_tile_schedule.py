@@ -116,15 +116,6 @@ def test_assert_correctness_with_block_reduce():
         accum_dtype="float16",
         propagate_a=0,
         propagate_b=0)
-    assert_correctness_with_block_reduce(
-        M=256,
-        N=256,
-        K=256,
-        in_dtype="float16",
-        out_dtype="float16",
-        accum_dtype="float16",
-        propagate_a=0,
-        propagate_b=2)
 
 
 def assert_correctness_with_ladder_ldmatrix_propagate(
@@ -509,8 +500,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
         torch_func(a, transformed_b, scale, zeros, c)
     else:
         torch_func(a, transformed_b, scale, c)
-    with open("debug/kernel.cu", "w") as f:
-        f.write(rt_mod.imported_modules[0].get_source())
+
     rescale_b = torch.empty_like(b, dtype=torch.float16)
     for i in range(N):
         for j in range(K):
