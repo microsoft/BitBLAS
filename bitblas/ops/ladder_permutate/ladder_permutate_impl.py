@@ -63,7 +63,6 @@ def select_implementation(
             None,
         )
 
-
     inp = te.placeholder((M, N // scaling_factor), name="inp", dtype=storage_dtype)
     args = [inp]
 
