@@ -55,7 +55,7 @@ jobs:
     # On pull requests and if the comment starts with `/run-benchmark`
     if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/run-benchmark')
     runs-on: self-hosted
-    depends-on: [benchmark_base]
+    needs: [benchmark_base]
 
     steps:
       - name: Checkout PR branch code
