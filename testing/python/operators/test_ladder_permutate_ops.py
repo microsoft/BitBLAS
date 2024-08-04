@@ -46,8 +46,8 @@ def test_ladder_permutate_profile_latency():
                                      "nvidia-mma")
     ladder_permutate_profile_latency(1024, 1024, "float16", -1, "float16", "B", True, 3,
                                      "nvidia-mma")
-    ladder_permutate_profile_latency(1024, 1024, "float16", 4, "uint32", "B", True, 2, "nvidia-mma")
-    ladder_permutate_profile_latency(1024, 1024, "float16", 4, "uint32", "B", True, 3, "nvidia-mma")
+    ladder_permutate_profile_latency(1024, 1024, "float16", 4, "int8", "B", True, 2, "nvidia-mma")
+    ladder_permutate_profile_latency(1024, 1024, "float16", 4, "int8", "B", True, 3, "nvidia-mma")
 
 
 def ladder_permutate_profile_latency_cuda(
