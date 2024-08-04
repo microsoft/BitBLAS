@@ -3,7 +3,7 @@
 from bitblas import tvm
 from tvm.tir.function import TensorIntrin
 from tvm.script import tir as T
-from typing import Dict, Literal, List, Optional
+from typing import Dict, Literal, List
 from bitblas.quantization import (
     _tir_packed_int_to_int_convert,
     _tir_packed_to_signed_convert,
@@ -870,7 +870,7 @@ def get_fast_decode_intrin(
         if Zeros is not None:
             args.append(Zeros.access_ptr("r"))
         return args
- 
+
     if with_scale is False:
 
         @T.prim_func
@@ -1016,9 +1016,7 @@ def get_fast_decode_intrin(
                 T.call_extern(
                     "handle",
                     func_name,
-                    *get_func_arguments(Compressed, 
-                                        Decompressed, 
-                                        Scale=Scale),
+                    *get_func_arguments(Compressed, Decompressed, Scale=Scale),
                     loops_extent,
                 )
 
@@ -1302,9 +1300,7 @@ def get_fast_decode_intrin(
                 T.call_extern(
                     "handle",
                     func_name,
-                    *get_func_arguments(Compressed, 
-                                        Decompressed, 
-                                        Scale=Scale),
+                    *get_func_arguments(Compressed, Decompressed, Scale=Scale),
                     loops_extent,
                 )
 

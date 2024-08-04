@@ -1601,7 +1601,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             B_shared_fused = sch.fuse(*sch.get_loops(block_shared)[-union_len:-2])
             if reduce_k > 1:
                 _, B_shared_rk, B_shared_ty, B_shared_tz, B_shared_tx = sch.split(
-                B_shared_fused, factors=[None, reduce_k, num_ty, num_tz, warp_size])
+                    B_shared_fused, factors=[None, reduce_k, num_ty, num_tz, warp_size])
                 sch.bind(B_shared_tx, "threadIdx.x")
                 B_shared_tz = B_shared_ty = sch.fuse(B_shared_ty, B_shared_tz)
                 sch.bind(B_shared_ty, "threadIdx.y")
@@ -1612,7 +1612,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 sch.bind(B_shared_tx, "threadIdx.x")
                 sch.bind(B_shared_ty, "threadIdx.y")
                 sch.bind(B_shared_tz, "threadIdx.z")
-            
+
             if not (can_swizzle_b or intrin_info.smooth_b):
                 pad_offset = 8 if intrin_info.in_dtype == "float16" else 16
                 sch.storage_align(block_shared, 0, axis=-2, factor=16, offset=pad_offset)
@@ -1625,10 +1625,10 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
             if reduce_k > 1:
                 _bind_thread_based_with_block_reduce_on_config(sch, block_shared_local_local_shared,
-                                                           num_ty, num_tz, warp_size, reduce_k)
+                                                               num_ty, num_tz, warp_size, reduce_k)
             else:
                 _bind_thread_based_on_config(sch, block_shared_local_local_shared, num_ty, num_tz,
-                                            warp_size)
+                                             warp_size)
 
             # cache small tensors, e.g. LUT
             if b_idx:
@@ -1641,7 +1641,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
         _ = decode_fetch_to_shared(block_outer, 1)
 
-        
         # Put the thread binding after the shared memory prefetch
         # Otherwise there's a axis missing bug behind tvm
         if reduce_k > 1:
@@ -1932,7 +1931,9 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
             intra_index_map, _ = get_propagate_map(
                 trans=trans, dtype=intrin_info.in_dtype, matrix_name=matrix_name)
-            ladder_stage3_index_map, ladder_stage3_inverse_index_map = get_ladder_stage3_map(dtype=intrin_info.in_dtype)
+            ladder_stage3_index_map, ladder_stage3_inverse_index_map = get_ladder_stage3_map(
+                dtype=intrin_info.in_dtype)
+
             # get target dequantize buffer's offset
             def get_offset():
                 # for LUT dequantize, the expr is LUT(w), the idx is 1
@@ -2124,7 +2125,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         def warp_memory_dequantize():
             B_dequantized_mat = sch.cache_read(block_outer, 1, "warp")
             is_qzeros = ("with_zeros" in weight_decode_info and weight_decode_info["with_zeros"] and
-                            weight_decode_info["zeros_mode"] == "quantized")
+                         weight_decode_info["zeros_mode"] == "quantized")
             weight_dequantize_block = sch.get_block(weight_decode_info["decode_block"])
             weight_producers = (
                 _collect_producers(sch, weight_dequantize_block) if is_qzeros else [])
@@ -2147,10 +2148,10 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.compute_at(B_quant_mat, k1, preserve_unit_loops=True)
             ndim = len(sch.get(B_quant_mat).iter_vars)
             f0 = sch.fuse(*sch.get_loops(B_quant_mat)[-ndim:])
-            vec_len = 4 # quant should load 4 int8 in one load
+            vec_len = 4  # quant should load 4 int8 in one load
             # and dequantize 8 int8 to 8 float16 -> 128bits
-            f1, f2 = sch.split(f0, factors=[None, warp_size, vec_len], 
-                            preserve_unit_iters=False)[-2:]
+            f1, f2 = sch.split(
+                f0, factors=[None, warp_size, vec_len], preserve_unit_iters=False)[-2:]
             sch.bind(f1, "threadIdx.x")
             sch.vectorize(f2)
             sch.compute_at(B_shared, k0, preserve_unit_loops=True)
@@ -2165,11 +2166,11 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 warp_size,
                 reduce_k,
             )
-            
+
             return B_dequantized_mat
-        
+
         B_dequantized_mat = warp_memory_dequantize()
-        
+
         # create write cache to store matrix from wmma fragments to shared memory and global memory
         if cache_write_required:
             accumulator_shared_to_global = sch.cache_write(block_outer, 0, shared_scope)
@@ -2237,12 +2238,11 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         sch.reorder(i0, j0, i1, j1)
         _ = sch.blockize(i1)
         sch.transform_block_layout(
-            B_dequantized_mat, lambda i, j: ((i * b_lr[1] + j) // vec_len, (i * b_lr[1] + j) % vec_len)
-        )
+            B_dequantized_mat, lambda i, j: ((i * b_lr[1] + j) // vec_len,
+                                             (i * b_lr[1] + j) % vec_len))
         i1, j1 = sch.get_loops(B_dequantized_mat)[-2:]
         fused = sch.fuse(i1, j1)
-        f1, f2 = sch.split(fused, factors=[warp_size, vec_len], 
-                           preserve_unit_iters=False)[-2:]
+        f1, f2 = sch.split(fused, factors=[warp_size, vec_len], preserve_unit_iters=False)[-2:]
         sch.bind(f1, "threadIdx.x")
         # fast type conversion
         if ("fast_decoding" in weight_decode_info and weight_decode_info["fast_decoding"]):

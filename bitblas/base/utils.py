@@ -210,7 +210,11 @@ def apply_and_build_parallel(func,
             code = tensor_remove_make_int2(code)
             return code
 
-        with tvm.transform.PassContext(config={"tir.use_async_copy": True, "tir.disable_cse_tir": True,  **config.pass_context}):
+        with tvm.transform.PassContext(config={
+                "tir.use_async_copy": True,
+                "tir.disable_cse_tir": True,
+                **config.pass_context
+        }):
             rt_mod = tvm.build(mod, target=arch.target)
 
         from tvm.contrib.tar import tar  # pylint: disable=import-outside-toplevel
