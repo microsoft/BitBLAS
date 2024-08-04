@@ -3,7 +3,7 @@
 from bitblas import tvm
 from tvm.tir.function import TensorIntrin
 from tvm.script import tir as T
-from typing import Dict, Literal, List
+from typing import Dict, Literal, List, Optional
 from bitblas.quantization import (
     _tir_packed_int_to_int_convert,
     _tir_packed_to_signed_convert,
@@ -292,6 +292,59 @@ __device__ void decode_i2u_to_f16_scale(T1 *_i2u, T2 *B_local_decode,  T3 *scale
 }
 """
 
+decode_i4_to_f16_scale_offset = """
+template <typename T1, typename T2, typename T3, bool isSigned = false, bool withScaling = false>
+__device__ void decode_i4b_to_f16_scale_offset(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T3 *scale = nullptr, const int offset = 0)
+{
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x000f000f;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    // Minus 7 to scale the value to signed
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64086408 : 0x64006400;
+    uint const i4s = *reinterpret_cast<uint *>(_i4s);
+    T3 const scale_l = *scale;
+    T3 const scale_r = *(scale + offset);
+    uint const packed_scales_l = __pack_half2(scale_l, scale_l);
+    uint const packed_scales_r = __pack_half2(scale_r, scale_r);
+
+#pragma unroll
+    // decode 2 elems at one time.
+    for (int i = 0; i < (N / 2); i++)
+    {
+
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                     : "=r"(h[i])
+                     : "r"(i4s >> (4 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+        asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+    }
+    #pragma unroll
+    for (int i = 0; i < (N / 4); i++)
+    {
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_scales_l), "r"(0));
+    }
+#pragma unroll
+    for (int i = (N / 4); i < (N / 2); i++)
+    {
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_scales_r), "r"(0));
+    }
+}
+
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i4s_to_f16_scale_offset(T1 *_i4s, T2 *B_local_decode, T3 *scale = nullptr, const int offset = 0, const int N = 8)
+{
+    decode_i4b_to_f16_scale_offset<T1, T2, T3, true, true>(_i4s, B_local_decode, N, scale, offset);
+}
+
+template <typename T1, typename T2, typename T3>
+__device__ void decode_i4u_to_f16_scale_offset(T1 *_i4u, T2 *B_local_decode, T3 *scale = nullptr, const int offset = 0, const int N = 8)
+{
+    decode_i4b_to_f16_scale_offset<T1, T2, T3, false, true>(_i4u, B_local_decode, N, scale, offset);
+}
+
+"""
+
 decode_i2_to_f16_scale_zeros_original = """
 template <typename T1, typename T2, typename T3, bool isSigned = false>
 __device__ void decode_i2b_to_f16_scale_zeros_original(T1 *_i2s, T2 *B_local_decode, T3 *scale = nullptr, T3 *zeros = nullptr, const int N = 8)
@@ -563,6 +616,7 @@ __device__ void decode_i1u_to_f16_scale_zeros_original(T1 *_i1u, T2 *B_local_dec
     decode_i1b_to_f16_zeros_original<T1, T2, T3, T4, false>(_i1u, B_local_decode, N, scale, zeros);
 }
 """
+
 decode_i1_to_f16_scale_zeros_rescale = """
 template <typename T1, typename T2, typename T3, typename T4, bool isSigned = false>
 __device__ void decode_i1b_to_f16_scale_zeros_rescale(T1 *_i1s, T2 *B_local_decode, const int N = 8, T3 *scale = nullptr, T4 *zeros = nullptr)
@@ -788,6 +842,10 @@ def get_fast_decode_intrin(
         func_name += "_scale"
     if with_zeros:
         func_name += f"_zeros_{zeros_mode}"
+    is_ladder_stage3 = (storage_scope == "warp") and with_scale
+    if is_ladder_stage3:
+        func_name += "_offset"
+
     assert storage_dtype in ["int8", "int32", "uint32"]
     storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
     storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
@@ -805,6 +863,14 @@ def get_fast_decode_intrin(
     else:
         raise ValueError("Unsupported source_format: {}".format(source_format))
 
+    def get_func_arguments(Quant, Dequant, Scale=None, Zeros=None):
+        args = [Quant.access_ptr("r"), Dequant.access_ptr("w")]
+        if Scale is not None:
+            args.append(Scale.access_ptr("r"))
+        if Zeros is not None:
+            args.append(Zeros.access_ptr("r"))
+        return args
+ 
     if with_scale is False:
 
         @T.prim_func
@@ -866,8 +932,7 @@ def get_fast_decode_intrin(
                 T.call_extern(
                     "handle",
                     func_name,
-                    Compressed.access_ptr("r"),
-                    Decompressed.access_ptr("w"),
+                    *get_func_arguments(Compressed, Decompressed),
                     loops_extent,
                 )
 
@@ -924,6 +989,7 @@ def get_fast_decode_intrin(
                 ],
                 dtype=storage_dtype,
                 scope=storage_scope,
+                offset_factor=n_storage_elems,
             )
             Decompressed = T.match_buffer(
                 decompressed,
@@ -932,6 +998,7 @@ def get_fast_decode_intrin(
                 ],
                 dtype=target_dtype,
                 scope=storage_scope,
+                offset_factor=loops_extent,
             )
             Scale = T.match_buffer(
                 scale,
@@ -949,9 +1016,9 @@ def get_fast_decode_intrin(
                 T.call_extern(
                     "handle",
                     func_name,
-                    Compressed.data,
-                    Decompressed.data,
-                    Scale.access_ptr("r"),
+                    *get_func_arguments(Compressed, 
+                                        Decompressed, 
+                                        Scale=Scale),
                     loops_extent,
                 )
 
@@ -1057,6 +1124,7 @@ def get_fast_decode_intrin(
                 ],
                 dtype=storage_dtype,
                 scope=storage_scope,
+                offset_factor=n_storage_elems,
             )
             Decompressed = T.match_buffer(
                 decompressed,
@@ -1065,6 +1133,7 @@ def get_fast_decode_intrin(
                 ],
                 dtype=target_dtype,
                 scope=storage_scope,
+                offset_factor=loops_extent,
             )
             Scale = T.match_buffer(
                 scale,
@@ -1092,8 +1161,8 @@ def get_fast_decode_intrin(
                 T.call_extern(
                     "handle",
                     func_name,
-                    Compressed.data,
-                    Decompressed.data,
+                    Compressed.access_ptr("r"),
+                    Decompressed.access_ptr("w"),
                     Scale.access_ptr("r"),
                     Zeros.access_ptr("r"),
                     loops_extent,
@@ -1196,6 +1265,7 @@ def get_fast_decode_intrin(
                 ],
                 dtype=storage_dtype,
                 scope=storage_scope,
+                offset_factor=n_storage_elems,
             )
             Decompressed = T.match_buffer(
                 decompressed,
@@ -1204,6 +1274,7 @@ def get_fast_decode_intrin(
                 ],
                 dtype=target_dtype,
                 scope=storage_scope,
+                offset_factor=loops_extent,
             )
             Scale = T.match_buffer(
                 scale,
@@ -1231,10 +1302,9 @@ def get_fast_decode_intrin(
                 T.call_extern(
                     "handle",
                     func_name,
-                    Compressed.data,
-                    Decompressed.data,
-                    Scale.access_ptr("r"),
-                    Zeros.access_ptr("r"),
+                    *get_func_arguments(Compressed, 
+                                        Decompressed, 
+                                        Scale=Scale),
                     loops_extent,
                 )
 
@@ -1245,7 +1315,6 @@ def get_fast_decode_intrin(
 intrin_definitions = [
     # (source_bit, storage_dtype, target_dtype, loops_extent, storage_scope, source_format, with_scale, with_zeros, zeros_mode)
     (4, "int8", "float16", 8, "local", "uint", False, False, "original"),
-    (4, "int8", "float16", 8, "warp", "uint", False, False, "original"),
     (2, "int8", "float16", 8, "local", "uint", False, False, "original"),
     (1, "int8", "float16", 8, "local", "uint", False, False, "original"),
     (4, "int32", "float16", 8, "local", "uint", False, False, "original"),
@@ -1274,6 +1343,36 @@ intrin_definitions = [
     (2, "int8", "float16", 8, "local", "int", False, False, "original"),
     (2, "int8", "float16", 8, "local", "int", True, False, "original"),
     (1, "int8", "float16", 8, "local", "int", False, False, "original"),
+    # Warp scope
+    (4, "int8", "float16", 8, "warp", "uint", False, False, "original"),
+    (2, "int8", "float16", 8, "warp", "uint", False, False, "original"),
+    (1, "int8", "float16", 8, "warp", "uint", False, False, "original"),
+    (4, "int32", "float16", 8, "warp", "uint", False, False, "original"),
+    (4, "int32", "float16", 8, "warp", "uint", True, False, "original"),
+    (4, "uint32", "float16", 8, "warp", "uint", False, False, "original"),
+    (4, "uint32", "float16", 8, "warp", "uint", True, False, "original"),
+    (4, "int8", "float16", 8, "warp", "uint", True, False, "original"),
+    # (4, "int8", "float16", 8, "warp", "uint", True, True, "original"),
+    # (4, "int8", "float16", 8, "warp", "uint", True, True, "rescale"),
+    # (4, "int8", "float16", 8, "warp", "uint", True, True, "quantized"),
+    # (2, "int8", "float16", 8, "warp", "uint", True, False, "original"),
+    # (2, "int8", "float16", 8, "warp", "uint", True, True, "original"),
+    # (2, "int8", "float16", 8, "warp", "uint", True, True, "rescale"),
+    # (2, "int8", "float16", 8, "warp", "uint", True, True, "quantized"),
+    # (1, "int8", "float16", 8, "warp", "uint", True, False, "original"),
+    # (1, "int8", "float16", 8, "warp", "uint", True, True, "original"),
+    # (1, "int8", "float16", 8, "warp", "uint", True, True, "rescale"),
+    # (4, "int8", "int8", 8, "warp", "uint", False, False, "original"),
+    # (4, "int8", "int8", 16, "warp", "uint", False, False, "original"),
+    # (2, "int8", "int8", 16, "warp", "uint", False, False, "original"),
+    # (2, "int8", "int8", 16, "warp", "int", False, False, "original"),
+    # (1, "int8", "int8", 16, "warp", "uint", False, False, "original"),
+    # (1, "int8", "int8", 16, "warp", "int", False, False, "original"),
+    # (4, "int8", "float16", 8, "warp", "int", False, False, "original"),
+    # (4, "int8", "float16", 8, "warp", "int", True, False, "original"),
+    # (2, "int8", "float16", 8, "warp", "int", False, False, "original"),
+    # (2, "int8", "float16", 8, "warp", "int", True, False, "original"),
+    # (1, "int8", "float16", 8, "warp", "int", False, False, "original"),
 ]
 
 
@@ -1386,6 +1485,7 @@ def get_lop3_intrin_group(
         "i2_to_f16": decode_i2_to_f16,
         "i1_to_f16": decode_i1_to_f16,
         "i4_to_f16_scale": decode_i4_to_f16_scale,
+        "i4_to_f16_scale_offset": decode_i4_to_f16_scale_offset,
         "i2_to_f16_scale": decode_i2_to_f16_scale,
         "i1_to_f16_scale": decode_i1_to_f16_scale,
         "i4_to_f16_scale_zeros_original": decode_i4_to_f16_scale_zeros_original,
@@ -1405,6 +1505,10 @@ def get_lop3_intrin_group(
         key += "_scale"
     if with_zeros:
         key += f"_zeros_{zeros_mode}"
+
+    is_ladder_stage3 = (storage_scope == "warp") and with_scaling
+    if is_ladder_stage3:
+        key += "_offset"
 
     return {
         "c_source": import_c_map[key],

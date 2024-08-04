@@ -100,6 +100,7 @@ class Operator(ABC):
                 # Use a specific TVM pass context for CUDA platforms
                 with tvm.transform.PassContext(config={
                         "tir.use_async_copy": True,
+                        "tir.disable_cse_tir": True,
                         **self.pass_context
                 }):
                     rt_mod = tvm.build(self.optimized_func, target=target, name=self.name)
