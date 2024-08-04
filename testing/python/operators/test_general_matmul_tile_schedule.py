@@ -213,6 +213,7 @@ def assert_correctness_with_ladder_ldmatrix_propagate(
     print("numpy output is \n", np_c)
     np.testing.assert_allclose(tvm_c.asnumpy(), np_c, rtol=1e1, atol=1e-1)
 
+
 def test_assert_correctness_with_ladder_ldmatrix_propagate():
     assert_correctness_with_ladder_ldmatrix_propagate(
         M=256, N=256, K=256, in_dtype="float16", out_dtype="float16", accum_dtype="float16")
@@ -515,9 +516,11 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
         for j in range(K):
             if with_zeros:
                 if zeros_mode == "original":
-                    rescale_b[i, j] = (b[i, j] - zeros[i, j // group_size]) * scale[i, j // group_size]
+                    rescale_b[i,
+                              j] = (b[i, j] - zeros[i, j // group_size]) * scale[i, j // group_size]
                 elif zeros_mode == "rescale":
-                    rescale_b[i, j] = b[i, j] * scale[i, j // group_size] + zeros[i, j // group_size]
+                    rescale_b[i,
+                              j] = b[i, j] * scale[i, j // group_size] + zeros[i, j // group_size]
                 else:
                     raise NotImplementedError
             else:
@@ -527,7 +530,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
 
     print("rescale_b is \n", c)
     print("ref_c is \n", ref_c)
-    
+
     torch.testing.assert_close(c.cpu(), ref_c.cpu(), rtol=1e-2, atol=1e0)
 
 
@@ -599,8 +602,7 @@ def test_assert_dequantize_correctness_with_ladder_ldmatrix_propagate():
         fast_decoding=True,
         with_bias=False,
         layout="nt",
-        zeros_mode="original"
-    )
+        zeros_mode="original")
     assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
         M=256,
         N=256,
@@ -617,8 +619,8 @@ def test_assert_dequantize_correctness_with_ladder_ldmatrix_propagate():
         fast_decoding=True,
         with_bias=False,
         layout="nt",
-        zeros_mode="rescale"
-    )
+        zeros_mode="rescale")
+
 
 # fmt: on
 if __name__ == "__main__":

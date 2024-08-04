@@ -453,7 +453,6 @@ __device__ void decode_i2u_to_f16_scale(T1 *_i2u, T2 *B_local_decode,  T3 *scale
 }
 """
 
-
 decode_i2_to_f16_scale_zeros_original_offset = """
 template <typename T1, typename T2, typename T3, bool isSigned = false>
 __device__ void decode_i2b_to_f16_scale_zeros_original_offset(T1 *_i2s, T2 *B_local_decode, T3 *scale = nullptr, T3 *zeros = nullptr, const int offset = 0, const int N = 8)
