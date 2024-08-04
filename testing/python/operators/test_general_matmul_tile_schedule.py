@@ -211,7 +211,7 @@ def assert_correctness_with_ladder_ldmatrix_propagate(
 
     np_c = np.dot(a, b.T)
     print("numpy output is \n", np_c)
-
+    np.testing.assert_allclose(tvm_c.asnumpy(), np_c, rtol=1e1, atol=1e-1)
 
 def test_assert_correctness_with_ladder_ldmatrix_propagate():
     assert_correctness_with_ladder_ldmatrix_propagate(
@@ -373,8 +373,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
     layout="nt",
     zeros_mode="original",
 ):
-    assert with_scaling, "Currently only support with scaling"
-    assert not with_zeros, "Currently only support without zeros"
+    assert with_scaling, "Currently The test only support with scaling"
     if group_size == -1:
         group_size = K
     propagate_b = 3
@@ -426,6 +425,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
             "block_reduction_depth": 2,
         }),
     )
+
     with tvm.transform.PassContext(config={
             "tir.use_async_copy": True,
             "tir.merge_static_smem": False,
@@ -445,12 +445,23 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
     qb = bitblas.quantization.general_compress(b.numpy())
     qb = torch.from_numpy(qb)
     scale = torch.randn((N, K // group_size), dtype=torch.float16)
+    maxq = 2**(bit - 1)
+    zeros = None
+    if with_zeros:
+        if zeros_mode == "original":
+            zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * maxq
+        elif zeros_mode == "rescale":
+            original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * maxq
+            zeros = -(original_zeros * scale.cuda())
+        else:
+            raise NotImplementedError
+
     c = torch.randn(M, N, dtype=torch.float16)
 
     ladder_permutate_config = bitblas.ops.LadderPermutateConfig(
         M=N,
         N=K,
-        dequantize_bits=4,
+        dequantize_bits=bit,
         storage_dtype="int8",
         transpose_matrix=True,
         transform_kind=3,
@@ -492,14 +503,31 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
     transformed_b = transformed_b.cuda()
     c = c.cuda()
     scale = scale.cuda()
-    torch_func(a, transformed_b, scale, c)
-
+    if zeros is not None:
+        zeros = zeros.cuda()
+        torch_func(a, transformed_b, scale, zeros, c)
+    else:
+        torch_func(a, transformed_b, scale, c)
+    with open("debug/kernel.cu", "w") as f:
+        f.write(rt_mod.imported_modules[0].get_source())
     rescale_b = torch.empty_like(b, dtype=torch.float16)
     for i in range(N):
         for j in range(K):
-            rescale_b[i, j] = b[i, j] * scale[i, j // group_size]
+            if with_zeros:
+                if zeros_mode == "original":
+                    rescale_b[i, j] = (b[i, j] - zeros[i, j // group_size]) * scale[i, j // group_size]
+                elif zeros_mode == "rescale":
+                    rescale_b[i, j] = b[i, j] * scale[i, j // group_size] + zeros[i, j // group_size]
+                else:
+                    raise NotImplementedError
+            else:
+                rescale_b[i, j] = b[i, j] * scale[i, j // group_size]
 
     ref_c = torch.matmul(a, rescale_b.t().cuda())
+
+    print("rescale_b is \n", c)
+    print("ref_c is \n", ref_c)
+    
     torch.testing.assert_close(c.cpu(), ref_c.cpu(), rtol=1e-2, atol=1e0)
 
 
@@ -555,9 +583,43 @@ def test_assert_dequantize_correctness_with_ladder_ldmatrix_propagate():
         with_bias=False,
         layout="nt",
         zeros_mode="original")
-
+    assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
+        M=256,
+        N=256,
+        K=256,
+        in_dtype="float16",
+        out_dtype="float16",
+        accum_dtype="float16",
+        bit=4,
+        storage_dtype="int8",
+        source_format="uint",
+        with_scaling=True,
+        with_zeros=True,
+        group_size=-1,
+        fast_decoding=True,
+        with_bias=False,
+        layout="nt",
+        zeros_mode="original"
+    )
+    assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
+        M=256,
+        N=256,
+        K=256,
+        in_dtype="float16",
+        out_dtype="float16",
+        accum_dtype="float16",
+        bit=4,
+        storage_dtype="int8",
+        source_format="uint",
+        with_scaling=True,
+        with_zeros=True,
+        group_size=-1,
+        fast_decoding=True,
+        with_bias=False,
+        layout="nt",
+        zeros_mode="rescale"
+    )
 
 # fmt: on
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_assert_dequantize_correctness_with_ladder_ldmatrix_propagate()
+    bitblas.testing.main()
