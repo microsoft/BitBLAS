@@ -4,7 +4,7 @@ import bitblas
 import torch
 
 try:
-    import auto_gptq  # noqa
+    import auto_gptq  # noqa: F401
 except ImportError as e:
     raise ImportError("Please install auto-gptq by running `pip install auto-gptq`") from e
 
@@ -16,6 +16,8 @@ bitblas.set_log_level("DEBUG")
 
 
 def assert_output_with_gptq(m, in_features, out_features, group_size):
+    if group_size == -1:
+        group_size = in_features
     _, linear, s, _ = bitblas.quantization.gen_quant4(in_features, out_features, group_size)
 
     zeros = torch.full((in_features // group_size, out_features), 7, dtype=torch.int32)
