@@ -515,7 +515,7 @@ def matmul_nt_dequantize_b_propagate_b(
     fast_decoding=False,
     with_bias=False,
     zeros_mode="original",
-    transform_kind: Union[int, TransformKind] = TransformKind.NonTransform,
+    transform_kind: Union[int, TransformKind] = TransformKind.IntraWarpTransform,
 ):
     if isinstance(transform_kind, int):
         transform_kind = TransformKind(transform_kind)
@@ -699,8 +699,8 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     fast_decoding=False,
     with_bias=False,
     zeros_mode="original",
-    transform_kind_input: Union[int, TransformKind] = TransformKind.NonTransform,
-    transform_kind_weight: Union[int, TransformKind] = TransformKind.NonTransform,
+    transform_kind_input: Union[int, TransformKind] = TransformKind.IntraWarpTransform,
+    transform_kind_weight: Union[int, TransformKind] = TransformKind.IntraWarpTransform,
 ):
     if isinstance(transform_kind_input, int):
         transform_kind_input = TransformKind(transform_kind_input)

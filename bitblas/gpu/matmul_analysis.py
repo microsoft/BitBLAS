@@ -622,14 +622,16 @@ def get_tensorized_func_and_tags(
         # Analysis Block Reduction Optimization
         # Currently, we only support block reduction depth 2 for small M
         # When the func is a dequantize like ops, we should consider the M
+        require_block_reduce = False
         if hasattr(func.attrs, "dequantize_info"):
             for arg in func.params:
                 inp_shape = func.buffer_map[arg].shape
                 M = inp_shape[0]
                 if isinstance(M, tir.IntImm) and M <= 128:
-                    tags["block_reduction_depth"] = 2
+                    require_block_reduce = True
                 break
-
+        if require_block_reduce and check_sm_version(target.arch) == 80:
+            tags["block_reduction_depth"] = 2
         return tags
 
     (main_block,) = reduction_blocks
