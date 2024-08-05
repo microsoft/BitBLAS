@@ -13,6 +13,7 @@ from ...base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_r
 from bitblas.utils.target_detector import auto_detect_nvidia_target
 from dataclasses import dataclass
 from ..ladder_permutate import LadderPermutate, LadderPermutateConfig
+from ..quant_compress import QuantCompress, QuantCompressConfig
 from ..lop3_permutate import LOP3Permutate, LOP3PermutateConfig
 import logging
 import torch
@@ -292,6 +293,7 @@ class Matmul(Operator):
         # create permutate_opertors
         self.ladder_permutate_a = self._assign_ladder_permutate_a(target, enable_tuning)
         self.ladder_permutate_b = self._assign_ladder_permutate_b(target, enable_tuning)
+        self.weight_compress = self._assign_weight_compress(target, enable_tuning)
         self.lop3_permutate = self._assign_lop3_permutate(target, enable_tuning)
         # create cpu weight executors
         self.input_executors = self._create_input_executors()
@@ -338,11 +340,14 @@ class Matmul(Operator):
         del enable_tuning
 
         if self.propagate_b:
+            # weight transform should be done in the unpacked level
+            # otherwise the bit trick should be applied and that is
+            # too complex to be implemented in the ladder permutation.
             ladder_permutate_config = LadderPermutateConfig(
                 M=self.N,
                 N=self.K,
                 datatype=self.A_dtype,
-                dequantize_bits=self.bit,
+                dequantize_bits=-1,
                 storage_dtype=self.storage_dtype,
                 propagate_kind="B",
                 transpose_matrix=self.layout == "nt",
@@ -353,6 +358,23 @@ class Matmul(Operator):
                 target=tvm.target.Target("llvm"),
             )
         return None
+
+    def _assign_weight_compress(self, target: Target, enable_tuning: bool):
+        # unused variables
+        del target
+        del enable_tuning
+        assert self.source_format in ["int", "uint"]
+        quant_compress_config = QuantCompressConfig(
+            M=self.N,
+            N=self.K,
+            input_dtype=self.storage_dtype,
+            storage_dtype=self.storage_dtype,
+            dequantize_bits=self.bit
+        )
+        return QuantCompress(
+            config=quant_compress_config,
+            target=tvm.target.Target("llvm"),
+        )
 
     def _assign_lop3_permutate(self, target: Target, enable_tuning: bool):
         # unused variables
@@ -383,6 +405,8 @@ class Matmul(Operator):
         weight_executors = OPExecutorCPU()
         if self.propagate_b is not TransformKind.NonTransform:
             weight_executors.append(self.ladder_permutate_b)
+        if self.weight_compress is not None:
+            weight_executors.append(self.weight_compress)
         if self.fast_decoding:
             weight_executors.append(self.lop3_permutate)
         return weight_executors
@@ -452,10 +476,6 @@ class Matmul(Operator):
                 return self.weight_transform(weight.cpu()).cuda().contiguous()
             return weight
 
-        from bitblas.quantization import general_compress
-        import torch
-        import numpy as np
-
         source_format, bit = self.source_format, self.bit
 
         # Process integer source format
@@ -464,20 +484,13 @@ class Matmul(Operator):
             assert not self.with_zeros, "zeros should be False for int source format"
             maxq = 2**(bit - 1)
             # Clamp weight values to be within the quantizable range and adjust
-            weight = torch.clamp(weight, -maxq, maxq).int() + maxq
+            weight = torch.clamp(weight, -maxq, maxq).char() + maxq
         elif source_format in ["fp_e5m2", "fp_e4m3"]:
             weight = weight.view(torch.int8)
-            weight = weight.int()
         else:
             # For non-integer formats, simply convert weights to integers
-            weight = weight.int()
-
-        np_storage_dtype = getattr(np, self.storage_dtype)
-
-        weight = general_compress(
-            weight.cpu().numpy(), source_bits=bit, storage_dtype=np_storage_dtype)
-
-        weight = torch.from_numpy(weight).cuda().contiguous()
+            # And assume weight is in the range of [-128, 127] for int8
+            weight = weight.char()
 
         # Apply an optional weight transformation if specified
         if self.weight_transform is not None:
