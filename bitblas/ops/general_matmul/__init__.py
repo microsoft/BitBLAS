@@ -98,8 +98,8 @@ class MatmulConfig(OperatorConfig):
         else:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
 
-        if (self.M == 1 or (self.N % MICRO_KERNEL_SIZE) != 0 or (self.K % MICRO_KERNEL_SIZE) != 0 or
-                isinstance(self.M, Tuple) or (self.with_zeros and self.zeros_mode == "quantized")):
+        if (self.M == 1 or (self.N % MICRO_KERNEL_SIZE) != 0 or (self.K % MICRO_KERNEL_SIZE) != 0 
+            or (self.with_zeros and self.zeros_mode == "quantized")):
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
             object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
         else:
@@ -110,6 +110,10 @@ class MatmulConfig(OperatorConfig):
             object.__setattr__(self, "propagate_a", propagate_a)
         if propagate_b is not None:
             object.__setattr__(self, "propagate_b", propagate_b)
+
+        # enhance propagate_b into ldmatrix transform if allowed
+        if self.propagate_b == TransformKind.IntraWarpTransform:
+            object.__setattr__(self, "propagate_b", TransformKind.LDMatrixTransform)
 
         # TODO(lei): This is a limitation arose by pytorch and llvm
         # Should be removed in the future.
@@ -144,7 +148,7 @@ class MatmulConfig(OperatorConfig):
     def __post_init__(self):
         # set M to default dynamic range if it is None
         if self.M is None:
-            object.__setattr__(self, "M", [1, 16, 32, 64, 128, 256, 512, 1024])
+            object.__setattr__(self, "M", [16, 32, 64, 128, 256, 512, 1024])
         if self.N is None:
             raise ValueError("N should be specified currently.")
         if self.K is None:

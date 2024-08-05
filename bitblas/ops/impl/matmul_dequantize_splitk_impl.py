@@ -9,6 +9,7 @@ from bitblas.gpu.matmul_analysis import get_propagate_map
 from bitblas.quantization import (_tir_packed_int_to_int_convert, _tir_packed_to_signed_convert,
                                   _tir_packed_to_unsigned_convert, _tir_u32_to_f4_to_f16,
                                   _tir_u8_to_f8_e4m3_to_f16)
+from typing import Union
 
 
 def matmul_nt_dequantize_b(
@@ -149,9 +150,14 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     fast_decoding=False,
     with_bias=False,
     zeros_mode="original",
-    transform_kind_input: TransformKind = TransformKind.IntraWarpTransform,
-    transform_kind_weight: TransformKind = TransformKind.IntraWarpTransform,
+    transform_kind_input: Union[int, TransformKind] = TransformKind.IntraWarpTransform,
+    transform_kind_weight: Union[int, TransformKind] = TransformKind.IntraWarpTransform,
 ):
+    if isinstance(transform_kind_input, int):
+        transform_kind_input = TransformKind(transform_kind_input)
+    if isinstance(transform_kind_weight, int):
+        transform_kind_weight = TransformKind(transform_kind_weight)
+
     assert bit in [1, 2, 4, 8], "Unsupported bit: {}".format(bit)
     if not isinstance(M, int):
         M = tvm.te.var("m")

@@ -59,7 +59,7 @@ def unpack_qweight(qweight, bits):
 
 
 class Linear(nn.Module):
-    opt_M = [1, 16, 32, 64, 128, 256, 512]
+    opt_M = [16, 32, 64, 128, 256, 512]
     STORAGE_DTYPE = "int8"  # assume int8 storage
     TORCH_STORAGE_DTYPE = getattr(torch, STORAGE_DTYPE)
     BITBLAS_DTYPES = {

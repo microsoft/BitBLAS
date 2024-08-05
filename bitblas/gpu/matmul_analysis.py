@@ -277,6 +277,10 @@ def detect_iter_traits(block: tir.Block) -> Optional[Tuple[List[IterTrait]]]:
             if iter_var.iter_type == tir.IterVar.CommReduce:
                 # for simplified case (e.g. 1x1 conv kernel)
                 kind = IterKind.kIter_K
+            elif var in A_axes and var in C_axes and var not in B_axes:
+                kind = IterKind.kIter_I
+            elif var in B_axes and var in C_axes and var not in A_axes:
+                kind = IterKind.kIter_J
             else:
                 kind = IterKind.kIter_T
         elif iter_var.iter_type == iter_var.DataPar:
