@@ -39,6 +39,7 @@ def unpack_qzeros(qzeros, bits):
     # NOTE: It appears that casting after the `unpacked_zeros  + 1` is important.
     return torch.bitwise_and(unpacked_zeros + 1, 2**bits - 1)
 
+
 def unpack_qweight(qweight, bits):
     qweight = qweight.view(torch.int8)
     elems_per_int8 = 8 // bits
