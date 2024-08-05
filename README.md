@@ -1,12 +1,12 @@
 # BitBLAS
 
 BitBLAS is a library to support mixed-precision BLAS operations on GPUs, for example, the $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication where $C_{cdtype}[M, N] = A_{adtype}[M, K] \times W_{wdtype}[N, K]$.
-BitBLAS aims to support efficient mixed-precision DNN model deployment, especially the $W_{wdtype}A_{adtype}$ quantization in large language models (LLMs), for example, the $W_{UINT4}A_{FP16}$ in [GPTQ](https://arxiv.org/abs/2210.17323), the $W_{INT2}A_{FP16}$ in [BitDistiller](https://arxiv.org/abs/2402.10631), the $W_{INT2}A_{INT8}$ in [BitNet-b1.58](https://arxiv.org/abs/2402.17764). BitBLAS is based on techniques from our accepted submission "Ladder: Enabling Efficient Low-Precision Deep Learning Computing through Hardware-aware Tensor Transformation" at OSDI'24.
+BitBLAS aims to support efficient mixed-precision DNN model deployment, especially the $W_{wdtype}A_{adtype}$ quantization in large language models (LLMs), for example, the $W_{UINT4}A_{FP16}$ in [GPTQ](https://arxiv.org/abs/2210.17323), the $W_{INT2}A_{FP16}$ in [BitDistiller](https://arxiv.org/abs/2402.10631), the $W_{INT2}A_{INT8}$ in [BitNet-b1.58](https://arxiv.org/abs/2402.17764). BitBLAS is based on techniques from our paper ["Ladder: Enabling Efficient Low-Precision Deep Learning Computing through Hardware-aware Tensor Transformation"](https://www.usenix.org/conference/osdi24/presentation/wang-lei) at OSDI'24.
 
 
 Some of the key features of BitBLAS include:
   - High performance matrix multiplication for both GEMV (e.g., the single batch auto-regressive decode phase in LLM) and GEMM (e.g., the batched auto-regressive decode phase and the prefill phase in LLM):
-    - $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication including FP16xINT4/2/1, INT8xINT4/2/1, etc. Please checkout [support matrix](#support-matrix) for detailed data types support.
+    - $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication including FP16xFP8/FP4/INT4/2/1, INT8xINT4/2/1, etc. Please checkout [support matrix](#support-matrix) for detailed data types support.
     - Matrix multiplication like FP16xFP16 and INT8xINT8.
   - Auto-Tensorization for TensorCore-like hardware instructions.
   - Implemented [integration](https://github.com/microsoft/BitBLAS/blob/main/integration/) to [PyTorch](https://pytorch.org/), [GPTQModel](https://github.com/ModelCloud/GPTQModel), [AutoGPTQ](https://github.com/AutoGPTQ/AutoGPTQ), [vLLM](https://github.com/vllm-project/vllm) and [BitNet-b1.58](https://huggingface.co/1bitLLM/bitnet_b1_58-3B) for LLM deployment. Please checkout [benchmark summary](#benchmark-summary) for detailed end2end LLM inference performance.
@@ -15,10 +15,12 @@ Some of the key features of BitBLAS include:
 
 ## Latest News
 
-- 04/19/2024 ✨: We are excited to announce that BitBLAS, a high-performance library for mixed-precision DNN model deployment, is now open source and available to the public!
-- 04/30/2024 🚀🚀: BitBLAS now supports FP8 TensorCore (E5M2/E4M3 * E4M3/E5M2), providing more combinations beyond the three available in cuBLAS!
+- 07/11/2024 ✨: Ladder is published and presented in OSDI'24. Please find [Ladder paper and presentation](https://www.usenix.org/conference/osdi24/presentation/wang-lei) if you are interested in the technical details of BitBLAS.
+- 06/25/2024 🚀🚀: BitBLAS has been integrated into [GPTQModel](https://github.com/ModelCloud/GPTQModel)! You can now use BitBLAS as a backend in GPTQ.
 - 05/04/2024 🚀🚀: We’ve added integration examples for the 1.58-bit model! Check out the files under integration/BitNet.
-- 06/25/2024 🚀🚀: BitBLAS has been integrated into GPTQModel! You can now use BitBLAS as a backend in GPTQ.
+- 04/30/2024 🚀🚀: BitBLAS now supports FP8 TensorCore (E5M2/E4M3 * E4M3/E5M2), providing more combinations beyond the three available in cuBLAS!
+- 04/19/2024 ✨: We are excited to announce that BitBLAS, a high-performance library for mixed-precision DNN model deployment, is now open source and available to the public!
+
 
 ## Integration Example of FasterTransformer with BitBLAS
 ![FasterTransformer Integration](images/gif/FasterTransformer.gif)
@@ -75,28 +77,19 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 
 We are continuously expanding the support matrix. If you have any specific requirements, please feel free to open an issue or PR.
 
-## Installation Guide
-
-### Prerequisites
-
- **Operating System**: Linux (Ubuntu 20.04 or later recommended for installation via wheel or PyPI or you may need to checkout the [Building from Source](#building-from-source) section for other Linux distributions.)
-- **Python Version**: >= 3.7
-- **CUDA Version**: >= 10.0
+## Getting Started with an Example
 
 ### Installing with pip
 
-The easiest way to install BitBLAS is direcly from the PyPi using pip. To install the latest version, run the following command in your terminal.
+**Prerequisites for installation via wheel or PyPI**
+- **Operating System**: Ubuntu 20.04 or later
+- **Python Version**: >= 3.8
+- **CUDA Version**: >= 11.0
 
-**Note**: Currently, bitblas whl is only supported on Linux systems. We recommend using Ubuntu 20.04 or later version as we build the whl files on this platform. Currently we only provide whl files for CUDA>=12.1 and with Python>=3.8. If you are using a different version of CUDA. you may need to build BitBLAS from source.
+The easiest way to install BitBLAS is direcly from the PyPi using pip. To install the latest version, run the following command in your terminal.
 
 ```bash
 pip install bitblas
-```
-
-Alternatively, you may choose to install BitBLAS using prebuilt packages available on the Release Page:
-
-```bash
-pip install bitblas-0.0.0.dev0+ubuntu.20.4.cu120-py3-none-any.whl
 ```
 
 After installing BitBLAS, you can verify the installation by running:
@@ -105,34 +98,7 @@ After installing BitBLAS, you can verify the installation by running:
 python -c "import bitblas; print(bitblas.__version__)"  
 ```
 
-### Building from Source
-
-We recommend using a docker container with the necessary dependencies to build BitBLAS from source. You can use the following command to run a docker container with the necessary dependencies:
-
-```bash
-docker run --gpus all -it --rm --ipc=host nvcr.io/nvidia/pytorch:23.01-py3
-```
-
-To build and install BitBLAS directly from source, follow the steps below. This process requires certain pre-requisites from apache tvm, which can be installed on Ubuntu/Debian-based systems using the following commands:
-
-```bash
-sudo apt-get update
-sudo apt-get install -y python3 python3-dev python3-setuptools gcc libtinfo-dev zlib1g-dev build-essential cmake libedit-dev libxml2-dev
-```
-
-After installing the prerequisites, you can clone the BitBLAS repository and install it using pip:
-
-```bash
-git clone --recursive https://github.com/Microsoft/BitBLAS.git
-cd BitBLAS
-pip install .  # Please be patient, this may take some time.
-```
-
-if you want to install BitBLAS with the development mode, you can run the following command:
-
-```bash
-pip install -e .
-```
+**Note**: Currently, BitBLAS whl is only supported on Ubuntu 20.04 or later version as we build the whl files on this platform. Currently we only provide whl files for CUDA>=11.0 and with Python>=3.8. **If you are using a different platform or environment, you may need to [build BitBLAS from source](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md#building-from-source).** More installation methods can be found in the [installation document](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md).
 
 ## Quick Start
 
@@ -396,7 +362,12 @@ author = {Lei Wang and Lingxiao Ma and Shijie Cao and Quanlu Zhang and Jilong Xu
 title = {Ladder: Enabling Efficient Low-Precision Deep Learning Computing through Hardware-aware Tensor Transformation},
 booktitle = {18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24)},
 year = {2024},
+isbn = {978-1-939133-40-3},
+address = {Santa Clara, CA},
+pages = {307--323},
 url = {https://www.usenix.org/conference/osdi24/presentation/wang-lei},
+publisher = {USENIX Association},
+month = jul
 }
 ```
 
