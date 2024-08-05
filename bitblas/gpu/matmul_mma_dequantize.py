@@ -2264,10 +2264,11 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 lop3_intrin_info["compute"],
             )
             # Assume the grouped K is the last dim of the scaling
-            grouped_k = sch.get(bf).reads[1].buffer.shape[-1]
-            # TODO(lei): This is a hack to get the loop extent
-            loop_extent = 8 if out_dtype == "float16" else 16
-            sch.unsafe_inject_call_argument(bf, -2, loop_extent * grouped_k)
+            if "with_scaling" in weight_decode_info and weight_decode_info["with_scaling"]:
+                grouped_k = sch.get(bf).reads[1].buffer.shape[-1]
+                # TODO(lei): This is a hack to get the loop extent
+                loop_extent = 8 if out_dtype == "float16" else 16
+                sch.unsafe_inject_call_argument(bf, -2, loop_extent * grouped_k)
             import_source.append(lop3_intrin_info["c_source"])
 
         def tensorize_init_store_compute():
