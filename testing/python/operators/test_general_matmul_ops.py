@@ -155,7 +155,7 @@ def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
     inputs.append(torch.rand(output_shape, dtype=torch.float16).cuda())
 
     intweight = inputs[1]
-    intweight = intweight.cpu().numpy().astype(np.int8)
+    intweight = intweight.cpu().to(torch.int8)
     if source_format == "int":
         intweight = intweight + maxq
     if with_zeros:
@@ -165,14 +165,12 @@ def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
                               (inputs[1].t() if layout == "nt" else inputs[1]).to(torch.float16))
     if with_bias:
         ref_result = ref_result + bias
-    qw_np = general_compress(intweight, source_bits=bit, storage_dtype=np.int8)
-    qw_torch = torch.from_numpy(qw_np).cuda()
     permuted_inputs = []
     permuted_inputs.append(inputs[0])
     if matmul.weight_transform is not None:
-        permuted_inputs.append(matmul.weight_transform(qw_torch.cpu()).cuda())
+        permuted_inputs.append(matmul.weight_transform(intweight.cpu()).cuda())
     else:
-        permuted_inputs.append(qw_torch)
+        permuted_inputs.append(intweight)
     if with_scaling:
         if group_size == -1:
             group_size = K

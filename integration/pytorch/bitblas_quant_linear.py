@@ -182,7 +182,7 @@ class QuantLinear(nn.Module):
                     (w[:, idx] + scale_zeros[:, g_idx]) / scales[:, g_idx]).to(torch.int)[:, None])
         intweight = torch.cat(intweight, dim=1)
         intweight = intweight.contiguous()
-        intweight = intweight.cpu().numpy().astype(np.int8)
+        intweight = intweight.cpu().to(torch.int8)
         # quantize to 4bit
         qw_np = general_compress(intweight, source_bits=self.bits, storage_dtype=np.int8)
         # do interleave for fast type conversion

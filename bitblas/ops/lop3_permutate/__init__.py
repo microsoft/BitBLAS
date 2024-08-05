@@ -42,11 +42,23 @@ class LOP3Permutate(Operator):
             dequantize_bits=self.dequantize_bits,
         )
 
-    def forward(self, weight, res):
+    def forward(self, inp, out=None):
+        out_shape = inp.shape
+        out_dtype = inp.dtype
+        if out is None:
+            # lop3 transform does not change the shape of the input tensor
+            out = torch.zeros(out_shape, dtype=out_dtype)
         # reinterpret the input tensor to int32 format
-        args = [arg.view(torch.int32) for arg in [weight, res]]
+        shape_2dim = self.retrieve_2d_weight_shape()
+        args = [arg.view(inp.dtype).view(shape_2dim).view(torch.int32) for arg in [inp, out]]
         self.torch_func(*args)
-        return args[-1].view(weight.dtype)
+        return args[-1].view(out_dtype).view(out_shape)
+
+    def retrieve_2d_weight_shape(self):
+        storage_nbit = int("".join(c for c in self.storage_dtype if c.isdigit()))
+        elems_per_byte = storage_nbit // self.dequantize_bits
+        weight_shape = (self.M, self.N // elems_per_byte)
+        return weight_shape
 
     @property
     def M(self):

@@ -98,7 +98,7 @@ def correctness_weight_only_dequantize(
     inputs.append(torch.rand(output_shape, dtype=torch.float16).cuda())
 
     intweight = inputs[1]
-    intweight = intweight.cpu().numpy().astype(np.int8)
+    intweight = intweight.cpu().to(torch.int8)
     if source_format == "int":
         intweight = intweight + maxq
     if with_zeros:
@@ -109,15 +109,13 @@ def correctness_weight_only_dequantize(
         ref_result = ref_result + bias_tensor
 
     with torch.no_grad():
-        qw_np = general_compress(intweight, source_bits=bit, storage_dtype=np.int8)
-        qw_torch = torch.from_numpy(qw_np).cuda()
         permuted_inputs = []
         permuted_inputs.append(inputs[0])
         if linear_bitblas.bitblas_matmul.weight_transform is not None:
             permuted_inputs.append(
-                linear_bitblas.bitblas_matmul.weight_transform(qw_torch.cpu()).cuda())
+                linear_bitblas.bitblas_matmul.weight_transform(intweight.cpu()).cuda())
         else:
-            permuted_inputs.append(qw_torch)
+            permuted_inputs.append(inputs[1])
         linear_bitblas.qweight.data = permuted_inputs[-1].clone()
         if with_scaling:
             if group_size == -1:

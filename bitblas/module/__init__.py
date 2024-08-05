@@ -40,6 +40,24 @@ def unpack_qzeros(qzeros, bits):
     return torch.bitwise_and(unpacked_zeros + 1, 2**bits - 1)
 
 
+def unpack_qweight(qweight, bits):
+    qweight = qweight.view(torch.int8)
+    elems_per_int8 = 8 // bits
+    unpacked_weight = torch.zeros(
+        (qweight.shape[0], qweight.shape[1] * elems_per_int8),
+        dtype=torch.int8,
+        device=qweight.device,
+        requires_grad=False,
+    )
+    for col in range(unpacked_weight.shape[1]):
+        i = col % elems_per_int8
+        unpacked_weight[:, col] = (qweight[:, col // elems_per_int8] >> (bits * i))
+
+    # Follow the instruction in AutoGPTQ qlinear_cuda_old.py line 303
+    # NOTE: It appears that casting after the `unpacked_zeros  + 1` is important.
+    return torch.bitwise_and(unpacked_weight, 2**bits - 1)
+
+
 class Linear(nn.Module):
     opt_M = [1, 16, 32, 64, 128, 256, 512]
     STORAGE_DTYPE = "int8"  # assume int8 storage
@@ -279,8 +297,9 @@ class Linear(nn.Module):
     def repack_from_gptq(self, gptq_module):
         # qweight in gptq old quant linear stored with (out_features, in_features), should be transposed.
         qweight = gptq_module.qweight.T.contiguous().view(self.TORCH_STORAGE_DTYPE)
+        intweight = unpack_qweight(qweight, self.bits).contiguous()
         if self.bitblas_matmul.weight_transform is not None:
-            qweight = self.bitblas_matmul.weight_transform(qweight.cpu()).cuda()
+            qweight = self.bitblas_matmul.weight_transform(intweight.cpu()).cuda()
         self.qweight = qweight
         # scales in gptq old quant linear stored with (in_features // group_size, out_features), should be transposed.
         scales = gptq_module.scales.T.contiguous().view(self.torch_dtype)
