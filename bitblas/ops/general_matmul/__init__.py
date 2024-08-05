@@ -363,17 +363,20 @@ class Matmul(Operator):
         # unused variables
         del target
         del enable_tuning
-        assert self.source_format in ["int", "uint"]
-        quant_compress_config = QuantCompressConfig(
-            M=self.N,
-            N=self.K,
-            input_dtype=self.storage_dtype,
-            storage_dtype=self.storage_dtype,
-            dequantize_bits=self.bit)
-        return QuantCompress(
-            config=quant_compress_config,
-            target=tvm.target.Target("llvm"),
-        )
+
+        require_compress: bool = self.bit in [1, 2, 4]
+        if require_compress:
+            quant_compress_config = QuantCompressConfig(
+                M=self.N,
+                N=self.K,
+                input_dtype=self.storage_dtype,
+                storage_dtype=self.storage_dtype,
+                dequantize_bits=self.bit)
+            return QuantCompress(
+                config=quant_compress_config,
+                target=tvm.target.Target("llvm"),
+            )
+        return None
 
     def _assign_lop3_permutate(self, target: Target, enable_tuning: bool):
         # unused variables
