@@ -13,7 +13,6 @@ import numpy as np
 from bitblas.base import fast_tune, fast_tune_with_dynamic_range
 from copy import deepcopy
 from bitblas.base.arch import get_arch
-from bitblas.utils.tensor_adapter import tvm_tensor_to_torch
 from bitblas.builder.wrapper import TIRWrapper
 from bitblas.builder.lib_generator import LibraryGenerator
 from dataclasses import dataclass
