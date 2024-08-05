@@ -369,8 +369,7 @@ class Matmul(Operator):
             N=self.K,
             input_dtype=self.storage_dtype,
             storage_dtype=self.storage_dtype,
-            dequantize_bits=self.bit
-        )
+            dequantize_bits=self.bit)
         return QuantCompress(
             config=quant_compress_config,
             target=tvm.target.Target("llvm"),
