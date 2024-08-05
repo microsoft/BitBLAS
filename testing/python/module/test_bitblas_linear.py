@@ -98,7 +98,7 @@ def correctness_weight_only_dequantize(
     inputs.append(torch.rand(output_shape, dtype=torch.float16).cuda())
 
     intweight = inputs[1]
-    intweight = intweight.cpu().numpy().astype(np.int8)
+    intweight = intweight.cpu().astype(np.int8)
     if source_format == "int":
         intweight = intweight + maxq
     if with_zeros:
