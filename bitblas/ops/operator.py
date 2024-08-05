@@ -371,7 +371,6 @@ class OPExecutorCPU:
     def forward(self, weight):
         inputs = [weight]
         for op in self.operators:
-            inputs.append(tvm_tensor_to_torch(op.get_profile_tensors()[-1]).cpu())
             inputs = [op.forward(*inputs)]
         return inputs[-1]
 

@@ -381,10 +381,12 @@ class Matmul(Operator):
 
     def _create_weight_executors(self):
         weight_executors = OPExecutorCPU()
-        if self.fast_decoding:
-            weight_executors.append(self.lop3_permutate)
+        # Why we should put the lop3_permutate before ladder_permutate_b?
+        # Shoule have a test
         if self.propagate_b is not TransformKind.NonTransform:
             weight_executors.append(self.ladder_permutate_b)
+        if self.fast_decoding:
+            weight_executors.append(self.lop3_permutate)
         return weight_executors
 
     def _select_implementation(self):
