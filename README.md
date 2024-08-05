@@ -1,12 +1,12 @@
 # BitBLAS
 
 BitBLAS is a library to support mixed-precision BLAS operations on GPUs, for example, the $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication where $C_{cdtype}[M, N] = A_{adtype}[M, K] \times W_{wdtype}[N, K]$.
-BitBLAS aims to support efficient mixed-precision DNN model deployment, especially the $W_{wdtype}A_{adtype}$ quantization in large language models (LLMs), for example, the $W_{UINT4}A_{FP16}$ in [GPTQ](https://arxiv.org/abs/2210.17323), the $W_{INT2}A_{FP16}$ in [BitDistiller](https://arxiv.org/abs/2402.10631), the $W_{INT2}A_{INT8}$ in [BitNet-b1.58](https://arxiv.org/abs/2402.17764). BitBLAS is based on techniques from our accepted submission "Ladder: Enabling Efficient Low-Precision Deep Learning Computing through Hardware-aware Tensor Transformation" at OSDI'24.
+BitBLAS aims to support efficient mixed-precision DNN model deployment, especially the $W_{wdtype}A_{adtype}$ quantization in large language models (LLMs), for example, the $W_{UINT4}A_{FP16}$ in [GPTQ](https://arxiv.org/abs/2210.17323), the $W_{INT2}A_{FP16}$ in [BitDistiller](https://arxiv.org/abs/2402.10631), the $W_{INT2}A_{INT8}$ in [BitNet-b1.58](https://arxiv.org/abs/2402.17764). BitBLAS is based on techniques from our paper ["Ladder: Enabling Efficient Low-Precision Deep Learning Computing through Hardware-aware Tensor Transformation"](https://www.usenix.org/conference/osdi24/presentation/wang-lei) at OSDI'24.
 
 
 Some of the key features of BitBLAS include:
   - High performance matrix multiplication for both GEMV (e.g., the single batch auto-regressive decode phase in LLM) and GEMM (e.g., the batched auto-regressive decode phase and the prefill phase in LLM):
-    - $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication including FP16xINT4/2/1, INT8xINT4/2/1, etc. Please checkout [support matrix](#support-matrix) for detailed data types support.
+    - $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication including FP16xFP8/FP4/INT4/2/1, INT8xINT4/2/1, etc. Please checkout [support matrix](#support-matrix) for detailed data types support.
     - Matrix multiplication like FP16xFP16 and INT8xINT8.
   - Auto-Tensorization for TensorCore-like hardware instructions.
   - Implemented [integration](https://github.com/microsoft/BitBLAS/blob/main/integration/) to [PyTorch](https://pytorch.org/), [GPTQModel](https://github.com/ModelCloud/GPTQModel), [AutoGPTQ](https://github.com/AutoGPTQ/AutoGPTQ), [vLLM](https://github.com/vllm-project/vllm) and [BitNet-b1.58](https://huggingface.co/1bitLLM/bitnet_b1_58-3B) for LLM deployment. Please checkout [benchmark summary](#benchmark-summary) for detailed end2end LLM inference performance.
@@ -15,12 +15,15 @@ Some of the key features of BitBLAS include:
 
 ## Latest News
 
-- 2024.04.19: BitBLAS is now open source! We are excited to announce that BitBLAS, a high-performance library for mixed-precision DNN model deployment, is now available to the public.
-- 2024.04.30: BitBLAS now supports FP8 TensorCore!
+- 07/11/2024 ✨: Ladder is published and presented in OSDI'24. Please find [Ladder paper and presentation](https://www.usenix.org/conference/osdi24/presentation/wang-lei) if you are interested in the technical details of BitBLAS.
+- 06/25/2024 🚀🚀: BitBLAS has been integrated into [GPTQModel](https://github.com/ModelCloud/GPTQModel)! You can now use BitBLAS as a backend in GPTQ.
+- 05/04/2024 🚀🚀: We’ve added integration examples for the 1.58-bit model! Check out the files under integration/BitNet.
+- 04/30/2024 🚀🚀: BitBLAS now supports FP8 TensorCore ($W_{E5M2/E4M3}A_{E4M3/E5M2}$), providing more combinations beyond the three available in cuBLAS!
+- 04/19/2024 ✨: We are excited to announce that BitBLAS, a high-performance library for mixed-precision DNN model deployment, is now open source and available to the public!
+
 
 ## Integration Example of FasterTransformer with BitBLAS
 ![FasterTransformer Integration](images/gif/FasterTransformer.gif)
-
 
 ## Benchmark Summary
 
@@ -74,20 +77,98 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 
 We are continuously expanding the support matrix. If you have any specific requirements, please feel free to open an issue or PR.
 
-## Getting Started
+## Getting Started with an Example
+
+### Installing with pip
+
+**Prerequisites for installation via wheel or PyPI**
+- **Operating System**: Ubuntu 20.04 or later
+- **Python Version**: >= 3.8
+- **CUDA Version**: >= 11.0
+
+The easiest way to install BitBLAS is direcly from the PyPi using pip. To install the latest version, run the following command in your terminal.
+
+```bash
+pip install bitblas
+```
+
+After installing BitBLAS, you can verify the installation by running:
+
+```bash
+python -c "import bitblas; print(bitblas.__version__)"  
+```
+
+**Note**: Currently, BitBLAS whl is only supported on Ubuntu 20.04 or later version as we build the whl files on this platform. Currently we only provide whl files for CUDA>=11.0 and with Python>=3.8. **If you are using a different platform or environment, you may need to [build BitBLAS from source](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md#building-from-source).** More installation methods can be found in the [installation document](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md).
+
+### Example: $W_{INT4}A_{FP16}$ mixed-precision matrix multiplication
+
+BitBLAS provides two Python APIs to perform mixed-precision matrix multiplication:
+  - ```bitblas.Matmul``` implements the $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication of $C_{cdtype}[M, N] = A_{adtype}[M, K] \times W_{wdtype}[N, K]$ where $W_{wdtype}$ indicates the weight of $wtype$, A_{adtype} indicates the activation of $adtype$, and C_{cdtype} indicates the output of $cdtype$.
+  - ```bitblas.Linear``` is a PyTorch ```nn.Linear```-like module to support a Linear of mixed-precision.
+
+Here is an example for a $W_{INT4}A_{FP16}$ mixed-precision matrix multiplication: $out_{FP16}[M, N] = A_{FP16}[M, K] \times W_{INT4}[N, K]$, this example includes the creation of input matrices, quantization of weight matrices, and execution of the matrix multiplication with the ```bitblas.Matmul``` API. The result is then compared against a reference result obtained through conventional methods to ensure accuracy.
+
+```python
+import bitblas
+import torch
+
+# uncomment to enable debug output
+# bitblas.set_log_level("Debug")
+
+matmul_config = bitblas.MatmulConfig(
+    M=1,  # M dimension
+    N=2048,  # N dimension
+    K=1024,  # K dimension
+    A_dtype="float16",  # activation A dtype
+    W_dtype="int4",  # weight W dtype
+    accum_dtype="float16",  # accumulation dtype
+    out_dtype="float16",  # output dtype
+    layout="nt",  # matrix layout, "nt" indicates the layout of A is non-transpose and the layout of W is transpose
+    with_bias=False,  # bias
+    # configs for weight only quantization
+    group_size=None,  # setting for grouped quantization
+    with_scaling=False,  # setting for scaling factor
+    with_zeros=False,  # setting for zeros
+    zeros_mode=None,  # setting for how to calculating zeros
+)
+
+matmul = bitblas.Matmul(config=matmul_config)
+
+# Create input matrices
+input_tensor = torch.rand((1, 1024), dtype=torch.float16).cuda()
+weight_tensor = torch.randint(0, 7, (2048, 1024), dtype=torch.int8).cuda()
+
+# Transform weight tensor to int4 data type
+weight_tensor_int4 = matmul.transform_weight(weight_tensor)
+
+# Perform mixed-precision matrix multiplication
+output_tensor = matmul(input_tensor, weight_tensor_int4)
+
+# Reference result using PyTorch matmul for comparison
+ref_result = torch.matmul(input_tensor, weight_tensor.t().to(torch.float16))
+# Assert that the results are close within a specified tolerance, note that the int4 randint value is a little bigger than the float16 value, so we set the atol to 1.0
+print("Ref output:", ref_result)
+print("BitBLAS output:", output_tensor)
+torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-0)
+```
+
+**Note**: More examples can be found in the [QuickStart document](https://github.com/microsoft/BitBLAS/blob/main/docs/QuickStart.md).
+
+## Documents
 
 - [Installation](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md):
-  To install BitBLAS, please checkout the document [installation](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md). Also Make sure you already have the cuda toolkit (version >= 11) installed in the system. Or you can easily install from `pip install bitblas` from PyPi. Currently we only provide whl files for CUDA>=12.1 and Ubuntu>=20.04 with Python>=3.8, if you are using a different version of CUDA or OS System, you may need to build BitBLAS from source.
+  The installation document of BitBLAS. Make sure you already have the cuda toolkit (version >= 11.0) installed in the system.
+  - You can easily install from `pip install bitblas` from PyPi. Currently we only provide whl files for CUDA>=11.0 and Ubuntu>=20.04 with Python>=3.8, if you are using a different version of CUDA or OS environment, you may need to build BitBLAS from source.
 
-- [QuickStart](https://github.com/microsoft/BitBLAS/blob/main/docs/QuickStart.md): BitBLAS provides two Python APIs to perform mixed-precision matrix multiplication:
+- [QuickStart](https://github.com/microsoft/BitBLAS/blob/main/docs/QuickStart.md): This document provides examples to use BitBLAS in your program with ```bitblas.Matmul``` and ```bitblas.Linear```.
+
+- [Python API](https://github.com/microsoft/BitBLAS/blob/main/docs/PythonAPI.md): The Python API document of BitBLAS. BitBLAS provides two Python APIs to perform mixed-precision matrix multiplication:
   - ```bitblas.Matmul``` implements the $W_{wdtype}A_{adtype}$ mixed-precision matrix multiplication of $C_{cdtype}[M, N] = A_{adtype}[M, K] \times W_{wdtype}[N, K]$.
   - ```bitblas.Linear``` is a PyTorch ```nn.Linear```-like module to support a Linear of mixed-precision.
 
-- [Python API](https://github.com/microsoft/BitBLAS/blob/main/docs/PythonAPI.md): The Python API doc of BitBLAS.
-
 - [Integration](https://github.com/microsoft/BitBLAS/tree/main/integration): Explore how BitBLAS seamlessly integrates with LLM deployment frameworks through our examples. Discover the ease of integrating BitBLAS with PyTorch, AutoGPTQ, and vLLM in the 3rd-party integration examples.
 
-- [Customization](https://github.com/microsoft/BitBLAS/blob/main/docs/ExtendOperatorsWithDSL.md): BitBLAS supports implementing customized mixed-precision DNN operations rather than matrix multiplication with the flexible DSL (TIR Script).
+- [Customization](https://github.com/microsoft/BitBLAS/blob/main/docs/ExtendOperatorsWithDSL.md): BitBLAS supports implementing customized mixed-precision DNN operations (e.g., Conv2D) rather than matrix multiplication with the flexible DSL (TIR Script).
 
 
 ## Reference
@@ -99,7 +180,12 @@ author = {Lei Wang and Lingxiao Ma and Shijie Cao and Quanlu Zhang and Jilong Xu
 title = {Ladder: Enabling Efficient Low-Precision Deep Learning Computing through Hardware-aware Tensor Transformation},
 booktitle = {18th USENIX Symposium on Operating Systems Design and Implementation (OSDI 24)},
 year = {2024},
+isbn = {978-1-939133-40-3},
+address = {Santa Clara, CA},
+pages = {307--323},
 url = {https://www.usenix.org/conference/osdi24/presentation/wang-lei},
+publisher = {USENIX Association},
+month = jul
 }
 ```
 

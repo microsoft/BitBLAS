@@ -1,16 +1,17 @@
 # Installation Guide
 
-## Prerequisites
 
- **Operating System**: Linux (Ubuntu 20.04 or later recommended for installation via wheel or PyPI or you may need to checkout the [Building from Source](#building-from-source) section for other Linux distributions.)
-- **Python Version**: >= 3.7
-- **CUDA Version**: >= 10.0
 
 ## Installing with pip
 
+**Prerequisites for installation via wheel or PyPI:**
+- **Operating System**: Ubuntu 20.04 or later
+- **Python Version**: >= 3.8
+- **CUDA Version**: >= 11.0
+
 The easiest way to install BitBLAS is direcly from the PyPi using pip. To install the latest version, run the following command in your terminal.
 
-**Note**: Currently, bitblas whl is only supported on Linux systems. We recommend using Ubuntu 20.04 or later version as we build the whl files on this platform. Currently we only provide whl files for CUDA>=12.1 and with Python>=3.8. If you are using a different version of CUDA. you may need to build BitBLAS from source.
+**Note**: Currently, BitBLAS whl is only supported on Ubuntu 20.04 or later version as we build the whl files on this platform. Currently we only provide whl files for CUDA>=11.0 and with Python>=3.8. **If you are using a different platform or environment, you may need to [build BitBLAS from source](https://github.com/microsoft/BitBLAS/blob/main/docs/Installation.md#building-from-source).**
 
 ```bash
 pip install bitblas
@@ -29,6 +30,11 @@ python -c "import bitblas; print(bitblas.__version__)"
 ```
 
 ## Building from Source
+
+**Prerequisites for building from source:**
+- **Operating System**: Linux
+- **Python Version**: >= 3.7
+- **CUDA Version**: >= 10.0
 
 We recommend using a docker container with the necessary dependencies to build BitBLAS from source. You can use the following command to run a docker container with the necessary dependencies:
 
