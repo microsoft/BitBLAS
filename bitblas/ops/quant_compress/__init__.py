@@ -70,7 +70,7 @@ class QuantCompress(Operator):
     @property
     def input_dtype(self):
         return self.config.input_dtype
-    
+
     @property
     def storage_dtype(self):
         return self.config.storage_dtype

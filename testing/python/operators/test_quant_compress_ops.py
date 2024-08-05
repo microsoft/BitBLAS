@@ -37,6 +37,7 @@ def test_quant_compress_profile_latency():
     quant_compress_profile_latency(1024, 1024, "int8", "int8", 2)
     quant_compress_profile_latency(1024, 1024, "int8", "int8", 1)
 
+
 def quant_compress_correctness(
     N,
     K,
@@ -57,16 +58,18 @@ def quant_compress_correctness(
         target=target,
     )
     import torch
-    maxq = 2 ** (dequantize_bits) - 1
+    maxq = 2**(dequantize_bits) - 1
     weight = torch.randint(0, maxq, (N, K), dtype=torch.int8)
     qweight = quant_compress(weight)
     ref_qweight = bitblas.quantization.general_compress(weight.numpy(), dequantize_bits)
     torch.testing.assert_close(qweight.numpy(), ref_qweight, rtol=1e-3, atol=1e-3)
 
+
 def test_quant_compress_correctness():
     quant_compress_correctness(1024, 1024, "int8", "int8", 4)
     quant_compress_correctness(1024, 1024, "int8", "int8", 2)
     quant_compress_correctness(1024, 1024, "int8", "int8", 1)
+
 
 # fmt: on
 

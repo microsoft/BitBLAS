@@ -1,7 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from typing import Literal
-from tvm import DataType
 from tvm import IRModule
 from tvm.ir import GlobalVar
 from tvm.script import tir as T
@@ -21,7 +20,8 @@ def tir_quant_compress_weight(
     assert K % elems_per_byte == 0, "K must be divisible by 8/bits"
 
     @T.prim_func
-    def quant_compress_weight(W: T.Buffer((N, K), input_dtype), QW: T.Buffer((N, QK), storage_dtype)):
+    def quant_compress_weight(W: T.Buffer((N, K), input_dtype), QW: T.Buffer((N, QK),
+                                                                             storage_dtype)):
         for ax0, ax1, ax2 in T.grid(N, QK, elems_per_byte):
             with T.block("B"):
                 v0, v1, v2 = T.axis.remap("SSR", [ax0, ax1, ax2])
