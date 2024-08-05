@@ -3,6 +3,7 @@
 from bitblas import tvm
 from tvm.target import Target
 import operator
+from bitblas import deprecated
 from functools import reduce
 from bitblas.base.arch.cuda import CUDA
 from typing import Any, Literal, Optional, Tuple, Union

@@ -42,6 +42,8 @@ from .ops.general_matmul_splitk import MatmulConfigWithSplitK, MatmulWithSplitK 
 from .ops.matmul_dequantize import MatmulWeightOnlyDequantizeConfig, MatmulWeightOnlyDequantize  # noqa: F401
 from .module import Linear  # noqa: F401
 
+import warnings
+import functools
 import logging
 from tqdm import tqdm
 
@@ -88,5 +90,27 @@ def _init_logger():
 
 
 _init_logger()
+
+
+def deprecated(reason):
+    """
+    This is a decorator which can be used to mark functions as deprecated.
+    It will result in a warning being emitted when the function is used.
+    """
+
+    def decorator(func):
+
+        @functools.wraps(func)
+        def new_func(*args, **kwargs):
+            warnings.warn(
+                f"Call to deprecated function {func.__name__} ({reason}).",
+                category=DeprecationWarning,
+                stacklevel=2)
+            return func(*args, **kwargs)
+
+        return new_func
+
+    return decorator
+
 
 __version__ = "0.0.1.dev13"
