@@ -551,7 +551,8 @@ class Matmul(Operator):
 
         if self.lib is None:
             self._forward_from_torch_func(*args)
-        self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
+        else:
+            self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
 
         return output
 
