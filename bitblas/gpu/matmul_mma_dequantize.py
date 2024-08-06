@@ -628,9 +628,19 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         i0, i1 = sch.split(i, factors=[None, b_lr[0]])
         j0, j1 = sch.split(j, factors=[None, b_lr[1]])
         sch.reorder(i0, j0, i1, j1)
-        bb = sch.blockize(i1)
-        sch.annotate(bb, ann_key="permuted_layout", ann_val=can_swizzle_b)
-        sch.tensorize(bb, intrin_group["load_b"])
+        weight_transform_kind = 0
+        if hasattr(func, "attrs") and "weight_transform_kind" in func.attrs:
+            weight_transform_kind = func.attrs["weight_transform_kind"]
+        if weight_transform_kind >= TransformKind.LDMatrixTransform:
+            fused = sch.fuse(i1, j1)
+            vec_len = get_coalesced_veclen(sch.get(B_mat))
+            f0, f1, f2 = sch.split(fused, factors=[None, warp_size, vec_len])
+            sch.bind(f1, "threadIdx.x")
+            sch.vectorize(f2)
+        else:
+            bb = sch.blockize(i1)
+            sch.annotate(bb, ann_key="permuted_layout", ann_val=can_swizzle_b)
+            sch.tensorize(bb, intrin_group["load_b"])
 
         def tensorize_init_store_compute():
             sch.tensorize(sch.get_loops(block_init_c_inner)[-2], intrin_group["init"])
