@@ -4,6 +4,7 @@ from bitblas import tvm
 from tvm.target import Target
 import operator
 from functools import reduce
+from enum import IntEnum
 from bitblas.base.arch.cuda import CUDA
 from typing import Any, Literal, Optional, Tuple, Union
 from ..operator import OperatorConfig, Operator, TransformKind, OPExecutorCPU
@@ -41,6 +42,16 @@ def is_native_compute(A_dtype, W_dtype) -> bool:
     return (A_dtype, W_dtype) in NATIVE_COMPUTE_PATTERNS
 
 
+CONFIG_INFO_MESSAGE_STRATEGY = """
+Optimization Strategy Notice: You are currently using the "{}" optimization strategy. If you wish to change this, you can do so by setting the `optimize_strategy` in the Config. The **SingleBatchDecodeOnly** strategy provides the best performance when the batch size (M) is 1. On the other hand, the **ContiguousBatching** strategy is optimized for situations where the batch size (M) is greater than 1. However, please note that using ContiguousBatching for M=1 will result in a slight performance decrease of about 5%.
+"""
+
+
+class OptimizeStrategy(IntEnum):
+    SingleBatchDecodeOnly = 0
+    ContigousBatching = 1
+
+
 @dataclass(frozen=True)
 class MatmulConfig(OperatorConfig):
     M: Union[int, Tuple[int]] = None
@@ -74,6 +85,8 @@ class MatmulConfig(OperatorConfig):
     propagate_b: Optional[TransformKind] = (
         None  # propagate_b is a flag to control the ladder permutation
     )
+
+    optimize_stratety: OptimizeStrategy = OptimizeStrategy.ContigousBatching
 
     def __legalize_dynamic_symbolic(self, M):
         return tuple(self.M) if isinstance(self.M, list) else self.M
@@ -112,6 +125,9 @@ class MatmulConfig(OperatorConfig):
             object.__setattr__(self, "propagate_b", propagate_b)
 
         # enhance propagate_b into ldmatrix transform if allowed
+        if self.optimize_stratety == OptimizeStrategy.ContigousBatching:
+            object.__setattr__(self, "propagate_b", TransformKind.LDMatrixTransform)
+
         if self.propagate_b == TransformKind.IntraWarpTransform:
             object.__setattr__(self, "propagate_b", TransformKind.LDMatrixTransform)
 
@@ -189,6 +205,8 @@ class MatmulConfig(OperatorConfig):
                 "e5m2_float8",
         ]:
             object.__setattr__(self, "storage_dtype", self.W_dtype)
+
+        logger.info(CONFIG_INFO_MESSAGE_STRATEGY.format(self.optimize_stratety.name))
 
 
 class Matmul(Operator):
