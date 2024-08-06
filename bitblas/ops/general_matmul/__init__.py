@@ -164,7 +164,10 @@ class MatmulConfig(OperatorConfig):
     def __post_init__(self):
         # set M to default dynamic range if it is None
         if self.M is None:
-            object.__setattr__(self, "M", [16, 32, 64, 128, 256, 512, 1024])
+            if self.optimize_stratety == OptimizeStrategy.SingleBatchDecodeOnly:
+                object.__setattr__(self, "M", [1, 16, 32, 64, 128, 256, 512, 1024])
+            else:
+                object.__setattr__(self, "M", [16, 32, 64, 128, 256, 512, 1024])
         if self.N is None:
             raise ValueError("N should be specified currently.")
         if self.K is None:

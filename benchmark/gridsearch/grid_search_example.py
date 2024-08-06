@@ -4,8 +4,7 @@ import tqdm
 import bitblas
 from bitblas.base.arch import CUDA
 from bitblas.ops.general_matmul.tirscript.matmul_dequantize_impl import (
-    matmul_nt_dequantize_b_propagate_b,
-)
+    matmul_nt_dequantize_b_propagate_b,)
 import tvm
 import itertools
 
@@ -32,8 +31,8 @@ group_size = -1
 # fmt:off
 llm_shape_fp16xint4 = [
     # square test
-    (matmul_nt_dequantize_b_propagate_b, (16, 16384, 16384, "float16", "float16", "float16", 4, "int8", "uint",
-                            False, False, group_size, True, False)),
+    (matmul_nt_dequantize_b_propagate_b, (16, 16384, 16384, "float16", "float16", "float16", 4,
+                                          "int8", "uint", False, False, group_size, True, False)),
 ]
 
 # fmt:on
@@ -75,8 +74,7 @@ for get_prim_func, input_args in benchmark_sets:
     pbar = tqdm.tqdm(combinations_dicts)
     for combination in pbar:
         pbar.set_description(
-            f"sucess_combinations: {len(sucess_combinations)} min_time: {min_time}"
-        )
+            f"sucess_combinations: {len(sucess_combinations)} min_time: {min_time}")
         block_row_warps = combination["block_row_warps"]
         block_col_warps = combination["block_col_warps"]
         warp_row_tiles = combination["warp_row_tiles"]
@@ -96,42 +94,38 @@ for get_prim_func, input_args in benchmark_sets:
         rstep = [mma_k * chunk * block_reduce]
         pipeline_stage = stage
         block_reduction_depth = block_reduce
-        hint = bitblas.base.Hint.from_dict(
-            {
-                "use_tc": True,
-                "arch": arch,
-                "block": block,
-                "warp": warp,
-                "rstep": rstep,
-                "pipeline_stage": pipeline_stage,
-                "use_async": True,
-                "intrin_info": intrin_info,
-                "shared_scope": "shared.dyn",
-                "vectorize": {"b": 8, "a": 8},
-                "block_reduction_depth": block_reduction_depth,
-                "rasterization_plan": bitblas.base.rasterization.Rasterization2DColumn(
-                    10
-                ),
-            }
-        )
+        hint = bitblas.base.Hint.from_dict({
+            "use_tc": True,
+            "arch": arch,
+            "block": block,
+            "warp": warp,
+            "rstep": rstep,
+            "pipeline_stage": pipeline_stage,
+            "use_async": True,
+            "intrin_info": intrin_info,
+            "shared_scope": "shared.dyn",
+            "vectorize": {
+                "b": 8,
+                "a": 8
+            },
+            "block_reduction_depth": block_reduction_depth,
+            "rasterization_plan": bitblas.base.rasterization.Rasterization2DColumn(10),
+        })
         print("Tuning Hint is", hint)
         try:
-            sch = bitblas.gpu.MatmulTensorizationMMAWithDequantizeInfo().sch_warp_memory_prefetch_with_config(
-                func, config=hint
-            )
+            sch = bitblas.gpu.MatmulTensorizationMMAWithDequantizeInfo(
+            ).sch_warp_memory_prefetch_with_config(
+                func, config=hint)
 
             with tvm.transform.PassContext(
-                config={
-                    "tir.use_async_copy": True,
-                    "tir.merge_static_smem": False,
-                    "tir.disable_cse_tir": True,
-                }
-            ):
+                    config={
+                        "tir.use_async_copy": True,
+                        "tir.merge_static_smem": False,
+                        "tir.disable_cse_tir": True,
+                    }):
                 rt_mod = tvm.build(sch.mod, target=target)
 
-            time_evaluator = rt_mod.time_evaluator(
-                rt_mod.entry_name, tvm.cuda(0), number=10
-            )
+            time_evaluator = rt_mod.time_evaluator(rt_mod.entry_name, tvm.cuda(0), number=10)
 
             t = time_evaluator(tvm_a, tvm_b, tvm_c).mean * 1e3
 
