@@ -2,6 +2,7 @@
 # Licensed under the MIT License.
 import pytest
 import os
+import shutil
 import torch
 import bitblas
 from bitblas import Matmul, MatmulConfig
@@ -248,7 +249,7 @@ def test_global_cache_save_to_database(
     database_path = "/tmp/.tmp_bitblas_cache.db"
     # clean the database if exists
     if os.path.exists(database_path):
-        os.remove(database_path)
+        shutil.rmtree(database_path)
     global_operator_cache.save_into_database(database_path, target=target)
     assert os.path.exists(database_path)
     global_operator_cache.clear()
@@ -285,6 +286,4 @@ def test_global_cache_save_to_database(
 
 # fmt: on
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_global_cache_save_to_database(1, 1024, 1024, "float16", "float16", "float16", False, False,
-                                       False, "nt", False)
+    bitblas.testing.main()
