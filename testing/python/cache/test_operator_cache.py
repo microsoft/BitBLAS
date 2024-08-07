@@ -2,11 +2,12 @@
 # Licensed under the MIT License.
 import pytest
 import os
-import shutil
 import torch
 import bitblas
 from bitblas import Matmul, MatmulConfig
 from bitblas.cache import global_operator_cache
+from bitblas import tvm as tvm
+from tvm.contrib import utils
 
 target = bitblas.utils.auto_detect_nvidia_target()
 bitblas.set_log_level("DEBUG")
@@ -40,7 +41,7 @@ def test_config_hashable(
     layout,
     enable_tuning,
 ):
-
+    global_operator_cache.clear()
     matmul_config = MatmulConfig(
         M=M,
         N=N,
@@ -92,7 +93,7 @@ def test_global_cache_inquery(
     layout,
     enable_tuning,
 ):
-
+    global_operator_cache.clear()
     matmul_config = MatmulConfig(
         M=M,
         N=N,
@@ -145,7 +146,7 @@ def test_global_cache_inquery_torch_forward(
     layout,
     enable_tuning,
 ):
-
+    global_operator_cache.clear()
     matmul_config = MatmulConfig(
         M=M,
         N=N,
@@ -219,7 +220,7 @@ def test_global_cache_save_to_database(
     layout,
     enable_tuning,
 ):
-
+    global_operator_cache.clear()
     matmul_config = MatmulConfig(
         M=M,
         N=N,
@@ -246,10 +247,9 @@ def test_global_cache_save_to_database(
         print(hash_error)
     assert success
 
-    database_path = "/tmp/.tmp_bitblas_cache.db"
-    # clean the database if exists
-    if os.path.exists(database_path):
-        shutil.rmtree(database_path)
+    tempdir = utils.tempdir()
+    database_path = str(tempdir.path)
+
     global_operator_cache.save_into_database(database_path, target=target)
     assert os.path.exists(database_path)
     global_operator_cache.clear()
