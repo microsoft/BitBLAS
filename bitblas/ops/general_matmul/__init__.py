@@ -128,7 +128,7 @@ class MatmulConfig(OperatorConfig):
                 self.optimize_stratety == OptimizeStrategy.ContigousBatching
                 # TODO(lei): Should add ladder stage 3 inverse layout propagation in the expr.
                 # And recover the layout in the schedule template.
-                and self.M != 1 and 1 not in self.M):
+                and (self.M != 1 or (isinstance(self.M, Tuple) and 1 not in self.M))):
             object.__setattr__(self, "propagate_b", TransformKind.LDMatrixTransform)
 
         # TODO(lei): This is a limitation arose by pytorch and llvm
