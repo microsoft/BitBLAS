@@ -42,8 +42,7 @@ def is_native_compute(A_dtype, W_dtype) -> bool:
     return (A_dtype, W_dtype) in NATIVE_COMPUTE_PATTERNS
 
 
-CONFIG_INFO_MESSAGE_STRATEGY = """
-Optimization Strategy Notice: You are currently using the "{}" optimization strategy. If you wish to change this, you can do so by setting the `optimize_strategy` in the Config. The **SingleBatchDecodeOnly** strategy provides the best performance when the batch size (M) is 1. On the other hand, the **ContiguousBatching** strategy is optimized for situations where the batch size (M) is greater than 1. However, please note that using ContiguousBatching for M=1 will result in a slight performance decrease of about 5%.
+CONFIG_INFO_MESSAGE_STRATEGY = """Optimization Strategy Notice: You are currently using the "{}" optimization strategy. If you wish to change this, you can do so by setting the `optimize_strategy` in the Config. The **SingleBatchDecodeOnly** strategy provides the best performance when the batch size (M) is 1. On the other hand, the **ContiguousBatching** strategy is optimized for situations where the batch size (M) is greater than 1. However, please note that using ContiguousBatching for M=1 will result in a slight performance decrease of about 5%.
 """
 
 
@@ -125,10 +124,11 @@ class MatmulConfig(OperatorConfig):
             object.__setattr__(self, "propagate_b", propagate_b)
 
         # enhance propagate_b into ldmatrix transform if allowed
-        if self.optimize_stratety == OptimizeStrategy.ContigousBatching:
-            object.__setattr__(self, "propagate_b", TransformKind.LDMatrixTransform)
-
-        if self.propagate_b == TransformKind.IntraWarpTransform:
+        if (self.propagate_b == TransformKind.IntraWarpTransform and
+                self.optimize_stratety == OptimizeStrategy.ContigousBatching
+                # TODO(lei): Should add ladder stage 3 inverse layout propagation in the expr.
+                # And recover the layout in the schedule template.
+                and self.M != 1 and 1 not in self.M):
             object.__setattr__(self, "propagate_b", TransformKind.LDMatrixTransform)
 
         # TODO(lei): This is a limitation arose by pytorch and llvm
