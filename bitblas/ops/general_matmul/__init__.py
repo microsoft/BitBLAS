@@ -85,7 +85,7 @@ class MatmulConfig(OperatorConfig):
         None  # propagate_b is a flag to control the ladder permutation
     )
 
-    optimize_stratety: OptimizeStrategy = OptimizeStrategy.ContigousBatching
+    optimize_stratety: Union[int, OptimizeStrategy] = OptimizeStrategy.ContigousBatching
 
     def __legalize_dynamic_symbolic(self, M):
         return tuple(self.M) if isinstance(self.M, list) else self.M
@@ -97,6 +97,11 @@ class MatmulConfig(OperatorConfig):
             return TransformKind(propagate)
 
         return propagate
+
+    def __legalize_optimize_strategy(self, optimize_stratety):
+        if isinstance(optimize_stratety, int):
+            return OptimizeStrategy(optimize_stratety)
+        return optimize_stratety
 
     def __initialize_propagate(self, propagate_a: Optional[TransformKind],
                                propagate_b: Optional[TransformKind]):
@@ -180,6 +185,10 @@ class MatmulConfig(OperatorConfig):
         # set propagate_a and propagate_b to default value if it is None
         object.__setattr__(self, "propagate_a", self.__legalize_propagate(self.propagate_a))
         object.__setattr__(self, "propagate_b", self.__legalize_propagate(self.propagate_b))
+
+        # set optimize_stratety to legal value
+        object.__setattr__(self, "optimize_stratety",
+                           self.__legalize_optimize_strategy(self.optimize_stratety))
 
         # This is hack to legalize propagate_a and b
         # TODO(lei): should be removed in the future when tc+br template is ready.
