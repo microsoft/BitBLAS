@@ -35,7 +35,9 @@ with VllmRunner(
         ckpt_path,
         dtype="half",
         quantization="bitblas",
-        enforce_eager=True,  # set False to enable cuda graph
+        # set enforce_eager = False to enable cuda graph
+        # set enforce_eager = True to disable cuda graph
+        enforce_eager=False,
 ) as bitnet_model:
     bitbnet_outputs = bitnet_model.generate_greedy(["Hi, tell me about microsoft?"],
                                                    max_tokens=1024)
