@@ -123,29 +123,29 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
             ),
         ]
 
-    def get_llm_benchmark_sets(self, name:str) -> List:
-        return [*self.prepare_set_group_llm(name, 3200, 3200),
-                *self.prepare_set_group_llm(name, 8640, 3200),
-                *self.prepare_set_group_llm(name, 3200, 8640),
-                *self.prepare_set_group_llm(name, 5120, 5120),
-                *self.prepare_set_group_llm(name, 13824, 5120),
-                *self.prepare_set_group_llm(name, 5120, 13824),
-                *self.prepare_set_group_llm(name, 6656, 6656),
-                *self.prepare_set_group_llm(name, 17920, 6656),
-                *self.prepare_set_group_llm(name, 6656, 17920),
-                *self.prepare_set_group_llm(name, 1024, 8192),
-                *self.prepare_set_group_llm(name, 8192, 8192),
-                *self.prepare_set_group_llm(name, 28672, 8192),
-                *self.prepare_set_group_llm(name, 8192, 28672)]
+    def get_llm_benchmark_sets(self, name: str) -> List:
+        return [
+            *self.prepare_set_group_llm(name, 3200, 3200),
+            *self.prepare_set_group_llm(name, 8640, 3200),
+            *self.prepare_set_group_llm(name, 3200, 8640),
+            *self.prepare_set_group_llm(name, 5120, 5120),
+            *self.prepare_set_group_llm(name, 13824, 5120),
+            *self.prepare_set_group_llm(name, 5120, 13824),
+            *self.prepare_set_group_llm(name, 6656, 6656),
+            *self.prepare_set_group_llm(name, 17920, 6656),
+            *self.prepare_set_group_llm(name, 6656, 17920),
+            *self.prepare_set_group_llm(name, 1024, 8192),
+            *self.prepare_set_group_llm(name, 8192, 8192),
+            *self.prepare_set_group_llm(name, 28672, 8192),
+            *self.prepare_set_group_llm(name, 8192, 28672)
+        ]
 
     def prepare_benchmark_sets(self):
         """Prepare benchmark sets."""
         self.add_benchmark_set(
             "FP16xFP16_ACCFP16_NT",
             [
-                *self.prepare_set_group_4x(
-                    "FP16xFP16_ACCFP16_NT", 16384, 16384, 16384
-                ),
+                *self.prepare_set_group_4x("FP16xFP16_ACCFP16_NT", 16384, 16384, 16384),
                 *self.get_llm_benchmark_sets("FP16xFP16_ACCFP16_NT"),
             ],
         )
@@ -153,9 +153,7 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
         self.add_benchmark_set(
             "INT8xINT8_ACCINT32_NT",
             [
-                *self.prepare_set_group_4x(
-                    "INT8xINT8_ACCINT32_NT", 16384, 16384, 16384
-                ),
+                *self.prepare_set_group_4x("INT8xINT8_ACCINT32_NT", 16384, 16384, 16384),
                 *self.get_llm_benchmark_sets("INT8xINT8_ACCINT32_NT"),
             ],
         )
@@ -315,6 +313,7 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
         # Disable default tuning when do benchmark
         return operator(config, target=self.benchmark_target, enable_tuning=False)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Bitblas Matmul Operator Benchmark")
     parser.add_argument(
@@ -322,7 +321,7 @@ if __name__ == "__main__":
         action="store_true",
         help="Enable hardware-aware tuning",
     )
-    
+
     args = parser.parse_args()
     enable_tuning = args.enable_tuning
     BitblasMatmulOpsBenchmark().run(enable_tuning=args.enable_tuning)
