@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+import argparse
 import torch
 import bitblas
 from modeling_bitnet import BitnetForCausalLM
@@ -17,8 +18,13 @@ dirpath = os.path.dirname(filepath)
 torch.set_grad_enabled(False)
 bitblas.set_log_level("INFO")
 
-model_name_or_path = "BitBLASModel/open_llama_3b_1.58bits"
-saved_model_path = os.path.join(dirpath, "models", f"{model_name_or_path}_bitblas")
+parser = argparse.ArgumentParser()
+parser.add_argument("--model_name_or_path", type=str, default="BitBLASModel/open_llama_3b_1.58bits")
+parser.add_argument("--saved_model_path", type=str, default=None)
+args = parser.parse_args()
+
+model_name_or_path = args.model_name_or_path
+saved_model_path = os.path.join(dirpath, "models", f"{model_name_or_path}_bitblas") if args.saved_model_path is None else args.saved_model_path
 
 
 def generate_text(model, tokenizer, prompt, max_length=100):
