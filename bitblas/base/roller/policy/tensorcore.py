@@ -333,7 +333,6 @@ class TensorCorePolicy(DefaultPolicy):
             logger.info(info_message)
             codegen_dict.shared_scope = "shared.dyn"
 
-        # Or assume we always use shared memory
         codegen_dict.shared_scope = "shared.dyn"
 
         codegen_dict.complete_config(node)

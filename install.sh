@@ -46,7 +46,7 @@ fi
 
 echo "Download and extraction completed successfully."
 
-LLVM_CONFIG_PATH="${EXTRACT_PATH}/$(basename ${FILE_NAME} .tar.xz)/bin/llvm-config"
+LLVM_CONFIG_PATH="$(realpath ${EXTRACT_PATH}/$(basename ${FILE_NAME} .tar.xz)/bin/llvm-config)"
 echo "LLVM config path: $LLVM_CONFIG_PATH"
 
 # clone and build tvm
