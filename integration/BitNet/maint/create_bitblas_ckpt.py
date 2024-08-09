@@ -11,7 +11,8 @@ import time
 import json
 
 import sys
-sys.path.insert(0, os.path.dirname(os.path.realpath(__file__))+"/../")
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../")
 from modeling_bitnet import BitnetForCausalLM
 from tokenization_bitnet import BitnetTokenizer
 
@@ -27,7 +28,9 @@ parser.add_argument("--saved_model_path", type=str, default=None)
 args = parser.parse_args()
 
 model_name_or_path = args.model_name_or_path
-saved_model_path = os.path.join(dirpath, "models", f"{model_name_or_path}_bitblas") if args.saved_model_path is None else args.saved_model_path
+saved_model_path = os.path.join(
+    dirpath, "models",
+    f"{model_name_or_path}_bitblas") if args.saved_model_path is None else args.saved_model_path
 
 
 def generate_text(model, tokenizer, prompt, max_length=100):

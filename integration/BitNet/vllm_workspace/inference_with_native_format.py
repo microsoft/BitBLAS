@@ -15,7 +15,6 @@ from conftest import VllmRunner
 import os
 import argparse
 
-
 # get the path of the current file
 current_file_path = os.path.realpath(__file__)
 current_dir = os.path.dirname(current_file_path)
@@ -34,16 +33,12 @@ args = parser.parse_args()
 ckpt_path = args.ckpt_path
 
 with VllmRunner(
-    ckpt_path,
-    dtype="half",
-    quantization="bitnet",
-    gpu_memory_utilization=0.5,
+        ckpt_path,
+        dtype="half",
+        quantization="bitnet",
+        gpu_memory_utilization=0.5,
 ) as bitnet_model:
-    bitbnet_outputs = bitnet_model.generate_greedy(
-        ["Hi, tell me about microsoft?"], max_tokens=128
-    )
+    bitbnet_outputs = bitnet_model.generate_greedy(["Hi, tell me about microsoft?"], max_tokens=128)
     print("bitnet inference output:")
     print(bitbnet_outputs[0][0])
     print(bitbnet_outputs[0][1])
-
-
