@@ -138,6 +138,7 @@ class BitLinearBitBLAS(nn.Module):
         result = (weight * s).round().clamp(-1, 1)
         return result.type(torch.int8)
 
+    @torch.compile
     def activation_quant(self, x, num_bits=8):
         x = x.float()
         Qn = -(2**(num_bits - 1))
@@ -145,6 +146,13 @@ class BitLinearBitBLAS(nn.Module):
         s = Qp / x.abs().max(dim=-1, keepdim=True).values.clamp(min=1e-5)
         result = (x * s).round().clamp(Qn, Qp)
         return result.type(torch.int8)
+
+    @torch.compile
+    def post_quant_process(self, input, si, sw):
+        out = input / si
+        out = out / sw
+        out = out.half()
+        return out
 
     # for the correctness evaluation.
     def native_forward(self, input):
@@ -184,9 +192,8 @@ class BitLinearBitBLAS(nn.Module):
         Qp = self.Qp
         si = Qp / input.abs().max(dim=-1, keepdim=True).values.clamp(min=1e-5)
         # if / (si * sw) it will inf in some cases
-        out = fp32_out / si
-        out = out / sw
-        out = out.half()
+        out = self.post_quant_process(fp32_out, si, sw)
+
         if self.bias is not None:
             out += self.bias.view(1, -1).expand_as(out)
         return out

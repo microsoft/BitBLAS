@@ -18,9 +18,6 @@ def generate_text(model, tokenizer, prompt, max_length=100):
     seq_length = input_ids.size(1)
     position_ids = torch.arange(seq_length, dtype=torch.long, device=input_ids.device)
     position_ids = position_ids.unsqueeze(0).expand_as(input_ids)
-    # position_embeddings = model.embed_positions(position_ids)
-    # cos = position_embeddings[:, :, 0::2].cos()
-    # sin = position_embeddings[:, :, 1::2].sin()
 
     generation_config = GenerationConfig(
         max_length=max_length,
@@ -32,7 +29,6 @@ def generate_text(model, tokenizer, prompt, max_length=100):
 
     start_time = time.time()
     output_ids = model.generate(input_ids, generation_config=generation_config)
-    # output_ids = model.generate(input_ids, generation_config=generation_config, cos=cos, sin=sin)
     end_time = time.time()
 
     generated_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
