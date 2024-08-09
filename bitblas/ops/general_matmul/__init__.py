@@ -85,7 +85,8 @@ class MatmulConfig(OperatorConfig):
         None  # propagate_b is a flag to control the ladder permutation
     )
 
-    optimize_stratety: Union[int, OptimizeStrategy] = OptimizeStrategy.ContigousBatching
+    # optimize strategy, default is ContigousBatching
+    optimize_stratety: Union[int, OptimizeStrategy] = OptimizeStrategy.SingleBatchDecodeOnly
 
     def __legalize_dynamic_symbolic(self, M):
         return tuple(self.M) if isinstance(self.M, list) else self.M
@@ -115,7 +116,8 @@ class MatmulConfig(OperatorConfig):
         else:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
 
-        if (self.M == 1 or (self.N % MICRO_KERNEL_SIZE) != 0 or (self.K % MICRO_KERNEL_SIZE) != 0 or
+        if (self.M == 1 or (self.N % MICRO_KERNEL_SIZE) != 0 or (self.K % MICRO_KERNEL_SIZE) != 0 or 
+            isinstance(self.M, Tuple) or
             (self.with_zeros and self.zeros_mode == "quantized")):
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
             object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
@@ -129,8 +131,7 @@ class MatmulConfig(OperatorConfig):
             object.__setattr__(self, "propagate_b", propagate_b)
 
         # enhance propagate_b into ldmatrix transform if allowed
-        if (self.propagate_b == TransformKind.IntraWarpTransform and
-                self.optimize_stratety == OptimizeStrategy.ContigousBatching
+        if (self.optimize_stratety == OptimizeStrategy.ContigousBatching
                 # TODO(lei): Should add ladder stage 3 inverse layout propagation in the expr.
                 # And recover the layout in the schedule template.
                 and (self.M != 1 or (isinstance(self.M, Tuple) and 1 not in self.M))):
@@ -217,8 +218,6 @@ class MatmulConfig(OperatorConfig):
                 "e5m2_float8",
         ]:
             object.__setattr__(self, "storage_dtype", self.W_dtype)
-
-        logger.info(CONFIG_INFO_MESSAGE_STRATEGY.format(self.optimize_stratety.name))
 
 
 class Matmul(Operator):
