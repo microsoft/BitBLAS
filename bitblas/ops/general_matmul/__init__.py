@@ -85,7 +85,7 @@ class MatmulConfig(OperatorConfig):
         None  # propagate_b is a flag to control the ladder permutation
     )
 
-    # optimize strategy, default is ContigousBatching
+    # optimize strategy, default is SingleBatchDecodeOnly
     optimize_stratety: Union[int, OptimizeStrategy] = OptimizeStrategy.SingleBatchDecodeOnly
 
     def __legalize_dynamic_symbolic(self, M):
