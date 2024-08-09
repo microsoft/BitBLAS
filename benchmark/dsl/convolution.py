@@ -3,7 +3,7 @@
 import numpy as np
 import tvm
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
-from bitblas.base.roller.arch import CUDA
+from bitblas.base.arch import CUDA
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.gpu import Matmul
 from bitblas.base.utils import apply_and_build
