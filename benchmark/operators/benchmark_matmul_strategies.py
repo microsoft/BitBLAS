@@ -7,10 +7,10 @@ from bitblas.ops.general_matmul import OptimizeStrategy
 from bitblas.utils import get_commit_id
 from bitblas import set_log_level
 from tabulate import tabulate
-import json
 from os import path, makedirs
-from typing import Dict, List, Union
+from typing import List
 import argparse
+from tqdm import tqdm
 
 set_log_level("DEBUG")
 
@@ -105,82 +105,6 @@ class BitblasMatmulOpsBenchmarkCompareStategies(BitblasOperatorBenchmarkBase):
             **self.config_map[name],
         )
 
-    def serialize_results(self) -> None:
-        """Serialize benchmark results into JSON files."""
-        commit_id_path = f"CommitID_{self.CURRENT_COMMIT_ID}"
-        log_commit_path = path.join(self.log_path, commit_id_path)
-
-        if not path.exists(log_commit_path):
-            makedirs(log_commit_path)
-
-        # Save benchmark results into JSON
-        self._save_json(
-            self.benchmark_results,
-            path.join(log_commit_path, self.BENCHMARK_RESULTS_FILE),
-        )
-
-        # Save benchmark shapes into JSON
-        shapes: Dict[List[List[Union[List, int], int, int]]] = {}
-
-        # Iterate through the benchmark results to extract the shapes
-        for name, results in self.benchmark_results.items():
-            shapes[name] = []
-            for i, _ in enumerate(results):
-                config = self.benchmark_sets[name][i][1]
-                dyn_prof_shape = self.benchmark_sets[name][i][2]
-                shapes[name].append([config.M, config.N, config.K, dyn_prof_shape])
-
-        self._save_json(shapes, path.join(log_commit_path, self.BENCHMARK_SHAPES_FILE))
-
-        # Save device info into JSON
-        self._save_json(
-            {"device": self.benchmark_target},
-            path.join(log_commit_path, self.BENCHMARK_DEVICE_FILE),
-        )
-
-    def _save_json(self, data, file_path):
-        """Helper function to save JSON data to a file."""
-        with open(file_path, "w") as f:
-            json.dump(data, f)
-
-    @classmethod
-    def deserialize_from_logs(cls, commit_id: str) -> None:
-        """Deserialize benchmark results from JSON files."""
-        benchmark = cls()
-        commit_id_path = f"CommitID_{commit_id}"
-        log_commit_path = path.join(benchmark.log_path, commit_id_path)
-
-        benchmark.benchmark_results = cls._load_json(
-            path.join(log_commit_path, cls.BENCHMARK_RESULTS_FILE))
-
-        shapes_file = path.join(log_commit_path, cls.BENCHMARK_SHAPES_FILE)
-
-        with open(shapes_file, "r") as f:
-            shapes = json.load(f)
-            for name, shape_list in shapes.items():
-                for shape in shape_list:
-                    M, N, K, dyn_prof_shape = shape
-                    benchmark.add_benchmark_set(
-                        name,
-                        [
-                            benchmark.generate_op_unit(
-                                benchmark.generate_operator_config(name, M, N, K),
-                                dynamic_profiling_shape=dyn_prof_shape,
-                            )
-                        ],
-                    )
-
-        benchmark.benchmark_target = cls._load_json(
-            path.join(log_commit_path, cls.BENCHMARK_DEVICE_FILE))["device"]
-
-        return benchmark
-
-    @staticmethod
-    def _load_json(file_path):
-        """Helper function to load JSON data from a file."""
-        with open(file_path, "r") as f:
-            return json.load(f)
-
     def report(self):
         """Generate and print a report of the benchmark results."""
         results4compare = {}
@@ -271,13 +195,21 @@ class BitblasMatmulOpsBenchmarkCompareStategies(BitblasOperatorBenchmarkBase):
 
     def benchmark(self):
         """Run benchmarks on all benchmark sets."""
-        for name, benchmark_set in self.benchmark_sets.items():
-            self.benchmark_results[name] = []
-            for op, config, _ in benchmark_set:
-                for opt in self.OPT_SHAPES:
-                    print(f"Running benchmark for {name} with shape {opt}")
-                    self.benchmark_results[name].extend(
-                        [self.run_benchmark(op, config, {"m": opt})])
+        # Calculate the total number of benchmark runs for the progress bar
+        total_runs = sum(
+            len(benchmark_set) * len(self.OPT_SHAPES)
+            for benchmark_set in self.benchmark_sets.values())
+
+        with tqdm(total=total_runs, desc="Total Progress", unit="benchmark") as pbar:
+            for name, benchmark_set in self.benchmark_sets.items():
+                self.benchmark_results[name] = []
+                for op, config, _ in benchmark_set:
+                    for opt in self.OPT_SHAPES:
+                        print(f"Running benchmark for {name} with shape {opt}")
+                        self.benchmark_results[name].extend(
+                            [self.run_benchmark(op, config, {"m": opt})])
+                        # Update the progress bar after each run
+                        pbar.update(1)
 
     def run_compare_strategy(self, report=True, serialize=True, enable_tuning: bool = False):
         """Run the benchmark process."""
