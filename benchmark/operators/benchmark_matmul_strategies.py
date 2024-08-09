@@ -228,6 +228,10 @@ class BitblasMatmulOpsBenchmarkCompareStategies(BitblasOperatorBenchmarkBase):
 
         self.cleanup()
 
+    def serialize_results(self) -> None:
+        """Serialize the benchmark results."""
+        pass
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Bitblas Matmul Operator Benchmark")
