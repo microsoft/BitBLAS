@@ -134,6 +134,7 @@ def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
         with_scaling=with_scaling,
         with_zeros=with_zeros,
         zeros_mode=zeros_mode,
+        propagate_a=False,
     )
     matmul = Matmul(config=matmul_config, enable_tuning=False)
 
@@ -194,6 +195,8 @@ def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
         permuted_inputs.append(bias)
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs[:-1], output=permuted_inputs[-1])
+    print(permuted_inputs[-1])
+    print(ref_result)
     if zeros_mode == "rescale":
         torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
     else:

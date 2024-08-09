@@ -160,18 +160,16 @@ class MatmulWithSplitK(Matmul):
 
         if output is None:
             output = torch.empty(
-                A.shape[:-1] + (self.N,),
-                dtype=self.torch_output_dtype,
-                device=A.device)
+                A.shape[:-1] + (self.N,), dtype=self.torch_output_dtype, device=A.device)
         if scale is not None:
             args.append(scale)
         if zeros is not None:
             args.append(zeros)
         if bias is not None:
             args.append(bias)
-        
-        sk_output = torch.empty((self.k_split,) +
-            A.shape[:-1] + (self.N,),
+
+        sk_output = torch.empty(
+            (self.k_split,) + A.shape[:-1] + (self.N,),
             dtype=self.torch_output_dtype,
             device=A.device)
         args.append(sk_output)
@@ -184,7 +182,9 @@ class MatmulWithSplitK(Matmul):
 
         if self.lib is None:
             self._forward_from_torch_func(*args)
-        self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
+        else:
+            self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
+
         torch.sum(sk_output, dim=0, out=output)
         return output
 

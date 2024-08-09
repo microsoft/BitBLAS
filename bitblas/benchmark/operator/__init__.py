@@ -9,6 +9,10 @@ from bitblas.ops import Operator, OperatorConfig
 from bitblas.utils import get_default_cache_path
 from bitblas import auto_detect_nvidia_target
 from bitblas import tvm as tvm
+from bitblas.cache import OperatorCache
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class BitblasOperatorBenchmarkBase(ABC):
@@ -27,6 +31,9 @@ class BitblasOperatorBenchmarkBase(ABC):
 
     # Log path
     log_path: Optional[str] = path.join(get_default_cache_path(), "benchmark")
+
+    # Operator cache
+    operator_cache: OperatorCache = OperatorCache()
 
     @abstractmethod
     def prepare_benchmark_sets(self):
@@ -98,6 +105,14 @@ class BitblasOperatorBenchmarkBase(ABC):
         dynamic_profiling_shape: Optional[Dict[str, int]] = None,
     ) -> Optional[float]:
         """Run a single benchmark."""
+
+        if self.operator_cache.exists(config):
+            logger.info(f"Operator {config} found in cache")
+            op_inst = self.operator_cache.get(config)
+            latency = op_inst.profile_latency(dynamic_symbolic_constraints=dynamic_profiling_shape)
+            op_inst.cleanup()
+            return latency, None
+
         op_inst = self.make_operator(operator, config)
         tuning_time = None
 
@@ -105,6 +120,8 @@ class BitblasOperatorBenchmarkBase(ABC):
             start = perf_counter()
             op_inst.hardware_aware_finetune(topk=20, parallel_build=True)
             tuning_time = perf_counter() - start
+
+        self.operator_cache.add(config, op_inst)
 
         latency = op_inst.profile_latency(dynamic_symbolic_constraints=dynamic_profiling_shape)
 

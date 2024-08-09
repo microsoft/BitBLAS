@@ -59,7 +59,9 @@ def correctness_weight_only_dequantize(
 ):
     import numpy as np
     from bitblas.quantization.utils import general_compress
+    from bitblas.cache import global_operator_cache
 
+    global_operator_cache.clear()
     linear_bitblas = BitBLASLinear(
         in_features,
         out_features,

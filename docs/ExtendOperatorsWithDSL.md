@@ -1,7 +1,7 @@
 ### Using BitBLAS from DSL
 ```python
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
-from bitblas.base.roller.arch import CUDA
+from bitblas.base.arch import CUDA
 from bitblas.base.utils import apply_and_build
 @tvm.script.ir_module
 class MatmulNT:

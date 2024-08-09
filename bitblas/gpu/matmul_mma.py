@@ -315,7 +315,17 @@ class MatmulTensorizationMMA(GPUScheduleRule):
 
         sch.tensorize(sch.get_loops(block_init_inner)[-2], intrin_group["init"])
         sch.tensorize(sch.get_loops(block_read_reg_a)[-2], intrin_group["load_a"])
-        sch.tensorize(sch.get_loops(block_read_reg_b)[-2], intrin_group["load_b"])
+        weight_transform_kind = 0
+        if hasattr(func, "attrs") and "weight_transform_kind" in func.attrs:
+            weight_transform_kind = func.attrs["weight_transform_kind"]
+        if weight_transform_kind >= TransformKind.LDMatrixTransform:
+            fused = sch.fuse(sch.get_loops(block_read_reg_b)[-2:])
+            vec_len = get_coalesced_veclen(sch.get(block_read_reg_b))
+            f0, f1, f2 = sch.split(fused, factors=[None, 32, vec_len])
+            sch.bind(f1, "threadIdx.x")
+            sch.vectorize(f2)
+        else:
+            sch.tensorize(sch.get_loops(block_read_reg_b)[-2], intrin_group["load_b"])
         sch.tensorize(sch.get_loops(block_inner)[-3], intrin_group["compute"])
         sch.tensorize(sch.get_loops(block_write_reg)[-2], intrin_group["store"])
 
