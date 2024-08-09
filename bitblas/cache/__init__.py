@@ -6,4 +6,5 @@ from .operator import (
     load_global_ops_cache,  # noqa: F401
     get_database_path,  # noqa: F401
     set_database_path,  # noqa: F401
+    OperatorCache,  # noqa: F401
 )

@@ -1186,7 +1186,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         """
 
         weight_transform_kind = config.intrin_info.weight_transform_kind
-        if weight_transform_kind == TransformKind.LDMatrixTransform:
+        if weight_transform_kind == TransformKind.LDMatrixTransform and config.block_reduction_depth is not None:
             return self.sch_warp_memory_prefetch_with_config(func, config)
 
         is_cross_thread_reduce = (
