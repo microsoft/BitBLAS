@@ -19,7 +19,7 @@ import argparse
 # get the path of the current file
 current_file_path = os.path.realpath(__file__)
 current_dir = os.path.dirname(current_file_path)
-ckpt_path = os.path.join(current_dir, "../models/bitnet_3b_1.58bits")
+ckpt_path = os.path.join(current_dir, "../models/bitnet_b1_58-3B_bitblas")
 
 parser = argparse.ArgumentParser(description="Inference with BitNet")
 parser.add_argument(
@@ -46,17 +46,4 @@ with VllmRunner(
     print(bitbnet_outputs[0][0])
     print(bitbnet_outputs[0][1])
 
-# with VllmRunner(
-#     "BitBLASModel/open_llama_3b_1.58bits_bitblas",
-#     dtype="half",
-#     quantization="bitblas",
-#     enforce_eager=True,
-# ) as bitnet_model:
-#     torch.cuda.profiler.start()
-#     bitbnet_outputs = bitnet_model.generate_greedy(
-#         ["Hi, tell me about microsoft?"], max_tokens=1024
-#     )
-#     torch.cuda.profiler.stop()
-#     print("bitnet:")
-#     print(bitbnet_outputs[0][0])
-#     print(bitbnet_outputs[0][1])
+

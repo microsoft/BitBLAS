@@ -24,7 +24,7 @@ cd /root/to/BitBLAS/integration/BitNet
 The second script is `generate_bitnet_model_bitblas_format.sh`, which is used to make a checkpoint with BitBLAS compressed metadata, which can avoid the online dequantize sage for the profiling of vLLM, which lead to more efficient memory utilization.
 
 ```bash
-./maint/generate_bitnet_model_bitblas_format.sh ./models/bitnet_3B_1.58bit ./models/bitnet_3B_1.58bit_bitblas
+./maint/generate_bitnet_model_bitblas_format.sh ./models/bitnet_b1_58-3B ./models/bitnet_b1_58-3B_bitblas
 # the output ckpy will be saved in the `./models/bitnet_b1_58-3B_bitblas` directory
 ```
 
