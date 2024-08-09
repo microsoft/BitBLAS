@@ -19,7 +19,7 @@ import argparse
 current_file_path = os.path.realpath(__file__)
 current_dir = os.path.dirname(current_file_path)
 
-ckpt_path = os.path.join(current_dir, "../models/bitnet_3b_1.58bits_bitblas")
+ckpt_path = os.path.join(current_dir, "../models/ckpt_bitnet_b1_58-3B_bitblas")
 parser = argparse.ArgumentParser(description="Inference with BitNet")
 parser.add_argument(
     "--ckpt_path",
@@ -32,14 +32,13 @@ args = parser.parse_args()
 
 ckpt_path = args.ckpt_path
 with VllmRunner(
-    ckpt_path,
-    dtype="half",
-    quantization="bitblas",
-    enforce_eager=True,
+        ckpt_path,
+        dtype="half",
+        quantization="bitblas",
+        enforce_eager=True,  # set False to enable cuda graph
 ) as bitnet_model:
-    bitbnet_outputs = bitnet_model.generate_greedy(
-        ["Hi, tell me about microsoft?"], max_tokens=1024
-    )
+    bitbnet_outputs = bitnet_model.generate_greedy(["Hi, tell me about microsoft?"],
+                                                   max_tokens=1024)
     print("bitnet inference:")
     print(bitbnet_outputs[0][0])
     print(bitbnet_outputs[0][1])

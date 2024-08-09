@@ -14,13 +14,13 @@ mkdir -p models
 cd models
 
 # download the model
-git clone https://huggingface.co/1bitLLM/bitnet_b1_58-3B bitnet_3B_1.58bits --depth 1
+git clone https://huggingface.co/1bitLLM/bitnet_b1_58-3B ckpt_bitnet_b1_58-3B --depth 1
 
 # copy quantized config into the model directory
-cp ../maint/quant_config.json bitnet_3B_1.58bits
+cp ../maint/quantize_config.json ckpt_bitnet_b1_58-3B
 
 # get the realpath of the model directory
-MODEL_DIR=$(realpath bitnet_3B_1.58bits)
+MODEL_DIR=$(realpath ckpt_bitnet_b1_58-3B)
 
 cd ..
 

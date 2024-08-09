@@ -24,4 +24,10 @@ fi
 # get the realpath of the saved model directory
 SAVED_MODEL_DIR=$(realpath $SAVED_MODEL_DIR)
 
+# cp files
+cp $MODEL_DIR/quantize_config.json $SAVED_MODEL_DIR/
+cp $MODEL_DIR/tokenizer.json $SAVED_MODEL_DIR/
+cp $MODEL_DIR/tokenizer.model $SAVED_MODEL_DIR/
+cp $MODEL_DIR/tokenizer_config.json $SAVED_MODEL_DIR/
+
 echo "Model has been converted and save to $SAVED_MODEL_DIR"

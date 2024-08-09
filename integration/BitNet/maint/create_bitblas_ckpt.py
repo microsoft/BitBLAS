@@ -4,13 +4,17 @@
 import argparse
 import torch
 import bitblas
-from modeling_bitnet import BitnetForCausalLM
-from tokenization_bitnet import BitnetTokenizer
 from transformers.utils.hub import cached_file
 import os
 from transformers import GenerationConfig
 import time
 import json
+
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../")
+from modeling_bitnet import BitnetForCausalLM
+from tokenization_bitnet import BitnetTokenizer
 
 filepath = os.path.abspath(__file__)
 dirpath = os.path.dirname(filepath)
@@ -19,12 +23,14 @@ torch.set_grad_enabled(False)
 bitblas.set_log_level("INFO")
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--model_name_or_path", type=str, default="BitBLASModel/open_llama_3b_1.58bits")
+parser.add_argument("--model_name_or_path", type=str, default="1bitLLM/bitnet_b1_58-3B")
 parser.add_argument("--saved_model_path", type=str, default=None)
 args = parser.parse_args()
 
 model_name_or_path = args.model_name_or_path
-saved_model_path = os.path.join(dirpath, "models", f"{model_name_or_path}_bitblas") if args.saved_model_path is None else args.saved_model_path
+saved_model_path = os.path.join(
+    dirpath, "models",
+    f"{model_name_or_path}_bitblas") if args.saved_model_path is None else args.saved_model_path
 
 
 def generate_text(model, tokenizer, prompt, max_length=100):
