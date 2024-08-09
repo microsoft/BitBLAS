@@ -18,14 +18,14 @@ We provide two scripts to make the checkpoints for vLLM. The first script is `ge
 cd /root/to/BitBLAS/integration/BitNet
 # make the checkpoint
 ./maint/generate_bitnet_model_native_format.sh
-# the output ckpy will be saved in the `./models/bitnet_b1_58-3B` directory
+# the output ckpy will be saved in the `./models/ckpt_bitnet_b1_58-3B` directory
 ```
 
 The second script is `generate_bitnet_model_bitblas_format.sh`, which is used to make a checkpoint with BitBLAS compressed metadata, which can avoid the online dequantize sage for the profiling of vLLM, which lead to more efficient memory utilization.
 
 ```bash
-./maint/generate_bitnet_model_bitblas_format.sh ./models/bitnet_b1_58-3B ./models/bitnet_b1_58-3B_bitblas
-# the output ckpy will be saved in the `./models/bitnet_b1_58-3B_bitblas` directory
+./maint/generate_bitnet_model_bitblas_format.sh ./models/ckpt_bitnet_b1_58-3B ./models/ckpt_bitnet_b1_58-3B_bitblas
+# the output ckpy will be saved in the `./models/ckpt_bitnet_b1_58-3B_bitblas` directory
 ```
 
 Finnaly, you can use the ckpt in vLLM with:
