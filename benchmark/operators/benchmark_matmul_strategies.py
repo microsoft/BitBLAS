@@ -37,6 +37,7 @@ class BitblasMatmulOpsBenchmarkCompareStategies(BitblasOperatorBenchmarkBase):
     }
 
     OPT_SHAPES = [1, 16, 32, 64, 128, 256, 512, 4096]
+
     CURRENT_COMMIT_ID = get_commit_id()
 
     def __init__(self):
@@ -48,9 +49,8 @@ class BitblasMatmulOpsBenchmarkCompareStategies(BitblasOperatorBenchmarkBase):
         return [
             self.generate_op_unit(
                 self.generate_operator_config(
-                    name, [1, 16, 32, 64, 128, 256, 512] if optimize_strategy
-                    == OptimizeStrategy.SingleBatchDecodeOnly else [16, 32, 64, 128, 256, 512], N,
-                    K)),
+                    name, self.OPT_SHAPES if optimize_strategy
+                    == OptimizeStrategy.SingleBatchDecodeOnly else self.OPT_SHAPES[1:], N, K)),
         ]
 
     def prepare_benchmark_sets(self):
