@@ -127,6 +127,7 @@ def assert_correctness_with_ladder_ldmatrix_propagate(
     accum_dtype="float16",
     block_reduction_depth=1,
 ):
+    propagate_b = 3
     matmul_func = matmul_select_implementation(
         M=M,
         N=N,
@@ -135,8 +136,8 @@ def assert_correctness_with_ladder_ldmatrix_propagate(
         out_dtype=out_dtype,
         accum_dtype=accum_dtype,
         propagate_a=0,
-        propagate_b=3)["main"]
-    propagate_b = 3
+        propagate_b=propagate_b)["main"]
+
     target = bitblas.auto_detect_nvidia_target()
     intrin_info = bitblas.base.hint.IntrinInfo(
         in_dtype=in_dtype,
@@ -169,7 +170,6 @@ def assert_correctness_with_ladder_ldmatrix_propagate(
             "tir.merge_static_smem": False
     }):
         block_reduce_rt_mod = tvm.build(block_reduce_sch.mod, target=target)
-
     # Evaluate the correctness
     import numpy as np
     a = np.random.randn(M, K).astype(np.float16 if in_dtype == "float16" else "int8")
@@ -456,7 +456,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
         dequantize_bits=bit,
         storage_dtype="int8",
         transpose_matrix=True,
-        transform_kind=3,
+        transform_kind=propagate_b,
     )
 
     ladder_permutate = bitblas.ops.LadderPermutate(ladder_permutate_config)
