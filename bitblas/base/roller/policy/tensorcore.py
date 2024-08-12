@@ -333,8 +333,7 @@ class TensorCorePolicy(DefaultPolicy):
             logger.info(info_message)
             codegen_dict.shared_scope = "shared.dyn"
 
-        # Or assume we always use shared memory
-        # codegen_dict.shared_scope = "shared.dyn"
+        codegen_dict.shared_scope = "shared.dyn"
 
         codegen_dict.complete_config(node)
         codegen_dict.vectorize = self._plan_vectorize(self.prim_func_node, td, block_size)

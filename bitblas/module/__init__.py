@@ -18,7 +18,6 @@ from bitblas import Matmul, MatmulConfig
 from bitblas.quantization.utils import general_compress
 from bitblas import auto_detect_nvidia_target
 
-BITBLAS_TARGET = auto_detect_nvidia_target()
 BITBLAS_DATABASE_PATH = get_database_path()
 
 
@@ -59,7 +58,7 @@ def unpack_qweight(qweight, bits):
 
 
 class Linear(nn.Module):
-    opt_M = [1, 16, 32, 64, 128, 256, 512]
+    opt_M = [16, 32, 64, 128, 256, 512]
     STORAGE_DTYPE = "int8"  # assume int8 storage
     TORCH_STORAGE_DTYPE = getattr(torch, STORAGE_DTYPE)
     BITBLAS_DTYPES = {
@@ -224,6 +223,8 @@ class Linear(nn.Module):
         self.source_format = self.bitblas_matmul.source_format
 
     def _get_or_create_bitblas_operator(self, config, enable_tuning):
+        BITBLAS_TARGET = auto_detect_nvidia_target()
+
         if global_operator_cache.size() == 0:
             global_operator_cache.load_from_database(BITBLAS_DATABASE_PATH, BITBLAS_TARGET)
             logger.info(f"Loaded {global_operator_cache.size()} operators from database.")

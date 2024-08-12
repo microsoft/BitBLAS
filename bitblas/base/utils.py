@@ -238,11 +238,12 @@ def apply_and_build_parallel(func,
             continue
         elif map_result.status == StatusKind.COMPLETE:
             idx, code, artifact_path = map_result.value
-            if artifact_path is None:
-                logger.debug("Artifact path is None")
-                continue
             sch = _sched[idx]
             config = configs[idx]
+            if artifact_path is None:
+                ARTIFACT_NOT_FOUND = f"Apply config {config} failed, artifact path is None"
+                logger.debug(ARTIFACT_NOT_FOUND)
+                continue
             rt_mod = tvm.runtime.load_module(artifact_path)
             cpresult = CompileResult(config, sch, rt_mod)
             timer_cuda_mod = rt_mod.time_evaluator(

@@ -4,6 +4,7 @@ from bitblas import tvm
 from tvm.target import Target
 import operator
 from functools import reduce
+from enum import IntEnum
 from bitblas.base.arch.cuda import CUDA
 from typing import Any, Literal, Optional, Tuple, Union
 from ..operator import OperatorConfig, Operator, TransformKind, OPExecutorCPU
@@ -41,6 +42,15 @@ def is_native_compute(A_dtype, W_dtype) -> bool:
     return (A_dtype, W_dtype) in NATIVE_COMPUTE_PATTERNS
 
 
+CONFIG_INFO_MESSAGE_STRATEGY = """Optimization Strategy Notice: You are currently using the "{}" optimization strategy. If you wish to change this, you can do so by setting the `optimize_strategy` in the Config. The **SingleBatchDecodeOnly** strategy provides the best performance when the batch size (M) is 1. On the other hand, the **ContiguousBatching** strategy is optimized for situations where the batch size (M) is greater than 1. However, please note that using ContiguousBatching for M=1 will result in a slight performance decrease of about 5%.
+"""
+
+
+class OptimizeStrategy(IntEnum):
+    SingleBatchDecodeOnly = 0
+    ContigousBatching = 1
+
+
 @dataclass(frozen=True)
 class MatmulConfig(OperatorConfig):
     M: Union[int, Tuple[int]] = None
@@ -75,6 +85,9 @@ class MatmulConfig(OperatorConfig):
         None  # propagate_b is a flag to control the ladder permutation
     )
 
+    # optimize strategy, default is SingleBatchDecodeOnly
+    optimize_stratety: Union[int, OptimizeStrategy] = OptimizeStrategy.SingleBatchDecodeOnly
+
     def __legalize_dynamic_symbolic(self, M):
         return tuple(self.M) if isinstance(self.M, list) else self.M
 
@@ -85,6 +98,11 @@ class MatmulConfig(OperatorConfig):
             return TransformKind(propagate)
 
         return propagate
+
+    def __legalize_optimize_strategy(self, optimize_stratety):
+        if isinstance(optimize_stratety, int):
+            return OptimizeStrategy(optimize_stratety)
+        return optimize_stratety
 
     def __initialize_propagate(self, propagate_a: Optional[TransformKind],
                                propagate_b: Optional[TransformKind]):
@@ -110,6 +128,13 @@ class MatmulConfig(OperatorConfig):
             object.__setattr__(self, "propagate_a", propagate_a)
         if propagate_b is not None:
             object.__setattr__(self, "propagate_b", propagate_b)
+
+        # enhance propagate_b into ldmatrix transform if allowed
+        if (self.optimize_stratety == OptimizeStrategy.ContigousBatching
+                # TODO(lei): Should add ladder stage 3 inverse layout propagation in the expr.
+                # And recover the layout in the schedule template.
+                and (self.M != 1 or (isinstance(self.M, Tuple) and 1 not in self.M))):
+            object.__setattr__(self, "propagate_b", TransformKind.LDMatrixTransform)
 
         # TODO(lei): This is a limitation arose by pytorch and llvm
         # Should be removed in the future.
@@ -144,7 +169,10 @@ class MatmulConfig(OperatorConfig):
     def __post_init__(self):
         # set M to default dynamic range if it is None
         if self.M is None:
-            object.__setattr__(self, "M", [1, 16, 32, 64, 128, 256, 512, 1024])
+            if self.optimize_stratety == OptimizeStrategy.SingleBatchDecodeOnly:
+                object.__setattr__(self, "M", [1, 16, 32, 64, 128, 256, 512, 1024])
+            else:
+                object.__setattr__(self, "M", [16, 32, 64, 128, 256, 512, 1024])
         if self.N is None:
             raise ValueError("N should be specified currently.")
         if self.K is None:
@@ -157,6 +185,10 @@ class MatmulConfig(OperatorConfig):
         # set propagate_a and propagate_b to default value if it is None
         object.__setattr__(self, "propagate_a", self.__legalize_propagate(self.propagate_a))
         object.__setattr__(self, "propagate_b", self.__legalize_propagate(self.propagate_b))
+
+        # set optimize_stratety to legal value
+        object.__setattr__(self, "optimize_stratety",
+                           self.__legalize_optimize_strategy(self.optimize_stratety))
 
         # This is hack to legalize propagate_a and b
         # TODO(lei): should be removed in the future when tc+br template is ready.
@@ -547,7 +579,8 @@ class Matmul(Operator):
 
         if self.lib is None:
             self._forward_from_torch_func(*args)
-        self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
+        else:
+            self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
 
         return output
 
