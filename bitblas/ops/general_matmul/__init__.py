@@ -85,6 +85,8 @@ class MatmulConfig(OperatorConfig):
         None  # propagate_b is a flag to control the ladder permutation
     )
 
+    # TODO: This is a temporary solution to legalize the dynamic symbolic.
+    # Maybe we should remove this in the future.
     # optimize strategy, default is SingleBatchDecodeOnly
     optimize_stratety: Union[int, OptimizeStrategy] = OptimizeStrategy.SingleBatchDecodeOnly
 
