@@ -18,6 +18,9 @@ fi
 if [ -z "$SAVED_MODEL_DIR" ]; then
   python ./maint/create_bitblas_ckpt.py --model_name_or_path $MODEL_DIR
 else
+  if [ ! -d "$SAVED_MODEL_DIR" ]; then
+    mkdir -p $SAVED_MODEL_DIR
+  fi
   python ./maint/create_bitblas_ckpt.py --model_name_or_path $MODEL_DIR --saved_model_path $SAVED_MODEL_DIR
 fi
 
