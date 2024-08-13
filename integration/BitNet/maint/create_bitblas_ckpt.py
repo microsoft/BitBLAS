@@ -68,7 +68,7 @@ def main():
     model = (
         BitnetForCausalLM.from_pretrained(
             model_name_or_path,
-            use_flash_attention_2=True,
+            use_flash_attention_2=False,
             torch_dtype=torch.float16,
         ).cuda().half())
     tokenizer = BitnetTokenizer.from_pretrained(model_name_or_path, use_fast=False)

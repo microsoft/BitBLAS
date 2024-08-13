@@ -72,18 +72,19 @@ model_path = '1bitLLM/bitnet_b1_58-3B'
 def main():
     model = BitnetForCausalLM.from_pretrained(
         model_path,
-        use_flash_attention_2=True,
+        use_flash_attention_2=False,
         torch_dtype=torch.float16,
     ).cuda().half()
-    with torch.no_grad():
-        model._post_process_weights()
 
     tokenizer = BitnetTokenizer.from_pretrained(model_path, use_fast=False)
     input_id = tokenizer("Hello")['input_ids']
     input_id = torch.tensor(input_id).unsqueeze(0).cuda()
-    output = model(input_id)
-    print(output)
 
+    print("original model generated text:")
+    print(generate_text(model, tokenizer, "Hello", max_length=100))
+
+    model.quantize()
+    print("quantized model generated text:")
     print(generate_text(model, tokenizer, "Hello", max_length=100))
 
 
