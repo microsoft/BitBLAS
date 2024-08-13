@@ -87,5 +87,6 @@ def main():
     print("quantized model generated text:")
     print(generate_text(model, tokenizer, "Hello", max_length=100))
 
+
 if __name__ == '__main__':
     main()
