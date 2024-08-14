@@ -43,7 +43,8 @@ class LibraryGenerator(object):
             "--shared",
             src.name,
             "-lcuda",
-            f"-gencode=arch=compute_{compute_version},code=compute_{compute_version}",
+            "-gencode",
+            f"arch=compute_{compute_version},code=sm_{compute_version}",
             "-o",
             libpath,
         ]
