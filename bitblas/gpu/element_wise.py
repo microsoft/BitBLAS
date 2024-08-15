@@ -8,6 +8,7 @@ from typing import List
 from tvm import tir
 
 from ..base import ScheduleRule, normalize_prim_func, try_inline
+from ..base.analysis import get_coalesced_veclen
 
 
 class ElementWise(ScheduleRule):
@@ -38,6 +39,11 @@ class ElementWise(ScheduleRule):
             o_loops: List[tir.schedule.LoopRV] = []
             dom_kind = block.dom_kind()
             block = block.block_rv
+
+            # set vector factors
+            vec_len = get_coalesced_veclen(sch.get(block))
+            vector_factors = [1] * len(block_factors)
+            vector_factors[-1] = vec_len
 
             if (
                 any(
@@ -93,5 +99,10 @@ class ElementWise(ScheduleRule):
 
             for i, ax in enumerate(vthread_loops):
                 sch.bind(ax, "vthread" + [".x", ".y", ".z"][i])
-
+            
+            # vectorize the last axis
+            ax = inner_loops[-1]
+            if sch.get(ax).extent.value > 1:
+                sch.vectorize(ax)
+                
         return sch
