@@ -101,10 +101,10 @@ class BitLinearBitBLAS(nn.Module):
         self.format = "bitblas"
 
     @classmethod
-    def from_bit_linear(cls, bitlinear):
+    def from_bit_linear(cls, bitlinear, weight_group=1):
         bitblas_linear = cls(
             bitlinear.in_features, bitlinear.out_features, weight_bits=1, input_bits=8)
-        sw, qweight = bitblas_linear.create_bitblas_weights(bitlinear.weight)
+        sw, qweight = bitblas_linear.create_bitblas_weights(bitlinear.weight, weight_group)
         bitblas_linear.register_buffer("qweight", qweight)
         bitblas_linear.register_buffer("sw", sw)
         if bitlinear.bias is not None:
@@ -113,11 +113,31 @@ class BitLinearBitBLAS(nn.Module):
             bitblas_linear.bias = None
         return bitblas_linear
 
-    def create_bitblas_weights(self, weight):
-        sw = 1 / weight.abs().mean().clamp(min=1e-5)
-        quant_weight = self.weight_quant(weight).detach()
-        quant_weight = self.bitblas_matmul.transform_weight(quant_weight)
-        qweight = nn.Parameter(quant_weight, requires_grad=False)
+    def create_bitblas_weights(self, weight, weight_group=1):
+        if weight_group:
+            hidden_size = weight.size(0)
+            group_size = hidden_size // weight_group
+
+            sw_list = []
+            qweight_list = []
+
+            for i in range(weight_group):
+                start_idx = i * group_size
+                end_idx = (i + 1) * group_size
+
+                sw = 1 / weight[start_idx:end_idx].abs().mean().clamp(min=1e-5)
+                sw_list.append(sw.repeat(group_size))
+
+                qweight = self.weight_quant(weight[start_idx:end_idx]).detach()
+                qweight_list.append(qweight)
+
+            sw = torch.cat(sw_list, dim=0)
+            qweight = torch.cat(qweight_list, dim=0)
+        else:
+            sw = 1 / weight.abs().mean().clamp(min=1e-5)
+            qweight = self.weight_quant(weight).detach()
+        qweight = self.bitblas_matmul.transform_weight(qweight)
+        qweight = nn.Parameter(qweight, requires_grad=False)
         return sw, qweight
 
     def post_process_weights(self):

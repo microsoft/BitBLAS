@@ -80,7 +80,7 @@ def main():
     output = model(input_ids)
     print("original model output:", output)
 
-    model.quantize()
+    model.quantize(fuse_qkv=True, fuse_gateup=True)
     print("original model generated text:")
     print(generate_text(model, tokenizer, "Hi, ", max_length=100))
 
@@ -93,6 +93,8 @@ def main():
     print("quant config:")
     print(quant_config)
     quant_config["checkpoint_format"] = "bitblas"
+    quant_config["fuse_qkv"] = True
+    quant_config["fuse_gateup"] = True
 
     # save quant config
     quant_config_path = os.path.join(saved_model_path, "quantize_config.json")
