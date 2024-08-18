@@ -52,8 +52,6 @@ def unpack_qweight(qweight, bits):
         i = col % elems_per_int8
         unpacked_weight[:, col] = (qweight[:, col // elems_per_int8] >> (bits * i))
 
-    # Follow the instruction in AutoGPTQ qlinear_cuda_old.py line 303
-    # NOTE: It appears that casting after the `unpacked_zeros  + 1` is important.
     return torch.bitwise_and(unpacked_weight, 2**bits - 1)
 
 
