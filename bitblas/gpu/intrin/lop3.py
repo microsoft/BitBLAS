@@ -1379,7 +1379,7 @@ def get_fast_decode_intrin(
                     1,
                 ],
                 dtype=target_dtype,
-                scope="global",
+                scope="local",
             )
             Zeros = T.match_buffer(
                 zeros,
@@ -1387,7 +1387,7 @@ def get_fast_decode_intrin(
                     1,
                 ],
                 dtype=target_dtype,
-                scope="global",
+                scope="local",
             )
             with T.block("root"):
                 T.reads(*get_dequantize_buffers_list(
@@ -1447,7 +1447,7 @@ def get_fast_decode_intrin(
                 dtype=target_dtype,
                 offset_factor=1,
                 strides=[s0],
-                scope="global",
+                scope="local",
             )
             Zeros = T.match_buffer(
                 zeros,
@@ -1457,7 +1457,7 @@ def get_fast_decode_intrin(
                 dtype=target_dtype,
                 offset_factor=1,
                 strides=[s1],
-                scope="global",
+                scope="local",
             )
             with T.block("root"):
                 T.reads(Compressed[0:n_storage_elems], Scale[0:1], Zeros[0:1])
