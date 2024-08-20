@@ -1028,6 +1028,9 @@ def get_fast_decode_intrin(
     else:
         raise ValueError("Unsupported source_format: {}".format(source_format))
 
+    # As warp memory require scale from scatter memory address, we need to pass the scale as an offset
+    scale_zero_scope = "local" if storage_scope == "local" else "global"
+
     def get_func_arguments(Quant, Dequant, Scale=None, Zeros=None):
         args = [Quant.access_ptr("r"), Dequant.access_ptr("w")]
         if Scale is not None:
@@ -1127,7 +1130,7 @@ def get_fast_decode_intrin(
                     1,
                 ],
                 dtype=target_dtype,
-                scope="global",
+                scope=scale_zero_scope,
             )
             with T.block("root"):
                 T.reads(Compressed[0:n_storage_elems], Scale[0:1])
@@ -1173,7 +1176,7 @@ def get_fast_decode_intrin(
                 dtype=target_dtype,
                 offset_factor=1,
                 strides=[s0],
-                scope="global",
+                scope=scale_zero_scope,
             )
             with T.block("root"):
                 T.reads(Compressed[0:n_storage_elems], Scale[0:1])
@@ -1237,7 +1240,7 @@ def get_fast_decode_intrin(
                     1,
                 ],
                 dtype=target_dtype,
-                scope=storage_scope,
+                scope=scale_zero_scope,
             )
             Zeros = T.match_buffer(
                 zeros,
@@ -1245,7 +1248,7 @@ def get_fast_decode_intrin(
                     1,
                 ],
                 dtype=storage_dtype,
-                scope=storage_scope,
+                scope=scale_zero_scope,
             )
             with T.block("root"):
                 T.reads(*get_dequantize_buffers_list(
@@ -1306,7 +1309,7 @@ def get_fast_decode_intrin(
                 dtype=target_dtype,
                 offset_factor=1,
                 strides=[s0],
-                scope=storage_scope,
+                scope=scale_zero_scope,
             )
             Zeros = T.match_buffer(
                 zeros,
@@ -1316,7 +1319,7 @@ def get_fast_decode_intrin(
                 dtype=storage_dtype,
                 offset_factor=1,
                 strides=[s1],
-                scope=storage_scope,
+                scope=scale_zero_scope,
             )
             with T.block("root"):
                 T.reads(Compressed[0:n_storage_elems], Scale[0:1], Zeros[0:1])
@@ -1379,7 +1382,7 @@ def get_fast_decode_intrin(
                     1,
                 ],
                 dtype=target_dtype,
-                scope="global",
+                scope=scale_zero_scope,
             )
             Zeros = T.match_buffer(
                 zeros,
@@ -1387,7 +1390,7 @@ def get_fast_decode_intrin(
                     1,
                 ],
                 dtype=target_dtype,
-                scope="global",
+                scope=scale_zero_scope,
             )
             with T.block("root"):
                 T.reads(*get_dequantize_buffers_list(
@@ -1447,7 +1450,7 @@ def get_fast_decode_intrin(
                 dtype=target_dtype,
                 offset_factor=1,
                 strides=[s0],
-                scope="global",
+                scope=scale_zero_scope,
             )
             Zeros = T.match_buffer(
                 zeros,
@@ -1457,7 +1460,7 @@ def get_fast_decode_intrin(
                 dtype=target_dtype,
                 offset_factor=1,
                 strides=[s1],
-                scope="global",
+                scope=scale_zero_scope,
             )
             with T.block("root"):
                 T.reads(Compressed[0:n_storage_elems], Scale[0:1], Zeros[0:1])
