@@ -399,7 +399,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
 
     arch = bitblas.base.CUDA(target=target)
 
-    block_reduce_sch = bitblas.gpu.MatmulTensorizationMMAWithDequantizeInfo().sch_warp_memory_prefetch_with_config(
+    block_reduce_sch = bitblas.gpu.MatmulTensorizationMMAWithDequantizeInfo().apply_config(
         matmul_func,
         config=bitblas.base.Hint.from_dict({
             "arch": arch,

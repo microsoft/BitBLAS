@@ -1027,9 +1027,10 @@ def get_fast_decode_intrin(
         decode_func = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)
     else:
         raise ValueError("Unsupported source_format: {}".format(source_format))
-    
+
     # As warp memory require scale from scatter memory address, we need to pass the scale as an offset
     scale_zero_scope = "local" if storage_scope == "local" else "global"
+
     def get_func_arguments(Quant, Dequant, Scale=None, Zeros=None):
         args = [Quant.access_ptr("r"), Dequant.access_ptr("w")]
         if Scale is not None:
