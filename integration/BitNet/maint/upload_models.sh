@@ -32,6 +32,8 @@ git commit -m "Initial commit"
 
 git remote add origin $REMOTE_DIR
 
+huggingface-cli lfs-enable-largefiles .
+
 git fetch origin
 
 git push -f --set-upstream origin main
