@@ -2176,7 +2176,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 warp_size,
                 reduce_k,
             )
-
             return B_dequantized_mat
 
         B_dequantized_mat = warp_memory_dequantize()
