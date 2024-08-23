@@ -7,7 +7,6 @@ torch.manual_seed(0)
 bitblas.set_log_level("DEBUG")
 
 
-@bitblas.testing.require
 def assert_output_with_gptq(m, in_features, out_features, group_size, sym=False):
     try:
         import gptqmodel  # noqa: F401
