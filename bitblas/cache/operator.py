@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+from bitblas.utils import get_default_cache_path
 from bitblas.ops.operator import OperatorConfig, Operator
 from dataclasses import asdict
 import os
@@ -14,7 +15,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-BITBLAS_DATABASE_PATH = os.path.expanduser("~/.cache/bitblas")
+BITBLAS_DATABASE_PATH = get_default_cache_path()
+BITBLAS_WRAPPED_SOURCE_NAME = "wrapper_source.cu"
+BITBLAS_WRAPPED_COMPILED_NAME = "wrapper_compiled.so"
 
 
 class OperatorCache:
@@ -107,17 +110,17 @@ class OperatorCache:
         with open(optimized_file_path, "w") as optimized_file:
             if op_inst.optimized_func is not None:
                 optimized_file.write(op_inst.optimized_func.script(show_meta=False))
-        if op_inst.wrapper.lib_name is not None:
+        if op_inst.libpath is not None:
             # copy lib name to the same directory as the artifact
-            src_name = op_inst.wrapper.src_name
+            srcpath = op_inst.srcpath
             shutil.copy(
-                src_name,
-                os.path.join(config_path, os.path.basename("wrapper_source.cu")),
+                srcpath,
+                os.path.join(config_path, os.path.basename(BITBLAS_WRAPPED_SOURCE_NAME)),
             )
-            lib_name = op_inst.wrapper.lib_name
+            libpath = op_inst.libpath
             shutil.copy(
-                lib_name,
-                os.path.join(config_path, os.path.basename("wrapper_compiled.so")),
+                libpath,
+                os.path.join(config_path, os.path.basename(BITBLAS_WRAPPED_COMPILED_NAME)),
             )
 
     def _determine_target_arch_str(self, target):
@@ -130,7 +133,7 @@ class OperatorCache:
                 self._load_operator(config_path, target)
 
     def _load_operator(self, config_path, target):
-        mapping, config, rt_mod, src_name, lib_name = None, None, None, None, None
+        mapping, config, rt_mod, srcpath, libpath = None, None, None, None, None
         for file in os.listdir(config_path):
             full_path = os.path.join(config_path, file)
             if file == "mapping.json":
@@ -141,27 +144,33 @@ class OperatorCache:
                     config = json.load(f)
             elif file.endswith(".tar"):
                 rt_mod = tvm.runtime.load_module(full_path)
-            elif file == "wrapper_compiled.so":
-                lib_name = full_path
-            elif file == "wrapper_source.cu":
-                src_name = full_path
+            elif file == BITBLAS_WRAPPED_COMPILED_NAME:
+                libpath = full_path
+            elif file == BITBLAS_WRAPPED_SOURCE_NAME:
+                srcpath = full_path
 
         if mapping and config and rt_mod:
-            self._instantiate_and_add_operator(mapping, config, rt_mod, src_name, lib_name, target)
+            self._instantiate_and_add_operator(mapping, config, rt_mod, srcpath, libpath, target)
 
-    def _instantiate_and_add_operator(self, mapping, config, rt_mod, src_name, lib_name, target):
+    def _instantiate_and_add_operator(self, mapping, config, rt_mod, srcpath, libpath, target):
         config_cls = getattr(bitblas, mapping["config_type"])
         operator_cls = getattr(bitblas, mapping["operator_type"])
         op_inst = operator_cls(
-            config=config_cls(**config), target=target, enable_tuning=False, from_database=True)
-        op_inst.update_runtime_module(rt_mod, src_name=src_name, lib_name=lib_name)
+            config=config_cls(**config),
+            target=target,
+            enable_tuning=False,
+            from_database=True,
+        )
+        op_inst.update_runtime_module(rt_mod, srcpath=srcpath, libpath=libpath)
         self.add(config_cls(**config), op_inst)
 
 
 global_operator_cache = OperatorCache()
 
 
-def load_global_ops_cache(database_path=BITBLAS_DATABASE_PATH, target=None):
+def load_global_ops_cache(database_path=None, target=None):
+    if database_path is None:
+        database_path = get_database_path()
     if target is None:
         target = bitblas.auto_detect_nvidia_target()
     logger.info(f"Loading operators from database {database_path} for target {target}")

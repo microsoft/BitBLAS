@@ -46,7 +46,7 @@ fi
 
 echo "Download and extraction completed successfully."
 
-LLVM_CONFIG_PATH="${EXTRACT_PATH}/$(basename ${FILE_NAME} .tar.xz)/bin/llvm-config"
+LLVM_CONFIG_PATH="$(realpath ${EXTRACT_PATH}/$(basename ${FILE_NAME} .tar.xz)/bin/llvm-config)"
 echo "LLVM config path: $LLVM_CONFIG_PATH"
 
 # clone and build tvm
@@ -56,7 +56,7 @@ cd 3rdparty/tvm
 mkdir build
 cp cmake/config.cmake build
 cd build
-echo "set(USE_LLVM $LLVM_CONFIG_PATH)" >> config.cmake && echo "set(USE_CUDA ON)" >> config.cmake
+echo "set(USE_LLVM $LLVM_CONFIG_PATH)" >> config.cmake && echo "set(USE_CUDA /usr/local/cuda)" >> config.cmake
 
 cmake .. && make -j && cd ../../..
 

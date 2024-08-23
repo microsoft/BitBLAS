@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 _TYPE_MAP = {
     "float32": "float",
     "float16": "half",
-    "bfloat16": "__nv_bfloat162",
+    "bfloat16": "__nv_bfloat16",
     "e4m3_float8": "__nv_fp8_e4m3",
     "e5m2_float8": "__nv_fp8_e5m2",
     "float64": "double",
@@ -131,23 +131,23 @@ class CUDASourceWrapper(object):
         self.block_info: Union[List[int], Dict] = [1, 1, 1]
         self.grid_info: Union[List[int], Dict] = [1, 1, 1]
         self.parse_source_information()
-        self.src_name: Optional[str] = None
-        self.lib_name: Optional[str] = None
+        self.srcpath: Optional[str] = None
+        self.libpath: Optional[str] = None
         self.lib_code: Optional[str] = self.update_lib_code(source)
 
     def load_lib(self):
-        return ctypes.CDLL(self.lib_name)
+        return ctypes.CDLL(self.libpath)
 
     def remove_lib(self):
-        if self.lib_name:
-            os.remove(self.lib_name)
-        self.lib_name = None
+        if self.libpath:
+            os.remove(self.libpath)
+        self.libpath = None
 
     def compile_lib(self, timeout: float = None):
         arch = self.arch
         src = tempfile.NamedTemporaryFile(mode="w", suffix=".cu", delete=False)
         compute_version = arch.compute_capability
-        lib_name = src.name.replace(".cu", ".so")
+        libpath = src.name.replace(".cu", ".so")
 
         command = [
             "nvcc",
@@ -160,9 +160,10 @@ class CUDASourceWrapper(object):
             "--shared",
             src.name,
             "-lcuda",
-            f"-gencode=arch=compute_{compute_version},code=compute_{compute_version}",
+            "-gencode",
+            f"arch=compute_{compute_version},code=sm_{compute_version}",
             "-o",
-            lib_name,
+            libpath,
         ]
         src.write(self.lib_code)
         src.flush()
@@ -174,8 +175,8 @@ class CUDASourceWrapper(object):
         if ret.returncode != 0:
             logger.warning(f"Compilation Failed! {command}")
             return None
-        self.src_name = src.name
-        self.lib_name = lib_name
+        self.srcpath = src.name
+        self.libpath = libpath
 
     def parse_source_information(self):
         device_mod = get_annotated_device_mod(self.mod, self.arch.target)

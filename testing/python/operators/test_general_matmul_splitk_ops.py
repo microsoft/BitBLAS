@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import pytest
+
 import bitblas
 from bitblas.ops.general_matmul_splitk import MatmulWithSplitK, MatmulConfigWithSplitK
 
@@ -11,8 +11,8 @@ def get_codegen_result(ops):
 
 
 # fmt: off
-def matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout,
-                                with_bias, group_size, with_scaling, with_zeros, zeros_mode):
+def matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias,
+                           group_size, with_scaling, with_zeros, zeros_mode):
 
     matmul_config = MatmulConfigWithSplitK(
         M=M,
@@ -36,15 +36,15 @@ def matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, la
 
 
 def test_matmul_codegen_default():
-    matmul_codegen_default(1, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
-         None)
-    matmul_codegen_default(16, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False, False,
-        None)
+    matmul_codegen_default(1, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False,
+                           -1, False, False, None)
+    matmul_codegen_default(16, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False,
+                           -1, False, False, None)
 
 
 def matmul_torch_forward_consistent(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
-                                         layout, with_bias, group_size, with_scaling, with_zeros,
-                                         zeros_mode):
+                                    layout, with_bias, group_size, with_scaling, with_zeros,
+                                    zeros_mode):
     import torch
     torch.random.manual_seed(0)
     matmul_config = MatmulConfigWithSplitK(
@@ -77,15 +77,16 @@ def matmul_torch_forward_consistent(SplitK, M, N, K, A_dtype, W_dtype, accum_dty
     output_torch = torch.matmul(inputs[0], inputs[1].t() if layout == "nt" else inputs[1])
     torch.testing.assert_close(output_bitblas, output_torch, rtol=1e-2, atol=1e-1)
 
-def test_matmul_torch_forward_consistent():
-    matmul_torch_forward_consistent(1, 1, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False,
-         False, None)
-    matmul_torch_forward_consistent(4, 1, 4096, 12800, "float16", "float16", "float16", "float16", "nt", False, -1, False,
-         False, None)
 
-def matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
-                                      layout, with_bias, group_size, with_scaling, with_zeros,
-                                      zeros_mode):
+def test_matmul_torch_forward_consistent():
+    matmul_torch_forward_consistent(1, 1, 4096, 12800, "float16", "float16", "float16", "float16",
+                                    "nt", False, -1, False, False, None)
+    matmul_torch_forward_consistent(4, 1, 4096, 12800, "float16", "float16", "float16", "float16",
+                                    "nt", False, -1, False, False, None)
+
+
+def matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout,
+                                 with_bias, group_size, with_scaling, with_zeros, zeros_mode):
     import torch
     torch.random.manual_seed(0)
     matmul_config = MatmulConfigWithSplitK(
@@ -135,7 +136,7 @@ def matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype,
     matmul.forward(torch_a, torch_b)
     print("torch_ref_out", ref_out)
     print("bitblas_out", bitblas_out)
-    
+
     matmul.forward(torch_a, torch_b, output=bitblas_out)
     print("torch_ref_out", ref_out)
     print("bitblas_out", bitblas_out)
@@ -146,12 +147,14 @@ def matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype,
 
     torch.testing.assert_close(bitblas_out, ref_out, rtol=1e0, atol=1e-1)
 
+
 @bitblas.testing.requires_cuda_compute_version(8, 9)
 def test_matmul_torch_forward_fp8e4m3():
-    matmul_torch_forward_fp8e4m3(1, 16, 4096, 12800, "e4m3_float8", "e4m3_float8", "float32", "float16", "nt", False, -1, False,
-         False, None)
-    matmul_torch_forward_fp8e4m3(4, 16, 4096, 12800, "e4m3_float8", "e4m3_float8", "float32", "float16", "nt", False, -1, False,
-         False, None)
+    matmul_torch_forward_fp8e4m3(1, 16, 4096, 12800, "e4m3_float8", "e4m3_float8", "float32",
+                                 "float16", "nt", False, -1, False, False, None)
+    matmul_torch_forward_fp8e4m3(4, 16, 4096, 12800, "e4m3_float8", "e4m3_float8", "float32",
+                                 "float16", "nt", False, -1, False, False, None)
+
 
 # fmt: on
 if __name__ == "__main__":

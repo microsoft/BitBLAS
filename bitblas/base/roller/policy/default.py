@@ -9,7 +9,7 @@ from typing import Iterable, Dict, List, Optional
 import numpy as np
 from bitblas import tvm
 
-from ..arch import TileDevice
+from ...arch import TileDevice
 from ..bestfit import BestFit
 from ..hint import Hint, Stride, TileDict
 from .common import coalesced_factor, coalesced_tensor_shape, factorize, get_all_factors

@@ -91,11 +91,11 @@ def tvm_tensor_to_torch(tensor: Union[tvm.te.Tensor, tvm.nd.NDArray]):
     else:
         raise RuntimeError("Not supported type: ", type(tensor))
 
+
 def lazy_tvm_tensor_to_torch(tensor: Union[tvm.te.Tensor, tvm.nd.NDArray]):
     # It additionally needs the ctypes type as torch type
     def as_tensor(address, shape, elems_inbytes, torch_type):
-        arr = (ctypes.c_int8 * elems_inbytes).from_address(
-            address)
+        arr = (ctypes.c_int8 * elems_inbytes).from_address(address)
         return torch.frombuffer(arr, dtype=torch_type).view(*shape)
 
     if isinstance(tensor, tvm.nd.NDArray):
@@ -110,11 +110,11 @@ def lazy_tvm_tensor_to_torch(tensor: Union[tvm.te.Tensor, tvm.nd.NDArray]):
     else:
         raise RuntimeError("Not supported type: ", type(tensor))
 
+
 def lazy_torch_to_tvm_tensor(tensor):
     # It additionally needs the ctypes type as torch type
     def as_tensor(address, shape, elems_inbytes, numpy_type):
-        arr = (ctypes.c_int8 * elems_inbytes).from_address(
-            address)
+        arr = (ctypes.c_int8 * elems_inbytes).from_address(address)
         return np.frombuffer(arr, dtype=numpy_type).reshape(shape)
 
     if isinstance(tensor, torch.Tensor):
@@ -122,9 +122,24 @@ def lazy_torch_to_tvm_tensor(tensor):
         shape = tensor.shape
         torch_dtype = tensor.dtype
         numpy_dtype = str(torch_dtype).replace("torch.", "")
-        num_elems_inbytes  = prod(shape) * tensor.itemsize
+        num_elems_inbytes = prod(shape) * tensor.itemsize
         np_tensor = as_tensor(data_ptr, shape, num_elems_inbytes, numpy_dtype)
         tvm_tensor = tvm.nd.array(np_tensor)
         return tvm_tensor
     else:
         raise RuntimeError("Not supported type: ", type(tensor))
+
+
+def np_float2np_bf16(arr):
+    """Convert a numpy array of float to a numpy array
+    of bf16 in uint16"""
+    orig = arr.view("<u4")
+    bias = np.bitwise_and(np.right_shift(orig, 16), 1) + 0x7FFF
+    return np.right_shift(orig + bias, 16).astype("uint16")
+
+
+def np_bf162np_float(arr):
+    """Convert a numpy array of bf16 (uint16) to a numpy array
+    of float"""
+    u32 = np.left_shift(arr.astype("uint32"), 16)
+    return u32.view("<f4")

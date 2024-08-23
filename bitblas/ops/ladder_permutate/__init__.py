@@ -2,9 +2,10 @@
 # Licensed under the MIT License.
 from tvm.target import Target
 from typing import Literal, Union
-from .operator import Operator
-from .impl.ladder_permutate_impl import select_implementation
+from ..operator import Operator
+from .ladder_permutate_impl import select_implementation
 from dataclasses import dataclass
+import torch
 
 
 @dataclass(frozen=True)
@@ -56,6 +57,23 @@ class LadderPermutate(Operator):
             transform_kind=self.transform_kind,
             target_instruction=self.target_instruction,
         )
+
+    def forward(self, inp, out=None):
+        if out is None:
+            out_shape, out_dtype = self.retrieve_output_shape()
+            out = torch.zeros(out_shape, dtype=out_dtype).to(inp.device)
+        self.torch_func(inp, out)
+        return out
+
+    def retrieve_output_shape(self):
+        """
+        Retrieve the output shape of the operator
+        """
+        func = self.prim_func
+        param = func.params[-1]
+        assert param in func.buffer_map, f"param {param} not in buffer_map"
+        arg = func.buffer_map[param]
+        return [int(i) for i in arg.shape], getattr(torch, arg.dtype)
 
     @property
     def M(self):

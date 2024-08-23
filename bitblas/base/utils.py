@@ -13,13 +13,15 @@ from tvm.tir import Schedule
 from tvm.relax.expr import Function
 import bitblas
 from .analysis import get_root_block, get_reduction_blocks, find_var_from_func
-from bitblas.base.roller.arch import CUDA
+from bitblas.base.arch import CUDA
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 import tempfile
 import itertools
 from tvm.ir.supply import GlobalVarSupply
 from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
+from bitblas.utils.tensor_adapter import (
+    np_float2np_bf16,)
 import logging
 
 logger = logging.getLogger(__name__)
@@ -51,12 +53,14 @@ class CompileResult:
         self.mod = mod
         self.code = mod.imported_modules[0].get_source() if mod else None
         self.latency = 1e9
-        self.profile_tensors = []
         self.time_evaluator = None
 
-    def profile(self):
-        profile_tensors = self.profile_tensors
-        return self.time_evaluator(*profile_tensors).mean * 1e3
+    def profile(self, data_distribution="uniform"):
+        func = self.sch.mod["main"]
+        device = self.config.arch.device
+        profile_tensors = get_dummy_input_arrays(func, device, distribution=data_distribution)
+        latency = self.time_evaluator(*profile_tensors).mean * 1e3
+        return latency
 
 
 def _apply_config(
@@ -147,17 +151,21 @@ def get_dummy_input_arrays(
 
         numpy_dtype = map_numpy_type(arg.dtype)
         if distribution == "uniform":
-            profile_tensors.append(
-                tvm.nd.array(
-                    np.random.rand(*[var_wrapper(i) for i in arg.shape]).astype(numpy_dtype),
-                    device=device,
-                ))
+            data_np = np.random.rand(*[var_wrapper(i) for i in arg.shape])
+            if arg.dtype == "bfloat16":
+                profile_tensors.append(
+                    tvm.nd.empty(data_np.shape, device=device, dtype=arg.dtype).copyfrom(
+                        np_float2np_bf16(data_np.astype(np.float32))))
+            else:
+                profile_tensors.append(tvm.nd.array(data_np.astype(numpy_dtype), device=device))
         elif distribution == "onefill":
-            profile_tensors.append(
-                tvm.nd.array(
-                    np.ones([var_wrapper(i) for i in arg.shape]).astype(numpy_dtype),
-                    device=device,
-                ))
+            data_np = np.ones(*[var_wrapper(i) for i in arg.shape])
+            if arg.dtype == "bfloat16":
+                profile_tensors.append(
+                    tvm.nd.empty(data_np.shape, device=device,
+                                 dtype=arg.dtype).copyfrom(np_float2np_bf16(data_np)))
+            else:
+                profile_tensors.append(tvm.nd.array(data_np.astype(numpy_dtype), device=device))
         else:
             raise ValueError("Not supported distribution: ", distribution)
     return profile_tensors
@@ -172,7 +180,6 @@ def apply_and_build_parallel(func,
                              data_distribution="uniform") -> CompileResult:
     cpresults = []
 
-    profile_tensors = get_dummy_input_arrays(func, arch.device, distribution=data_distribution)
     max_workers = min(len(configs), os.cpu_count(), max_workers)
 
     # apply config in thread parallel
@@ -209,7 +216,11 @@ def apply_and_build_parallel(func,
             code = tensor_remove_make_int2(code)
             return code
 
-        with tvm.transform.PassContext(config={"tir.use_async_copy": True, **config.pass_context}):
+        with tvm.transform.PassContext(config={
+                "tir.use_async_copy": True,
+                "tir.disable_cse_tir": True,
+                **config.pass_context
+        }):
             rt_mod = tvm.build(mod, target=arch.target)
 
         from tvm.contrib.tar import tar  # pylint: disable=import-outside-toplevel
@@ -233,16 +244,16 @@ def apply_and_build_parallel(func,
             continue
         elif map_result.status == StatusKind.COMPLETE:
             idx, code, artifact_path = map_result.value
-            if artifact_path is None:
-                logger.debug("Artifact path is None")
-                continue
             sch = _sched[idx]
             config = configs[idx]
+            if artifact_path is None:
+                ARTIFACT_NOT_FOUND = f"Apply config {config} failed, artifact path is None"
+                logger.debug(ARTIFACT_NOT_FOUND)
+                continue
             rt_mod = tvm.runtime.load_module(artifact_path)
             cpresult = CompileResult(config, sch, rt_mod)
             timer_cuda_mod = rt_mod.time_evaluator(
                 rt_mod.entry_name, arch.device, number=num_repeats)
-            cpresult.profile_tensors = profile_tensors
             cpresult.time_evaluator = timer_cuda_mod
             cpresult.code = code
             cpresults.append(cpresult)
@@ -256,7 +267,7 @@ def apply_and_build_parallel(func,
     for cpresult in cpresults:
         config = cpresult.config
         try:
-            latency = cpresult.profile()
+            latency = cpresult.profile(data_distribution=data_distribution)
         except Exception as e_mesg:
             logger.debug(f"Evaluation with config failed {e_mesg}")
             continue

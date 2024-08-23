@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 import bitblas
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
-from bitblas.base.roller.arch import CUDA
+from bitblas.base.arch import CUDA
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.gpu import Matmul
 from bitblas.utils import auto_detect_nvidia_target
@@ -14,6 +14,7 @@ from bitblas.ops.impl.matmul_dequantize_impl import (
 import tvm
 import time
 import argparse
+
 bitblas.set_log_level("DEBUG")
 # append a parser for the benchmark set
 

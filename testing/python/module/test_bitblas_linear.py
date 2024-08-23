@@ -6,21 +6,12 @@ import torch
 import time
 import numpy as np
 import torch.nn as nn
-import pytest
 
 torch.manual_seed(0)
 bitblas.set_log_level("DEBUG")
 
-@pytest.mark.parametrize(
-    "m, in_features, out_features, bias",
-    [
-        (1, 1024, 1024, False),
-        (1, 1024, 1024, True),
-        (1024, 1024, 1024, True),
-        ([1, 1024], 1024, 1024, True),
-    ],
-)
-def test_correctness_consistent(m, in_features, out_features, bias):
+
+def correctness_consistent(m, in_features, out_features, bias):
     linear_torch = (nn.Linear(in_features, out_features, bias=bias).to(torch.float16).cuda())
     linear_bitblas = BitBLASLinear(
         in_features,
@@ -48,19 +39,14 @@ def test_correctness_consistent(m, in_features, out_features, bias):
     torch.testing.assert_close(output_torch, output_bitblas, rtol=1e-1, atol=1e-2)
 
 
-@pytest.mark.parametrize(
-    "m, in_features, out_features, bias, W_dtype, group_size, with_scaling, with_zeros, zeros_mode",
-    [
-        (1, 1024, 1024, False, "uint4", -1, False, False, None),
-        (1, 1024, 1024, False, "uint4", -1, False, False, None),
-        (1024, 1024, 1024, True, "uint4", -1, False, False, None),
-        (1, 1024, 1024, True, "uint2", -1, True, False, None),
-        (1, 1024, 1024, True, "uint2", 128, True, True, "original"),
-        (1024, 1024, 1024, True, "uint2", 128, True, True, "original"),
-        (1, 1024, 1024, True, "uint2", 128, True, True, "rescale"),
-    ],
-)
-def test_correctness_weight_only_dequantize(
+def test_correctness_consistent():
+    correctness_consistent(1, 1024, 1024, False)
+    correctness_consistent(1, 1024, 1024, True)
+    correctness_consistent(1024, 1024, 1024, True)
+    correctness_consistent([1, 1024], 1024, 1024, True)
+
+
+def correctness_weight_only_dequantize(
     m,
     in_features,
     out_features,
@@ -73,7 +59,9 @@ def test_correctness_weight_only_dequantize(
 ):
     import numpy as np
     from bitblas.quantization.utils import general_compress
+    from bitblas.cache import global_operator_cache
 
+    global_operator_cache.clear()
     linear_bitblas = BitBLASLinear(
         in_features,
         out_features,
@@ -112,7 +100,7 @@ def test_correctness_weight_only_dequantize(
     inputs.append(torch.rand(output_shape, dtype=torch.float16).cuda())
 
     intweight = inputs[1]
-    intweight = intweight.cpu().numpy().astype(np.int8)
+    intweight = intweight.cpu().to(torch.int8)
     if source_format == "int":
         intweight = intweight + maxq
     if with_zeros:
@@ -123,15 +111,13 @@ def test_correctness_weight_only_dequantize(
         ref_result = ref_result + bias_tensor
 
     with torch.no_grad():
-        qw_np = general_compress(intweight, source_bits=bit, storage_dtype=np.int8)
-        qw_torch = torch.from_numpy(qw_np).cuda()
         permuted_inputs = []
         permuted_inputs.append(inputs[0])
         if linear_bitblas.bitblas_matmul.weight_transform is not None:
             permuted_inputs.append(
-                linear_bitblas.bitblas_matmul.weight_transform(qw_torch.cpu()).cuda())
+                linear_bitblas.bitblas_matmul.weight_transform(intweight.cpu()).cuda())
         else:
-            permuted_inputs.append(qw_torch)
+            permuted_inputs.append(inputs[1])
         linear_bitblas.qweight.data = permuted_inputs[-1].clone()
         if with_scaling:
             if group_size == -1:
@@ -167,6 +153,16 @@ def test_correctness_weight_only_dequantize(
     with torch.no_grad():
         output_bitblas = linear_bitblas(inputs[0])
     torch.testing.assert_close(output_bitblas, ref_result, rtol=1e0, atol=1e0)
+
+
+def test_correctness_weight_only_dequantize():
+    correctness_weight_only_dequantize(1, 1024, 1024, False, "uint4", -1, False, False, None)
+    correctness_weight_only_dequantize(1, 1024, 1024, False, "uint4", -1, False, False, None)
+    correctness_weight_only_dequantize(1024, 1024, 1024, True, "uint4", -1, False, False, None)
+    correctness_weight_only_dequantize(1, 1024, 1024, True, "uint2", -1, True, False, None)
+    correctness_weight_only_dequantize(1, 1024, 1024, True, "uint2", 128, True, True, "original")
+    correctness_weight_only_dequantize(1024, 1024, 1024, True, "uint2", 128, True, True, "original")
+    correctness_weight_only_dequantize(1, 1024, 1024, True, "uint2", 128, True, True, "rescale")
 
 
 def profile(model, input_data):

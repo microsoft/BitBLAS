@@ -4,17 +4,18 @@ from bitblas import tvm
 from tvm.target import Target
 import operator
 from functools import reduce
-from bitblas.base.roller.arch.cuda import CUDA
+from enum import IntEnum
+from bitblas.base.arch.cuda import CUDA
 from typing import Any, Literal, Optional, Tuple, Union
-from .operator import Operator, TransformKind, OPExecutorCPU
-from .impl.matmul_dequantize_impl import (
-    select_implementation as weight_dequantize_implementation,)
-from .impl.matmul_impl import select_implementation as consistent_implementation
-from ..base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
+from ..operator import OperatorConfig, Operator, TransformKind, OPExecutorCPU
+from .tirscript.matmul_dequantize_impl import select_implementation as weight_dequantize_implementation
+from .tirscript.matmul_impl import select_implementation as consistent_implementation
+from ...base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
 from bitblas.utils.target_detector import auto_detect_nvidia_target
 from dataclasses import dataclass
-from .ladder_permutate import LadderPermutate, LadderPermutateConfig
-from .lop3_permutate import LOP3Permutate, LOP3PermutateConfig
+from ..ladder_permutate import LadderPermutate, LadderPermutateConfig
+from ..quant_compress import QuantCompress, QuantCompressConfig
+from ..lop3_permutate import LOP3Permutate, LOP3PermutateConfig
 import logging
 import torch
 
@@ -29,6 +30,7 @@ NATIVE_COMPUTE_PATTERNS = [
     ("float64", "float64"),
     ("float32", "float32"),
     ("float16", "float16"),
+    ("bfloat16", "bfloat16"),
     ("int8", "int8"),
     ("e4m3_float8", "e4m3_float8"),
     ("e4m3_float8", "e5m2_float8"),
@@ -41,8 +43,17 @@ def is_native_compute(A_dtype, W_dtype) -> bool:
     return (A_dtype, W_dtype) in NATIVE_COMPUTE_PATTERNS
 
 
+CONFIG_INFO_MESSAGE_STRATEGY = """Optimization Strategy Notice: You are currently using the "{}" optimization strategy. If you wish to change this, you can do so by setting the `optimize_strategy` in the Config. The **SingleBatchDecodeOnly** strategy provides the best performance when the batch size (M) is 1. On the other hand, the **ContiguousBatching** strategy is optimized for situations where the batch size (M) is greater than 1. However, please note that using ContiguousBatching for M=1 will result in a slight performance decrease of about 5%.
+"""
+
+
+class OptimizeStrategy(IntEnum):
+    SingleBatchDecodeOnly = 0
+    ContigousBatching = 1
+
+
 @dataclass(frozen=True)
-class MatmulConfig:
+class MatmulConfig(OperatorConfig):
     M: Union[int, Tuple[int]] = None
     N: int = None
     K: int = None
@@ -75,6 +86,11 @@ class MatmulConfig:
         None  # propagate_b is a flag to control the ladder permutation
     )
 
+    # TODO: This is a temporary solution to legalize the dynamic symbolic.
+    # Maybe we should remove this in the future.
+    # optimize strategy, default is SingleBatchDecodeOnly
+    optimize_stratety: Union[int, OptimizeStrategy] = OptimizeStrategy.SingleBatchDecodeOnly
+
     def __legalize_dynamic_symbolic(self, M):
         return tuple(self.M) if isinstance(self.M, list) else self.M
 
@@ -86,6 +102,11 @@ class MatmulConfig:
 
         return propagate
 
+    def __legalize_optimize_strategy(self, optimize_stratety):
+        if isinstance(optimize_stratety, int):
+            return OptimizeStrategy(optimize_stratety)
+        return optimize_stratety
+
     def __initialize_propagate(self, propagate_a: Optional[TransformKind],
                                propagate_b: Optional[TransformKind]):
         MICRO_KERNEL_SIZE = 16
@@ -93,7 +114,7 @@ class MatmulConfig:
             # Currently we do not support propagate_a when propagate_b is not transformed.
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
         elif (isinstance(self.M, int) and (self.M % MICRO_KERNEL_SIZE) == 0 and
-            (self.K % MICRO_KERNEL_SIZE) == 0):
+              (self.K % MICRO_KERNEL_SIZE) == 0):
             object.__setattr__(self, "propagate_a", TransformKind.IntraWarpTransform)
         else:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
@@ -111,9 +132,16 @@ class MatmulConfig:
         if propagate_b is not None:
             object.__setattr__(self, "propagate_b", propagate_b)
 
+        # enhance propagate_b into ldmatrix transform if allowed
+        if (self.optimize_stratety == OptimizeStrategy.ContigousBatching
+                # TODO(lei): Should add ladder stage 3 inverse layout propagation in the expr.
+                # And recover the layout in the schedule template.
+                and (self.M != 1 or (isinstance(self.M, Tuple) and 1 not in self.M))):
+            object.__setattr__(self, "propagate_b", TransformKind.LDMatrixTransform)
+
         # TODO(lei): This is a limitation arose by pytorch and llvm
         # Should be removed in the future.
-        if self.A_dtype in ["e4m3_float8", "e5m2_float8"]:
+        if self.A_dtype in ["e4m3_float8", "e5m2_float8", "bfloat16"]:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
             object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
 
@@ -129,6 +157,12 @@ class MatmulConfig:
             conditions.append(self.W_dtype == self.A_dtype)
             # int8,uint8 also do not implement and also do not require fast decoding
             conditions.append(self.W_dtype in ["int8", "uint8"])
+            # if the w_dtype is int4/uint4 and the a_dtype is int8
+            # we do not require fast decoding
+            conditions.append(self.W_dtype in ["int4", "uint4"] and self.A_dtype in ["int8"])
+            # do not support bfloat16 currently
+            # TODO(lei): should implement to improve the performance
+            conditions.append(self.A_dtype == "bfloat16")
             return any(conditions)
 
         if fast_decoding is not None:
@@ -141,7 +175,10 @@ class MatmulConfig:
     def __post_init__(self):
         # set M to default dynamic range if it is None
         if self.M is None:
-            object.__setattr__(self, "M", [1, 16, 32, 64, 128, 256, 512, 1024])
+            if self.optimize_stratety == OptimizeStrategy.SingleBatchDecodeOnly:
+                object.__setattr__(self, "M", [1, 16, 32, 64, 128, 256, 512, 1024])
+            else:
+                object.__setattr__(self, "M", [16, 32, 64, 128, 256, 512, 1024])
         if self.N is None:
             raise ValueError("N should be specified currently.")
         if self.K is None:
@@ -154,6 +191,10 @@ class MatmulConfig:
         # set propagate_a and propagate_b to default value if it is None
         object.__setattr__(self, "propagate_a", self.__legalize_propagate(self.propagate_a))
         object.__setattr__(self, "propagate_b", self.__legalize_propagate(self.propagate_b))
+
+        # set optimize_stratety to legal value
+        object.__setattr__(self, "optimize_stratety",
+                           self.__legalize_optimize_strategy(self.optimize_stratety))
 
         # This is hack to legalize propagate_a and b
         # TODO(lei): should be removed in the future when tc+br template is ready.
@@ -177,6 +218,7 @@ class MatmulConfig:
 
         if self.A_dtype == self.W_dtype and self.W_dtype in [
                 "float16",
+                "bfloat16",
                 "int8",
                 "e4m3_float8",
                 "e5m2_float8",
@@ -186,11 +228,12 @@ class MatmulConfig:
 
 class Matmul(Operator):
 
-    # TODO(lei): This should be improved into a general datatype.
+    # TODO(lei): This should be improved into a general datatype class.
     BITBLAS_TRICK_DTYPE_MAP = {
         "float64": ("fp", 64),
         "float32": ("fp", 32),
         "float16": ("fp", 16),
+        "bfloat16": ("bf", 16),
         "int32": ("int", 32),
         "uint32": ("uint", 32),
         "int16": ("int", 16),
@@ -216,18 +259,25 @@ class Matmul(Operator):
         target: Optional[Union[str, Target]] = None,
         enable_tuning: bool = True,
         from_database: bool = False,
+        backend: str = "tir",
     ):
         # if from database, we should disable default schedule
         # to save compilation time
         if target is None:
             target = auto_detect_nvidia_target()
             logger.info(f"Auto detected target: {target}")
+
         assert (config.A_dtype
                 in self.BITBLAS_TRICK_DTYPE_MAP), f"Unsupported input dtype {config.A_dtype}"
+
+        assert (config.W_dtype
+                in self.BITBLAS_TRICK_DTYPE_MAP), f"Unsupported weight dtype {config.W_dtype}"
+
         source_format, bit = self.BITBLAS_TRICK_DTYPE_MAP[config.W_dtype]
 
         self.source_format = source_format
         self.bit = bit
+        self.backend = backend
         super().__init__(name, config, target)
 
         if source_format == "int" and self.with_zeros:
@@ -239,6 +289,14 @@ class Matmul(Operator):
         if target.kind.name != "cuda":
             raise ValueError("Currently only support cuda target")
 
+        self.dispatch_tir(target, from_database, source_format, enable_tuning)
+
+    def dispatch_tir(self,
+                     target: Target,
+                     from_database: bool = False,
+                     source_format: str = "uint",
+                     enable_tuning: bool = True):
+        '''Dispatch the tir script implementation'''
         self.arch = CUDA(target)
 
         if isinstance(self.M, Tuple):
@@ -252,77 +310,6 @@ class Matmul(Operator):
             self._build_default_module(target)
 
         self.workspace = None
-        if self.propagate_a:
-            # for general purpose, we use propagate_a to control the ladder permutation.
-            ladder_permutate_config = LadderPermutateConfig(
-                M=self.M,
-                N=self.K,
-                datatype=self.A_dtype,
-                storage_dtype=self.A_dtype,
-                propagate_kind="A",
-                transpose_matrix=False,
-                transform_kind=self.propagate_a,
-            )
-            self.ladder_permutate_a = LadderPermutate(
-                config=ladder_permutate_config,
-                target=target,
-                enable_tuning=enable_tuning,
-            )
-            self.workspace = torch.empty(WORKSPACE_SIZE, dtype=torch.float16).cuda()
-        else:
-            self.ladder_permutate_a = None
-
-        if self.propagate_b:
-            ladder_permutate_config = LadderPermutateConfig(
-                M=self.N,
-                N=self.K,
-                datatype=self.A_dtype,
-                dequantize_bits=self.bit,
-                storage_dtype=self.storage_dtype,
-                propagate_kind="B",
-                transpose_matrix=self.layout == "nt",
-                transform_kind=self.propagate_b,
-            )
-            self.ladder_permutate_b = LadderPermutate(
-                config=ladder_permutate_config,
-                target=tvm.target.Target("llvm"),
-            )
-        else:
-            self.ladder_permutate_b = None
-
-        if self.fast_decoding:
-            assert self.source_format in ["int", "uint"]
-            lop3_permutate_config = LOP3PermutateConfig(
-                M=self.N,
-                N=self.K,
-                datatype=self.A_dtype,
-                dequantize_bits=self.bit,
-                storage_dtype=self.storage_dtype,
-            )
-            self.lop3_permutate = LOP3Permutate(
-                config=lop3_permutate_config,
-                target=tvm.target.Target("llvm"),
-            )
-        else:
-            self.lop3_permutate = None
-
-        input_executors = OPExecutorCPU()
-        if self.ladder_permutate_a is not None:
-            input_executors.append(self.ladder_permutate_a)
-        self.input_executors = input_executors
-
-        weight_executors = OPExecutorCPU()
-        if self.lop3_permutate is not None:
-            weight_executors.append(self.lop3_permutate)
-
-        if self.ladder_permutate_b is not None:
-            weight_executors.append(self.ladder_permutate_b)
-
-        self.weight_executors = weight_executors
-
-        if enable_tuning:
-            self.hardware_aware_finetune()
-
         if source_format == "nf":
             self.lut = torch.tensor(
                 [
@@ -348,19 +335,128 @@ class Matmul(Operator):
         else:
             self.lut = None
 
+        # create permutate_opertors
+        self.ladder_permutate_a = self._assign_ladder_permutate_a(target, enable_tuning)
+        self.ladder_permutate_b = self._assign_ladder_permutate_b(target, enable_tuning)
+        self.weight_compress = self._assign_weight_compress(target, enable_tuning)
+        self.lop3_permutate = self._assign_lop3_permutate(target, enable_tuning)
+        # create cpu weight executors
+        self.input_executors = self._create_input_executors()
+        self.weight_executors = self._create_weight_executors()
+
+        if enable_tuning:
+            self.hardware_aware_finetune()
+
         # output data type
         self.torch_output_dtype = getattr(torch, self.out_dtype)
 
-    def _build_default_module(self, target: Target):
-        try:
-            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
-        except Exception:
-            self.optimized_func = None
-            logger.warning(
-                "[BitBLAS][Warning] Apply default schedule failed, should do hardware-aware optimization manually."
-            )
+    def _alloc_workspace(self):
+        return torch.empty(WORKSPACE_SIZE, dtype=torch.float16).cuda()
 
-        self._build_runtime_module(target)
+    def _free_workspace(self):
+        # release the workspace if it is None
+        if self.workspace is not None:
+            self.workspace = None
+
+    def _assign_ladder_permutate_a(self, target: Target, enable_tuning: bool):
+        ladder_permutate_a = None
+        if self.propagate_a:
+            # for general purpose, we use propagate_a to control the ladder permutation.
+            ladder_permutate_config = LadderPermutateConfig(
+                M=self.M,
+                N=self.K,
+                datatype=self.A_dtype,
+                storage_dtype=self.A_dtype,
+                propagate_kind="A",
+                transpose_matrix=False,
+                transform_kind=self.propagate_a,
+            )
+            ladder_permutate_a = LadderPermutate(
+                config=ladder_permutate_config,
+                target=target,
+                enable_tuning=enable_tuning,
+            )
+            self.workspace = self._alloc_workspace()
+        return ladder_permutate_a
+
+    def _assign_ladder_permutate_b(self, target: Target, enable_tuning: bool):
+        # unused variables
+        del target
+        del enable_tuning
+
+        if self.propagate_b:
+            # weight transform should be done in the unpacked level
+            # otherwise the bit trick should be applied and that is
+            # too complex to be implemented in the ladder permutation.
+            ladder_permutate_config = LadderPermutateConfig(
+                M=self.N,
+                N=self.K,
+                datatype=self.A_dtype,
+                dequantize_bits=-1,
+                storage_dtype=self.storage_dtype,
+                propagate_kind="B",
+                transpose_matrix=self.layout == "nt",
+                transform_kind=self.propagate_b,
+            )
+            return LadderPermutate(
+                config=ladder_permutate_config,
+                target=tvm.target.Target("llvm"),
+            )
+        return None
+
+    def _assign_weight_compress(self, target: Target, enable_tuning: bool):
+        # unused variables
+        del target
+        del enable_tuning
+
+        require_compress: bool = self.bit in [1, 2, 4]
+        if require_compress:
+            quant_compress_config = QuantCompressConfig(
+                M=self.N,
+                N=self.K,
+                input_dtype=self.storage_dtype,
+                storage_dtype=self.storage_dtype,
+                dequantize_bits=self.bit)
+            return QuantCompress(
+                config=quant_compress_config,
+                target=tvm.target.Target("llvm"),
+            )
+        return None
+
+    def _assign_lop3_permutate(self, target: Target, enable_tuning: bool):
+        # unused variables
+        del target
+        del enable_tuning
+        if self.fast_decoding:
+            assert self.source_format in ["int", "uint"]
+            lop3_permutate_config = LOP3PermutateConfig(
+                M=self.N,
+                N=self.K,
+                datatype=self.A_dtype,
+                dequantize_bits=self.bit,
+                storage_dtype=self.storage_dtype,
+            )
+            return LOP3Permutate(
+                config=lop3_permutate_config,
+                target=tvm.target.Target("llvm"),
+            )
+        return None
+
+    def _create_input_executors(self):
+        input_executors = OPExecutorCPU()
+        if self.propagate_a is not TransformKind.NonTransform:
+            input_executors.append(self.ladder_permutate_a)
+        return input_executors
+
+    def _create_weight_executors(self):
+        weight_executors = OPExecutorCPU()
+        if self.propagate_b is not TransformKind.NonTransform:
+            weight_executors.append(self.ladder_permutate_b)
+        if self.weight_compress is not None:
+            weight_executors.append(self.weight_compress)
+        if self.fast_decoding:
+            weight_executors.append(self.lop3_permutate)
+        return weight_executors
 
     def _select_implementation(self):
         if is_native_compute(self.A_dtype, self.W_dtype):
@@ -427,10 +523,6 @@ class Matmul(Operator):
                 return self.weight_transform(weight.cpu()).cuda().contiguous()
             return weight
 
-        from bitblas.quantization import general_compress
-        import torch
-        import numpy as np
-
         source_format, bit = self.source_format, self.bit
 
         # Process integer source format
@@ -439,20 +531,13 @@ class Matmul(Operator):
             assert not self.with_zeros, "zeros should be False for int source format"
             maxq = 2**(bit - 1)
             # Clamp weight values to be within the quantizable range and adjust
-            weight = torch.clamp(weight, -maxq, maxq).int() + maxq
+            weight = torch.clamp(weight, -maxq, maxq).char() + maxq
         elif source_format in ["fp_e5m2", "fp_e4m3"]:
             weight = weight.view(torch.int8)
-            weight = weight.int()
         else:
             # For non-integer formats, simply convert weights to integers
-            weight = weight.int()
-
-        np_storage_dtype = getattr(np, self.storage_dtype)
-
-        weight = general_compress(
-            weight.cpu().numpy(), source_bits=bit, storage_dtype=np_storage_dtype)
-
-        weight = torch.from_numpy(weight).cuda().contiguous()
+            # And assume weight is in the range of [-128, 127] for int8
+            weight = weight.char()
 
         # Apply an optional weight transformation if specified
         if self.weight_transform is not None:
@@ -507,12 +592,16 @@ class Matmul(Operator):
 
         if self.lib is None:
             self._forward_from_torch_func(*args)
-        self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
+        else:
+            self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
 
         return output
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         return self.forward(*args, **kwds)
+
+    def cleanup(self):
+        self._free_workspace()
 
     @property
     def M(self):

@@ -4,16 +4,20 @@ import sys
 import os
 
 # installing tvm
-install_tvm_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tvm")
+install_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tvm")
+install_cutlass_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "3rdparty", "cutlass")
 if os.path.exists(install_tvm_path) and install_tvm_path not in sys.path:
     os.environ["PYTHONPATH"] = install_tvm_path + "/python:" + os.environ.get("PYTHONPATH", "")
+    os.environ["TL_CUTLASS_PATH"] = install_cutlass_path + "/include"
     sys.path.insert(0, install_tvm_path + "/python")
 
-develop_tvm_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "tvm")
+develop_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "tvm")
+develop_cutlass_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "cutlass")
 if os.path.exists(develop_tvm_path) and develop_tvm_path not in sys.path:
     os.environ["PYTHONPATH"] = develop_tvm_path + "/python:" + os.environ.get("PYTHONPATH", "")
+    os.environ["TL_CUTLASS_PATH"] = develop_cutlass_path + "/include"
     sys.path.insert(0, develop_tvm_path + "/python")
 
 import tvm as tvm  # noqa: E402
@@ -31,14 +35,14 @@ from .base import (
     try_inline_contiguous_spatial,  # noqa: F401
 )
 
-
 from . import testing  # noqa: F401
-from .utils import auto_detect_nvidia_target  # noqa: F401
+from .utils import auto_detect_nvidia_target, apply_transform_on_input  # noqa: F401
 from .ops.general_matmul import MatmulConfig, Matmul  # noqa: F401
 from .ops.general_matmul_splitk import MatmulConfigWithSplitK, MatmulWithSplitK  # noqa: F401
-from .ops.matmul_dequantize import MatmulWeightOnlyDequantizeConfig, MatmulWeightOnlyDequantize  # noqa: F401
 from .module import Linear  # noqa: F401
 
+import warnings
+import functools
 import logging
 from tqdm import tqdm
 
@@ -86,4 +90,26 @@ def _init_logger():
 
 _init_logger()
 
-__version__ = "0.0.1.dev12"
+
+def deprecated(reason):
+    """
+    This is a decorator which can be used to mark functions as deprecated.
+    It will result in a warning being emitted when the function is used.
+    """
+
+    def decorator(func):
+
+        @functools.wraps(func)
+        def new_func(*args, **kwargs):
+            warnings.warn(
+                f"Call to deprecated function {func.__name__} ({reason}).",
+                category=DeprecationWarning,
+                stacklevel=2)
+            return func(*args, **kwargs)
+
+        return new_func
+
+    return decorator
+
+
+__version__ = "0.0.1.dev15"

@@ -473,8 +473,7 @@ def matmul_nt_dequantize_b(
         else:
             args.append(Zeros)
     if with_bias:
-        E = te.compute((M, N), lambda i, j: D[i, j] + Bias[j], name="E")
-        last_output = E
+        last_output = te.compute((M, N), lambda i, j: last_output[i, j] + Bias[j], name="E")
         args.append(Bias)
     args.append(last_output)
 
@@ -654,8 +653,7 @@ def matmul_nt_dequantize_b_propagate_b(
     if with_zeros:
         args.append(Zeros)
     if with_bias:
-        E = te.compute((M, N), lambda i, j: D[i, j] + Bias[j], name="E")
-        last_output = E
+        last_output = te.compute((M, N), lambda i, j: last_output[i, j] + Bias[j], name="E")
         args.append(Bias)
     args.append(last_output)
 
@@ -854,8 +852,7 @@ def matmul_nt_dequantize_b_propagate_a_propagate_b(
     if with_zeros:
         args.append(Zeros)
     if with_bias:
-        E = te.compute((M, N), lambda i, j: D[i, j] + Bias[j], name="E")
-        last_output = E
+        last_output = te.compute((M, N), lambda i, j: last_output[i, j] + Bias[j], name="E")
         args.append(Bias)
     args.append(last_output)
 

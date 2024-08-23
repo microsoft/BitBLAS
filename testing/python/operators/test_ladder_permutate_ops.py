@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import pytest
 import bitblas
 from bitblas.ops.ladder_permutate import LadderPermutate, LadderPermutateConfig
 from bitblas import tvm
@@ -41,9 +40,14 @@ def ladder_permutate_profile_latency(
 
 
 def test_ladder_permutate_profile_latency():
-    ladder_permutate_profile_latency(1024, 1024, "float16", -1, "float16", "B", True, 1, "nvidia-mma")
-    ladder_permutate_profile_latency(1024, 1024, "float16", -1, "float16", "B", True, 2, "nvidia-mma")
-    ladder_permutate_profile_latency(1024, 1024, "float16", 4, "uint32", "B", True, 2, "nvidia-mma")
+    ladder_permutate_profile_latency(1024, 1024, "float16", -1, "float16", "B", True, 1,
+                                     "nvidia-mma")
+    ladder_permutate_profile_latency(1024, 1024, "float16", -1, "float16", "B", True, 2,
+                                     "nvidia-mma")
+    ladder_permutate_profile_latency(1024, 1024, "float16", -1, "float16", "B", True, 3,
+                                     "nvidia-mma")
+    ladder_permutate_profile_latency(1024, 1024, "float16", 4, "int8", "B", True, 2, "nvidia-mma")
+    ladder_permutate_profile_latency(1024, 1024, "float16", 4, "int8", "B", True, 3, "nvidia-mma")
 
 
 def ladder_permutate_profile_latency_cuda(
@@ -73,16 +77,19 @@ def ladder_permutate_profile_latency_cuda(
         config=ladder_permutate_config,
         target="cuda",
     )
-    # ladder_permutate.hardware_aware_finetune()
     latency = ladder_permutate.profile_latency()
-    print(latency)
     assert latency
 
 
 def test_ladder_permutate_profile_latency_cuda():
-    ladder_permutate_profile_latency_cuda(1024, 1024, "float16", -1, "float16", "A", True, 1, "nvidia-mma")
-    ladder_permutate_profile_latency_cuda(1024, 1024, "float16", -1, "float16", "A", True, 2, "nvidia-mma")
-    ladder_permutate_profile_latency_cuda(1024, 1024, "float16", 4, "uint32", "A", True, 2, "nvidia-mma")
+    ladder_permutate_profile_latency_cuda(1024, 1024, "float16", -1, "float16", "A", True, 1,
+                                          "nvidia-mma")
+    ladder_permutate_profile_latency_cuda(1024, 1024, "float16", -1, "float16", "A", True, 2,
+                                          "nvidia-mma")
+    ladder_permutate_profile_latency_cuda(1024, 1024, "float16", 4, "int8", "A", True, 2,
+                                          "nvidia-mma")
+
+
 # fmt: on
 
 if __name__ == "__main__":

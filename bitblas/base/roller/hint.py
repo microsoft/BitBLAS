@@ -211,11 +211,12 @@ class Hint(object):
             dic["block_reduction_depth"] = self.block_reduction_depth
         return dic
 
-    def from_dict(self, dic: Dict) -> "Hint":
-        self.__init__()
+    @classmethod
+    def from_dict(cls, dic: Dict) -> "Hint":
+        hint = cls()
         for k, v in dic.items():
-            setattr(self, k, v)
-        return self
+            setattr(hint, k, v)
+        return hint
 
     def tensorcore_legalization(self):
         # only keep the last 2 axes for tensorcore
@@ -244,5 +245,7 @@ class Hint(object):
         # int32 and float32 accum may take too much shared memory
         if self.use_tc and self.intrin_info.out_dtype in ["float32", "int32"]:
             merge_static_smem = True
+        # Always merge static shared memory
+        merge_static_smem = False
         self.pass_context = {"tir.merge_static_smem": merge_static_smem}
         return self

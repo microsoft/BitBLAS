@@ -18,6 +18,7 @@ import sys
 import urllib.request
 from distutils.version import LooseVersion
 import platform
+import multiprocessing
 
 # Environment variables False/True
 PYPI_BUILD = os.environ.get("PYPI_BUILD", "False").lower() == "true"
@@ -176,11 +177,12 @@ def build_tvm(llvm_config_path):
     # Set LLVM path and enable CUDA in config.cmake
     with open("config.cmake", "a") as config_file:
         config_file.write(f"set(USE_LLVM {llvm_config_path})\n")
-        config_file.write("set(USE_CUDA ON)\n")
+        config_file.write("set(USE_CUDA /usr/local/cuda)\n")
     # Run CMake and make
     try:
         subprocess.check_call(["cmake", ".."])
-        subprocess.check_call(["make", "-j"])
+        num_jobs = multiprocessing.cpu_count()
+        subprocess.check_call(["make", f"-j{num_jobs}"])
     except subprocess.CalledProcessError as error:
         raise RuntimeError("Failed to build TVM") from error
     finally:
@@ -237,8 +239,25 @@ class BitBLASBuilPydCommand(build_py):
             "3rdparty/tvm/mypy.ini",
             "3rdparty/tvm/pyproject.toml",
             "3rdparty/tvm/version.py",
+            "3rdparty/tvm/src/tl/tl_templates",
         ]
         for item in TVM_PREBUILD_ITEMS:
+            source_dir = os.path.join(ROOT_DIR, item)
+            target_dir = os.path.join(self.build_lib, PACKAGE_NAME, item)
+            if os.path.isdir(source_dir):
+                self.mkpath(target_dir)
+                distutils.dir_util.copy_tree(source_dir, target_dir)
+            else:
+                target_dir = os.path.dirname(target_dir)
+                if not os.path.exists(target_dir):
+                    os.makedirs(target_dir)
+                shutil.copy2(source_dir, target_dir)
+
+        # Copy CUTLASS to the package directory
+        CUTLASS_PREBUILD_ITEMS = [
+            "3rdparty/cutlass",
+        ]
+        for item in CUTLASS_PREBUILD_ITEMS:
             source_dir = os.path.join(ROOT_DIR, item)
             target_dir = os.path.join(self.build_lib, PACKAGE_NAME, item)
             if os.path.isdir(source_dir):

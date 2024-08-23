@@ -4,13 +4,15 @@
 from bitblas import tvm
 from typing import Dict, List, Tuple, Optional
 import numpy as np
-
-from ..arch import TileDevice
+import logging
+from ...arch import TileDevice
 from ..hint import Hint, Stride, TileDict, IntrinInfo
 from ..node import PrimFuncNode
 from .common import coalesced_factor, factorize, get_all_factors
 from .default import DefaultPolicy
 from ..rasterization import NoRasterization, Rasterization2DColumn
+
+logger = logging.getLogger(__name__)
 
 
 class TensorCorePolicy(DefaultPolicy):
@@ -47,9 +49,9 @@ class TensorCorePolicy(DefaultPolicy):
                 self.use_async_copy = False
         # TODO: block reduction depth is not used for now.
         # As there still exists some performance issues for block reduction.
-        # block_reduction_depth = self.prim_func_node.get_tag("block_reduction_depth")
-        # if block_reduction_depth:
-        #     self.block_reduction_depth = block_reduction_depth
+        block_reduction_depth = self.prim_func_node.get_tag("block_reduction_depth")
+        if block_reduction_depth:
+            self.block_reduction_depth = block_reduction_depth
 
     def _compute_tc_strides(
         self,
@@ -115,84 +117,92 @@ class TensorCorePolicy(DefaultPolicy):
                     return True
             return False
 
-        if not _check_small_tile(td):
-            return None
+        if _check_small_tile(td):
 
-        smem_limit = min(self.arch.max_smem_usage // td.block_per_SM, self.arch.smem_cap)
-        rstep_map = td.rstep_map.copy()
-        is_block_reduction = self.block_reduction_depth is not None
+            smem_limit = min(self.arch.max_smem_usage // td.block_per_SM, self.arch.smem_cap)
+            rstep_map = td.rstep_map.copy()
 
-        def _optimize(node, rstep):
-            all_steps = self.get_node_reduce_step_candidates(node)
-            # todo(lei): optimize the all_steps enlarge policy to be a multiple of the original all_steps[k]
-            for k in all_steps:
-                all_steps[k] = list(filter(lambda x: x % rstep[k] == 0, all_steps[k]))
-            if any([v == [] for v in all_steps.values()]):
+            def _optimize(node, rstep):
+                all_steps = self.get_node_reduce_step_candidates(node)
+                # todo(lei): optimize the all_steps enlarge policy to be a multiple of the original all_steps[k]
+                for k in all_steps:
+                    all_steps[k] = list(filter(lambda x: x % rstep[k] == 0, all_steps[k]))
+                if any([v == [] for v in all_steps.values()]):
+                    return rstep
+
+                def _shared_memory_usage(td: TileDict):
+                    return node.footprint(td.output_tile, new_rstep_map,
+                                          td.tensor_strides_map[node])
+
+                def _score(rstep_id):
+                    rstep = {
+                        k.var.name: all_steps[k.var.name][rstep_id[k.var.name]] for k in node.raxis
+                    }
+                    score = 0
+                    shape = node.propagate_inputs_on_reduction(td.get_tile(node), rstep=rstep)
+                    input_buffers = node.block_analyzer.get_input_buffers(node.reduction_block)
+                    for i, input_buffer in enumerate(input_buffers):
+                        score += coalesced_factor(shape[i], input_buffer.shape)
+                    return score
+
+                def _enlarge(rstep_id):
+                    candidates = []
+                    for ax in rstep_id:
+                        if rstep_id[ax] + 1 == len(all_steps[ax]):
+                            continue
+                        r = rstep_id.copy()
+                        r[ax] += 1
+                        candidates.append((r, _score(r)))
+                    if len(candidates) == 0:
+                        return None
+                    return max(candidates, key=lambda x: x[1])[0]
+
+                cur_rstep_id = {
+                    k.var.name: all_steps[k.var.name].index(rstep[k.var.name]) for k in node.raxis
+                }
+                new_rstep_map = rstep_map.copy()
+                while True:
+                    new_rstep_id = _enlarge(cur_rstep_id)
+                    if new_rstep_id is None:
+                        break
+                    new_rstep_map = {
+                        k.var.name: all_steps[k.var.name][new_rstep_id[k.var.name]]
+                        for k in node.raxis
+                    }
+                    old_rstep_map = td.rstep_map
+                    td.rstep_map = new_rstep_map
+                    smem_usage, _ = _shared_memory_usage(td)
+                    td.rstep_map = old_rstep_map
+                    if smem_usage > smem_limit:
+                        break
+                    else:
+                        cur_rstep_id = new_rstep_id
+                rstep = {
+                    k.var.name: all_steps[k.var.name][cur_rstep_id[k.var.name]] for k in node.raxis
+                }
                 return rstep
 
-            def _shared_memory_usage(td: TileDict):
-                return node.footprint(td.output_tile, new_rstep_map, td.tensor_strides_map[node])
+            for node in self.ordered_nodes:
+                if len(node.raxis) > 0:
+                    rstep = _optimize(node, rstep_map)
+                    rstep_map = rstep
 
-            def _score(rstep_id):
-                rstep = {
-                    k.var.name: all_steps[k.var.name][rstep_id[k.var.name]] for k in node.raxis
-                }
-                score = 0
-                shape = node.propagate_inputs_on_reduction(td.get_tile(node), rstep=rstep)
-                input_buffers = node.block_analyzer.get_input_buffers(node.reduction_block)
-                for i, input_buffer in enumerate(input_buffers):
-                    score += coalesced_factor(shape[i], input_buffer.shape)
-                return score
+            td.rstep_map = rstep_map
+            td.smem_cost, td.cached_tensors_map = self._compute_shared_memory_usage(td)
 
-            def _enlarge(rstep_id):
-                candidates = []
-                for ax in rstep_id:
-                    if rstep_id[ax] + 1 == len(all_steps[ax]):
-                        continue
-                    r = rstep_id.copy()
-                    r[ax] += 1
-                    candidates.append((r, _score(r)))
-                if len(candidates) == 0:
-                    return None
-                return max(candidates, key=lambda x: x[1])[0]
+        if self.block_reduction_depth is not None:
 
-            cur_rstep_id = {
-                k.var.name: all_steps[k.var.name].index(rstep[k.var.name]) for k in node.raxis
-            }
-            new_rstep_map = rstep_map.copy()
-            while True:
-                new_rstep_id = _enlarge(cur_rstep_id)
-                if new_rstep_id is None:
-                    break
-                new_rstep_map = {
-                    k.var.name: all_steps[k.var.name][new_rstep_id[k.var.name]] for k in node.raxis
-                }
-                old_rstep_map = td.rstep_map
-                td.rstep_map = new_rstep_map
-                smem_usage, _ = _shared_memory_usage(td)
-                td.rstep_map = old_rstep_map
-                if smem_usage > smem_limit:
-                    break
-                else:
-                    cur_rstep_id = new_rstep_id
-            rstep = {
-                k.var.name: all_steps[k.var.name][cur_rstep_id[k.var.name]] for k in node.raxis
-            }
-            return rstep
+            def _expand_with_tags(rstep):
+                new_rstep = {k: v * self.block_reduction_depth for k, v in rstep.items()}
+                return new_rstep
 
-        for node in self.ordered_nodes:
-            if len(node.raxis) > 0:
-                rstep = _optimize(node, rstep_map)
-                rstep_map = rstep
+            rstep_map = td.rstep_map.copy()
+            for node in self.ordered_nodes:
+                if len(node.raxis) > 0:
+                    rstep = _expand_with_tags(rstep_map)
+                    rstep_map = rstep
+            td.rstep_map = rstep_map
 
-        if is_block_reduction:
-            # If block reduction, we should constrain the max value is 64
-            # Otherwise it will introduce an issue of cuda invalid args.
-            MAX_REDUCE_K = 64
-            for k in rstep_map:
-                rstep_map[k] = min(rstep_map[k], MAX_REDUCE_K)
-        td.rstep_map = rstep_map
-        td.smem_cost, td.cached_tensors_map = self._compute_shared_memory_usage(td)
         return
 
     def get_node_reduce_step_candidates(self, node):
@@ -315,8 +325,15 @@ class TensorCorePolicy(DefaultPolicy):
             if intrin_info["out_dtype"] in ["float32"]:
                 codegen_dict.shared_scope = "shared.dyn"
         # smem capacity
-        if td.smem_cost > self.arch.smem_cap:
+        # TODO: This is a dummy mul which avoid reusing some shared memory.
+        # Should be removed in the future.
+        if td.smem_cost > (self.arch.smem_cap):
+            info_message = f"Tile Dict: {td.output_tile} Shared memory exceeds the static capacity," \
+                " use dynamic shared memory."
+            logger.info(info_message)
             codegen_dict.shared_scope = "shared.dyn"
+
+        codegen_dict.shared_scope = "shared.dyn"
 
         codegen_dict.complete_config(node)
         codegen_dict.vectorize = self._plan_vectorize(self.prim_func_node, td, block_size)
