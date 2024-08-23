@@ -7,7 +7,8 @@ from bitblas import set_log_level
 set_log_level(logging.DEBUG)
 
 
-def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias, group_size, with_scaling, with_zeros, zeros_mode):
+def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias,
+                         group_size, with_scaling, with_zeros, zeros_mode):
     torch.random.manual_seed(0)
 
     matmul_config = MatmulConfig(
@@ -56,14 +57,22 @@ def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
     bitblas_out = matmul(torch_a, new_torch_b)
     print("bitblas_out", bitblas_out)
 
+
 @bitblas.testing.requires_cuda_compute_version(8, 9)
 def test_matmul_torch_forward():
-    matmul_torch_forward(1, 1024, 1024, "e4m3_float8", "e4m3_float8", "float32", "float32", "nt", None, None, None, None, None)
-    matmul_torch_forward(1024, 1024, 1024, "e4m3_float8", "e4m3_float8", "float32", "float32", "nt", None, None, None, None, None)
-    matmul_torch_forward(1, 1024, 1024, "e5m2_float8", "e5m2_float8", "float32", "float32", "nt", None, None, None, None, None)
-    matmul_torch_forward(1024, 1024, 1024, "e5m2_float8", "e5m2_float8", "float32", "float32", "nt", None, None, None, None, None)
+    matmul_torch_forward(1, 1024, 1024, "e4m3_float8", "e4m3_float8", "float32", "float32", "nt",
+                         None, None, None, None, None)
+    matmul_torch_forward(1024, 1024, 1024, "e4m3_float8", "e4m3_float8", "float32", "float32", "nt",
+                         None, None, None, None, None)
+    matmul_torch_forward(1, 1024, 1024, "e5m2_float8", "e5m2_float8", "float32", "float32", "nt",
+                         None, None, None, None, None)
+    matmul_torch_forward(1024, 1024, 1024, "e5m2_float8", "e5m2_float8", "float32", "float32", "nt",
+                         None, None, None, None, None)
 
-def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias, group_size, with_scaling, with_zeros, zeros_mode):
+
+def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
+                                           layout, with_bias, group_size, with_scaling, with_zeros,
+                                           zeros_mode):
     torch.random.manual_seed(0)
 
     matmul_config = MatmulConfig(
@@ -135,12 +144,18 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
 
     torch.testing.assert_close(ref_out, bitblas_out, rtol=1e-1, atol=1e-1)
 
+
 @bitblas.testing.requires_cuda_compute_version(8, 9)
 def test_matmul_torch_forward_weight_dequantize():
-    matmul_torch_forward_weight_dequantize(1, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, None, None, None, None)
-    matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, None, None, None, None)
-    matmul_torch_forward_weight_dequantize(1, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, 32, True, None, None)
-    matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "float16", "e4m3_float8", "float16", "float16", "nt", None, 32, True, None, None)
+    matmul_torch_forward_weight_dequantize(1, 1024, 1024, "float16", "e4m3_float8", "float16",
+                                           "float16", "nt", None, None, None, None, None)
+    matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "float16", "e4m3_float8", "float16",
+                                           "float16", "nt", None, None, None, None, None)
+    matmul_torch_forward_weight_dequantize(1, 1024, 1024, "float16", "e4m3_float8", "float16",
+                                           "float16", "nt", None, 32, True, None, None)
+    matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "float16", "e4m3_float8", "float16",
+                                           "float16", "nt", None, 32, True, None, None)
+
 
 if __name__ == "__main__":
     bitblas.testing.main()

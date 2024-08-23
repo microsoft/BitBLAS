@@ -7,7 +7,8 @@ from bitblas import set_log_level
 set_log_level(logging.DEBUG)
 
 
-def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias, group_size, with_scaling, with_zeros, zeros_mode):
+def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias,
+                         group_size, with_scaling, with_zeros, zeros_mode):
     torch.random.manual_seed(0)
 
     matmul_config = MatmulConfig(
@@ -42,7 +43,7 @@ def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
     ref_out = torch.matmul(torch_a.to(torch.float32),
                            torch_b.t().to(torch.float32)) if layout == "nt" else torch.matmul(
                                torch_a.to(torch.float32), torch_b.to(torch.float32))
-    
+
     ref_out = ref_out.to(torch_type_c)
 
     print("torch_ref_out", ref_out)
@@ -50,14 +51,18 @@ def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
     bitblas_out = matmul(torch_a, new_torch_b)
     print("bitblas_out", bitblas_out)
 
+
 @bitblas.testing.requires_cuda_compute_version(8, 0)
 def test_matmul_torch_forward():
-    matmul_torch_forward(1, 1024, 1024, "bfloat16", "bfloat16", "float32", "float32", "nt", None, None, None, None, None)
-    matmul_torch_forward(1024, 1024, 1024, "bfloat16", "bfloat16", "float32", "float32", "nt", None, None, None, None, None)
+    matmul_torch_forward(1, 1024, 1024, "bfloat16", "bfloat16", "float32", "float32", "nt", None,
+                         None, None, None, None)
+    matmul_torch_forward(1024, 1024, 1024, "bfloat16", "bfloat16", "float32", "float32", "nt", None,
+                         None, None, None, None)
 
 
-def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias,
-                         group_size, with_scaling, with_zeros, zeros_mode):
+def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
+                                           layout, with_bias, group_size, with_scaling, with_zeros,
+                                           zeros_mode):
     import torch
     torch.random.manual_seed(0)
     import numpy as np
@@ -106,9 +111,8 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
     if with_zeros:
         inputs[1] = inputs[1] - zeros
     bias = torch.rand((output_shape[-1],), dtype=getattr(torch, out_dtype)).cuda()
-    ref_result = torch.matmul(inputs[0],
-                              (inputs[1].t() if layout == "nt" else inputs[1]).to(getattr(torch, A_dtype))).to(
-                                    getattr(torch, out_dtype))
+    ref_result = torch.matmul(inputs[0], (inputs[1].t() if layout == "nt" else inputs[1]).to(
+        getattr(torch, A_dtype))).to(getattr(torch, out_dtype))
     if with_bias:
         ref_result = ref_result + bias
     permuted_inputs = []
@@ -120,13 +124,15 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
     if with_scaling:
         if group_size == -1:
             group_size = K
-        permuted_inputs.append(torch.ones([N, K // group_size], dtype=getattr(torch, A_dtype)).cuda())
+        permuted_inputs.append(
+            torch.ones([N, K // group_size], dtype=getattr(torch, A_dtype)).cuda())
     if with_zeros:
         if zeros_mode == "original":
             permuted_inputs.append(
                 torch.ones([N, K // group_size], dtype=getattr(torch, A_dtype)).cuda() * zeros)
         elif zeros_mode == "rescale":
-            original_zeros = torch.ones([N, K // group_size], dtype=getattr(torch, A_dtype)).cuda() * zeros
+            original_zeros = torch.ones([N, K // group_size], dtype=getattr(torch,
+                                                                            A_dtype)).cuda() * zeros
             scaled_zeros = original_zeros * permuted_inputs[-1]
             permuted_inputs.append(scaled_zeros)
         elif zeros_mode == "quantized":
@@ -147,12 +153,18 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
     else:
         torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
 
+
 @bitblas.testing.requires_cuda_compute_version(8, 0)
 def test_matmul_torch_forward_weight_dequantize():
-    matmul_torch_forward_weight_dequantize(1, 1024, 1024, "bfloat16", "uint4", "float32", "float32", "nt", None, None, None, None, None)
-    matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "bfloat16", "uint4", "float32", "float32", "nt", None, None, None, None, None)
-    matmul_torch_forward_weight_dequantize(1, 1024, 1024, "bfloat16", "uint4", "float32", "float32", "nt", None, 32, True, None, None)
-    matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "bfloat16", "uint4", "float32", "float32", "nt", None, 32, True, None, None)
+    matmul_torch_forward_weight_dequantize(1, 1024, 1024, "bfloat16", "uint4", "float32", "float32",
+                                           "nt", None, None, None, None, None)
+    matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "bfloat16", "uint4", "float32",
+                                           "float32", "nt", None, None, None, None, None)
+    matmul_torch_forward_weight_dequantize(1, 1024, 1024, "bfloat16", "uint4", "float32", "float32",
+                                           "nt", None, 32, True, None, None)
+    matmul_torch_forward_weight_dequantize(1024, 1024, 1024, "bfloat16", "uint4", "float32",
+                                           "float32", "nt", None, 32, True, None, None)
+
 
 if __name__ == "__main__":
     bitblas.testing.main()

@@ -624,8 +624,7 @@ def get_tensorized_func_and_tags(
         # When the func is a dequantize like ops, we should consider the M
         require_block_reduce = False
         # And we only support float16 for now
-        if (hasattr(func.attrs, "dequantize_info") 
-            and in_dtype in ["bfloat16", "float16"]):
+        if (hasattr(func.attrs, "dequantize_info") and in_dtype in ["bfloat16", "float16"]):
             for arg in func.params:
                 inp_shape = func.buffer_map[arg].shape
                 M = inp_shape[0]
