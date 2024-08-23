@@ -84,7 +84,6 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
         propagate_b=False,
     )
     matmul = Matmul(config=matmul_config, enable_tuning=False)
-    print(matmul.src_name)
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
 

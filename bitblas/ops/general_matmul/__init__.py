@@ -30,6 +30,7 @@ NATIVE_COMPUTE_PATTERNS = [
     ("float64", "float64"),
     ("float32", "float32"),
     ("float16", "float16"),
+    ("bfloat16", "bfloat16"),
     ("int8", "int8"),
     ("e4m3_float8", "e4m3_float8"),
     ("e4m3_float8", "e5m2_float8"),
@@ -140,7 +141,7 @@ class MatmulConfig(OperatorConfig):
 
         # TODO(lei): This is a limitation arose by pytorch and llvm
         # Should be removed in the future.
-        if self.A_dtype in ["e4m3_float8", "e5m2_float8"]:
+        if self.A_dtype in ["e4m3_float8", "e5m2_float8", "bfloat16"]:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
             object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
 
@@ -159,6 +160,9 @@ class MatmulConfig(OperatorConfig):
             # if the w_dtype is int4/uint4 and the a_dtype is int8
             # we do not require fast decoding
             conditions.append(self.W_dtype in ["int4", "uint4"] and self.A_dtype in ["int8"])
+            # do not support bfloat16 currently
+            # TODO(lei): should implement to improve the performance
+            conditions.append(self.A_dtype == "bfloat16")
             return any(conditions)
 
         if fast_decoding is not None:
@@ -214,6 +218,7 @@ class MatmulConfig(OperatorConfig):
 
         if self.A_dtype == self.W_dtype and self.W_dtype in [
                 "float16",
+                "bfloat16",
                 "int8",
                 "e4m3_float8",
                 "e5m2_float8",
@@ -228,6 +233,7 @@ class Matmul(Operator):
         "float64": ("fp", 64),
         "float32": ("fp", 32),
         "float16": ("fp", 16),
+        "bfloat16": ("bf", 16),
         "int32": ("int", 32),
         "uint32": ("uint", 32),
         "int16": ("int", 16),
@@ -260,8 +266,13 @@ class Matmul(Operator):
         if target is None:
             target = auto_detect_nvidia_target()
             logger.info(f"Auto detected target: {target}")
+
         assert (config.A_dtype
                 in self.BITBLAS_TRICK_DTYPE_MAP), f"Unsupported input dtype {config.A_dtype}"
+
+        assert (config.W_dtype
+                in self.BITBLAS_TRICK_DTYPE_MAP), f"Unsupported weight dtype {config.W_dtype}"
+
         source_format, bit = self.BITBLAS_TRICK_DTYPE_MAP[config.W_dtype]
 
         self.source_format = source_format

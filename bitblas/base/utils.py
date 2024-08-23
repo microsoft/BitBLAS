@@ -20,6 +20,9 @@ import tempfile
 import itertools
 from tvm.ir.supply import GlobalVarSupply
 from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
+from bitblas.utils.tensor_adapter import (
+    np_float2np_bf16,
+)
 import logging
 
 logger = logging.getLogger(__name__)
@@ -149,17 +152,17 @@ def get_dummy_input_arrays(
 
         numpy_dtype = map_numpy_type(arg.dtype)
         if distribution == "uniform":
-            profile_tensors.append(
-                tvm.nd.array(
-                    np.random.rand(*[var_wrapper(i) for i in arg.shape]).astype(numpy_dtype),
-                    device=device,
-                ))
+            data_np = np.random.rand(*[var_wrapper(i) for i in arg.shape])
+            if arg.dtype == "bfloat16":
+                profile_tensors.append(tvm.nd.empty(data_np.shape, device=device, dtype=arg.dtype).copyfrom(np_float2np_bf16(data_np.astype(np.float32))))
+            else:            
+                profile_tensors.append(tvm.nd.array(data_np.astype(numpy_dtype), device=device))
         elif distribution == "onefill":
-            profile_tensors.append(
-                tvm.nd.array(
-                    np.ones([var_wrapper(i) for i in arg.shape]).astype(numpy_dtype),
-                    device=device,
-                ))
+            data_np = np.ones(*[var_wrapper(i) for i in arg.shape])
+            if arg.dtype == "bfloat16":
+                profile_tensors.append(tvm.nd.empty(data_np.shape, device=device, dtype=arg.dtype).copyfrom(np_float2np_bf16(data_np)))
+            else:            
+                profile_tensors.append(tvm.nd.array(data_np.astype(numpy_dtype), device=device))
         else:
             raise ValueError("Not supported distribution: ", distribution)
     return profile_tensors

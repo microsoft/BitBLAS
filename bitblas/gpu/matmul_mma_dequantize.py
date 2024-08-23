@@ -1237,7 +1237,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             conditions.append(weight_decode_info["source_format"]["bits"] in [1, 2, 4, 8])
             # check target format in ["float16", "int8"]
             conditions.append("target_format" in weight_decode_info)
-            conditions.append(weight_decode_info["target_format"] in ["float16", "int8"])
+            conditions.append(weight_decode_info["target_format"] in ["bfloat16", "float16", "int8"])
             return all(conditions)
 
         assert check_weight_decode_info(weight_decode_info), "Invalid B_decode_info"

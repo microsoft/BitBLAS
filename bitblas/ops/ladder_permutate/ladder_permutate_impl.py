@@ -12,7 +12,7 @@ from tvm.tir import IndexMap
 def select_implementation(
     M: int,
     N: int,
-    datatype: Literal["float16", "int8", "e4m3_float8", "e5m2_float8"] = "float16",
+    datatype: Literal["float16", "bfloat16","int8", "e4m3_float8", "e5m2_float8"] = "float16",
     dequantize_bits: int = -1,
     storage_dtype: Literal["float16", "int8", "uint8", "int32", "uint32"] = "float16",
     propagate_kind: Literal["A", "B"] = "B",

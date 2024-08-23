@@ -128,3 +128,17 @@ def lazy_torch_to_tvm_tensor(tensor):
         return tvm_tensor
     else:
         raise RuntimeError("Not supported type: ", type(tensor))
+
+def np_float2np_bf16(arr):
+    """Convert a numpy array of float to a numpy array
+    of bf16 in uint16"""
+    orig = arr.view("<u4")
+    bias = np.bitwise_and(np.right_shift(orig, 16), 1) + 0x7FFF
+    return np.right_shift(orig + bias, 16).astype("uint16")
+
+def np_bf162np_float(arr):
+    """Convert a numpy array of bf16 (uint16) to a numpy array
+    of float"""
+    u32 = np.left_shift(arr.astype("uint32"), 16)
+    return u32.view("<f4")
+
