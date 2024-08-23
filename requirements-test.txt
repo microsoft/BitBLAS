@@ -31,4 +31,3 @@ tabulate
 wheel
 setuptools
 auto-gptq
-gptqmodel

@@ -3,18 +3,19 @@
 import bitblas
 import torch
 
-try:
-    import gptqmodel  # noqa: F401
-except ImportError as e:
-    raise ImportError("Please install gptqmodel by running `pip install gptqmodel`") from e
-
-from gptqmodel.nn_modules.qlinear.qlinear_exllama import ExllamaQuantLinear
-
 torch.manual_seed(0)
 bitblas.set_log_level("DEBUG")
 
 
+@bitblas.testing.require
 def assert_output_with_gptq(m, in_features, out_features, group_size, sym=False):
+    try:
+        import gptqmodel  # noqa: F401
+    except ImportError:  # noqa: F401
+        return  # Skip test if gptqmodel is not installed
+
+    from gptqmodel.nn_modules.qlinear.qlinear_exllama import ExllamaQuantLinear
+
     if group_size == -1:
         group_size = in_features
     _, linear, s, _ = bitblas.quantization.gen_quant4(in_features, out_features, group_size)
