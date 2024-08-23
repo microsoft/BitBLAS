@@ -1626,7 +1626,8 @@ def get_lop3_intrin_group(
     Dict[str, str]
         A dictionary mapping the names of the intrinsics to their corresponding implementations.
     """
-    assert out_dtype in ["float16", "int8"]
+    assert out_dtype in ["float16",
+                         "int8"], (f"Invalid out_dtype: {out_dtype}. Expected 'float16' or 'int8'.")
 
     dtype_mapping = {"float16": "f16", "int8": "i8", "int32": "i32"}
     target_dtype = dtype_mapping[out_dtype]

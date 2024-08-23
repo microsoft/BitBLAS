@@ -624,7 +624,7 @@ def get_tensorized_func_and_tags(
         # When the func is a dequantize like ops, we should consider the M
         require_block_reduce = False
         # And we only support float16 for now
-        if hasattr(func.attrs, "dequantize_info") and in_dtype == "float16":
+        if (hasattr(func.attrs, "dequantize_info") and in_dtype in ["bfloat16", "float16"]):
             for arg in func.params:
                 inp_shape = func.buffer_map[arg].shape
                 M = inp_shape[0]
@@ -690,12 +690,14 @@ def get_propagate_map(trans: bool = True, dtype="float16", matrix_name="A", inde
     )
 
     assert dtype in [
+        "bfloat16",
         "float16",
         "int8",
         "e4m3_float8",
         "e5m2_float8",
-    ], "Only support float16, int8, e4m3_float8, e5m2_float8"
-    if dtype == "float16":
+    ], "Only support bfloat16, float16, int8, e4m3_float8, e5m2_float8"
+    # TODO(lei): actually should analyze based on bits instead of dtype
+    if dtype in ["bfloat16", "float16"]:
         ldmatrix_layout = ldmatrix_32x8_to_shared_16x16_layout
         ldmatrix_layout_trans = ldmatrix_trans_32x8_to_shared_16x16_layout
     elif dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
@@ -723,7 +725,7 @@ def get_propagate_map(trans: bool = True, dtype="float16", matrix_name="A", inde
         local_id = kernel_j % 16
         return ldmatrix_layout(thread_id, local_id)
 
-    if dtype == "float16":
+    if dtype in ["bfloat16", "float16"]:
         ldmatrix_index_map = (
             ldmatrix_trans_permutation_16x16_32x8_16x16
             if trans else ldmatrix_permutation_16x16_32x8_16x16)
@@ -732,7 +734,7 @@ def get_propagate_map(trans: bool = True, dtype="float16", matrix_name="A", inde
 
     ldmatrix_index_map = IndexMap.from_func(ldmatrix_index_map, index_dtype=index_dtype)
     # TODO(lei): index_dtype should be analyzed from the schedule
-    row, col = [16, 16] if dtype == "float16" else [16, 32]
+    row, col = [16, 16] if dtype in ["bfloat16", "float16"] else [16, 32]
     inversed_index_map = ldmatrix_index_map.inverse([row, col])
     return ldmatrix_index_map, inversed_index_map
 
@@ -753,12 +755,13 @@ def get_ladder_stage3_map(dtype="float16", index_dtype="int32"):
         return thread_id, local_id
 
     assert dtype in [
+        "bfloat16",
         "float16",
         "int8",
         "e4m3_float8",
         "e5m2_float8",
     ], "Only support float16, int8, e4m3_float8, e5m2_float8"
-    if dtype == "float16":
+    if dtype in ["bfloat16", "float16"]:
         stage3_layout = shared_32x8_to_mma_32x8_layout
     elif dtype in ["int8", "e4m3_float8", "e5m2_float8"]:
         stage3_layout = shared_32x16_to_mma_32x16_layout
@@ -782,14 +785,14 @@ def get_ladder_stage3_map(dtype="float16", index_dtype="int32"):
         new_kernel_j = (new_thread_id * 16 + new_local_id) % 32
         return new_kernel_i, new_kernel_j
 
-    if dtype == "float16":
+    if dtype in ["bfloat16", "float16"]:
         stage3_index_map = ladder_stage3_permutation_16x16_32x8_32x8_16x16
     else:
         stage3_index_map = ladder_stage3_permutation_16x32_32x16_32x16_16x32
 
     stage3_index_map = IndexMap.from_func(stage3_index_map, index_dtype=index_dtype)
     # TODO(lei): index_dtype should be analyzed from the schedule
-    row, col = [16, 16] if dtype == "float16" else [16, 32]
+    row, col = [16, 16] if dtype in ["bfloat16", "float16"] else [16, 32]
     inversed_index_map = stage3_index_map.inverse([row, col])
     return stage3_index_map, inversed_index_map
 
