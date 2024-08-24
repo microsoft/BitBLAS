@@ -13,6 +13,22 @@ from .base import BaseWrapper
 
 logger = logging.getLogger(__name__)
 
+PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY = """
+    cudaFuncSetAttribute({}, cudaFuncAttributeMaxDynamicSharedMemorySize, {});
+"""
+
+PREDEF_INIT_FUNC = """
+extern "C" void init() {{
+    {}
+}}
+"""
+
+PREDEF_HOST_FUNC = """
+extern "C" void call({}) {{
+{}
+}}
+"""
+
 
 class TIRCUDASourceWrapper(object):
     _TYPE_MAP = {
@@ -77,16 +93,11 @@ class TIRCUDASourceWrapper(object):
         call_str = """"""
         # If dynamic shared memory buffer is specified, prepare the cudaFuncSetAttribute call
         if self.dynamic_smem_buf is not None:
-            call_str = """
-        cudaFuncSetAttribute({},
-                                    cudaFuncAttributeMaxDynamicSharedMemorySize, {});
-                """.format(self.function_name, self.dynamic_smem_buf)
+            call_str = (
+                PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY.format(self.function_name,
+                                                           self.dynamic_smem_buf))
         # Format the initialization function using the call_str
-        init_funcs = """
-    extern "C" void init() {{
-        {}
-    }}
-            """.format(call_str)
+        init_funcs = PREDEF_INIT_FUNC.format(call_str)
         return init_funcs
 
     def update_lib_code(self, code: str):
@@ -162,18 +173,19 @@ class TIRCUDASourceWrapper(object):
         call_str += "{}<<<{}, {}, {}, stream>>>({});".format(function_name, grid_str, block_str,
                                                              smem_str, call_args)
         # Create the host function wrapper for the CUDA kernel
-        host_func = """
-    extern "C" void call({}) {{
-        {}
-    }}
-        """.format(def_args, call_str)
+        host_func = PREDEF_HOST_FUNC.format(def_args, call_str)
         # Combine the source, initialization function, and host function to form the complete library code
         lib_code = self.source + init_func + host_func
         return lib_code
 
     @property
     def prim_func(self):
-        return self.mod["main"]
+        if len(self.mod.get_global_vars()) == 1:
+            return self.mod[self.mod.get_global_vars()[0]]
+        elif "main" in self.mod:
+            return self.mod["main"]
+        else:
+            raise ValueError("Unable to determine primary function.")
 
 
 class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
@@ -188,16 +200,10 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
         for function_name, dynamic_smem_buf in self.dynamic_smem_buf.items():
             if dynamic_smem_buf is not None:
                 # Format the cudaFuncSetAttribute call for dynamic shared memory
-                call_str += """
-        cudaFuncSetAttribute({},
-                                    cudaFuncAttributeMaxDynamicSharedMemorySize, {});
-                    """.format(function_name, dynamic_smem_buf)
+                call_str += (
+                    PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY.format(function_name, dynamic_smem_buf))
         # Define the init function that will set the attributes for each kernel
-        init_funcs = """
-extern "C" void init() {{
-    {}
-}}
-            """.format(call_str)
+        init_funcs = PREDEF_INIT_FUNC.format(call_str)
         return init_funcs
 
     def create_dispatch_func(self, code, function_informations):
@@ -278,8 +284,8 @@ extern "C" void init() {{
             (symbolic,) = list(dynamic_symbolic_set)
             range_str = opt_shapes[symbolic]
             if last_range == 0:
-                call_str = "if ({} == 0) return; \n".format(symbolic,)
-                call_str += "if ({} <= {}) {{\n\t\t\t {}<<<{}, {}, {}, stream>>>({}); \n\t\t}}\n".format(
+                call_str = "  if ({} == 0) return; \n".format(symbolic,)
+                call_str += "  if ({} <= {}) {{\n    {}<<<{}, {}, {}, stream>>>({}); \n  }}\n".format(
                     symbolic,
                     range_str,
                     function_name,
@@ -289,7 +295,7 @@ extern "C" void init() {{
                     call_args,
                 )
             else:
-                call_str = "\t\telse if ({} <= {}) {{\n\t\t\t {}<<<{}, {}, {}, stream>>>({}); \n\t\t}}\n".format(
+                call_str = "  else if ({} <= {}) {{\n    {}<<<{}, {}, {}, stream>>>({}); \n  }}\n".format(
                     symbolic,
                     range_str,
                     function_name,
@@ -299,18 +305,13 @@ extern "C" void init() {{
                     call_args,
                 )
             if last_range == num_items - 1:
-                call_str += (
-                    "\t\telse {{\n\t\t\t {}<<<{}, {}, {}, stream>>>({}); \n\t\t}}\n".format(
-                        function_name, grid_str, block_str, smem_str, call_args))
+                call_str += ("  else {{\n    {}<<<{}, {}, {}, stream>>>({}); \n  }}\n".format(
+                    function_name, grid_str, block_str, smem_str, call_args))
             last_range += 1
             _call_str += call_str
 
         # Wrap the kernel dispatch logic in an external C function
-        host_func = """
-extern "C" void call({}) {{
-    {}
-}}
-        """.format(def_args, _call_str)
+        host_func = PREDEF_HOST_FUNC.format(def_args, _call_str)
         return host_func
 
     def parse_source_information(self):
@@ -380,10 +381,6 @@ extern "C" void call({}) {{
         # Concatenate source code with generated code segments
         lib_code = self.source + init_func + host_func
         return lib_code
-
-    @property
-    def prim_func(self):
-        return self.mod["main"]
 
 
 class TIRWrapper(BaseWrapper):

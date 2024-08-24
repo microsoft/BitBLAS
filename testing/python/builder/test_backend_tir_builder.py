@@ -39,8 +39,9 @@ def matmul_backend_code_wrap(
     )
     matmul = Matmul(config=matmul_config, enable_tuning=False)
     backend = TIRWrapper(arch=matmul.arch)
-    backend.assign_optimized_module(matmul.optimized_func)
-    wrapped_code = backend.wrap(matmul.get_source(), is_dynamic=isinstance(M, list))
+    backend.assign_optimized_module(matmul.optimized_mod)
+    is_dynamic = (matmul.dynamic_range is not None and len(matmul.optimized_mod.functions) > 1)
+    wrapped_code = backend.wrap(matmul.get_source(kenrel_only=True), is_dynamic=is_dynamic)
     assert "void call" in wrapped_code
 
 
