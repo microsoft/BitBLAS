@@ -278,7 +278,7 @@ class MatmulKernelNameGenerator(BaseKernelNameGenerator):
         A_dtype = self.simplify_dtype(config.A_dtype)
         W_dtype = self.simplify_dtype(config.W_dtype)
 
-        precision_str = (f"A{A_dtype}W{W_dtype}")
+        precision_str = (f"{A_dtype}x{W_dtype}")
         kernel_name = "_".join([kernel_name, shape_str, precision_str])
 
         # if config.with_scaling:

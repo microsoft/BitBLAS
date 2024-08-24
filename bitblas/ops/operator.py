@@ -80,7 +80,6 @@ class Operator(ABC):
         self.dynamic_range = None
         self.pass_context: Dict = {}
         self.num_args = len(self.prim_func.params)
-        self.function_handle = None
         self.num_output_args: int = (
             1  # todo(lei): should be analyzed from the prim_func.
         )
@@ -93,10 +92,10 @@ class Operator(ABC):
     def get_kernel_name_generator(self) -> Optional[BaseKernelNameGenerator]:
         return None
 
-    def get_source(self, target: Optional[Target] = None) -> str:
+    def get_source(self, target: Optional[Target] = None, kenrel_only=False) -> str:
         if target is None:
             target = self.target
-        if self.lib_generator.lib_code is not None:
+        if self.lib_generator.lib_code is not None and not kenrel_only:
             return self.lib_generator.lib_code
         if self.rt_mod is None:
             self._build_runtime_module(target)
@@ -153,14 +152,14 @@ class Operator(ABC):
             # Initialize a time evaluator with the built module, specifying the device and the number of runs
             self.time_evaluator = rt_mod.time_evaluator(
                 rt_mod.entry_name, self.arch.device, number=10)
-            self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
             self.torch_func = to_pytorch_func(rt_mod)
             if self.arch.platform == "CUDA":
                 try:
                     is_dynamic = (
                         self.dynamic_range is not None and len(self.optimized_mod.functions) > 1)
                     self.wrapper.assign_optimized_module(self.optimized_mod)
-                    wrapped_source = self.wrapper.wrap(self.get_source(target), is_dynamic)
+                    wrapped_source = self.wrapper.wrap(
+                        self.get_source(target, kenrel_only=True), is_dynamic)
                     self.lib_generator.update_lib_code(wrapped_source)
                     self.lib_generator.compile_lib()
                     self.lib = self.lib_generator.load_lib()
@@ -377,7 +376,6 @@ class Operator(ABC):
     def update_runtime_module(self, rt_mod, srcpath=None, libpath=None):
         self.rt_mod = rt_mod
         self.time_evaluator = rt_mod.time_evaluator(rt_mod.entry_name, self.arch.device, number=10)
-        self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
         self.torch_func = to_pytorch_func(rt_mod)
         if srcpath is not None:
             assert self.lib_generator is not None, "lib_generator is not initialized"
@@ -398,7 +396,12 @@ class Operator(ABC):
 
     @property
     def prim_func(self):
-        return self.prim_func_mod["main"]
+        if len(self.prim_func_mod.get_global_vars()) == 1:
+            return self.prim_func_mod[self.prim_func_mod.get_global_vars()[0]]
+        elif "main" in self.prim_func_mod:
+            return self.prim_func_mod["main"]
+        else:
+            raise ValueError("Unable to determine primary function.")
 
     @property
     def srcpath(self):

@@ -180,7 +180,12 @@ class TIRCUDASourceWrapper(object):
 
     @property
     def prim_func(self):
-        return self.mod["main"]
+        if len(self.mod.get_global_vars()) == 1:
+            return self.mod[self.mod.get_global_vars()[0]]
+        elif "main" in self.mod:
+            return self.mod["main"]
+        else:
+            raise ValueError("Unable to determine primary function.")
 
 
 class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
@@ -376,10 +381,6 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
         # Concatenate source code with generated code segments
         lib_code = self.source + init_func + host_func
         return lib_code
-
-    @property
-    def prim_func(self):
-        return self.mod["main"]
 
 
 class TIRWrapper(BaseWrapper):
