@@ -279,8 +279,8 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
             (symbolic,) = list(dynamic_symbolic_set)
             range_str = opt_shapes[symbolic]
             if last_range == 0:
-                call_str = "\tif ({} == 0) return; \n".format(symbolic,)
-                call_str += "\tif ({} <= {}) {{\n\t\t{}<<<{}, {}, {}, stream>>>({}); \n\t}}\n".format(
+                call_str = "  if ({} == 0) return; \n".format(symbolic,)
+                call_str += "  if ({} <= {}) {{\n    {}<<<{}, {}, {}, stream>>>({}); \n  }}\n".format(
                     symbolic,
                     range_str,
                     function_name,
@@ -290,7 +290,7 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
                     call_args,
                 )
             else:
-                call_str = "\telse if ({} <= {}) {{\n\t\t{}<<<{}, {}, {}, stream>>>({}); \n\t}}\n".format(
+                call_str = "  else if ({} <= {}) {{\n    {}<<<{}, {}, {}, stream>>>({}); \n  }}\n".format(
                     symbolic,
                     range_str,
                     function_name,
@@ -300,7 +300,7 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
                     call_args,
                 )
             if last_range == num_items - 1:
-                call_str += ("\telse {{\n\t\t{}<<<{}, {}, {}, stream>>>({}); \n\t}}\n".format(
+                call_str += ("  else {{\n    {}<<<{}, {}, {}, stream>>>({}); \n  }}\n".format(
                     function_name, grid_str, block_str, smem_str, call_args))
             last_range += 1
             _call_str += call_str
