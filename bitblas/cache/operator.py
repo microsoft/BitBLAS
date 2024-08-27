@@ -108,8 +108,8 @@ class OperatorCache:
         # For writing optimized.py file
         optimized_file_path = os.path.join(config_path, "optimized.py")
         with open(optimized_file_path, "w") as optimized_file:
-            if op_inst.optimized_func is not None:
-                optimized_file.write(op_inst.optimized_func.script(show_meta=False))
+            if op_inst.optimized_mod is not None:
+                optimized_file.write(op_inst.optimized_mod.script(show_meta=False))
         if op_inst.libpath is not None:
             # copy lib name to the same directory as the artifact
             srcpath = op_inst.srcpath

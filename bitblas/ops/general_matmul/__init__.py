@@ -6,8 +6,9 @@ import operator
 from functools import reduce
 from enum import IntEnum
 from bitblas.base.arch.cuda import CUDA
+from bitblas.base.roller.hint import Hint
 from typing import Any, Literal, Optional, Tuple, Union
-from ..operator import OperatorConfig, Operator, TransformKind, OPExecutorCPU
+from ..operator import OperatorConfig, Operator, TransformKind, OPExecutorCPU, BaseKernelNameGenerator
 from .tirscript.matmul_dequantize_impl import select_implementation as weight_dequantize_implementation
 from .tirscript.matmul_impl import select_implementation as consistent_implementation
 from ...base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
@@ -226,6 +227,85 @@ class MatmulConfig(OperatorConfig):
             object.__setattr__(self, "storage_dtype", self.W_dtype)
 
 
+class MatmulKernelNameGenerator(BaseKernelNameGenerator):
+
+    KERNEL_PREFIX = "matmul"
+
+    @staticmethod
+    def serialize_hint(hint: Optional[Hint] = None) -> str:
+        if hint is None:
+            return "default"
+        else:
+            if hint.use_tc:
+                hint_prefix = "tc"
+                BM, BN = hint.block
+                WM, WN = hint.warp
+                BK = hint.rstep[-1]
+                reduce_k = hint.block_reduction_depth
+                pipeline_stage = hint.pipeline_stage
+                hint_name = f"{hint_prefix}x{BM}x{BN}x{BK}w{WM}x{WN}"
+                if reduce_k is not None and reduce_k > 1:
+                    hint_name += f"xr{reduce_k}"
+                if pipeline_stage > 1:
+                    hint_name += f"xp{pipeline_stage}"
+                return hint_name
+            else:
+                hint_prefix = "simt"
+                # do not annotate for simt currently
+                return hint_prefix
+
+    @staticmethod
+    def simplify_dtype(dtype: str) -> str:
+        if dtype == "float32":
+            return "f32"
+        elif dtype == "float16":
+            return "f16"
+        elif dtype == "bfloat16":
+            return "bf16"
+        elif dtype.startswith("int"):
+            return f"i{dtype[3:]}"
+        elif dtype.startswith("uint"):
+            return f"u{dtype[4:]}"
+        return dtype
+
+    def generate(self, hint=None) -> str:
+        config = self.config
+        kernel_name = self.KERNEL_PREFIX
+        shape_str = f"n{self.config.N}k{self.config.K}"
+        if isinstance(config.M, int):
+            shape_str = f"m{config.M}" + shape_str
+
+        A_dtype = self.simplify_dtype(config.A_dtype)
+        W_dtype = self.simplify_dtype(config.W_dtype)
+
+        precision_str = (f"{A_dtype}x{W_dtype}")
+        kernel_name = "_".join([kernel_name, shape_str, precision_str])
+
+        # if config.with_scaling:
+        #     kernel_name += "Scale"
+
+        # if config.with_zeros:
+        #     if config.zeros_mode == "original":
+        #         kernel_name += "OriginalZeros"
+        #     elif config.zeros_mode == "rescale":
+        #         precision_str += "RescaleZeros"
+        #     elif config.zeros_mode == "quantized":
+        #         precision_str += "QuantizedZeros"
+        #     else:
+        #         raise ValueError(f"Unsupported zeros mode: {config.zeros_mode}")
+
+        # if config.propagate_a is not TransformKind.NonTransform:
+        #     kernel_name += f"_pa{config.propagate_a.value}"
+        # if config.propagate_b is not TransformKind.NonTransform:
+        #     kernel_name += f"_pb{config.propagate_b.value}"
+
+        kernel_name = "_".join([kernel_name, self.serialize_hint(hint)])
+        return kernel_name
+
+    def is_valid_config(self, config: OperatorConfig) -> bool:
+        return isinstance(config, MatmulConfig)
+
+
 class Matmul(Operator):
 
     # TODO(lei): This should be improved into a general datatype class.
@@ -349,6 +429,9 @@ class Matmul(Operator):
 
         # output data type
         self.torch_output_dtype = getattr(torch, self.out_dtype)
+
+    def get_kernel_name_generator(self):
+        return MatmulKernelNameGenerator(self.config)
 
     def _alloc_workspace(self):
         return torch.empty(WORKSPACE_SIZE, dtype=torch.float16).cuda()

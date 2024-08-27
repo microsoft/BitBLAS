@@ -6,7 +6,7 @@ import os
 from tvm.contrib.popen_pool import PopenPoolExecutor, StatusKind
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import numpy as np
-from typing import List, Tuple, Optional, Dict, Union, Literal
+from typing import List, Tuple, Optional, Dict, Union, Literal, Callable
 from tvm import tir, IRModule
 from tvm.runtime import Module
 from tvm.tir import Schedule
@@ -455,13 +455,13 @@ def create_dispatch_func(g_var: str, func: tir.PrimFunc, refactored_funcs: List[
 
 
 def create_dispatch_mod(g_var: str, original_func: tir.PrimFunc,
-                        specialized_funcs: List[tir.PrimFunc]) -> IRModule:
+                        specialized_funcs: List[tir.PrimFunc], function_symbols) -> IRModule:
     dispatch_mod: IRModule = tvm.IRModule()
     g_var_supply = GlobalVarSupply(dispatch_mod)
     refactored_funcs = []
-    for func in specialized_funcs:
+    for f_var, func in zip(function_symbols, specialized_funcs):
         params, buffers_to_declare = collect_buffers_to_declare(func)
-        global_symbol, device_func = refactor_specialized_func(g_var, func, params,
+        global_symbol, device_func = refactor_specialized_func(f_var, func, params,
                                                                buffers_to_declare)
         global_symbol = g_var_supply.fresh_global(global_symbol, add_prefix=False)
         dispatch_mod[global_symbol] = device_func
@@ -478,6 +478,7 @@ def fast_tune_with_dynamic_range(
     parallel_build: bool = True,
     global_symbol: Optional[str] = None,
     dynamic_range: Optional[Dict[str, List[int]]] = None,
+    kernel_name_generator: Optional[Callable] = None,
 ) -> IRModule:
     if dynamic_range is None:
         dynamic_range = {}
@@ -517,12 +518,30 @@ def fast_tune_with_dynamic_range(
     # Convert the Cartesian product to a list of dictionaries
     specialize_items: List[Dict] = [dict(zip(opt_shapes.keys(), values)) for values in product_list]
 
+    function_symbols: List[str] = []
     specilized_tuned_funcs: List[tir.PrimFunc] = []
     for item in specialize_items:
         func = func.with_attr("opt_shapes", item)
         _, best = fast_tune(func, target, topk, parallel_build)
         if best is None:
             return None
-        specilized_tuned_funcs.append(best.sch.mod["main"])
+        specialized_func = best.sch.mod["main"]
+        function_symbol = global_symbol
+        if kernel_name_generator is not None:
+            scheduled_mod = best.sch.mod
+            best_hint = best.config
+            assert len(scheduled_mod.get_global_vars()) == 1, (
+                "The optimized module should only have one global variable for default schedule.")
+            assert "main" in scheduled_mod, (
+                "The optimized module should have a function named 'main' for default schedule.")
+            default_kernal_name = kernel_name_generator.generate(best_hint)
+            specialized_func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
+            function_symbol = default_kernal_name
 
-    return create_dispatch_mod(global_symbol, func, specilized_tuned_funcs)
+        function_symbols.append(function_symbol)
+        specilized_tuned_funcs.append(specialized_func)
+
+    assert global_symbol is not None, "The global_symbol should not be None"
+    assert len(function_symbols) == len(specilized_tuned_funcs), (
+        "The length of global_symbols should be equal to the length of specilized_tuned_funcs")
+    return create_dispatch_mod(global_symbol, func, specilized_tuned_funcs, function_symbols)

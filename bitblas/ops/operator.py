@@ -8,11 +8,12 @@ from tvm.tir import PrimFunc
 from tvm.contrib.dlpack import to_pytorch_func
 import bitblas
 import ctypes
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 import numpy as np
 from bitblas.base import fast_tune, fast_tune_with_dynamic_range
 from copy import deepcopy
 from bitblas.base.arch import get_arch
+from bitblas.base.roller.hint import Hint
 from bitblas.builder.wrapper import TIRWrapper
 from bitblas.builder.lib_generator import LibraryGenerator
 from dataclasses import dataclass
@@ -20,6 +21,16 @@ from enum import IntEnum
 import logging
 
 logger = logging.getLogger(__name__)
+
+APPLY_SCHEDULE_FAILED_MESSAGE = ("Failed to apply default schedule for operator {} "
+                                 "With target {} and hint {}. \n"
+                                 "The error message: {} "
+                                 "Please perform hardware-aware tuning manually.")
+
+BUILD_RUNTIME_LIBRARY_FAILED_MESSAGE = ("Failed to build runtime library for operator {} "
+                                        "With target {} and hint {}. \n"
+                                        "The error message: {} "
+                                        "Please perform hardware-aware tuning manually.")
 
 
 class TransformKind(IntEnum):
@@ -35,6 +46,24 @@ class OperatorConfig:
     pass
 
 
+class BaseKernelNameGenerator(ABC):
+    """Optional class for generating kernel names based on the config and hint"""
+
+    def __init__(self, config: OperatorConfig):
+        assert self.is_valid_config(config), (f"Invalid config for {self.__class__.__name__}: "
+                                              f"{config}")
+        self.config = config
+
+    @abstractmethod
+    def is_valid_config(self, config: OperatorConfig):
+        pass
+
+    @abstractmethod
+    def generate(self, hint: Hint = None) -> str:
+        '''Generate the kernel name based on the config and hint'''
+        pass
+
+
 class Operator(ABC):
 
     def __init__(self, name, config: OperatorConfig, target: Target = None):
@@ -44,24 +73,30 @@ class Operator(ABC):
         self.config = config
         self.target = target
         self.prim_func_mod = self._select_implementation()
-        self.optimized_func = None
+        self.optimized_mod = None
         self.rt_mod = None
         self.time_evaluator = None
         self.arch = get_arch(target) if target else None
         self.dynamic_range = None
         self.pass_context: Dict = {}
         self.num_args = len(self.prim_func.params)
-        self.function_handle = None
         self.num_output_args: int = (
             1  # todo(lei): should be analyzed from the prim_func.
         )
+        self.kernel_name_generator: Optional[BaseKernelNameGenerator] = (
+            self.get_kernel_name_generator())
         self.lib_generator = LibraryGenerator(self.arch)
         self.wrapper = TIRWrapper(self.arch)
         self.lib = None
 
-    def get_source(self, target: Target = None) -> str:
+    def get_kernel_name_generator(self) -> Optional[BaseKernelNameGenerator]:
+        return None
+
+    def get_source(self, target: Optional[Target] = None, kenrel_only=False) -> str:
         if target is None:
             target = self.target
+        if self.lib_generator.lib_code is not None and not kenrel_only:
+            return self.lib_generator.lib_code
         if self.rt_mod is None:
             self._build_runtime_module(target)
         return self.rt_mod.imported_modules[0].get_source() if self.rt_mod else None
@@ -88,7 +123,7 @@ class Operator(ABC):
 
         # Check if the platform is CUDA and we have an optimized function
         if self.arch.platform == "CUDA":
-            if self.optimized_func is None:
+            if self.optimized_mod is None:
                 return None
 
             @tvm.register_func(func_name="tvm_callback_cuda_postproc", override=True)
@@ -96,17 +131,17 @@ class Operator(ABC):
                 return self.post_process(code)
 
             try:
-                # Use a specific TVM pass context for CUDA platforms
                 with tvm.transform.PassContext(config={
                         "tir.use_async_copy": True,
                         "tir.disable_cse_tir": True,
                         **self.pass_context
                 }):
-                    rt_mod = tvm.build(self.optimized_func, target=target, name=self.name)
+                    rt_mod = tvm.build(self.optimized_mod, target=target)
             except Exception:  # noqa: F841
                 logger.debug(
-                    "Failed to build optimized function for CUDA target with default schedule, Please consider enable hardware aware tuning!"
-                )
+                    BUILD_RUNTIME_LIBRARY_FAILED_MESSAGE.format(self.__class__.__name__, target,
+                                                                "optimized",
+                                                                "Failed to build optimized module"))
         else:
             # For non-CUDA platforms or when no optimized function is available, build with the primary function
             rt_mod = tvm.build(self.prim_func, target=target, name=self.name)
@@ -117,14 +152,14 @@ class Operator(ABC):
             # Initialize a time evaluator with the built module, specifying the device and the number of runs
             self.time_evaluator = rt_mod.time_evaluator(
                 rt_mod.entry_name, self.arch.device, number=10)
-            self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
             self.torch_func = to_pytorch_func(rt_mod)
             if self.arch.platform == "CUDA":
                 try:
                     is_dynamic = (
-                        self.dynamic_range is not None and len(self.optimized_func.functions) > 1)
-                    self.wrapper.assign_optimized_module(self.optimized_func)
-                    wrapped_source = self.wrapper.wrap(self.get_source(target), is_dynamic)
+                        self.dynamic_range is not None and len(self.optimized_mod.functions) > 1)
+                    self.wrapper.assign_optimized_module(self.optimized_mod)
+                    wrapped_source = self.wrapper.wrap(
+                        self.get_source(target, kenrel_only=True), is_dynamic)
                     self.lib_generator.update_lib_code(wrapped_source)
                     self.lib_generator.compile_lib()
                     self.lib = self.lib_generator.load_lib()
@@ -153,14 +188,25 @@ class Operator(ABC):
             return optimized_mod
         return None
 
+    def _update_optimized_mod(self, optimized_mod: IRModule):
+        self.optimized_mod = optimized_mod
+
     def _build_default_module(self, target: Target):
         try:
-            self.optimized_func = self.apply_default_schedule(self.prim_func_mod, target)
-        except Exception:
-            self.optimized_func = None
+            scheduled_mod = self.apply_default_schedule(self.prim_func_mod, target)
+            assert len(scheduled_mod.get_global_vars()) == 1, (
+                "The optimized module should only have one global variable for default schedule.")
+            assert "main" in scheduled_mod, (
+                "The optimized module should have a function named 'main' for default schedule.")
+            default_kernal_name = self.kernel_name_generator.generate()
+            func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
+            optimized_mod = tvm.IRModule({default_kernal_name: func})
+            self._update_optimized_mod(optimized_mod)
+        except Exception as apply_schedule_error:
+            self.optimized_mod = None
             logger.warning(
-                "[BitBLAS][Warning] Apply default schedule failed. Please perform hardware-aware tuning manually."
-            )
+                APPLY_SCHEDULE_FAILED_MESSAGE.format(self.__class__.__name__, target, "default",
+                                                     apply_schedule_error))
 
         self._build_runtime_module(target)
 
@@ -171,12 +217,13 @@ class Operator(ABC):
                           func: PrimFunc,
                           target: Target,
                           topk: int = 20,
-                          parallel_build=True) -> IRModule:
+                          parallel_build=True) -> Tuple[IRModule, Hint]:
         _, best = fast_tune(func, target, topk=topk, parallel_build=parallel_build)
-        if best is not None:
-            return best.sch.mod
+        # annotate the best pass context
+        # TODO(lei): actually we should remove this by enable pass through
+        # annotation in the func's attribute.
         self.pass_context = best.config.pass_context
-        return None
+        return ((best.sch.mod, best.config) if best is not None else (None, None))
 
     def apply_fast_tuning_with_dynamic_range(
         self,
@@ -186,25 +233,39 @@ class Operator(ABC):
         dynamic_range: Dict[str, List[int]] = None,
     ):
         optimized_mod = fast_tune_with_dynamic_range(
-            func, target, topk=topk, parallel_build=True, dynamic_range=dynamic_range)
+            func,
+            target,
+            topk=topk,
+            parallel_build=True,
+            dynamic_range=dynamic_range,
+            kernel_name_generator=self.kernel_name_generator)
         if optimized_mod is not None:
             return optimized_mod
         return None
 
     def hardware_aware_finetune(self,
                                 topk: int = 20,
-                                target: tvm.target.Target = None,
+                                target: Optional[tvm.target.Target] = None,
                                 parallel_build=True):
         if target is None:
             target = self.target
         dynamic_range = self.dynamic_range
         func = self.prim_func
         if dynamic_range is not None:
-            self.optimized_func = self.apply_fast_tuning_with_dynamic_range(
+            self.optimized_mod = self.apply_fast_tuning_with_dynamic_range(
                 func, target, topk, dynamic_range)
         else:
-            self.optimized_func = self.apply_fast_tuning(
+            scheduled_mod, best_hint = self.apply_fast_tuning(
                 func, target, topk, parallel_build=parallel_build)
+            assert len(scheduled_mod.get_global_vars()) == 1, (
+                "The optimized module should only have one global variable for default schedule.")
+            assert "main" in scheduled_mod, (
+                "The optimized module should have a function named 'main' for default schedule.")
+            default_kernal_name = self.kernel_name_generator.generate(best_hint)
+            func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
+            optimized_mod = tvm.IRModule({default_kernal_name: func})
+            self._update_optimized_mod(optimized_mod)
+
         self._build_runtime_module(self.target)
 
     def get_profile_tensors(self, dynamic_symbolic_constraints: Optional[Dict] = None):
@@ -315,7 +376,6 @@ class Operator(ABC):
     def update_runtime_module(self, rt_mod, srcpath=None, libpath=None):
         self.rt_mod = rt_mod
         self.time_evaluator = rt_mod.time_evaluator(rt_mod.entry_name, self.arch.device, number=10)
-        self.function_handle = rt_mod.get_function(rt_mod.entry_name).handle
         self.torch_func = to_pytorch_func(rt_mod)
         if srcpath is not None:
             assert self.lib_generator is not None, "lib_generator is not initialized"
@@ -336,7 +396,12 @@ class Operator(ABC):
 
     @property
     def prim_func(self):
-        return self.prim_func_mod["main"]
+        if len(self.prim_func_mod.get_global_vars()) == 1:
+            return self.prim_func_mod[self.prim_func_mod.get_global_vars()[0]]
+        elif "main" in self.prim_func_mod:
+            return self.prim_func_mod["main"]
+        else:
+            raise ValueError("Unable to determine primary function.")
 
     @property
     def srcpath(self):
