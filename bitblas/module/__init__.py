@@ -312,12 +312,12 @@ class Linear(nn.Module):
             if bias is not None:
                 self.bias = bias
 
-    def repack_from_gptq(self, gptq_module):
+    def repack_from_gptq(self, gptq_module, device="cuda"):
         # qweight in gptq old quant linear stored with (out_features, in_features), should be transposed.
         qweight = gptq_module.qweight.T.contiguous().view(self.TORCH_STORAGE_DTYPE)
         intweight = unpack_qweight(qweight, self.bits).contiguous()
         if self.bitblas_matmul.weight_transform is not None:
-            qweight = self.bitblas_matmul.weight_transform(intweight.cpu()).cuda()
+            qweight = self.bitblas_matmul.weight_transform(intweight.cpu()).to(device)
         self.qweight = qweight
         # scales in gptq old quant linear stored with (in_features // group_size, out_features), should be transposed.
         scales = gptq_module.scales.T.contiguous().view(self.torch_dtype)
