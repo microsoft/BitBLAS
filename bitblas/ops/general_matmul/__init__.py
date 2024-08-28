@@ -666,7 +666,7 @@ class Matmul(Operator):
         if bias is not None:
             args.append(bias)
         args.append(output)
-        
+
         # self._forward_from_torch_func(*args)
         if self.lib is None:
             self._forward_from_torch_func(*args)
@@ -678,7 +678,7 @@ class Matmul(Operator):
             stream = torch.cuda.current_stream(device=A.device)
             torch.cuda.set_device(A.device)
             self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
-        
+
         return output
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
