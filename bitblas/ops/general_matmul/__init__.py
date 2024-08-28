@@ -674,7 +674,7 @@ class Matmul(Operator):
             if self.dynamic_range is not None:
                 m = reduce(operator.mul, A.shape[:-1], 1)
                 args.append(m)
-            print(self.get_source())
+
             stream = torch.cuda.current_stream(device=A.device)
             torch.cuda.set_device(A.device)
             self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
