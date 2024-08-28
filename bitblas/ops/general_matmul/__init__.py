@@ -667,7 +667,6 @@ class Matmul(Operator):
             args.append(bias)
         args.append(output)
 
-        # self._forward_from_torch_func(*args)
         if self.lib is None:
             self._forward_from_torch_func(*args)
         else:
