@@ -603,7 +603,7 @@ class Matmul(Operator):
         weight = weight.contiguous()
         if self.W_dtype == self.A_dtype:
             if self.weight_transform is not None:
-                return self.weight_transform(weight.cpu()).cuda().contiguous()
+                return self.weight_transform(weight.cpu()).to(weight.device).contiguous()
             return weight
 
         source_format, bit = self.source_format, self.bit
@@ -624,7 +624,7 @@ class Matmul(Operator):
 
         # Apply an optional weight transformation if specified
         if self.weight_transform is not None:
-            weight = self.weight_transform(weight.cpu()).cuda().contiguous()
+            weight = self.weight_transform(weight.cpu()).to(weight.device).contiguous()
 
         # Prepare the return list with the transformed weight and optionally include scale, zeros, and bias
         result = [weight]
@@ -666,18 +666,19 @@ class Matmul(Operator):
         if bias is not None:
             args.append(bias)
         args.append(output)
-
-        if self.dynamic_range is not None:
-            m = reduce(operator.mul, A.shape[:-1], 1)
-            args.append(m)
-
-        stream = torch.cuda.current_stream()
-
+        
+        # self._forward_from_torch_func(*args)
         if self.lib is None:
             self._forward_from_torch_func(*args)
         else:
+            if self.dynamic_range is not None:
+                m = reduce(operator.mul, A.shape[:-1], 1)
+                args.append(m)
+            print(self.get_source())
+            stream = torch.cuda.current_stream(device=A.device)
+            torch.cuda.set_device(A.device)
             self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
-
+        
         return output
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
