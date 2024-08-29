@@ -666,7 +666,7 @@ def get_tensorized_func_and_tags(
 
         block_stmt = sch.get(main_block)
 
-        minimal_tensorize_threshold = 16
+        minimal_tensorize_threshold = 16 if in_dtype in ["bfloat16", "float16"] else 32
         # the batch dimension is not taken into consideration.
         extent = block_stmt.iter_vars[1].dom.extent
         if isinstance(extent,
