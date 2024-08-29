@@ -3,7 +3,6 @@
 
 from bitblas.benchmark import BitblasOperatorBenchmarkBase
 from bitblas import Matmul, MatmulConfig
-from bitblas.ops.general_matmul import OptimizeStrategy
 from bitblas.utils import get_commit_id
 from bitblas import set_log_level
 from tabulate import tabulate
@@ -67,7 +66,7 @@ class BitblasMatmulOpsBenchmarkCompareStategies(BitblasOperatorBenchmarkBase):
         },
     }
 
-    OPT_SHAPES = 1 # our test focuses on GEMV only
+    OPT_SHAPES = 1  # our test focuses on GEMV only
 
     CURRENT_COMMIT_ID = get_commit_id()
 
@@ -77,14 +76,12 @@ class BitblasMatmulOpsBenchmarkCompareStategies(BitblasOperatorBenchmarkBase):
     def prepare_set_group_4x(self, name: str, N, K) -> List:
         assert name in self.config_map, f"Operator {name} not found in config map"
         return [
-            self.generate_op_unit(
-                self.generate_operator_config(
-                    name, self.OPT_SHAPES, N, K)),
+            self.generate_op_unit(self.generate_operator_config(name, self.OPT_SHAPES, N, K)),
         ]
 
     def prepare_benchmark_sets(self):
         """Prepare benchmark sets."""
-        
+
         self.add_benchmark_set(
             "FP16xUINT4_GEMV_DECODING_NAIVE",
             [
@@ -144,7 +141,7 @@ class BitblasMatmulOpsBenchmarkCompareStategies(BitblasOperatorBenchmarkBase):
                 ),
             ],
         )
-        
+
         self.add_benchmark_set(
             "FP16xUINT2_GEMV_DECODING_NAIVE",
             [
@@ -204,7 +201,7 @@ class BitblasMatmulOpsBenchmarkCompareStategies(BitblasOperatorBenchmarkBase):
                 ),
             ],
         )
-        
+
         self.add_benchmark_set(
             "INT8xUINT2_GEMV_DECODING_NAIVE",
             [
@@ -338,7 +335,8 @@ class BitblasMatmulOpsBenchmarkCompareStategies(BitblasOperatorBenchmarkBase):
                         latency_str = "N/A" if latency is None else f"{latency:.3f}"
                         tmp_data.append([shape, latency_str])
                     else:
-                        sub_results = results[i * len(self.OPT_SHAPES):(i + 1) * len(self.OPT_SHAPES)]
+                        sub_results = results[i * len(self.OPT_SHAPES):(i + 1) *
+                                              len(self.OPT_SHAPES)]
                         for i, result in enumerate(sub_results):
                             latency = result[0]
                             dyn_prof_shape = {"m": self.OPT_SHAPES[i]}
@@ -383,14 +381,9 @@ class BitblasMatmulOpsBenchmarkCompareStategies(BitblasOperatorBenchmarkBase):
         """Run benchmarks on all benchmark sets."""
         # Calculate the total number of benchmark runs for the progress bar
         total_runs = sum(
-            (
-                len(benchmark_set) * 
-                (len(self.OPT_SHAPES)
-                if isinstance(self.OPT_SHAPES, list)
-                else self.OPT_SHAPES)
-            )
-            for benchmark_set in self.benchmark_sets.values()
-        )
+            (len(benchmark_set) *
+             (len(self.OPT_SHAPES) if isinstance(self.OPT_SHAPES, list) else self.OPT_SHAPES))
+            for benchmark_set in self.benchmark_sets.values())
 
         with tqdm(total=total_runs, desc="Total Progress", unit="benchmark") as pbar:
             for name, benchmark_set in self.benchmark_sets.items():
