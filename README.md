@@ -61,14 +61,14 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 
 | **A_dtype** | **W_dtype** | **Accum_dtype** |     **Out_dtype**    | **BitBLAS Support** |                  **Tested Platform**                 |
 |:-----------:|:-----------:|:---------------:|:--------------------:|:-------------------:|:----------------------------------------------------:|
-|     BF16    |     BF16    |    FP32/FP16    |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
-|     BF16    |   FP4_E2M1  |    FP32/FP16    |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
-|     BF16    |   FP8_E4M3  |    FP32/FP16    |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
-|     BF16    |     INT8    |    FP32/FP16    |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
-|     BF16    |  UINT4/INT4 |    FP32/FP16    |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
-|     BF16    |  UINT2/INT2 |    FP32/FP16    |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
-|     BF16    |    UINT1    |    FP32/FP16    |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
-|     BF16    |     NF4     |    FP32/FP16    |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
+|     BF16    |     BF16    |      FP32       |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
+|     BF16    |   FP4_E2M1  |      FP32       |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
+|     BF16    |   FP8_E4M3  |      FP32       |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
+|     BF16    |     INT8    |      FP32       |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
+|     BF16    |  UINT4/INT4 |      FP32       |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
+|     BF16    |  UINT2/INT2 |      FP32       |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
+|     BF16    |    UINT1    |      FP32       |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
+|     BF16    |     NF4     |      FP32       |         FP16         |        **√**        |                A100(SM_80)/A6000(SM_86)              |
 |     FP16    |     FP16    |    FP32/FP16    |         FP16         |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     FP16    |   FP4_E2M1  |    FP32/FP16    |         FP16         |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |     FP16    |   FP8_E4M3  |    FP32/FP16    |         FP16         |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
