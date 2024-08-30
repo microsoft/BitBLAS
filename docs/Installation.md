@@ -1,7 +1,5 @@
 # Installation Guide
 
-
-
 ## Installing with pip
 
 **Prerequisites for installation via wheel or PyPI:**
@@ -21,6 +19,12 @@ Alternatively, you may choose to install BitBLAS using prebuilt packages availab
 
 ```bash
 pip install bitblas-0.0.0.dev0+ubuntu.20.4.cu120-py3-none-any.whl
+```
+
+To install the latest version of BitBLAS from the github repository, you can run the following command:
+
+```bash
+pip install git+https://github.com/microsoft/BitBLAS.git
 ```
 
 After installing BitBLAS, you can verify the installation by running:
