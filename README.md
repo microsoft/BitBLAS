@@ -101,6 +101,12 @@ The easiest way to install BitBLAS is direcly from the PyPi using pip. To instal
 pip install bitblas
 ```
 
+Alternatively, to install the latest version of BitBLAS from the github repository, you can run the following command:
+
+```bash
+pip install git+https://github.com/microsoft/BitBLAS.git
+```
+
 After installing BitBLAS, you can verify the installation by running:
 
 ```bash
