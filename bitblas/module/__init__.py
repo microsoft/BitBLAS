@@ -265,8 +265,6 @@ class Linear(nn.Module):
         self.bitblas_matmul.hardware_aware_finetune(topk=topk)
 
     def forward(self, A, output=None):
-        if A.dtype != torch.float16:
-            A = A.half()
         A = self.bitblas_matmul.transform_input(A)
         stream = torch.cuda.current_stream()
 
@@ -277,7 +275,9 @@ class Linear(nn.Module):
         args = [A_void, *self.q_params]
         if output is None:
             output = torch.empty(
-                A.shape[:-1] + (self.out_features,), dtype=A.dtype, device=A.device)
+                A.shape[:-1] + (self.out_features,),
+                dtype=getattr(torch, self.bitblas_matmul.out_dtype),
+                device=A.device)
         args.append(ctypes.c_void_p(output.data_ptr()))
         if self.bitblas_matmul.dynamic_range is not None:
             m = reduce(operator.mul, A.shape[:-1], 1)
