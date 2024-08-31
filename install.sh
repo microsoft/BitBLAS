@@ -53,6 +53,9 @@ echo "LLVM config path: $LLVM_CONFIG_PATH"
 git submodule update --init --recursive
 
 cd 3rdparty/tvm
+if [ -d build ]; then
+    rm -rf build
+fi
 mkdir build
 cp cmake/config.cmake build
 cd build
