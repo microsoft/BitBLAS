@@ -571,9 +571,9 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             # Apply Swizzling
             sch.annotate(block_read, ann_key="permuted_layout", ann_val=can_swizzle)
             # if not, apply padding to alleviate bank conflict
-            # if not (can_swizzle or is_smooth):
-            #     pad_offset = 8 if intrin_info.in_dtype == "float16" else 16
-            #     sch.storage_align(block_read, 0, axis=-2, factor=16, offset=pad_offset)
+            if not (can_swizzle or is_smooth):
+                pad_offset = 8 if intrin_info.in_dtype == "float16" else 16
+                sch.storage_align(block_read, 0, axis=-2, factor=16, offset=pad_offset)
             sch.annotate(f_2, "pragma_unroll_explicit", False)
             return block_read
 
