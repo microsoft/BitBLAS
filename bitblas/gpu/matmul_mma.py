@@ -648,7 +648,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             auto_inline_consumer_chain(sch, accumulator_shared_to_global)
             sch.reverse_compute_at(
                 accumulator_shared_to_global,
-                sch.get_loops(store)[-5],
+                sch.get_loops(store)[-6],
                 preserve_unit_loops=True,
             )
             vec_len = get_coalesced_veclen(sch.get(accumulator_shared_to_global))
