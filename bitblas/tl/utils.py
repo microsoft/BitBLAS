@@ -10,9 +10,8 @@ def get_swizzle_layout(row_idx, col_idx, row_size, dtype: Union[DataType, str]):
     BANK_SIZE_BYTES = 128
     if isinstance(dtype, str):
         dtype = DataType(dtype)
-    col_idx_outer, col_idx_inner = col_idx // (
-        BANK_SIZE_BYTES // dtype.bits
-    ), col_idx % (BANK_SIZE_BYTES // dtype.bits)
+    col_idx_outer, col_idx_inner = col_idx // (BANK_SIZE_BYTES // dtype.bits), col_idx % (
+        BANK_SIZE_BYTES // dtype.bits)
     #  use transaction bits to support diverse dtype.
     #  for fp16, 64 elems * 16 bits = 1024 bits, 32 elems * 32 bits = 512 bits
     #  for int8, 128 elems * 8 bits = 1024 bits, 64 elems * 8 bits = 512 bits
@@ -58,9 +57,7 @@ def get_swizzle_layout(row_idx, col_idx, row_size, dtype: Union[DataType, str]):
         interleave_elems = 32 // dtype.bits
         new_col_idx_outer = col_idx_outer ^ (row_idx_sub // interleave_elems)
 
-    assert (
-        new_col_idx_outer is not None
-    ), f"Unsupported dtype {dtype} with {coalescent_bits} bits"
+    assert (new_col_idx_outer is not None), f"Unsupported dtype {dtype} with {coalescent_bits} bits"
     return row_idx, ana.simplify(new_col_idx_outer * bank_elems + col_idx_inner)
 
 
@@ -105,14 +102,10 @@ def get_ldmatrix_offset(
     assert matrix in ["A", "B"], "matrix should be either A or B"
     transform_func = (
         ldmatrix_32x8_to_shared_16x16_layout
-        if dtype in ["float16", "bfloat16"]
-        else ldmatrix_32x16_to_shared_16x32_layout_b
-    )
+        if dtype in ["float16", "bfloat16"] else ldmatrix_32x16_to_shared_16x32_layout_b)
     transform_func_trans = (
         ldmatrix_trans_32x8_to_shared_16x16_layout
-        if dtype in ["float16", "bfloat16"]
-        else ldmatrix_32x16_to_shared_16x32_layout_a
-    )
+        if dtype in ["float16", "bfloat16"] else ldmatrix_32x16_to_shared_16x32_layout_a)
     if matrix == "A":
         assert not transpose, "A matrix should not be transposed"
         new_row_idx, new_col_idx = transform_func(row_idx, col_idx)
