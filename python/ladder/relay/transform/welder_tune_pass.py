@@ -6,7 +6,7 @@ from tvm import relay, ir
 from ladder.graph import IRNode, OutputNode, Node, PlaceHolderNode
 from ladder.te_utils import normalize_tensor_names
 from ladder.engine import Engine, MultiProcTunner
-from ..integration import add_source
+from ..integration import add_source, set_arch
 import logging
 
 logger = logging.getLogger(__name__)
@@ -29,6 +29,7 @@ class WelderTunePass(relay.ExprMutator):
     def __init__(self, arch, topk=20, save_perf_log=None):
         super().__init__()
         self.arch = arch
+        set_arch(arch)
         self.topk = topk
         # save_perf_log should be a directory
         self.save_perf_log_ = save_perf_log

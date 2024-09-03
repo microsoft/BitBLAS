@@ -12,8 +12,12 @@ from ..utils import CompileResult
 from ..header import tvm_rt_header
 
 _global_dict: Dict[str, CompileResult] = {}
-
+_global_arch = None
 _source_mod_cache = {}
+
+def set_arch(arch):
+    global _global_arch
+    _global_arch = arch
 
 def add_source(key, cpresult: CompileResult) -> None:
     _global_dict[key] = cpresult
@@ -30,6 +34,7 @@ def _compiler(func):
     tvm_symbol = func.attrs["global_symbol"]
     cpresult = _global_dict[func.attrs["global_symbol"]]
     symbol = cpresult.name + "_host"
+    arch = _global_arch
 
     num_fparam = len(func.params) + len(cpresult.output_desc)
     index_map = [i for i in range(num_fparam)]
@@ -39,7 +44,7 @@ def _compiler(func):
     link_mod = csrc_module_create(link_code, "cc", [tvm_symbol], [])
 
     if cpresult not in _source_mod_cache:
-        source_code = cpresult.create_code_for_tvm(symbol, index_map, num_fparam)
+        source_code = cpresult.create_code_for_tvm(arch, symbol, index_map, num_fparam)
         source_mod = csrc_module_create(source_code, "cu", [symbol], [])
         _source_mod_cache[cpresult] = source_mod
     source_mod = _source_mod_cache[cpresult]
@@ -76,12 +81,47 @@ def call_cuda_compile(output, objects, options=None, cc="nvcc"):
     for obj in temp_objs:
         os.remove(obj)
 
+def call_hip_compile(output, objects, options=None, cc="hipcc"):
+    procs = []
+    objects_to_link = []
+    temp_objs = []
+    for object in objects:
+        if object.endswith('.o'):
+            objects_to_link.append(object)
+        else:
+            obj = tempfile.mktemp(suffix=".o")
+            temp_objs.append(obj)
+            objects_to_link.append(obj)
+            commands = [cc, "-c", object, "-o", obj, "-fPIC"] + options
+            proc = subprocess.Popen(commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            procs.append(proc)
+    for proc in procs:
+        proc.wait()
+    for proc in procs:
+        if proc.returncode != 0:
+            msg = proc.stdout.read().decode('utf-8')
+            raise RuntimeError("Compilation error: " + msg)
+    subprocess.run([cc, "--shared", *objects_to_link, "-o", output], check=True,
+                   stdout=subprocess.PIPE,  # Capture the stdout
+                   stderr=subprocess.PIPE,  # Capture the stderr
+                   text=True  # Make sure the captured output is in string format
+                )
+    for obj in temp_objs:
+        os.remove(obj)
+
 def update_lib(lib, arch, lib_path):
-    compute_version = arch.compute_capability
-    cutlass_dir = os.path.expanduser("~/cutlass/include")
-    options = ["-std=c++17", "-O3", "--prec-sqrt=false", "--ftz=true", "--prec-div=false", "--fmad=true",
-               f"-gencode=arch=compute_{compute_version},code=compute_{compute_version}",
-               f"-I{cutlass_dir}"]
-    lib.export_library(lib_path, fcompile=call_cuda_compile, options=options)
+    if arch.platform == "CUDA":
+        compute_version = arch.compute_capability
+        cutlass_dir = os.path.expanduser("~/cutlass/include")
+        options = ["-std=c++17", "-O3", "--prec-sqrt=false", "--ftz=true", "--prec-div=false", "--fmad=true",
+                f"-gencode=arch=compute_{compute_version},code=compute_{compute_version}",
+                f"-I{cutlass_dir}"]
+        lib.export_library(lib_path, fcompile=call_cuda_compile, options=options)
+    elif "ROCm" in arch.platform:
+        compute_version = arch.compute_capability
+        options = ["-std=c++17", "-O3", "--offload-arch={}".format(compute_version)]
+        lib.export_library(lib_path, fcompile=call_hip_compile, options=options)
+    else:
+        raise NotImplementedError(arch.platform)
     lib = tvm.runtime.load_module(lib_path)
     return lib
