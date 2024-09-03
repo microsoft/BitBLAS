@@ -108,7 +108,7 @@ extern "C" float profile({}) {{
         profiling_code = header + self.code + "\n" + host_funcs
         return profiling_code
 
-    def create_code_for_tvm(self, symbol, index_map: List[int], num_fparam: int):
+    def create_code_for_tvm(self, arch, symbol, index_map: List[int], num_fparam: int):
         """generate something like this:
         extern "C" int symbol(DLTensor* args0, DLTensor* args1) {
             kernel_<<<grid, block>>>(
@@ -143,9 +143,17 @@ extern "C" int {symbol}({def_args}) {{
     return 0;
 }}
 """
-        header = tvm_rt_header + cuda_default_header + cutlass_header
-        if self.use_fp16:
-            header += cuda_fp16_header
+        if arch.platform == "CUDA":
+            header = tvm_rt_header + cuda_default_header + cutlass_header    
+            if self.use_fp16:
+                header += cuda_fp16_header
+        elif "ROCm" in arch.platform:
+            header = tvm_rt_header + rocm_default_header
+            if self.use_fp16:
+                header += rocm_fp16_header
+        else:
+            raise NotImplementedError(arch.platform)
+            
         return header + self.code + "\n" + host_funcs
 
     def compile(self, arch, timeout: float = None):

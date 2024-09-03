@@ -349,7 +349,7 @@ class DefaultPolicy:
         td.rstep_map = rstep_map
         td.traffic, td.tile_map = self._compute_memory_traffic(output_tile)
         td.smem_cost, td.cached_tensors_map = self._compute_shared_memory_usage(td)
-        if td.smem_cost > self.arch.smem_cap * 1.2:
+        if td.smem_cost > self.arch.smem_cap:
             td.valid = False
             return td
         output_shape = self.output_nodes[0].get_space_dim()

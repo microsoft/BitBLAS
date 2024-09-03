@@ -106,7 +106,7 @@ class TCPolicy(DefaultPolicy):
     def compute_node_stride_map(self, node: IRNode, td: TileDict):
         if not node.get_tag("tensorCoreConfig"):
             return super().compute_node_stride_map(node, td)
-        td.use_cutlass_mma[node] = self._use_cutlass_mma(node, td)
+        td.use_cutlass_mma[node] = self._use_cutlass_mma(node, td) if self.arch.platform == "CUDA" else False
         use_layout = self._can_implement_layout(node, td)
         AS_stride, BS_stride, C_stride = self._compute_tc_strides(node, td.get_tile(node), td.get_rstep(node))
         A_stride, B_stride, _ = self._compute_tc_strides(node, td.get_tile(node))

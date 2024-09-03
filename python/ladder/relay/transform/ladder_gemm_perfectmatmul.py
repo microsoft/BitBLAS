@@ -1,8 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+import ladder
 from tvm import relay, ir
 import numpy as np
 import logging 
+from tvm.tir import IndexMap
 
 logger = logging.getLogger(__name__)
 
@@ -59,10 +61,14 @@ class PreviousOutputFusibleTracer(relay.ExprVisitor):
 
 @relay.transform.function_pass(opt_level=0, required=["InferType"])
 class LadderPerfectGemmTransform(relay.ExprMutator):
-    def __init__(self, use_async_propagation=False):
+    def __init__(self, use_async_propagation=False, arch=None):
         super().__init__()
         self.use_async_propagation = use_async_propagation
         self.node_output_map = {}
+        if arch==None:
+            self.arch = ladder.arch.__getattribute__('cuda')()
+        else:
+            self.arch=arch
 
     def transform_function(self, func, mod, ctx):
         usage_tracer = UsageTracer()
@@ -132,43 +138,110 @@ class LadderPerfectGemmTransform(relay.ExprMutator):
                     data, (K, M)) if transpose_a else relay.reshape(data, (M, K))
             perfect_data = relay.layout_transform(data, "HW", "HW16h16w")
             perfect_kernel = relay.layout_transform(kernel, "HW", "HW16h16w")
+            if self.arch.platform == "cuda":
 
-            if can_propagate:
-                attrs = ir.make_node(
-                    "DictAttrs",
-                    is_b=False,
-                    transpose=transpose_a,
-                    is_inverse=False,
-                )
-                perfect_data = relay.Call(
-                    relay.op.get("ladder.layout_transform"), [perfect_data], attrs
-                )
-                attrs = ir.make_node(
-                    "DictAttrs",
-                    is_b=True,
-                    transpose=transpose_b,
-                    is_inverse=False,
-                )
-                perfect_kernel = relay.Call(
-                    relay.op.get("ladder.layout_transform"), [perfect_kernel], attrs
-                )
+                if can_propagate:
+                    attrs = ir.make_node(
+                        "DictAttrs",
+                        is_b=False,
+                        transpose=transpose_a,
+                        is_inverse=False,
+                    )
+                    perfect_data = relay.Call(
+                        relay.op.get("ladder.layout_transform"), [perfect_data], attrs
+                    )
+                    attrs = ir.make_node(
+                        "DictAttrs",
+                        is_b=True,
+                        transpose=transpose_b,
+                        is_inverse=False,
+                    )
+                    perfect_kernel = relay.Call(
+                        relay.op.get("ladder.layout_transform"), [perfect_kernel], attrs
+                    )
 
-            # transform data to M, K, wmma_m, wmma_k
-            # transform kernel to K, N, wmma_k, wmma_n
-            attrs = ir.make_node(
-                "DictAttrs", out_dtype=out_dtype,
-                transpose_a=transpose_a,
-                transpose_b=transpose_b, 
-                can_propagate=can_propagate
-            )
-            gemm = relay.Call(
-                relay.op.get("ladder.perfect_matmul"),
-                [perfect_data, perfect_kernel],
-                attrs,
-            )
-            layout_convert = relay.layout_transform(gemm, "HW16h16w", "HW")
-            reshape = relay.reshape(layout_convert, out_shape)
-            return reshape
+                # transform data to M, K, wmma_m, wmma_k
+                # transform kernel to K, N, wmma_k, wmma_n
+                attrs = ir.make_node(
+                    "DictAttrs", out_dtype=out_dtype,
+                    transpose_a=transpose_a,
+                    transpose_b=transpose_b, 
+                    can_propagate=can_propagate
+                )
+                gemm = relay.Call(
+                    relay.op.get("ladder.perfect_matmul"),
+                    [perfect_data, perfect_kernel],
+                    attrs,
+                )
+                layout_convert = relay.layout_transform(gemm, "HW16h16w", "HW")
+                reshape = relay.reshape(layout_convert, out_shape)
+                return reshape
+            elif "ROCm" in self.arch.platform:
+                if can_propagate:
+                    # todo(leiwang): this is a trick to evaluate the correctness of the layout transform
+                    def thread_id_shared_access_64x4_to_16x16_layout_A(thread_id, local_id):
+                        i = thread_id % 16
+                        j = (thread_id // 16) * 4 + local_id
+                        return i, j
+
+                    def thread_id_shared_access_64x4_to_16x16_layout_B(thread_id, local_id):
+                        i = local_id + (thread_id // 16) * 4
+                        j = thread_id % 16
+                        return i, j
+
+                    def a_prmt_func(i, j):
+                        _id = i * 16 + j
+                        thread_id = _id // 4
+                        local_id = _id % 4
+                        return thread_id_shared_access_64x4_to_16x16_layout_A(thread_id, local_id)
+
+                    def b_prmt_func(i, j):
+                        _id = i * 16 + j
+                        thread_id = _id // 4
+                        local_id = _id % 4
+                        return thread_id_shared_access_64x4_to_16x16_layout_B(thread_id, local_id)
+
+                    attrs = ir.make_node(
+                        "DictAttrs",
+                        is_b=False,
+                        transpose=transpose_a,
+                        is_inverse=False,
+                        transform_func=IndexMap.from_func(a_prmt_func),
+                    )
+                    perfect_data = relay.Call(
+                        relay.op.get("ladder.layout_transform"), [perfect_data], attrs
+                    )
+                    # assert transpose_b == True, "currently only support transpose_b == True"
+                    # if transpose_b == True:
+                    #     transpose_b = False
+                    attrs = ir.make_node(
+                        "DictAttrs",
+                        is_b=True,
+                        transpose=transpose_b,
+                        is_inverse=False,
+                        transform_func=IndexMap.from_func(a_prmt_func)
+                    )
+                    perfect_kernel = relay.Call(
+                        relay.op.get("ladder.layout_transform"), [perfect_kernel], attrs
+                    )
+                    attrs = ir.make_node(
+                        "DictAttrs", 
+                        out_dtype='float32', # mfma only support float32 accum and output
+                        transpose_a=transpose_a,
+                        transpose_b=transpose_b, 
+                        can_propagate=can_propagate, 
+                    )
+                    gemm = relay.Call(
+                        relay.op.get("ladder.perfect_matmul"),
+                        [perfect_data, perfect_kernel],
+                        attrs,
+                    )
+                    print("create a fp32 perfect matmul")
+                    gemm = relay.cast(gemm, "float16")
+                    print("cast the matmul")
+                    layout_convert = relay.layout_transform(gemm, "HW16h16w", "HW")
+                    reshape = relay.reshape(layout_convert, out_shape)
+                    return reshape
 
         elif isinstance(call.op, ir.Op) and call.op.name in ["ladder.quant_linear"]:
             kernel = self.visit(call.args[1])

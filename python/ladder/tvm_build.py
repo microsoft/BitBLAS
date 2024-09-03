@@ -274,6 +274,10 @@ def tvm_build(
                 src,
                 1,
             )
-    src = tensor_replace_dp4a(src)
+    if target == "hip":
+        pass
+        # src = tensor_replace_vdot4(src)
+    else:
+        src = tensor_replace_dp4a(src)
     src = tensor_remove_make_int4(src)
     return src, exteral_shared_memroy_size, total_internal_shared_memory

@@ -260,12 +260,49 @@ __device__ void decode_i4s_to_f16(T1 *_i4s, T2 *B_local_decode, const int N = 8)
 
 rocm_default_header = """
 #include <hip/hip_runtime.h>
+#include <rocwmma/rocwmma.hpp>
 #include <math.h>
+
+
+#include <hip/hcc_detail/hip_fp16_math_fwd.h>
+
+#define hpow __ocml_pown_f16
+#define hsqrt __ocml_sqrt_f16
+
+#define htanh(x) __float2half_rn(tanh(__half2float(x)))
+#define htan(x) __float2half_rn(tanf(__half2float(x)))
+#define hatan(x) __float2half_rn(atanf(__half2float(x)))
+#define herf(x) __float2half_rn(erff(__half2float(x)))
+#define hexp(x) __float2half_rn(expf(__half2float(x)))
+
+#define HIPRT_INF_F        __int_as_float(0x7f800000)
+#define HIPRT_NAN_F        __int_as_float(0x7fffffff)
+#define HIPRT_MIN_DENORM_F __int_as_float(0x00000001)
+#define HIPRT_MAX_NORMAL_F __int_as_float(0x7f7fffff)
+#define HIPRT_NEG_ZERO_F   __int_as_float(0x80000000)
+#define HIPRT_ZERO_F       0.0f
+#define HIPRT_ONE_F        1.0f
+
+/* double precision constants */
+#define HIPRT_INF          __hiloint2double(0x7ff00000, 0x00000000)
+#define HIPRT_NAN          __hiloint2double(0xfff80000, 0x00000000)
+
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #define min(a, b) (((a) < (b)) ? (a) : (b))
+
+using int32x4
+ = __attribute__((__vector_size__(4 * sizeof(int)))) int;
+using float32x4
+ = __attribute__((__vector_size__(4 * sizeof(float)))) float;
+using float32x16
+ = __attribute__((__vector_size__(16 * sizeof(float)))) float;
+
 """
 
 rocm_fp16_header = """
+#include <hip/hip_fp16.h>
+#include <hip/hip_bfloat16.h>
+
 #define half _Float16
 #define __float2half_rn(x) half(x)
 
@@ -314,7 +351,10 @@ using float32x4
  = __attribute__((__vector_size__(4 * sizeof(float)))) float;
 using float32x16
  = __attribute__((__vector_size__(16 * sizeof(float)))) float;
- 
+
+using bfloat16_t = hip_bfloat16;
+using bfloat16x4
+ = __attribute__((__vector_size__(4 * sizeof(bfloat16_t)))) float16_t;
 """
 
 cutlass_header = """
