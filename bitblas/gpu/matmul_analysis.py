@@ -6,7 +6,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Optional, Set, Union, Tuple, Dict
-from tvm import tir, DataType
+from tvm import tir
 from tvm.ir import Range
 from tvm.tir import IterVar, PrimExpr, Var, BufferRegion, IndexMap
 from tvm.tir.analysis import undefined_vars
@@ -847,66 +847,3 @@ def layout_propagate_chain(
         if buffer == last_buffer:
             break
     return index_map
-
-
-def get_swizzle_layout(row_idx, col_idx, row_size, dtype: Union[DataType, str]):
-    from tvm import arith
-    ana = arith.Analyzer()
-    BANK_SIZE_BYTES = 128
-    if isinstance(dtype, str):
-        dtype = DataType(dtype)
-    col_idx_outer, col_idx_inner = col_idx // (BANK_SIZE_BYTES // dtype.bits), col_idx % (
-        BANK_SIZE_BYTES // dtype.bits)
-    #  use transaction bits to support diverse dtype.
-    #  for fp16, 64 elems * 16 bits = 1024 bits, 32 elems * 32 bits = 512 bits
-    #  for int8, 128 elems * 8 bits = 1024 bits, 64 elems * 8 bits = 512 bits
-    coalescent_bits = dtype.bits * row_size
-    # permutation on 4 banks, each bank has 32 bits
-    bank_elems = BANK_SIZE_BYTES // dtype.bits
-    new_col_idx_outer = None
-    print(f"coalescent_bits: {coalescent_bits}")
-    if coalescent_bits % 1024 == 0:
-        #   Use 8 * 8 permuted layout
-        #   Every number below corresponds to 8 consecutive fp16 number in shared mem, i.e. one read
-        #   Every row below corresponds to 32 banks
-        #   0  1  2  3  4  5  6  7    ==>    0  1  2  3  4  5  6  7
-        #   0  1  2  3  4  5  6  7    ==>    1  0  3  2  5  4  7  6
-        #   0  1  2  3  4  5  6  7    ==>    2  3  0  1  6  7  4  5
-        #   0  1  2  3  4  5  6  7    ==>    3  2  1  0  7  6  5  4
-        #   0  1  2  3  4  5  6  7    ==>    4  5  6  7  0  1  2  3
-        #   0  1  2  3  4  5  6  7    ==>    5  4  7  6  1  0  3  2
-        #   0  1  2  3  4  5  6  7    ==>    6  7  4  5  2  3  0  1
-        #   0  1  2  3  4  5  6  7    ==>    7  6  5  4  3  2  1  0
-        row_idx_sub = row_idx % bank_elems
-        new_col_idx_outer = col_idx_outer ^ row_idx_sub
-    else:
-        assert coalescent_bits % 512 == 0
-        #  Use 8 * 4 permuted layout
-        #  Every number below corresponds to 8 consecutive fp16 number in shared mem, i.e. one read
-        #  Every row below corresponds to 16 banks
-        #  0  1  2  3    ==>    0  1  2  3
-        #  0  1  2  3    ==>    0  1  2  3
-        #  0  1  2  3    ==>    1  0  3  2
-        #  0  1  2  3    ==>    1  0  3  2
-        #  0  1  2  3    ==>    2  3  0  1
-        #  0  1  2  3    ==>    2  3  0  1
-        #  0  1  2  3    ==>    3  2  1  0
-        #  0  1  2  3    ==>    3  2  1  0
-        #  View with 8 elements per row:
-        #  0  1  2  3  4  0  1  2  3    ==>    0  1  2  3  0  1  2  3
-        #  0  1  2  3  4  0  1  2  3    ==>    1  0  3  2  1  0  3  2
-        #  0  1  2  3  4  0  1  2  3    ==>    2  3  0  1  2  3  0  1
-        #  0  1  2  3  4  0  1  2  3    ==>    3  2  1  0  3  2  1  0
-        row_idx_sub = row_idx % bank_elems
-        #  Interleave elems per byte
-        interleave_elems = 32 // dtype.bits
-        new_col_idx_outer = col_idx_outer ^ (row_idx_sub // interleave_elems)
-
-    assert (new_col_idx_outer is not None), f"Unsupported dtype {dtype} with {coalescent_bits} bits"
-    return row_idx, ana.simplify(new_col_idx_outer * bank_elems + col_idx_inner)
-
-
-def mma_store_32x8_to_shared_16x16_layout(thread_id, local_id):
-    row = 8 * (local_id % 4 // 2) + (thread_id // 4)
-    col = 8 * (local_id // 4) + (thread_id % 4) * 2 + (local_id % 2)
-    return row, col
