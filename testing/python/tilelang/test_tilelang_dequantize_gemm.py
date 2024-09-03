@@ -133,9 +133,7 @@ def run_gemm(
 
 
 def test_run_dequantize_gemm():
-    run_gemm(
-        256, 256, 256, "int8", "int32", "int32", 128, 128, 32, num_threads=128
-    )
+    run_gemm(256, 256, 256, "int8", "int32", "int32", 128, 128, 32, num_threads=128)
 
 
 if __name__ == "__main__":
