@@ -113,9 +113,6 @@ def run_gemm(
 
     print(f"output is {out}")
 
-    with open("debug/kernel.cu", "w") as f:
-        f.write(mod.mod.imported_modules[0].get_source())
-
     def ref_program(A, qB):
         import torch
 

@@ -165,7 +165,7 @@ class BitLinearBitBLAS(nn.Module):
         Qp = 2**(num_bits - 1) - 1
         s = Qp / x.abs().max(dim=-1, keepdim=True).values.clamp(min=1e-5)
         result = (x * s).round().clamp(Qn, Qp)
-        return result.type(torch.int8)
+        return result.type(torch.int8), s
 
     @torch.compile
     def post_quant_process(self, input, si, sw):
@@ -186,7 +186,7 @@ class BitLinearBitBLAS(nn.Module):
         return out
 
     def forward_fp32_simulated(self, input):
-        quant_input = self.activation_quant(input, self.input_bits).detach()
+        quant_input, si = self.activation_quant(input, self.input_bits).detach()
         quant_weight = self.weight_quant(self.weight).detach()
 
         fp32_simulated_input = quant_input.float()
@@ -194,8 +194,6 @@ class BitLinearBitBLAS(nn.Module):
         fp32_simulated_out = nn.functional.linear(fp32_simulated_input, fp32_simulated_weight)
 
         sw = 1 / self.weight.abs().mean().clamp(min=1e-5)
-        Qp = 2**(self.input_bits - 1) - 1
-        si = Qp / input.abs().max(dim=-1, keepdim=True).values.clamp(min=1e-5)
         # if / (si * sw) it will inf in some cases
         out = fp32_simulated_out / si
         out = out / sw
@@ -206,11 +204,9 @@ class BitLinearBitBLAS(nn.Module):
 
     def forward(self, input):
         # return self.forward_fp32_simulated(input)
-        quant_input = self.activation_quant(input, self.input_bits).detach()
+        quant_input, si = self.activation_quant(input, self.input_bits)
         fp32_out = self.bitblas_matmul(quant_input, self.qweight)
         sw = self.sw
-        Qp = self.Qp
-        si = Qp / input.abs().max(dim=-1, keepdim=True).values.clamp(min=1e-5)
         # if / (si * sw) it will inf in some cases
         out = self.post_quant_process(fp32_out, si, sw)
 
