@@ -106,13 +106,13 @@ jobs:
 
     steps:
       - name: Download commit IDs
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: base-commit-id
           path: .
 
       - name: Download PR commit ID
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: pr-commit-id
           path: .
