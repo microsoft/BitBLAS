@@ -97,7 +97,7 @@ class TensorCorePTXMacroGenerator(object):
         for i, j in T.grid(inst.warp_rows, inst.warp_cols):
             T.ptx_mma(
                 inst.accum_dtype,
-                "m16n8k16",
+                inst.mma_prefix,
                 "row",
                 "col",
                 inst.a_dtype_abbrv,
@@ -108,13 +108,14 @@ class TensorCorePTXMacroGenerator(object):
                 B_local_buf.data,
                 j * inst.local_size_b,
                 C_local_buf.data,
-                i * inst.warp_cols * inst.local_size_out + j * inst.local_size_out,
+                i * inst.warp_cols * inst.local_size_out
+                + j * inst.local_size_out,
                 T.bool(False),
             )
 
             T.ptx_mma(
                 inst.accum_dtype,
-                "m16n8k16",
+                inst.mma_prefix,
                 "row",
                 "col",
                 inst.a_dtype_abbrv,
@@ -142,11 +143,10 @@ class TensorCorePTXMacroGenerator(object):
         stride = inst.chunk
         tx = thread_bindings % inst.WARP_SIZE
         ty = (thread_bindings // inst.WARP_SIZE) % inst.block_row_warps
-        # self.ty = (thread_bindings // warp_size) % block_row_warps
-        # self.tz = thread_bindings // (warp_size * block_row_warps)
+
         for i in T.serial(inst.warp_rows):
             T.ptx_ldmatrix(
-                "float16",
+                inst.a_dtype,
                 T.bool(False),
                 4,
                 ".b16",
@@ -154,7 +154,7 @@ class TensorCorePTXMacroGenerator(object):
                 i * inst.local_size_a,
                 T.address_of(A_shared_buf[ty * inst.warp_row_tiles + i * inst.micro_size_x,
                                           ki * inst.micro_size_k,]),
-                get_ldmatrix_offset("A", tx, 0, stride, inst.a_dtype, False),
+                get_ldmatrix_offset("A", tx, 0, stride, inst.a_dtype, inst.a_transposed),
             )
 
     @staticmethod
@@ -171,7 +171,7 @@ class TensorCorePTXMacroGenerator(object):
         tz = thread_bindings // (inst.WARP_SIZE * inst.block_row_warps)
         for j in T.serial(inst.warp_cols):
             T.ptx_ldmatrix(
-                "float16",
+                inst.b_dtype,
                 T.bool(False),  # TODO(lei): should be optimized
                 4,
                 ".b16",
@@ -179,7 +179,7 @@ class TensorCorePTXMacroGenerator(object):
                 j * inst.local_size_b,
                 T.address_of(B_shared_buf[tz * inst.warp_col_tiles + j * inst.micro_size_y,
                                           ki * inst.micro_size_k,]),
-                get_ldmatrix_offset("B", tx, 0, stride, inst.b_dtype, True),
+                get_ldmatrix_offset("B", tx, 0, stride, inst.b_dtype, inst.b_transposed),
             )
 
     # STS
@@ -203,13 +203,14 @@ class TensorCorePTXMacroGenerator(object):
     @staticmethod
     @T.macro
     def GEMM_SS(inst, A_shared_buf, B_shared_buf, C_local_buf, thread_bindings):
-        A_local_buf = T.alloc_fragment((inst.warp_rows * inst.local_size),
+        # TODO(lei): alloc_buffer within the macro is not supported yet.
+        A_local_buf = T.alloc_fragment((inst.warp_rows * inst.local_size_a),
                                        inst.a_dtype,
                                        scope="local")
-        B_local_buf = T.alloc_fragment((inst.warp_cols * inst.local_size),
+        B_local_buf = T.alloc_fragment((inst.warp_cols * inst.local_size_b),
                                        inst.b_dtype,
                                        scope="local")
-        for ki in T.serial(0, (inst.block_K // inst.micro_size_k)):
+        for ki in T.serial(0, (inst.chunk // inst.micro_size_k)):
             inst.LDMATRIX_A(
                 inst,
                 A_local_buf,

@@ -19,7 +19,7 @@ def get_swizzle_layout(row_idx, col_idx, row_size, dtype: Union[DataType, str]):
     # permutation on 4 banks, each bank has 32 bits
     bank_elems = BANK_SIZE_BYTES // dtype.bits
     new_col_idx_outer = None
-    print(f"coalescent_bits: {coalescent_bits}")
+
     if coalescent_bits % 1024 == 0:
         #   Use 8 * 8 permuted layout
         #   Every number below corresponds to 8 consecutive fp16 number in shared mem, i.e. one read
