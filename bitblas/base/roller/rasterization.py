@@ -7,11 +7,18 @@ from typing import List
 
 class Rasterization:
 
+    panel_width_ = None
+
     def __init__(self) -> None:
         pass
 
     def get_code(self) -> List[str]:
         raise NotImplementedError()
+
+    @property
+    def panel_width(self):
+        assert self.panel_width_ is not None
+        return self.panel_width_
 
 
 class NoRasterization(Rasterization):
