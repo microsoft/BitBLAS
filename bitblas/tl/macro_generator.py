@@ -108,8 +108,7 @@ class TensorCorePTXMacroGenerator(object):
                 B_local_buf.data,
                 j * inst.local_size_b,
                 C_local_buf.data,
-                i * inst.warp_cols * inst.local_size_out
-                + j * inst.local_size_out,
+                i * inst.warp_cols * inst.local_size_out + j * inst.local_size_out,
                 T.bool(False),
             )
 
