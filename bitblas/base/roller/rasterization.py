@@ -20,6 +20,7 @@ class Rasterization:
         assert self.panel_width_ is not None
         return self.panel_width_
 
+
 class NoRasterization(Rasterization):
 
     def __init__(self) -> None:
