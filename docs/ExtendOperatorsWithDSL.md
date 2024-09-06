@@ -1,5 +1,6 @@
 ### Using BitBLAS from DSL
 ```python
+from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.arch import CUDA
 from bitblas.base.utils import apply_and_build
