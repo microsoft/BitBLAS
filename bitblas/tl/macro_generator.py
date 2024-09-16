@@ -33,23 +33,21 @@ class TensorCorePTXMacroGenerator(object):
         "e5m2_float8": "e5m2",
     }
 
-    def __init__(
-        self,
-        a_dtype="float16",
-        b_dtype="float16",
-        accum_dtype="float16",
-        a_transposed=False,
-        b_transposed=False,
-        block_row_warps=2,
-        block_col_warps=2,
-        warp_row_tiles=8,
-        warp_col_tiles=8,
-        chunk=16,
-        reduce_k=1,
-        transform_kind_a: Union[int, TransformKind] =0,
-        transform_kind_b: Union[int, TransformKind] =0,
-        num_elems_per_byte=1
-    ):
+    def __init__(self,
+                 a_dtype="float16",
+                 b_dtype="float16",
+                 accum_dtype="float16",
+                 a_transposed=False,
+                 b_transposed=False,
+                 block_row_warps=2,
+                 block_col_warps=2,
+                 warp_row_tiles=8,
+                 warp_col_tiles=8,
+                 chunk=16,
+                 reduce_k=1,
+                 transform_kind_a: Union[int, TransformKind] = 0,
+                 transform_kind_b: Union[int, TransformKind] = 0,
+                 num_elems_per_byte=1):
         self.a_dtype = a_dtype
         self.b_dtype = b_dtype
         self.accum_dtype = accum_dtype
@@ -72,7 +70,6 @@ class TensorCorePTXMacroGenerator(object):
         self.threads = self.WARP_SIZE * (block_row_warps * block_col_warps) * reduce_k
         self._initialize_transform_kind(transform_kind_a, transform_kind_b)
         self.num_elems_per_byte = num_elems_per_byte
-        
 
     def _initialize_k_dim(self, a_dtype="float16"):
         if isinstance(a_dtype, str):
@@ -127,12 +124,12 @@ class TensorCorePTXMacroGenerator(object):
         A_shared_buf,
         ki,
         thread_bindings,
-        rk = 0,
+        rk=0,
     ):
         stride = A_shared_buf.shape[-1]
         tx = thread_bindings % inst.WARP_SIZE
         ty = (thread_bindings // inst.WARP_SIZE) % inst.block_row_warps
-        
+
         for i in T.serial(inst.warp_rows):
             T.ptx_ldmatrix(
                 inst.a_dtype,
@@ -154,12 +151,12 @@ class TensorCorePTXMacroGenerator(object):
         B_shared_buf,
         ki,
         thread_bindings,
-        rk = 0,
+        rk=0,
     ):
         stride = B_shared_buf.shape[-1]
         tx = thread_bindings % inst.WARP_SIZE
         tz = (thread_bindings // (inst.WARP_SIZE * inst.block_row_warps)) % inst.block_col_warps
-    
+
         for j in T.serial(inst.warp_cols):
             # Assign B_shared_elem
             ri, rj = tz * inst.warp_col_tiles + j * inst.micro_size_y, rk * inst.chunk + ki * inst.micro_size_k
@@ -175,7 +172,7 @@ class TensorCorePTXMacroGenerator(object):
                 T.address_of(B_shared_elem),
                 get_ldmatrix_offset("B", tx, 0, stride, inst.b_dtype, inst.b_transposed),
             )
-    
+
     @staticmethod
     @T.macro
     def MMA(inst, A_local_buf, B_local_buf, C_local_buf):
@@ -215,7 +212,6 @@ class TensorCorePTXMacroGenerator(object):
                 T.bool(False),
             )
 
- 
     # STS
     # MMA Store must be in simulated instead of TVM Intrins
     # As TVM Intrins is like a hack that the threadIdx.x should be always
@@ -232,7 +228,7 @@ class TensorCorePTXMacroGenerator(object):
                     local_id = local_id_o * 2 + local_id_i
                     row, col = T.meta_var(mma_store_index_map(tx, local_id))
                     C_shared_buf[ty * inst.warp_rows + i, tz * inst.warp_cols + j, row,
-                                col] = C_local_buf[i * (inst.warp_cols * inst.local_size_out) +
+                                 col] = C_local_buf[i * (inst.warp_cols * inst.local_size_out) +
                                                     j * inst.local_size_out + local_id]
 
     # Allow GEMM from shared memory to local memory
@@ -265,6 +261,7 @@ class TensorCorePTXMacroGenerator(object):
 
             inst.MMA(inst, A_local_buf, B_local_buf, C_local_buf)
 
+
 class TensorCorePTXMacroGeneratorWithLadderTransform(object):
     """
     To eliminate Python syntax within TIR Macro.
@@ -296,8 +293,8 @@ class TensorCorePTXMacroGeneratorWithLadderTransform(object):
         warp_col_tiles=8,
         chunk=16,
         reduce_k=1,
-        transform_kind_a: Union[int, TransformKind] =0,
-        transform_kind_b: Union[int, TransformKind] =0,
+        transform_kind_a: Union[int, TransformKind] = 0,
+        transform_kind_b: Union[int, TransformKind] = 0,
         num_elems_per_byte=1,
     ):
         self.a_dtype = a_dtype
@@ -322,7 +319,6 @@ class TensorCorePTXMacroGeneratorWithLadderTransform(object):
         self.threads = self.WARP_SIZE * (block_row_warps * block_col_warps) * reduce_k
         self._initialize_transform_kind(transform_kind_a, transform_kind_b)
         self.num_elems_per_byte = num_elems_per_byte
-        
 
     def _initialize_k_dim(self, a_dtype="float16"):
         self.k_dim = 256 // DataType(a_dtype).bits
@@ -366,8 +362,7 @@ class TensorCorePTXMacroGeneratorWithLadderTransform(object):
             raise ValueError("Unsupported transform_kind_b")
 
         assert transform_kind_b in [0, 3], "Currently only support 0 and 3"
-        
-        
+
     @staticmethod
     @T.macro
     def LDMATRIX_A(
@@ -376,12 +371,12 @@ class TensorCorePTXMacroGeneratorWithLadderTransform(object):
         A_shared_buf,
         ki,
         thread_bindings,
-        rk = 0,
+        rk=0,
     ):
         stride = A_shared_buf.shape[-1]
         tx = thread_bindings % inst.WARP_SIZE
         ty = (thread_bindings // inst.WARP_SIZE) % inst.block_row_warps
-        
+
         for i in T.serial(inst.warp_rows):
             T.ptx_ldmatrix(
                 inst.a_dtype,
@@ -403,7 +398,7 @@ class TensorCorePTXMacroGeneratorWithLadderTransform(object):
         B_shared_buf,
         ki,
         thread_bindings,
-        rk = 0,
+        rk=0,
     ):
         stride = B_shared_buf.shape[-1]
         tx = thread_bindings % inst.WARP_SIZE
@@ -413,7 +408,8 @@ class TensorCorePTXMacroGeneratorWithLadderTransform(object):
             for j in T.serial(inst.warp_cols):
                 # Assign B_shared_elem
                 ri, rj = tz * inst.warp_col_tiles + j * inst.micro_size_y, rk * inst.chunk + ki * inst.micro_size_k
-                ni, nj, nii, njj = (ri) // inst.micro_size_y, (rj) // inst.micro_size_k, (ri) % inst.micro_size_y, (rj) % inst.micro_size_k
+                ni, nj, nii, njj = (ri) // inst.micro_size_y, (rj) // inst.micro_size_k, (
+                    ri) % inst.micro_size_y, (rj) % inst.micro_size_k
                 args = (ni, nj, nii, njj) if inst.transform_kind_b > 0 else (ri, rj)
                 B_shared_elem = B_shared_buf[args]
 
@@ -433,9 +429,13 @@ class TensorCorePTXMacroGeneratorWithLadderTransform(object):
                 for local_id in T.vectorized(local_size_dequantize):
                     # Assign B_shared_elem
                     ri, rj = tz * inst.warp_cols + j, rk * (inst.chunk // inst.micro_size_k) + ki
-                    rii, rjj = (tx * local_size_dequantize + local_id) // (inst.micro_size_k // inst.num_elems_per_byte), (tx * local_size_dequantize + local_id) % (inst.micro_size_k // inst.num_elems_per_byte)
-                    B_local_buf[j * local_size_dequantize + local_id] = B_shared_buf[ri, rj, rii, rjj]
-    
+                    rii, rjj = (tx * local_size_dequantize +
+                                local_id) // (inst.micro_size_k // inst.num_elems_per_byte), (
+                                    tx * local_size_dequantize + local_id) % (
+                                        inst.micro_size_k // inst.num_elems_per_byte)
+                    B_local_buf[j * local_size_dequantize + local_id] = B_shared_buf[ri, rj, rii,
+                                                                                     rjj]
+
     @staticmethod
     @T.macro
     def MMA(inst, A_local_buf, B_local_buf, C_local_buf):
@@ -475,7 +475,6 @@ class TensorCorePTXMacroGeneratorWithLadderTransform(object):
                 T.bool(False),
             )
 
- 
     # STS
     # MMA Store must be in simulated instead of TVM Intrins
     # As TVM Intrins is like a hack that the threadIdx.x should be always
@@ -492,7 +491,7 @@ class TensorCorePTXMacroGeneratorWithLadderTransform(object):
                     local_id = local_id_o * 2 + local_id_i
                     row, col = T.meta_var(mma_store_index_map(tx, local_id))
                     C_shared_buf[ty * inst.warp_rows + i, tz * inst.warp_cols + j, row,
-                                col] = C_local_buf[i * (inst.warp_cols * inst.local_size_out) +
+                                 col] = C_local_buf[i * (inst.warp_cols * inst.local_size_out) +
                                                     j * inst.local_size_out + local_id]
 
     # Allow GEMM from shared memory to local memory

@@ -90,6 +90,7 @@ def mma_store_32x8_to_shared_16x16_layout(thread_id, local_id):
     col = 8 * (local_id // 4) + (thread_id % 4) * 2 + (local_id % 2)
     return row, col
 
+
 def shared_16x16_to_mma_32x8_smoothlayout(i, j):
     return (i * 2 + j // 8, j % 8)
 
