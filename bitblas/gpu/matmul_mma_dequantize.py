@@ -1458,6 +1458,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         sch.bind(block_idy, "blockIdx.y")
         if reduce_k > 1:
             thread_idz = j2 = thread_idy = sch.fuse(thread_idy, thread_idz)
+            sch.bind(thread_idy, "threadIdx.y")
             sch.bind(kr, "threadIdx.z")
         else:
             sch.bind(thread_idy, "threadIdx.y")
