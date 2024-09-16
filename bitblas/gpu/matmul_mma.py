@@ -465,7 +465,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         i_factors, j_factors, k_factors = (
             [None, 1, block_row_warps, warp_row_tiles // micro_size_x],
             [1, None, block_col_warps, warp_col_tiles // micro_size_y],
-            [None, (reduce_k * chunk) // micro_size_k],
+            [None, chunk // micro_size_k],
         )
 
         num_ty = i_factors[2]
@@ -519,6 +519,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         sch.bind(block_idy, "blockIdx.y")
         if reduce_k > 1:
             thread_idz = j2 = thread_idy = sch.fuse(thread_idy, thread_idz)
+            sch.bind(thread_idy, "threadIdx.y")
             sch.bind(kr, "threadIdx.z")
         else:
             sch.bind(thread_idy, "threadIdx.y")
