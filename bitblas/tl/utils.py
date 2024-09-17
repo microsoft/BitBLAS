@@ -91,6 +91,18 @@ def mma_store_32x8_to_shared_16x16_layout(thread_id, local_id):
     return row, col
 
 
+def shared_16x16_to_mma_32x8_smoothlayout(i, j):
+    return (i * 2 + j // 8, j % 8)
+
+
+def shared_16x32_to_mma_32x16_smoothlayout(i, j):
+    return (i * 2 + j // 16, j % 16)
+
+
+def shared_32x16_to_mma_32x16_smoothlayout(i, j):
+    return (i * 2 + j // 16, j % 16)
+
+
 def get_ldmatrix_offset(
     matrix: Literal["A", "B"],
     row_idx,
