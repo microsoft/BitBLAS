@@ -16,8 +16,12 @@ set_log_level(logging.DEBUG)
 
 
 def check_reduce(rt_mod):
-    source = rt_mod.imported_modules[0].get_source()
-    assert "red_buf" in source
+    # source = rt_mod.imported_modules[0].get_source()
+    # assert "red_buf" in source
+    # TODO(lei): After improve lower_thraed_all_reduce pass
+    # The red_buf has been merged into dynamic shared memory
+    # ref to: https://github.com/microsoft/BitBLAS/pull/183
+    return True
 
 
 # fmt: off
