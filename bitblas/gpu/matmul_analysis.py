@@ -561,10 +561,15 @@ def get_tensorized_func_and_tags(
         sm_version = arch.replace("sm_", "")
         return int(sm_version) if sm_version.isdigit() else -1
 
-    def analysis_tensorcore_tags(sch: tir.Schedule, block: BlockRV, target: Target) -> bool:
+    def analysis_tensorcore_tags(sch: tir.Schedule, block: BlockRV,
+                                 target: Target) -> Union[bool, Dict]:
         tags: Dict[str, Union[List[int], int]] = {}
         block_stmt = sch.get(block)
 
+        # Nvidia Only Support Tensor Core for
+        # devices greater than 70.
+        if check_sm_version(target.arch) < 70:
+            return False
         # analysis tensorcore axis
         # todo(lei): maybe we can remove this in the future
         (write_buffer_region,) = block_stmt.writes
@@ -612,6 +617,11 @@ def get_tensorized_func_and_tags(
         in_dtype, out_dtype = get_in_out_dtypes(block_stmt)
         intrin_info["in_dtype"] = in_dtype
         intrin_info["out_dtype"] = out_dtype
+
+        if 70 <= check_sm_version(target.arch) < 80 and out_dtype == "int32":
+            # INT32 Accum TensorCore only supports SM Version > 32.
+            return False
+
         # if the last dimension is reduce axis, the B is transposed
         intrin_info["trans_b"] = check_last_trait(block_stmt.reads[1].region)
         if func.attrs is not None and "input_transform_kind" in func.attrs:
@@ -666,6 +676,7 @@ def get_tensorized_func_and_tags(
 
         block_stmt = sch.get(main_block)
 
+        # 16 for 16 bits tensor core while 32 for 8bits tensorcore.
         minimal_tensorize_threshold = 16 if in_dtype in ["bfloat16", "float16"] else 32
         # the batch dimension is not taken into consideration.
         extent = block_stmt.iter_vars[1].dom.extent
