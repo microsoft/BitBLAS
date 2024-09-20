@@ -7,6 +7,12 @@ from modeling_bitnet import BitnetForCausalLM
 from tokenization_bitnet import BitnetTokenizer
 from transformers import GenerationConfig
 import time
+import transformers
+
+print(f"transformers version is {transformers.__version__}")
+
+# version must be lower than or equal to 4.40
+assert transformers.__version__ <= "4.40.0"
 
 torch.set_grad_enabled(False)
 bitblas.set_log_level("INFO")
