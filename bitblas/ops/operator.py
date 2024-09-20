@@ -373,10 +373,12 @@ class Operator(ABC):
     def update_func(self, func: PrimFunc):
         self.prim_func_mod["main"] = func
 
-    def update_runtime_module(self, rt_mod, srcpath=None, libpath=None):
-        self.rt_mod = rt_mod
-        self.time_evaluator = rt_mod.time_evaluator(rt_mod.entry_name, self.arch.device, number=10)
-        self.torch_func = to_pytorch_func(rt_mod)
+    def update_runtime_module(self, rt_mod=None, srcpath=None, libpath=None):
+        if rt_mod is not None:
+            self.rt_mod = rt_mod
+            self.time_evaluator = rt_mod.time_evaluator(
+                rt_mod.entry_name, self.arch.device, number=10)
+            self.torch_func = to_pytorch_func(rt_mod)
         if srcpath is not None:
             assert self.lib_generator is not None, "lib_generator is not initialized"
             self.lib_generator.set_src_path(srcpath)

@@ -464,8 +464,8 @@ class Matmul(GPUScheduleRule):
         block_col_warps = config.block[1] // (config.thread[1] * config.step[1])
         thread_row_tiles = config.thread[0] // (config.step[0])
         thread_col_tiles = config.thread[1] // (config.step[1])
-        vthread_row_tiles = (config.step[0])  # expand vtrhead to avoid load band conflict
-        vthread_col_tiles = (config.step[1])  # expand vtrhead to avoid load band conflict
+        vthread_row_tiles = (config.step[0])  # expand vthread to avoid load band conflict
+        vthread_col_tiles = (config.step[1])  # expand vthread to avoid load band conflict
         chunk = config.rstep[0]
         shared_scope = config.shared_scope
 
@@ -489,8 +489,10 @@ class Matmul(GPUScheduleRule):
             return None  # If no such number is found
 
         K = func.buffer_map[func.params[0]].shape[-1]
+        # This is hack to handle unaligned K and BK
         BK = find_valid_number(K, chunk)
-
+        # Align Factor (Notes: This is also a hack.)
+        align_factor = 4  # used to expand the vectorization factor
         sch.pad_einsum(
             main_block,
             [1, BM, BN, BK],
@@ -498,8 +500,8 @@ class Matmul(GPUScheduleRule):
         batch, y, x, k = sch.get_loops(main_block)
         by, vy, ty, yi = sch.split(y, [None, vthread_row_tiles, block_row_warps, thread_row_tiles])
         bx, vx, tx, xi = sch.split(x, [None, vthread_col_tiles, block_col_warps, thread_col_tiles])
-        ko, ki = sch.split(k, factors=[None, BK])
-        sch.reorder(by, bx, vy, vx, ty, tx, ko, ki, yi, xi)
+        ko, ki, kii = sch.split(k, factors=[None, (BK // align_factor), align_factor])
+        sch.reorder(by, bx, vy, vx, ty, tx, ko, ki, kii, yi, xi)
         by = sch.fuse(batch, by)
         sch.bind(bx, "blockIdx.x")
         sch.bind(by, "blockIdx.y")
@@ -514,7 +516,7 @@ class Matmul(GPUScheduleRule):
         l2g = sch.cache_write(main_block, 0, "local")
         sch.reverse_compute_at(l2g, tx, preserve_unit_loops=True)
 
-        def _cooperative_fetch(index, vec_len):
+        def _cooperative_fetch(index, vec_len, align_factor=2):
             block = sch.cache_read(main_block, index, "shared")
             num_loops = len(sch.get_loops(block))
             block_local = sch.cache_read(main_block, index, "local")
@@ -543,9 +545,10 @@ class Matmul(GPUScheduleRule):
             sch.bind(ty, "threadIdx.y")
             sch.bind(tx, "threadIdx.x")
 
+            fused = sch.fuse(*sch.get_loops(block_local)[-2:])
             _, vec = sch.split(
-                sch.fuse(*sch.get_loops(block_local)[-2:]),
-                [None, vec_len // prod(config.step)],
+                fused,
+                [None, align_factor],
             )
             sch.vectorize(vec)
 
@@ -562,7 +565,7 @@ class Matmul(GPUScheduleRule):
             # otherwise cooperative fetch in shared memory.
             vectorize = config.vectorize.get(_buffer_name, 1)
 
-            _cooperative_fetch(i, vec_len=vectorize)
+            _cooperative_fetch(i, vec_len=vectorize, align_factor=align_factor)
 
         def decode_fetch_to_shared(block, idx):
             # step1. create memory hierarchy
@@ -648,14 +651,29 @@ class Matmul(GPUScheduleRule):
                 _, B_shared_tx = sch.split(
                     sch.get_loops(block_shared_lut)[-1], factors=[None, num_tx])
                 sch.bind(B_shared_tx, "threadIdx.x")
+
             return block_shared_local
 
         _ = decode_fetch_to_shared(main_block, 1)
 
+        def fetch_to_local(block, index, align_factor=2):
+            # read_b to load
+            block_local = sch.cache_read(block, index, "local")
+            sch.compute_at(block_local, ki, preserve_unit_loops=True)
+            fused = sch.fuse(*sch.get_loops(block_local)[-2:])
+            _, vec = sch.split(
+                fused,
+                [None, align_factor],
+            )
+            sch.vectorize(vec)
+            return block_local
+
+        fetch_to_local(main_block, 1, align_factor=align_factor)
+
         auto_inline_consumer_chain(sch, l2g)
 
-        _, vec = sch.split(
-            sch.fuse(*sch.get_loops(l2g)[-2:]), [None, vectorize // prod(config.step)])
+        l2g_vec = get_coalesced_veclen(sch.get(l2g))
+        _, vec = sch.split(sch.fuse(*sch.get_loops(l2g)[-2:]), [None, l2g_vec])
         sch.vectorize(vec)
 
         sch.decompose_reduction(main_block, ko)
