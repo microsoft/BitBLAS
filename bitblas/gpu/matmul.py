@@ -502,11 +502,6 @@ class Matmul(GPUScheduleRule):
         bx, vx, tx, xi = sch.split(x, [None, vthread_col_tiles, block_col_warps, thread_col_tiles])
         ko, ki, kii = sch.split(k, factors=[None, (BK // align_factor), align_factor])
         sch.reorder(by, bx, vy, vx, ty, tx, ko, ki, kii, yi, xi)
-        by = sch.fuse(batch, by)
-        sch.bind(bx, "blockIdx.x")
-        sch.bind(by, "blockIdx.y")
-        sch.bind(vy, "vthread.y")
-        sch.bind(vx, "vthread.x")
         sch.bind(ty, "threadIdx.y")
         sch.bind(tx, "threadIdx.x")
 
@@ -651,7 +646,6 @@ class Matmul(GPUScheduleRule):
                 _, B_shared_tx = sch.split(
                     sch.get_loops(block_shared_lut)[-1], factors=[None, num_tx])
                 sch.bind(B_shared_tx, "threadIdx.x")
-
             return block_shared_local
 
         _ = decode_fetch_to_shared(main_block, 1)
