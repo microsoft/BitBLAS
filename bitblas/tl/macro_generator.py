@@ -15,7 +15,7 @@ from .utils import (
 lift = convert
 
 
-class TensorCorePTXMacroGenerator(object):
+class TensorCoreIntrinEmitter(object):
     """
     To eliminate Python syntax within TIR Macro.
     """
@@ -116,9 +116,8 @@ class TensorCorePTXMacroGenerator(object):
 
         assert transform_kind_b in [0, 3], "Currently only support 0 and 3"
 
-    @staticmethod
     @T.macro
-    def LDMATRIX_A(
+    def _warp_ldmatrix_a(
         inst,
         A_local_buf,
         A_shared_buf,
@@ -143,9 +142,8 @@ class TensorCorePTXMacroGenerator(object):
                 get_ldmatrix_offset("A", tx, 0, stride, inst.a_dtype, inst.a_transposed),
             )
 
-    @staticmethod
     @T.macro
-    def LDMATRIX_B(
+    def _warp_ldmatrix_b(
         inst,
         B_local_buf,
         B_shared_buf,
@@ -173,9 +171,8 @@ class TensorCorePTXMacroGenerator(object):
                 get_ldmatrix_offset("B", tx, 0, stride, inst.b_dtype, inst.b_transposed),
             )
 
-    @staticmethod
     @T.macro
-    def MMA(inst, A_local_buf, B_local_buf, C_local_buf):
+    def _warp_mma(inst, A_local_buf, B_local_buf, C_local_buf):
         for i, j in T.grid(inst.warp_rows, inst.warp_cols):
             T.ptx_mma(
                 inst.accum_dtype,
@@ -216,9 +213,8 @@ class TensorCorePTXMacroGenerator(object):
     # MMA Store must be in simulated instead of TVM Intrins
     # As TVM Intrins is like a hack that the threadIdx.x should be always
     # equal to the warp_size
-    @staticmethod
     @T.macro
-    def STMATRIX(inst, C_local_buf, C_shared_buf, thread_bindings):
+    def _warp_stmatrix(inst, C_local_buf, C_shared_buf, thread_bindings):
         tx = thread_bindings % inst.WARP_SIZE
         ty = (thread_bindings // inst.WARP_SIZE) % inst.block_row_warps
         tz = (thread_bindings // (inst.WARP_SIZE * inst.block_row_warps)) % inst.block_col_warps
@@ -231,38 +227,20 @@ class TensorCorePTXMacroGenerator(object):
                                  col] = C_local_buf[i * (inst.warp_cols * inst.local_size_out) +
                                                     j * inst.local_size_out + local_id]
 
-    # Allow GEMM from shared memory to local memory
-    @staticmethod
-    @T.macro
-    def GEMM_SS(inst, A_shared_buf, B_shared_buf, C_local_buf, thread_bindings):
-        # TODO(lei): alloc_buffer within the macro is not supported yet.
-        A_local_buf = T.alloc_fragment((inst.warp_rows * inst.local_size_a),
-                                       inst.a_dtype,
-                                       scope="local")
-        B_local_buf = T.alloc_fragment((inst.warp_cols * inst.local_size_b),
-                                       inst.b_dtype,
-                                       scope="local")
-        for ki in T.serial(0, (inst.chunk // inst.micro_size_k)):
-            inst.LDMATRIX_A(
-                inst,
-                A_local_buf,
-                A_shared_buf,
-                ki,
-                thread_bindings=thread_bindings,
-            )
+    def ldmatrix_a(self, A_local_buf, A_shared_buf, ki, thread_bindings, rk=0):
+        return self._warp_ldmatrix_a(self, A_local_buf, A_shared_buf, ki, thread_bindings, rk)
 
-            inst.LDMATRIX_B(
-                inst,
-                B_local_buf,
-                B_shared_buf,
-                ki,
-                thread_bindings=thread_bindings,
-            )
+    def ldmatrix_b(self, B_local_buf, B_shared_buf, ki, thread_bindings, rk=0):
+        return self._warp_ldmatrix_b(self, B_local_buf, B_shared_buf, ki, thread_bindings, rk)
 
-            inst.MMA(inst, A_local_buf, B_local_buf, C_local_buf)
+    def mma(self, A_local_buf, B_local_buf, C_local_buf):
+        return self._warp_mma(self, A_local_buf, B_local_buf, C_local_buf)
+
+    def stmatrix(self, C_local_buf, C_shared_buf, thread_bindings):
+        return self._warp_stmatrix(self, C_local_buf, C_shared_buf, thread_bindings)
 
 
-class TensorCorePTXMacroGeneratorWithLadderTransform(object):
+class TensorCoreIntrinEmitterWithLadderTransform(object):
     """
     To eliminate Python syntax within TIR Macro.
     """

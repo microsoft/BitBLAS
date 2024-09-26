@@ -9,7 +9,7 @@ from tvm import DataType
 from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.tl.utils import get_swizzle_layout
-from bitblas.tl.macro_generator import TensorCorePTXMacroGenerator
+from bitblas.tl.macro_generator import TensorCoreIntrinEmitter
 
 
 def make_swizzle_layout(shared_buf):
@@ -41,9 +41,10 @@ def tl_matmul(
         "int8",
     ], "Currently only float16 and int8 are supported"
     assert dtypeC in [
+        "float16",
         "float32",
         "int32",
-    ], "Currently only float32 and int32 are supported"
+    ], "Currently only float16, float32 and int32 are supported"
 
     micro_size_x = micro_size_y = micro_size_k = 16
 
@@ -83,7 +84,7 @@ def tl_matmul(
     warp_cols = warp_col_tiles // micro_size_y
 
     # MMA Wrapper to Auto Generate Code for MMA
-    ptx_macro_generator = TensorCorePTXMacroGenerator(
+    mma_emitter = TensorCoreIntrinEmitter(
         a_dtype=dtypeAB,
         b_dtype=dtypeAB,
         accum_dtype=accum_dtype,
@@ -112,6 +113,7 @@ def tl_matmul(
             C_local = T.alloc_fragment((warp_rows * warp_cols * local_size),
                                        accum_dtype,
                                        scope="local")
+
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 
             T.annotate_layout({
@@ -137,8 +139,7 @@ def tl_matmul(
                 for ki in T.serial(0, (block_K // micro_size_k)):
 
                     # Load A into fragment
-                    ptx_macro_generator.LDMATRIX_A(
-                        ptx_macro_generator,
+                    mma_emitter.ldmatrix_a(
                         A_local,
                         A_shared,
                         ki,
@@ -146,8 +147,7 @@ def tl_matmul(
                     )
 
                     # Load B into fragment
-                    ptx_macro_generator.LDMATRIX_B(
-                        ptx_macro_generator,
+                    mma_emitter.ldmatrix_b(
                         B_local,
                         B_shared,
                         ki,
@@ -155,11 +155,10 @@ def tl_matmul(
                     )
 
                     # Perform Matrix Multiplication
-                    ptx_macro_generator.MMA(ptx_macro_generator, A_local, B_local, C_local)
+                    mma_emitter.mma(A_local, B_local, C_local)
 
             # Perform STMatrix
-            ptx_macro_generator.STMATRIX(
-                ptx_macro_generator,
+            mma_emitter.stmatrix(
                 C_local,
                 C_shared,
                 thread_bindings=thread_bindings,
@@ -202,8 +201,8 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, dtypeC, accum_dtype):
 
 
 def test_assert_tl_matmul_correctness():
-    assert_tl_matmul_correctness(128, 128, 128, "float16", "float32", "float32")
-    assert_tl_matmul_correctness(32, 256, 256, "float16", "float32", "float32")
+    assert_tl_matmul_correctness(128, 128, 128, "float16", "float16", "float16")
+    assert_tl_matmul_correctness(128, 256, 256, "float16", "float32", "float32")
 
 
 if __name__ == "__main__":
