@@ -98,30 +98,26 @@ def tl_matmul(
 
     @T.prim_func
     def main(
-        A: T.Buffer(A_shape, dtypeAB),
-        B: T.Buffer(B_shape, dtypeAB),
-        C: T.Buffer((M, N), dtypeC),
+            A: T.Buffer(A_shape, dtypeAB),
+            B: T.Buffer(B_shape, dtypeAB),
+            C: T.Buffer((M, N), dtypeC),
     ):
-        with T.Kernel(
-            T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads
-        ) as (bx, by):
+        with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
 
             A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope=shared_scope)
             B_shared = T.alloc_shared(B_shared_shape, dtypeAB, scope=shared_scope)
             C_shared = T.alloc_shared(C_shared_shape, dtypeC, scope=shared_scope)
             A_local = T.alloc_fragment((warp_rows * local_size), dtypeAB, scope="local")
             B_local = T.alloc_fragment((warp_cols * local_size), dtypeAB, scope="local")
-            C_local = T.alloc_fragment(
-                (warp_rows * warp_cols * local_size), accum_dtype, scope="local"
-            )
+            C_local = T.alloc_fragment((warp_rows * warp_cols * local_size),
+                                       accum_dtype,
+                                       scope="local")
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 
-            T.annotate_layout(
-                {
-                    A_shared: make_swizzle_layout(A_shared),
-                    B_shared: make_swizzle_layout(B_shared),
-                }
-            )
+            T.annotate_layout({
+                A_shared: make_swizzle_layout(A_shared),
+                B_shared: make_swizzle_layout(B_shared),
+            })
 
             # Improve L2 Cache
             T.use_swizzle(panel_size=10)
@@ -159,9 +155,7 @@ def tl_matmul(
                     )
 
                     # Perform Matrix Multiplication
-                    ptx_macro_generator.MMA(
-                        ptx_macro_generator, A_local, B_local, C_local
-                    )
+                    ptx_macro_generator.MMA(ptx_macro_generator, A_local, B_local, C_local)
 
             # Perform STMatrix
             ptx_macro_generator.STMATRIX(
@@ -173,12 +167,9 @@ def tl_matmul(
 
             # Store shared into global
             for i, j in T.Parallel(block_M, block_N):
-                C[by * block_M + i, bx * block_N + j] = C_shared[
-                    i // micro_size_x,
-                    j // micro_size_y,
-                    i % micro_size_x,
-                    j % micro_size_y,
-                ]
+                C[by * block_M + i,
+                  bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
+                                               i % micro_size_x, j % micro_size_y,]
 
     return main
 
