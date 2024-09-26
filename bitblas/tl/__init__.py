@@ -7,4 +7,7 @@ from .utils import (
     get_ldmatrix_offset,  # noqa: F401
 )
 
-from .macro_generator import TensorCorePTXMacroGenerator  # noqa: F401
+from .macro_generator import (
+    TensorCoreIntrinEmitter,  # noqa: F401
+    TensorCoreIntrinEmitterWithLadderTransform,  # noqa: F401
+)
