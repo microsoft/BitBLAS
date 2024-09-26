@@ -143,13 +143,16 @@ class OperatorCache:
                 with open(full_path) as f:
                     config = json.load(f)
             elif file.endswith(".tar"):
-                rt_mod = tvm.runtime.load_module(full_path)
+                try:
+                    rt_mod = tvm.runtime.load_module(full_path)
+                except Exception as e:
+                    logger.error(f"Failed to load runtime module from {full_path}: {e}")
             elif file == BITBLAS_WRAPPED_COMPILED_NAME:
                 libpath = full_path
             elif file == BITBLAS_WRAPPED_SOURCE_NAME:
                 srcpath = full_path
 
-        if mapping and config and rt_mod:
+        if mapping and config:
             self._instantiate_and_add_operator(mapping, config, rt_mod, srcpath, libpath, target)
 
     def _instantiate_and_add_operator(self, mapping, config, rt_mod, srcpath, libpath, target):
