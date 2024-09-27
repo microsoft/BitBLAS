@@ -43,6 +43,7 @@ class CompileResult:
         self.origin = self
         self.use_fp16 = any([x.dtype == "float16" for x in self.args])
         self.scheduled_mods = scheduled_mods
+        self.arg_op_mapping_list = None
 
     def set_io_desc(self, input_desc, output_desc):
         self.input_desc = input_desc

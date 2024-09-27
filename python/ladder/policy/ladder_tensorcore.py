@@ -67,7 +67,9 @@ class LadderPolicy(DefaultPolicy):
         output_shape = node.reduce_op.output(0).shape
         output_dtype = node.reduce_op.output(0).dtype
         ladder_configs = node.get_tag("ladder_config")
-        pipeline_stage = ladder_configs[2] if len(ladder_configs) > 2 else 1
+        pipeline_stage = 1
+        if ladder_configs:
+            pipeline_stage = ladder_configs[2] if len(ladder_configs) > 2 else 1
         # assume A is always not transposed.
         is_matmul = output_shape[-1] == self.wmma_n and output_shape[-2] == self.wmma_n
 

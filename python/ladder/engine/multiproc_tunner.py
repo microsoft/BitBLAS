@@ -39,6 +39,7 @@ def call_build(node_names, connections, send_config, kernel_name, target_str):
         cpresult.grid_size,
         cpresult.args,
         cpresult.scheduled_mods,
+        cpresult.arg_op_mapping_list
     ]
 
 
@@ -118,16 +119,29 @@ class MultiProcTunner(Tunner):
             except Exception as e:
                 self.write_error_log(config, e)
                 continue
-            code, block_size, grid_size, args, mods = result
-            compile_results.append(
-                CompileResult(
-                    config,
-                    code,
-                    block_size,
-                    grid_size,
-                    kernel_name,
-                    args,
-                    scheduled_mods=mods,
-                )
+            code, block_size, grid_size, args, mods, arg_op_mapping_list = result
+            temp_cpresult = CompileResult(
+                config,
+                code,
+                block_size,
+                grid_size,
+                kernel_name,
+                args,
+                scheduled_mods=mods,
             )
+            # compile_results.append(
+            #     CompileResult(
+            #         config,
+            #         code,
+            #         block_size,
+            #         grid_size,
+            #         kernel_name,
+            #         args,
+            #         scheduled_mods=mods,
+            #     )
+            # )
+            temp_cpresult.arg_op_mapping_list=arg_op_mapping_list
+            compile_results.append(temp_cpresult)
+
+
         return compile_results

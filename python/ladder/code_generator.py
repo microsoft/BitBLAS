@@ -15,6 +15,13 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+import tvm
+def intimm_to_int(value):
+    """如果是IntImm类型,则转换为Python整数,否则直接返回值"""
+    if isinstance(value, tvm.tir.IntImm):
+        return int(value)
+    return value
+
 
 class CodeGenerator:
     def __init__(self) -> None:
@@ -118,6 +125,7 @@ class CodeGenerator:
         strides_map = {}  # {(Node, output_id) : Block}
         statements, kernel_codes = [], []
         _scheduled_mods = {}
+        arg_op_mapping_list=[]
 
         for op in self.topo_order:
             self.done_ops.add(op)
@@ -226,6 +234,12 @@ class CodeGenerator:
                     )
                 else:
                     arg_list.append(global_args_name_map[op.args[idx]])
+                    arg_op_mapping_list.append({
+                        "reg_fused_op_name": op.name,
+                        "tensor_shape": [intimm_to_int(dim) for dim in op.args[idx].shape],
+                        "dtype": str(op.args[idx].dtype),
+                        "pointer_name": op.args[idx].op.name
+                    })
             arg_list.append(f"shared+{internal_shared_mem.start}")
             statements.append(func_name + "(" + ", ".join(arg_list) + ");")
 
@@ -241,7 +255,17 @@ class CodeGenerator:
         global_args_name_rmap = {v: k for k, v in global_args_name_map.items()}
         global_args = [global_args_name_rmap[x] for x in global_args_names]
 
-        return CompileResult(
+        # return CompileResult(
+        #     configs,
+        #     code,
+        #     self.block_size,
+        #     self.grid_size,
+        #     self.kernel_name,
+        #     global_args,
+        #     _scheduled_mods,
+        # )
+
+        temp_cpresult=CompileResult(
             configs,
             code,
             self.block_size,
@@ -250,6 +274,12 @@ class CodeGenerator:
             global_args,
             _scheduled_mods,
         )
+
+        temp_cpresult.arg_op_mapping_list=arg_op_mapping_list
+
+        return temp_cpresult
+
+
 
     def _compile_single_node(self, node: Node, config: Config):
         try:
@@ -265,7 +295,38 @@ class CodeGenerator:
             global_kernel=True,
             flatten_block=False,
         )
-        return CompileResult(
+
+        arg_op_mapping_list=[]
+
+        for tensor_arg in node.args:
+            # print("tensor arg",tensor_arg) # tensor arg Tensor(shape=[128, 64, 256, 256], op.name=p0)
+            # print("type(tensor_arg)",type(tensor_arg))
+            # print(f"Data Type: {tensor_arg.dtype}")
+            # if hasattr(tensor_arg.op, 'name'):  # 确保操作有名字属性
+            #     print(f"Operation Name: {tensor_arg.op.name}")
+            # print("tensor_arg.shape",tensor_arg.shape)
+            # print(type(tensor_arg))
+
+            # node.name,tensor_arg.shape,tensor_arg.dtype,tensor_arg.op.name
+            # arg_op_mapping_list.append((tensor_arg,node.name))
+            arg_op_mapping_list.append({
+                "reg_fused_op_name": node.name,
+                "tensor_shape": [intimm_to_int(dim) for dim in tensor_arg.shape],
+                "dtype": str(tensor_arg.dtype),
+                "pointer_name": tensor_arg.op.name
+            })
+
+        # return CompileResult(
+        #     {node: config},
+        #     code,
+        #     self.block_size,
+        #     self.grid_size,
+        #     self.kernel_name,
+        #     node.args,
+        #     {node.name : sch.get_mod_script()},
+        # )
+        
+        temp_cpresult=CompileResult(
             {node: config},
             code,
             self.block_size,
@@ -274,3 +335,9 @@ class CodeGenerator:
             node.args,
             {node.name : sch.get_mod_script()},
         )
+
+        temp_cpresult.arg_op_mapping_list=arg_op_mapping_list
+
+        return temp_cpresult
+
+

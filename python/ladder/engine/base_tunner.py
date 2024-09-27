@@ -246,6 +246,7 @@ class Tunner(object):
             result.latency = cached.latency
             result.set_io_desc(input_desc, output_desc)
             result.origin = cached
+            result.arg_op_mapping_list=cached.arg_op_mapping_list
             return result
 
         policy_list = self.get_policy_list()
