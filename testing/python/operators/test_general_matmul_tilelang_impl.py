@@ -7,33 +7,39 @@ from tvm import tl
 from bitblas.ops.general_matmul.tilelang.dense import matmul_blocked
 import torch
 import torch.backends
+
 torch.manual_seed(0)
 
 
-def assert_tl_matmul_correctness(M, N, K,
-    block_M=64,
-    block_N=64,
-    block_K=32,
-    trans_A=False,
-    trans_B=True,
-    dtypeAB="float16",
-    dtypeC="float16",
-    accum_dtype="float16",
-    num_stages=2,
-    threads=128,
-    enable_rasterization=False):
-    matmul = matmul_blocked(M, N, K,
-                block_M=block_M,
-                block_N=block_N,
-                block_K=block_K,
-                trans_A=trans_A,
-                trans_B=trans_B,
-                dtypeAB=dtypeAB,
-                dtypeC=dtypeC,
-                accum_dtype=accum_dtype,
-                num_stages=num_stages,
-                threads=threads,
-                enable_rasterization=enable_rasterization,
+def assert_tl_matmul_correctness(M,
+                                 N,
+                                 K,
+                                 block_M=64,
+                                 block_N=64,
+                                 block_K=32,
+                                 trans_A=False,
+                                 trans_B=True,
+                                 dtypeAB="float16",
+                                 dtypeC="float16",
+                                 accum_dtype="float16",
+                                 num_stages=2,
+                                 threads=128,
+                                 enable_rasterization=False):
+    matmul = matmul_blocked(
+        M,
+        N,
+        K,
+        block_M=block_M,
+        block_N=block_N,
+        block_K=block_K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        dtypeAB=dtypeAB,
+        dtypeC=dtypeC,
+        accum_dtype=accum_dtype,
+        num_stages=num_stages,
+        threads=threads,
+        enable_rasterization=enable_rasterization,
     )
 
     mod, params = tl.lower(matmul)
@@ -61,11 +67,12 @@ def assert_tl_matmul_correctness(M, N, K,
 
 
 def test_matmul_blocked():
-    # pipeline
+    # Pipeline
     assert_tl_matmul_correctness(1024, 1024, 1024, num_stages=2)
     assert_tl_matmul_correctness(1024, 1024, 1024, num_stages=1)
     # L2 Cache
     assert_tl_matmul_correctness(1024, 1024, 1024, enable_rasterization=True)
+
 
 if __name__ == "__main__":
     bitblas.testing.main()

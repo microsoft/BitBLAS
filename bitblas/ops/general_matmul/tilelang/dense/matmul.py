@@ -1,48 +1,55 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
 from bitblas import tvm as tvm
 import tvm.tl.language as T
 
+from bitblas.tl.utils import (
+    get_mma_micro_size,
+    make_swizzle_layout,
+)
+
+from bitblas.tl.macro_generator import (TensorCoreIntrinEmitter)
+
+
+def maybe_pipeline(
+    iterable,
+    num_stages,
+):
+    enable_pipeline = num_stages > 1
+    if enable_pipeline:
+        return T.Pipelined(iterable, num_stages=num_stages)
+    else:
+        return T.serial(iterable)
+
+
 def matmul_blocked(
-    M,
-    N,
-    K,
-    block_M=64,
-    block_N=64,
-    block_K=32,
-    trans_A=False,
-    trans_B=False,
-    dtypeAB="float16",
-    dtypeC="float16",
-    accum_dtype="float16",
-    num_stages=2,
-    threads=128,
-    enable_rasterization=False, # Enhance L2 Locality
+        M,
+        N,
+        K,
+        block_M=64,
+        block_N=64,
+        block_K=32,
+        trans_A=False,
+        trans_B=False,
+        dtypeAB="float16",
+        dtypeC="float16",
+        accum_dtype="float16",
+        num_stages=2,
+        threads=128,
+        enable_rasterization=False,  # Enhance L2 Locality
 ):
     A_shape = (K, M) if trans_A else (M, K)
     B_shape = (N, K) if trans_B else (K, N)
     A_shared_shape = (block_K, block_M) if trans_A else (block_M, block_K)
     B_shared_shape = (block_N, block_K) if trans_B else (block_K, block_N)
 
-    def maybe_pipeline(
-        iterable, num_stages,
-    ):
-        enable_pipeline = num_stages > 1
-        if enable_pipeline:
-            return T.Pipelined(iterable, num_stages=num_stages)
-        else:
-            return T.serial(iterable)
-        
     @T.prim_func
     def main(
-        A: T.Buffer(A_shape, dtypeAB),
-        B: T.Buffer(B_shape, dtypeAB),
-        C: T.Buffer((M, N), dtypeC),
+            A: T.Buffer(A_shape, dtypeAB),
+            B: T.Buffer(B_shape, dtypeAB),
+            C: T.Buffer((M, N), dtypeC),
     ):
-        with T.Kernel(
-            T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads
-        ) as (bx, by):
+        with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
             A_shared = T.alloc_shared(A_shared_shape, dtypeAB)
             B_shared = T.alloc_shared(B_shared_shape, dtypeAB)
             C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
@@ -63,5 +70,120 @@ def matmul_blocked(
                     T.copy(B[k * block_K, bx * block_N], B_shared)
                 T.gemm(A_shared, B_shared, C_local, trans_A, trans_B)
             T.copy(C_local, C[by * block_M, bx * block_N])
+
+    return main
+
+
+def matmul_macro_tensorcore(
+    M,
+    N,
+    K,
+    dtypeAB,
+    dtypeC,
+    accum_dtype,
+    block_row_warps,
+    block_col_warps,
+    warp_row_tiles,
+    warp_col_tiles,
+    chunk,
+    num_stages=2,
+    enable_rasterization=False,
+):
+
+    block_M = block_row_warps * warp_row_tiles
+    block_N = block_col_warps * warp_col_tiles
+    block_K = chunk
+
+    micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(dtypeAB)
+
+    A_shape = (M, K)
+    B_shape = (N, K)
+    A_shared_shape = (block_M, block_K)
+    B_shared_shape = (block_N, block_K)
+    C_shared_shape = (block_M // micro_size_x, block_N // micro_size_y, micro_size_x, micro_size_y)
+
+    warp_size = 32  # nvidia gpu warp size is 32
+    threads = warp_size * (block_row_warps * block_col_warps)
+    local_size = (micro_size_x * micro_size_y) // warp_size
+    warp_rows = warp_row_tiles // micro_size_x
+    warp_cols = warp_col_tiles // micro_size_y
+
+    shared_scope = "shared.dyn"  # Literal["shared", "shared.dyn"] while shared for static shared memory
+    mma_emitter = TensorCoreIntrinEmitter(
+        a_dtype=dtypeAB,
+        b_dtype=dtypeAB,
+        accum_dtype=accum_dtype,
+        a_transposed=False,
+        b_transposed=True,
+        block_row_warps=block_row_warps,
+        block_col_warps=block_col_warps,
+        warp_row_tiles=warp_row_tiles,
+        warp_col_tiles=warp_col_tiles,
+        chunk=chunk)
+
+    @T.prim_func
+    def main(
+            A: T.Buffer(A_shape, dtypeAB),
+            B: T.Buffer(B_shape, dtypeAB),
+            C: T.Buffer((M, N), dtypeC),
+    ):
+        with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
+
+            A_shared = T.alloc_shared(A_shared_shape, dtypeAB, shared_scope=shared_scope)
+            B_shared = T.alloc_shared(B_shared_shape, dtypeAB, shared_scope=shared_scope)
+            C_shared = T.alloc_shared(C_shared_shape, dtypeC, shared_scope=shared_scope)
+            A_local = T.alloc_local((warp_rows * local_size), dtypeAB)
+            B_local = T.alloc_local((warp_cols * local_size), dtypeAB)
+            C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
+            thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
+
+            T.annotate_layout({
+                A_shared: make_swizzle_layout(A_shared),
+                B_shared: make_swizzle_layout(B_shared),
+            })
+
+            if enable_rasterization:
+                T.use_swizzle(panel_size=10)
+
+            T.clear(C_local)
+
+            for ko in maybe_pipeline(T.ceildiv(K, block_K), num_stages):
+
+                for i, k in T.Parallel(block_M, block_K):
+                    A_shared[i, k] = A[by * block_M + i, ko * block_K + k]
+
+                for j, k in T.Parallel(block_N, block_K):
+                    B_shared[j, k] = B[bx * block_N + j, ko * block_K + k]
+
+                for ki in T.serial(0, (block_K // micro_size_k)):
+
+                    # Load A into fragment
+                    mma_emitter.ldmatrix_a(
+                        A_local,
+                        A_shared,
+                        ki,
+                        thread_bindings=thread_bindings,
+                    )
+
+                    # Load B into fragment
+                    mma_emitter.ldmatrix_b(
+                        B_local,
+                        B_shared,
+                        ki,
+                        thread_bindings=thread_bindings,
+                    )
+
+                    mma_emitter.mma(A_local, B_local, C_local)
+
+            mma_emitter.stmatrix(
+                C_local,
+                C_shared,
+                thread_bindings=thread_bindings,
+            )
+
+            for i, j in T.Parallel(block_M, block_N):
+                C[by * block_M + i,
+                  bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
+                                               i % micro_size_x, j % micro_size_y]
 
     return main
