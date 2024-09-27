@@ -47,13 +47,8 @@ def matmul(
             for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=3):
                 T.copy(A[by * block_M, k * block_K], A_shared)
 
-                for i in T.serial(block_N * block_K // num_elems_per_byte // (threads * 16)):
-                    for t in T.thread_binding(0, threads, thread="threadIdx.x"):
-                        for v in T.vectorized(0, 16):
-                            vi = (i * threads * 16 + t * 16 + v) // (block_K // num_elems_per_byte)
-                            vj = (i * threads * 16 + t * 16 + v) % (block_K // num_elems_per_byte)
-                            B_shared[vi, vj] = B[bx * block_N + vi,
-                                                 k * block_K // num_elems_per_byte + vj,]
+                for i, j in T.Parallel(block_N, block_K // num_elems_per_byte):
+                    B_shared[i, j] = B[bx * block_N + i, k * block_K // num_elems_per_byte + j] 
 
                 for i in T.serial(block_N * block_K // num_elems_per_byte // (threads * 4)):
                     for t in T.thread_binding(0, threads, thread="threadIdx.x"):
