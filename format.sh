@@ -143,7 +143,7 @@ else
    # Check spelling only of the files that changed in last commit.
    spell_check_changed
 fi
-echo 'BitBLAS codespell: Done'
+echo 'bitblas codespell: Done'
 
 echo 'bitblas ruff: Check Start'
 # Lint specified files
