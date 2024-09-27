@@ -53,6 +53,12 @@ def dump(fusion_groups: List[FusionGroup]):
             group_desc["latency"] = cpresult.latency
             group_desc["name"] = cpresult.name
             group_desc["gain"] = group.gain
+            group_desc["config"]=str(cpresult.config)
+            group_desc["args"]=str(cpresult.args)
+            # group_desc["config."]=cpresult.config.
+            # group_desc["arg_op_mapping_list"]=str(cpresult.arg_op_mapping_list)
+            group_desc["arg_op_mapping_list"]=cpresult.arg_op_mapping_list
+
         obj.append(group_desc)
     return obj
 
