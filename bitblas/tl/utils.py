@@ -1,8 +1,17 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+
 from tvm import arith
 from tvm import DataType
+import tvm.tl.language as T
 from typing import Union, Literal
+from .mma_layout import (
+    ldmatrix_32x8_to_shared_16x16_layout,
+    ldmatrix_trans_32x8_to_shared_16x16_layout,
+    ldmatrix_32x16_to_shared_16x32_layout_a,
+    ldmatrix_32x16_to_shared_16x32_layout_b,
+    mma_store_32x8_to_shared_16x16_layout,
+)
 
 
 def get_swizzle_layout(row_idx, col_idx, row_size, dtype: Union[DataType, str]):
@@ -61,48 +70,6 @@ def get_swizzle_layout(row_idx, col_idx, row_size, dtype: Union[DataType, str]):
     return row_idx, ana.simplify(new_col_idx_outer * bank_elems + col_idx_inner)
 
 
-def ldmatrix_32x8_to_shared_16x16_layout(thread_id, local_id):
-    row = thread_id % 16
-    col = 8 * (thread_id // 16) + local_id % 8
-    return row, col
-
-
-def ldmatrix_trans_32x8_to_shared_16x16_layout(thread_id, local_id):
-    row = 8 * (thread_id // 16) + (thread_id % 8)
-    col = 8 * ((thread_id % 16) // 8) + local_id % 8
-    return row, col
-
-
-def ldmatrix_32x16_to_shared_16x32_layout_a(thread_id, local_id):
-    row = thread_id % 16
-    col = local_id + (thread_id // 16) * 16
-    return row, col
-
-
-def ldmatrix_32x16_to_shared_16x32_layout_b(thread_id, local_id):
-    row = (thread_id // 16) * 8 + (thread_id % 8)
-    col = local_id + 16 * ((thread_id % 16) // 8)
-    return row, col
-
-
-def mma_store_32x8_to_shared_16x16_layout(thread_id, local_id):
-    row = 8 * (local_id % 4 // 2) + (thread_id // 4)
-    col = 8 * (local_id // 4) + (thread_id % 4) * 2 + (local_id % 2)
-    return row, col
-
-
-def shared_16x16_to_mma_32x8_smoothlayout(i, j):
-    return (i * 2 + j // 8, j % 8)
-
-
-def shared_16x32_to_mma_32x16_smoothlayout(i, j):
-    return (i * 2 + j // 16, j % 16)
-
-
-def shared_32x16_to_mma_32x16_smoothlayout(i, j):
-    return (i * 2 + j // 16, j % 16)
-
-
 def get_ldmatrix_offset(
     matrix: Literal["A", "B"],
     row_idx,
@@ -129,3 +96,28 @@ def get_ldmatrix_offset(
 
 def mma_store_index_map(*args, **kwargs):
     return mma_store_32x8_to_shared_16x16_layout(*args, **kwargs)
+
+
+def get_mma_micro_size(dtype: Literal["float16", "int8"]):
+    # TODO(lei): FP8 related precision support.
+    # Basic Tensor Core Matrix Multiply operation Unit
+    micro_size_x = micro_size_y = 16
+    micro_size_k = 16
+    if dtype == "int8":
+        micro_size_k = 32
+    return micro_size_x, micro_size_y, micro_size_k
+
+
+def make_swizzle_layout(shared_buf):
+    dtype = shared_buf.dtype
+    shape = shared_buf.shape
+
+    can_swizzle = shape[-1] * DataType(dtype).bits == 512
+    if not can_swizzle:
+        return T.Layout(shape, lambda *args: args)
+
+    def transform_func(i, j):
+        new_warp_i, new_warp_j = get_swizzle_layout(i, j, shape[-1], dtype)
+        return [new_warp_i, new_warp_j]
+
+    return T.Layout(shape, transform_func)
