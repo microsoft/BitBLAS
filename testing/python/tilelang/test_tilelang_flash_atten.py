@@ -1,4 +1,3 @@
-import argparse
 from tvm import tl
 import tvm.tl.language as T
 from tvm.tl.autotuner import *
