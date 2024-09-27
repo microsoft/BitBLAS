@@ -17,17 +17,6 @@ from bitblas.tl.macro_generator import (
 from bitblas.ops.operator import TransformKind
 
 
-def maybe_pipeline(
-    iterable,
-    num_stages,
-):
-    enable_pipeline = num_stages > 1
-    if enable_pipeline:
-        return T.Pipelined(iterable, num_stages=num_stages)
-    else:
-        return T.serial(iterable)
-
-
 def matmul_blocked(
         M,
         N,
@@ -65,7 +54,7 @@ def matmul_blocked(
                 T.use_swizzle(10)
 
             T.clear(C_local)
-            for k in maybe_pipeline(T.ceildiv(K, block_K), num_stages):
+            for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
                 if trans_A:
                     T.copy(A[k * block_K, by * block_M], A_shared)
                 else:
@@ -157,7 +146,7 @@ def matmul_macro_tensorcore(
 
             T.clear(C_local)
 
-            for ko in maybe_pipeline(T.ceildiv(K, block_K), num_stages):
+            for ko in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
 
                 for i, k in T.Parallel(block_M, block_K):
                     A_shared[i, k] = A[by * block_M + i, ko * block_K + k]
@@ -284,7 +273,7 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
 
             T.clear(C_local)
 
-            for ko in maybe_pipeline(T.ceildiv(K, block_K), num_stages):
+            for ko in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
 
                 for i, k in T.Parallel(block_M, block_K):
                     A_shared[i, k] = A[by * block_M + i, ko * block_K + k]

@@ -108,7 +108,7 @@ def assert_matmul_macro_tensorcore_correctness(
     mod, params = tl.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
-    # src_code is the generated cuda source
+    # src_code represents generated cuda source
     assert src_code is not None
 
     A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB))
@@ -209,6 +209,7 @@ def test_matmul_macro_tensorcore():
     # Pipeline
     assert_matmul_macro_tensorcore_correctness(1024, 1024, 1024, num_stages=2)
     assert_matmul_macro_tensorcore_correctness(1024, 1024, 1024, num_stages=1)
+    assert_matmul_macro_tensorcore_correctness(1024, 1024, 1024, num_stages=0)
     # L2 Cache
     assert_matmul_macro_tensorcore_correctness(1024, 1024, 1024, enable_rasterization=True)
 
@@ -217,6 +218,7 @@ def test_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4():
     # Pipeline
     assert_tl_matmul_with_ladder_weight_only_transform_correctness(1024, 1024, 1024, num_stages=2)
     assert_tl_matmul_with_ladder_weight_only_transform_correctness(1024, 1024, 1024, num_stages=1)
+    assert_tl_matmul_with_ladder_weight_only_transform_correctness(1024, 1024, 1024, num_stages=0)
     # L2 Cache
     assert_tl_matmul_with_ladder_weight_only_transform_correctness(
         1024, 1024, 1024, enable_rasterization=True)
