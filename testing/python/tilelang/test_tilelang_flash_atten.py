@@ -38,9 +38,12 @@ def ref_flashattn_result(batch, heads, seq_len, dim, is_casual, dtype="float16")
     k_shape = (batch, seq_len, heads, dim)
     v_shape = (batch, seq_len, heads, dim)
     typemap = {"float16": torch.float16}
-    Q = torch.rand(batch * seq_len * heads * dim).uniform_(-1, 1).reshape(q_shape).type(typemap[dtype]).cuda()
-    K = torch.rand(batch * seq_len * heads * dim).uniform_(-1, 1).reshape(k_shape).type(typemap[dtype]).cuda()
-    V = torch.rand(batch * seq_len * heads * dim).uniform_(-1, 1).reshape(v_shape).type(typemap[dtype]).cuda()
+    Q = torch.rand(batch * seq_len * heads * dim).uniform_(-1, 1).reshape(q_shape).type(
+        typemap[dtype]).cuda()
+    K = torch.rand(batch * seq_len * heads * dim).uniform_(-1, 1).reshape(k_shape).type(
+        typemap[dtype]).cuda()
+    V = torch.rand(batch * seq_len * heads * dim).uniform_(-1, 1).reshape(v_shape).type(
+        typemap[dtype]).cuda()
     res = ref_program(Q, K, V, is_casual)
     return res
 
@@ -74,8 +77,7 @@ def flashattn_autotune(batch, heads, seq_len, dim, is_causal):
                 Output: T.Buffer(shape, dtype),  # type: ignore
         ):
             with T.Kernel(
-                T.ceildiv(seq_len, block_M), heads, batch, threads=thread_num
-            ) as (bx, by, bz):
+                    T.ceildiv(seq_len, block_M), heads, batch, threads=thread_num) as (bx, by, bz):
                 Q_shared = T.alloc_shared([block_M, dim], dtype)
                 Q_local = T.alloc_fragment([block_M, dim], dtype)
                 K_shared = T.alloc_shared([block_N, dim], dtype)
@@ -155,25 +157,24 @@ def test_flashattn_autotune():
 
 
 def flashattn(batch, heads, seq_len, dim, is_causal):
-    
+
     def kernel(block_M=64, block_N=64, num_stages=1, thread_num=128):
-        scale = (1.0 / dim) ** 0.5 * 1.44269504
+        scale = (1.0 / dim)**0.5 * 1.44269504
         shape = [batch, seq_len, heads, dim]
         dtype = "float16"
         accum_dtype = "float"
 
         @T.prim_func
         def main(
-            Q: T.Buffer(shape, dtype),
-            K: T.Buffer(shape, dtype),
-            V: T.Buffer(shape, dtype),
-            Output: T.Buffer(shape, dtype),
+                Q: T.Buffer(shape, dtype),
+                K: T.Buffer(shape, dtype),
+                V: T.Buffer(shape, dtype),
+                Output: T.Buffer(shape, dtype),
         ):
             print(type(seq_len), seq_len)
             print(type(block_M), block_M)
             with T.Kernel(
-                T.ceildiv(seq_len, block_M), heads, batch, threads=thread_num
-            ) as (bx, by, bz):
+                    T.ceildiv(seq_len, block_M), heads, batch, threads=thread_num) as (bx, by, bz):
                 Q_shared = T.alloc_shared([block_M, dim], dtype)
                 Q_local = T.alloc_fragment([block_M, dim], dtype)
                 K_shared = T.alloc_shared([block_N, dim], dtype)
