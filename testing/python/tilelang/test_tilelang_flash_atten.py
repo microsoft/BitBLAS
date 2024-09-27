@@ -257,26 +257,3 @@ def test_flashattn():
 
 if __name__ == "__main__":
     bitblas.testing.main()
-
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument("--batch", type=int, default=4, help="Batch size")
-#     parser.add_argument("--h", type=int, default=4, help="Number of heads")
-#     parser.add_argument("--n_ctx", type=int, default=256, help="Context size")
-#     parser.add_argument("--d_head", type=int, default=256, help="Head dimension")
-#     parser.add_argument("--casual", type=bool, default=True, help="Casual flag")
-#     args = parser.parse_args()
-#     BATCH, H, N_CTX, D_HEAD = args.batch, args.h, args.n_ctx, args.d_head
-#     casual = args.casual
-#     flops_per_matmul = 2.0 * BATCH * H * N_CTX * N_CTX * D_HEAD
-#     total_flops = 2 * flops_per_matmul
-#     if casual:
-#         total_flops *= 0.5
-
-#     # best_latency, ref_latency = flashattn(BATCH, H, N_CTX, D_HEAD, casual)
-#     # best_config = None
-#     best_latency, best_config, ref_latency = flashattn_autotune(BATCH, H, N_CTX, D_HEAD, casual)
-#     print(f"Best latency: {best_latency}")
-#     print(f"Best TFlops: {total_flops / best_latency * 1e-9}")
-#     print(f"Best config: {best_config}")
-#     print(f"Ref TFlops: {total_flops / ref_latency * 1e-9}")
