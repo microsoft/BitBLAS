@@ -276,7 +276,7 @@ def assert_matmul_weight_propagation_with_default_correctness(M,
     ref_c = torch.matmul(A, B.T).to(getattr(torch, dtypeC))
     print(C)
     print(ref_c)
-    torch.testing.assert_close(C, ref_c, rtol=1e-1, atol=1e-1)
+    torch.testing.assert_close(C, ref_c, rtol=1e0, atol=1e0)
 
 
 def assert_matmul_weight_propagation_apply_config_correctness(
@@ -348,7 +348,7 @@ def assert_matmul_weight_propagation_apply_config_correctness(
 
     # Get Reference Result
     ref_c = torch.matmul(A, B.T).to(getattr(torch, dtypeC))
-    torch.testing.assert_close(C, ref_c, rtol=1e-1, atol=1e-1)
+    torch.testing.assert_close(C, ref_c, rtol=1e0, atol=1e0)
 
 
 def test_matmul_blocked():

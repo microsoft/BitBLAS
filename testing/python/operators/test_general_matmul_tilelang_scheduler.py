@@ -25,7 +25,7 @@ def assert_scheduler_simplify(M,
         dtypeAB=dtypeAB,
         dtypeC=dtypeC,
         accum_dtype=accum_dtype,
-    ).disable_simplify().with_default_config()
+    ).deactivate_simplify().with_default_config()
 
     simplified = MatmulScheduler.Simplify(matmul)
 
