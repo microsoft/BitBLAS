@@ -17,14 +17,13 @@ torch.manual_seed(0)
 
 
 def assert_matmul_blocked_with_default_correctness(M,
-                                      N,
-                                      K,
-                                      trans_A=False,
-                                      trans_B=True,
-                                      dtypeAB="float16",
-                                      dtypeC="float16",
-                                      accum_dtype="float16"
-                                      ):
+                                                   N,
+                                                   K,
+                                                   trans_A=False,
+                                                   trans_B=True,
+                                                   dtypeAB="float16",
+                                                   dtypeC="float16",
+                                                   accum_dtype="float16"):
     matmul = MatmulScheduler(
         M=M,
         N=N,
@@ -35,7 +34,7 @@ def assert_matmul_blocked_with_default_correctness(M,
         dtypeC=dtypeC,
         accum_dtype=accum_dtype,
     ).with_default_config()
-    
+
     mod, params = tl.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
@@ -61,19 +60,19 @@ def assert_matmul_blocked_with_default_correctness(M,
 
 
 def assert_matmul_blocked_apply_config_correctness(M,
-                                      N,
-                                      K,
-                                      block_M=64,
-                                      block_N=64,
-                                      block_K=32,
-                                      trans_A=False,
-                                      trans_B=True,
-                                      dtypeAB="float16",
-                                      dtypeC="float16",
-                                      accum_dtype="float16",
-                                      num_stages=2,
-                                      threads=128,
-                                      enable_rasterization=False):
+                                                   N,
+                                                   K,
+                                                   block_M=64,
+                                                   block_N=64,
+                                                   block_K=32,
+                                                   trans_A=False,
+                                                   trans_B=True,
+                                                   dtypeAB="float16",
+                                                   dtypeC="float16",
+                                                   accum_dtype="float16",
+                                                   num_stages=2,
+                                                   threads=128,
+                                                   enable_rasterization=False):
     matmul = MatmulScheduler(
         M=M,
         N=N,
@@ -91,7 +90,7 @@ def assert_matmul_blocked_apply_config_correctness(M,
         threads=threads,
         enable_rasterization=enable_rasterization,
     )
-    
+
     mod, params = tl.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
@@ -117,14 +116,13 @@ def assert_matmul_blocked_apply_config_correctness(M,
 
 
 def assert_matmul_fine_grained_with_default_correctness(M,
-                                      N,
-                                      K,
-                                      trans_A=False,
-                                      trans_B=True,
-                                      dtypeAB="float16",
-                                      dtypeC="float16",
-                                      accum_dtype="float16"
-                    ):
+                                                        N,
+                                                        K,
+                                                        trans_A=False,
+                                                        trans_B=True,
+                                                        dtypeAB="float16",
+                                                        dtypeC="float16",
+                                                        accum_dtype="float16"):
 
     matmul = MatmulFineGrainScheduler(
         M=M,
@@ -163,21 +161,22 @@ def assert_matmul_fine_grained_with_default_correctness(M,
     torch.testing.assert_close(C, ref_c, rtol=1e-1, atol=1e-1)
 
 
-def assert_matmul_fine_grained_apply_config_correctness(M,
-                                      N,
-                                      K,
-                                      trans_A=False,
-                                      trans_B=True,
-                                      dtypeAB="float16",
-                                      dtypeC="float16",
-                                      accum_dtype="float16",
-                                        block_row_warps=1,
-                                        block_col_warps=1,
-                                        warp_row_tiles=16,
-                                        warp_col_tiles=16,
-                                        chunk=32,
-                                        num_stages=2,
-                                        enable_rasterization=False,
+def assert_matmul_fine_grained_apply_config_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    dtypeAB="float16",
+    dtypeC="float16",
+    accum_dtype="float16",
+    block_row_warps=1,
+    block_col_warps=1,
+    warp_row_tiles=16,
+    warp_col_tiles=16,
+    chunk=32,
+    num_stages=2,
+    enable_rasterization=False,
 ):
 
     matmul = MatmulFineGrainScheduler(
@@ -198,7 +197,6 @@ def assert_matmul_fine_grained_apply_config_correctness(M,
         num_stages=num_stages,
         enable_rasterization=enable_rasterization,
     )
-    
 
     mod, params = tl.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
@@ -225,14 +223,13 @@ def assert_matmul_fine_grained_apply_config_correctness(M,
 
 
 def assert_matmul_weight_propagation_with_default_correctness(M,
-                                      N,
-                                      K,
-                                      trans_A=False,
-                                      trans_B=True,
-                                      dtypeAB="float16",
-                                      dtypeC="float16",
-                                      accum_dtype="float16"
-                    ):
+                                                              N,
+                                                              K,
+                                                              trans_A=False,
+                                                              trans_B=True,
+                                                              dtypeAB="float16",
+                                                              dtypeC="float16",
+                                                              accum_dtype="float16"):
 
     matmul = MatmulWeightPropagationScheduler(
         M=M,
@@ -281,22 +278,24 @@ def assert_matmul_weight_propagation_with_default_correctness(M,
     print(ref_c)
     torch.testing.assert_close(C, ref_c, rtol=1e-1, atol=1e-1)
 
-def assert_matmul_weight_propagation_apply_config_correctness(M,
-                                      N,
-                                      K,
-                                      trans_A=False,
-                                      trans_B=True,
-                                      dtypeAB="float16",
-                                      dtypeC="float16",
-                                      accum_dtype="float16",
-                                        block_row_warps=1,
-                                        block_col_warps=1,
-                                        warp_row_tiles=16,
-                                        warp_col_tiles=16,
-                                        chunk=32,
-                                        num_stages=2,
-                                        enable_rasterization=False,
-                    ):
+
+def assert_matmul_weight_propagation_apply_config_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    dtypeAB="float16",
+    dtypeC="float16",
+    accum_dtype="float16",
+    block_row_warps=1,
+    block_col_warps=1,
+    warp_row_tiles=16,
+    warp_col_tiles=16,
+    chunk=32,
+    num_stages=2,
+    enable_rasterization=False,
+):
 
     matmul = MatmulWeightPropagationScheduler(
         M=M,
@@ -361,6 +360,7 @@ def test_matmul_blocked():
     # L2 Cache
     assert_matmul_blocked_apply_config_correctness(1024, 1024, 1024, enable_rasterization=True)
 
+
 def test_matmul_fine_grained():
     # Default
     assert_matmul_fine_grained_with_default_correctness(1024, 1024, 1024)
@@ -370,6 +370,7 @@ def test_matmul_fine_grained():
     # L2 Cache
     assert_matmul_fine_grained_apply_config_correctness(1024, 1024, 1024, enable_rasterization=True)
 
+
 def test_matmul_weight_propagation():
     # Default
     assert_matmul_weight_propagation_with_default_correctness(1024, 1024, 1024)
@@ -377,7 +378,9 @@ def test_matmul_weight_propagation():
     assert_matmul_weight_propagation_apply_config_correctness(1024, 1024, 1024, num_stages=2)
     assert_matmul_weight_propagation_apply_config_correctness(1024, 1024, 1024, num_stages=1)
     # L2 Cache
-    assert_matmul_weight_propagation_apply_config_correctness(1024, 1024, 1024, enable_rasterization=True)
+    assert_matmul_weight_propagation_apply_config_correctness(
+        1024, 1024, 1024, enable_rasterization=True)
+
 
 if __name__ == "__main__":
     bitblas.testing.main()
