@@ -6,3 +6,9 @@ from .matmul import (
     matmul_macro_tensorcore,  # noqa: F401
     matmul_macro_tensorcore_weight_propagation_level_ldmatrix  # noqa: F401
 )
+
+from .matmul import (
+    MatmulScheduler,  # noqa: F401
+    MatmulFineGrainScheduler,  # noqa: F401
+    MatmulWeightPropagationScheduler,  # noqa: F401
+)

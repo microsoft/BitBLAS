@@ -65,34 +65,36 @@ def matmul(
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
             A_shared = T.alloc_shared(A_shared_shape, dtypeAB)
             B_shared = T.alloc_shared(B_shared_shape, storage_dtype)
-            B_local = T.alloc_fragment([8], storage_dtype, "local")
-            B_dequantize_local = T.alloc_fragment([16], dtypeAB, "local")
+            B_local = T.alloc_local([8], storage_dtype)
+            B_dequantize_local = T.alloc_local([16], dtypeAB)
             B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, dtypeAB)
             C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
+
+            tx = T.thread_binding(0, threads, thread="threadIdx.x")
+
             T.clear(C_local)
-            for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=3):
+            for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
                 T.copy(A[by * block_M, k * block_K], A_shared)
 
                 for i, j in T.Parallel(block_N, block_K // num_elems_per_byte):
                     B_shared[i, j] = B[bx * block_N + i, k * block_K // num_elems_per_byte + j]
 
                 for i in T.serial(block_N * block_K // num_elems_per_byte // (threads * 4)):
-                    for t in T.thread_binding(0, threads, thread="threadIdx.x"):
-                        for v in T.vectorized(0, 4):
-                            vi = (i * threads * 4 + t * 4 + v) // (block_K // num_elems_per_byte)
-                            vj = (i * threads * 4 + t * 4 + v) % (block_K // num_elems_per_byte)
-                            B_local[v] = B_shared[vi, vj]
-                        for v in T.serial(0, 8):
-                            B_dequantize_local[v] = _tir_packed_to_unsigned_convert("int", 8)(
-                                num_bits,
-                                B_local[v // 2],
-                                v % 2,
-                                dtype=dtypeAB,
-                            )
-                        for v in T.vectorized(0, 8):
-                            vi = (i * threads * 8 + t * 8 + v) // (block_K)
-                            vj = (i * threads * 8 + t * 8 + v) % (block_K)
-                            B_dequantize_shared[vi, vj] = B_dequantize_local[v]
+                    for v in T.vectorized(0, 4):
+                        vi = (i * threads * 4 + tx * 4 + v) // (block_K // num_elems_per_byte)
+                        vj = (i * threads * 4 + tx * 4 + v) % (block_K // num_elems_per_byte)
+                        B_local[v] = B_shared[vi, vj]
+                    for v in T.serial(0, 8):
+                        B_dequantize_local[v] = _tir_packed_to_unsigned_convert("int", 8)(
+                            num_bits,
+                            B_local[v // 2],
+                            v % 2,
+                            dtype=dtypeAB,
+                        )
+                    for v in T.vectorized(0, 8):
+                        vi = (i * threads * 8 + tx * 8 + v) // (block_K)
+                        vj = (i * threads * 8 + tx * 8 + v) % (block_K)
+                        B_dequantize_shared[vi, vj] = B_dequantize_local[v]
                 T.gemm(A_shared, B_dequantize_shared, C_local, transpose_B=True)
             T.copy(C_local, C[by * block_M, bx * block_N])
 
@@ -125,14 +127,12 @@ def run_gemm(
         num_stages,
         num_threads,
     )
-    print(program)
 
     mod, params = TL.lower(program)
     mod = TL.Profiler(mod, params, [2], TL.TensorSupplyType.Integer)
 
     out = mod.run_once()
-
-    print(f"output is {out}")
+    assert out is not None
 
     def ref_program(A, qB):
         import torch
