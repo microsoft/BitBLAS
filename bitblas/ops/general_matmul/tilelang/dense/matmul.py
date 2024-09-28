@@ -2,8 +2,10 @@
 # Licensed under the MIT License.
 from bitblas import tvm as tvm
 from tvm import DataType
+from tvm import IRModule
+from tvm.tir import PrimFunc
 import tvm.tl.language as T
-
+from typing import Union, Optional
 from bitblas.tl.utils import (
     get_mma_micro_size,
     make_swizzle_layout,
@@ -20,12 +22,40 @@ from dataclasses import dataclass
 
 
 @dataclass
-class MatmulScheduler:
+class BaseScheduler:
+
+    enable_simplify: bool = True
+
+    @staticmethod
+    def Simplify(stmt: Union[PrimFunc, IRModule]):
+        if isinstance(stmt, PrimFunc):
+            return tvm.tir.transform.Simplify()(tvm.IRModule.from_expr(stmt))["main"]
+        elif isinstance(stmt, IRModule):
+            return tvm.tir.transform.Simplify()(stmt)
+        else:
+            raise ValueError(f"Unsupported type: {type(stmt)}")
+
+    def enable_simplify(self):
+        self.enable_simplify = True
+        return self
+
+    def disable_simplify(self):
+        self.enable_simplify = False
+        return self
+
+    def maybe_simplify(self, stmt: Union[PrimFunc, IRModule]):
+        if self.enable_simplify:
+            return self.Simplify(stmt)
+        return stmt
+
+
+@dataclass
+class MatmulScheduler(BaseScheduler):
 
     # OP Related Config
-    M: int
-    N: int
-    K: int
+    M: Optional[int] = None
+    N: Optional[int] = None
+    K: Optional[int] = None
     trans_A: bool = False
     trans_B: bool = False
     dtypeAB: str = "float16"
@@ -105,7 +135,7 @@ class MatmulScheduler:
                     T.gemm(A_shared, B_shared, C_local, trans_A, trans_B)
                 T.copy(C_local, C[by * block_M, bx * block_N])
 
-        return main
+        return self.maybe_simplify(main)
 
     def __post_init__(self):
         # Add Config Validation
@@ -113,14 +143,14 @@ class MatmulScheduler:
 
 
 @dataclass
-class MatmulFineGrainScheduler:
+class MatmulFineGrainScheduler(BaseScheduler):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
 
     # Operation Configuration
-    M: int
-    N: int
-    K: int
+    M: Optional[int] = None
+    N: Optional[int] = None
+    K: Optional[int] = None
     dtypeAB: str = "float16"
     dtypeC: str = "float16"
     trans_A: bool = False
@@ -157,14 +187,16 @@ class MatmulFineGrainScheduler:
             enable_rasterization=enable_rasterization,
         )
 
-    def apply_config(self,
-                     block_row_warps=2,
-                     block_col_warps=2,
-                     warp_row_tiles=32,
-                     warp_col_tiles=32,
-                     chunk=16,
-                     num_stages=2,
-                     enable_rasterization=False):
+    def apply_config(
+        self,
+        block_row_warps=2,
+        block_col_warps=2,
+        warp_row_tiles=32,
+        warp_col_tiles=32,
+        chunk=16,
+        num_stages=2,
+        enable_rasterization=False,
+    ):
 
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B
@@ -182,8 +214,12 @@ class MatmulFineGrainScheduler:
         B_shape = (N, K)
         A_shared_shape = (block_M, block_K)
         B_shared_shape = (block_N, block_K)
-        C_shared_shape = (block_M // micro_size_x, block_N // micro_size_y, micro_size_x,
-                          micro_size_y)
+        C_shared_shape = (
+            block_M // micro_size_x,
+            block_N // micro_size_y,
+            micro_size_x,
+            micro_size_y,
+        )
 
         # GPU warp configuration for NVIDIA GPUs
         warp_size = 32
@@ -207,7 +243,8 @@ class MatmulFineGrainScheduler:
             block_col_warps=block_col_warps,
             warp_row_tiles=warp_row_tiles,
             warp_col_tiles=warp_col_tiles,
-            chunk=chunk)
+            chunk=chunk,
+        )
 
         # Define the main kernel using the generated configuration
         @T.prim_func
@@ -288,9 +325,9 @@ class MatmulFineGrainScheduler:
                 for i, j in T.Parallel(block_M, block_N):
                     C[by * block_M + i,
                       bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
-                                                   i % micro_size_x, j % micro_size_y]
+                                                   i % micro_size_x, j % micro_size_y,]
 
-        return main
+        return self.maybe_simplify(main)
 
     def __post_init__(self):
         # Validate the matrix transpose settings
@@ -301,14 +338,14 @@ class MatmulFineGrainScheduler:
 
 
 @dataclass
-class MatmulWeightPropagationScheduler:
+class MatmulWeightPropagationScheduler(BaseScheduler):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
 
     # Operation Configuration
-    M: int
-    N: int
-    K: int
+    M: Optional[int] = None
+    N: Optional[int] = None
+    K: Optional[int] = None
     dtypeAB: str = "float16"
     dtypeC: str = "float16"
     trans_A: bool = False
@@ -345,14 +382,16 @@ class MatmulWeightPropagationScheduler:
             enable_rasterization=enable_rasterization,
         )
 
-    def apply_config(self,
-                     block_row_warps=2,
-                     block_col_warps=2,
-                     warp_row_tiles=32,
-                     warp_col_tiles=32,
-                     chunk=16,
-                     num_stages=2,
-                     enable_rasterization=False):
+    def apply_config(
+        self,
+        block_row_warps=2,
+        block_col_warps=2,
+        warp_row_tiles=32,
+        warp_col_tiles=32,
+        chunk=16,
+        num_stages=2,
+        enable_rasterization=False,
+    ):
 
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B
@@ -377,10 +416,18 @@ class MatmulWeightPropagationScheduler:
         A_shape = (M, K)
         B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y, micro_size_k)
         A_shared_shape = (block_M, (block_K + pad_factor) if apply_pad_a else block_K)
-        B_shared_shape = (block_N // micro_size_y, block_K // micro_size_k, micro_size_y,
-                          micro_size_k)
-        C_shared_shape = (block_M // micro_size_x, block_N // micro_size_y, micro_size_x,
-                          micro_size_y)
+        B_shared_shape = (
+            block_N // micro_size_y,
+            block_K // micro_size_k,
+            micro_size_y,
+            micro_size_k,
+        )
+        C_shared_shape = (
+            block_M // micro_size_x,
+            block_N // micro_size_y,
+            micro_size_x,
+            micro_size_y,
+        )
 
         # GPU warp configuration for NVIDIA GPUs
         warp_size = 32
@@ -451,10 +498,14 @@ class MatmulWeightPropagationScheduler:
                         A_shared[i, k] = A[by * block_M + i, ko * block_K + k]
 
                     # Load B matrix into shared memory
-                    for j, k, jj, kk in T.Parallel(block_N // micro_size_y, block_K // micro_size_k,
-                                                   micro_size_y, micro_size_k):
+                    for j, k, jj, kk in T.Parallel(
+                            block_N // micro_size_y,
+                            block_K // micro_size_k,
+                            micro_size_y,
+                            micro_size_k,
+                    ):
                         B_shared[j, k, jj, kk] = B[bx * (block_N // micro_size_y) + j,
-                                                   ko * (block_K // micro_size_k) + k, jj, kk]
+                                                   ko * (block_K // micro_size_k) + k, jj, kk,]
 
                     # Perform the matrix multiplication on tensor core fragments
                     for ki in T.serial(0, (block_K // micro_size_k)):
@@ -489,9 +540,9 @@ class MatmulWeightPropagationScheduler:
                 for i, j in T.Parallel(block_M, block_N):
                     C[by * block_M + i,
                       bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
-                                                   i % micro_size_x, j % micro_size_y]
+                                                   i % micro_size_x, j % micro_size_y,]
 
-        return main
+        return self.maybe_simplify(main)
 
     def __post_init__(self):
         # Validate the matrix transpose settings
@@ -583,7 +634,12 @@ def matmul_macro_tensorcore(
     B_shape = (N, K)
     A_shared_shape = (block_M, block_K)
     B_shared_shape = (block_N, block_K)
-    C_shared_shape = (block_M // micro_size_x, block_N // micro_size_y, micro_size_x, micro_size_y)
+    C_shared_shape = (
+        block_M // micro_size_x,
+        block_N // micro_size_y,
+        micro_size_x,
+        micro_size_y,
+    )
 
     warp_size = 32  # nvidia gpu warp size is 32
     threads = warp_size * (block_row_warps * block_col_warps)
@@ -602,7 +658,8 @@ def matmul_macro_tensorcore(
         block_col_warps=block_col_warps,
         warp_row_tiles=warp_row_tiles,
         warp_col_tiles=warp_col_tiles,
-        chunk=chunk)
+        chunk=chunk,
+    )
 
     @T.prim_func
     def main(
@@ -667,7 +724,7 @@ def matmul_macro_tensorcore(
             for i, j in T.Parallel(block_M, block_N):
                 C[by * block_M + i,
                   bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
-                                               i % micro_size_x, j % micro_size_y]
+                                               i % micro_size_x, j % micro_size_y,]
 
     return main
 
@@ -707,8 +764,18 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
     A_shape = (M, K)
     B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y, micro_size_k)
     A_shared_shape = (block_M, (block_K + pad_factor) if apply_pad_a else block_K)
-    B_shared_shape = (block_N // micro_size_y, block_K // micro_size_k, micro_size_y, micro_size_k)
-    C_shared_shape = (block_M // micro_size_x, block_N // micro_size_y, micro_size_x, micro_size_y)
+    B_shared_shape = (
+        block_N // micro_size_y,
+        block_K // micro_size_k,
+        micro_size_y,
+        micro_size_k,
+    )
+    C_shared_shape = (
+        block_M // micro_size_x,
+        block_N // micro_size_y,
+        micro_size_x,
+        micro_size_y,
+    )
 
     warp_size = 32  # nvidia gpu warp size is 32
     threads = warp_size * (block_row_warps * block_col_warps)
@@ -762,10 +829,14 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
                 for i, k in T.Parallel(block_M, block_K):
                     A_shared[i, k] = A[by * block_M + i, ko * block_K + k]
 
-                for j, k, jj, kk in T.Parallel(block_N // micro_size_y, block_K // micro_size_k,
-                                               micro_size_y, micro_size_k):
+                for j, k, jj, kk in T.Parallel(
+                        block_N // micro_size_y,
+                        block_K // micro_size_k,
+                        micro_size_y,
+                        micro_size_k,
+                ):
                     B_shared[j, k, jj, kk] = B[bx * (block_N // micro_size_y) + j,
-                                               ko * (block_K // micro_size_k) + k, jj, kk]
+                                               ko * (block_K // micro_size_k) + k, jj, kk,]
 
                 for ki in T.serial(0, (block_K // micro_size_k)):
 
@@ -796,6 +867,6 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
             for i, j in T.Parallel(block_M, block_N):
                 C[by * block_M + i,
                   bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
-                                               i % micro_size_x, j % micro_size_y]
+                                               i % micro_size_x, j % micro_size_y,]
 
     return main
