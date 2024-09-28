@@ -1,8 +1,5 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-from tvm import arith
-from tvm import DataType
-from typing import Union, Literal
 
 
 def ldmatrix_32x8_to_shared_16x16_layout(thread_id, local_id):
