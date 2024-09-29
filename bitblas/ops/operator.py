@@ -57,17 +57,14 @@ class BaseKernelNameGenerator(ABC):
         pass
 
     @abstractmethod
-    def _generate(self, hint: Hint = None) -> str:
+    def generate(self, hint: Hint = None) -> str:
         """Generate the kernel name based on the config and hint"""
         pass
 
-    def generate_valid(self, hint: Hint = None) -> str:
+    def is_valid(self, kernel_name: str = None) -> bool:
         '''Validate kernel name after generation'''
-        kernel_name = self._generate(hint=hint)
         pattern = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
-        if not (self.kernel_name.isidentifier() and pattern.match(self.kernel_name)):
-            raise ValueError("kernel name is not valid")
-        return kernel_name
+        return kernel_name.isidentifier() and pattern.match(kernel_name)
 
 
 class DefaultKernelNameGenerator(BaseKernelNameGenerator):
@@ -271,7 +268,7 @@ class Operator(object):
             assert (
                 "main" in scheduled_mod
             ), "The optimized module should have a function named 'main' for default schedule."
-            default_kernal_name = self.kernel_name_generator.generate_valid()
+            default_kernal_name = self.kernel_name_generator.generate()
             func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
             scheduled_ir_module = tvm.IRModule({default_kernal_name: func})
             self._update_optimized_mod(scheduled_ir_module)
@@ -357,7 +354,7 @@ class Operator(object):
             assert (
                 "main" in scheduled_mod
             ), "The optimized module should have a function named 'main' for default schedule."
-            default_kernal_name = self.kernel_name_generator.generate_valid(best_hint)
+            default_kernal_name = self.kernel_name_generator.generate(best_hint)
             func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
             scheduled_ir_module = tvm.IRModule({default_kernal_name: func})
             self._update_optimized_mod(scheduled_ir_module)

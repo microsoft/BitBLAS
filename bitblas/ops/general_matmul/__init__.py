@@ -264,7 +264,7 @@ class MatmulKernelNameGenerator(BaseKernelNameGenerator):
             return f"u{dtype[4:]}"
         return dtype
 
-    def _generate(self, hint=None) -> str:
+    def generate(self, hint=None) -> str:
         config = self.config
         kernel_name = self.KERNEL_PREFIX
         shape_str = f"n{self.config.N}k{self.config.K}"
@@ -296,6 +296,7 @@ class MatmulKernelNameGenerator(BaseKernelNameGenerator):
         #     kernel_name += f"_pb{config.propagate_b.value}"
 
         kernel_name = "_".join([kernel_name, self.serialize_hint(hint)])
+        assert self.is_valid(kernel_name), "Kernel name invalid"
         return kernel_name
 
     def is_valid_config(self, config: OperatorConfig) -> bool:

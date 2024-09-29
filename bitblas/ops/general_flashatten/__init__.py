@@ -58,7 +58,7 @@ class FlashAttenKernelNameGenerator(BaseKernelNameGenerator):
         else:
             raise ValueError("Currently only support float, bfloat, int, uint")
 
-    def _generate(self, hint: Hint = None) -> str:
+    def generate(self, hint: Hint = None) -> str:
         config = self.config
         kernel_name = self.KERNEL_PREFIX
         shape_str = f"batch{self.config.batch}heads{self.config.heads}seqlen{self.config.seq_len}dim{self.config.dim}"
@@ -70,6 +70,7 @@ class FlashAttenKernelNameGenerator(BaseKernelNameGenerator):
         precision_str = f"Q{Q_dtype}_K{K_dtype}_V{V_dtype}_Accu{Accu_dtype}_Out{Out_dtype}"
         kernel_name = "_".join([kernel_name, shape_str, precision_str])
         # TODO need to add hint
+        assert self.is_valid(kernel_name), "Kernel name invalid"
         return kernel_name
 
 
