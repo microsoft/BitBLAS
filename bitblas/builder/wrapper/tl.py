@@ -9,12 +9,8 @@ from bitblas.utils.rtmod_analysis import get_annotated_device_mod
 import re
 import logging
 
-from .base import (
-    BaseWrapper, 
-    PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY, 
-    PREDEF_INIT_FUNC, 
-    PREDEF_HOST_FUNC
-)
+from .base import (BaseWrapper, PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY, PREDEF_INIT_FUNC,
+                   PREDEF_HOST_FUNC)
 
 logger = logging.getLogger(__name__)
 

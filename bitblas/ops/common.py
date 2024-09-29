@@ -3,6 +3,7 @@
 
 from enum import IntEnum
 
+
 class OptimizeStrategy(IntEnum):
     SingleBatchDecodeOnly = 0
     ContigousBatching = 1

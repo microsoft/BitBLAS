@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from tvm.tir.transform import Simplify
 from abc import ABC, abstractmethod
 
+
 @dataclass
 class BaseScheduler(ABC):
 
@@ -31,11 +32,11 @@ class BaseScheduler(ABC):
         if self._enable_simplify:
             return self.Simplify(stmt)
         return stmt
-    
+
     @abstractmethod
     def with_default_config(self):
         pass
-    
+
     @abstractmethod
     def apply_config(
         self,
