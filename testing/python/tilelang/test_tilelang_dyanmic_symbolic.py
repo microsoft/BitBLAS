@@ -32,15 +32,15 @@ def make_swizzle_layout(shared_buf):
 def tl_matmul_macro(
     N,
     K,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     accum_dtype,
 ):
-    assert dtypeAB in [
+    assert in_dtype in [
         "float16",
         "int8",
     ], "Currently only float16 and int8 are supported"
-    assert dtypeC in [
+    assert out_dtype in [
         "float16",
         "float32",
         "int32",
@@ -48,7 +48,7 @@ def tl_matmul_macro(
 
     micro_size_x = micro_size_y = micro_size_k = 16
 
-    if dtypeC == "int32":
+    if out_dtype == "int32":
         micro_size_k = 32
 
     # This is a debug config
@@ -56,7 +56,7 @@ def tl_matmul_macro(
     block_col_warps = 1
     warp_row_tiles = 16
     warp_col_tiles = 16
-    chunk = 32 if dtypeAB == "float16" else 64
+    chunk = 32 if in_dtype == "float16" else 64
     shared_scope = "shared.dyn"
 
     # Pipeline Stage
@@ -86,8 +86,8 @@ def tl_matmul_macro(
 
     # MMA Wrapper to Auto Generate Code for MMA
     mma_emitter = TensorCoreIntrinEmitter(
-        a_dtype=dtypeAB,
-        b_dtype=dtypeAB,
+        a_dtype=in_dtype,
+        b_dtype=in_dtype,
         accum_dtype=accum_dtype,
         a_transposed=False,
         b_transposed=True,
@@ -100,17 +100,17 @@ def tl_matmul_macro(
 
     @T.prim_func
     def main(
-            A: T.Buffer(A_shape, dtypeAB),
-            B: T.Buffer(B_shape, dtypeAB),
-            C: T.Buffer((M, N), dtypeC),
+            A: T.Buffer(A_shape, in_dtype),
+            B: T.Buffer(B_shape, in_dtype),
+            C: T.Buffer((M, N), out_dtype),
     ):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
 
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope=shared_scope)
-            B_shared = T.alloc_shared(B_shared_shape, dtypeAB, scope=shared_scope)
-            C_shared = T.alloc_shared(C_shared_shape, dtypeC, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), dtypeAB)
-            B_local = T.alloc_local((warp_cols * local_size), dtypeAB)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
+            B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
+            C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
+            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
+            B_local = T.alloc_local((warp_cols * local_size), in_dtype)
             C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
 
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
@@ -172,8 +172,8 @@ def tl_matmul_macro(
     return main
 
 
-def assert_tl_matmul_macro_correctness(M, N, K, in_dtype, dtypeC, accum_dtype):
-    matmul = tl_matmul_macro(N, K, in_dtype, dtypeC, accum_dtype)
+def assert_tl_matmul_macro_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
+    matmul = tl_matmul_macro(N, K, in_dtype, out_dtype, accum_dtype)
 
     mod, params = TL.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
@@ -202,8 +202,8 @@ def tl_matmul_block(
     block_K,
     trans_A,
     trans_B,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     accum_dtype,
     num_stages,
     threads,
@@ -217,11 +217,11 @@ def tl_matmul_block(
     import tvm.tl.language as T
 
     @T.prim_func
-    def main(A: T.Buffer(A_shape, dtypeAB), B: T.Buffer(B_shape, dtypeAB), C: T.Buffer((M, N),
-                                                                                       dtypeC)):
+    def main(A: T.Buffer(A_shape, in_dtype), B: T.Buffer(B_shape, in_dtype), C: T.Buffer(
+        (M, N), out_dtype)):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB)
-            B_shared = T.alloc_shared(B_shared_shape, dtypeAB)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype)
+            B_shared = T.alloc_shared(B_shared_shape, in_dtype)
             C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
             T.clear(C_local)
             for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
@@ -245,8 +245,8 @@ def assert_tl_matmul_block_correctness(
     K,
     trans_A,
     trans_B,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     dtypeAccum,
     block_M,
     block_N,
@@ -262,17 +262,17 @@ def assert_tl_matmul_block_correctness(
         block_K,
         trans_A,
         trans_B,
-        dtypeAB,
-        dtypeC,
+        in_dtype,
+        out_dtype,
         dtypeAccum,
         num_stages,
         num_threads,
     )
     mod, params = TL.lower(program)
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, dtypeAB))
-    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, dtypeC))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
     mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
     mod(A, B, C)
@@ -285,7 +285,7 @@ def assert_tl_matmul_block_correctness(
         if trans_B:
             B = B.T
         C = torch.matmul(A.to(torch.float), B.to(torch.float))
-        C = C.to(torch.__getattribute__(dtypeC))
+        C = C.to(torch.__getattribute__(out_dtype))
         return C
 
     # Get Reference Result
@@ -300,8 +300,8 @@ def tl_matmul_block_all_dynamic(
     block_K,
     trans_A,
     trans_B,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     accum_dtype,
     num_stages,
     threads,
@@ -318,11 +318,11 @@ def tl_matmul_block_all_dynamic(
     import tvm.tl.language as T
 
     @T.prim_func
-    def main(A: T.Buffer(A_shape, dtypeAB), B: T.Buffer(B_shape, dtypeAB), C: T.Buffer((M, N),
-                                                                                       dtypeC)):
+    def main(A: T.Buffer(A_shape, in_dtype), B: T.Buffer(B_shape, in_dtype), C: T.Buffer(
+        (M, N), out_dtype)):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB)
-            B_shared = T.alloc_shared(B_shared_shape, dtypeAB)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype)
+            B_shared = T.alloc_shared(B_shared_shape, in_dtype)
             C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
             T.clear(C_local)
             for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
@@ -346,8 +346,8 @@ def assert_tl_matmul_block_all_dynamic_correctness(
     K,
     trans_A,
     trans_B,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     dtypeAccum,
     block_M,
     block_N,
@@ -361,17 +361,17 @@ def assert_tl_matmul_block_all_dynamic_correctness(
         block_K,
         trans_A,
         trans_B,
-        dtypeAB,
-        dtypeC,
+        in_dtype,
+        out_dtype,
         dtypeAccum,
         num_stages,
         num_threads,
     )
     mod, params = TL.lower(program)
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, dtypeAB))
-    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, dtypeC))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
     mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
     mod(A, B, C)
@@ -385,7 +385,7 @@ def assert_tl_matmul_block_all_dynamic_correctness(
         if trans_B:
             B = B.T
         C = torch.matmul(A.to(torch.float), B.to(torch.float))
-        C = C.to(torch.__getattribute__(dtypeC))
+        C = C.to(torch.__getattribute__(out_dtype))
         return C
 
     # Get Reference Result

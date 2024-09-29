@@ -3,7 +3,7 @@
 # pre-transformed tir expression of matmul
 from bitblas import tvm
 from tvm import te
-from bitblas.ops.operator import TransformKind
+from bitblas.ops.common import TransformKind
 from .base import TIRScriptEmitter, TIRScriptSelector
 
 

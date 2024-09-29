@@ -6,9 +6,72 @@ from tvm.runtime import ndarray
 from tvm.driver import lower
 from tvm.target import Target
 from typing import Tuple, List
+from tvm import tir
+from tvm import tl
+from tvm.tl.engine import is_device_call
 
 
-def get_annotated_device_mod(mod: IRModule, target: Target) -> "IRModule":
+def get_annotated_device_mod_from_tl(mod: IRModule, target: Target) -> "IRModule":
+    target_host = tvm.target.Target("llvm -keys=cpu")
+    target = tvm.target.Target(target, target_host)
+    mod = tir.transform.BindTarget(target)(mod)
+
+    mod = tl.transform.FrontendLegalize()(mod)
+    mod = tir.transform.Simplify()(mod)
+    mod = tl.transform.LayoutInference()(mod)
+    mod = tl.transform.LowerTileOp()(mod)
+    mod = tir.transform.Simplify()(mod)
+
+    if target.arch == "sm_90":
+        mod = tl.transform.WarpSpecializedPipeline()(mod)
+    else:
+        mod = tir.transform.PlanAndUpdateBufferAllocationLocation()(mod)
+        mod = tl.transform.PipelinePlanning()(mod)
+        mod = tl.transform.InjectSoftwarePipeline()(mod)
+
+    mod = tir.transform.LowerOpaqueBlock()(mod)
+    mod = tir.transform.FlattenBuffer()(mod)
+    mod = tir.transform.NarrowDataType(32)(mod)
+    mod = tir.transform.Simplify()(mod)
+
+    mod = tir.transform.VectorizeLoop()(mod)
+    mod = tir.transform.StorageRewrite()(mod)
+    mod = tir.transform.UnrollLoop()(mod)
+    mod = tir.transform.RenormalizeSplitPattern()(mod)
+    mod = tir.transform.Simplify()(mod)
+    mod = tir.transform.RemoveNoOp()(mod)
+    mod = tir.transform.RewriteUnsafeSelect()(mod)
+    mod = tir.transform.HoistIfThenElse()(mod)
+
+    mod = tir.transform.VerifyMemory()(mod)
+    mod = tir.transform.AnnotateEntryFunc()(mod)
+    mod = tir.transform.ThreadSync("shared")(mod)
+    # TODO(lei): This is a hack to make sure the
+    # thread level allreduce pass can be applied
+    # in TL. As Tl only use one thread dimension
+    # the var binding information will be lost
+    # in the lowering process with Legalization
+    # and Simplify pass.
+    # We can find a way better to create var instead
+    # of putting the LowerThreadAllreduce before
+    # the Legalization.
+    mod = tir.transform.LowerThreadAllreduce()(mod)
+    mod = tir.transform.ThreadSync("shared.dyn")(mod)
+    mod = tl.transform.LowerHopperIntrin()(mod)
+    mod = tir.transform.InjectPTXAsyncCopy()(mod)
+
+    mod = tir.transform.AnnotateDeviceRegions()(mod)
+    mod = tir.transform.SplitHostDevice()(mod)
+    mod = tir.transform.MergeSharedMemoryAllocations()(mod)
+    mod = tir.transform.MakePackedAPI()(mod)
+    mod = tir.transform.LowerDeviceKernelLaunch()(mod)
+
+    device_mod = tir.transform.Filter(is_device_call)(mod)
+
+    return device_mod
+
+
+def get_annotated_device_mod_from_tir(mod: IRModule, target: Target) -> "IRModule":
     """
     Lower the given IRModule and create a device module for the specified target.
 
@@ -48,6 +111,15 @@ def get_annotated_device_mod(mod: IRModule, target: Target) -> "IRModule":
         mod = mixed_mod_passes(mod, target)(mod)
         device_mod = device_mod_passes(mod, target)(mod)
     return device_mod
+
+
+def get_annotated_device_mod(mod: IRModule, target: Target, backend="tir") -> "IRModule":
+    if backend == "tir":
+        return get_annotated_device_mod_from_tir(mod, target)
+    elif backend == "tl":
+        return get_annotated_device_mod_from_tl(mod, target)
+    else:
+        raise ValueError("Unsupported backend: {}".format(backend))
 
 
 def get_thread_block_information(mod: IRModule) -> Tuple[List[int], List[int]]:

@@ -8,7 +8,7 @@ from typing import Literal, Optional, List
 from tvm import tir, DataType
 from tvm.target import Target
 
-from ..ops.operator import TransformKind
+from ..ops.common import TransformKind
 from ..base.roller import Hint
 from ..base.roller.rasterization import NoRasterization
 from ..base import analysis

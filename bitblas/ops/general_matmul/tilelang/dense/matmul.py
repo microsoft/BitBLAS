@@ -2,10 +2,8 @@
 # Licensed under the MIT License.
 from bitblas import tvm as tvm
 from tvm import DataType
-from tvm import IRModule
-from tvm.tir import PrimFunc
 import tvm.tl.language as T
-from typing import Union, Optional
+from typing import Optional
 from bitblas.tl.utils import (
     get_mma_micro_size,
     make_swizzle_layout,
@@ -15,38 +13,10 @@ from bitblas.tl.macro_generator import (
     TensorCoreIntrinEmitter,
     TensorCoreIntrinEmitterWithLadderTransform,
 )
-
-from bitblas.ops.operator import TransformKind
+from bitblas.ops.common import TransformKind
+from bitblas.ops.base_scheduler import BaseScheduler
 
 from dataclasses import dataclass
-
-
-@dataclass
-class BaseScheduler:
-
-    enable_simplify: bool = True
-
-    @staticmethod
-    def Simplify(stmt: Union[PrimFunc, IRModule]):
-        if isinstance(stmt, PrimFunc):
-            return tvm.tir.transform.Simplify()(tvm.IRModule.from_expr(stmt))["main"]
-        elif isinstance(stmt, IRModule):
-            return tvm.tir.transform.Simplify()(stmt)
-        else:
-            raise ValueError(f"Unsupported type: {type(stmt)}")
-
-    def enable_simplify(self):
-        self.enable_simplify = True
-        return self
-
-    def disable_simplify(self):
-        self.enable_simplify = False
-        return self
-
-    def maybe_simplify(self, stmt: Union[PrimFunc, IRModule]):
-        if self.enable_simplify:
-            return self.Simplify(stmt)
-        return stmt
 
 
 @dataclass
@@ -58,8 +28,8 @@ class MatmulScheduler(BaseScheduler):
     K: Optional[int] = None
     trans_A: bool = False
     trans_B: bool = False
-    dtypeAB: str = "float16"
-    dtypeC: str = "float16"
+    in_dtype: str = "float16"
+    out_dtype: str = "float16"
     accum_dtype: str = "float16"
 
     # Default Tile Related Params
@@ -99,7 +69,7 @@ class MatmulScheduler(BaseScheduler):
     ):
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B
-        dtypeAB, dtypeC, accum_dtype = self.dtypeAB, self.dtypeC, self.accum_dtype
+        in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
 
         A_shape = (K, M) if trans_A else (M, K)
         B_shape = (N, K) if trans_B else (K, N)
@@ -108,14 +78,14 @@ class MatmulScheduler(BaseScheduler):
 
         @T.prim_func
         def main(
-                A: T.Buffer(A_shape, dtypeAB),
-                B: T.Buffer(B_shape, dtypeAB),
-                C: T.Buffer((M, N), dtypeC),
+                A: T.Buffer(A_shape, in_dtype),
+                B: T.Buffer(B_shape, in_dtype),
+                C: T.Buffer((M, N), out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
-                A_shared = T.alloc_shared(A_shared_shape, dtypeAB)
-                B_shared = T.alloc_shared(B_shared_shape, dtypeAB)
+                A_shared = T.alloc_shared(A_shared_shape, in_dtype)
+                B_shared = T.alloc_shared(B_shared_shape, in_dtype)
                 C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
 
                 if enable_rasterization:
@@ -151,8 +121,8 @@ class MatmulFineGrainScheduler(BaseScheduler):
     M: Optional[int] = None
     N: Optional[int] = None
     K: Optional[int] = None
-    dtypeAB: str = "float16"
-    dtypeC: str = "float16"
+    in_dtype: str = "float16"
+    out_dtype: str = "float16"
     trans_A: bool = False
     trans_B: bool = True
     accum_dtype: str = "float16"
@@ -200,10 +170,10 @@ class MatmulFineGrainScheduler(BaseScheduler):
 
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B
-        dtypeAB, dtypeC, accum_dtype = self.dtypeAB, self.dtypeC, self.accum_dtype
+        in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
 
         # Calculate the micro size per warp using a helper function
-        micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(dtypeAB)
+        micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(in_dtype)
 
         block_M = block_row_warps * warp_row_tiles
         block_N = block_col_warps * warp_col_tiles
@@ -234,8 +204,8 @@ class MatmulFineGrainScheduler(BaseScheduler):
 
         # Configure the tensor core intrinsic emitter
         mma_emitter = TensorCoreIntrinEmitter(
-            a_dtype=dtypeAB,
-            b_dtype=dtypeAB,
+            a_dtype=in_dtype,
+            b_dtype=in_dtype,
             accum_dtype=accum_dtype,
             a_transposed=trans_A,
             b_transposed=trans_B,
@@ -249,20 +219,20 @@ class MatmulFineGrainScheduler(BaseScheduler):
         # Define the main kernel using the generated configuration
         @T.prim_func
         def main(
-                A: T.Buffer(A_shape, dtypeAB),
-                B: T.Buffer(B_shape, dtypeAB),
-                C: T.Buffer((M, N), dtypeC),
+                A: T.Buffer(A_shape, in_dtype),
+                B: T.Buffer(B_shape, in_dtype),
+                C: T.Buffer((M, N), out_dtype),
         ):
             # Grid and thread configuration for CUDA kernel
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
 
                 # Allocate shared memory and local fragments
-                A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope=shared_scope)
-                B_shared = T.alloc_shared(B_shared_shape, dtypeAB, scope=shared_scope)
-                C_shared = T.alloc_shared(C_shared_shape, dtypeC, scope=shared_scope)
-                A_local = T.alloc_local((warp_rows * local_size), dtypeAB)
-                B_local = T.alloc_local((warp_cols * local_size), dtypeAB)
+                A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
+                B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
+                C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
+                A_local = T.alloc_local((warp_rows * local_size), in_dtype)
+                B_local = T.alloc_local((warp_cols * local_size), in_dtype)
                 C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
 
                 # Thread-level parallelism for Tensor Cores
@@ -346,8 +316,8 @@ class MatmulWeightPropagationScheduler(BaseScheduler):
     M: Optional[int] = None
     N: Optional[int] = None
     K: Optional[int] = None
-    dtypeAB: str = "float16"
-    dtypeC: str = "float16"
+    in_dtype: str = "float16"
+    out_dtype: str = "float16"
     trans_A: bool = False
     trans_B: bool = True
     accum_dtype: str = "float16"
@@ -395,22 +365,22 @@ class MatmulWeightPropagationScheduler(BaseScheduler):
 
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B
-        dtypeAB, dtypeC, accum_dtype = self.dtypeAB, self.dtypeC, self.accum_dtype
+        in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
 
         # Calculate the micro size per warp using a helper function
-        micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(dtypeAB)
+        micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(in_dtype)
 
         block_M = block_row_warps * warp_row_tiles
         block_N = block_col_warps * warp_col_tiles
         block_K = chunk
 
         # TODO(lei): Can be generalized to analyzed from bank size
-        pad_factor = 8 if dtypeAB == "float16" else 16
+        pad_factor = 8 if in_dtype == "float16" else 16
 
-        can_swizzle_a = block_K * DataType(dtypeAB).bits == 512
+        can_swizzle_a = block_K * DataType(in_dtype).bits == 512
         apply_pad_a = not can_swizzle_a
 
-        micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(dtypeAB)
+        micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(in_dtype)
 
         # Define the shapes of matrices and shared memory buffers
         A_shape = (M, K)
@@ -442,8 +412,8 @@ class MatmulWeightPropagationScheduler(BaseScheduler):
 
         # Configure the tensor core intrinsic emitter
         mma_emitter = TensorCoreIntrinEmitterWithLadderTransform(
-            a_dtype=dtypeAB,
-            b_dtype=dtypeAB,
+            a_dtype=in_dtype,
+            b_dtype=in_dtype,
             accum_dtype=accum_dtype,
             a_transposed=trans_A,
             b_transposed=trans_B,
@@ -458,20 +428,20 @@ class MatmulWeightPropagationScheduler(BaseScheduler):
         # Define the main kernel using the generated configuration
         @T.prim_func
         def main(
-                A: T.Buffer(A_shape, dtypeAB),
-                B: T.Buffer(B_shape, dtypeAB),
-                C: T.Buffer((M, N), dtypeC),
+                A: T.Buffer(A_shape, in_dtype),
+                B: T.Buffer(B_shape, in_dtype),
+                C: T.Buffer((M, N), out_dtype),
         ):
             # Grid and thread configuration for CUDA kernel
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
 
                 # Allocate shared memory and local fragments
-                A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope=shared_scope)
-                B_shared = T.alloc_shared(B_shared_shape, dtypeAB, scope=shared_scope)
-                C_shared = T.alloc_shared(C_shared_shape, dtypeC, scope=shared_scope)
-                A_local = T.alloc_local((warp_rows * local_size), dtypeAB)
-                B_local = T.alloc_local((warp_cols * local_size), dtypeAB)
+                A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
+                B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
+                C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
+                A_local = T.alloc_local((warp_rows * local_size), in_dtype)
+                B_local = T.alloc_local((warp_cols * local_size), in_dtype)
                 C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
 
                 # Thread-level parallelism for Tensor Cores
@@ -561,8 +531,8 @@ def matmul_blocked(
         block_K=32,
         trans_A=False,
         trans_B=False,
-        dtypeAB="float16",
-        dtypeC="float16",
+        in_dtype="float16",
+        out_dtype="float16",
         accum_dtype="float16",
         num_stages=2,
         threads=128,
@@ -575,13 +545,13 @@ def matmul_blocked(
 
     @T.prim_func
     def main(
-            A: T.Buffer(A_shape, dtypeAB),
-            B: T.Buffer(B_shape, dtypeAB),
-            C: T.Buffer((M, N), dtypeC),
+            A: T.Buffer(A_shape, in_dtype),
+            B: T.Buffer(B_shape, in_dtype),
+            C: T.Buffer((M, N), out_dtype),
     ):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB)
-            B_shared = T.alloc_shared(B_shared_shape, dtypeAB)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype)
+            B_shared = T.alloc_shared(B_shared_shape, in_dtype)
             C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
 
             if enable_rasterization:
@@ -608,8 +578,8 @@ def matmul_macro_tensorcore(
     M,
     N,
     K,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     trans_A,
     trans_B,
     accum_dtype,
@@ -628,7 +598,7 @@ def matmul_macro_tensorcore(
     block_N = block_col_warps * warp_col_tiles
     block_K = chunk
 
-    micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(dtypeAB)
+    micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(in_dtype)
 
     A_shape = (M, K)
     B_shape = (N, K)
@@ -649,8 +619,8 @@ def matmul_macro_tensorcore(
 
     shared_scope = "shared.dyn"  # Literal["shared", "shared.dyn"] while shared for static shared memory
     mma_emitter = TensorCoreIntrinEmitter(
-        a_dtype=dtypeAB,
-        b_dtype=dtypeAB,
+        a_dtype=in_dtype,
+        b_dtype=in_dtype,
         accum_dtype=accum_dtype,
         a_transposed=False,
         b_transposed=True,
@@ -663,17 +633,17 @@ def matmul_macro_tensorcore(
 
     @T.prim_func
     def main(
-            A: T.Buffer(A_shape, dtypeAB),
-            B: T.Buffer(B_shape, dtypeAB),
-            C: T.Buffer((M, N), dtypeC),
+            A: T.Buffer(A_shape, in_dtype),
+            B: T.Buffer(B_shape, in_dtype),
+            C: T.Buffer((M, N), out_dtype),
     ):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
 
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope=shared_scope)
-            B_shared = T.alloc_shared(B_shared_shape, dtypeAB, scope=shared_scope)
-            C_shared = T.alloc_shared(C_shared_shape, dtypeC, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), dtypeAB)
-            B_local = T.alloc_local((warp_cols * local_size), dtypeAB)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
+            B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
+            C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
+            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
+            B_local = T.alloc_local((warp_cols * local_size), in_dtype)
             C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 
@@ -733,8 +703,8 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
     M,
     N,
     K,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     trans_A,
     trans_B,
     accum_dtype,
@@ -754,12 +724,12 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
     block_K = chunk
 
     # TODO(lei): Can be generalized to analyzed from bank size
-    pad_factor = 8 if dtypeAB == "float16" else 16
+    pad_factor = 8 if in_dtype == "float16" else 16
 
-    can_swizzle_a = block_K * DataType(dtypeAB).bits == 512
+    can_swizzle_a = block_K * DataType(in_dtype).bits == 512
     apply_pad_a = not can_swizzle_a
 
-    micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(dtypeAB)
+    micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(in_dtype)
 
     A_shape = (M, K)
     B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y, micro_size_k)
@@ -785,8 +755,8 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
 
     shared_scope = "shared.dyn"  # Literal["shared", "shared.dyn"] while shared for static shared memory
     mma_emitter = TensorCoreIntrinEmitterWithLadderTransform(
-        a_dtype=dtypeAB,
-        b_dtype=dtypeAB,
+        a_dtype=in_dtype,
+        b_dtype=in_dtype,
         accum_dtype=accum_dtype,
         a_transposed=trans_A,
         b_transposed=trans_B,
@@ -800,17 +770,17 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
 
     @T.prim_func
     def main(
-            A: T.Buffer(A_shape, dtypeAB),
-            B: T.Buffer(B_shape, dtypeAB),
-            C: T.Buffer((M, N), dtypeC),
+            A: T.Buffer(A_shape, in_dtype),
+            B: T.Buffer(B_shape, in_dtype),
+            C: T.Buffer((M, N), out_dtype),
     ):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
 
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope=shared_scope)
-            B_shared = T.alloc_shared(B_shared_shape, dtypeAB, scope=shared_scope)
-            C_shared = T.alloc_shared(C_shared_shape, dtypeC, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), dtypeAB)
-            B_local = T.alloc_local((warp_cols * local_size), dtypeAB)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
+            B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
+            C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
+            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
+            B_local = T.alloc_local((warp_cols * local_size), in_dtype)
             C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 

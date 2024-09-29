@@ -13,8 +13,8 @@ def assert_scheduler_simplify(M,
                               K,
                               trans_A=False,
                               trans_B=True,
-                              dtypeAB="float16",
-                              dtypeC="float16",
+                              in_dtype="float16",
+                              out_dtype="float16",
                               accum_dtype="float16"):
     matmul = MatmulScheduler(
         M=M,
@@ -22,8 +22,8 @@ def assert_scheduler_simplify(M,
         K=K,
         trans_A=trans_A,
         trans_B=trans_B,
-        dtypeAB=dtypeAB,
-        dtypeC=dtypeC,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
         accum_dtype=accum_dtype,
     ).deactivate_simplify().with_default_config()
 

@@ -4,7 +4,7 @@
 from bitblas import tvm
 from tvm import te
 from bitblas.gpu.matmul_analysis import get_propagate_map
-from bitblas.ops.operator import TransformKind
+from bitblas.ops.common import TransformKind
 
 
 def matmul_nn(

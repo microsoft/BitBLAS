@@ -38,7 +38,7 @@ class LadderPermutate(Operator):
 
         target = self.target
         if target.kind.name == "cuda":
-            self.optimized_mod = self.apply_default_schedule(self.prim_func_mod, target)
+            self.scheduled_ir_module = self.apply_default_schedule(self.ir_module, target)
             if enable_tuning:
                 self.hardware_aware_finetune()
         if not from_database:

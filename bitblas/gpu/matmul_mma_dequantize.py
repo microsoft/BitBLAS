@@ -9,7 +9,7 @@ from contextlib import suppress
 from tvm import tir, DataType
 from tvm.target import Target
 
-from ..ops.operator import TransformKind
+from ..ops.common import TransformKind
 from ..base.roller.hint import Hint, IntrinInfo
 from ..base.roller.rasterization import NoRasterization
 from ..base import analysis

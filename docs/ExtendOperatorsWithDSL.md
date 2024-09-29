@@ -137,7 +137,7 @@ class MatmulNT:
 
 from bitblas import fast_tune_with_dynamic_range
 # Tune with dynamic symbolic
-optimized_mod = fast_tune_with_dynamic_range(
+scheduled_ir_module = fast_tune_with_dynamic_range(
     func, target, topk=topk, parallel_build=True, 
     dynamic_range={
         "M": [1, 1024]

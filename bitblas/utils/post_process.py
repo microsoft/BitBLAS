@@ -6,7 +6,7 @@ import re
 def match_global_kernel(source: str) -> int:
     pattern = r"__global__\s+void\s+[__launch_bounds__\(\d+\)\s+]\w+"
     matched = re.findall(pattern, source)
-    assert len(matched) > 1  # may have statement before kernel
+    assert len(matched) >= 1  # may have statement before kernel
     return source.index(matched[0])
 
 
@@ -27,6 +27,7 @@ def tensor_remove_make_int4(source: str) -> str:
         "make_int4(0, 0, 0, 0)",
     )
     return source
+
 
 def tensor_remove_make_int2(source: str) -> str:
     # remove make_int4 with 16 signed char arguments
