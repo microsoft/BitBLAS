@@ -25,9 +25,10 @@ def is_native_compute(Q_dtype, K_dtype, V_dtype) -> bool:
 class FlashAttenConfig(OperatorConfig):
     batch: Union[int, Tuple[int]] = None
     # TODO should distinguish from q_heads and kv_heads
-    heads: int = None
-    seq_len: int = None
-    dim: int = None
+    heads: Optional[int] = None
+    kv_heads: Optional[int] = None
+    seq_len: Optional[int] = None
+    dim: Optional[int] = None
     Q_dtype: str = "float16"
     K_dtype: str = Q_dtype  # for default
     V_dtype: str = Q_dtype

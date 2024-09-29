@@ -51,7 +51,6 @@ class BaseKernelNameGenerator(ABC):
         assert self.is_valid_config(config), (f"Invalid config for {self.__class__.__name__}: "
                                               f"{config}")
         self.config = config
-        self.kernel_name = ""
 
     @abstractmethod
     def is_valid_config(self, config: OperatorConfig):
@@ -64,11 +63,11 @@ class BaseKernelNameGenerator(ABC):
 
     def generate_valid(self, hint: Hint = None) -> str:
         '''Validate kernel name after generation'''
-        self.kernel_name = self._generate(hint=hint)
+        kernel_name = self._generate(hint=hint)
         pattern = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
         if not (self.kernel_name.isidentifier() and pattern.match(self.kernel_name)):
             raise ValueError("kernel name is not valid")
-        return self.kernel_name
+        return kernel_name
 
 
 class DefaultKernelNameGenerator(BaseKernelNameGenerator):

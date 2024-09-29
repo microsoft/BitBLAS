@@ -52,8 +52,8 @@ CONFIG_INFO_MESSAGE_STRATEGY = """Optimization Strategy Notice: You are currentl
 @dataclass(frozen=True)
 class MatmulConfig(OperatorConfig):
     M: Union[int, Tuple[int]] = None
-    N: int = None
-    K: int = None
+    N: Optional[int] = None
+    K: Optional[int] = None
     A_dtype: str = "float16"
     # is a wrapper for source_format and bit
     W_dtype: str = A_dtype  # W_dtype is the same as A_dtype by default
