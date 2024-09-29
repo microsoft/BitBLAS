@@ -59,6 +59,25 @@ class BaseKernelNameGenerator(ABC):
         pass
 
 
+class DefaultKernelNameGenerator(BaseKernelNameGenerator):
+
+    DEFAULT_PREFIX = "main"
+
+    def __init__(self, config: OperatorConfig, name: str):
+        self.DEFAULT_PREFIX = name
+        super().__init__(config)
+
+    def generate(self, hint: Hint = None) -> str:
+        # hint is not used
+        assert hint is not None
+        return self.DEFAULT_PREFIX
+
+    def is_valid_config(self, config: OperatorConfig) -> bool:
+        # hint is not used
+        assert config is not None
+        return True
+
+
 class Operator(object):
 
     def __init__(self,
@@ -105,7 +124,7 @@ class Operator(object):
         return self.backend == "tl"
 
     def get_kernel_name_generator(self) -> Optional[BaseKernelNameGenerator]:
-        raise NotImplementedError
+        return DefaultKernelNameGenerator(self.config, self.name)
 
     def get_source(self, target: Optional[Target] = None, kenrel_only=False) -> str:
         if target is None:
