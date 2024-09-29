@@ -193,7 +193,7 @@ def apply_and_build_parallel(func,
             sch = None
         return sch
 
-    with ThreadPoolExecutor(max_workers=4) as scheduler:
+    with ThreadPoolExecutor(max_workers=max_workers) as scheduler:
         futures = {scheduler.submit(_apply_schedule, func, config) for config in configs}
         for future in as_completed(futures, timeout=timeout):
             _sched.append(future.result())

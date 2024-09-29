@@ -10,9 +10,10 @@ from tvm.tir import PrimFunc
 from tvm.contrib.dlpack import to_pytorch_func
 import bitblas
 import ctypes
-from typing import (List, Dict, Any, Optional, Tuple, Literal, Callable)
+from typing import List, Dict, Any, Optional, Tuple, Literal, Callable
 import numpy as np
 from bitblas.base import fast_tune, fast_tune_with_dynamic_range
+from bitblas.tl.tuner import apply_and_build as tl_apply_and_build
 from copy import deepcopy
 from bitblas.ops.base_scheduler import BaseScheduler
 from bitblas.base.arch import get_arch, TileDevice
@@ -38,6 +39,7 @@ BUILD_RUNTIME_LIBRARY_FAILED_MESSAGE = ("Failed to build runtime library for ope
 @dataclass(frozen=True)
 class OperatorConfig:
     """Base class for operator configurations. Used for typing."""
+
     pass
 
 
@@ -55,7 +57,7 @@ class BaseKernelNameGenerator(ABC):
 
     @abstractmethod
     def generate(self, hint: Hint = None) -> str:
-        '''Generate the kernel name based on the config and hint'''
+        """Generate the kernel name based on the config and hint"""
         pass
 
 
@@ -73,18 +75,20 @@ class DefaultKernelNameGenerator(BaseKernelNameGenerator):
         return self.DEFAULT_PREFIX
 
     def is_valid_config(self, config: OperatorConfig) -> bool:
-        # hint is not used
+        # config is not used
         assert config is not None
         return True
 
 
 class Operator(object):
 
-    def __init__(self,
-                 name,
-                 config: OperatorConfig,
-                 target: Target = None,
-                 backend: Literal["tir", "tl"] = "tir"):
+    def __init__(
+        self,
+        name,
+        config: OperatorConfig,
+        target: Target = None,
+        backend: Literal["tir", "tl"] = "tir",
+    ):
         if isinstance(target, str):
             target = Target(target)
         self.name = name
@@ -169,7 +173,7 @@ class Operator(object):
                         config={
                             "tir.use_async_copy": True,
                             "tir.disable_cse_tir": True,
-                            **(self.pass_context if self.pass_context else {})
+                            **(self.pass_context if self.pass_context else {}),
                         }):
                     if self.is_tir_backend():
                         rt_mod = tvm.build(self.scheduled_ir_module, target=target)
@@ -183,9 +187,12 @@ class Operator(object):
                         raise ValueError(f"Unsupported backend: {self.backend}")
             except Exception:  # noqa: F841
                 logger.debug(
-                    BUILD_RUNTIME_LIBRARY_FAILED_MESSAGE.format(self.__class__.__name__, target,
-                                                                "optimized",
-                                                                "Failed to build optimized module"))
+                    BUILD_RUNTIME_LIBRARY_FAILED_MESSAGE.format(
+                        self.__class__.__name__,
+                        target,
+                        "optimized",
+                        "Failed to build optimized module",
+                    ))
         else:
             # For non-CUDA platforms or when no optimized function is available, build with the primary function
             rt_mod = tvm.build(self.prim_func, target=target, name=self.name)
@@ -248,10 +255,12 @@ class Operator(object):
                 scheduled_mod = self.apply_default_schedule(self.ir_module, target)
             elif self.is_tilelang_backend():
                 scheduled_mod = self.scheduler_with_default(self.scheduler)
-            assert len(scheduled_mod.get_global_vars()) == 1, (
-                "The optimized module should only have one global variable for default schedule.")
-            assert "main" in scheduled_mod, (
-                "The optimized module should have a function named 'main' for default schedule.")
+            assert (
+                len(scheduled_mod.get_global_vars()) == 1
+            ), "The optimized module should only have one global variable for default schedule."
+            assert (
+                "main" in scheduled_mod
+            ), "The optimized module should have a function named 'main' for default schedule."
             default_kernal_name = self.kernel_name_generator.generate()
             func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
             scheduled_ir_module = tvm.IRModule({default_kernal_name: func})
@@ -267,54 +276,77 @@ class Operator(object):
     def post_process(self, code: str) -> str:
         return code
 
-    def apply_fast_tuning(self,
-                          func: PrimFunc,
-                          target: Target,
-                          topk: int = 20,
-                          parallel_build=True) -> Tuple[IRModule, Hint]:
-        _, best = fast_tune(func, target, topk=topk, parallel_build=parallel_build)
-        # annotate the best pass context
-        # TODO(lei): actually we should remove this by enable pass through
-        # annotation in the func's attribute.
-        self.pass_context = best.config.pass_context
-        return ((best.sch.mod, best.config) if best is not None else (None, None))
+    def get_tl_tuning_config(self):
+        assert self.is_tilelang_backend(), "Only support tilelang backend"
+        return self.scheduler.get_hardware_aware_configs(self.arch)
+
+    def apply_fast_tuning(
+        self,
+        func_or_scheduler: PrimFunc,
+        target: Target,
+        topk: int = 20,
+        parallel_build=True,
+    ) -> Tuple[IRModule, Hint]:
+        if self.is_tir_backend():
+            _, best = fast_tune(func_or_scheduler, target, topk=topk, parallel_build=parallel_build)
+            # annotate the best pass context
+            # TODO(lei): actually we should remove this by enable pass through
+            # annotation in the func's attribute.
+            self.pass_context = best.config.pass_context
+            return (best.sch.mod, best.config) if best is not None else (None, None)
+        elif self.is_tilelang_backend():
+            # Finetune the schedule
+            tuning_configs = self.get_tl_tuning_config()
+            _, best = tl_apply_and_build(
+                func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=False)
+            # Return the best Config as Hint
+            return (best.sch.mod, best.config) if best is not None else (None, None)
 
     def apply_fast_tuning_with_dynamic_range(
         self,
-        func: PrimFunc,
+        func_or_scheduler: PrimFunc,
         target: Target,
         topk: int = 20,
         dynamic_range: Dict[str, List[int]] = None,
     ):
         scheduled_ir_module = fast_tune_with_dynamic_range(
-            func,
+            func_or_scheduler,
             target,
             topk=topk,
             parallel_build=True,
             dynamic_range=dynamic_range,
-            kernel_name_generator=self.kernel_name_generator)
+            kernel_name_generator=self.kernel_name_generator,
+        )
         if scheduled_ir_module is not None:
             return scheduled_ir_module
         return None
 
-    def hardware_aware_finetune(self,
-                                topk: int = 20,
-                                target: Optional[tvm.target.Target] = None,
-                                parallel_build=True):
+    def hardware_aware_finetune(
+        self,
+        topk: int = 20,
+        target: Optional[tvm.target.Target] = None,
+        parallel_build=True,
+    ):
         if target is None:
             target = self.target
         dynamic_range = self.dynamic_range
-        func = self.prim_func
         if dynamic_range is not None:
-            self.scheduled_ir_module = self.apply_fast_tuning_with_dynamic_range(
-                func, target, topk, dynamic_range)
+            if self.is_tir_backend():
+                func = self.prim_func
+                self.scheduled_ir_module = self.apply_fast_tuning_with_dynamic_range(
+                    func, target, topk, dynamic_range)
+            elif self.is_tilelang_backend():
+                raise NotImplementedError("Not support dynamic range for tilelang backend")
         else:
+            func_or_scheduler = (self.prim_func if self.is_tir_backend() else self.scheduler)
             scheduled_mod, best_hint = self.apply_fast_tuning(
-                func, target, topk, parallel_build=parallel_build)
-            assert len(scheduled_mod.get_global_vars()) == 1, (
-                "The optimized module should only have one global variable for default schedule.")
-            assert "main" in scheduled_mod, (
-                "The optimized module should have a function named 'main' for default schedule.")
+                func_or_scheduler, target, topk, parallel_build=parallel_build)
+            assert (
+                len(scheduled_mod.get_global_vars()) == 1
+            ), "The optimized module should only have one global variable for default schedule."
+            assert (
+                "main" in scheduled_mod
+            ), "The optimized module should have a function named 'main' for default schedule."
             default_kernal_name = self.kernel_name_generator.generate(best_hint)
             func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
             scheduled_ir_module = tvm.IRModule({default_kernal_name: func})
@@ -341,8 +373,9 @@ class Operator(object):
                     for i in func.attrs["opt_shapes"][v.name]:
                         avg_shape += i.value
                     avg_shape = avg_shape // len(func.attrs["opt_shapes"][v.name])
-                    _info_message = f"Doesn't provide dynamic symbolic constrains for {v.name} when do benchmarking, "\
-                        f"use average shape {avg_shape}"
+                    _info_message = (
+                        f"Doesn't provide dynamic symbolic constrains for {v.name} when do benchmarking, "
+                        f"use average shape {avg_shape}")
                     logger.info(_info_message)
                     return avg_shape
                 else:

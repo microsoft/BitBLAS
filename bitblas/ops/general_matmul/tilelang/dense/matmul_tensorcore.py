@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+import itertools
 from bitblas import tvm as tvm
 from tvm import DataType
 import tvm.tl.language as T
@@ -15,7 +16,7 @@ from bitblas.tl.macro_generator import (
 )
 from bitblas.ops.common import TransformKind
 from bitblas.ops.base_scheduler import BaseScheduler
-
+from bitblas.base.arch import CUDA
 from dataclasses import dataclass
 
 
@@ -40,6 +41,22 @@ class MatmulScheduler(BaseScheduler):
     threads: int = 128
     enable_rasterization: bool = False  # Enhance L2 Locality
 
+    def get_configs_sm80(self):
+        num_stages = 2
+        configs = [
+            {'block_M': 128, 'block_N': 256, 'block_K': 32, 'threads': 128},
+            {'block_M': 256, 'block_N': 128, 'block_K': 32, 'threads': 128},
+            {'block_M': 128, 'block_N': 128, 'block_K': 32, 'threads': 128},
+        ]
+        configs = [{**c, 'num_stages': num_stages} for c in configs]
+        return configs
+    
+    def get_hardware_aware_configs(self, arch: CUDA = None):
+        # TODO(lei): implement only for SM80 Currently
+        sm_version: int = int(arch.sm_partition)
+        assert sm_version is not None, "Please provide a valid CUDA Arch"
+        return self.get_configs_sm80()
+        
     def with_default_config(self):
         block_M = getattr(self, "block_M", 64)
         block_N = getattr(self, "block_N", 64)

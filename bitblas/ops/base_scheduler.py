@@ -4,6 +4,7 @@ from typing import Union
 from dataclasses import dataclass, field
 from tvm.tir.transform import Simplify
 from abc import ABC, abstractmethod
+from bitblas.base.arch import TileDevice
 
 
 @dataclass
@@ -19,6 +20,10 @@ class BaseScheduler(ABC):
             return Simplify()(stmt)
         else:
             raise ValueError(f"Unsupported type: {type(stmt)}")
+
+    def get_hardware_aware_configs(self, arch: TileDevice = None):
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support hardware-aware tuning for {arch}")
 
     def activate_simplify(self):
         self._enable_simplify = True
