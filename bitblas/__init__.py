@@ -39,6 +39,7 @@ from . import testing  # noqa: F401
 from .utils import auto_detect_nvidia_target, apply_transform_on_input  # noqa: F401
 from .ops.general_matmul import MatmulConfig, Matmul  # noqa: F401
 from .ops.general_matmul_splitk import MatmulConfigWithSplitK, MatmulWithSplitK  # noqa: F401
+from .ops.general_flashatten import FlashAttenConfig, FlashAtten # noqa: F401
 from .module import Linear  # noqa: F401
 
 import warnings

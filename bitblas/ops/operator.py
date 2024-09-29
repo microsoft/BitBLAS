@@ -22,6 +22,7 @@ from bitblas.builder.wrapper import TIRWrapper, TLWrapper
 from bitblas.builder.lib_generator import LibraryGenerator
 from dataclasses import dataclass
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -50,26 +51,36 @@ class BaseKernelNameGenerator(ABC):
         assert self.is_valid_config(config), (f"Invalid config for {self.__class__.__name__}: "
                                               f"{config}")
         self.config = config
+        self.kernel_name = ""
 
     @abstractmethod
     def is_valid_config(self, config: OperatorConfig):
         pass
 
     @abstractmethod
-    def generate(self, hint: Hint = None) -> str:
+    def _generate(self, hint: Hint = None) -> str:
         """Generate the kernel name based on the config and hint"""
         pass
+
+    def generate_valid(self, hint: Hint = None) -> str:
+        '''Validate kernel name after generation'''
+        self.kernel_name = self._generate(hint=hint)
+        pattern = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
+        if not (self.kernel_name.isidentifier() and pattern.match(self.kernel_name)):
+            raise ValueError("kernel name is not valid")
+        return self.kernel_name
 
 
 class DefaultKernelNameGenerator(BaseKernelNameGenerator):
 
     DEFAULT_PREFIX = "main"
+    kernel_name = None
 
     def __init__(self, config: OperatorConfig, name: str):
         self.DEFAULT_PREFIX = name
         super().__init__(config)
 
-    def generate(self, hint: Hint = None) -> str:
+    def _generate(self, hint: Hint = None) -> str:
         # hint is not used
         assert hint is not None
         return self.DEFAULT_PREFIX
@@ -261,7 +272,7 @@ class Operator(object):
             assert (
                 "main" in scheduled_mod
             ), "The optimized module should have a function named 'main' for default schedule."
-            default_kernal_name = self.kernel_name_generator.generate()
+            default_kernal_name = self.kernel_name_generator.generate_valid()
             func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
             scheduled_ir_module = tvm.IRModule({default_kernal_name: func})
             self._update_optimized_mod(scheduled_ir_module)
@@ -347,7 +358,7 @@ class Operator(object):
             assert (
                 "main" in scheduled_mod
             ), "The optimized module should have a function named 'main' for default schedule."
-            default_kernal_name = self.kernel_name_generator.generate(best_hint)
+            default_kernal_name = self.kernel_name_generator.generate_valid(best_hint)
             func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
             scheduled_ir_module = tvm.IRModule({default_kernal_name: func})
             self._update_optimized_mod(scheduled_ir_module)

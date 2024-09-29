@@ -264,7 +264,7 @@ class MatmulKernelNameGenerator(BaseKernelNameGenerator):
             return f"u{dtype[4:]}"
         return dtype
 
-    def generate(self, hint=None) -> str:
+    def _generate(self, hint=None) -> str:
         config = self.config
         kernel_name = self.KERNEL_PREFIX
         shape_str = f"n{self.config.N}k{self.config.K}"
