@@ -1,13 +1,17 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-from .matmul import (
+from .matmul_simt import (
+    MatmulFineGrainSIMTScheduler,  # noqa: F401
+)
+
+from .matmul_tensorcore import (
     matmul_blocked,  # noqa: F401
     matmul_macro_tensorcore,  # noqa: F401
     matmul_macro_tensorcore_weight_propagation_level_ldmatrix  # noqa: F401
 )
 
-from .matmul import (
+from .matmul_tensorcore import (
     MatmulScheduler,  # noqa: F401
     MatmulFineGrainScheduler,  # noqa: F401
     MatmulWeightPropagationScheduler,  # noqa: F401
