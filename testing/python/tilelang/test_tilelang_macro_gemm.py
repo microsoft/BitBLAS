@@ -37,15 +37,15 @@ def tl_matmul(
     M,
     N,
     K,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     accum_dtype,
 ):
-    assert dtypeAB in [
+    assert in_dtype in [
         "float16",
         "int8",
     ], "Currently only float16 and int8 are supported"
-    assert dtypeC in [
+    assert out_dtype in [
         "float16",
         "float32",
         "int32",
@@ -53,7 +53,7 @@ def tl_matmul(
 
     micro_size_x = micro_size_y = micro_size_k = 16
 
-    if dtypeC == "int32":
+    if out_dtype == "int32":
         micro_size_k = 32
 
     # This is a debug config
@@ -61,7 +61,7 @@ def tl_matmul(
     block_col_warps = 1
     warp_row_tiles = 16
     warp_col_tiles = 16
-    chunk = 32 if dtypeAB == "float16" else 64
+    chunk = 32 if in_dtype == "float16" else 64
     shared_scope = "shared.dyn"
 
     # Pipeline Stage
@@ -90,8 +90,8 @@ def tl_matmul(
 
     # MMA Wrapper to Auto Generate Code for MMA
     mma_emitter = TensorCoreIntrinEmitter(
-        a_dtype=dtypeAB,
-        b_dtype=dtypeAB,
+        a_dtype=in_dtype,
+        b_dtype=in_dtype,
         accum_dtype=accum_dtype,
         a_transposed=False,
         b_transposed=True,
@@ -104,17 +104,17 @@ def tl_matmul(
 
     @T.prim_func
     def main(
-            A: T.Buffer(A_shape, dtypeAB),
-            B: T.Buffer(B_shape, dtypeAB),
-            C: T.Buffer((M, N), dtypeC),
+            A: T.Buffer(A_shape, in_dtype),
+            B: T.Buffer(B_shape, in_dtype),
+            C: T.Buffer((M, N), out_dtype),
     ):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
 
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope=shared_scope)
-            B_shared = T.alloc_shared(B_shared_shape, dtypeAB, scope=shared_scope)
-            C_shared = T.alloc_shared(C_shared_shape, dtypeC, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), dtypeAB)
-            B_local = T.alloc_local((warp_cols * local_size), dtypeAB)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
+            B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
+            C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
+            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
+            B_local = T.alloc_local((warp_cols * local_size), in_dtype)
             C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
 
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
@@ -176,8 +176,8 @@ def tl_matmul(
     return main
 
 
-def assert_tl_matmul_correctness(M, N, K, in_dtype, dtypeC, accum_dtype):
-    matmul = tl_matmul(M, N, K, in_dtype, dtypeC, accum_dtype)
+def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
+    matmul = tl_matmul(M, N, K, in_dtype, out_dtype, accum_dtype)
 
     mod, params = TL.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
@@ -207,15 +207,15 @@ def tl_matmul_with_block_reduce(
     M,
     N,
     K,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     accum_dtype,
 ):
-    assert dtypeAB in [
+    assert in_dtype in [
         "float16",
         "int8",
     ], "Currently only float16 and int8 are supported"
-    assert dtypeC in [
+    assert out_dtype in [
         "float16",
         "float32",
         "int32",
@@ -223,7 +223,7 @@ def tl_matmul_with_block_reduce(
 
     micro_size_x = micro_size_y = micro_size_k = 16
 
-    if dtypeC == "int32":
+    if out_dtype == "int32":
         micro_size_k = 32
 
     # This is a debug config
@@ -238,7 +238,7 @@ def tl_matmul_with_block_reduce(
 
     block_M = block_row_warps * warp_row_tiles
     block_N = block_col_warps * warp_col_tiles
-    block_K = 32 if dtypeAB == "float16" else 64
+    block_K = 32 if in_dtype == "float16" else 64
     reduce_k = 2
     chunk = block_K // reduce_k
 
@@ -260,8 +260,8 @@ def tl_matmul_with_block_reduce(
     warp_cols = warp_col_tiles // micro_size_y
 
     mma_emitter = TensorCoreIntrinEmitter(
-        a_dtype=dtypeAB,
-        b_dtype=dtypeAB,
+        a_dtype=in_dtype,
+        b_dtype=in_dtype,
         accum_dtype=accum_dtype,
         a_transposed=False,
         b_transposed=True,
@@ -274,17 +274,17 @@ def tl_matmul_with_block_reduce(
 
     @T.prim_func
     def main(
-            A: T.Buffer(A_shape, dtypeAB),
-            B: T.Buffer(B_shape, dtypeAB),
-            C: T.Buffer((M, N), dtypeC),
+            A: T.Buffer(A_shape, in_dtype),
+            B: T.Buffer(B_shape, in_dtype),
+            C: T.Buffer((M, N), out_dtype),
     ):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
 
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope=shared_scope)
-            B_shared = T.alloc_shared(B_shared_shape, dtypeAB, scope=shared_scope)
-            C_shared = T.alloc_shared(C_shared_shape, dtypeC, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), dtypeAB)
-            B_local = T.alloc_local((warp_cols * local_size), dtypeAB)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
+            B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
+            C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
+            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
+            B_local = T.alloc_local((warp_cols * local_size), in_dtype)
             C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
             reduced_accum_res = T.alloc_local(0, accum_dtype)
 
@@ -371,8 +371,8 @@ def tl_matmul_with_block_reduce(
     return main
 
 
-def assert_tl_matmul_with_block_reduce_correctness(M, N, K, in_dtype, dtypeC, accum_dtype):
-    matmul = tl_matmul_with_block_reduce(M, N, K, in_dtype, dtypeC, accum_dtype)
+def assert_tl_matmul_with_block_reduce_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
+    matmul = tl_matmul_with_block_reduce(M, N, K, in_dtype, out_dtype, accum_dtype)
 
     mod, params = TL.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
@@ -402,16 +402,16 @@ def tl_matmul_with_ladder_weight_only_transform(
     M,
     N,
     K,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     accum_dtype,
     transform_b,
 ):
-    assert dtypeAB in [
+    assert in_dtype in [
         "float16",
         "int8",
     ], "Currently only float16 and int8 are supported"
-    assert dtypeC in [
+    assert out_dtype in [
         "float16",
         "float32",
         "int32",
@@ -419,7 +419,7 @@ def tl_matmul_with_ladder_weight_only_transform(
 
     micro_size_x = micro_size_y = micro_size_k = 16
 
-    if dtypeC == "int32":
+    if out_dtype == "int32":
         micro_size_k = 32
 
     # This is a debug config
@@ -431,7 +431,7 @@ def tl_matmul_with_ladder_weight_only_transform(
     warp_row_tiles = micro_size_x * warp_rows
     warp_col_tiles = micro_size_y * warp_cols
 
-    chunk = 64 if dtypeAB == "float16" else 128
+    chunk = 64 if in_dtype == "float16" else 128
     shared_scope = "shared.dyn"
 
     # Pipeline Stage
@@ -442,7 +442,7 @@ def tl_matmul_with_ladder_weight_only_transform(
     block_K = chunk
 
     is_smooth_a = False
-    can_swizzle = block_K * DataType(dtypeAB).bits == 512
+    can_swizzle = block_K * DataType(in_dtype).bits == 512
     apply_pad_a = not (is_smooth_a or can_swizzle)
     pad_factor = 8
 
@@ -465,8 +465,8 @@ def tl_matmul_with_ladder_weight_only_transform(
 
     # MMA Wrapper to Auto Generate Code for MMA
     mma_emitter = TensorCoreIntrinEmitterWithLadderTransform(
-        a_dtype=dtypeAB,
-        b_dtype=dtypeAB,
+        a_dtype=in_dtype,
+        b_dtype=in_dtype,
         accum_dtype=accum_dtype,
         a_transposed=False,
         b_transposed=True,
@@ -479,17 +479,17 @@ def tl_matmul_with_ladder_weight_only_transform(
 
     @T.prim_func
     def main(
-            A: T.Buffer(A_shape, dtypeAB),
-            B: T.Buffer(B_shape, dtypeAB),
-            C: T.Buffer((M, N), dtypeC),
+            A: T.Buffer(A_shape, in_dtype),
+            B: T.Buffer(B_shape, in_dtype),
+            C: T.Buffer((M, N), out_dtype),
     ):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
 
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope=shared_scope)
-            B_shared = T.alloc_shared(B_shared_shape, dtypeAB, scope=shared_scope)
-            C_shared = T.alloc_shared(C_shared_shape, dtypeC, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), dtypeAB)
-            B_local = T.alloc_local((warp_cols * local_size), dtypeAB)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
+            B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
+            C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
+            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
+            B_local = T.alloc_local((warp_cols * local_size), in_dtype)
             C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 
@@ -544,9 +544,9 @@ def tl_matmul_with_ladder_weight_only_transform(
     return main
 
 
-def assert_tl_matmul_with_ladder_weight_only_transform_correctness(M, N, K, in_dtype, dtypeC,
+def assert_tl_matmul_with_ladder_weight_only_transform_correctness(M, N, K, in_dtype, out_dtype,
                                                                    accum_dtype, transform_b):
-    matmul = tl_matmul_with_ladder_weight_only_transform(M, N, K, in_dtype, dtypeC, accum_dtype,
+    matmul = tl_matmul_with_ladder_weight_only_transform(M, N, K, in_dtype, out_dtype, accum_dtype,
                                                          transform_b)
 
     mod, params = TL.lower(matmul)
@@ -588,16 +588,16 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
     M,
     N,
     K,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     accum_dtype,
     transform_b,
 ):
-    assert dtypeAB in [
+    assert in_dtype in [
         "float16",
         "int8",
     ], "Currently only float16 and int8 are supported"
-    assert dtypeC in [
+    assert out_dtype in [
         "float16",
         "float32",
         "int32",
@@ -608,7 +608,7 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
 
     micro_size_x = micro_size_y = micro_size_k = 16
 
-    if dtypeC == "int32":
+    if out_dtype == "int32":
         micro_size_k = 32
 
     # This is a debug config
@@ -627,11 +627,11 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
 
     block_M = block_row_warps * warp_row_tiles
     block_N = block_col_warps * warp_col_tiles
-    block_K = 32 if dtypeAB == "float16" else 64
+    block_K = 32 if in_dtype == "float16" else 64
     chunk = block_K // reduce_k
 
     is_smooth_a = False
-    can_swizzle = block_K * DataType(dtypeAB).bits == 512
+    can_swizzle = block_K * DataType(in_dtype).bits == 512
     apply_pad_a = not (is_smooth_a or can_swizzle)
     pad_factor = 8
 
@@ -660,8 +660,8 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
 
     # MMA Wrapper to Auto Generate Code for MMA
     mma_emitter = TensorCoreIntrinEmitterWithLadderTransform(
-        a_dtype=dtypeAB,
-        b_dtype=dtypeAB,
+        a_dtype=in_dtype,
+        b_dtype=in_dtype,
         accum_dtype=accum_dtype,
         a_transposed=False,
         b_transposed=True,
@@ -680,20 +680,20 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
 
     @T.prim_func
     def main(
-            A: T.Buffer(A_shape, dtypeAB),
+            A: T.Buffer(A_shape, in_dtype),
             B: T.Buffer(B_shape, storage_dtype),
-            C: T.Buffer((M, N), dtypeC),
+            C: T.Buffer((M, N), out_dtype),
     ):
         with T.Kernel(
                 T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads,
                 prelude=decode_i4_to_f16) as (bx, by):
 
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope=shared_scope)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
             B_shared = T.alloc_shared(B_shared_shape, storage_dtype, scope=shared_scope)
-            C_shared = T.alloc_shared(C_shared_shape, dtypeC, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), dtypeAB)
+            C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
+            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
             B_local = T.alloc_local((warp_cols * local_size // num_elems_per_byte), storage_dtype)
-            B_dequantize_local = T.alloc_local((warp_cols * local_size), dtypeAB)
+            B_dequantize_local = T.alloc_local((warp_cols * local_size), in_dtype)
             C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
             reduced_accum_res = T.alloc_local(0, accum_dtype)
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
@@ -799,12 +799,12 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
     N,
     K,
     in_dtype,
-    dtypeC,
+    out_dtype,
     accum_dtype,
     transform_b,
 ):
     matmul = tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
-        M, N, K, in_dtype, dtypeC, accum_dtype, transform_b)
+        M, N, K, in_dtype, out_dtype, accum_dtype, transform_b)
 
     mod, params = TL.lower(matmul)
     src_code = mod.imported_modules[0].get_source()

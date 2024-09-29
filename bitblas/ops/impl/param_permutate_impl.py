@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from bitblas.gpu.matmul_analysis import get_propagate_map
-from ..operator import TransformKind
+from ..common import TransformKind
 from typing import Literal
 from tvm import te, IRModule
 

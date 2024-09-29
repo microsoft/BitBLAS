@@ -4,13 +4,14 @@ from bitblas import tvm
 from tvm.target import Target
 import operator
 from functools import reduce
-from enum import IntEnum
 from bitblas.base.arch.cuda import CUDA
 from bitblas.base.roller.hint import Hint
 from typing import Any, Literal, Optional, Tuple, Union
-from ..operator import OperatorConfig, Operator, TransformKind, OPExecutorCPU, BaseKernelNameGenerator
+from ..operator import OperatorConfig, Operator, OPExecutorCPU, BaseKernelNameGenerator
+from ..common import TransformKind, OptimizeStrategy
 from .tirscript.matmul_dequantize_impl import select_implementation as weight_dequantize_implementation
 from .tirscript.matmul_impl import select_implementation as consistent_implementation
+from .tilelang.dense import select_scheduler as consistent_scheduler
 from ...base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
 from bitblas.utils.target_detector import auto_detect_nvidia_target
 from dataclasses import dataclass
@@ -46,11 +47,6 @@ def is_native_compute(A_dtype, W_dtype) -> bool:
 
 CONFIG_INFO_MESSAGE_STRATEGY = """Optimization Strategy Notice: You are currently using the "{}" optimization strategy. If you wish to change this, you can do so by setting the `optimize_strategy` in the Config. The **SingleBatchDecodeOnly** strategy provides the best performance when the batch size (M) is 1. On the other hand, the **ContiguousBatching** strategy is optimized for situations where the batch size (M) is greater than 1. However, please note that using ContiguousBatching for M=1 will result in a slight performance decrease of about 5%.
 """
-
-
-class OptimizeStrategy(IntEnum):
-    SingleBatchDecodeOnly = 0
-    ContigousBatching = 1
 
 
 @dataclass(frozen=True)
@@ -357,8 +353,7 @@ class Matmul(Operator):
 
         self.source_format = source_format
         self.bit = bit
-        self.backend = backend
-        super().__init__(name, config, target)
+        super().__init__(name, config, target, backend)
 
         if source_format == "int" and self.with_zeros:
             logger.warning(
@@ -381,7 +376,7 @@ class Matmul(Operator):
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
-            self.prim_func_mod["main"] = self.prim_func_mod["main"].with_attrs(
+            self.ir_module["main"] = self.ir_module["main"].with_attrs(
                 {"opt_shapes": self.dynamic_range})
         else:
             self.dynamic_range = None
@@ -576,6 +571,23 @@ class Matmul(Operator):
                 propagate_a=self.propagate_a,
                 propagate_b=self.propagate_b,
             )
+
+    def _select_scheduler(self):
+        if is_native_compute(self.A_dtype, self.W_dtype):
+            return consistent_scheduler(
+                M=self.M,
+                N=self.N,
+                K=self.K,
+                in_dtype=self.A_dtype,
+                out_dtype=self.out_dtype,
+                accum_dtype=self.accum_dtype,
+                with_bias=self.with_bias,
+                layout=self.layout,
+                propagate_a=self.propagate_a,
+                propagate_b=self.propagate_b,
+            )
+        else:
+            raise ValueError("Currently only support native compute for scheduler")
 
     def post_process(self, code: str) -> str:
         code = tensor_replace_dp4a(code)

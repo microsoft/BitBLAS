@@ -39,8 +39,8 @@ def matmul(
     block_M,
     block_N,
     block_K,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     accum_dtype,
     num_stages,
     threads,
@@ -58,16 +58,16 @@ def matmul(
 
     @T.prim_func
     def main(
-            A: T.Buffer(A_shape, dtypeAB),
+            A: T.Buffer(A_shape, in_dtype),
             B: T.Buffer(B_shape, storage_dtype),
-            C: T.Buffer((M, N), dtypeC),
+            C: T.Buffer((M, N), out_dtype),
     ):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype)
             B_shared = T.alloc_shared(B_shared_shape, storage_dtype)
             B_local = T.alloc_local([8], storage_dtype)
-            B_dequantize_local = T.alloc_local([16], dtypeAB)
-            B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, dtypeAB)
+            B_dequantize_local = T.alloc_local([16], in_dtype)
+            B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, in_dtype)
             C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
 
             tx = T.thread_binding(0, threads, thread="threadIdx.x")
@@ -89,7 +89,7 @@ def matmul(
                             num_bits,
                             B_local[v // 2],
                             v % 2,
-                            dtype=dtypeAB,
+                            dtype=in_dtype,
                         )
                     for v in T.vectorized(0, 8):
                         vi = (i * threads * 8 + tx * 8 + v) // (block_K)
@@ -105,8 +105,8 @@ def run_gemm(
     M,
     N,
     K,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     dtypeAccum,
     block_M,
     block_N,
@@ -121,8 +121,8 @@ def run_gemm(
         block_M,
         block_N,
         block_K,
-        dtypeAB,
-        dtypeC,
+        in_dtype,
+        out_dtype,
         dtypeAccum,
         num_stages,
         num_threads,
@@ -144,7 +144,7 @@ def run_gemm(
             for j in range(B.shape[1]):
                 B[i][j] = ((qB[i][j // 2] >> (4 * (j % 2))) & 0xF).to(torch.half)
         C = torch.matmul(A.to(torch.float), B.T.to(torch.float))
-        C = C.to(torch.__getattribute__(dtypeC))
+        C = C.to(torch.__getattribute__(out_dtype))
         return C
 
     mod.assert_allclose(ref_program)
@@ -154,16 +154,16 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
     M,
     N,
     K,
-    dtypeAB,
-    dtypeC,
+    in_dtype,
+    out_dtype,
     accum_dtype,
     transform_b,
 ):
-    assert dtypeAB in [
+    assert in_dtype in [
         "float16",
         "int8",
     ], "Currently only float16 and int8 are supported"
-    assert dtypeC in [
+    assert out_dtype in [
         "float16",
         "float32",
         "int32",
@@ -174,7 +174,7 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
 
     micro_size_x = micro_size_y = micro_size_k = 16
 
-    if dtypeC == "int32":
+    if out_dtype == "int32":
         micro_size_k = 32
 
     # This is a debug config
@@ -193,11 +193,11 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
 
     block_M = block_row_warps * warp_row_tiles
     block_N = block_col_warps * warp_col_tiles
-    block_K = 32 if dtypeAB == "float16" else 64
+    block_K = 32 if in_dtype == "float16" else 64
     chunk = block_K // reduce_k
 
     is_smooth_a = False
-    can_swizzle = block_K * DataType(dtypeAB).bits == 512
+    can_swizzle = block_K * DataType(in_dtype).bits == 512
     apply_pad_a = not (is_smooth_a or can_swizzle)
     pad_factor = 8
 
@@ -226,8 +226,8 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
 
     # MMA Wrapper to Auto Generate Code for MMA
     mma_emitter = TensorCoreIntrinEmitterWithLadderTransform(
-        a_dtype=dtypeAB,
-        b_dtype=dtypeAB,
+        a_dtype=in_dtype,
+        b_dtype=in_dtype,
         accum_dtype=accum_dtype,
         a_transposed=False,
         b_transposed=True,
@@ -246,20 +246,20 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
 
     @T.prim_func
     def main(
-            A: T.Buffer(A_shape, dtypeAB),
+            A: T.Buffer(A_shape, in_dtype),
             B: T.Buffer(B_shape, storage_dtype),
-            C: T.Buffer((M, N), dtypeC),
+            C: T.Buffer((M, N), out_dtype),
     ):
         with T.Kernel(
                 T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads,
                 prelude=decode_i4_to_f16) as (bx, by):
 
-            A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope=shared_scope)
+            A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
             B_shared = T.alloc_shared(B_shared_shape, storage_dtype, scope=shared_scope)
-            C_shared = T.alloc_shared(C_shared_shape, dtypeC, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), dtypeAB)
+            C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
+            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
             B_local = T.alloc_local((warp_cols * local_size // num_elems_per_byte), storage_dtype)
-            B_dequantize_local = T.alloc_local((warp_cols * local_size), dtypeAB)
+            B_dequantize_local = T.alloc_local((warp_cols * local_size), in_dtype)
             C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
             reduced_accum_res = T.alloc_local(0, accum_dtype)
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
@@ -365,12 +365,12 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
     N,
     K,
     in_dtype,
-    dtypeC,
+    out_dtype,
     accum_dtype,
     transform_b,
 ):
     matmul = tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
-        M, N, K, in_dtype, dtypeC, accum_dtype, transform_b)
+        M, N, K, in_dtype, out_dtype, accum_dtype, transform_b)
 
     mod, params = TL.lower(matmul)
     src_code = mod.imported_modules[0].get_source()

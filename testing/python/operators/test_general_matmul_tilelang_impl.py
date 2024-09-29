@@ -24,8 +24,8 @@ def assert_matmul_blocked_correctness(M,
                                       block_K=32,
                                       trans_A=False,
                                       trans_B=True,
-                                      dtypeAB="float16",
-                                      dtypeC="float16",
+                                      in_dtype="float16",
+                                      out_dtype="float16",
                                       accum_dtype="float16",
                                       num_stages=2,
                                       threads=128,
@@ -39,8 +39,8 @@ def assert_matmul_blocked_correctness(M,
         block_K=block_K,
         trans_A=trans_A,
         trans_B=trans_B,
-        dtypeAB=dtypeAB,
-        dtypeC=dtypeC,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
         accum_dtype=accum_dtype,
         num_stages=num_stages,
         threads=threads,
@@ -53,8 +53,8 @@ def assert_matmul_blocked_correctness(M,
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, dtypeAB))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
@@ -75,8 +75,8 @@ def assert_matmul_macro_tensorcore_correctness(
     M,
     N,
     K,
-    dtypeAB="float16",
-    dtypeC="float16",
+    in_dtype="float16",
+    out_dtype="float16",
     trans_A=False,
     trans_B=True,
     accum_dtype="float16",
@@ -92,8 +92,8 @@ def assert_matmul_macro_tensorcore_correctness(
         M=M,
         N=N,
         K=K,
-        dtypeAB=dtypeAB,
-        dtypeC=dtypeC,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
         trans_A=trans_A,
         trans_B=trans_B,
         accum_dtype=accum_dtype,
@@ -111,8 +111,8 @@ def assert_matmul_macro_tensorcore_correctness(
     # src_code represents generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, dtypeAB))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
@@ -133,8 +133,8 @@ def assert_tl_matmul_with_ladder_weight_only_transform_correctness(
     M,
     N,
     K,
-    dtypeAB="float16",
-    dtypeC="float16",
+    in_dtype="float16",
+    out_dtype="float16",
     trans_A=False,
     trans_B=True,
     accum_dtype="float16",
@@ -150,8 +150,8 @@ def assert_tl_matmul_with_ladder_weight_only_transform_correctness(
         M=M,
         N=N,
         K=K,
-        dtypeAB=dtypeAB,
-        dtypeC=dtypeC,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
         trans_A=trans_A,
         trans_B=trans_B,
         accum_dtype=accum_dtype,
@@ -170,8 +170,8 @@ def assert_tl_matmul_with_ladder_weight_only_transform_correctness(
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, dtypeAB))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
     ladder_permutate_config = bitblas.ops.LadderPermutateConfig(

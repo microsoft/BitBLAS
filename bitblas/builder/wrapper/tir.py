@@ -9,25 +9,10 @@ from bitblas.utils.rtmod_analysis import get_annotated_device_mod
 import re
 import logging
 
-from .base import BaseWrapper
+from .base import (BaseWrapper, PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY, PREDEF_INIT_FUNC,
+                   PREDEF_HOST_FUNC)
 
 logger = logging.getLogger(__name__)
-
-PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY = """
-    cudaFuncSetAttribute({}, cudaFuncAttributeMaxDynamicSharedMemorySize, {});
-"""
-
-PREDEF_INIT_FUNC = """
-extern "C" void init() {{
-    {}
-}}
-"""
-
-PREDEF_HOST_FUNC = """
-extern "C" void call({}) {{
-{}
-}}
-"""
 
 
 class TIRCUDASourceWrapper(object):
@@ -48,8 +33,8 @@ class TIRCUDASourceWrapper(object):
         "uchar": "uint8_t",
     }
 
-    def __init__(self, optimized_mod: IRModule, source: str, arch: TileDevice):
-        self.mod = optimized_mod
+    def __init__(self, scheduled_ir_module: IRModule, source: str, arch: TileDevice):
+        self.mod = scheduled_ir_module
         self.arch = arch
         self.source = source
         self.function_name: Optional[str] = None
@@ -190,8 +175,8 @@ class TIRCUDASourceWrapper(object):
 
 class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
 
-    def __init__(self, optimized_mod: IRModule, source: str, arch: TileDevice):
-        super().__init__(optimized_mod, source, arch)
+    def __init__(self, scheduled_ir_module: IRModule, source: str, arch: TileDevice):
+        super().__init__(scheduled_ir_module, source, arch)
 
     def get_cuda_init_func(self):
         # Initialize an empty string to accumulate CUDA function calls for setting dynamic shared memory
@@ -387,16 +372,16 @@ class TIRWrapper(BaseWrapper):
 
     def __init__(self, arch: TileDevice):
         super().__init__()
-        self.optimized_mod = None
+        self.scheduled_ir_module = None
         self.arch = arch
         self.lib = None
 
-    def assign_optimized_module(self, optimized_mod: IRModule):
-        self.optimized_mod = optimized_mod
+    def assign_optimized_module(self, scheduled_ir_module: IRModule):
+        self.scheduled_ir_module = scheduled_ir_module
 
     # Get Scheduled Rt Module and return source to be compiled
     def wrap(self, c_source: str, is_dynamic: bool = False):
-        assert self.optimized_mod is not None, "Please assign optimized module first."
+        assert self.scheduled_ir_module is not None, "Please assign optimized module first."
         wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
-        wrapper = wrapper_class(self.optimized_mod, c_source, self.arch)
+        wrapper = wrapper_class(self.scheduled_ir_module, c_source, self.arch)
         return wrapper.lib_code

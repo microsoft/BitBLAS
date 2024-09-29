@@ -21,8 +21,8 @@ def assert_matmul_blocked_with_default_correctness(M,
                                                    K,
                                                    trans_A=False,
                                                    trans_B=True,
-                                                   dtypeAB="float16",
-                                                   dtypeC="float16",
+                                                   in_dtype="float16",
+                                                   out_dtype="float16",
                                                    accum_dtype="float16"):
     matmul = MatmulScheduler(
         M=M,
@@ -30,8 +30,8 @@ def assert_matmul_blocked_with_default_correctness(M,
         K=K,
         trans_A=trans_A,
         trans_B=trans_B,
-        dtypeAB=dtypeAB,
-        dtypeC=dtypeC,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
         accum_dtype=accum_dtype,
     ).with_default_config()
 
@@ -41,8 +41,8 @@ def assert_matmul_blocked_with_default_correctness(M,
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, dtypeAB))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
@@ -67,8 +67,8 @@ def assert_matmul_blocked_apply_config_correctness(M,
                                                    block_K=32,
                                                    trans_A=False,
                                                    trans_B=True,
-                                                   dtypeAB="float16",
-                                                   dtypeC="float16",
+                                                   in_dtype="float16",
+                                                   out_dtype="float16",
                                                    accum_dtype="float16",
                                                    num_stages=2,
                                                    threads=128,
@@ -79,8 +79,8 @@ def assert_matmul_blocked_apply_config_correctness(M,
         K=K,
         trans_A=trans_A,
         trans_B=trans_B,
-        dtypeAB=dtypeAB,
-        dtypeC=dtypeC,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
         accum_dtype=accum_dtype,
     ).apply_config(
         block_M=block_M,
@@ -97,8 +97,8 @@ def assert_matmul_blocked_apply_config_correctness(M,
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, dtypeAB))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
@@ -120,8 +120,8 @@ def assert_matmul_fine_grained_with_default_correctness(M,
                                                         K,
                                                         trans_A=False,
                                                         trans_B=True,
-                                                        dtypeAB="float16",
-                                                        dtypeC="float16",
+                                                        in_dtype="float16",
+                                                        out_dtype="float16",
                                                         accum_dtype="float16"):
 
     matmul = MatmulFineGrainScheduler(
@@ -130,8 +130,8 @@ def assert_matmul_fine_grained_with_default_correctness(M,
         K=K,
         trans_A=trans_A,
         trans_B=trans_B,
-        dtypeAB=dtypeAB,
-        dtypeC=dtypeC,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
         accum_dtype=accum_dtype,
     ).with_default_config()
 
@@ -141,9 +141,9 @@ def assert_matmul_fine_grained_with_default_correctness(M,
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB)) - 0.5
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, dtypeAB)) - 0.5
-    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, dtypeC))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
 
@@ -155,7 +155,7 @@ def assert_matmul_fine_grained_with_default_correctness(M,
     assert latency is not None
 
     # Get Reference Result
-    ref_c = torch.matmul(A, B.T).to(getattr(torch, dtypeC))
+    ref_c = torch.matmul(A, B.T).to(getattr(torch, out_dtype))
     print(C)
     print(ref_c)
     torch.testing.assert_close(C, ref_c, rtol=1e-1, atol=1e-1)
@@ -167,8 +167,8 @@ def assert_matmul_fine_grained_apply_config_correctness(
     K,
     trans_A=False,
     trans_B=True,
-    dtypeAB="float16",
-    dtypeC="float16",
+    in_dtype="float16",
+    out_dtype="float16",
     accum_dtype="float16",
     block_row_warps=1,
     block_col_warps=1,
@@ -185,8 +185,8 @@ def assert_matmul_fine_grained_apply_config_correctness(
         K=K,
         trans_A=trans_A,
         trans_B=trans_B,
-        dtypeAB=dtypeAB,
-        dtypeC=dtypeC,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
         accum_dtype=accum_dtype,
     ).apply_config(
         block_row_warps=block_row_warps,
@@ -204,8 +204,8 @@ def assert_matmul_fine_grained_apply_config_correctness(
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, dtypeAB))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
@@ -227,8 +227,8 @@ def assert_matmul_weight_propagation_with_default_correctness(M,
                                                               K,
                                                               trans_A=False,
                                                               trans_B=True,
-                                                              dtypeAB="float16",
-                                                              dtypeC="float16",
+                                                              in_dtype="float16",
+                                                              out_dtype="float16",
                                                               accum_dtype="float16"):
 
     matmul = MatmulWeightPropagationScheduler(
@@ -237,8 +237,8 @@ def assert_matmul_weight_propagation_with_default_correctness(M,
         K=K,
         trans_A=trans_A,
         trans_B=trans_B,
-        dtypeAB=dtypeAB,
-        dtypeC=dtypeC,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
         accum_dtype=accum_dtype,
     ).with_default_config()
 
@@ -248,9 +248,9 @@ def assert_matmul_weight_propagation_with_default_correctness(M,
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB)) - 0.5
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, dtypeAB)) - 0.5
-    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, dtypeC))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
     ladder_permutate_config = bitblas.ops.LadderPermutateConfig(
         M=N,
@@ -273,7 +273,7 @@ def assert_matmul_weight_propagation_with_default_correctness(M,
     assert latency is not None
 
     # Get Reference Result
-    ref_c = torch.matmul(A, B.T).to(getattr(torch, dtypeC))
+    ref_c = torch.matmul(A, B.T).to(getattr(torch, out_dtype))
     print(C)
     print(ref_c)
     torch.testing.assert_close(C, ref_c, rtol=1e0, atol=1e0)
@@ -285,8 +285,8 @@ def assert_matmul_weight_propagation_apply_config_correctness(
     K,
     trans_A=False,
     trans_B=True,
-    dtypeAB="float16",
-    dtypeC="float16",
+    in_dtype="float16",
+    out_dtype="float16",
     accum_dtype="float16",
     block_row_warps=1,
     block_col_warps=1,
@@ -303,8 +303,8 @@ def assert_matmul_weight_propagation_apply_config_correctness(
         K=K,
         trans_A=trans_A,
         trans_B=trans_B,
-        dtypeAB=dtypeAB,
-        dtypeC=dtypeC,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
         accum_dtype=accum_dtype,
     ).apply_config(
         block_row_warps=block_row_warps,
@@ -322,9 +322,9 @@ def assert_matmul_weight_propagation_apply_config_correctness(
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, dtypeAB)) - 0.5
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, dtypeAB)) - 0.5
-    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, dtypeC))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
     ladder_permutate_config = bitblas.ops.LadderPermutateConfig(
         M=N,
@@ -347,7 +347,7 @@ def assert_matmul_weight_propagation_apply_config_correctness(
     assert latency is not None
 
     # Get Reference Result
-    ref_c = torch.matmul(A, B.T).to(getattr(torch, dtypeC))
+    ref_c = torch.matmul(A, B.T).to(getattr(torch, out_dtype))
     torch.testing.assert_close(C, ref_c, rtol=1e0, atol=1e0)
 
 

@@ -4,7 +4,7 @@
 from bitblas import tvm
 from tvm import te, DataType
 from tvm.tir import IndexMap
-from bitblas.ops.operator import TransformKind
+from bitblas.ops.common import TransformKind
 from bitblas.gpu.matmul_analysis import get_propagate_map
 from bitblas.quantization import (_tir_packed_int_to_int_convert, _tir_packed_to_signed_convert,
                                   _tir_packed_to_unsigned_convert, _tir_u32_to_f4_to_f16,

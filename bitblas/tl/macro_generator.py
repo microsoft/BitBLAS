@@ -4,7 +4,7 @@
 import tvm.tl.language as T
 
 from typing import Union
-from bitblas.ops.operator import TransformKind
+from bitblas.ops.common import TransformKind
 from tvm import DataType
 from tvm.runtime import convert
 from .utils import (

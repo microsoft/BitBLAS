@@ -4,6 +4,7 @@ from typing import Optional
 from bitblas.base.arch import TileDevice
 import ctypes
 import os
+import os.path as osp
 import tempfile
 import subprocess
 import logging
@@ -26,7 +27,7 @@ class LibraryGenerator(object):
     def load_lib(self):
         return ctypes.CDLL(self.libpath)
 
-    def compile_lib(self, timeout: float = None):
+    def compile_lib(self, timeout: float = None, with_tl: bool = False):
         arch = self.arch
         src = tempfile.NamedTemporaryFile(mode="w", suffix=".cu", delete=False)
         compute_version = arch.compute_capability
@@ -45,9 +46,22 @@ class LibraryGenerator(object):
             "-lcuda",
             "-gencode",
             f"arch=compute_{compute_version},code=sm_{compute_version}",
-            "-o",
-            libpath,
         ]
+        if with_tl:
+            tvm_root = osp.join(osp.dirname(__file__), "../../../3rdparty/tvm")
+            tl_template_path = osp.abspath(osp.join(tvm_root, "src/tl"))
+            if "TL_CUTLASS_PATH" in os.environ:
+                cutlass_path = os.environ["TL_CUTLASS_PATH"]
+            else:
+                cutlass_path = osp.abspath(osp.join(tvm_root, "3rdparty/cutlass/include"))
+
+            command += [
+                "-I" + tl_template_path,
+                "-I" + cutlass_path,
+            ]
+            command += ["-diag-suppress=20013"]
+        command += ["-o", libpath]
+
         src.write(self.lib_code)
         src.flush()
         try:
