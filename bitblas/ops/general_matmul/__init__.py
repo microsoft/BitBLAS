@@ -52,8 +52,8 @@ CONFIG_INFO_MESSAGE_STRATEGY = """Optimization Strategy Notice: You are currentl
 @dataclass(frozen=True)
 class MatmulConfig(OperatorConfig):
     M: Union[int, Tuple[int]] = None
-    N: int = None
-    K: int = None
+    N: Optional[int] = None
+    K: Optional[int] = None
     A_dtype: str = "float16"
     # is a wrapper for source_format and bit
     W_dtype: str = A_dtype  # W_dtype is the same as A_dtype by default
@@ -296,6 +296,7 @@ class MatmulKernelNameGenerator(BaseKernelNameGenerator):
         #     kernel_name += f"_pb{config.propagate_b.value}"
 
         kernel_name = "_".join([kernel_name, self.serialize_hint(hint)])
+        assert self.is_valid(kernel_name), "Kernel name invalid"
         return kernel_name
 
     def is_valid_config(self, config: OperatorConfig) -> bool:
