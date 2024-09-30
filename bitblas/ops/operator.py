@@ -76,7 +76,7 @@ class DefaultKernelNameGenerator(BaseKernelNameGenerator):
         self.DEFAULT_PREFIX = name
         super().__init__(config)
 
-    def _generate(self, hint: Hint = None) -> str:
+    def generate(self, hint: Hint = None) -> str:
         # hint is not used
         assert hint is not None
         return self.DEFAULT_PREFIX
