@@ -26,6 +26,9 @@ from bitblas.ops.general_matmul.tirscript import (
 )
 from bitblas.tl.base_hint import BaseTLHint
 
+# GPU warp configuration for NVIDIA GPUs
+warp_size = 32
+
 
 @dataclass
 class MatmulScheduler(BaseScheduler):
@@ -66,8 +69,8 @@ class MatmulScheduler(BaseScheduler):
             rasterization_plan = hint.rasterization_plan
             enable_rasterization = not isinstance(rasterization_plan, NoRasterization)
 
-            warp_rows = block[0] // warp[0]
-            warp_cols = block[1] // warp[1]
+            block_row_warps = block[0] // warp[0]
+            block_col_warps = block[1] // warp[1]
             warp_size = 32  # NVIDIA GPU warp size is 32
             if num_stages == 1:
                 num_stages = 0  # disable pipelining
@@ -76,7 +79,7 @@ class MatmulScheduler(BaseScheduler):
             tl_hint.block_N = block[1]
             tl_hint.block_K = rstep[0]
             tl_hint.num_stages = num_stages
-            tl_hint.threads = warp_size * warp_rows * warp_cols
+            tl_hint.threads = warp_size * block_row_warps * block_col_warps
             tl_hint.enable_rasterization = enable_rasterization
 
             return tl_hint
@@ -263,9 +266,104 @@ class MatmulFineGrainScheduler(BaseScheduler):
     warp_col_tiles: int = 32
     chunk: int = 32  # Usually determines the K-dimension split size
 
-    # Tiling and Other Optimization Parameters
+    # Other Optimization Parameters
     num_stages: int = 2
     enable_rasterization: bool = False
+
+    class TLHint(BaseTLHint):
+
+        def __init__(self):
+            super().__init__()
+
+        @classmethod
+        def from_roller_hint(cls, hint: Hint):
+            tl_hint = cls()
+            for key, value in hint.__dict__.items():
+                setattr(tl_hint, key, value)
+
+            block = hint.block
+            warp = hint.warp
+            rstep = hint.rstep
+            num_stages = hint.pipeline_stage
+            rasterization_plan = hint.rasterization_plan
+            enable_rasterization = not isinstance(rasterization_plan, NoRasterization)
+
+            block_row_warps = block[0] // warp[0]
+            block_col_warps = block[1] // warp[1]
+            warp_row_tiles = warp[0]
+            warp_col_tiles = warp[1]
+            chunk = rstep[0]
+
+            if num_stages == 1:
+                num_stages = 0  # disable pipelining
+
+            tl_hint.block_row_warps = block_row_warps
+            tl_hint.block_col_warps = block_col_warps
+            tl_hint.warp_row_tiles = warp_row_tiles
+            tl_hint.warp_col_tiles = warp_col_tiles
+            tl_hint.chunk = chunk
+            tl_hint.num_stages = num_stages
+            tl_hint.enable_rasterization = enable_rasterization
+
+            return tl_hint
+
+        def get_config_params(self):
+            return {
+                "block_row_warps": self.block_row_warps,
+                "block_col_warps": self.block_col_warps,
+                "warp_row_tiles": self.warp_row_tiles,
+                "warp_col_tiles": self.warp_col_tiles,
+                "chunk": self.chunk,
+                "num_stages": self.num_stages,
+                "enable_rasterization": self.enable_rasterization,
+            }
+
+        def __repr__(self):
+            return ("{"
+                    f"block_M={self.block_M},"
+                    f"block_N={self.block_N},"
+                    f"block_K={self.block_K},"
+                    f"threads={self.block_row_warps * self.block_col_warps * warp_size},"
+                    f"num_stages={self.num_stages},"
+                    f"enable_rasterization={self.enable_rasterization})"
+                    "}")
+
+    def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
+        layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
+
+        # Simple TIR Compute Expression
+        ir_module = matmul_select_implementation(
+            M=self.M,
+            N=self.N,
+            K=self.K,
+            in_dtype=self.in_dtype,
+            out_dtype=self.out_dtype,
+            accum_dtype=self.accum_dtype,
+            layout=layout,
+        )
+
+        roller_hints = get_roller_hints_from_func(
+            ir_module["main"],
+            arch,
+            topk,
+            tensorcore_only=True,
+            allow_gemv=True,
+        )
+
+        if roller_hints is None:
+            raise ValueError("No Roller Hints Found for TensorCore Scheduling")
+
+        def serialze_hints_to_configs(hints: List[Hint]):
+            configs = []
+            for hint in hints:
+                config = self.TLHint.from_roller_hint(hint)
+                configs.append(config)
+            return configs
+
+        return serialze_hints_to_configs(roller_hints)
+
+    def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
+        return self.get_roller_configs(arch, topk)
 
     def with_default_config(self):
         block_row_warps = getattr(self, "block_row_warps", 2)
@@ -320,8 +418,6 @@ class MatmulFineGrainScheduler(BaseScheduler):
             micro_size_y,
         )
 
-        # GPU warp configuration for NVIDIA GPUs
-        warp_size = 32
         threads = warp_size * (block_row_warps * block_col_warps)
 
         # Calculate local fragment sizes for tensor core

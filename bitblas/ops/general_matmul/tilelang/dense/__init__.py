@@ -47,6 +47,10 @@ def select_scheduler(
     propagate_a: Union[int, TransformKind] = TransformKind.NonTransform,
     propagate_b: Union[int, TransformKind] = TransformKind.NonTransform,
 ):
+    '''
+        Fine-grained Interface is preferred as it provides more flexibility
+        and can be used to implement high performance kernel.
+    '''
     if isinstance(propagate_a, int):
         propagate_a = TransformKind(propagate_a)
     if isinstance(propagate_b, int):

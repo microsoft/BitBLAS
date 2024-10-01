@@ -137,28 +137,75 @@ def assert_matmul_fine_grained_with_default_correctness(M,
 
     mod, params = tl.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
-
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
-
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
-
-    mod(A, B, C)
 
     latency = mod.do_bench(mod.func, warmup=25)
 
     # Ensure that the latency is not None
     assert latency is not None
 
+    mod(A, B, C)
+
     # Get Reference Result
     ref_c = torch.matmul(A, B.T).to(getattr(torch, out_dtype))
-    print(C)
-    print(ref_c)
-    torch.testing.assert_close(C, ref_c, rtol=1e-1, atol=1e-1)
+    from bitblas.ops import Matmul, MatmulConfig
+    matmul_config = MatmulConfig(
+        M=M,
+        N=N,
+        K=K,
+        propagate_a=False,
+        propagate_b=False,
+    )
+    matmul = Matmul(matmul_config, enable_tuning=False)
+    prim_func = matmul.prim_func
+    intrin_info = bitblas.base.hint.IntrinInfo(
+        in_dtype=in_dtype,
+        out_dtype=accum_dtype,
+        trans_b=True,
+        input_transform_kind=0,
+        weight_transform_kind=0,
+    )
+
+    arch = bitblas.base.CUDA(target="cuda")
+
+    sch = bitblas.gpu.MatmulTensorizationMMA().apply_config(
+        prim_func,
+        config=bitblas.base.Hint.from_dict({
+            "arch": arch,
+            "block": [64, 64],
+            "warp": [32, 32],
+            "rstep": [32],
+            "pipeline_stage": 2,
+            "use_async": True,
+            "intrin_info": intrin_info,
+            "shared_scope": "shared.dyn",
+            "vectorize": {
+                "b": 8,
+                "a": 8
+            },
+        }),
+    )
+    
+    with tvm.transform.PassContext(config={
+            "tir.use_async_copy": True,
+            "tir.merge_static_smem": False
+    }):
+        rt_mod = tvm.build(sch.mod, target="cuda")
+    from tvm.contrib.dlpack import to_pytorch_func
+    
+    torch_func = to_pytorch_func(rt_mod)
+    
+    matmul_c = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
+    torch_func(A, B, matmul_c)
+
+    torch.testing.assert_close(matmul_c, ref_c, rtol=1e-2, atol=1e-2)
+    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
 
 
 def assert_matmul_fine_grained_apply_config_correctness(
