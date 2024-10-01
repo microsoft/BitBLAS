@@ -4,7 +4,7 @@
 from bitblas import tvm as tvm
 import bitblas.testing
 from tvm import tl
-from bitblas.ops.general_matmul.tilelang.dense.matmul import (
+from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
     MatmulScheduler,
     MatmulFineGrainScheduler,
     MatmulWeightPropagationScheduler,

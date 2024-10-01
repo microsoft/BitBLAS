@@ -122,7 +122,6 @@ def apply_and_build_parallel(scheduler,
             code = tensor_remove_make_int4(code)
             code = tensor_remove_make_int2(code)
             return code
-
         # check only have one function in the module
         if len(mod.functions) > 1:
             raise ValueError("Only support one function in the module")

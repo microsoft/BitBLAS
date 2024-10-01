@@ -22,6 +22,7 @@ from bitblas.builder.wrapper import TIRWrapper, TLWrapper
 from bitblas.builder.lib_generator import LibraryGenerator
 from dataclasses import dataclass
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -60,10 +61,16 @@ class BaseKernelNameGenerator(ABC):
         """Generate the kernel name based on the config and hint"""
         pass
 
+    def is_valid(self, kernel_name: str = None) -> bool:
+        '''Validate kernel name after generation'''
+        pattern = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
+        return kernel_name.isidentifier() and pattern.match(kernel_name)
+
 
 class DefaultKernelNameGenerator(BaseKernelNameGenerator):
 
     DEFAULT_PREFIX = "main"
+    kernel_name = None
 
     def __init__(self, config: OperatorConfig, name: str):
         self.DEFAULT_PREFIX = name
