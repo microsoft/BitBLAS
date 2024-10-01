@@ -1,14 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from bitblas import tvm as tvm
-from tvm import DataType
-import tvm.tl.language as T
 from typing import Optional
-from bitblas.tl.utils import (
-    get_mma_micro_size,
-    make_swizzle_layout,
-)
-
 from bitblas.ops.base_scheduler import BaseScheduler
 
 from dataclasses import dataclass
@@ -43,16 +36,13 @@ class MatmulFineGrainSIMTScheduler(BaseScheduler):
     def with_default_config(self):
         raise NotImplementedError
 
-    def apply_config(
-        self,
-    ):
+    def apply_config(self,):
 
         # M, N, K = self.M, self.N, self.K
         # trans_A, trans_B = self.trans_A, self.trans_B
         # in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
 
         raise NotImplementedError
-
 
     def __post_init__(self):
         # Validate the matrix transpose settings
