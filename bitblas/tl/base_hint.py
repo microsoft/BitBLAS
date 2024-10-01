@@ -13,7 +13,7 @@ class BaseTLHint(ABC):
         raise NotImplementedError("method __repr__ is not implemented")
 
     def from_roller_hint(self, hint: Hint):
-        raise NotImplementedError(f"method from_roller_hint is not implemented")
+        raise NotImplementedError("method from_roller_hint is not implemented")
 
     @abstractmethod
     def get_config_params(self):
