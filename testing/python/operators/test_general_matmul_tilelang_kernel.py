@@ -191,16 +191,16 @@ def assert_matmul_fine_grained_with_default_correctness(M,
             },
         }),
     )
-    
+
     with tvm.transform.PassContext(config={
             "tir.use_async_copy": True,
             "tir.merge_static_smem": False
     }):
         rt_mod = tvm.build(sch.mod, target="cuda")
     from tvm.contrib.dlpack import to_pytorch_func
-    
+
     torch_func = to_pytorch_func(rt_mod)
-    
+
     matmul_c = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
     torch_func(A, B, matmul_c)
 
