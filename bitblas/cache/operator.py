@@ -12,6 +12,7 @@ import shutil
 from bitblas import tvm
 from tvm.contrib.tar import tar
 import logging
+import threading
 
 logger = logging.getLogger(__name__)
 
@@ -24,53 +25,63 @@ class OperatorCache:
     """
     Manages a cache for operator instances (e.g., Matmul, Convolution) based on their configurations.
     """
+    # A lock to synchronize access to the cache
+    # RLock is used to allow reentrant locking
+    # As load_from_database calls _load_operator which
+    # calls _instantiate_and_add_operator
+    cache_locker = threading.RLock()
 
     def __init__(self):
         self.cache = {}
 
     def add(self, config: OperatorConfig, op_inst: Operator):
-        self.cache[config] = op_inst
+        with self.cache_locker:
+            self.cache[config] = op_inst
 
     def get(self, config: OperatorConfig):
-        return self.cache.get(config)
+        with self.cache_locker:
+            return self.cache.get(config)
 
     def exists(self, config):
         return config in self.cache
 
     def clear(self):
-        self.cache.clear()
+        with self.cache_locker:
+            self.cache.clear()
 
     def size(self):
         return len(self.cache)
 
     def save_into_database(self, database_path=None, target=None):
-        database_path = self._ensure_database_path(database_path)
-        for config, op_inst in self.cache.items():
-            arch_str = self._determine_arch_str(op_inst, target)
-            arch_path = os.path.join(database_path, arch_str)
-            self._ensure_directory(arch_path)
-            hash_str = sha256(repr(config).encode()).hexdigest()
-            config_path = os.path.join(arch_path, hash_str)
-            # if the config already exists, skip saving
-            if os.path.exists(config_path):
-                continue
-            self._ensure_directory(config_path)
-            self._save_operator_config_and_artifact(config, op_inst, config_path)
+        with self.cache_locker:
+            database_path = self._ensure_database_path(database_path)
+            for config, op_inst in self.cache.items():
+                arch_str = self._determine_arch_str(op_inst, target)
+                arch_path = os.path.join(database_path, arch_str)
+                self._ensure_directory(arch_path)
+                hash_str = sha256(repr(config).encode()).hexdigest()
+                config_path = os.path.join(arch_path, hash_str)
+                # if the config already exists, skip saving
+                if os.path.exists(config_path):
+                    continue
+                self._ensure_directory(config_path)
+                self._save_operator_config_and_artifact(config, op_inst, config_path)
 
     def load_from_database(self, database_path, target=None):
-        if not os.path.exists(database_path):
-            logger.info(
-                f"Database path {database_path} does not exist, skipping loading operators from the database"
-            )
-            return
-        arch_str = self._determine_target_arch_str(target)
-        arch_path = os.path.join(database_path, arch_str)
-        if not os.path.exists(arch_path):
-            logger.info(
-                f"Target {arch_str} does not exist in the database, skipping loading operators from the database"
-            )
-            return
-        self._load_operators_from_arch_path(arch_path, target)
+        with self.cache_locker:
+            if not os.path.exists(database_path):
+                logger.info(
+                    f"Database path {database_path} does not exist, skipping loading operators from the database"
+                )
+                return
+            arch_str = self._determine_target_arch_str(target)
+            arch_path = os.path.join(database_path, arch_str)
+            if not os.path.exists(arch_path):
+                logger.info(
+                    f"Target {arch_str} does not exist in the database, skipping loading operators from the database"
+                )
+                return
+            self._load_operators_from_arch_path(arch_path, target)
 
     def _ensure_database_path(self, database_path):
         if database_path is None:

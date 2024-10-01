@@ -24,7 +24,6 @@ import multiprocessing
 PYPI_BUILD = os.environ.get("PYPI_BUILD", "False").lower() == "true"
 PACKAGE_NAME = "bitblas"
 ROOT_DIR = os.path.dirname(__file__)
-MAIN_CUDA_VERSION = "12.1"
 
 # BitBLAS only supports Linux platform
 assert sys.platform.startswith("linux"), "BitBLAS only supports Linux platform (including WSL)."

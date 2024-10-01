@@ -5,14 +5,11 @@ from bitblas import tvm
 import os
 from tvm.contrib.popen_pool import PopenPoolExecutor, StatusKind
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import numpy as np
-from typing import List, Tuple, Optional, Dict, Union, Literal, Callable
+from typing import List, Tuple, Optional, Dict, Literal
 from tvm import tir, IRModule
 from tvm.runtime import Module
 from tvm.tir import Schedule
-from tvm.relax.expr import Function
 import tvm.tl as tl
-import bitblas
 from bitblas.ops.base_scheduler import BaseScheduler
 from bitblas.base.arch import CUDA
 from bitblas.base import Hint
@@ -20,11 +17,7 @@ from bitblas.base.utils import get_dummy_input_arrays
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 import tempfile
-import itertools
-from tvm.ir.supply import GlobalVarSupply
 from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
-from bitblas.utils.tensor_adapter import (
-    np_float2np_bf16,)
 import logging
 
 logger = logging.getLogger(__name__)
@@ -67,8 +60,8 @@ class CompileResult:
 
 
 def _apply_config(
-        scheduler: BaseScheduler,
-        config: Dict = None,
+    scheduler: BaseScheduler,
+    config: Dict = None,
 ) -> Optional[IRModule]:
     """
     find rules:
@@ -121,6 +114,7 @@ def apply_and_build_parallel(scheduler,
             return idx, None, None
 
         config = configs[idx]
+        assert config is not None
 
         @tvm.register_func(func_name="tvm_callback_cuda_postproc", override=True)
         def tvm_callback_cuda_postproc(code, _):
@@ -128,6 +122,7 @@ def apply_and_build_parallel(scheduler,
             code = tensor_remove_make_int4(code)
             code = tensor_remove_make_int2(code)
             return code
+
         # check only have one function in the module
         if len(mod.functions) > 1:
             raise ValueError("Only support one function in the module")
@@ -168,12 +163,12 @@ def apply_and_build_parallel(scheduler,
                 continue
             rt_mod = tvm.runtime.load_module(artifact_path)
             # Transform Tuning Config to Hint
-            hint = Hint.from_dict(
-                {
-                    **{"arch": arch},
-                    **config, 
-                }
-            )
+            hint = Hint.from_dict({
+                **{
+                    "arch": arch
+                },
+                **config,
+            })
             cpresult = CompileResult(hint, sch, rt_mod)
             timer_cuda_mod = rt_mod.time_evaluator(
                 rt_mod.entry_name, arch.device, number=num_repeats)
@@ -250,11 +245,8 @@ def fast_tune(
                     raise NotImplementedError(
                         "Currently do not support fast tune with none-dynamic range set")
         if opt_shapes:
-            for name, shape in opt_shapes.items():
-                var = find_var_from_func(func, name)
-                specilized_func = func.specialize({
-                    var: shape.astype(var.dtype)
-                }).with_attr("is_specialized")
+            raise NotImplementedError(
+                "Currently do not support fast tune with none-dynamic range set")
 
     arch = CUDA(target)
 
@@ -281,4 +273,3 @@ def fast_tune(
     )
 
     return cpresults, best
-
