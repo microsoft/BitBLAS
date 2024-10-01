@@ -232,7 +232,7 @@ class MatmulKernelNameGenerator(BaseKernelNameGenerator):
         if hint is None:
             return "default"
         else:
-            if hint.use_tc:
+            if hasattr(hint, "use_tc") and hint.use_tc:
                 hint_prefix = "tc"
                 BM, BN = hint.block
                 WM, WN = hint.warp

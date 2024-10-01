@@ -31,7 +31,7 @@ def correctness_consistent(m, in_features, out_features, bias):
 
     with torch.no_grad():
         if not isinstance(m, int):
-            # average m
+            # When m is a list, average m
             m = sum(m) // len(m)
         input_data = torch.randn(m, in_features, dtype=torch.float16).cuda()
         output_torch = linear_torch(input_data)

@@ -5,20 +5,19 @@ from bitblas import tvm
 import os
 from tvm.contrib.popen_pool import PopenPoolExecutor, StatusKind
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Tuple, Optional, Dict, Literal
+from typing import List, Tuple, Optional, Literal
 from tvm import tir, IRModule
 from tvm.runtime import Module
 from tvm.tir import Schedule
 import tvm.tl as tl
 from bitblas.ops.base_scheduler import BaseScheduler
 from bitblas.base.arch import CUDA
-from bitblas.base import Hint
 from bitblas.base.utils import get_dummy_input_arrays
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
-import tempfile
 from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
 import logging
+import tempfile
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +60,7 @@ class CompileResult:
 
 def _apply_config(
     scheduler: BaseScheduler,
-    config: Dict = None,
+    config=None,
 ) -> Optional[IRModule]:
     """
     find rules:
@@ -71,7 +70,7 @@ def _apply_config(
     case 4. else we should use general reduction rule.
     """
     logger.debug("Scheduler Apply config {}".format(config))
-    scheduled_func = scheduler.apply_config(**config)
+    scheduled_func = scheduler.apply_config(**config.get_config_params())
     if scheduled_func is None:
         return None
     else:
@@ -163,13 +162,7 @@ def apply_and_build_parallel(scheduler,
                 continue
             rt_mod = tvm.runtime.load_module(artifact_path)
             # Transform Tuning Config to Hint
-            hint = Hint.from_dict({
-                **{
-                    "arch": arch
-                },
-                **config,
-            })
-            cpresult = CompileResult(hint, sch, rt_mod)
+            cpresult = CompileResult(config, sch, rt_mod)
             timer_cuda_mod = rt_mod.time_evaluator(
                 rt_mod.entry_name, arch.device, number=num_repeats)
             cpresult.time_evaluator = timer_cuda_mod

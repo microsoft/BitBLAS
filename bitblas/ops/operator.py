@@ -283,9 +283,9 @@ class Operator(object):
     def post_process(self, code: str) -> str:
         return code
 
-    def get_tl_tuning_config(self):
+    def get_tl_tuning_config(self, topk: int = 10):
         assert self.is_tilelang_backend(), "Only support tilelang backend"
-        return self.scheduler.get_hardware_aware_configs(self.arch)
+        return self.scheduler.get_hardware_aware_configs(self.arch, topk)
 
     def apply_fast_tuning(
         self,
@@ -305,7 +305,7 @@ class Operator(object):
             # Finetune the schedule
             tuning_configs = self.get_tl_tuning_config()
             _, best = tl_apply_and_build(
-                func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=False)
+                func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=parallel_build)
             # Return the best Config as Hint
             return (best.sch.mod, best.config) if best is not None else (None, None)
 

@@ -13,8 +13,9 @@ from tvm.tir import Schedule
 from tvm.relax.expr import Function
 import bitblas
 from .analysis import get_root_block, get_reduction_blocks, find_var_from_func
-from bitblas.base.arch import CUDA
+from bitblas.base.arch import TileDevice, CUDA
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
+from bitblas.base.roller.hint import Hint
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 import tempfile
 import itertools
@@ -61,6 +62,37 @@ class CompileResult:
         profile_tensors = get_dummy_input_arrays(func, device, distribution=data_distribution)
         latency = self.time_evaluator(*profile_tensors).mean * 1e3
         return latency
+
+
+def get_roller_hints_from_func(func: tir.PrimFunc,
+                               arch: TileDevice,
+                               topk: int = 10,
+                               tensorcore_only: bool = False,
+                               allow_gemv: bool = False) -> Optional[List[Hint]]:
+    if tensorcore_only:
+        try:
+            tensorized_func, tags = get_tensorized_func_and_tags(
+                func, arch.target, allow_gemv=allow_gemv)
+        except Exception as e_msg:
+            logger.debug("Get tensorized func and tags failed: ", e_msg)
+            tags = None
+        if tags and tensorized_func:
+            policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
+            return policy.emit_config(topk)
+        else:
+            return None
+    else:
+        policy = DefaultPolicy(func=func, arch=arch)
+        tensorized_func = None
+        try:
+            tensorized_func, tags = get_tensorized_func_and_tags(
+                func, arch.target, allow_gemv=allow_gemv)
+        except Exception as e_msg:
+            logger.debug("Get tensorized func and tags failed: ", e_msg)
+            tags = None
+        if tags and tensorized_func:
+            policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
+        return policy.emit_config(topk)
 
 
 def _apply_config(
