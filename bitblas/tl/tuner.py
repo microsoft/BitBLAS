@@ -3,7 +3,6 @@
 
 from bitblas import tvm
 import os
-from tvm.contrib.popen_pool import PopenPoolExecutor, StatusKind
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Tuple, Optional, Literal
 from tvm import tir, IRModule
@@ -16,6 +15,8 @@ from bitblas.base.utils import get_dummy_input_arrays
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
+from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
+
 import logging
 import tempfile
 
@@ -104,10 +105,8 @@ def apply_and_build_parallel(scheduler,
         for future in as_completed(futures, timeout=timeout):
             _scheduled_ir_modules.append(future.result())
 
-    builder = PopenPoolExecutor(max_workers=max_workers, timeout=timeout)
-
     # build in process parallel
-    def _build(context) -> str:
+    def _build(context):
         idx, mod, arch = context
         if mod is None:
             return idx, None, None
@@ -122,56 +121,62 @@ def apply_and_build_parallel(scheduler,
             code = tensor_remove_make_int2(code)
             return code
 
-        # check only have one function in the module
+        # Check only have one function in the module
         if len(mod.functions) > 1:
             raise ValueError("Only support one function in the module")
+
         tl_prim_func = list(mod.functions.values())[0]
-        with tvm.transform.PassContext(config={
-                "tir.use_async_copy": True,
-                "tir.disable_cse_tir": True,
-        }):
+
+        with tvm.transform.PassContext(
+                config={
+                    "tir.use_async_copy": True,
+                    "tir.disable_cse_tir": True,
+                    **(config.pass_context if config.pass_context else {})
+                }):
             rt_mod = tl.lower(tl_prim_func, arch.target, runtime_only=True)
 
-        from tvm.contrib.tar import tar  # pylint: disable=import-outside-toplevel
+        from tvm.contrib.tar import tar  # Import the tar module
 
         artifact_path = os.path.join(tempfile.mkdtemp(), "tvm_tmp_mod." + tar.output_format)
         code = rt_mod.imported_modules[0].get_source()
         rt_mod.export_library(artifact_path, fcompile=tar)
         return idx, code, artifact_path
 
-    _mods = [mod for mod in _scheduled_ir_modules]
+    # Use ThreadPoolExecutor for parallel execution
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_idx = {
+            executor.submit(_build, (i, mod, arch)): i
+            for i, mod in enumerate(_scheduled_ir_modules)
+        }
 
-    for map_result in builder.map_with_error_catching(
-            _build,
-        [(i, mod, arch) for i, mod in enumerate(_mods)],
-    ):
-        if map_result.status == StatusKind.TIMEOUT:
-            logger.debug("LocalBuilder: Timeout")
-        elif map_result.status == StatusKind.EXCEPTION:
-            # TODO(lei): redirect the exception to file if needed
-            logger.debug("LocalBuilder: An exception occurred {}".format(map_result.value))
-            continue
-        elif map_result.status == StatusKind.COMPLETE:
-            idx, code, artifact_path = map_result.value
-            ir_module = _scheduled_ir_modules[idx]
-            sch = tvm.tir.Schedule(ir_module)
-            config = configs[idx]
-            if artifact_path is None:
-                ARTIFACT_NOT_FOUND = f"Apply config {config} failed, artifact path is None"
-                logger.debug(ARTIFACT_NOT_FOUND)
-                continue
-            rt_mod = tvm.runtime.load_module(artifact_path)
-            # Transform Tuning Config to Hint
-            cpresult = CompileResult(config, sch, rt_mod)
-            timer_cuda_mod = rt_mod.time_evaluator(
-                rt_mod.entry_name, arch.device, number=num_repeats)
-            cpresult.time_evaluator = timer_cuda_mod
-            cpresult.code = code
-            cpresults.append(cpresult)
-        else:
-            raise ValueError(f"Unreachable: unexpected result: {map_result}")
+        for future in as_completed(future_to_idx, timeout=timeout):
+            idx = future_to_idx[future]
+            try:
+                idx, code, artifact_path = future.result()
+                ir_module = _scheduled_ir_modules[idx]
+                sch = tvm.tir.Schedule(ir_module)
+                config = configs[idx]
 
-    del builder
+                if artifact_path is None:
+                    ARTIFACT_NOT_FOUND = f"Apply config {config} failed, artifact path is None"
+                    print(ARTIFACT_NOT_FOUND)
+                    continue
+
+                rt_mod = tvm.runtime.load_module(artifact_path)
+                cpresult = CompileResult(config, sch, rt_mod)
+                timer_cuda_mod = rt_mod.time_evaluator(
+                    rt_mod.entry_name, arch.device, number=num_repeats)
+                cpresult.time_evaluator = timer_cuda_mod
+                cpresult.code = code
+                cpresults.append(cpresult)
+
+            except Exception as e:
+                local_build_error = str(e)
+                if len(local_build_error) > MAX_ERROR_MESSAGE_LENGTH:
+                    local_build_error = (
+                        local_build_error[:MAX_ERROR_MESSAGE_LENGTH] + "\t...\t" +
+                        local_build_error[-MAX_ERROR_MESSAGE_LENGTH:])
+                print(f"An exception occurred for index {idx}: {local_build_error}")
 
     best = None
     best_latency = 1e9

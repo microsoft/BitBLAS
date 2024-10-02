@@ -101,7 +101,7 @@ class MatmulScheduler(BaseScheduler):
                     f"block_K={self.block_K},"
                     f"num_stages={self.num_stages},"
                     f"threads={self.threads},"
-                    f"enable_rasterization={self.enable_rasterization})"
+                    f"enable_rasterization={self.enable_rasterization}"
                     "}")
 
     def get_configs_sm80(self):
@@ -220,9 +220,7 @@ class MatmulScheduler(BaseScheduler):
                 B_shared = T.alloc_shared(B_shared_shape, in_dtype)
                 C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
 
-                if enable_rasterization:
-                    # rasterization factor
-                    T.use_swizzle(10)
+                T.use_swizzle(10, enable=enable_rasterization)
 
                 T.clear(C_local)
                 for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
@@ -325,7 +323,7 @@ class MatmulFineGrainScheduler(BaseScheduler):
                     f"block_K={self.chunk},"
                     f"threads={self.block_row_warps * self.block_col_warps * warp_size},"
                     f"num_stages={self.num_stages},"
-                    f"enable_rasterization={self.enable_rasterization})"
+                    f"enable_rasterization={self.enable_rasterization}"
                     "}")
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
@@ -470,8 +468,7 @@ class MatmulFineGrainScheduler(BaseScheduler):
                 })
 
                 # Optional rasterization for L2 locality enhancement
-                if enable_rasterization:
-                    T.use_swizzle(panel_size=10)
+                T.use_swizzle(panel_size=10, enable=enable_rasterization)
 
                 # Initialize accumulation buffer to zero
                 T.clear(C_local)
@@ -678,9 +675,7 @@ class MatmulWeightPropagationScheduler(BaseScheduler):
                     B_shared: make_swizzle_layout(B_shared),
                 })
 
-                # Optional rasterization for L2 locality enhancement
-                if enable_rasterization:
-                    T.use_swizzle(panel_size=10)
+                T.use_swizzle(panel_size=10, enable=enable_rasterization)
 
                 # Initialize accumulation buffer to zero
                 T.clear(C_local)
@@ -779,9 +774,7 @@ def matmul_blocked(
             B_shared = T.alloc_shared(B_shared_shape, in_dtype)
             C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
 
-            if enable_rasterization:
-                # rasterization factor
-                T.use_swizzle(10)
+            T.use_swizzle(10, enable=enable_rasterization)
 
             T.clear(C_local)
             for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
@@ -877,8 +870,7 @@ def matmul_macro_tensorcore(
                 B_shared: make_swizzle_layout(B_shared),
             })
 
-            if enable_rasterization:
-                T.use_swizzle(panel_size=10)
+            T.use_swizzle(panel_size=10, enable=enable_rasterization)
 
             T.clear(C_local)
 
@@ -1014,8 +1006,7 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
                 B_shared: make_swizzle_layout(B_shared),
             })
 
-            if enable_rasterization:
-                T.use_swizzle(panel_size=10)
+            T.use_swizzle(panel_size=10, enable=enable_rasterization)
 
             T.clear(C_local)
 

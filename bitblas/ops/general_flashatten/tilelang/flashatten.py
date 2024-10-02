@@ -101,9 +101,8 @@ class FlashAttenScheduler(BaseScheduler):
                 global_l = T.alloc_fragment((block_M), dtypeAccu)
                 block_output = T.alloc_fragment((block_M, dim), dtypeOut)
 
-                if enable_rasterization:
-                    # rasterization factor
-                    T.use_swizzle(10)
+                T.use_swizzle(10, enable=enable_rasterization)
+
                 T.copy(Q[by, bx * block_M:(bx + 1) * block_M, bz, :], Q_shared)
                 T.copy(Q_shared, Q_local)
                 for i, j in T.Parallel(block_M, dim):
@@ -222,9 +221,8 @@ def flashatten_blocked(
             global_l = T.alloc_fragment((block_M_seq), dtypeAccu)
             block_output = T.alloc_fragment((block_M_seq, dim), dtypeOut)
 
-            if enable_rasterization:
-                # rasterization factor
-                T.use_swizzle(10)
+            T.use_swizzle(10, enable=enable_rasterization)
+
             if trans_Q:
                 T.copy(Q[by, :, bz, bx * block_M_seq:(bx + 1) * block_M_seq], Q_shared)
             else:

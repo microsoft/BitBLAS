@@ -6,10 +6,8 @@ from .target_detector import get_all_nvidia_targets, auto_detect_nvidia_target  
 from .rtmod_analysis import get_annotated_device_mod  # noqa: F401
 from .weight_propagate import apply_transform_on_input  # noqa: F401
 
-import os
 import subprocess
-
-BITBLAS_DEFAULT_CACHE_PATH = os.path.expanduser("~/.cache/bitblas")
+from bitblas.common import BITBLAS_DEFAULT_CACHE_PATH
 
 
 def get_commit_id():

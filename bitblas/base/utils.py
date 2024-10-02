@@ -17,6 +17,7 @@ from bitblas.base.arch import TileDevice, CUDA
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.hint import Hint
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
+from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
 import tempfile
 import itertools
 from tvm.ir.supply import GlobalVarSupply
@@ -271,8 +272,12 @@ def apply_and_build_parallel(func,
         if map_result.status == StatusKind.TIMEOUT:
             logger.debug("LocalBuilder: Timeout")
         elif map_result.status == StatusKind.EXCEPTION:
-            # TODO(lei): redirect the exception to file if needed
-            logger.debug("LocalBuilder: An exception occurred {}".format(map_result.value))
+            local_build_error = str(map_result.value)
+            if len(local_build_error) > MAX_ERROR_MESSAGE_LENGTH:
+                local_build_error = (
+                    local_build_error[:MAX_ERROR_MESSAGE_LENGTH // 2] + "\t...\t" +
+                    local_build_error[-MAX_ERROR_MESSAGE_LENGTH // 2:])
+            logger.debug("LocalBuilder: An exception occurred {}".format(local_build_error))
             continue
         elif map_result.status == StatusKind.COMPLETE:
             idx, code, artifact_path = map_result.value

@@ -20,6 +20,7 @@ from bitblas.base.arch import get_arch, TileDevice
 from bitblas.base.roller.hint import Hint
 from bitblas.builder.wrapper import TIRWrapper, TLWrapper
 from bitblas.builder.lib_generator import LibraryGenerator
+from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
 from dataclasses import dataclass
 import logging
 import re
@@ -189,13 +190,17 @@ class Operator(object):
                         if len(self.scheduled_ir_module.functions) > 1:
                             raise ValueError("Only support one function in the module")
                         tl_prim_func = list(self.scheduled_ir_module.functions.values())[0]
-                        rt_mod, _ = tl.lower(tl_prim_func, target=target)
+                        with tvm.transform.PassContext(
+                                config={
+                                    "tir.use_async_copy": True,
+                                    "tir.disable_cse_tir": True,
+                                    **(self.pass_context if self.pass_context else {})
+                                }):
+                            rt_mod, _ = tl.lower(tl_prim_func, target=target)
                     else:
                         raise ValueError(f"Unsupported backend: {self.backend}")
             except Exception as build_runtime_error:  # noqa: F841
-                MAX_ERROR_MESSAGE_LENGTH = 100
                 error_message = str(build_runtime_error)
-
                 # Truncate only if the message exceeds the maximum length
                 if len(error_message) > MAX_ERROR_MESSAGE_LENGTH:
                     truncated_message = f"{error_message[-MAX_ERROR_MESSAGE_LENGTH:]} [...]"
@@ -357,6 +362,10 @@ class Operator(object):
             func_or_scheduler = (self.prim_func if self.is_tir_backend() else self.scheduler)
             scheduled_mod, best_hint = self.apply_fast_tuning(
                 func_or_scheduler, target, topk, parallel_build=parallel_build)
+
+            if scheduled_mod is None:
+                raise RuntimeError("Failed to apply fast tuning for operator {}.".format(self.name))
+
             assert (
                 len(scheduled_mod.get_global_vars()) == 1
             ), "The optimized module should only have one global variable for default schedule."
