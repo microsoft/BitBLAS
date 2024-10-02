@@ -401,7 +401,8 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             conditions.append(config.use_async is False)
             return any(conditions)
 
-        cache_write_required = check_require_cache(func, config=config)
+        # cache_write_required = check_require_cache(func, config=config)
+        cache_write_required = True
 
         # Step 1. Normalize generic matmul to C[S, I, J] += A[S, I, K] * B[S, J, K]/B[S, K, J]
         if not (func.attrs is not None and "dlight.tensorcore_prenormlized" in func.attrs.keys()):

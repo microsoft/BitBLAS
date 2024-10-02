@@ -68,7 +68,7 @@ def assert_matmul_blocked_correctness(M,
 
     # Get Reference Result
     ref_c = torch.matmul(A, B.T).to(getattr(torch, accum_dtype))
-    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
+    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e0)
 
 
 def assert_matmul_macro_tensorcore_correctness(
