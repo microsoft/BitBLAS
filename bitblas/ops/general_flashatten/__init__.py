@@ -8,7 +8,7 @@ from ..operator import OperatorConfig, Operator, BaseKernelNameGenerator
 from ...base.arch.cuda import CUDA
 from ...utils import auto_detect_nvidia_target
 from dataclasses import dataclass
-from typing import Union, Tuple, Literal, Optional
+from typing import Union, Tuple, Literal, Optional, Any
 import logging
 import torch
 
@@ -88,7 +88,7 @@ class FlashAtten(Operator):
         config: FlashAttenConfig,
         name: str = "flashatten",
         target: Optional[Union[str, Target]] = None,
-        enable_tuning: bool = True,
+        enable_tuning: bool = False,
         from_database: bool = False,
         backend: str = "tl",
     ):
@@ -157,8 +157,23 @@ class FlashAtten(Operator):
         else:
             raise ValueError("Currently only support native compute for scheduler")
 
+    def forward(self, Q, K, V, output=None) -> Any:
+        args = []
+        args.append(Q)
+        args.append(K)
+        args.append(V)
+        args.append(output)
+        if self.lib is None:
+            self._forward_from_torch_func(*args)
+        else:
+            stream = torch.cuda.current_stream(device=Q.device)
+            self._forward_from_prebuild_lib(*args, stream=stream.cuda_stream)
+
     def cleanup(self):
         self._free_workspace()
+
+    def __call__(self, *args: Any, **kwds: Any) -> Any:
+        return self.forward(*args, **kwds)
 
     @property
     def batch(self):
