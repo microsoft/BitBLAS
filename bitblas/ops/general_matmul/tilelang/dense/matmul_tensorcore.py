@@ -320,9 +320,9 @@ class MatmulFineGrainScheduler(BaseScheduler):
 
         def __repr__(self):
             return ("{"
-                    f"block_M={self.block_M},"
-                    f"block_N={self.block_N},"
-                    f"block_K={self.block_K},"
+                    f"block_M={self.block_row_warps * self.warp_row_tiles},"
+                    f"block_N={self.block_col_warps * self.warp_col_tiles},"
+                    f"block_K={self.chunk},"
                     f"threads={self.block_row_warps * self.block_col_warps * warp_size},"
                     f"num_stages={self.num_stages},"
                     f"enable_rasterization={self.enable_rasterization})"

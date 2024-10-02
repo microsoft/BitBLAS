@@ -59,7 +59,7 @@ def matmul_finetune(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, w
         propagate_b=False,
     )
     matmul = Matmul(config=matmul_config, enable_tuning=False, backend="tl")
-    matmul.hardware_aware_finetune(topk=10)
+    matmul.hardware_aware_finetune(topk=20)
     assert get_codegen_result(matmul)
 
 
@@ -78,7 +78,7 @@ def test_matmul_codegen_default():
 
 def test_matmul_finetune():
     matmul_finetune(768, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1,
-                    False, False, None),
+                    False, False, None)
 
 
 # fmt: on

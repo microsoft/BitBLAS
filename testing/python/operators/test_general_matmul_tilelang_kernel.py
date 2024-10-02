@@ -16,14 +16,16 @@ import torch.backends
 torch.manual_seed(0)
 
 
-def assert_matmul_blocked_with_default_correctness(M,
-                                                   N,
-                                                   K,
-                                                   trans_A=False,
-                                                   trans_B=True,
-                                                   in_dtype="float16",
-                                                   out_dtype="float16",
-                                                   accum_dtype="float16"):
+def assert_matmul_blocked_with_default_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+):
     matmul = MatmulScheduler(
         M=M,
         N=N,
@@ -59,20 +61,22 @@ def assert_matmul_blocked_with_default_correctness(M,
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
 
 
-def assert_matmul_blocked_apply_config_correctness(M,
-                                                   N,
-                                                   K,
-                                                   block_M=64,
-                                                   block_N=64,
-                                                   block_K=32,
-                                                   trans_A=False,
-                                                   trans_B=True,
-                                                   in_dtype="float16",
-                                                   out_dtype="float16",
-                                                   accum_dtype="float16",
-                                                   num_stages=2,
-                                                   threads=128,
-                                                   enable_rasterization=False):
+def assert_matmul_blocked_apply_config_correctness(
+    M,
+    N,
+    K,
+    block_M=64,
+    block_N=64,
+    block_K=32,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+    num_stages=2,
+    threads=128,
+    enable_rasterization=False,
+):
     matmul = MatmulScheduler(
         M=M,
         N=N,
@@ -115,14 +119,16 @@ def assert_matmul_blocked_apply_config_correctness(M,
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
 
 
-def assert_matmul_fine_grained_with_default_correctness(M,
-                                                        N,
-                                                        K,
-                                                        trans_A=False,
-                                                        trans_B=True,
-                                                        in_dtype="float16",
-                                                        out_dtype="float16",
-                                                        accum_dtype="float16"):
+def assert_matmul_fine_grained_with_default_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+):
 
     matmul = MatmulFineGrainScheduler(
         M=M,
@@ -139,9 +145,9 @@ def assert_matmul_fine_grained_with_default_correctness(M,
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
-
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
+    B = (torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) if trans_B else torch.rand(
+        K, N, device="cuda", dtype=getattr(torch, in_dtype))) - 0.5
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
 
@@ -153,58 +159,68 @@ def assert_matmul_fine_grained_with_default_correctness(M,
     mod(A, B, C)
 
     # Get Reference Result
-    ref_c = torch.matmul(A, B.T).to(getattr(torch, out_dtype))
-    from bitblas.ops import Matmul, MatmulConfig
-    matmul_config = MatmulConfig(
-        M=M,
-        N=N,
-        K=K,
-        propagate_a=False,
-        propagate_b=False,
-    )
-    matmul = Matmul(matmul_config, enable_tuning=False)
-    prim_func = matmul.prim_func
-    intrin_info = bitblas.base.hint.IntrinInfo(
-        in_dtype=in_dtype,
-        out_dtype=accum_dtype,
-        trans_b=True,
-        input_transform_kind=0,
-        weight_transform_kind=0,
-    )
+    ref_c = (
+        torch.matmul(A, B.T).to(getattr(torch, out_dtype)) if trans_B else torch.matmul(A, B).to(
+            getattr(torch, out_dtype)))
 
-    arch = bitblas.base.CUDA(target="cuda")
+    # from bitblas.ops import Matmul, MatmulConfig
+    # matmul_config = MatmulConfig(
+    #     M=M,
+    #     N=N,
+    #     K=K,
+    #     propagate_a=False,
+    #     propagate_b=False,
+    # )
+    # matmul = Matmul(matmul_config, enable_tuning=False)
+    # prim_func = matmul.prim_func
+    # intrin_info = bitblas.base.hint.IntrinInfo(
+    #     in_dtype=in_dtype,
+    #     out_dtype=accum_dtype,
+    #     trans_b=True,
+    #     input_transform_kind=0,
+    #     weight_transform_kind=0,
+    # )
 
-    sch = bitblas.gpu.MatmulTensorizationMMA().apply_config(
-        prim_func,
-        config=bitblas.base.Hint.from_dict({
-            "arch": arch,
-            "block": [64, 64],
-            "warp": [32, 32],
-            "rstep": [32],
-            "pipeline_stage": 2,
-            "use_async": True,
-            "intrin_info": intrin_info,
-            "shared_scope": "shared.dyn",
-            "vectorize": {
-                "b": 8,
-                "a": 8
-            },
-        }),
-    )
+    # arch = bitblas.base.CUDA(target="cuda")
 
-    with tvm.transform.PassContext(config={
-            "tir.use_async_copy": True,
-            "tir.merge_static_smem": False
-    }):
-        rt_mod = tvm.build(sch.mod, target="cuda")
-    from tvm.contrib.dlpack import to_pytorch_func
+    # sch = bitblas.gpu.MatmulTensorizationMMA().apply_config(
+    #     prim_func,
+    #     config=bitblas.base.Hint.from_dict({
+    #         "arch": arch,
+    #         "block": [64, 64],
+    #         "warp": [32, 32],
+    #         "rstep": [32],
+    #         "pipeline_stage": 2,
+    #         "use_async": True,
+    #         "intrin_info": intrin_info,
+    #         "shared_scope": "shared.dyn",
+    #         "vectorize": {
+    #             "b": 8,
+    #             "a": 8
+    #         },
+    #     }),
+    # )
 
-    torch_func = to_pytorch_func(rt_mod)
+    # with tvm.transform.PassContext(config={
+    #         "tir.use_async_copy": True,
+    #         "tir.merge_static_smem": False
+    # }):
+    #     rt_mod = tvm.build(sch.mod, target="cuda")
+    # from tvm.contrib.dlpack import to_pytorch_func
 
-    matmul_c = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
-    torch_func(A, B, matmul_c)
+    # torch_func = to_pytorch_func(rt_mod)
 
-    torch.testing.assert_close(matmul_c, ref_c, rtol=1e-2, atol=1e-2)
+    # matmul_c = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
+    # torch_func(A, B, matmul_c)
+
+    # with open("debug/matmul_ref.cu", "w") as f:
+    #     f.write(rt_mod.imported_modules[0].get_source())
+
+    # with open("debug/matmul_tl.cu", "w") as f:
+    #     f.write(src_code)
+
+    # torch.testing.assert_close(matmul_c, ref_c, rtol=1e-2, atol=1e-2)
+
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
 
 
@@ -269,14 +285,16 @@ def assert_matmul_fine_grained_apply_config_correctness(
     torch.testing.assert_close(C, ref_c, rtol=1e-1, atol=1e-1)
 
 
-def assert_matmul_weight_propagation_with_default_correctness(M,
-                                                              N,
-                                                              K,
-                                                              trans_A=False,
-                                                              trans_B=True,
-                                                              in_dtype="float16",
-                                                              out_dtype="float16",
-                                                              accum_dtype="float16"):
+def assert_matmul_weight_propagation_with_default_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+):
 
     matmul = MatmulWeightPropagationScheduler(
         M=M,

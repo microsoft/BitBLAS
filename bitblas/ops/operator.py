@@ -192,13 +192,22 @@ class Operator(object):
                         rt_mod, _ = tl.lower(tl_prim_func, target=target)
                     else:
                         raise ValueError(f"Unsupported backend: {self.backend}")
-            except Exception:  # noqa: F841
+            except Exception as build_runtime_error:  # noqa: F841
+                MAX_ERROR_MESSAGE_LENGTH = 100
+                error_message = str(build_runtime_error)
+
+                # Truncate only if the message exceeds the maximum length
+                if len(error_message) > MAX_ERROR_MESSAGE_LENGTH:
+                    truncated_message = f"{error_message[-MAX_ERROR_MESSAGE_LENGTH:]} [...]"
+                else:
+                    truncated_message = error_message
+
                 logger.debug(
                     BUILD_RUNTIME_LIBRARY_FAILED_MESSAGE.format(
                         self.__class__.__name__,
                         target,
                         "optimized",
-                        "Failed to build optimized module",
+                        truncated_message,
                     ))
         else:
             # For non-CUDA platforms or when no optimized function is available, build with the primary function
@@ -303,7 +312,7 @@ class Operator(object):
             return (best.sch.mod, best.config) if best is not None else (None, None)
         elif self.is_tilelang_backend():
             # Finetune the schedule
-            tuning_configs = self.get_tl_tuning_config()
+            tuning_configs = self.get_tl_tuning_config(topk=topk)
             _, best = tl_apply_and_build(
                 func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=parallel_build)
             # Return the best Config as Hint

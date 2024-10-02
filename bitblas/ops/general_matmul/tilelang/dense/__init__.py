@@ -59,7 +59,32 @@ def select_scheduler(
         raise NotImplementedError
 
     trans_A, trans_B = parse_layout(layout)
-    if is_non_transform_kind(propagate_a) and is_non_transform_kind(propagate_b):
+
+    def can_apply_fine_grain_scheduler(trans_A, trans_B, propagate_a, propagate_b):
+        conditions = []
+        conditions.append(trans_A is False and trans_B is True)
+        conditions.append(propagate_a == TransformKind.NonTransform)
+        conditions.append(propagate_b == TransformKind.NonTransform)
+        return all(conditions)
+
+    def can_apply_block_scheduler(propagate_a, propagate_b):
+        conditions = []
+        conditions.append(propagate_a == TransformKind.NonTransform)
+        conditions.append(propagate_b == TransformKind.NonTransform)
+        return all(conditions)
+
+    if can_apply_fine_grain_scheduler(trans_A, trans_B, propagate_a, propagate_b):
+        return MatmulFineGrainScheduler(
+            M=M,
+            N=N,
+            K=K,
+            trans_A=trans_A,
+            trans_B=trans_B,
+            in_dtype=in_dtype,
+            out_dtype=out_dtype,
+            accum_dtype=accum_dtype,
+        )
+    elif can_apply_block_scheduler(propagate_a, propagate_b):
         return MatmulScheduler(
             M=M,
             N=N,
