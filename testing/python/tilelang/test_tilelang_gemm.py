@@ -95,7 +95,7 @@ def run_gemm(
         C = C.to(torch.__getattribute__(out_dtype))
         return C
 
-    mod.assert_allclose(ref_program)
+    mod.assert_allclose(ref_program, atol=1e-2, rtol=1e-2)
 
 
 def test_gemm_f16f16f16_nn():

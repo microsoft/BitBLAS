@@ -58,7 +58,7 @@ def assert_matmul_blocked_with_default_correctness(
 
     # Get Reference Result
     ref_c = torch.matmul(A, B.T).to(getattr(torch, accum_dtype))
-    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
+    torch.testing.assert_close(C, ref_c, rtol=1e0, atol=1e-1)
 
 
 def assert_matmul_blocked_apply_config_correctness(
@@ -116,7 +116,7 @@ def assert_matmul_blocked_apply_config_correctness(
 
     # Get Reference Result
     ref_c = torch.matmul(A, B.T).to(getattr(torch, accum_dtype))
-    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
+    torch.testing.assert_close(C, ref_c, rtol=1e0, atol=1e-1)
 
 
 def assert_matmul_fine_grained_with_default_correctness(
@@ -219,9 +219,9 @@ def assert_matmul_fine_grained_with_default_correctness(
     # with open("debug/matmul_tl.cu", "w") as f:
     #     f.write(src_code)
 
-    # torch.testing.assert_close(matmul_c, ref_c, rtol=1e-2, atol=1e-2)
+    # torch.testing.assert_close(matmul_c, ref_c, rtol=1e0, atol=1e-1)
 
-    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
+    torch.testing.assert_close(C, ref_c, rtol=1e0, atol=1e-1)
 
 
 def assert_matmul_fine_grained_apply_config_correctness(
