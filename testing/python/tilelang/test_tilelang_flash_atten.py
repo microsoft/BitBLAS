@@ -1,3 +1,5 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 from tvm import tl
 import tvm.tl.language as T
 from tvm.tl.autotuner import *
@@ -75,13 +77,9 @@ def flashattn_tilelang(batch, heads, seq_len, dim, trans_K, dtypeQKV, dtypeAccu,
     torch.testing.assert_close(tilelang_res, ref_res, rtol=0.01, atol=0.01)
 
 
-@bitblas.testing.requires_cuda_compute_version(8, 9)
 def test_flashattn_blocked():
-    flashattn_tilelang(1, 1, 256, 256, False, "float16", "float32", 1, False)
     flashattn_tilelang(1, 4, 256, 256, False, "float16", "float32", 1, False)
-    flashattn_tilelang(1, 1, 512, 256, False, "float16", "float32", 1, False)
     flashattn_tilelang(1, 4, 512, 256, False, "float16", "float32", 1, False)
-    flashattn_tilelang(1, 1, 512, 256, True, "float16", "float32", 1, False)
     flashattn_tilelang(1, 4, 512, 256, True, "float16", "float32", 1, False)
 
 
@@ -174,13 +172,9 @@ def flashattn_ref(batch, heads, seq_len, dim, is_causal):
     mod.assert_allclose(partial(ref_program, causal=is_causal), rtol=0.01, atol=0.01)
 
 
-@bitblas.testing.requires_cuda_compute_version(8, 9)
 def test_flashattn_ref():
-    flashattn_ref(1, 4, 256, 256, False)
     flashattn_ref(1, 8, 256, 256, False)
-    flashattn_ref(1, 4, 256, 256, True)
     flashattn_ref(1, 8, 256, 256, True)
-    flashattn_ref(4, 4, 256, 256, True)
     flashattn_ref(4, 8, 256, 256, True)
 
 

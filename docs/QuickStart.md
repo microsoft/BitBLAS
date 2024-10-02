@@ -241,3 +241,50 @@ print("BitBLAS output:", res_bitblas)
 # Verify the outputs are close within specified tolerances
 torch.testing.assert_close(res_bitblas, res_cuda_old, rtol=1e-0, atol=1e-1)
 ```
+
+## Example: bitblas.FlashAtten module
+
+```python
+import torch
+torch.random.manual_seed(0)
+from flash_attn.flash_attn_interface import flash_attn_func
+
+type_convert_map = {
+    "float16": torch.float16
+}
+
+flashatten_config = FlashAttenConfig(
+    batch=1,
+    heads=4,
+    seq_len=256,
+    dim=256,
+    Q_dtype="float16",
+    K_dtype="float16",
+    V_dtype="float16",
+    Accu_dtype="float32",
+    Out_dtype="float16",
+    layout="nnn",
+    is_causal=False)
+flashatten = FlashAtten(config=flashatten_config, enable_tuning=False, backend="tl")
+
+Q_shape = [batch, seq_len, heads, dim]
+V_shape = [batch, seq_len, heads, dim]
+if layout == "ntn":
+    K_shape = [batch, dim, heads, seq_len]
+else:
+    K_shape = [batch, seq_len, heads, dim]
+Out_shape = [batch, seq_len, heads, dim]
+q = torch.rand(Q_shape, dtype=type_convert_map[Q_dtype]).cuda() - 0.5
+k = torch.rand(K_shape, dtype=type_convert_map[K_dtype]).cuda() - 0.5
+k_ref = k
+if layout == "ntn":
+    k_ref = k.permute((0, 3, 2, 1))
+v = torch.rand(V_shape, dtype=type_convert_map[V_dtype]).cuda() - 0.5
+tl_output = torch.rand(Out_shape, dtype=type_convert_map[V_dtype]).cuda()
+
+ref_output = flash_attn_func(q, k_ref, v, causal=is_causal)
+flashatten(q, k, v, output=tl_output)
+print("Flash Attention lib output:", ref_output)
+print("BitBLAS Tilelang output:", tl_output)
+torch.testing.assert_close(tl_output, ref_output, rtol=1e-1, atol=1e-1)
+```

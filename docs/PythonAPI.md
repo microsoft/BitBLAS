@@ -77,6 +77,62 @@ Allows the object to be called like a function, forwarding the call to the `forw
 
 - **M**, **N**, **K**, **A_dtype**, **W_dtype**, **out_dtype**, **accum_dtype**, **storage_dtype**, **with_scaling**, **with_zeros**, **group_size**, **fast_decoding**, **with_bias**, **layout**, **zeros_mode**: These properties correspond to the parameters defined in `MatmulConfig`, providing easy access to the configuration details.
 
+## FlashAtten
+
+`FlashAtten` is an operator class that performs multi-heads attention process of Transformers in flash attention optimization $Out = Softmax(Q \times K^T / \sqrt {dim}) \times V$. 
+
+### FlashAttenConfig:
+
+`FlashAttenConfig` is a configuration class for the `FlashAtten` operator, specifying the flash attention operation's parameters and behaviors.
+
+### Parameters:
+
+- **batch** *(int)*: The batch size of multi-head attention.
+- **heads** *(int)*: The head number of Q, K and V (current only support they have same heads).
+- **seq_len** *(int)*: The sequence length.
+- **dim** *(int)*: The hidden dimension of the attention operation.
+- **Q_dtype** *(str, default='float16')*: The data type of Q.
+    - Choices: `float16`.
+- **K_dtype** *(str, default='float16')*: The data type of K.
+    - Choices: `float16`.
+- **V_dtype** *(str, default='float16')*: The data type of V.
+    - Choices: `float16`.
+- **Accu_dtype** *(str, default='float32')*: The data type used for accumulation.
+    - Choices: `float32`.
+- **Out_dtype** *(str, default='float16')*: The data type of Output.
+    - Choices: `float16`.
+- **layout** *(Literal['nnn', 'ntn'], default='nnn')*: The layout of the flash attention input.
+    - `'nnn'`: Q, K, and V have the same layout as $[batch, seq_len, heads, dim]$.
+    - `'ntn'`: Q and V have layout as above, while K has layout of $[batch, dim, heads, seq_len]$.
+- **is_causal** *(bool, default=False)*: Indicates whether a causal mask is added to the flash attention process.
+
+### Initialization:
+
+```python
+FlashAtten(config: FlashAttenConfig)
+```
+
+- **config** *(FlashAttenConfig)*: The configuration for the flash attention operation.
+
+### Methods:
+
+#### `forward(Q, K, V, output=None) -> Any`
+
+Performs the flash attention with given input tensors.
+
+- **Q** *(Tensor)*: The input tensor Q.
+- **K** *(Tensor)*: The input tensor K.
+- **V** *(Tensor)*: The input tensor V.
+- **output** *(Optional[Tensor], default=None)*: The pre-allocated output tensor.
+
+#### `__call__(*args: Any) -> Any`
+
+Allows the object to be called like a function, forwarding the call to the `forward` method.
+
+
+### Properties:
+
+- **batch**, **heads**, **seq_len**, **dim**, **Q_dtype**, **K_dtype**, **V_dtype**, **Accu_dtype**, **Out_dtype**, **layout**, **is_causal**: These properties correspond to the parameters defined in `FlashAttenConfig`, providing easy access to the configuration details.
 
 ## Linear
 
