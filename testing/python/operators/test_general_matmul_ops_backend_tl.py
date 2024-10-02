@@ -38,8 +38,20 @@ def matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, la
     assert get_codegen_result(matmul)
 
 
-def matmul_finetune(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, with_bias,
-                    group_size, with_scaling, with_zeros, zeros_mode):
+def matmul_finetune(M,
+                    N,
+                    K,
+                    A_dtype,
+                    W_dtype,
+                    accum_dtype,
+                    out_dtype,
+                    layout,
+                    with_bias,
+                    group_size,
+                    with_scaling,
+                    with_zeros,
+                    zeros_mode,
+                    propagate_b=False):
 
     matmul_config = MatmulConfig(
         M=M,
@@ -56,7 +68,7 @@ def matmul_finetune(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, w
         with_zeros=with_zeros,
         zeros_mode=zeros_mode,
         propagate_a=False,
-        propagate_b=False,
+        propagate_b=propagate_b,
     )
     matmul = Matmul(config=matmul_config, enable_tuning=False, backend="tl")
     matmul.hardware_aware_finetune(topk=20)
@@ -77,8 +89,10 @@ def test_matmul_codegen_default():
 
 
 def test_matmul_finetune():
-    matmul_finetune(768, 768, 768, "float16", "float16", "float16", "float16", "nt", False, -1,
-                    False, False, None)
+    matmul_finetune(1024, 1024, 1024, "float16", "float16", "float16", "float16", "nt", False, -1,
+                    False, False, None, False)
+    matmul_finetune(1024, 1024, 1024, "float16", "float16", "float16", "float16", "nt", False, -1,
+                    False, False, None, False)
 
 
 # fmt: on

@@ -62,7 +62,8 @@ def select_scheduler(
 
     def can_apply_fine_grain_scheduler(trans_A, trans_B, propagate_a, propagate_b):
         conditions = []
-        conditions.append(trans_A is False and trans_B is True)
+        conditions.append(trans_A is False)
+        conditions.append(trans_B is True)
         conditions.append(propagate_a == TransformKind.NonTransform)
         conditions.append(propagate_b == TransformKind.NonTransform)
         return all(conditions)
@@ -73,6 +74,25 @@ def select_scheduler(
         conditions.append(propagate_b == TransformKind.NonTransform)
         return all(conditions)
 
+    def can_apply_weight_propagation_scheduler(trans_A, trans_B, propagate_a, propagate_b):
+        conditions = []
+        conditions.append(trans_A is False)
+        conditions.append(trans_B is True)
+        conditions.append(propagate_a == TransformKind.NonTransform)
+        conditions.append(propagate_b == TransformKind.LDMatrixTransform)
+        return all(conditions)
+
+    if can_apply_weight_propagation_scheduler(trans_A, trans_B, propagate_a, propagate_b):
+        return MatmulWeightPropagationScheduler(
+            M=M,
+            N=N,
+            K=K,
+            trans_A=trans_A,
+            trans_B=trans_B,
+            in_dtype=in_dtype,
+            out_dtype=out_dtype,
+            accum_dtype=accum_dtype,
+        )
     if can_apply_fine_grain_scheduler(trans_A, trans_B, propagate_a, propagate_b):
         return MatmulFineGrainScheduler(
             M=M,
@@ -96,4 +116,4 @@ def select_scheduler(
             accum_dtype=accum_dtype,
         )
     else:
-        raise ValueError(f"Unsupported transform kind: {propagate_a}, {propagate_b}")
+        raise ValueError(f"Unsupported configuration: {layout}, {propagate_a}, {propagate_b}")
