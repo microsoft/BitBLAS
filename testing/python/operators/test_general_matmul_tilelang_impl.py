@@ -53,8 +53,8 @@ def assert_matmul_blocked_correctness(M,
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
@@ -111,8 +111,8 @@ def assert_matmul_macro_tensorcore_correctness(
     # src_code represents generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
@@ -170,8 +170,8 @@ def assert_tl_matmul_with_ladder_weight_only_transform_correctness(
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
+    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
+    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
     ladder_permutate_config = bitblas.ops.LadderPermutateConfig(
