@@ -65,3 +65,6 @@ class CUDA(TileDevice):
             TensorInstruction("wmma", get_wmma_intrin_group, [16, 16]),
         )
         return [t.shape for t in self.available_tensor_instructions]
+
+    def __repr__(self):
+        return f"CUDA({self.target})"

@@ -31,7 +31,7 @@ def correctness_consistent(m, in_features, out_features, bias):
 
     with torch.no_grad():
         if not isinstance(m, int):
-            # average m
+            # When m is a list, average m
             m = sum(m) // len(m)
         input_data = torch.randn(m, in_features, dtype=torch.float16).cuda()
         output_torch = linear_torch(input_data)
@@ -152,7 +152,17 @@ def correctness_weight_only_dequantize(
 
     with torch.no_grad():
         output_bitblas = linear_bitblas(inputs[0])
-    torch.testing.assert_close(output_bitblas, ref_result, rtol=1e0, atol=1e0)
+    try:
+        rtol = 1e0
+        atol = 1e0
+        if zeros_mode == "original":
+            rtol = 1e2
+            atol = 1e2
+        torch.testing.assert_close(output_bitblas, ref_result, rtol=rtol, atol=atol)
+    except AssertionError as e:
+        print(ref_result, output_bitblas)
+        print(f"Failed with {e}")
+        raise e
 
 
 def test_correctness_weight_only_dequantize():

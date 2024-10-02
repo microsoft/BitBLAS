@@ -20,6 +20,7 @@ from bitblas.base.arch import get_arch, TileDevice
 from bitblas.base.roller.hint import Hint
 from bitblas.builder.wrapper import TIRWrapper, TLWrapper
 from bitblas.builder.lib_generator import LibraryGenerator
+from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
 from dataclasses import dataclass
 import logging
 import re
@@ -189,16 +190,29 @@ class Operator(object):
                         if len(self.scheduled_ir_module.functions) > 1:
                             raise ValueError("Only support one function in the module")
                         tl_prim_func = list(self.scheduled_ir_module.functions.values())[0]
-                        rt_mod, _ = tl.lower(tl_prim_func, target=target)
+                        with tvm.transform.PassContext(
+                                config={
+                                    "tir.use_async_copy": True,
+                                    "tir.disable_cse_tir": True,
+                                    **(self.pass_context if self.pass_context else {})
+                                }):
+                            rt_mod, _ = tl.lower(tl_prim_func, target=target)
                     else:
                         raise ValueError(f"Unsupported backend: {self.backend}")
-            except Exception:  # noqa: F841
+            except Exception as build_runtime_error:  # noqa: F841
+                error_message = str(build_runtime_error)
+                # Truncate only if the message exceeds the maximum length
+                if len(error_message) > MAX_ERROR_MESSAGE_LENGTH:
+                    truncated_message = f"{error_message[-MAX_ERROR_MESSAGE_LENGTH:]} [...]"
+                else:
+                    truncated_message = error_message
+
                 logger.debug(
                     BUILD_RUNTIME_LIBRARY_FAILED_MESSAGE.format(
                         self.__class__.__name__,
                         target,
                         "optimized",
-                        "Failed to build optimized module",
+                        truncated_message,
                     ))
         else:
             # For non-CUDA platforms or when no optimized function is available, build with the primary function
@@ -283,9 +297,9 @@ class Operator(object):
     def post_process(self, code: str) -> str:
         return code
 
-    def get_tl_tuning_config(self):
+    def get_tl_tuning_config(self, topk: int = 10):
         assert self.is_tilelang_backend(), "Only support tilelang backend"
-        return self.scheduler.get_hardware_aware_configs(self.arch)
+        return self.scheduler.get_hardware_aware_configs(self.arch, topk)
 
     def apply_fast_tuning(
         self,
@@ -303,9 +317,9 @@ class Operator(object):
             return (best.sch.mod, best.config) if best is not None else (None, None)
         elif self.is_tilelang_backend():
             # Finetune the schedule
-            tuning_configs = self.get_tl_tuning_config()
+            tuning_configs = self.get_tl_tuning_config(topk=topk)
             _, best = tl_apply_and_build(
-                func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=False)
+                func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=parallel_build)
             # Return the best Config as Hint
             return (best.sch.mod, best.config) if best is not None else (None, None)
 
@@ -348,6 +362,10 @@ class Operator(object):
             func_or_scheduler = (self.prim_func if self.is_tir_backend() else self.scheduler)
             scheduled_mod, best_hint = self.apply_fast_tuning(
                 func_or_scheduler, target, topk, parallel_build=parallel_build)
+
+            if scheduled_mod is None:
+                raise RuntimeError("Failed to apply fast tuning for operator {}.".format(self.name))
+
             assert (
                 len(scheduled_mod.get_global_vars()) == 1
             ), "The optimized module should only have one global variable for default schedule."

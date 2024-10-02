@@ -21,9 +21,10 @@ class BaseScheduler(ABC):
         else:
             raise ValueError(f"Unsupported type: {type(stmt)}")
 
-    def get_hardware_aware_configs(self, arch: TileDevice = None):
+    def get_hardware_aware_configs(self, arch: TileDevice = None, topk: int = 10):
         raise NotImplementedError(
-            f"{self.__class__.__name__} does not support hardware-aware tuning for {arch}")
+            f"{self.__class__.__name__} does not support hardware-aware tuning for {arch} with topk={topk}"
+        )
 
     def activate_simplify(self):
         self._enable_simplify = True

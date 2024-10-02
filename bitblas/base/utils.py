@@ -13,9 +13,11 @@ from tvm.tir import Schedule
 from tvm.relax.expr import Function
 import bitblas
 from .analysis import get_root_block, get_reduction_blocks, find_var_from_func
-from bitblas.base.arch import CUDA
+from bitblas.base.arch import TileDevice, CUDA
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
+from bitblas.base.roller.hint import Hint
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
+from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
 import tempfile
 import itertools
 from tvm.ir.supply import GlobalVarSupply
@@ -61,6 +63,37 @@ class CompileResult:
         profile_tensors = get_dummy_input_arrays(func, device, distribution=data_distribution)
         latency = self.time_evaluator(*profile_tensors).mean * 1e3
         return latency
+
+
+def get_roller_hints_from_func(func: tir.PrimFunc,
+                               arch: TileDevice,
+                               topk: int = 10,
+                               tensorcore_only: bool = False,
+                               allow_gemv: bool = False) -> Optional[List[Hint]]:
+    if tensorcore_only:
+        try:
+            tensorized_func, tags = get_tensorized_func_and_tags(
+                func, arch.target, allow_gemv=allow_gemv)
+        except Exception as e_msg:
+            logger.debug("Get tensorized func and tags failed: ", e_msg)
+            tags = None
+        if tags and tensorized_func:
+            policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
+            return policy.emit_config(topk)
+        else:
+            return None
+    else:
+        policy = DefaultPolicy(func=func, arch=arch)
+        tensorized_func = None
+        try:
+            tensorized_func, tags = get_tensorized_func_and_tags(
+                func, arch.target, allow_gemv=allow_gemv)
+        except Exception as e_msg:
+            logger.debug("Get tensorized func and tags failed: ", e_msg)
+            tags = None
+        if tags and tensorized_func:
+            policy = TensorCorePolicy(func=tensorized_func, arch=arch, tags=tags)
+        return policy.emit_config(topk)
 
 
 def _apply_config(
@@ -239,8 +272,12 @@ def apply_and_build_parallel(func,
         if map_result.status == StatusKind.TIMEOUT:
             logger.debug("LocalBuilder: Timeout")
         elif map_result.status == StatusKind.EXCEPTION:
-            # TODO(lei): redirect the exception to file if needed
-            logger.debug("LocalBuilder: An exception occurred {}".format(map_result.value))
+            local_build_error = str(map_result.value)
+            if len(local_build_error) > MAX_ERROR_MESSAGE_LENGTH:
+                local_build_error = (
+                    local_build_error[:MAX_ERROR_MESSAGE_LENGTH // 2] + "\t...\t" +
+                    local_build_error[-MAX_ERROR_MESSAGE_LENGTH // 2:])
+            logger.debug("LocalBuilder: An exception occurred {}".format(local_build_error))
             continue
         elif map_result.status == StatusKind.COMPLETE:
             idx, code, artifact_path = map_result.value
