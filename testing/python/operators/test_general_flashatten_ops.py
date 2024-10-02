@@ -12,7 +12,11 @@ def flashatten_forward(batch, heads, seq_len, dim, Q_dtype, K_dtype, V_dtype,
                        Accu_dtype, Out_dtype, layout, is_causal):
     import torch
     torch.random.manual_seed(0)
-    from flash_attn.flash_attn_interface import flash_attn_func
+    try:
+        from flash_attn.flash_attn_interface import flash_attn_func
+    except ImportError:
+        print("flash_attn is not installed, skipping test")
+        return True
 
     type_convert_map = {
         "float16": torch.float16
