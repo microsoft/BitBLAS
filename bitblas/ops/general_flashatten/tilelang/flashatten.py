@@ -26,7 +26,7 @@ class FlashAttenScheduler(BaseScheduler):
     # block config
     block_M: int = 64
     block_N: int = 64
-    num_stages: int = 2
+    num_stages: int = 1
     threads: int = 128
     enable_rasterization: bool = False
 
@@ -44,7 +44,7 @@ class FlashAttenScheduler(BaseScheduler):
     def with_default_config(self):
         block_M = getattr(self, "block_M", 64)
         block_N = getattr(self, "block_N", 64)
-        num_stages = getattr(self, "num_stages", 2)
+        num_stages = getattr(self, "num_stages", 1)
         threads = getattr(self, "threads", 128)
         enable_rasterization = getattr(self, "rasterization", False)
         return self.apply_config(
@@ -139,9 +139,6 @@ class FlashAttenScheduler(BaseScheduler):
                         score_QK[i, j] = T.exp2(score_QK[i, j] - local_rowmax[i])
                     for i in T.Parallel(block_M):
                         score_scale[i] = T.exp2(prev_rowmax[i] - local_rowmax[i])
-                    T.reduce_sum(score_QK, score_QK_sum, dim=1)
-                    for i in T.Parallel(block_M):
-                        global_l[i] = global_l[i] * score_scale[i] + score_QK_sum[i]
                     for i, j in T.Parallel(block_M, dim):
                         block_output[i, j] *= score_scale[i]
                     T.copy(score_QK, score_QK_qkvtype)
@@ -151,6 +148,9 @@ class FlashAttenScheduler(BaseScheduler):
                         block_output,
                         policy=T.GemmWarpPolicy.FullRow,
                     )
+                    T.reduce_sum(score_QK, score_QK_sum, dim=1)
+                    for i in T.Parallel(block_M):
+                        global_l[i] = global_l[i] * score_scale[i] + score_QK_sum[i]
                 for i, j in T.Parallel(block_M, dim):
                     block_output[i, j] /= global_l[i]
                 T.copy(block_output, Output[by, bx * block_M:(bx + 1) * block_M, bz, :])
