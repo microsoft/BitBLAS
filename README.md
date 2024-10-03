@@ -23,8 +23,6 @@
 
 Tile Language (tile-lang) is an extension of the Apache tvm designed to facilitate the development of simple yet high-performance GPU kernels. The project tile-lang currently supports CUDA devices with architectures including Ampere (sm_80+), Turing (sm_75), and Volta (sm_70).
 
-
-
 This project is co-authored by [nox-410](https://github.com/nox-410) and [chengyupku](https://github.com/chengyupku) and [LeiWang1999](https://github.com/LeiWang1999).
 
 Let's get started with a simple GEMM example.
