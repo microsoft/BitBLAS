@@ -20,10 +20,7 @@ from bitblas.base.roller.hint import Hint
 from bitblas.base.roller.rasterization import NoRasterization
 from bitblas.base.utils import get_roller_hints_from_func
 from dataclasses import dataclass
-from bitblas.ops.general_matmul.tirscript import (
-    matmul_select_implementation,  # noqa: F401
-    matmul_dequantize_select_implementation,  # noqa: F401
-)
+from bitblas.ops.general_matmul.tirscript import (matmul_select_implementation)
 from bitblas.tl.base_hint import BaseTLHint
 
 # GPU warp configuration for NVIDIA GPUs
@@ -530,49 +527,7 @@ class MatmulFineGrainScheduler(BaseScheduler):
 
 
 @dataclass
-class MatmulWeightPropagationScheduler(BaseScheduler):
-    # Fine-grained matrix multiplication scheduler
-    # Allows for more detailed configuration.
-
-    # Operation Configuration
-    M: Optional[int] = None
-    N: Optional[int] = None
-    K: Optional[int] = None
-    in_dtype: str = "float16"
-    out_dtype: str = "float16"
-    trans_A: bool = False
-    trans_B: bool = True
-    accum_dtype: str = "float16"
-
-    # Tensor Core Warp Configuration
-    block_row_warps: int = 2
-    block_col_warps: int = 2
-    warp_row_tiles: int = 32
-    warp_col_tiles: int = 32
-    chunk: int = 32  # Usually determines the K-dimension split size
-
-    # Tiling and Other Optimization Parameters
-    num_stages: int = 2
-    enable_rasterization: bool = False
-
-    def with_default_config(self):
-        block_row_warps = getattr(self, "block_row_warps", 2)
-        block_col_warps = getattr(self, "block_col_warps", 2)
-        warp_row_tiles = getattr(self, "warp_row_tiles", 4)
-        warp_col_tiles = getattr(self, "warp_col_tiles", 4)
-        chunk = getattr(self, "chunk", 16)
-        num_stages = getattr(self, "num_stages", 2)
-        enable_rasterization = getattr(self, "enable_rasterization", False)
-
-        return self.apply_config(
-            block_row_warps=block_row_warps,
-            block_col_warps=block_col_warps,
-            warp_row_tiles=warp_row_tiles,
-            warp_col_tiles=warp_col_tiles,
-            chunk=chunk,
-            num_stages=num_stages,
-            enable_rasterization=enable_rasterization,
-        )
+class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
 
     def apply_config(
         self,

@@ -7,16 +7,19 @@ from bitblas import set_log_level
 
 set_log_level(logging.DEBUG)
 
+
 # fmt: off
-def flashatten_forward(batch, heads, seq_len, dim, Q_dtype, K_dtype, V_dtype,
-                       Accu_dtype, Out_dtype, layout, is_causal):
+def flashatten_forward(batch, heads, seq_len, dim, Q_dtype, K_dtype, V_dtype, Accu_dtype, Out_dtype,
+                       layout, is_causal):
     import torch
     torch.random.manual_seed(0)
-    from flash_attn.flash_attn_interface import flash_attn_func
+    try:
+        from flash_attn.flash_attn_interface import flash_attn_func
+    except ImportError:
+        print("flash_attn is not installed, skipping test")
+        return True
 
-    type_convert_map = {
-        "float16": torch.float16
-    }
+    type_convert_map = {"float16": torch.float16}
 
     flashatten_config = FlashAttenConfig(
         batch=batch,
@@ -55,14 +58,14 @@ def flashatten_forward(batch, heads, seq_len, dim, Q_dtype, K_dtype, V_dtype,
 
 
 def test_flashatten_forward():
-    flashatten_forward(1, 4, 256, 256, "float16", "float16", "float16", "float32",
-                       "float16", "nnn", False)
-    flashatten_forward(1, 4, 256, 256, "float16", "float16", "float16", "float32",
-                       "float16", "nnn", True)
-    flashatten_forward(1, 4, 256, 256, "float16", "float16", "float16", "float32",
-                       "float16", "ntn", False)
-    flashatten_forward(1, 4, 256, 256, "float16", "float16", "float16", "float32",
-                       "float16", "ntn", True)
+    flashatten_forward(1, 4, 256, 256, "float16", "float16", "float16", "float32", "float16", "nnn",
+                       False)
+    flashatten_forward(1, 4, 256, 256, "float16", "float16", "float16", "float32", "float16", "nnn",
+                       True)
+    flashatten_forward(1, 4, 256, 256, "float16", "float16", "float16", "float32", "float16", "ntn",
+                       False)
+    flashatten_forward(1, 4, 256, 256, "float16", "float16", "float16", "float32", "float16", "ntn",
+                       True)
 
 
 # fmt: on

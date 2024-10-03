@@ -93,7 +93,7 @@ class MatmulConfig(OperatorConfig):
 
     def __legalize_propagate(self, propagate):
         if isinstance(propagate, bool):
-            return (TransformKind.IntraWarpTransform if propagate else TransformKind.NonTransform)
+            return (TransformKind.LDMatrixTransform if propagate else TransformKind.NonTransform)
         elif isinstance(propagate, int):
             return TransformKind(propagate)
 
@@ -141,6 +141,9 @@ class MatmulConfig(OperatorConfig):
         if self.A_dtype in ["e4m3_float8", "e5m2_float8", "bfloat16"]:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
             object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
+
+        # TODO(lei): propagation can only be enabled on SM80+ Devices and MI200+
+        # We should add a check here to disable the propagation if the device is not supported.
 
     def __initialize_zeros_mode(self, zeros_mode: Optional[str]):
         if zeros_mode is None:

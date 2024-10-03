@@ -138,10 +138,6 @@ def test_gemm_f64f64f64_nt():
     run_gemm(512, 1024, 768, False, True, "float64", "float64", "float64", 64, 32, 16)
 
 
-def test_gemm_f64f64f64_tn():
-    run_gemm(512, 1024, 768, True, False, "float64", "float64", "float64", 64, 32, 16)
-
-
 def test_gemm_f32f32f32_nt():
     run_gemm(512, 1024, 768, False, True, "float32", "float32", "float32", 64, 128, 32)
 

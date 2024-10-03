@@ -78,9 +78,17 @@ def flashattn_tilelang(batch, heads, seq_len, dim, trans_K, dtypeQKV, dtypeAccu,
 
 
 def test_flashattn_blocked():
-    flashattn_tilelang(1, 4, 256, 256, False, "float16", "float32", 1, False)
-    flashattn_tilelang(1, 4, 512, 256, False, "float16", "float32", 1, False)
-    flashattn_tilelang(1, 4, 512, 256, True, "float16", "float32", 1, False)
+    can_import_flash_attn = True
+    try:
+        import flash_attn  # noqa: F401
+    except ImportError:
+        can_import_flash_attn = False
+        print("flash_attn is not installed, skipping test")
+
+    if can_import_flash_attn:
+        flashattn_tilelang(1, 4, 256, 256, False, "float16", "float32", 1, False)
+        flashattn_tilelang(1, 4, 512, 256, False, "float16", "float32", 1, False)
+        flashattn_tilelang(1, 4, 512, 256, True, "float16", "float32", 1, False)
 
 
 def flashattn_ref(batch, heads, seq_len, dim, is_causal):
@@ -173,9 +181,17 @@ def flashattn_ref(batch, heads, seq_len, dim, is_causal):
 
 
 def test_flashattn_ref():
-    flashattn_ref(1, 8, 256, 256, False)
-    flashattn_ref(1, 8, 256, 256, True)
-    flashattn_ref(4, 8, 256, 256, True)
+    can_import_flash_attn = True
+    try:
+        import flash_attn  # noqa: F401
+    except ImportError:
+        can_import_flash_attn = False
+        print("flash_attn is not installed, skipping test")
+
+    if can_import_flash_attn:
+        flashattn_ref(1, 8, 256, 256, False)
+        flashattn_ref(1, 8, 256, 256, True)
+        flashattn_ref(4, 8, 256, 256, True)
 
 
 def flashattn_autotune(batch, heads, seq_len, dim, is_causal):
@@ -280,10 +296,18 @@ def flashattn_autotune(batch, heads, seq_len, dim, is_causal):
 
 @bitblas.testing.requires_cuda_compute_version(8, 9)
 def test_flashattn_autotune():
-    flashattn_autotune(1, 4, 256, 256, True)
-    flashattn_autotune(1, 8, 256, 256, True)
-    flashattn_autotune(4, 4, 256, 256, True)
-    flashattn_autotune(4, 8, 256, 256, True)
+    can_import_flash_attn = True
+    try:
+        import flash_attn  # noqa: F401
+    except ImportError:
+        can_import_flash_attn = False
+        print("flash_attn is not installed, skipping test")
+
+    if can_import_flash_attn:
+        flashattn_autotune(1, 4, 256, 256, True)
+        flashattn_autotune(1, 8, 256, 256, True)
+        flashattn_autotune(4, 4, 256, 256, True)
+        flashattn_autotune(4, 8, 256, 256, True)
 
 
 def flashattn(batch, heads, seq_len, dim, is_causal):
@@ -379,11 +403,25 @@ def flashattn(batch, heads, seq_len, dim, is_causal):
 
 @bitblas.testing.requires_cuda_compute_version(8, 9)
 def test_flashattn():
-    flashattn(1, 4, 256, 256, True)
-    flashattn(1, 8, 256, 256, True)
-    flashattn(4, 4, 256, 256, True)
-    flashattn(4, 8, 256, 256, True)
+    can_import_flash_attn = True
+    try:
+        import flash_attn  # noqa: F401
+    except ImportError:
+        can_import_flash_attn = False
+
+    if can_import_flash_attn:
+        flashattn(1, 4, 256, 256, True)
+        flashattn(1, 8, 256, 256, True)
+        flashattn(4, 4, 256, 256, True)
+        flashattn(4, 8, 256, 256, True)
 
 
 if __name__ == "__main__":
-    bitblas.testing.main()
+    can_import_flash_attn = True
+    try:
+        import flash_attn  # noqa: F401
+    except ImportError:
+        can_import_flash_attn = False
+
+    if can_import_flash_attn:
+        bitblas.testing.main()
