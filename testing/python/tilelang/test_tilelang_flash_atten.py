@@ -388,7 +388,7 @@ def test_flashattn():
 if __name__ == "__main__":
     can_import_flash_attn = True
     try:
-        import flash_attn # noqa: F401
+        import flash_attn  # noqa: F401
     except ImportError:
         can_import_flash_attn = False
         print("flash_attn is not installed, skipping test")

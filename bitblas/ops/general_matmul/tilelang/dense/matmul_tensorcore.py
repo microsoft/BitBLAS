@@ -20,10 +20,7 @@ from bitblas.base.roller.hint import Hint
 from bitblas.base.roller.rasterization import NoRasterization
 from bitblas.base.utils import get_roller_hints_from_func
 from dataclasses import dataclass
-from bitblas.ops.general_matmul.tirscript import (
-    matmul_select_implementation,  # noqa: F401
-    matmul_dequantize_select_implementation,  # noqa: F401
-)
+from bitblas.ops.general_matmul.tirscript import (matmul_select_implementation)
 from bitblas.tl.base_hint import BaseTLHint
 
 # GPU warp configuration for NVIDIA GPUs
