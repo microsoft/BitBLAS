@@ -395,10 +395,17 @@ def flashattn(batch, heads, seq_len, dim, is_causal):
 
 @bitblas.testing.requires_cuda_compute_version(8, 9)
 def test_flashattn():
-    flashattn(1, 4, 256, 256, True)
-    flashattn(1, 8, 256, 256, True)
-    flashattn(4, 4, 256, 256, True)
-    flashattn(4, 8, 256, 256, True)
+    can_import_flash_attn = True
+    try:
+        import flash_attn  # noqa: F401
+    except ImportError:
+        can_import_flash_attn = False
+
+    if can_import_flash_attn:
+        flashattn(1, 4, 256, 256, True)
+        flashattn(1, 8, 256, 256, True)
+        flashattn(4, 4, 256, 256, True)
+        flashattn(4, 8, 256, 256, True)
 
 
 if __name__ == "__main__":
