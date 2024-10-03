@@ -181,9 +181,17 @@ def flashattn_ref(batch, heads, seq_len, dim, is_causal):
 
 
 def test_flashattn_ref():
-    flashattn_ref(1, 8, 256, 256, False)
-    flashattn_ref(1, 8, 256, 256, True)
-    flashattn_ref(4, 8, 256, 256, True)
+    can_import_flash_attn = True
+    try:
+        import flash_attn  # noqa: F401
+    except ImportError:
+        can_import_flash_attn = False
+        print("flash_attn is not installed, skipping test")
+
+    if can_import_flash_attn:
+        flashattn_ref(1, 8, 256, 256, False)
+        flashattn_ref(1, 8, 256, 256, True)
+        flashattn_ref(4, 8, 256, 256, True)
 
 
 def flashattn_autotune(batch, heads, seq_len, dim, is_causal):
