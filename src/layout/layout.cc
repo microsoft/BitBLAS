@@ -28,7 +28,7 @@
 #include <tvm/tir/op.h>
 #include <tvm/tir/stmt_functor.h>
 
-#include "../../arith/pattern_match.h"
+#include "arith/pattern_match.h"
 #include "utils.h"
 
 namespace tvm {

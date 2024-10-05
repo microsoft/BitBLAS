@@ -30,7 +30,7 @@
 
 #include <queue>
 
-#include "../../arith/ir_mutator_with_analyzer.h"
+#include "arith/ir_mutator_with_analyzer.h"
 #include "../op/parallel.h"
 #include "loop_partition.h"
 #include "loop_vectorize.h"

@@ -27,7 +27,7 @@
 #include <tvm/tir/transform.h>
 #include <tvm/tir/utils.h>
 
-#include "../../arith/ir_mutator_with_analyzer.h"
+#include "arith/ir_mutator_with_analyzer.h"
 #include "../layout/layout.h"
 #include "../layout/utils.h"
 #include "../op/op.h"

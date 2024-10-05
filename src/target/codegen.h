@@ -31,7 +31,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "../../target/source/codegen_c.h"
+#include "target/source/codegen_c.h"
 
 namespace tvm {
 namespace codegen {
