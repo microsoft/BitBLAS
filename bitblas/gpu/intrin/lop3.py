@@ -1677,9 +1677,9 @@ def get_lop3_intrin_group(
     if is_ladder_stage3:
         key += "_offset"
 
-    if target_dtype == "float16":
+    if out_dtype == "float16":
         d4f = "f16"
-    elif target_dtype == "int8":
+    elif out_dtype == "int8":
         d4f = "i8s"
     else:
         raise ValueError("Unsupported target dtype: {}".format(target_dtype))

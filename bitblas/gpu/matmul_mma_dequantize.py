@@ -152,6 +152,20 @@ def get_index_map(index_map, l=16, r=16, is_5d=False):  # noqa: E741
     return get_index_map_3d(index_map, l, r)
 
 
+def check_weight_decode_info(weight_decode_info):
+    conditions = []
+    # check source format in ["int", "fp", "nf"]
+    conditions.append("source_format" in weight_decode_info)
+    conditions.append(
+        weight_decode_info["source_format"]["format"] in ["uint", "int", "fp", "nf", "fp_e4m3"])
+    # check source bits in [1, 2, 4, 8]
+    conditions.append(weight_decode_info["source_format"]["bits"] in [1, 2, 4, 8])
+    # check target format in ["float16", "int8"]
+    conditions.append("target_format" in weight_decode_info)
+    conditions.append(weight_decode_info["target_format"] in ["bfloat16", "float16", "int8"])
+    return all(conditions)
+
+
 class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
     """
     The schedule rule for float16 tensor core matmul computation.
@@ -211,19 +225,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         assert check_dequantize_info(dequantize_info)
 
         (weight_decode_info,) = list(dequantize_info.values())
-
-        def check_weight_decode_info(weight_decode_info):
-            conditions = []
-            # check source format in ["int", "fp", "nf"]
-            conditions.append("source_format" in weight_decode_info)
-            conditions.append(weight_decode_info["source_format"]["format"] in
-                              ["uint", "int", "fp", "nf", "fp_e4m3"])
-            # check source bits in [1, 2, 4, 8]
-            conditions.append(weight_decode_info["source_format"]["bits"] in [1, 2, 4, 8])
-            # check target format in ["float16", "int8"]
-            conditions.append("target_format" in weight_decode_info)
-            conditions.append(weight_decode_info["target_format"] in ["float16", "int8"])
-            return all(conditions)
 
         assert check_weight_decode_info(weight_decode_info), "Invalid Weight Decode Info"
 
@@ -727,19 +728,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
 
         (weight_decode_info,) = list(dequantize_info.values())
 
-        def check_weight_decode_info(weight_decode_info):
-            conditions = []
-            # check source format in ["int", "fp", "nf"]
-            conditions.append("source_format" in weight_decode_info)
-            conditions.append(weight_decode_info["source_format"]["format"] in
-                              ["uint", "int", "fp", "nf", "fp_e4m3"])
-            # check source bits in [1, 2, 4, 8]
-            conditions.append(weight_decode_info["source_format"]["bits"] in [1, 2, 4, 8])
-            # check target format in ["float16", "int8"]
-            conditions.append("target_format" in weight_decode_info)
-            conditions.append(weight_decode_info["target_format"] in ["float16", "int8"])
-            return all(conditions)
-
         assert check_weight_decode_info(weight_decode_info), "Invalid Weight Decode Info"
 
         # Start Schedule
@@ -1224,20 +1212,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         assert check_dequantize_info(dequantize_info)
 
         (weight_decode_info,) = list(dequantize_info.values())
-
-        def check_weight_decode_info(weight_decode_info):
-            conditions = []
-            # check source format in ["int", "fp", "nf"]
-            conditions.append("source_format" in weight_decode_info)
-            conditions.append(weight_decode_info["source_format"]["format"] in
-                              ["uint", "int", "fp", "nf", "fp_e4m3"])
-            # check source bits in [1, 2, 4, 8]
-            conditions.append(weight_decode_info["source_format"]["bits"] in [1, 2, 4, 8])
-            # check target format in ["float16", "int8"]
-            conditions.append("target_format" in weight_decode_info)
-            conditions.append(
-                weight_decode_info["target_format"] in ["bfloat16", "float16", "int8"])
-            return all(conditions)
 
         assert check_weight_decode_info(weight_decode_info), "Invalid B_decode_info"
 
@@ -1819,19 +1793,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
         assert check_dequantize_info(dequantize_info)
 
         (weight_decode_info,) = list(dequantize_info.values())
-
-        def check_weight_decode_info(weight_decode_info):
-            conditions = []
-            # check source format in ["int", "fp", "nf"]
-            conditions.append("source_format" in weight_decode_info)
-            conditions.append(weight_decode_info["source_format"]["format"] in
-                              ["uint", "int", "fp", "nf", "fp_e4m3"])
-            # check source bits in [1, 2, 4, 8]
-            conditions.append(weight_decode_info["source_format"]["bits"] in [1, 2, 4, 8])
-            # check target format in ["float16", "int8"]
-            conditions.append("target_format" in weight_decode_info)
-            conditions.append(weight_decode_info["target_format"] in ["float16", "int8"])
-            return all(conditions)
 
         assert check_weight_decode_info(weight_decode_info), "Invalid B_decode_info"
 
