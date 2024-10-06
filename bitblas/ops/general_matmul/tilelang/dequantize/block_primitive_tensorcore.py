@@ -11,8 +11,7 @@ from bitblas.base.roller.rasterization import NoRasterization
 from bitblas.base.utils import get_roller_hints_from_func
 from dataclasses import dataclass
 from bitblas.ops.general_matmul.tirscript import (
-    matmul_dequantize_select_implementation,
-)
+    matmul_dequantize_select_implementation,)
 from bitblas.tl.base_hint import BaseTLHint
 from bitblas.quantization import (
     _tir_packed_int_to_int_convert,
@@ -51,7 +50,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
     fast_decoding: bool = False
     with_bias: bool = False
     zeros_mode: Literal["original", "rescale", "quantized"] = "original",
-    
+
     # Default Tile Related Params
     block_M: int = 64
     block_N: int = 64
@@ -133,8 +132,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
             group_size=self.group_size,
             fast_decoding=self.fast_decoding,
             with_bias=self.with_bias,
-            zeros_mode=self.zeros_mode
-        )
+            zeros_mode=self.zeros_mode)
 
         roller_hints = get_roller_hints_from_func(
             ir_module["main"],
@@ -175,7 +173,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
             threads=threads,
             enable_rasterization=enable_rasterization,
         )
-    
+
     def _apply_config_dequant_only(
         self,
         block_M: Optional[int] = None,
@@ -203,10 +201,10 @@ class MatmulDequantizeScheduler(BaseScheduler):
 
         if not check_is_dequantize_only():
             raise ValueError("Not a Dequantize Only Configuration")
-        
+
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
         fast_decoding = self.fast_decoding
-        
+
         bit = self.bit
         storage_dtype = self.storage_dtype
         source_format = self.source_format
@@ -220,10 +218,10 @@ class MatmulDequantizeScheduler(BaseScheduler):
         group_size = self.group_size
         if group_size == -1:
             group_size = K
-        
+
         A_shape = (M, K)
         B_shape = (N, K // storage_nbit * bit)
-        
+
         A_shared_shape = (block_M, block_K)
         B_shared_shape = (block_N, block_K // num_elems_per_byte)
         B_dequantize_shared_shape = (block_N, block_K)
@@ -254,9 +252,9 @@ class MatmulDequantizeScheduler(BaseScheduler):
                 B_dequantize_local = T.alloc_local([local_size], in_dtype)
                 B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, in_dtype)
                 C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
-                
+
                 tx = T.thread_binding(0, threads, thread="threadIdx.x")
-                                
+
                 T.use_swizzle(10, enable=enable_rasterization)
 
                 if import_source is not None:
@@ -269,23 +267,23 @@ class MatmulDequantizeScheduler(BaseScheduler):
                     T.copy(B[bx * block_N, k * block_K // num_elems_per_byte], B_shared)
 
                     for i in T.serial(block_N * block_K // num_elems_per_byte //
-                                    (threads * local_size_compressed)):
+                                      (threads * local_size_compressed)):
                         for v in T.vectorized(0, local_size_compressed):
                             index = i * threads * local_size_compressed + tx * local_size_compressed + v
                             vi = index // (block_K // num_elems_per_byte)
                             vj = index % (block_K // num_elems_per_byte)
                             B_local[v] = B_shared[vi, vj]
-                        
+
                         if fast_decoding is True:
                             T.call_extern(func_name, B_local, B_dequantize_local, dtype=in_dtype)
                         else:
                             for v in T.serial(0, local_size):
-                                B_dequantize_local[v] =  self._decode_func(
-                                        bit,
-                                        B_local[v // num_elems_per_byte],
-                                        v % num_elems_per_byte,
-                                        dtype=in_dtype,
-                                    )
+                                B_dequantize_local[v] = self._decode_func(
+                                    bit,
+                                    B_local[v // num_elems_per_byte],
+                                    v % num_elems_per_byte,
+                                    dtype=in_dtype,
+                                )
                         for v in T.vectorized(0, local_size):
                             index = i * threads * local_size + tx * local_size + v
                             vi = index // block_K
@@ -296,9 +294,8 @@ class MatmulDequantizeScheduler(BaseScheduler):
 
                 T.copy(C_local, C[by * block_M, bx * block_N])
 
-        
         return main
-    
+
     def _apply_config_with_scaling(
         self,
         block_M: Optional[int] = None,
@@ -322,7 +319,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
         enable_rasterization: bool = False,
     ):
         raise NotImplementedError("Scaling and Zeros Original Configuration is not implemented")
-    
+
     def _apply_config_with_scaling_zeros_quantized(
         self,
         block_M: Optional[int] = None,
@@ -351,23 +348,16 @@ class MatmulDequantizeScheduler(BaseScheduler):
         assert num_stages is not None, "num_stages is required"
         assert threads is not None, "threads is required"
         trans_A, trans_B = self.trans_A, self.trans_B
-        
+
         assert trans_A is False, "Dequantize only implement for trans_A=False currently"
         assert trans_B is True, "Dequantize only implement for trans_B=TRue currently"
-        
+
         with_scaling = self.with_scaling
         with_zeros = self.with_zeros
         zeros_mode = self.zeros_mode
-        
-        args = [
-            block_M, 
-            block_N, 
-            block_K, 
-            num_stages, 
-            threads, 
-            enable_rasterization
-        ]
-        
+
+        args = [block_M, block_N, block_K, num_stages, threads, enable_rasterization]
+
         dequant_prim_func = None
 
         if not with_scaling:
@@ -380,7 +370,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
             dequant_prim_func = self._apply_config_with_scaling_zeros_quantized(*args)
         else:
             raise ValueError("Unsupported zeros_mode: {}".format(zeros_mode))
-        
+
         if dequant_prim_func is None:
             raise ValueError("Unsupported Configuration")
 
@@ -399,12 +389,16 @@ class MatmulDequantizeScheduler(BaseScheduler):
         bit = self.bit
 
         dequant_func = None
+
+        def naive_cast_dequant(x):
+            return x.astype(in_dtype)
+
         if with_zeros and zeros_mode == "quantized":
             dequant_func = _tir_packed_to_unsigned_convert_with_zeros(storage_type, storage_nbit)
         elif source_format == "uint":
             if bit == 8:
                 # 8 bit does not need to be compressed
-                dequant_func = lambda x: x.astype(in_dtype)
+                dequant_func = naive_cast_dequant
             else:
                 dequant_func = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)
         elif source_format == "int":
@@ -413,7 +407,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
                 dequant_func = _tir_packed_int_to_int_convert(storage_type, storage_nbit)
             elif bit == 8:
                 # 8 bit does not need to be compressed
-                dequant_func = lambda x: x.astype(in_dtype)
+                dequant_func = naive_cast_dequant
             else:
                 dequant_func = _tir_packed_to_signed_convert(storage_type, storage_nbit)
         elif source_format == "fp":
@@ -422,10 +416,9 @@ class MatmulDequantizeScheduler(BaseScheduler):
             dequant_func = _tir_u8_to_f8_e4m3_to_f16
         else:
             raise ValueError("Unsupported source_format: {}".format(source_format))
-        
+
         return dequant_func
 
- 
     def __post_init__(self):
         # Add Config Validation
         return
