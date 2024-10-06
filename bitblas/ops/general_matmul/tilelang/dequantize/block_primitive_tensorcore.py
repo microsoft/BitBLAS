@@ -41,7 +41,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
     accum_dtype: str = "float16"
 
     # Dequantize Config
-    bit: int = 4
+    num_bits: int = 4
     storage_dtype: str = "int8"
     source_format: str = "uint"
     with_scaling: bool = False
@@ -124,7 +124,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
             out_dtype=self.out_dtype,
             accum_dtype=self.accum_dtype,
             layout=layout,
-            bit=self.bit,
+            bit=self.num_bits,
             storage_dtype=self.storage_dtype,
             source_format=self.source_format,
             with_scaling=self.with_scaling,
@@ -205,11 +205,11 @@ class MatmulDequantizeScheduler(BaseScheduler):
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
         fast_decoding = self.fast_decoding
 
-        bit = self.bit
+        num_bits = self.num_bits
         storage_dtype = self.storage_dtype
         source_format = self.source_format
         storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
-        num_elems_per_byte = 8 // bit
+        num_elems_per_byte = 8 // num_bits
 
         MAX_TRANSACTION_SIZE_IN_BITS = 128
         local_size = MAX_TRANSACTION_SIZE_IN_BITS // DataType(in_dtype).bits
@@ -220,7 +220,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
             group_size = K
 
         A_shape = (M, K)
-        B_shape = (N, K // storage_nbit * bit)
+        B_shape = (N, K // storage_nbit * num_bits)
 
         A_shared_shape = (block_M, block_K)
         B_shared_shape = (block_N, block_K // num_elems_per_byte)
@@ -233,7 +233,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
                 out_dtype=out_dtype,
                 storage_dtype=storage_dtype,
                 source_format=source_format,
-                source_bit=bit,
+                source_bit=num_bits,
             )
             import_source = lop3_intrin_info["c_source"]
             func_name = lop3_intrin_info["func_name"]
@@ -275,11 +275,15 @@ class MatmulDequantizeScheduler(BaseScheduler):
                             B_local[v] = B_shared[vi, vj]
 
                         if fast_decoding is True:
-                            T.call_extern(func_name, B_local, B_dequantize_local, dtype=in_dtype)
+                            T.call_extern(
+                                func_name,
+                                T.address_of(B_local[0]),
+                                T.address_of(B_dequantize_local[0]),
+                                dtype=in_dtype)
                         else:
                             for v in T.serial(0, local_size):
                                 B_dequantize_local[v] = self._decode_func(
-                                    bit,
+                                    num_bits,
                                     B_local[v // num_elems_per_byte],
                                     v % num_elems_per_byte,
                                     dtype=in_dtype,
@@ -386,7 +390,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
         source_format = self.source_format
         storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
         storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
-        bit = self.bit
+        num_bits = self.num_bits
 
         dequant_func = None
 
@@ -396,17 +400,17 @@ class MatmulDequantizeScheduler(BaseScheduler):
         if with_zeros and zeros_mode == "quantized":
             dequant_func = _tir_packed_to_unsigned_convert_with_zeros(storage_type, storage_nbit)
         elif source_format == "uint":
-            if bit == 8:
-                # 8 bit does not need to be compressed
+            if num_bits == 8:
+                # 8 num_bits does not need to be compressed
                 dequant_func = naive_cast_dequant
             else:
                 dequant_func = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)
         elif source_format == "int":
-            if bit == 1:
+            if num_bits == 1:
                 # Dequantize int1 to -1 and 1. Without this step, the values would be 0 and 1, identical to uint1.
                 dequant_func = _tir_packed_int_to_int_convert(storage_type, storage_nbit)
-            elif bit == 8:
-                # 8 bit does not need to be compressed
+            elif num_bits == 8:
+                # 8 num_bits does not need to be compressed
                 dequant_func = naive_cast_dequant
             else:
                 dequant_func = _tir_packed_to_signed_convert(storage_type, storage_nbit)
