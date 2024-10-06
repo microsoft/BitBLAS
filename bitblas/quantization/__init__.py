@@ -10,7 +10,7 @@ from .quantization import (
 )
 
 from .utils import (
-    gen_quant4, # noqa: F401
-    general_compress, # noqa: F401
-    interleave_weight, # noqa: F401
+    gen_quant4,  # noqa: F401
+    general_compress,  # noqa: F401
+    interleave_weight,  # noqa: F401
 )

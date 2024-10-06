@@ -488,11 +488,10 @@ def assert_matmul_blocked_dequant_with_default_correctness(
         inputs[1] = inputs[1] - zeros
 
     ref_result = torch.matmul(inputs[0], inputs[1].t().to(torch.float16))
-    
+
     permuted_inputs = []
     permuted_inputs.append(inputs[0])
-    qw = general_compress(
-            intweight.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
+    qw = general_compress(intweight.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
     # lop3 transformation
     if fast_decoding:
         qw = interleave_weight(qw, bit, target_dtype=in_dtype)
@@ -518,17 +517,18 @@ def assert_matmul_blocked_dequant_with_default_correctness(
             raise NotImplementedError
 
     permuted_inputs.append(inputs[2])
-    
+
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
 
     mod(*permuted_inputs)
-    
+
     print(permuted_inputs[-1])
     print(ref_result)
     if zeros_mode == "rescale":
         torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
     else:
         torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
+
 
 def test_matmul_blocked():
     # Default
@@ -562,8 +562,10 @@ def test_matmul_weight_propagation():
 
 
 def test_matmul_blocked_dequant_with_default():
-    assert_matmul_blocked_dequant_with_default_correctness(1024, 1024, 1024, source_format="uint", bit=4)
-    assert_matmul_blocked_dequant_with_default_correctness(1024, 1024, 1024, source_format="uint", bit=2)
+    assert_matmul_blocked_dequant_with_default_correctness(
+        1024, 1024, 1024, source_format="uint", bit=4)
+    assert_matmul_blocked_dequant_with_default_correctness(
+        1024, 1024, 1024, source_format="uint", bit=2)
 
 
 if __name__ == "__main__":
