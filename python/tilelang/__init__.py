@@ -41,11 +41,9 @@ if os.path.exists(develop_tvm_path) and develop_tvm_path not in sys.path:
     sys.path.insert(0, develop_tvm_path + "/python")
 
 import tvm
-from . import transform
-from . import libinfo
-from .engine import lower
-from .utils import Profiler, ConvertTorch, TensorSupplyType, cached
+import tvm._ffi.base
 
+from . import libinfo
 
 def _load_tile_lang_lib():
     """Load Tile Lang lib"""
@@ -61,3 +59,7 @@ def _load_tile_lang_lib():
 # only load once here
 if SKIP_LOADING_TILELANG_SO == "0":
     _LIB, _LIB_PATH = _load_tile_lang_lib()
+
+from . import transform
+from .engine import lower
+from .utils import Profiler, ConvertTorch, TensorSupplyType, cached
