@@ -14,7 +14,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+"""FFI APIs for tilelang"""
 
-from . import transform
-from .engine import lower
-from .utils import Profiler, ConvertTorch, TensorSupplyType, cached
+import tvm._ffi
+
+# TVM_REGISTER_GLOBAL("tl.name").set_body_typed(func);
+tvm._ffi._init_api("tl", __name__)  # pylint: disable=protected-access

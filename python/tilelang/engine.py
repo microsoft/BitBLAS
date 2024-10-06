@@ -19,7 +19,7 @@
 import os
 import os.path as osp
 import tvm
-from tvm import tir, tl, relay
+from tvm import tir, relay
 from tvm.contrib import nvcc
 
 
@@ -33,12 +33,12 @@ def is_host_call(func: tir.PrimFunc):
 
 @tvm.register_func("tvm_tl_cuda_compile", override=True)
 def tvm_callback_cuda_compile(code, target):
-    tvm_root = osp.join(osp.dirname(__file__), "../../..")
-    tl_template_path = osp.abspath(osp.join(tvm_root, "src/tl"))
+    project_root = osp.join(osp.dirname(__file__), "../..")
+    tl_template_path = osp.abspath(osp.join(project_root, "src"))
     if "TL_CUTLASS_PATH" in os.environ:
         cutlass_path = os.environ["TL_CUTLASS_PATH"]
     else:
-        cutlass_path = osp.abspath(osp.join(tvm_root, "3rdparty/cutlass/include"))
+        cutlass_path = osp.abspath(osp.join(project_root, "3rdparty/cutlass/include"))
     compute_version = "".join(nvcc.get_target_compute_version(target).split("."))
 
     # special handle for Hopper

@@ -43,7 +43,15 @@ def Parallel(*extents: tir.PrimExpr):
     return _ffi_api.Parallel(extents)  # type: ignore[attr-defined] # pylint: disable=no-member
 
 
-def Pipelined(start: tir.PrimExpr, stop: tir.PrimExpr = None, num_stages: int = 0):
+def Pipelined(
+        start: tir.PrimExpr, 
+        stop: tir.PrimExpr = None, 
+        num_stages: int = 0, 
+        order: Optional[List[int]] = None, 
+        stage: Optional[List[int]] = None, 
+        sync: Optional[List[List[int]]] = None,
+        group: Optional[List[List[int]]] = None
+    ):
     """Tools to construct pipelined for loop.
 
     Parameters
@@ -66,9 +74,16 @@ def Pipelined(start: tir.PrimExpr, stop: tir.PrimExpr = None, num_stages: int = 
             start = IntImm(start.dtype, 0)
         else:
             start = 0
+    if order is None:
+        order = []
+    if stage is None:
+        stage = []
+    if sync is None:
+        sync = []
+    if group is None:
+        group = []
     # type: ignore[attr-defined] # pylint: disable=no-member
-    return _ffi_api.Pipelined(start, stop, num_stages)
-
+    return _ffi_api.Pipelined(start, stop, num_stages, order, stage, sync, group)
 
 @register_object("tl.KernelLaunchFrame")
 class KernelLaunchFrame(TIRFrame):
