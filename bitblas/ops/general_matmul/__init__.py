@@ -12,6 +12,7 @@ from ..common import TransformKind, OptimizeStrategy
 from .tirscript.matmul_dequantize_impl import select_implementation as weight_dequantize_implementation
 from .tirscript.matmul_impl import select_implementation as consistent_implementation
 from .tilelang.dense import select_scheduler as consistent_scheduler
+from .tilelang.dequantize import select_scheduler as weight_dequantize_scheduler
 from ...base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
 from bitblas.utils.target_detector import auto_detect_nvidia_target
 from dataclasses import dataclass
@@ -591,7 +592,26 @@ class Matmul(Operator):
                 propagate_b=self.propagate_b,
             )
         else:
-            raise ValueError("Currently only support native compute for scheduler")
+            return weight_dequantize_scheduler(
+                M=self.M,
+                N=self.N,
+                K=self.K,
+                in_dtype=self.A_dtype,
+                out_dtype=self.out_dtype,
+                accum_dtype=self.accum_dtype,
+                bit=self.bit,
+                storage_dtype=self.storage_dtype,
+                source_format=self.source_format,
+                with_scaling=self.with_scaling,
+                with_zeros=self.with_zeros,
+                group_size=self.group_size,
+                fast_decoding=self.fast_decoding,
+                with_bias=self.with_bias,
+                layout=self.layout,
+                zeros_mode=self.zeros_mode,
+                propagate_a=self.propagate_a,
+                propagate_b=self.propagate_b,
+            )
 
     def post_process(self, code: str) -> str:
         code = tensor_replace_dp4a(code)

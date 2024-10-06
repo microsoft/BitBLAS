@@ -317,6 +317,8 @@ class MatmulFineGrainScheduler(BaseScheduler):
             return ("{"
                     f"block_M={self.block_row_warps * self.warp_row_tiles},"
                     f"block_N={self.block_col_warps * self.warp_col_tiles},"
+                    f"warp_M={self.warp_row_tiles},"
+                    f"warp_N={self.warp_col_tiles},"
                     f"block_K={self.chunk},"
                     f"threads={self.block_row_warps * self.block_col_warps * warp_size},"
                     f"num_stages={self.num_stages},"
