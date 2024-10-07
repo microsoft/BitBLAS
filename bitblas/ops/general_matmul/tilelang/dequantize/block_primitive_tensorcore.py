@@ -52,8 +52,8 @@ class MatmulDequantizeScheduler(BaseScheduler):
     zeros_mode: Literal["original", "rescale", "quantized"] = "original",
 
     # Default Tile Related Params
-    block_M: int = 64
-    block_N: int = 64
+    block_M: int = 128
+    block_N: int = 128
     block_K: int = 32
     num_stages: int = 2
     threads: int = 128
@@ -227,7 +227,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
         B_dequantize_shared_shape = (block_N, block_K)
 
         import_source: Optional[str] = None
-        func_name: Optional[str] = None
+        func_name: str = ""
         if fast_decoding is True:
             lop3_intrin_info = get_lop3_intrin_group(
                 out_dtype=out_dtype,
@@ -237,6 +237,8 @@ class MatmulDequantizeScheduler(BaseScheduler):
             )
             import_source = lop3_intrin_info["c_source"]
             func_name = lop3_intrin_info["func_name"]
+            assert import_source is not None, "lop3_intrin_info is not found"
+            assert func_name is not None, "lop3_intrin_info is not found"
 
         @T.prim_func
         def main(
@@ -257,8 +259,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
 
                 T.use_swizzle(10, enable=enable_rasterization)
 
-                if import_source is not None:
-                    T.import_source(import_source)
+                T.import_source(import_source)
 
                 T.clear(C_local)
 

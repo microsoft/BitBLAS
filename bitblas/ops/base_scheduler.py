@@ -1,10 +1,22 @@
 from tvm import IRModule
 from tvm.tir import PrimFunc
-from typing import Union
+from typing import Union, Callable
 from dataclasses import dataclass, field
 from tvm.tir.transform import Simplify
 from abc import ABC, abstractmethod
 from bitblas.base.arch import TileDevice
+
+
+# Decorator to simplify the output of a function
+def maybe_simplify(self, func: Callable):
+
+    def wrapper(*args, **kwargs):
+        stmt: Union[PrimFunc, IRModule] = (func)(*args, **kwargs)
+        if self._enable_simplify:
+            return self.Simplify(stmt)
+        return stmt
+
+    return wrapper
 
 
 @dataclass

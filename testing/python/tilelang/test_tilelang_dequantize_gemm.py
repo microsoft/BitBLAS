@@ -427,6 +427,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
 
 
 def test_run_dequantize_gemm():
+    run_gemm(256, 256, 256, "float16", "float16", "float16", 128, 128, 32, num_threads=128)
     run_gemm(256, 256, 256, "int8", "int32", "int32", 128, 128, 32, num_threads=128)
 
 

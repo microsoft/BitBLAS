@@ -448,7 +448,7 @@ def assert_matmul_blocked_dequant_with_default_correctness(
         in_dtype=in_dtype,
         out_dtype=out_dtype,
         accum_dtype=accum_dtype,
-        bit=bit,
+        num_bits=bit,
         storage_dtype=storage_dtype,
         source_format=source_format,
         with_scaling=with_scaling,
@@ -460,7 +460,6 @@ def assert_matmul_blocked_dequant_with_default_correctness(
 
     mod, params = tl.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
-
     # src_code is the generated cuda source
     assert src_code is not None
 
