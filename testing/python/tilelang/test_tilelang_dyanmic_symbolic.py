@@ -165,9 +165,12 @@ def tl_matmul_macro(
 
             # Store shared into global
             for i, j in T.Parallel(block_M, block_N):
-                C[by * block_M + i,
-                  bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
-                                               i % micro_size_x, j % micro_size_y,]
+                C[by * block_M + i, bx * block_N + j] = C_shared[
+                    i // micro_size_x,
+                    j // micro_size_y,
+                    i % micro_size_x,
+                    j % micro_size_y,
+                ]
 
     return main
 
