@@ -16,6 +16,7 @@
 # under the License.
 """The compiler for TL programs."""
 
+import tilelang as tl
 import os
 import os.path as osp
 import tvm

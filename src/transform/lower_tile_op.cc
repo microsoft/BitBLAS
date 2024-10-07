@@ -294,7 +294,6 @@ using namespace tir::transform;
 
 tvm::transform::Pass LowerTileOp() {
   auto pass_func = [=](PrimFunc f, IRModule m, PassContext ctx) {
-    LOG(INFO) << "Lowering TileOp";
     return LowerTileOpPass::Substitute(std::move(f));
   };
   return CreatePrimFuncPass(pass_func, 0, "tl.LowerTileOp", {});

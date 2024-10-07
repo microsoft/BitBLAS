@@ -43,7 +43,8 @@ message(STATUS "TVM_SOURCE_DIR: ${TVM_SOURCE_DIR}")
 add_subdirectory(${TVM_SOURCE_DIR} tvm EXCLUDE_FROM_ALL)
 
 tvm_file_glob(GLOB_RECURSE TILE_LANG_SRCS src/*.cc)
-add_library(tile_lang_objs OBJECT ${TILE_LANG_SRCS})
+message(STATUS "TILE_LANG_SRCS: ${TILE_LANG_SRCS}")
+add_library(tilelang_objs OBJECT ${TILE_LANG_SRCS})
 
 set(
   TILE_LANG_INCLUDES
@@ -53,52 +54,54 @@ set(
   ${TVM_SOURCE_DIR}/3rdparty/dmlc-core/include
 )
 
+# Find CUDA
+find_package(CUDA REQUIRED)
+# CUDA Dependencies
+set(TILE_LANG_INCLUDES ${TILE_LANG_INCLUDES} ${CUDA_INCLUDE_DIRS})
+
 set(TILE_LANG_COMPILE_DEFS ${TILE_LANG_COMPILE_DEFS} DMLC_USE_LOGGING_LIBRARY=<tvm/runtime/logging.h>)
 set(TILE_LANG_COMPILE_DEFS ${TILE_LANG_COMPILE_DEFS} __STDC_FORMAT_MACROS=1)
 set(TILE_LANG_COMPILE_DEFS ${TILE_LANG_COMPILE_DEFS} PICOJSON_USE_INT64)
 
-target_include_directories(tile_lang_objs PRIVATE ${TILE_LANG_INCLUDES})
-target_compile_definitions(tile_lang_objs PRIVATE ${TILE_LANG_COMPILE_DEFS})
-target_include_directories(tile_lang_objs PRIVATE ${TOKENZIER_CPP_PATH}/include)
-target_compile_definitions(tile_lang_objs PRIVATE -DTILE_LANG_EXPORTS)
+target_include_directories(tilelang_objs PRIVATE ${TILE_LANG_INCLUDES})
+target_compile_definitions(tilelang_objs PRIVATE ${TILE_LANG_COMPILE_DEFS})
+target_include_directories(tilelang_objs PRIVATE ${TOKENZIER_CPP_PATH}/include)
+target_compile_definitions(tilelang_objs PRIVATE -DTILE_LANG_EXPORTS)
 
-# CUDA Dependencies
-target_include_directories(tile_lang_objs PRIVATE ${CUDA_TOOLKIT_ROOT_DIR}/include)
 
-add_library(tile_lang SHARED $<TARGET_OBJECTS:tile_lang_objs>)
-add_library(tile_lang_static STATIC $<TARGET_OBJECTS:tile_lang_objs>)
-add_dependencies(tile_lang_static tvm_runtime)
-set_target_properties(tile_lang_static PROPERTIES OUTPUT_NAME tile_lang)
+add_library(tilelang SHARED $<TARGET_OBJECTS:tilelang_objs>)
+add_library(tilelang_static STATIC $<TARGET_OBJECTS:tilelang_objs>)
+add_dependencies(tilelang_static tvm_runtime)
+set_target_properties(tilelang_static PROPERTIES OUTPUT_NAME tilelang)
 
-target_link_libraries(tile_lang PUBLIC tvm_runtime)
+target_link_libraries(tilelang PUBLIC tvm_runtime)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(tile_lang PRIVATE "TVM_LOG_DEBUG")
-    target_compile_definitions(tile_lang_objs PRIVATE "TVM_LOG_DEBUG")
-    target_compile_definitions(tile_lang_static PRIVATE "TVM_LOG_DEBUG")
+    target_compile_definitions(tilelang PRIVATE "TVM_LOG_DEBUG")
+    target_compile_definitions(tilelang_objs PRIVATE "TVM_LOG_DEBUG")
+    target_compile_definitions(tilelang_static PRIVATE "TVM_LOG_DEBUG")
 endif()
 
 
-add_library(tile_lang_module SHARED $<TARGET_OBJECTS:tile_lang_objs>)
-target_link_libraries(tile_lang_module PUBLIC tvm)
-target_link_libraries(tile_lang_module PRIVATE tokenizers_cpp)
+add_library(tilelang_module SHARED $<TARGET_OBJECTS:tilelang_objs>)
+target_link_libraries(tilelang_module PUBLIC tvm)
 
 
-set_property(TARGET tile_lang_module APPEND PROPERTY LINK_OPTIONS "${MLC_VISIBILITY_FLAG}")
-set_property(TARGET tile_lang APPEND PROPERTY LINK_OPTIONS "${MLC_VISIBILITY_FLAG}")
+set_property(TARGET tilelang_module APPEND PROPERTY LINK_OPTIONS "${MLC_VISIBILITY_FLAG}")
+set_property(TARGET tilelang APPEND PROPERTY LINK_OPTIONS "${MLC_VISIBILITY_FLAG}")
 
 
 # when this option is on,
 # we install all static lib deps into lib
 if (TILE_LANG_INSTALL_STATIC_LIB)
   install(TARGETS
-    tile_lang_static
+    tilelang_static
     tvm_runtime
     LIBRARY DESTINATION lib${LIB_SUFFIX}
     )
 else()
-  install(TARGETS tvm_runtime tile_lang tile_lang_module
-    tile_lang_static
+  install(TARGETS tvm_runtime tilelang tilelang_module
+    tilelang_static
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib${LIB_SUFFIX}
   )
