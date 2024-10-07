@@ -5,6 +5,7 @@ from bitblas.base.arch import TileDevice
 import ctypes
 import os
 import os.path as osp
+import sys
 import tempfile
 import subprocess
 import logging
@@ -47,8 +48,21 @@ class LibraryGenerator(object):
             "-gencode",
             f"arch=compute_{compute_version},code=sm_{compute_version}",
         ]
+
         if with_tl:
-            tvm_root = osp.join(osp.dirname(__file__), "../../../3rdparty/tvm")
+            install_tvm_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), "../../..", "3rdparty", "tvm")
+            develop_tvm_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), "../..", "3rdparty", "tvm")
+
+            tvm_root = next((path for path in [install_tvm_path, develop_tvm_path]
+                             if os.path.exists(path) and path not in sys.path), None)
+
+            if "TL_TEMPLATE_PATH " in os.environ:
+                tl_template_path = os.environ["TL_TEMPLATE_PATH"]
+            else:
+                tl_template_path = osp.abspath(osp.join(tvm_root, "src/tl"))
+
             tl_template_path = osp.abspath(osp.join(tvm_root, "src/tl"))
             if "TL_CUTLASS_PATH" in os.environ:
                 cutlass_path = os.environ["TL_CUTLASS_PATH"]

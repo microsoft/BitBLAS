@@ -680,9 +680,8 @@ def get_tensorized_func_and_tags(
         minimal_tensorize_threshold = 16 if in_dtype in ["bfloat16", "float16"] else 32
         # the batch dimension is not taken into consideration.
         extent = block_stmt.iter_vars[1].dom.extent
-        if isinstance(extent,
-                      tir.expr.IntImm) and (extent.value <
-                                            (1 if allow_gemv else minimal_tensorize_threshold)):
+        if isinstance(extent, tir.expr.IntImm) and (extent.value < (1 if allow_gemv else
+                                                                    minimal_tensorize_threshold)):
             return func, None
         for item_var in block_stmt.iter_vars[2:]:
             extent = item_var.dom.extent
