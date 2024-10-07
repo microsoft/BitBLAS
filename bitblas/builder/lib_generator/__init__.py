@@ -51,9 +51,9 @@ class LibraryGenerator(object):
 
         if with_tl:
             install_tvm_path = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), "../../..", "3rdparty", "tvm")
-            develop_tvm_path = os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), "../..", "3rdparty", "tvm")
+            develop_tvm_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), "../../..", "3rdparty", "tvm")
 
             tvm_root = next((path for path in [install_tvm_path, develop_tvm_path]
                              if os.path.exists(path) and path not in sys.path), None)
