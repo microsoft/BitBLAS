@@ -28,7 +28,9 @@ This project is co-authored by [nox-410](https://github.com/nox-410) and [chengy
 Let's get started with a simple GEMM example.
 
 ```python
-import tvm.tl.language as T
+import tilelang
+import tilelang.language as T
+
 def matmul(M, N, K, block_M, block_N, block_K, dtype="float16", accum_dtype = "float"):
     @T.prim_func
     def main(
@@ -53,31 +55,34 @@ def matmul(M, N, K, block_M, block_N, block_K, dtype="float16", accum_dtype = "f
             T.copy(C_local, C[by * block_M, bx * block_N])
 
     return main
+
+func = matmul(1024, 1024, 1024, 32, 32, 32)
+
+print(func)
+
+rt_mod, _ = tilelang.lower(func)
+
+# CUDA Source
+print(rt_mod.imported_modules[0].get_source())
+
 ```
 Despite this simple examples, tvm.tl can be used to write more complicated examples including convolutions, flash-attention-v2 (fwd & bwd), normalizations, these examples can be found under folder tl_scripts.
 
- The performance of our flash-attention is comparable to the manually implementation. (see [Link](https://github.com/nox-410/tvm.tl/blob/tl/tl_doc/flash_perf.md)).
+The performance of our flash-attention is comparable to the manually implementation. (see [Link](./tl_doc/flash_perf.md)).
 
 ## Install
 
 Install is similar to tvm. First, fill in USE_CUDA and USE_LLVM in cmake/config.cmake, like this:
 ```bash
-set(USE_LLVM "/path/to/llvm-config --link-static")
-set(HIDE_PRIVATE_SYMBOLS ON)
-set(USE_CUDA /usr/local/cuda)
+git clone --recursive https://github.com/TileLang/tile-lang
 ```
-Then build tvm
+
+Then install
+
 ```bash
-mkdir -p build && cd build && cp ../cmake/config.cmake . && cmake .. && make -j && cd -
-export PYTHONPATH="$PYTHONPATH:$PWD/python"
-# some python package required by tvm
-pip install torch attrs cloudpickle decorator psutil synr tornado xgboost
+./install.sh
 ```
-We also need to prepare the cutlass headers, the default version of cutlass in TVM does not work correctly
-```bash
-git clone https://github.com/NVIDIA/cutlass.git -b v3.2.2
-export TL_CUTLASS_PATH=/path/to/cutlass/include
-```
+
 Note 1: It is recommeneded to use the latest cuda toolkit, because we requires nvcc to jit compile the generated CUDA code.
 
 Note 2: Don't forget to clone the submodules.

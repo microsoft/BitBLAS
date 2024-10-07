@@ -52,13 +52,14 @@ echo "LLVM config path: $LLVM_CONFIG_PATH"
 # clone and build tvm
 git submodule update --init --recursive
 
-cd 3rdparty/tvm
 if [ -d build ]; then
     rm -rf build
 fi
+
 mkdir build
-cp cmake/config.cmake build
+cp 3rdparty/tvm/cmake/config.cmake build
 cd build
+
 echo "set(USE_LLVM $LLVM_CONFIG_PATH)" >> config.cmake && echo "set(USE_CUDA /usr/local/cuda)" >> config.cmake
 
 cmake .. && make -j && cd ../../..
