@@ -17,11 +17,12 @@
 """The auto-tune module for tl programs."""
 
 import tvm
-from tvm import tl
+import tilelang as tl
 import inspect
 from functools import wraps
 from typing import Any, Callable, List, Literal
 from tqdm import tqdm
+
 
 class Autotuner:
     def __init__(
@@ -37,7 +38,7 @@ class Autotuner:
         self.keys = keys
         self.warmup = warmup
         self.rep = rep
-    
+
     def run(self, *args: Any, **kwds: Any) -> Any:
         sig = inspect.signature(self.fn)
         bound_args = sig.bind(*args, **kwds)
@@ -71,42 +72,51 @@ class Autotuner:
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         return self.run(*args, **kwds)
 
-def autotune(configs: Any, keys: List[str], warmup: int = 25, rep: int = 100) -> Callable:
+
+def autotune(
+    configs: Any, keys: List[str], warmup: int = 25, rep: int = 100
+) -> Callable:
     """
     Decorator for tl program
     """
+
     def decorator(fn: Callable) -> Autotuner:
         return Autotuner(fn, configs=configs, keys=keys, warmup=warmup, rep=rep)
+
     return decorator
 
+
 def jit(
-    out_idx: List[int], 
-    supply_type: tl.TensorSupplyType = tl.TensorSupplyType.Normal, 
+    out_idx: List[int],
+    supply_type: tl.TensorSupplyType = tl.TensorSupplyType.Normal,
     ref_prog: Callable = None,
     rtol: float = 1e-5,
     atol: float = 1e-5,
-    skip_check: bool = False, 
-    profiler: Literal['torch', 'tvm']='torch'
-    ) -> Callable:
-    
+    skip_check: bool = False,
+    profiler: Literal["torch", "tvm"] = "torch",
+) -> Callable:
+
     def wrapper(fn: Callable):
         ref_latency_cache = None
+
         @wraps(fn)
         def decorator(*args, **kwargs) -> float:
             nonlocal ref_latency_cache
             # Enabling Efficient Fusion
-            with tvm.transform.PassContext(config={
-                "tir.merge_static_smem": True
-            }):
+            with tvm.transform.PassContext(
+                config={"tir.merge_static_smem": True}
+            ):
                 mod, params = tl.lower(fn(*args, **kwargs))
-            
+
             mod = tl.Profiler(mod, params, out_idx, supply_type)
             if (not skip_check) and (ref_prog is not None):
                 mod.assert_allclose(ref_prog, rtol=rtol, atol=atol)
-            
-            latency = mod.do_bench(mod.func, warmup = 25, profiler = profiler)
+
+            latency = mod.do_bench(mod.func, warmup=25, profiler=profiler)
             if ref_latency_cache is None and ref_prog is not None:
-                ref_latency_cache = mod.do_bench(ref_prog, warmup = 25)
+                ref_latency_cache = mod.do_bench(ref_prog, warmup=25)
             return latency, ref_latency_cache
+
         return decorator
+
     return wrapper

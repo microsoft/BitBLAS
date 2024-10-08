@@ -25,7 +25,11 @@ from tvm.contrib import nvcc
 
 
 def is_device_call(func: tir.PrimFunc):
-    return bool(func.attrs and "calling_conv" in func.attrs and func.attrs["calling_conv"] == 2)
+    return bool(
+        func.attrs
+        and "calling_conv" in func.attrs
+        and func.attrs["calling_conv"] == 2
+    )
 
 
 def is_host_call(func: tir.PrimFunc):
@@ -34,13 +38,17 @@ def is_host_call(func: tir.PrimFunc):
 
 @tvm.register_func("tvm_tl_cuda_compile", override=True)
 def tvm_callback_cuda_compile(code, target):
-    project_root = osp.join(osp.dirname(__file__), "../..")
+    project_root = osp.join(osp.dirname(__file__), "../../..")
     tl_template_path = osp.abspath(osp.join(project_root, "src"))
     if "TL_CUTLASS_PATH" in os.environ:
         cutlass_path = os.environ["TL_CUTLASS_PATH"]
     else:
-        cutlass_path = osp.abspath(osp.join(project_root, "3rdparty/cutlass/include"))
-    compute_version = "".join(nvcc.get_target_compute_version(target).split("."))
+        cutlass_path = osp.abspath(
+            osp.join(project_root, "3rdparty/cutlass/include")
+        )
+    compute_version = "".join(
+        nvcc.get_target_compute_version(target).split(".")
+    )
 
     # special handle for Hopper
     if compute_version == "90":
@@ -68,8 +76,11 @@ def tvm_callback_cuda_compile(code, target):
 
 def extrac_params(func: tir.PrimFunc):
     buffers = [func.buffer_map[var] for var in func.params]
-    tensor_types = [relay.TensorType(buffer.shape, buffer.dtype) for buffer in buffers]
+    tensor_types = [
+        relay.TensorType(buffer.shape, buffer.dtype) for buffer in buffers
+    ]
     return tensor_types
+
 
 # TODO(lei): Should enhance to support IRModule with multiple functions
 def lower(func, target="cuda", runtime_only=False):

@@ -27,7 +27,7 @@ from tvm.contrib.dlpack import to_pytorch_func
 from torch.utils.dlpack import to_dlpack
 from tvm.runtime import ndarray
 
-from .engine import lower
+from tilelang.engine import lower
 
 
 class TensorSupplyType(Enum):
@@ -53,11 +53,17 @@ def get_tensor_supply(supply_type: TensorSupplyType):
             return torch.ones(*shape, device=device, dtype=dtype)
 
         if supply_type == TensorSupplyType.Integer:
-            return torch.randint(low=-2, high=3, size=shape, device=device, dtype=dtype)
+            return torch.randint(
+                low=-2, high=3, size=shape, device=device, dtype=dtype
+            )
         elif supply_type == TensorSupplyType.Uniform:
-            return torch.empty(*shape, device=device, dtype=dtype).uniform_(-1.0, 1.0)
+            return torch.empty(*shape, device=device, dtype=dtype).uniform_(
+                -1.0, 1.0
+            )
         elif supply_type == TensorSupplyType.Normal:
-            return torch.empty(*shape, device=device, dtype=dtype).normal_(-1.0, 1.0)
+            return torch.empty(*shape, device=device, dtype=dtype).normal_(
+                -1.0, 1.0
+            )
         elif supply_type == TensorSupplyType.Randn:
             return torch.randn(*shape, device=device).to(dtype)
         elif supply_type == TensorSupplyType.Zero:
@@ -71,7 +77,9 @@ def get_tensor_supply(supply_type: TensorSupplyType):
 
 
 class ConvertTorch:
-    def __init__(self, mod, params: List[TensorType], result_idx: List[int]) -> None:
+    def __init__(
+        self, mod, params: List[TensorType], result_idx: List[int]
+    ) -> None:
         self.mod = mod
         self.params = params
         self.result_idx = result_idx
@@ -130,7 +138,12 @@ class Profiler(ConvertTorch):
                 ins.append(self.supply(self.params[i]))
         return ins
 
-    def assert_allclose(self, reference_program: callable, atol: float = 1e-8, rtol: float = 1e-5):
+    def assert_allclose(
+        self,
+        reference_program: callable,
+        atol: float = 1e-8,
+        rtol: float = 1e-5,
+    ):
         ins = self._get_inputs()
         ref_outs = reference_program(*ins)
         torch.cuda.synchronize()
@@ -153,7 +166,11 @@ class Profiler(ConvertTorch):
         for _ in range(repeat):
             lib_outs = self.func(*ins)
             for lhs, rhs in zip(lib_outs, ref_outs):
-                assert torch.allclose(lhs, rhs), ["result is not consistent", lhs, rhs]
+                assert torch.allclose(lhs, rhs), [
+                    "result is not consistent",
+                    lhs,
+                    rhs,
+                ]
 
     def run_once(self):
         ins = self._get_inputs()
@@ -172,7 +189,11 @@ class Profiler(ConvertTorch):
             ins = self._get_inputs()
             bench_func = partial(func, *ins)
             return do_bench(
-                bench_func, warmup=warmup, rep=rep, _n_warmup=n_warmup, _n_repeat=n_repeat
+                bench_func,
+                warmup=warmup,
+                rep=rep,
+                _n_warmup=n_warmup,
+                _n_repeat=n_repeat,
             )
         elif profiler == "tvm":
             ins = self._get_inputs(with_output=True)
@@ -244,7 +265,9 @@ def do_bench(
         n_warmup = _n_warmup
     if _n_repeat > 0:
         n_repeat = _n_repeat
-    start_event = [torch.cuda.Event(enable_timing=True) for i in range(n_repeat)]
+    start_event = [
+        torch.cuda.Event(enable_timing=True) for i in range(n_repeat)
+    ]
     end_event = [torch.cuda.Event(enable_timing=True) for i in range(n_repeat)]
     # Warm-up
     for _ in range(n_warmup):
@@ -266,10 +289,13 @@ def do_bench(
     # Record clocks
     torch.cuda.synchronize()
     times = torch.tensor(
-        [s.elapsed_time(e) for s, e in zip(start_event, end_event)], dtype=torch.float
+        [s.elapsed_time(e) for s, e in zip(start_event, end_event)],
+        dtype=torch.float,
     )
     if quantiles is not None:
-        ret = torch.quantile(times, torch.tensor(quantiles, dtype=torch.float)).tolist()
+        ret = torch.quantile(
+            times, torch.tensor(quantiles, dtype=torch.float)
+        ).tolist()
         if len(ret) == 1:
             ret = ret[0]
         return ret

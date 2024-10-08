@@ -17,7 +17,7 @@
 """Wrapping transformations."""
 # pylint: disable=invalid-name, unsupported-binary-operation
 
-from . import _ffi_api
+from tilelang import _ffi_api
 
 
 def ClusterPlanning():
