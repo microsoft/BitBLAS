@@ -1,101 +1,127 @@
-<!--- Licensed to the Apache Software Foundation (ASF) under one -->
-<!--- or more contributor license agreements.  See the NOTICE file -->
-<!--- distributed with this work for additional information -->
-<!--- regarding copyright ownership.  The ASF licenses this file -->
-<!--- to you under the Apache License, Version 2.0 (the -->
-<!--- "License"); you may not use this file except in compliance -->
-<!--- with the License.  You may obtain a copy of the License at -->
-
-<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
-
-<!--- Unless required by applicable law or agreed to in writing, -->
-<!--- software distributed under the License is distributed on an -->
-<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
-<!--- KIND, either express or implied.  See the License for the -->
-<!--- specific language governing permissions and limitations -->
-<!--- under the License. -->
-
 <div align="center">
 
 # Tile Language (tile-lang)
 
 </div>
 
-Tile Language (tile-lang) is an extension of the Apache tvm designed to facilitate the development of simple yet high-performance GPU kernels. The project tile-lang currently supports CUDA devices with architectures including Ampere (sm_80+), Turing (sm_75), and Volta (sm_70).
+Tile Language (**tile-lang**) is an extension of [Apache TVM](https://tvm.apache.org/) designed to facilitate the development of simple yet high-performance GPU kernels. Currently, **tile-lang** supports CUDA devices with architectures including Ampere (sm_80+), Turing (sm_75), and Volta (sm_70).
 
-This project is co-authored by [nox-410](https://github.com/nox-410) and [chengyupku](https://github.com/chengyupku) and [LeiWang1999](https://github.com/LeiWang1999).
+This project is co-authored by [nox-410](https://github.com/nox-410), [chengyupku](https://github.com/chengyupku), and [LeiWang1999](https://github.com/LeiWang1999).
 
-Let's get started with a simple GEMM example.
+## Features
+
+- **Simplified Syntax**: Write GPU kernels with a more straightforward and expressive syntax.
+- **High Performance**: Achieve performance comparable to manually optimized implementations.
+- **Advanced Operations**: Support for complex operations like convolutions, flash-attention, and normalizations.
+- **Compatibility**: Works with modern CUDA architectures.
+
+## Getting Started
+
+Here's how you can get started with a simple GEMM (General Matrix Multiplication) example:
 
 ```python
 import tilelang
+from tilelang import Profiler
 import tilelang.language as T
 
-def matmul(M, N, K, block_M, block_N, block_K, dtype="float16", accum_dtype = "float"):
+def matmul(M, N, K, block_M, block_N, block_K, dtype="float16", accum_dtype="float"):
     @T.prim_func
     def main(
         A: T.Buffer((M, K), dtype),
         B: T.Buffer((K, N), dtype),
         C: T.Buffer((M, N), dtype),
-        bias: T.Buffer([N], dtype),
     ):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=128) as (bx, by):
             A_shared = T.alloc_shared((block_M, block_K), dtype)
             B_shared = T.alloc_shared((block_K, block_N), dtype)
             C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
-            bias_local = T.alloc_fragment((block_N,), dtype)
+
             T.clear(C_local)
             for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=3):
                 T.copy(A[by * block_M, k * block_K], A_shared)
                 T.copy(B[k * block_K, bx * block_N], B_shared)
                 T.gemm(A_shared, B_shared, C_local)
-            T.copy(bias[bx * block_N], bias_local)
-            for i, j in T.Parallel(block_M, block_N):
-                C_local[i, j] += bias_local[j]
+
             T.copy(C_local, C[by * block_M, bx * block_N])
 
     return main
 
-func = matmul(1024, 1024, 1024, 32, 32, 32)
+func = matmul(1024, 1024, 1024, 128, 128, 32)
 
 print(func)
 
-rt_mod, _ = tilelang.lower(func)
+rt_mod, params = tilelang.lower(func)
 
-# CUDA Source
+profiler = Profiler(rt_mod, params, result_idx=[2])
+
+import torch
+a = torch.randn(1024, 1024).cuda().half()
+b = torch.randn(1024, 1024).cuda().half()
+
+c = profiler(a, b)
+
+ref_c = a @ b
+
+print(c)
+print(ref_c)
+
+torch.testing.assert_close(c, ref_c, rtol=1e-2, atol=1e-2)
+
+# Get CUDA Source
 print(rt_mod.imported_modules[0].get_source())
-
-```
-Despite this simple examples, tilalang can be used to write more complicated examples including convolutions, flash-attention-v2 (fwd & bwd), normalizations, these examples can be found under folder tl_scripts.
-
-The performance of our flash-attention is comparable to the manually implementation. (see [Link](./tl_doc/flash_perf.md)).
-
-## Install
-
-Install is similar to tvm. First, fill in USE_CUDA and USE_LLVM in cmake/config.cmake, like this:
-```bash
-git clone --recursive https://github.com/TileLang/tile-lang
 ```
 
-Then install
+Even though this is a simple example, **tile-lang** can be used to write more complex operations, including convolutions, flash-attention-v2 (forward & backward), and normalizations. These examples can be found under the `tl_scripts` folder.
 
-```bash
-./install.sh
-```
+The performance of our flash-attention implementation is comparable to manually optimized versions. See the [performance comparison](./tl_doc/flash_perf.md) for more details.
 
-Note 1: It is recommeneded to use the latest cuda toolkit, because we requires nvcc to jit compile the generated CUDA code.
+## Installation
 
-Note 2: Don't forget to clone the submodules.
+Installation is similar to that of TVM. Follow these steps:
 
-## Operator Example
+1. **Clone the Repository**:
+
+   ```bash
+   git clone --recursive https://github.com/TileLang/tile-lang
+   ```
+
+   **Note**: Ensure you use the `--recursive` flag to clone submodules.
+
+2. **Configure Build Options**:
+
+   Edit the `cmake/config.cmake` file to enable CUDA and LLVM support:
+
+   ```cmake
+   set(USE_CUDA ON)
+   set(USE_LLVM ON)
+   ```
+
+3. **Install**:
+
+   Run the installation script:
+
+   ```bash
+   ./install.sh
+   ```
+
+   **Notes**:
+
+   - It is recommended to use the latest CUDA toolkit because `nvcc` is required to JIT compile the generated CUDA code.
+   - Ensure that all submodules are correctly cloned.
+
+## Operator Examples
+
 ### Flash Attention
+
+Below is an example of implementing Flash Attention using **tile-lang**:
+
 ```python
 @T.prim_func
-def flash_atten_v3(
-    Q: T.Buffer(shape, dtype), # type: ignore
-    K: T.Buffer(shape, dtype), # type: ignore
-    V: T.Buffer(shape, dtype), # type: ignore
-    Output: T.Buffer(shape, dtype), # type: ignore
+def flash_attention_v3(
+    Q: T.Buffer(shape, dtype),
+    K: T.Buffer(shape, dtype),
+    V: T.Buffer(shape, dtype),
+    Output: T.Buffer(shape, dtype),
 ):
     with T.Kernel(T.ceildiv(seq_len, block_M), heads, batch, threads=thread_num) as (bx, by, bz):
         Q_shared = T.alloc_shared([block_M, dim], dtype)
@@ -150,7 +176,9 @@ def flash_atten_v3(
         T.copy(acc_o, Output[bz, bx * block_M : (bx + 1) * block_M, by, :])
 ```
 
-### Dequant GEMM
+### Dequantization GEMM
+
+An example of implementing a dequantization GEMM:
 
 ```python
 @T.prim_func
@@ -168,20 +196,29 @@ def dequant_matmul(
 
         T.clear(Ct_local)
         for k in T.Pipelined(
-        T.ceildiv(K, block_K), 
-        num_stages=num_stages
+            T.ceildiv(K, block_K), 
+            num_stages=num_stages
         ):
-        T.copy(A[by * block_M, k * block_K], A_shared)
-        T.copy(B[bx * block_N, k * block_K // num_elems_per_byte], B_shared)
-        T.copy(B_shared, B_local)
-        for i, j in T.Parallel(block_N, block_K):
-            B_dequantize_local[i, j] = _tir_packed_to_unsigned_convert("int", 8)(
-            num_bits,
-            B_local[i, j // 2],
-            j % 2,
-            dtype=in_dtype,
-            )
-        T.gemm(B_dequantize_local, A_shared, Ct_local, transpose_B=True)
+            T.copy(A[by * block_M, k * block_K], A_shared)
+            T.copy(B[bx * block_N, k * block_K // num_elems_per_byte], B_shared)
+            T.copy(B_shared, B_local)
+            for i, j in T.Parallel(block_N, block_K):
+                B_dequantize_local[i, j] = _tir_packed_to_unsigned_convert("int", 8)(
+                    num_bits,
+                    B_local[i, j // 2],
+                    j % 2,
+                    dtype=in_dtype,
+                )
+            T.gemm(B_dequantize_local, A_shared, Ct_local, transpose_B=True)
         T.copy(Ct_local, Ct[bx * block_N, by * block_M])
-
 ```
+
+## Roadmap
+
+- [ ] **Transform BitBLAS 3rdparty tvm into tl_core branch and tilelang**.
+
+---
+
+Feel free to explore the repository and contribute to the project. If you have any questions or suggestions, please open an issue or contact the authors.
+
+**Happy Coding!**
