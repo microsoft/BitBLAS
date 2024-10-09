@@ -1,20 +1,20 @@
 import tvm
-from tvm import tir, tl, relay
+from tvm import tl
 import tvm.tl.language as T
-from functools import partial
-import bitblas
+
 
 def modify(
     with_B: bool = False,
     with_bias: bool = False,
 ):
+
     @T.prim_func
     def main(
-        A: T.Buffer((64, 64)),
-        B: T.Buffer((64, 64)),
-        C: T.Buffer((64, 64)),
-        D: T.Buffer((64, 64)),
-        bias: T.Buffer((64, 64)),
+            A: T.Buffer((64, 64)),
+            B: T.Buffer((64, 64)),
+            C: T.Buffer((64, 64)),
+            D: T.Buffer((64, 64)),
+            bias: T.Buffer((64, 64)),
     ):
         if with_B:
             if with_bias:
@@ -29,8 +29,9 @@ def modify(
                 T.copy(C, C_shared)
                 T.gemm(A_shared, C_shared, D_shared)
                 T.copy(D_shared, D)
-    
+
     return main
+
 
 def test_modify(with_B=False, with_bias=False):
     tester = modify(with_B=with_B, with_bias=with_bias)
@@ -39,7 +40,8 @@ def test_modify(with_B=False, with_bias=False):
     assert mod != mod2
 
 
-def matmul(M, N, K, block_M, block_N, block_K, dtype="float16", accum_dtype = "float"):
+def matmul(M, N, K, block_M, block_N, block_K, dtype="float16", accum_dtype="float"):
+
     @T.prim_func
     def main(
         a: T.handle,
@@ -49,7 +51,7 @@ def matmul(M, N, K, block_M, block_N, block_K, dtype="float16", accum_dtype = "f
         A = T.match_buffer(a, (M, K), dtype=dtype)
         B = T.match_buffer(b, (K, N), dtype=dtype)
         C = T.match_buffer(c, (M, N), dtype=accum_dtype)
-        
+
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=128) as (bx, by):
             A_shared = T.alloc_shared((block_M, block_K), dtype)
             B_shared = T.alloc_shared((block_K, block_N), dtype)
