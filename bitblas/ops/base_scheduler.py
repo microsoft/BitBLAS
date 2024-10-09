@@ -2,7 +2,7 @@ from tvm import IRModule
 from tvm.tir import PrimFunc
 from typing import Union, Callable
 from dataclasses import dataclass, field
-from tvm.tir.transform import Simplify
+from tvm.tl.transform import Simplify
 from abc import ABC, abstractmethod
 from bitblas.base.arch import TileDevice
 
