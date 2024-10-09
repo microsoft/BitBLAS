@@ -43,8 +43,12 @@ def conv2d_nhwc_hwio(n, f, h, w, c, kh, kw, s, d, p, in_dtype="float16", out_dty
     C = te.compute(
         out_shape,
         lambda n, h, w, f: te.sum(
-            pad[n, h * stride_h + kh * dilation_h, w * stride_w + kw * dilation_w, c,] * B[kh, kw,
-                                                                                           c, f],
+            pad[
+                n,
+                h * stride_h + kh * dilation_h,
+                w * stride_w + kw * dilation_w,
+                c,
+            ] * B[kh, kw, c, f],
             axis=[kh, kw, c],
         ),
         name="C",

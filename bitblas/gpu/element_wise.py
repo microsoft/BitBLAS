@@ -45,15 +45,9 @@ class ElementWise(ScheduleRule):
             vector_factors = [1] * len(block_factors)
             vector_factors[-1] = vec_len
 
-            if (
-                any(
-                    [
-                        sch.get(loop_rv).thread_binding is not None
-                        for loop_rv in sch.get_loops(block)
-                    ]
-                )
-                or len(sch.get_loops(block)) == 0
-            ):
+            if (any([
+                    sch.get(loop_rv).thread_binding is not None for loop_rv in sch.get_loops(block)
+            ]) or len(sch.get_loops(block)) == 0):
                 continue
 
             for loop, iter_type in zip(sch.get_loops(block), dom_kind):
@@ -68,15 +62,11 @@ class ElementWise(ScheduleRule):
             thread_loops = []
             inner_loops = []
             for s_loop, block_factor, step_factor, thread_factor in zip(
-                s_loops, block_factors, step_factors, thread_factors
-            ):
+                    s_loops, block_factors, step_factors, thread_factors):
                 block_loop, inner_loop = sch.split(s_loop, factors=[None, block_factor])
                 vthread_loop, inner_loop = sch.split(
-                    inner_loop, factors=[None, thread_factor * step_factor]
-                )
-                thread_loop, inner_loop = sch.split(
-                    inner_loop, factors=[None, step_factor]
-                )
+                    inner_loop, factors=[None, thread_factor * step_factor])
+                thread_loop, inner_loop = sch.split(inner_loop, factors=[None, step_factor])
                 block_loops.append(block_loop)
                 vthread_loops.append(vthread_loop)
                 thread_loops.append(thread_loop)
@@ -84,14 +74,8 @@ class ElementWise(ScheduleRule):
 
             # inner virtual thread first
             vthread_loops = list(reversed(vthread_loops))
-            sch.reorder(
-                *block_loops,
-                *vthread_loops,
-                *thread_loops,
-                *inner_loops,
-                *r_loops,
-                *o_loops
-            )
+            sch.reorder(*block_loops, *vthread_loops, *thread_loops, *inner_loops, *r_loops,
+                        *o_loops)
             sch.bind(sch.fuse(*block_loops), "blockIdx.x")
             sch.bind(sch.fuse(*thread_loops), "threadIdx.x")
             if len(vthread_loops) > 3:
@@ -99,10 +83,10 @@ class ElementWise(ScheduleRule):
 
             for i, ax in enumerate(vthread_loops):
                 sch.bind(ax, "vthread" + [".x", ".y", ".z"][i])
-            
+
             # vectorize the last axis
             ax = inner_loops[-1]
             if sch.get(ax).extent.value > 1:
                 sch.vectorize(ax)
-                
+
         return sch
