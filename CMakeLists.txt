@@ -16,20 +16,28 @@ else()
   endmacro()
 endif()
 
-if(EXISTS ${CMAKE_BINARY_DIR}/config.cmake)
-  include(${CMAKE_BINARY_DIR}/config.cmake)
-else()
-  if(EXISTS ${CMAKE_SOURCE_DIR}/config.cmake)
-    include(${CMAKE_SOURCE_DIR}/config.cmake)
+if (DEFINED TVM_PREBUILD_PATH)
+  message(STATUS "TVM_PREBUILD_PATH: ${TVM_PREBUILD_PATH}")
+  if(EXISTS ${TVM_PREBUILD_PATH}/config.cmake)
+    include(${TVM_PREBUILD_PATH}/config.cmake)
   endif()
-endif()
+else()
+  if(EXISTS ${CMAKE_BINARY_DIR}/config.cmake)
+    include(${CMAKE_BINARY_DIR}/config.cmake)
+  else()
+    if(EXISTS ${CMAKE_SOURCE_DIR}/config.cmake)
+      include(${CMAKE_SOURCE_DIR}/config.cmake)
+    endif()
+  endif()
 
-if(NOT CMAKE_BUILD_TYPE)
-  set(
-    CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Build type" FORCE
-  )
-  message(STATUS "Setting default build type to " ${CMAKE_BUILD_TYPE})
-endif(NOT CMAKE_BUILD_TYPE)
+  if(NOT CMAKE_BUILD_TYPE)
+    set(
+      CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Build type" FORCE
+    )
+    message(STATUS "Setting default build type to " ${CMAKE_BUILD_TYPE})
+  endif(NOT CMAKE_BUILD_TYPE)
+
+endif()
 
 
 if (TILE_LANG_INSTALL_STATIC_LIB)
