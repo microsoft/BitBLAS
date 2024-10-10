@@ -24,7 +24,7 @@ except ImportError as e:
     autogptq_bitblas_cuda = bitblas_import_exception
 
 from bitblas.utils import auto_detect_nvidia_target  # noqa: E402
-from bitblas.ops.matmul import MatmulConfig, Matmul  # noqa: E402
+from bitblas.ops import MatmulConfig, Matmul  # noqa: E402
 
 
 class Linear(nn.Module):

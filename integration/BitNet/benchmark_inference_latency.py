@@ -43,11 +43,11 @@ def main():
         torch_dtype=torch.float16,
     ).half()
     with torch.no_grad():
-        model._post_process_weights()
+         model.quantize()
+         model = torch.compile(model)
     
     benchmark_sets = [
-        (1, 1),
-        (128, 1),
+        (1024, 1),
         (1, 2048)
     ]
     for batch_size, seq_len in benchmark_sets:
