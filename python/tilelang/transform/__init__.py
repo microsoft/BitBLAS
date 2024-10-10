@@ -122,3 +122,14 @@ def ThreadPartialSync(storage_scope: str):
         The result pass
     """
     return _ffi_api.ThreadPartialSync(storage_scope)  # type: ignore
+
+
+def Simplify():
+    """Simplify
+
+    Returns
+    -------
+    fpass : tvm.transform.Pass
+        The result pass
+    """
+    return _ffi_api.Simplify()  # type: ignore
