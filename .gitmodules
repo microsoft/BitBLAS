@@ -6,3 +6,7 @@
 	path = 3rdparty/cutlass
 	url = https://github.com/TileLang/cutlass
 	branch = tldev
+[submodule "3rdparty/tile-lang"]
+	path = 3rdparty/tile-lang
+	url = https://github.com/TileLang/tile-lang
+	branch = dev
