@@ -112,11 +112,6 @@ endif()
 add_library(tilelang_module SHARED $<TARGET_OBJECTS:tilelang_objs>)
 target_link_libraries(tilelang_module PUBLIC tvm)
 
-
-set_property(TARGET tilelang_module APPEND PROPERTY LINK_OPTIONS "${MLC_VISIBILITY_FLAG}")
-set_property(TARGET tilelang APPEND PROPERTY LINK_OPTIONS "${MLC_VISIBILITY_FLAG}")
-
-
 # when this option is on,
 # we install all static lib deps into lib
 if (TILE_LANG_INSTALL_STATIC_LIB)

@@ -21,24 +21,30 @@ import ctypes
 
 SKIP_LOADING_TILELANG_SO = os.environ.get("SKIP_LOADING_TILELANG_SO", "0")
 
-# tvm path
-install_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tvm")
-install_cutlass_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "3rdparty", "cutlass")
-if os.path.exists(install_tvm_path) and install_tvm_path not in sys.path:
-    os.environ["PYTHONPATH"] = install_tvm_path + "/python:" + os.environ.get("PYTHONPATH", "")
-    os.environ["TL_CUTLASS_PATH"] = install_cutlass_path + "/include"
-    sys.path.insert(0, install_tvm_path + "/python")
+# Handle TVM_IMPORT_PYTHON_PATH to import tvm from the specified path
+TVM_IMPORT_PYTHON_PATH = os.environ.get("TVM_IMPORT_PYTHON_PATH", None)
 
-develop_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "3rdparty", "tvm")
-tvm_library_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "build", "tvm")
-develop_cutlass_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "..", "..", "3rdparty", "cutlass")
-if os.path.exists(develop_tvm_path) and develop_tvm_path not in sys.path:
-    os.environ["PYTHONPATH"] = develop_tvm_path + "/python:" + os.environ.get("PYTHONPATH", "")
-    os.environ["TL_CUTLASS_PATH"] = develop_cutlass_path + "/include"
-    os.environ["TVM_LIBRARY_PATH"] = tvm_library_path
-    sys.path.insert(0, develop_tvm_path + "/python")
+if TVM_IMPORT_PYTHON_PATH is not None:
+    os.environ["PYTHONPATH"] = TVM_IMPORT_PYTHON_PATH + ":" + os.environ.get("PYTHONPATH", "")
+    sys.path.insert(0, TVM_IMPORT_PYTHON_PATH + "/python")
+else:
+    install_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tvm")
+    install_cutlass_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "3rdparty", "cutlass")
+    if os.path.exists(install_tvm_path) and install_tvm_path not in sys.path:
+        os.environ["PYTHONPATH"] = install_tvm_path + "/python:" + os.environ.get("PYTHONPATH", "")
+        os.environ["TL_CUTLASS_PATH"] = install_cutlass_path + "/include"
+        sys.path.insert(0, install_tvm_path + "/python")
+
+    develop_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "3rdparty", "tvm")
+    tvm_library_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "build", "tvm")
+    develop_cutlass_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "..", "3rdparty", "cutlass")
+    if os.path.exists(develop_tvm_path) and develop_tvm_path not in sys.path:
+        os.environ["PYTHONPATH"] = develop_tvm_path + "/python:" + os.environ.get("PYTHONPATH", "")
+        os.environ["TL_CUTLASS_PATH"] = develop_cutlass_path + "/include"
+        os.environ["TVM_LIBRARY_PATH"] = tvm_library_path
+        sys.path.insert(0, develop_tvm_path + "/python")
 
 import tvm
 import tvm._ffi.base
