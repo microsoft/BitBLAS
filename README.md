@@ -119,9 +119,6 @@ Here's how you can get started with a simple GEMM (General Matrix Multiplication
 import tilelang
 from tilelang import Profiler
 import tilelang.language as T
-from bitblas.tl.utils import (
-    make_swizzle_layout,
-)
 
 def matmul(M, N, K, block_M, block_N, block_K, dtype="float16", accum_dtype="float"):
     @T.prim_func
@@ -135,31 +132,10 @@ def matmul(M, N, K, block_M, block_N, block_K, dtype="float16", accum_dtype="flo
             B_shared = T.alloc_shared((block_K, block_N), dtype)
             C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
 
-            
-            # Apply memory layout optimizations
-            # Or you define your own memory layout
-            T.annotate_layout({
-                A_shared: make_swizzle_layout(A_shared),
-                B_shared: make_swizzle_layout(B_shared),
-            })
-
-            # Enable rasterization for better L2 Cache Locality
-            T.use_swizzle(panel_size=10, enable=enable_rasterization)
-
-            # Clear the local buffer
             T.clear(C_local)
-
-            # Auto pipeline the computation
             for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=3):
                 T.copy(A[by * block_M, k * block_K], A_shared)
-
-                # Instead of using
-                # T.copy(B[k * block_K, bx * block_N], B_shared)
-                # we can also use Parallel to auto map the thread
-                # bindings and vectorize the copy operation.
-                for k, j in T.Parallel(block_K, block_N):
-                    B_shared[k, j] = B[ko * block_K + k, bx * block_N + j]
-
+                T.copy(B[k * block_K, bx * block_N], B_shared)
                 T.gemm(A_shared, B_shared, C_local)
 
             T.copy(C_local, C[by * block_M, bx * block_N])
@@ -189,6 +165,58 @@ torch.testing.assert_close(c, ref_c, rtol=1e-2, atol=1e-2)
 
 # Get CUDA Source
 print(rt_mod.imported_modules[0].get_source())
+```
+
+TL also provide interface for users to manupulate the memory layout, pipeline and enable rasterization for better L2 Cache Locality. Here is an example of how to use the memory layout and rasterization:
+
+```python
+import tilelang.language as T
+from bitblas.tl.utils import (
+    make_swizzle_layout,
+)
+
+def matmul(M, N, K, block_M, block_N, block_K, dtype="float16", accum_dtype="float"):
+    @T.prim_func
+    def main(
+        A: T.Buffer((M, K), dtype),
+        B: T.Buffer((K, N), dtype),
+        C: T.Buffer((M, N), dtype),
+    ):
+        with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=128) as (bx, by):
+            A_shared = T.alloc_shared((block_M, block_K), dtype)
+            B_shared = T.alloc_shared((block_K, block_N), dtype)
+            C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
+
+            
+            # Apply memory layout optimizations
+            # Or you can define your own memory layout
+            T.annotate_layout({
+                A_shared: make_swizzle_layout(A_shared),
+                B_shared: make_swizzle_layout(B_shared),
+            })
+
+            # Enable rasterization for better L2 Cache Locality
+            T.use_swizzle(panel_size=10, enable=enable_rasterization)
+
+            # Clear the local buffer
+            T.clear(C_local)
+
+            # Auto pipeline the computation
+            for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=3):
+                T.copy(A[by * block_M, k * block_K], A_shared)
+
+                # Instead of using
+                # T.copy(B[k * block_K, bx * block_N], B_shared)
+                # we can also use Parallel to auto map the thread
+                # bindings and vectorize the copy operation.
+                for k, j in T.Parallel(block_K, block_N):
+                    B_shared[k, j] = B[ko * block_K + k, bx * block_N + j]
+
+                T.gemm(A_shared, B_shared, C_local)
+
+            T.copy(C_local, C[by * block_M, bx * block_N])
+
+    return main
 ```
 
 Even though this is a simple example, **tile-lang** can be used to write more complex operations, including convolutions, flash-attention-v2 (forward & backward), and normalizations. These examples can be found under the `tl_scripts` folder.
