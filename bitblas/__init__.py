@@ -107,7 +107,7 @@ else:
             develop_tvm_path + "/python:" + os.environ.get("PYTHONPATH", ""))
         sys.path.insert(0, develop_tvm_path + "/python")
 
-if os.environ.get("TVM_LIBRARY_PATH", None) is None:
+if os.environ.get("TL_CUTLASS_PATH", None) is None:
     install_cutlass_path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "3rdparty", "cutlass")
     develop_cutlass_path = os.path.join(

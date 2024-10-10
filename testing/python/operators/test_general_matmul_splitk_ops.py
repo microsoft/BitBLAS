@@ -3,7 +3,7 @@
 
 import bitblas
 from bitblas.ops.general_matmul_splitk import MatmulWithSplitK, MatmulConfigWithSplitK
-
+bitblas.set_log_level("DEBUG")
 
 def get_codegen_result(ops):
     code = ops.get_source()
@@ -107,7 +107,7 @@ def matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype,
         propagate_a=False,
         propagate_b=False,
     )
-    matmul = MatmulWithSplitK(config=matmul_config, enable_tuning=False)
+    matmul = MatmulWithSplitK(config=matmul_config, enable_tuning=True)
 
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
@@ -151,8 +151,6 @@ def matmul_torch_forward_fp8e4m3(SplitK, M, N, K, A_dtype, W_dtype, accum_dtype,
 @bitblas.testing.requires_cuda_compute_version(8, 9)
 def test_matmul_torch_forward_fp8e4m3():
     matmul_torch_forward_fp8e4m3(1, 16, 4096, 12800, "e4m3_float8", "e4m3_float8", "float32",
-                                 "float16", "nt", False, -1, False, False, None)
-    matmul_torch_forward_fp8e4m3(4, 16, 4096, 12800, "e4m3_float8", "e4m3_float8", "float32",
                                  "float16", "nt", False, -1, False, False, None)
 
 

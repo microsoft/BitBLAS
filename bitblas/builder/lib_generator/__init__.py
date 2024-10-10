@@ -50,24 +50,24 @@ class LibraryGenerator(object):
         ]
 
         if with_tl:
-            install_tvm_path = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), "../..", "3rdparty", "tvm")
-            develop_tvm_path = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), "../../..", "3rdparty", "tvm")
+            install_tilelang_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), "../..", "3rdparty", "tile-lang")
+            develop_tilelang_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), "../../..", "3rdparty", "tile-lang")
 
-            tvm_root = next((path for path in [install_tvm_path, develop_tvm_path]
+            tilelang_root = next((path for path in [install_tilelang_path, develop_tilelang_path]
                              if os.path.exists(path) and path not in sys.path), None)
+            
+            install_cutlass_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), "../..", "3rdparty", "cutlass")
+            develop_cutlass_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), "../../..", "3rdparty", "cutlass")
+            cutlass_root = next((path for path in [install_cutlass_path, develop_cutlass_path]
+                                if os.path.exists(path) and path not in sys.path), None)
 
-            if "TL_TEMPLATE_PATH " in os.environ:
-                tl_template_path = os.environ["TL_TEMPLATE_PATH"]
-            else:
-                tl_template_path = osp.abspath(osp.join(tvm_root, "src/tl"))
-
-            tl_template_path = osp.abspath(osp.join(tvm_root, "src/tl"))
-            if "TL_CUTLASS_PATH" in os.environ:
-                cutlass_path = os.environ["TL_CUTLASS_PATH"]
-            else:
-                cutlass_path = osp.abspath(osp.join(tvm_root, "3rdparty/cutlass/include"))
+            tl_template_path = tl_template_path = os.environ["TL_TEMPLATE_PATH"] if "TL_TEMPLATE_PATH" in os.environ else osp.abspath(osp.join(tilelang_root, "src"))
+            
+            cutlass_path = os.environ["TL_CUTLASS_PATH"] if "TL_CUTLASS_PATH" in os.environ else osp.abspath(osp.join(cutlass_root, "include"))
 
             command += [
                 "-I" + tl_template_path,
