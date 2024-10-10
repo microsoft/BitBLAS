@@ -285,7 +285,7 @@ tvm::transform::Pass LayoutInference() {
   return CreatePrimFuncPass(pass_func, 0, "tl.LayoutInference", {});
 }
 
-TVM_REGISTER_GLOBAL("tl.LayoutInference").set_body_typed(LayoutInference);
+TVM_REGISTER_GLOBAL("tl.transform.LayoutInference").set_body_typed(LayoutInference);
 
 }  // namespace tl
 }  // namespace tvm

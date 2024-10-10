@@ -299,7 +299,7 @@ tvm::transform::Pass LowerTileOp() {
   return CreatePrimFuncPass(pass_func, 0, "tl.LowerTileOp", {});
 }
 
-TVM_REGISTER_GLOBAL("tl.LowerTileOp").set_body_typed(LowerTileOp);
+TVM_REGISTER_GLOBAL("tl.transform.LowerTileOp").set_body_typed(LowerTileOp);
 }  // namespace transform
 
 }  // namespace tl

@@ -928,7 +928,7 @@ tir::transform::Pass InjectSoftwarePipeline() {
   return CreatePrimFuncPass(pass_func, 0, "tl.InjectSoftwarePipeline", {});
 }
 
-TVM_REGISTER_GLOBAL("tl.InjectSoftwarePipeline").set_body_typed(InjectSoftwarePipeline);
+TVM_REGISTER_GLOBAL("tl.transform.InjectSoftwarePipeline").set_body_typed(InjectSoftwarePipeline);
 
 }  // namespace tl
 }  // namespace tvm

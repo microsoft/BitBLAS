@@ -88,7 +88,7 @@ Pass FrontendLegalize() {
   return CreatePrimFuncPass(pass_func, 0, "tl.FrontendLegalize", {});
 }
 
-TVM_REGISTER_GLOBAL("tl.FrontendLegalize").set_body_typed(FrontendLegalize);
+TVM_REGISTER_GLOBAL("tl.transform.FrontendLegalize").set_body_typed(FrontendLegalize);
 
 }  // namespace tl
 }  // namespace tvm

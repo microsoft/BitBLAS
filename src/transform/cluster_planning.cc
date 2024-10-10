@@ -126,7 +126,7 @@ tvm::transform::Pass ClusterPlanning() {
   return CreatePrimFuncPass(pass_func, 0, "tl.ClusterPlanning", {});
 }
 
-TVM_REGISTER_GLOBAL("tl.ClusterPlanning").set_body_typed(ClusterPlanning);
+TVM_REGISTER_GLOBAL("tl.transform.ClusterPlanning").set_body_typed(ClusterPlanning);
 }  // namespace transform
 
 }  // namespace tir

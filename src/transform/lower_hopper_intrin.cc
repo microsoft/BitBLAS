@@ -151,7 +151,7 @@ tvm::transform::Pass LowerHopperIntrin() {
   return CreatePrimFuncPass(pass_func, 0, "tl.LowerHopperIntrin", {});
 }
 
-TVM_REGISTER_GLOBAL("tl.LowerHopperIntrin").set_body_typed(LowerHopperIntrin);
+TVM_REGISTER_GLOBAL("tl.transform.LowerHopperIntrin").set_body_typed(LowerHopperIntrin);
 
 }  // namespace tl
 }  // namespace tvm

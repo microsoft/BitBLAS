@@ -836,7 +836,7 @@ tvm::transform::Pass WarpSpecializedPipeline() {
   return CreatePrimFuncPass(pass_func, 0, "tl.WarpSpecializedPipeline", {});
 }
 
-TVM_REGISTER_GLOBAL("tl.WarpSpecializedPipeline").set_body_typed(WarpSpecializedPipeline);
+TVM_REGISTER_GLOBAL("tl.transform.WarpSpecializedPipeline").set_body_typed(WarpSpecializedPipeline);
 
 }  // namespace tl
 }  // namespace tvm

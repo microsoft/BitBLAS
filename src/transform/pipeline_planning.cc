@@ -236,7 +236,7 @@ tvm::transform::Pass PipelinePlanning() {
   return CreatePrimFuncPass(pass_func, 0, "tl.PipelinePlanning", {});
 }
 
-TVM_REGISTER_GLOBAL("tl.PipelinePlanning").set_body_typed(PipelinePlanning);
+TVM_REGISTER_GLOBAL("tl.transform.PipelinePlanning").set_body_typed(PipelinePlanning);
 
 }  // namespace tl
 }  // namespace tvm

@@ -129,6 +129,7 @@ def lower(func, target="cuda", runtime_only=False):
     # We can find a way better to create var instead
     # of putting the LowerThreadAllreduce before
     # the Legalization.
+    mod = tl.transform.ThreadPartialSync("shared.dyn")(mod)
     mod = tir.transform.LowerThreadAllreduce()(mod)
     mod = tl.transform.LowerHopperIntrin()(mod)
     mod = tir.transform.InjectPTXAsyncCopy()(mod)

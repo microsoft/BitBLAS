@@ -17,7 +17,7 @@
 """Wrapping transformations."""
 # pylint: disable=invalid-name, unsupported-binary-operation
 
-from tilelang import _ffi_api
+from . import _ffi_api
 
 
 def ClusterPlanning():
@@ -106,3 +106,19 @@ def WarpSpecializedPipeline():
         The result pass
     """
     return _ffi_api.WarpSpecializedPipeline()  # type: ignore
+
+
+def ThreadPartialSync(storage_scope: str):
+    """Insert partial sync.
+
+    Parameters
+    ----------
+    storage_scope: str
+        The target storage scope.
+
+    Returns
+    -------
+    fpass : tvm.transform.Pass
+        The result pass
+    """
+    return _ffi_api.ThreadPartialSync(storage_scope)  # type: ignore
