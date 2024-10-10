@@ -3,6 +3,15 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+nproc=$(nproc)
+if [ -z "$nproc" ]; then
+    nproc=1
+fi
+# max 16 jobs
+if [ $nproc -gt 16 ]; then
+    nproc=16
+fi
+
 # install requirements
 pip install -r requirements.txt
 
@@ -49,7 +58,7 @@ echo "Download and extraction completed successfully."
 LLVM_CONFIG_PATH="$(realpath ${EXTRACT_PATH}/$(basename ${FILE_NAME} .tar.xz)/bin/llvm-config)"
 echo "LLVM config path: $LLVM_CONFIG_PATH"
 
-# clone and build tvm
+# update and build tvm
 git submodule update --init --recursive
 
 cd 3rdparty/tvm
@@ -59,11 +68,29 @@ fi
 mkdir build
 cp cmake/config.cmake build
 cd build
+
+# get the absolute path of the TVM prebuild path
+ABS_TVM_PREBUILD_PATH=$(realpath .)
+
 echo "set(USE_LLVM $LLVM_CONFIG_PATH)" >> config.cmake && echo "set(USE_CUDA /usr/local/cuda)" >> config.cmake
 
-cmake .. && make -j && cd ../../..
+cmake .. && make -j $nproc && cd ../../..
+
+# update and build tile-lang
+cd 3rdparty/tile-lang
+if [ -d build ]; then
+    rm -rf build
+fi
+
+mkdir build
+
+cd build
+
+cmake .. -DTVM_PREBUILD_PATH=$ABS_TVM_PREBUILD_PATH && make -j $nproc && cd ../../..
 
 echo "export TVM_HOME=$(pwd)/3rdparty/tvm" >> ~/.bashrc
+# For 3rdparty/tile-lang import path
+echo "export TVM_IMPORT_PYTHON_PATH=\$TVM_HOME/python" >> ~/.bashrc
 echo "export PYTHONPATH=\$TVM_HOME/python:$(pwd):\$PYTHONPATH" >> ~/.bashrc
 
 source ~/.bashrc

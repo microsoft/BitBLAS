@@ -1,9 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
+from bitblas import tvm as tvm
+from bitblas import tilelang as tilelang
 from tvm import arith
 from tvm import DataType
-import tvm.tl.language as T
+import tilelang.language as T
 from typing import Union, Literal
 from .mma_layout import (
     ldmatrix_32x8_to_shared_16x16_layout,

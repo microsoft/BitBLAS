@@ -3,47 +3,6 @@
 import sys
 import os
 
-# installing tvm
-install_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tvm")
-install_cutlass_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "3rdparty", "cutlass")
-if os.path.exists(install_tvm_path) and install_tvm_path not in sys.path:
-    os.environ["PYTHONPATH"] = install_tvm_path + "/python:" + os.environ.get("PYTHONPATH", "")
-    os.environ["TL_CUTLASS_PATH"] = install_cutlass_path + "/include"
-    os.environ["TL_TEMPLATE_PATH"] = os.path.join(install_tvm_path, "src/tl")
-    sys.path.insert(0, install_tvm_path + "/python")
-
-develop_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "tvm")
-develop_cutlass_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "cutlass")
-if os.path.exists(develop_tvm_path) and develop_tvm_path not in sys.path:
-    os.environ["PYTHONPATH"] = develop_tvm_path + "/python:" + os.environ.get("PYTHONPATH", "")
-    os.environ["TL_CUTLASS_PATH"] = develop_cutlass_path + "/include"
-    os.environ["TL_TEMPLATE_PATH"] = os.path.join(install_tvm_path, "src/tl")
-    sys.path.insert(0, develop_tvm_path + "/python")
-
-import tvm as tvm  # noqa: E402
-from . import gpu  # noqa: F401
-from .base import (
-    TileDevice,  # noqa: F401
-    fast_tune,  # noqa: F401
-    ApplyDefaultSchedule,  # noqa: F401
-    ApplyFastTuning,  # noqa: F401
-    BlockInfo,  # noqa: F401
-    IterInfo,  # noqa: F401
-    ScheduleRule,  # noqa: F401
-    normalize_prim_func,  # noqa: F401
-    try_inline,  # noqa: F401
-    try_inline_contiguous_spatial,  # noqa: F401
-)
-
-from . import testing  # noqa: F401
-from .utils import auto_detect_nvidia_target, apply_transform_on_input  # noqa: F401
-from .ops.general_matmul import MatmulConfig, Matmul  # noqa: F401
-from .ops.general_matmul_splitk import MatmulConfigWithSplitK, MatmulWithSplitK  # noqa: F401
-from .ops.general_flashatten import FlashAttenConfig, FlashAtten  # noqa: F401
-from .module import Linear  # noqa: F401
-
 import warnings
 import functools
 import logging
@@ -51,14 +10,14 @@ from tqdm import tqdm
 
 
 class TqdmLoggingHandler(logging.Handler):
-    """ Custom logging handler that directs log output to tqdm progress bar to avoid interference. """
+    """Custom logging handler that directs log output to tqdm progress bar to avoid interference."""
 
     def __init__(self, level=logging.NOTSET):
-        """ Initialize the handler with an optional log level. """
+        """Initialize the handler with an optional log level."""
         super().__init__(level)
 
     def emit(self, record):
-        """ Emit a log record. Messages are written to tqdm to ensure output in progress bars isn't corrupted. """
+        """Emit a log record. Messages are written to tqdm to ensure output in progress bars isn't corrupted."""
         try:
             msg = self.format(record)
             tqdm.write(msg)
@@ -67,8 +26,8 @@ class TqdmLoggingHandler(logging.Handler):
 
 
 def set_log_level(level):
-    """ Set the logging level for the module's logger.
-    
+    """Set the logging level for the module's logger.
+
     Args:
         level (str or int): Can be the string name of the level (e.g., 'INFO') or the actual level (e.g., logging.INFO).
         OPTIONS: 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
@@ -80,15 +39,17 @@ def set_log_level(level):
 
 
 def _init_logger():
-    """ Initialize the logger specific for this module with custom settings and a Tqdm-based handler. """
+    """Initialize the logger specific for this module with custom settings and a Tqdm-based handler."""
     logger = logging.getLogger(__name__)
     handler = TqdmLoggingHandler()
     formatter = logging.Formatter(
-        fmt="%(asctime)s [BitBLAS:%(levelname)s]: %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
+        fmt="%(asctime)s [BitBLAS:%(levelname)s]: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.propagate = False
-    set_log_level('WARNING')
+    set_log_level("WARNING")
 
 
 _init_logger()
@@ -107,12 +68,108 @@ def deprecated(reason):
             warnings.warn(
                 f"Call to deprecated function {func.__name__} ({reason}).",
                 category=DeprecationWarning,
-                stacklevel=2)
+                stacklevel=2,
+            )
             return func(*args, **kwargs)
 
         return new_func
 
     return decorator
 
+
+logger = logging.getLogger(__name__)
+
+# SETUP ENVIRONMENT VARIABLES
+CUTLASS_NOT_FOUND_MESSAGE = ("CUTLASS is not installed or found in the expected path")
+", which may lead to compilation bugs when utilize tilelang backend."
+TL_TEMPLATE_NOT_FOUND_MESSAGE = ("TileLang is not installed or found in the expected path")
+", which may lead to compilation bugs when utilize tilelang backend."
+
+# Handle TVM_IMPORT_PYTHON_PATH to import tvm from the specified path
+TVM_IMPORT_PYTHON_PATH = os.environ.get("TVM_IMPORT_PYTHON_PATH", None)
+
+if TVM_IMPORT_PYTHON_PATH is not None:
+    os.environ["PYTHONPATH"] = (TVM_IMPORT_PYTHON_PATH + ":" + os.environ.get("PYTHONPATH", ""))
+    sys.path.insert(0, TVM_IMPORT_PYTHON_PATH + "/python")
+else:
+    # installed 3rdparty tvm
+    install_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tvm")
+    if os.path.exists(install_tvm_path) and install_tvm_path not in sys.path:
+        os.environ["PYTHONPATH"] = (
+            install_tvm_path + "/python:" + os.environ.get("PYTHONPATH", ""))
+        sys.path.insert(0, install_tvm_path + "/python")
+
+    # developed 3rdparty tvm
+    develop_tvm_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "tvm")
+    if os.path.exists(develop_tvm_path) and develop_tvm_path not in sys.path:
+        os.environ["PYTHONPATH"] = (
+            develop_tvm_path + "/python:" + os.environ.get("PYTHONPATH", ""))
+        sys.path.insert(0, develop_tvm_path + "/python")
+
+if os.environ.get("TVM_LIBRARY_PATH", None) is None:
+    install_cutlass_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "3rdparty", "cutlass")
+    develop_cutlass_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "cutlass")
+    if os.path.exists(install_cutlass_path):
+        os.environ["TL_CUTLASS_PATH"] = install_cutlass_path + "/include"
+    elif (os.path.exists(develop_cutlass_path) and develop_cutlass_path not in sys.path):
+        os.environ["TL_CUTLASS_PATH"] = develop_cutlass_path + "/include"
+    else:
+        logger.warning(CUTLASS_NOT_FOUND_MESSAGE)
+
+install_tilelang_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tile-lang")
+develop_tilelang_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "tile-lang")
+
+if os.environ.get("TL_TEMPLATE_PATH", None) is None:
+    sys.path.insert(0, install_tilelang_path + "/python")
+    if os.path.exists(install_tilelang_path):
+        os.environ["TL_TEMPLATE_PATH"] = os.path.join(install_tilelang_path, "src")
+    elif os.path.exists(develop_tilelang_path):
+        os.environ["TL_TEMPLATE_PATH"] = os.path.join(develop_tilelang_path, "src")
+    else:
+        logger.warning(TL_TEMPLATE_NOT_FOUND_MESSAGE)
+
+if (os.path.exists(install_tilelang_path) and install_tilelang_path not in sys.path):
+    os.environ["PYTHONPATH"] = (
+        install_tilelang_path + "/python:" + os.environ.get("PYTHONPATH", ""))
+    sys.path.insert(0, install_tilelang_path + "/python")
+
+if (os.path.exists(develop_tilelang_path) and develop_tilelang_path not in sys.path):
+    os.environ["PYTHONPATH"] = (
+        develop_tilelang_path + "/python:" + os.environ.get("PYTHONPATH", ""))
+    sys.path.insert(0, develop_tilelang_path + "/python")
+
+import tvm as tvm  # noqa: E402
+import tilelang as tilelang  # noqa: E402
+from . import gpu  # noqa: F401
+from .base import (
+    TileDevice,  # noqa: F401
+    fast_tune,  # noqa: F401
+    ApplyDefaultSchedule,  # noqa: F401
+    ApplyFastTuning,  # noqa: F401
+    BlockInfo,  # noqa: F401
+    IterInfo,  # noqa: F401
+    ScheduleRule,  # noqa: F401
+    normalize_prim_func,  # noqa: F401
+    try_inline,  # noqa: F401
+    try_inline_contiguous_spatial,  # noqa: F401
+)
+
+from . import testing  # noqa: F401
+from .utils import (
+    auto_detect_nvidia_target,  # noqa: F401
+    apply_transform_on_input,  # noqa: F401
+)
+from .ops.general_matmul import MatmulConfig, Matmul  # noqa: F401
+from .ops.general_matmul_splitk import (
+    MatmulConfigWithSplitK,  # noqa: F401
+    MatmulWithSplitK,  # noqa: F401
+)
+from .ops.general_flashatten import FlashAttenConfig, FlashAtten  # noqa: F401
+from .module import Linear  # noqa: F401
 
 __version__ = "0.0.1.dev15"

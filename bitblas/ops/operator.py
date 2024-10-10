@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 from abc import ABC, abstractmethod
 from bitblas import tvm
-from tvm import tl
+from bitblas import tilelang
 from tvm import IRModule
 from tvm.runtime.module import Module
 from tvm.target import Target
@@ -196,7 +196,7 @@ class Operator(object):
                                     "tir.disable_cse_tir": True,
                                     **(self.pass_context if self.pass_context else {})
                                 }):
-                            rt_mod = tl.lower(tl_prim_func, target=target, runtime_only=True)
+                            rt_mod = tilelang.lower(tl_prim_func, target=target, runtime_only=True)
                     else:
                         raise ValueError(f"Unsupported backend: {self.backend}")
             except Exception as build_runtime_error:  # noqa: F841

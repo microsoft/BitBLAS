@@ -2,8 +2,9 @@
 # Licensed under the MIT License.
 
 from bitblas import tvm as tvm
+from bitblas import tilelang as tilelang
 from bitblas.ops.base_scheduler import BaseScheduler
-import tvm.tl.language as T
+import tilelang.language as T
 from dataclasses import dataclass
 from typing import Optional
 import logging

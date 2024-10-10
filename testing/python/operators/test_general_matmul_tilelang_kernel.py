@@ -3,7 +3,7 @@
 
 from bitblas import tvm as tvm
 import bitblas.testing
-from tvm import tl
+from bitblas import tilelang as tilelang
 from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
     MatmulScheduler,
     MatmulFineGrainScheduler,
@@ -40,7 +40,7 @@ def assert_matmul_blocked_with_default_correctness(
         accum_dtype=accum_dtype,
     ).with_default_config()
 
-    mod, params = tl.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -50,7 +50,7 @@ def assert_matmul_blocked_with_default_correctness(
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
-    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
@@ -98,7 +98,7 @@ def assert_matmul_blocked_apply_config_correctness(
         enable_rasterization=enable_rasterization,
     )
 
-    mod, params = tl.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -108,7 +108,7 @@ def assert_matmul_blocked_apply_config_correctness(
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
-    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
@@ -144,7 +144,7 @@ def assert_matmul_fine_grained_with_default_correctness(
         accum_dtype=accum_dtype,
     ).with_default_config()
 
-    mod, params = tl.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -152,7 +152,7 @@ def assert_matmul_fine_grained_with_default_correctness(
     B = (torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) if trans_B else torch.rand(
         K, N, device="cuda", dtype=getattr(torch, in_dtype))) - 0.5
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
-    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     latency = mod.do_bench(mod.func, warmup=25)
 
@@ -264,7 +264,7 @@ def assert_matmul_fine_grained_apply_config_correctness(
         enable_rasterization=enable_rasterization,
     )
 
-    mod, params = tl.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -274,7 +274,7 @@ def assert_matmul_fine_grained_apply_config_correctness(
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
-    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
@@ -310,7 +310,7 @@ def assert_matmul_weight_propagation_with_default_correctness(
         accum_dtype=accum_dtype,
     ).with_default_config()
 
-    mod, params = tl.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -331,7 +331,7 @@ def assert_matmul_weight_propagation_with_default_correctness(
 
     LB = ladder_permutate(B.cpu()).cuda()
 
-    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, LB, C)
 
@@ -384,7 +384,7 @@ def assert_matmul_weight_propagation_apply_config_correctness(
         enable_rasterization=enable_rasterization,
     )
 
-    mod, params = tl.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -405,7 +405,7 @@ def assert_matmul_weight_propagation_apply_config_correctness(
 
     LB = ladder_permutate(B.cpu()).cuda()
 
-    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, LB, C)
 
@@ -458,7 +458,7 @@ def assert_matmul_blocked_dequant_with_default_correctness(
         zeros_mode=zeros_mode,
     ).with_default_config()
 
-    mod, params = tl.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -517,7 +517,7 @@ def assert_matmul_blocked_dequant_with_default_correctness(
 
     permuted_inputs.append(inputs[2])
 
-    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(*permuted_inputs)
 

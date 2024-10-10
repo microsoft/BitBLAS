@@ -1,8 +1,9 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from bitblas import tvm as tvm
+from bitblas import tilelang as tilelang
 from tvm import DataType
-import tvm.tl.language as T
+import tilelang.language as T
 from typing import Optional, List, Literal
 from bitblas.ops.base_scheduler import BaseScheduler
 from bitblas.base.arch import TileDevice

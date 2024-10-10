@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-from tvm import tl
-import tvm.tl.language as T
+from bitblas import tilelang as tilelang
+import tilelang.language as T
 from tvm.tl.autotuner import *
 from functools import partial
 import itertools
@@ -64,8 +64,8 @@ def flashattn_tilelang(batch, heads, seq_len, dim, trans_K, dtypeQKV, dtypeAccu,
         num_stages=num_stages,
         is_causal=is_causal,
     )
-    mod, params = tl.lower(tl_prim_func)
-    mod = tl.Profiler(mod, params, [3], tl.TensorSupplyType.Normal)
+    mod, params = tilelang.lower(tl_prim_func)
+    mod = tilelang.Profiler(mod, params, [3], tilelang.TensorSupplyType.Normal)
     from flash_attn.flash_attn_interface import flash_attn_func
     # TODO Now hack to internal function get the same input, may need to modify 3rdparty:tvm.tl.utils
     ins = mod._get_inputs()
@@ -175,8 +175,8 @@ def flashattn_ref(batch, heads, seq_len, dim, is_causal):
 
         return main
 
-    mod, params = tl.lower(kernel())
-    mod = tl.Profiler(mod, params, [3], tl.TensorSupplyType.Normal)
+    mod, params = tilelang.lower(kernel())
+    mod = tilelang.Profiler(mod, params, [3], tilelang.TensorSupplyType.Normal)
     mod.assert_allclose(partial(ref_program, causal=is_causal), rtol=0.01, atol=0.01)
 
 
@@ -204,7 +204,7 @@ def flashattn_autotune(batch, heads, seq_len, dim, is_causal):
     )
     @jit(
         out_idx=[3],
-        supply_type=tl.TensorSupplyType.Normal,
+        supply_type=tilelang.TensorSupplyType.Normal,
         ref_prog=partial(ref_program, causal=is_causal),
         rtol=0.01,
         atol=0.01,
@@ -396,8 +396,8 @@ def flashattn(batch, heads, seq_len, dim, is_causal):
 
         return main
 
-    mod, params = tl.lower(kernel())
-    mod = tl.Profiler(mod, params, [3], tl.TensorSupplyType.Normal)
+    mod, params = tilelang.lower(kernel())
+    mod = tilelang.Profiler(mod, params, [3], tilelang.TensorSupplyType.Normal)
     mod.assert_allclose(partial(ref_program, causal=is_causal), rtol=0.01, atol=0.01)
 
 

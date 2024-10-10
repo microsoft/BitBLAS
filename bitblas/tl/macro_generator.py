@@ -1,7 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
-import tvm.tl.language as T
+from bitblas import tvm as tvm
+from bitblas import tilelang as tilelang
+import tilelang.language as T
 
 from typing import Union
 from bitblas.ops.common import TransformKind
