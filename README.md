@@ -6,8 +6,6 @@
 
 Tile Language (**tile-lang**) is an extension of [Apache TVM](https://tvm.apache.org/) designed to facilitate the development of simple yet high-performance GPU kernels. Currently, **tile-lang** supports CUDA devices with architectures including Ampere (sm_80+), Turing (sm_75), and Volta (sm_70).
 
-This project is co-authored by [nox-410](https://github.com/nox-410), [chengyupku](https://github.com/chengyupku), and [LeiWang1999](https://github.com/LeiWang1999).
-
 ## Features
 
 - **Simplified Syntax**: Write GPU kernels with a more straightforward and expressive syntax.
@@ -15,7 +13,105 @@ This project is co-authored by [nox-410](https://github.com/nox-410), [chengyupk
 - **Advanced Operations**: Support for complex operations like convolutions, flash-attention, and normalizations.
 - **Compatibility**: Works with modern CUDA architectures.
 
-## Getting Started
+## Installation
+
+We currently provide three ways to install **tile-lang**:
+ - [Install from Source (using your own TVM installation)](#install-from-source-with-your-own-tvm-installation)
+ - [Install from Source (using the bundled TVM submodule)](#install-from-source-with-our-tvm-submodule)
+ - [Install Using the Provided Script](#install-with-provided-script)
+
+
+### Method 1: Install from Source (using your own TVM installation)
+
+If you already have a compatible TVM installation, follow these steps:
+
+1. **Clone the Repository:**
+
+    ```bash
+    git clone --recursive https://github.com/TileLang/tile-lang
+    cd tile-lang
+    ```
+
+   > **Note**: Use the `--recursive` flag to include necessary submodules.
+
+2. **Configure Build Options:**
+
+    Create a build directory and specify your existing TVM path:
+
+    ```bash
+    mkdir build
+    cd build
+    cmake .. -DTVM_PREBUILD_PATH=/your/path/to/tvm/build  # e.g., /workspace/tvm/build
+    make -j 16
+    ```
+
+3. **Set Environment Variables:**
+
+    Update `PYTHONPATH` to include the `tile-lang` Python module:
+
+    ```bash
+    export PYTHONPATH=/your/path/to/tile-lang/python:$PYTHONPATH
+    # TVM_IMPORT_PYTHON_PATH is used by 3rdparty framework to import tvm
+    export TVM_IMPORT_PYTHON_PATH=/your/path/to/tvm/python
+    ```
+
+### Method 2: Install from Source (using the bundled TVM submodule)
+
+If you prefer to use the built-in TVM version, follow these instructions:
+
+1. **Clone the Repository:**
+
+    ```bash
+    git clone --recursive https://github.com/TileLang/tile-lang
+    cd tile-lang
+    ```
+
+   > **Note**: Ensure the `--recursive` flag is included to fetch submodules.
+
+2. **Configure Build Options:**
+
+    Copy the configuration file and enable the desired backends (e.g., LLVM and CUDA):
+
+    ```bash
+    mkdir build
+    cp 3rdparty/tvm/cmake/config.cmake build
+    cd build
+    echo "set(USE_LLVM ON)" >> config.cmake
+    echo "set(USE_CUDA ON)" >> config.cmake
+    cmake ..
+    make -j 16
+    ```
+
+   The build outputs (e.g., `libtilelang.so`, `libtvm.so`, `libtvm_runtime.so`) will be generated in the `build` directory.
+
+3. **Set Environment Variables:**
+
+    Ensure the `tile-lang` Python package is in your `PYTHONPATH`:
+
+    ```bash
+    export PYTHONPATH=/your/path/to/tile-lang/python:$PYTHONPATH
+    ```
+
+### Method 3: Install Using the Provided Script
+
+For a simplified installation, use the provided script:
+
+1. **Clone the Repository:**
+
+    ```bash
+    git clone --recursive https://github.com/TileLang/tile-lang
+    cd tile-lang
+    ```
+
+2. **Run the Installation Script:**
+
+    ```bash
+    bash install.sh
+    ```
+
+This script automates the setup, including submodule initialization and configuration.
+
+### Quick Start
 
 Here's how you can get started with a simple GEMM (General Matrix Multiplication) example:
 
@@ -74,40 +170,6 @@ print(rt_mod.imported_modules[0].get_source())
 Even though this is a simple example, **tile-lang** can be used to write more complex operations, including convolutions, flash-attention-v2 (forward & backward), and normalizations. These examples can be found under the `tl_scripts` folder.
 
 The performance of our flash-attention implementation is comparable to manually optimized versions. See the [performance comparison](./tl_doc/flash_perf.md) for more details.
-
-## Installation
-
-Installation is similar to that of TVM. Follow these steps:
-
-1. **Clone the Repository**:
-
-   ```bash
-   git clone --recursive https://github.com/TileLang/tile-lang
-   ```
-
-   **Note**: Ensure you use the `--recursive` flag to clone submodules.
-
-2. **Configure Build Options**:
-
-   Edit the `cmake/config.cmake` file to enable CUDA and LLVM support:
-
-   ```cmake
-   set(USE_CUDA ON)
-   set(USE_LLVM ON)
-   ```
-
-3. **Install**:
-
-   Run the installation script:
-
-   ```bash
-   ./install.sh
-   ```
-
-   **Notes**:
-
-   - It is recommended to use the latest CUDA toolkit because `nvcc` is required to JIT compile the generated CUDA code.
-   - Ensure that all submodules are correctly cloned.
 
 ## Operator Examples
 
@@ -214,11 +276,12 @@ def dequant_matmul(
 ```
 
 ## Roadmap
-
+- [ ] **Seperate TVM Library and Tile Language**.
 - [ ] **Transform BitBLAS 3rdparty tvm into tl_core branch and tilelang**.
 
 ---
 
-Feel free to explore the repository and contribute to the project. If you have any questions or suggestions, please open an issue or contact the authors.
+Feel free to explore the repository and contribute to the project. If you have any questions or suggestions, please open an issue or contact the authors. This project is co-authored by [nox-410](https://github.com/nox-410), [chengyupku](https://github.com/chengyupku), and [LeiWang1999](https://github.com/LeiWang1999).
+
 
 **Happy Coding!**
