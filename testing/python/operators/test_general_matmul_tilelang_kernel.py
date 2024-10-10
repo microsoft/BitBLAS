@@ -10,6 +10,9 @@ from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
     MatmulWeightPropagationScheduler,
 )
 
+from bitblas.ops.general_matmul.tilelang.dequantize import (
+    MatmulDequantizeScheduler,)
+
 import torch
 import torch.backends
 
@@ -416,6 +419,116 @@ def assert_matmul_weight_propagation_apply_config_correctness(
     torch.testing.assert_close(C, ref_c, rtol=1e0, atol=1e0)
 
 
+def assert_matmul_blocked_dequant_with_default_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+    bit=4,
+    storage_dtype="int8",
+    source_format="uint",
+    with_scaling=False,
+    with_zeros=False,
+    group_size=-1,
+    fast_decoding=False,
+    zeros_mode="original",
+):
+    import numpy as np
+    from bitblas.quantization import general_compress, interleave_weight
+    matmul = MatmulDequantizeScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        num_bits=bit,
+        storage_dtype=storage_dtype,
+        source_format=source_format,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        group_size=group_size,
+        fast_decoding=fast_decoding,
+        zeros_mode=zeros_mode,
+    ).with_default_config()
+
+    mod, params = tl.lower(matmul)
+    src_code = mod.imported_modules[0].get_source()
+    # src_code is the generated cuda source
+    assert src_code is not None
+
+    input_shape = (M, K)
+    weight_shape = (N, K)
+    output_shape = (M, N)
+    inputs = []
+    inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda() - 0.5)
+    maxq = 2**(bit - 1)
+    zeros = maxq
+    if source_format == "uint":
+        inputs.append(torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda())
+    elif source_format == "int":
+        inputs.append(torch.randint(-maxq, maxq, weight_shape, dtype=torch.int8).cuda())
+    else:
+        raise NotImplementedError
+
+    inputs.append(torch.rand(output_shape, dtype=torch.float16).cuda())
+
+    intweight = inputs[1]
+    intweight = intweight.cpu().to(torch.int8)
+    if source_format == "int":
+        intweight = intweight + maxq
+    if with_zeros:
+        inputs[1] = inputs[1] - zeros
+
+    ref_result = torch.matmul(inputs[0], inputs[1].t().to(torch.float16))
+
+    permuted_inputs = []
+    permuted_inputs.append(inputs[0])
+    qw = general_compress(intweight.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
+    # lop3 transformation
+    if fast_decoding:
+        qw = interleave_weight(qw, bit, target_dtype=in_dtype)
+    permuted_inputs.append(torch.from_numpy(qw).cuda())
+    if with_scaling:
+        if group_size == -1:
+            group_size = K
+        permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda())
+    if with_zeros:
+        if zeros_mode == "original":
+            permuted_inputs.append(
+                torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
+        elif zeros_mode == "rescale":
+            original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros
+            scaled_zeros = original_zeros * permuted_inputs[-1]
+            permuted_inputs.append(scaled_zeros)
+        elif zeros_mode == "quantized":
+            original_zeros = torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros
+            qzeros = general_compress(
+                original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
+            permuted_inputs.append(torch.from_numpy(qzeros).cuda())
+        else:
+            raise NotImplementedError
+
+    permuted_inputs.append(inputs[2])
+
+    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+
+    mod(*permuted_inputs)
+
+    print(permuted_inputs[-1])
+    print(ref_result)
+    if zeros_mode == "rescale":
+        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
+    else:
+        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
+
+
 def test_matmul_blocked():
     # Default
     assert_matmul_blocked_with_default_correctness(1024, 1024, 1024)
@@ -445,6 +558,13 @@ def test_matmul_weight_propagation():
     # L2 Cache
     assert_matmul_weight_propagation_apply_config_correctness(
         1024, 1024, 1024, enable_rasterization=True)
+
+
+def test_matmul_blocked_dequant_with_default():
+    assert_matmul_blocked_dequant_with_default_correctness(
+        1024, 1024, 1024, source_format="uint", bit=4)
+    assert_matmul_blocked_dequant_with_default_correctness(
+        1024, 1024, 1024, source_format="uint", bit=2)
 
 
 if __name__ == "__main__":

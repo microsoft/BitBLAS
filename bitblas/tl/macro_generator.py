@@ -117,8 +117,10 @@ class TensorCoreIntrinEmitter(object):
                 ".b16",
                 A_local_buf.data,
                 i * inst.local_size_a,
-                T.address_of(A_shared_buf[ty * inst.warp_row_tiles + i * inst.micro_size_x,
-                                          rk * inst.chunk + ki * inst.micro_size_k,]),
+                T.address_of(A_shared_buf[
+                    ty * inst.warp_row_tiles + i * inst.micro_size_x,
+                    rk * inst.chunk + ki * inst.micro_size_k,
+                ]),
                 get_ldmatrix_offset("A", tx, 0, stride, inst.a_dtype, inst.a_transposed),
             )
 

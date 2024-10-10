@@ -61,12 +61,10 @@ else:
 class _ImageAssets(_ImageAssetsBase):
 
     def __init__(self) -> None:
-        super().__init__(
-            [
-                ImageAsset("stop_sign"),
-                ImageAsset("cherry_blossom"),
-            ]
-        )
+        super().__init__([
+            ImageAsset("stop_sign"),
+            ImageAsset("cherry_blossom"),
+        ])
 
     def prompts(self, prompts: _ImageAssetPrompts) -> List[str]:
         """
@@ -173,8 +171,7 @@ class HfRunner:
                 SentenceTransformer(
                     model_name,
                     device="cpu",
-                ).to(dtype=torch_dtype)
-            )
+                ).to(dtype=torch_dtype))
         else:
             if is_vision_model:
                 auto_cls = AutoModelForVision2Seq
@@ -192,8 +189,7 @@ class HfRunner:
                     torch_dtype=torch_dtype,
                     trust_remote_code=True,
                     **model_kwargs,
-                )
-            )
+                ))
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name,
@@ -268,9 +264,7 @@ class HfRunner:
             **kwargs,
         )
 
-        return [
-            (output_ids[0], output_str[0]) for output_ids, output_str in outputs
-        ]
+        return [(output_ids[0], output_str[0]) for output_ids, output_str in outputs]
 
     def generate_beam_search(
         self,
@@ -288,9 +282,7 @@ class HfRunner:
         for i in range(len(outputs)):
             output_ids, output_str = outputs[i]
             for j in range(len(output_ids)):
-                output_ids[j] = [
-                    x for x in output_ids[j] if x != self.tokenizer.pad_token_id
-                ]
+                output_ids[j] = [x for x in output_ids[j] if x != self.tokenizer.pad_token_id]
             outputs[i] = (output_ids, output_str)
         return outputs
 
@@ -329,9 +321,7 @@ class HfRunner:
                     self.model.get_output_embeddings().weight.t(),
                 )
                 if self.model.get_output_embeddings().bias is not None:
-                    logits += self.model.get_output_embeddings().bias.unsqueeze(
-                        0
-                    )
+                    logits += self.model.get_output_embeddings().bias.unsqueeze(0)
                 logprobs = F.log_softmax(logits, dim=-1, dtype=torch.float32)
                 seq_logprobs.append(logprobs)
             all_logprobs.append(seq_logprobs)
@@ -377,13 +367,8 @@ class HfRunner:
                     last_hidden_states,
                     self.model.get_output_embeddings().weight.t(),
                 )
-                if (
-                    getattr(self.model.get_output_embeddings(), "bias", None)
-                    is not None
-                ):
-                    logits += self.model.get_output_embeddings().bias.unsqueeze(
-                        0
-                    )
+                if (getattr(self.model.get_output_embeddings(), "bias", None) is not None):
+                    logits += self.model.get_output_embeddings().bias.unsqueeze(0)
                 logprobs = F.log_softmax(logits, dim=-1, dtype=torch.float32)
                 seq_logprobs.append(logprobs)
 
@@ -409,10 +394,8 @@ class HfRunner:
             all_output_strs.append(self.tokenizer.decode(output_ids))
 
         outputs = zip(all_output_ids, all_output_strs, all_logprobs)
-        return [
-            (output_ids, output_str, output_logprobs)
-            for output_ids, output_str, output_logprobs in outputs
-        ]
+        return [(output_ids, output_str, output_logprobs)
+                for output_ids, output_str, output_logprobs in outputs]
 
     def encode(self, prompts: List[str]) -> List[List[torch.Tensor]]:
         return self.model.encode(prompts)
@@ -477,9 +460,7 @@ class VllmRunner:
             for i, image in enumerate(images):
                 inputs[i]["multi_modal_data"] = {"image": image}
 
-        req_outputs = self.model.generate(
-            inputs, sampling_params=sampling_params
-        )
+        req_outputs = self.model.generate(inputs, sampling_params=sampling_params)
 
         outputs: List[Tuple[List[List[int]], List[str]]] = []
         for req_output in req_outputs:
@@ -511,9 +492,7 @@ class VllmRunner:
             for i, image in enumerate(images):
                 inputs[i]["multi_modal_data"] = {"image": image}
 
-        req_outputs = self.model.generate(
-            inputs, sampling_params=sampling_params
-        )
+        req_outputs = self.model.generate(inputs, sampling_params=sampling_params)
         outputs: List[Tuple[List[int], str, Optional[SampleLogprobs]]] = []
         for req_output in req_outputs:
             for sample in req_output.outputs:
@@ -531,9 +510,7 @@ class VllmRunner:
     ) -> List[Tuple[List[int], str]]:
         greedy_params = SamplingParams(temperature=0.0, max_tokens=max_tokens)
         outputs = self.generate(prompts, greedy_params, images=images)
-        return [
-            (output_ids[0], output_str[0]) for output_ids, output_str in outputs
-        ]
+        return [(output_ids[0], output_str[0]) for output_ids, output_str in outputs]
 
     def generate_greedy_logprobs(
         self,
@@ -543,16 +520,11 @@ class VllmRunner:
         images: Optional[List[Image.Image]] = None,
     ) -> List[Tuple[List[int], str, Optional[SampleLogprobs]]]:
         greedy_logprobs_params = SamplingParams(
-            temperature=0.0, max_tokens=max_tokens, logprobs=num_logprobs
-        )
-        outputs = self.generate_w_logprobs(
-            prompts, greedy_logprobs_params, images=images
-        )
+            temperature=0.0, max_tokens=max_tokens, logprobs=num_logprobs)
+        outputs = self.generate_w_logprobs(prompts, greedy_logprobs_params, images=images)
 
-        return [
-            (output_ids, output_str, output_logprobs)
-            for output_ids, output_str, output_logprobs in outputs
-        ]
+        return [(output_ids, output_str, output_logprobs)
+                for output_ids, output_str, output_logprobs in outputs]
 
     def generate_beam_search(
         self,
@@ -594,9 +566,7 @@ def get_tokenizer_pool_config(tokenizer_group_type):
     if tokenizer_group_type is None:
         return None
     if tokenizer_group_type == "ray":
-        return TokenizerPoolConfig(
-            pool_size=1, pool_type="ray", extra_config={}
-        )
+        return TokenizerPoolConfig(pool_size=1, pool_type="ray", extra_config={})
     raise ValueError(f"Unknown tokenizer_group_type: {tokenizer_group_type}")
 
 

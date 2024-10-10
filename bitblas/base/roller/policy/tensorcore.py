@@ -211,9 +211,9 @@ class TensorCorePolicy(DefaultPolicy):
         else:
             # must be a a multiple of wmma_k
             return {
-                k.var.name:
-                [x * self.wmma_k for x in get_all_factors(int(k.dom.extent) // self.wmma_k)]
-                for k in node.raxis
+                k.var.name: [
+                    x * self.wmma_k for x in get_all_factors(int(k.dom.extent) // self.wmma_k)
+                ] for k in node.raxis
             }
 
     def check_tile_shape_isvalid(self, td: TileDict):
