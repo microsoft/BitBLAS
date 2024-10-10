@@ -6,6 +6,15 @@
 cmake_minimum_required(VERSION 3.18)
 project(TILE_LANG C CXX)
 
+if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.12.0")
+  macro(tilelang_file_glob glob variable)
+    file(${glob} ${variable} CONFIGURE_DEPENDS ${ARGN})
+  endmacro()
+else()
+  macro(tilelang_file_glob)
+    file(${glob} ${variable} ${ARGN})
+  endmacro()
+endif()
 
 if(EXISTS ${CMAKE_BINARY_DIR}/config.cmake)
   include(${CMAKE_BINARY_DIR}/config.cmake)
@@ -39,10 +48,27 @@ if (NOT DEFINED TVM_SOURCE_DIR)
   endif(DEFINED ENV{TVM_SOURCE_DIR})
 endif (NOT DEFINED TVM_SOURCE_DIR)
 
-message(STATUS "TVM_SOURCE_DIR: ${TVM_SOURCE_DIR}")
-add_subdirectory(${TVM_SOURCE_DIR} tvm EXCLUDE_FROM_ALL)
+if (DEFINED TVM_PREBUILD_PATH)
+  message(STATUS "TVM_PREBUILD_PATH: ${TVM_PREBUILD_PATH}")
+  # add library path
+  add_library(tvm SHARED IMPORTED)
+  set_target_properties(tvm PROPERTIES
+    IMPORTED_LOCATION "${TVM_PREBUILD_PATH}/libtvm.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${TVM_PREBUILD_PATH}/../include"
+  )
+  add_library(tvm_runtime SHARED IMPORTED)
+  set_target_properties(tvm_runtime PROPERTIES
+    IMPORTED_LOCATION "${TVM_PREBUILD_PATH}/libtvm_runtime.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${TVM_PREBUILD_PATH}/../include"
+  )
+else()
+  message(STATUS "TVM_PREBUILD_PATH NOT SET, will build TVM from source")
+  message(STATUS "TVM_SOURCE_DIR: ${TVM_SOURCE_DIR}")
+  add_subdirectory(${TVM_SOURCE_DIR} tvm EXCLUDE_FROM_ALL)
+endif()
 
-tvm_file_glob(GLOB_RECURSE TILE_LANG_SRCS src/*.cc)
+
+tilelang_file_glob(GLOB_RECURSE TILE_LANG_SRCS src/*.cc)
 message(STATUS "TILE_LANG_SRCS: ${TILE_LANG_SRCS}")
 add_library(tilelang_objs OBJECT ${TILE_LANG_SRCS})
 
@@ -55,9 +81,10 @@ set(
 )
 
 # Find CUDA
-find_package(CUDA REQUIRED)
+find_package(CUDAToolkit REQUIRED)
 # CUDA Dependencies
-set(TILE_LANG_INCLUDES ${TILE_LANG_INCLUDES} ${CUDA_INCLUDE_DIRS})
+message(STATUS "CUDAToolkit_INCLUDE_DIRS: ${CUDAToolkit_INCLUDE_DIRS}")
+set(TILE_LANG_INCLUDES ${TILE_LANG_INCLUDES} ${CUDAToolkit_INCLUDE_DIRS})
 
 set(TILE_LANG_COMPILE_DEFS ${TILE_LANG_COMPILE_DEFS} DMLC_USE_LOGGING_LIBRARY=<tvm/runtime/logging.h>)
 set(TILE_LANG_COMPILE_DEFS ${TILE_LANG_COMPILE_DEFS} __STDC_FORMAT_MACROS=1)
@@ -65,7 +92,6 @@ set(TILE_LANG_COMPILE_DEFS ${TILE_LANG_COMPILE_DEFS} PICOJSON_USE_INT64)
 
 target_include_directories(tilelang_objs PRIVATE ${TILE_LANG_INCLUDES})
 target_compile_definitions(tilelang_objs PRIVATE ${TILE_LANG_COMPILE_DEFS})
-target_include_directories(tilelang_objs PRIVATE ${TOKENZIER_CPP_PATH}/include)
 target_compile_definitions(tilelang_objs PRIVATE -DTILE_LANG_EXPORTS)
 
 
@@ -100,9 +126,15 @@ if (TILE_LANG_INSTALL_STATIC_LIB)
     LIBRARY DESTINATION lib${LIB_SUFFIX}
     )
 else()
-  install(TARGETS tvm_runtime tilelang tilelang_module
-    tilelang_static
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib${LIB_SUFFIX}
-  )
+  if (DEFINED TVM_PREBUILD_PATH)
+    install(TARGETS tilelang tilelang_module
+      RUNTIME DESTINATION bin
+      LIBRARY DESTINATION lib${LIB_SUFFIX}
+    )
+  else()
+    install(TARGETS tvm_runtime tilelang tilelang_module
+      RUNTIME DESTINATION bin
+      LIBRARY DESTINATION lib${LIB_SUFFIX}
+    )
+  endif()
 endif()
