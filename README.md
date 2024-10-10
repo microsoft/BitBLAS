@@ -13,6 +13,14 @@ Tile Language (**tile-lang**) is an extension of [Apache TVM](https://tvm.apache
 - **Advanced Operations**: Support for complex operations like convolutions, flash-attention, and normalizations.
 - **Compatibility**: Works with modern CUDA architectures.
 
+## OP Examples
+
+- [Matrix Multiplication](#quick-start)
+- [Flash Attention](#flash-attention)
+- [Dequantization GEMM](#dequantization-gemm)
+- [RetNet](#retina-net)
+- [MAMBA](#mamba)
+
 ## Installation
 
 We currently provide three ways to install **tile-lang**:
@@ -333,7 +341,7 @@ def dequant_matmul(
 
 ---
 
+
+TileLang has now been used in project [BitBLAS](https://github.com/microsoft/BitBLAS).
+
 Feel free to explore the repository and contribute to the project. If you have any questions or suggestions, please open an issue or contact the authors. This project is co-authored by [nox-410](https://github.com/nox-410), [chengyupku](https://github.com/chengyupku), and [LeiWang1999](https://github.com/LeiWang1999).
-
-
-**Happy Coding!**
