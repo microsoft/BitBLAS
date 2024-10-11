@@ -2027,7 +2027,6 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
             sch.bind(thread_idy, "threadIdx.y")
             sch.bind(thread_idz, "threadIdx.z")
 
-
         def smooth_layout_recover(block, scope, l=16, r=16, enable=True):  # noqa: E741
             if not enable:
                 return
@@ -2071,7 +2070,7 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 sch.bind(f_3, "threadIdx.x")
                 sch.bind(f_1, "threadIdx.z")
                 sch.bind(f_0, "threadIdx.y")
- 
+
             sch.vectorize(f_4)
             sch.unroll(f_0)
             sch.annotate(f_0, "pragma_unroll_explicit", False)
@@ -2178,8 +2177,12 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 preserve_unit_loops=True,
             )
             fused = sch.fuse(*sch.get_loops(accumulator_shared_to_global)[-5:])
-            f0, f1, f2 = sch.split(fused, factors=[None, warp_size, 
-                                                    get_coalesced_veclen(sch.get(accumulator_shared_to_global))])
+            f0, f1, f2 = sch.split(
+                fused,
+                factors=[
+                    None, warp_size,
+                    get_coalesced_veclen(sch.get(accumulator_shared_to_global))
+                ])
             sch.bind(f1, "threadIdx.x")
             sch.vectorize(f2)
             sch.unroll(f0)
