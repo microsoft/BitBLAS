@@ -266,8 +266,9 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             auto_inline_consumer_chain(sch, block_write_smem)
 
             # bind loops
+            write_vec_len = get_coalesced_veclen(sch.get(block_write_smem))
             fused = sch.fuse(*sch.get_loops(block_write_smem)[-2:])
-            f0, f1, f2 = sch.split(fused, [None, thread_x, vector_size])
+            f0, f1, f2 = sch.split(fused, [None, thread_x, write_vec_len])
             sch.bind(f1, "threadIdx.x")
             sch.vectorize(f2)
 
@@ -527,6 +528,11 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             sch.bind(thread_idz, "threadIdx.z")
 
         # rewrite smooth layout of shared memory
+        # enable_store_rewrite is a hack as in some cases
+        # lower vectorization factor may failed to generate
+        # expected high performance code
+        enable_store_rewrite = not intrin_info.is_input_8bit()
+
         def smooth_smem_layout_rewrite(block, scope, l=16, r=16, enable=True):  # noqa: E741
             if not enable:
                 return
@@ -546,7 +552,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
             block_outer, ("read", 0), *a_lr, enable=intrin_info.inter_transform_a)
         smooth_smem_layout_rewrite(
             block_outer, ("read", 1), *b_lr, enable=intrin_info.inter_transform_b)
-        smooth_smem_layout_rewrite(block_outer, ("write", 0), enable=True)
+        smooth_smem_layout_rewrite(block_outer, ("write", 0), enable=enable_store_rewrite)
 
         def fetch_to_shared(block, idx, vec_len, can_swizzle=False, is_smooth=False, reduce_k=1):
             block_read = sch.cache_read(block, idx, shared_scope)
@@ -654,7 +660,8 @@ class MatmulTensorizationMMA(GPUScheduleRule):
                 preserve_unit_loops=True,
             )
             vec_len = get_coalesced_veclen(sch.get(accumulator_shared_to_global))
-            fused = sch.fuse(*sch.get_loops(accumulator_shared_to_global)[-5:])
+            fuse_iters = 5 if enable_store_rewrite else 3
+            fused = sch.fuse(*sch.get_loops(accumulator_shared_to_global)[-fuse_iters:])
             f0, f1, f2 = sch.split(fused, factors=[None, warp_size, vec_len])
             sch.bind(f1, "threadIdx.x")
             sch.vectorize(f2)
@@ -682,7 +689,7 @@ class MatmulTensorizationMMA(GPUScheduleRule):
         sch.transform_layout(
             store,
             ("read", 0),
-            get_warp_index_map(index_map_c, is_5d=True),
+            get_warp_index_map(index_map_c, is_5d=enable_store_rewrite),
         )
 
         i, j = sch.get_loops(A_mat)[-2:]
