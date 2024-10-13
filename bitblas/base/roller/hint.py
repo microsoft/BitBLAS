@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 """Hint definition for schedule"""
+from tvm import DataType
 from typing import Dict, List, Tuple
 from . import PrimFuncNode
 import numpy as np
@@ -127,6 +128,9 @@ class IntrinInfo:
 
     def __repr__(self) -> str:
         return f"<IntrinInfo, {self.in_dtype}, {self.out_dtype}, {self.trans_b}, {self.propagate_b}>"
+
+    def is_input_8bit(self) -> bool:
+        return DataType(self.in_dtype).bits == 8
 
     @property
     def smooth_a(self) -> bool:
