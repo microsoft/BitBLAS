@@ -27,7 +27,9 @@ class BaseScheduler(ABC):
     @staticmethod
     def Simplify(stmt: Union[PrimFunc, IRModule]):
         if isinstance(stmt, PrimFunc):
-            return Simplify()(IRModule.from_expr(stmt))["main"]
+            mod = Simplify()(IRModule.from_expr(stmt))
+            assert len(mod.functions) == 1, "Simplify should return a single function"
+            return list(mod.functions.values()).pop()
         elif isinstance(stmt, IRModule):
             return Simplify()(stmt)
         else:
