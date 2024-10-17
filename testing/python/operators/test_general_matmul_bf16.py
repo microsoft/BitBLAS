@@ -167,5 +167,4 @@ def test_matmul_torch_forward_weight_dequantize():
 
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_matmul_torch_forward_weight_dequantize()
+    bitblas.testing.main()
