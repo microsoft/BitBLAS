@@ -35,9 +35,8 @@ def assert_dense_scheduler_simplify(M,
         print("Matmul is simplified")
     else:
         print("Matmul is not simplified")
-    
-    assert simplified is not None, "Simplify should return a schedule" 
-    
+
+    assert simplified is not None, "Simplify should return a schedule"
 
 
 def assert_dequantize_scheduler_simplify(
