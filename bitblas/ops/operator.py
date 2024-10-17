@@ -279,11 +279,9 @@ class Operator(object):
             assert (
                 len(scheduled_mod.get_global_vars()) == 1
             ), "The optimized module should only have one global variable for default schedule."
-            assert (
-                "main" in scheduled_mod
-            ), "The optimized module should have a function named 'main' for default schedule."
+            global_symbol = scheduled_mod.get_global_vars()[0]
             default_kernal_name = self.kernel_name_generator.generate()
-            func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
+            func = scheduled_mod[global_symbol].with_attr("global_symbol", default_kernal_name)
             scheduled_ir_module = tvm.IRModule({default_kernal_name: func})
             self._update_optimized_mod(scheduled_ir_module)
         except Exception as apply_schedule_error:

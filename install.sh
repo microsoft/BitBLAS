@@ -65,5 +65,5 @@ cmake .. && make -j && cd ../../..
 
 echo "export TVM_HOME=$(pwd)/3rdparty/tvm" >> ~/.bashrc
 echo "export PYTHONPATH=\$TVM_HOME/python:$(pwd):\$PYTHONPATH" >> ~/.bashrc
-
+echo "export CUDA_DEVICE_ORDER=PCI_BUS_ID" >> ~/.bashrc
 source ~/.bashrc
