@@ -7,7 +7,7 @@
 pip install -r requirements.txt
 
 # install llvm
-LLVM_VERSION="10.0.1"
+LLVM_VERSION="16.0.1"
 IS_AARCH64=false
 EXTRACT_PATH="3rdparty"
 
