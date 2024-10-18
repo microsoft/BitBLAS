@@ -6,50 +6,23 @@
 # install requirements
 pip install -r requirements.txt
 
-# install llvm
-LLVM_VERSION="16.0.1"
-IS_AARCH64=false
-EXTRACT_PATH="3rdparty"
-
-UBUNTU_VERSION="16.04"
-if [[ "$LLVM_VERSION" > "17.0.0" ]]; then
-    UBUNTU_VERSION="22.04"
-elif [[ "$LLVM_VERSION" > "16.0.0" ]]; then
-    UBUNTU_VERSION="20.04"
-elif [[ "$LLVM_VERSION" > "13.0.0" ]]; then
-    UBUNTU_VERSION="18.04"
+# determine if root
+USER_IS_ROOT=false
+if [ "$EUID" -e 0 ]; then
+    USER_IS_ROOT=true
 fi
 
-BASE_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${LLVM_VERSION}"
-if $IS_AARCH64; then
-    FILE_NAME="clang+llvm-${LLVM_VERSION}-aarch64-linux-gnu.tar.xz"
-else
-    FILE_NAME="clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-${UBUNTU_VERSION}.tar.xz"
+if $USER_IS_ROOT; then
+    wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+    echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-16 main" >> /etc/apt/sources.list
+    echo "deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-16 main" >> /etc/apt/sources.list
+    apt-get install llvm-16
+else 
+    wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+    echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-16 main" | sudo tee /etc/apt/sources.list
+    echo "deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-16 main" | sudo tee /etc/apt/sources.list
+    sudo apt-get install llvm-16
 fi
-DOWNLOAD_URL="${BASE_URL}/${FILE_NAME}"
-
-mkdir -p "$EXTRACT_PATH"
-
-echo "Downloading $FILE_NAME from $DOWNLOAD_URL"
-curl -L -o "${EXTRACT_PATH}/${FILE_NAME}" "$DOWNLOAD_URL"
-
-if [ $? -ne 0 ]; then
-    echo "Download failed!"
-    exit 1
-fi
-
-echo "Extracting $FILE_NAME to $EXTRACT_PATH"
-tar -xJf "${EXTRACT_PATH}/${FILE_NAME}" -C "$EXTRACT_PATH"
-
-if [ $? -ne 0 ]; then
-    echo "Extraction failed!"
-    exit 1
-fi
-
-echo "Download and extraction completed successfully."
-
-LLVM_CONFIG_PATH="$(realpath ${EXTRACT_PATH}/$(basename ${FILE_NAME} .tar.xz)/bin/llvm-config)"
-echo "LLVM config path: $LLVM_CONFIG_PATH"
 
 # clone and build tvm
 git submodule update --init --recursive
@@ -61,7 +34,7 @@ fi
 mkdir build
 cp cmake/config.cmake build
 cd build
-echo "set(USE_LLVM $LLVM_CONFIG_PATH)" >> config.cmake && echo "set(USE_CUDA /usr/local/cuda)" >> config.cmake
+echo "set(USE_LLVM llvm-config-16)" >> config.cmake && echo "set(USE_ROCM /opt/rocm)" >> config.cmake
 
 cmake .. && make -j && cd ../../..
 
