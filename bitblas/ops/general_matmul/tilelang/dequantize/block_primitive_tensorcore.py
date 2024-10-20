@@ -401,17 +401,11 @@ class MatmulDequantizeScheduler(BaseScheduler):
             zeros_buffer: T.Buffer,
             qzeros_buffer: T.Buffer,
         ):
-            print("Normal Dequantize")
-            print("with_scaling", with_scaling)
-            print("with_zeros", with_zeros)
-            print("zeros_mode", zeros_mode)
-            print("num_bits", num_bits)
             for v in T.serial(0, local_size):
                 index = (i * threads * local_size_compressed + tx * local_size_compressed + v)
                 vi = index // (stride_k // num_elems_per_byte)
                 vj = index % (stride_k // num_elems_per_byte)
                 if not with_scaling:
-                    print("No Scaling")
                     dequant_weight_local[v] = self._decode_func(
                         num_bits,
                         compressed_weight_local[v // num_elems_per_byte],
@@ -419,7 +413,6 @@ class MatmulDequantizeScheduler(BaseScheduler):
                         dtype=in_dtype,
                     )
                 elif not with_zeros:
-                    print("No Zeros")
                     # Scaling only
                     dequant_weight_local[v] = (
                         self._decode_func(
@@ -429,7 +422,6 @@ class MatmulDequantizeScheduler(BaseScheduler):
                             dtype=in_dtype,
                         ) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size])
                 elif zeros_mode == "original":
-                    print("Original Zeros")
                     dequant_weight_local[v] = (self._decode_func(
                         num_bits,
                         compressed_weight_local[v // num_elems_per_byte],
@@ -439,7 +431,6 @@ class MatmulDequantizeScheduler(BaseScheduler):
                                      group_size]) * scale_buffer[pid_n * stride_n + vi,
                                                                  (k * stride_k + vj) // group_size]
                 elif zeros_mode == "rescale":
-                    print("rescale")
                     dequant_weight_local[v] = (
                         self._decode_func(
                             num_bits,
@@ -449,7 +440,6 @@ class MatmulDequantizeScheduler(BaseScheduler):
                         ) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size] -
                         zeros_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size])
                 elif zeros_mode == "quantized":
-                    print("Quantized Zeros")
                     dequant_qzeros = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                         num_bits,
                         qzeros_buffer[

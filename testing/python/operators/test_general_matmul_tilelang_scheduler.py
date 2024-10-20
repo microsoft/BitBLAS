@@ -78,7 +78,7 @@ def assert_dequantize_scheduler_simplify(
 
     simplified = MatmulDequantizeScheduler.Simplify(matmul)
     print(simplified)
-    is_equal = structural_equal(matmul, simplified)
+    is_equal = structural_equal(matmul, simplified) # noqa: F841
     assert simplified is not None, "Simplify should return a schedule"
 
 

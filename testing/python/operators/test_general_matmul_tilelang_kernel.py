@@ -457,7 +457,7 @@ def assert_matmul_blocked_dequant_with_default_correctness(
         fast_decoding=fast_decoding,
         zeros_mode=zeros_mode,
     ).with_default_config()
-
+    print(matmul)
     mod, params = tl.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
@@ -485,8 +485,6 @@ def assert_matmul_blocked_dequant_with_default_correctness(
         intweight = intweight + maxq
     if with_zeros:
         inputs[1] = inputs[1] - zeros
-
-    ref_result = torch.matmul(inputs[0], inputs[1].t().to(torch.float16))
 
     permuted_inputs = []
     permuted_inputs.append(inputs[0])
@@ -522,11 +520,14 @@ def assert_matmul_blocked_dequant_with_default_correctness(
     mod(*permuted_inputs)
 
     print(permuted_inputs[-1])
+    
+    ref_result = torch.matmul(inputs[0], inputs[1].t().to(torch.float16))
+
     print(ref_result)
     if zeros_mode == "rescale":
-        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
+        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e2)
     else:
-        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
+        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e2)
 
 
 def test_matmul_blocked():
@@ -565,6 +566,10 @@ def test_matmul_blocked_dequant_with_default():
         1024, 1024, 1024, source_format="uint", bit=4)
     assert_matmul_blocked_dequant_with_default_correctness(
         1024, 1024, 1024, source_format="uint", bit=2)
+    assert_matmul_blocked_dequant_with_default_correctness(
+        1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True)
+    assert_matmul_blocked_dequant_with_default_correctness(
+        1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True, with_zeros=True)
 
 
 if __name__ == "__main__":

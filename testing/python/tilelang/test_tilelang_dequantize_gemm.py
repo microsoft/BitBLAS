@@ -437,4 +437,6 @@ def test_assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4():
 
 
 if __name__ == "__main__":
-    bitblas.testing.main()
+    # bitblas.testing.main()
+    run_gemm(256, 256, 256, "float16", "float16", "float16", 128, 128, 32, num_threads=128)
+
