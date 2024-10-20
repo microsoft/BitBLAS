@@ -570,6 +570,19 @@ def test_matmul_blocked_dequant_with_default():
         1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True)
     assert_matmul_blocked_dequant_with_default_correctness(
         1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True, with_zeros=True)
+    assert_matmul_blocked_dequant_with_default_correctness(
+        1024, 1024, 1024, source_format="uint", bit=4, fast_decoding=True)
+    assert_matmul_blocked_dequant_with_default_correctness(
+        1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True, fast_decoding=True)
+    assert_matmul_blocked_dequant_with_default_correctness(
+        1024,
+        1024,
+        1024,
+        source_format="uint",
+        bit=4,
+        with_scaling=True,
+        with_zeros=True,
+        fast_decoding=True)
 
 
 if __name__ == "__main__":
