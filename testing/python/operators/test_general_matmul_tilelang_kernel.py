@@ -520,7 +520,7 @@ def assert_matmul_blocked_dequant_with_default_correctness(
     mod(*permuted_inputs)
 
     print(permuted_inputs[-1])
-    
+
     ref_result = torch.matmul(inputs[0], inputs[1].t().to(torch.float16))
 
     print(ref_result)
