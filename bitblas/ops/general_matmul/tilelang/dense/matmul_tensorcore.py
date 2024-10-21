@@ -540,6 +540,9 @@ class MatmulFineGrainScheduler(BaseScheduler):
 @dataclass
 class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
 
+    # Ladder Transform Config
+    weight_transform_kind: TransformKind = TransformKind.LDMatrixTransform
+
     def apply_config(
         self,
         block_row_warps=2,
@@ -610,7 +613,7 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
             warp_row_tiles=warp_row_tiles,
             warp_col_tiles=warp_col_tiles,
             chunk=chunk,
-            transform_kind_b=TransformKind.LDMatrixTransform,
+            transform_kind_b=self.weight_transform_kind,
         )
 
         # Define the main kernel using the generated configuration

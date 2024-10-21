@@ -11,7 +11,6 @@ from bitblas.tl.utils import (
 
 from bitblas.tl.macro_generator import (
     TensorCoreIntrinEmitter,  # noqa: F401
-    TensorCoreIntrinEmitterWithLadderTransform,  # noqa: F401
 )
 from bitblas.ops.common import TransformKind  # noqa: F401
 from bitblas.ops.base_scheduler import BaseScheduler
@@ -321,7 +320,7 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
 
                 A_frag = T.alloc_local((warp_rows * fragement_size), in_dtype)
                 B_frag = T.alloc_local((warp_cols * fragement_size), in_dtype)
-                C_frag = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
+                C_frag = T.alloc_local((warp_rows * warp_cols * fragement_size), accum_dtype)
 
                 B_local = T.alloc_local([local_size_compressed], storage_dtype)
                 B_dequantize_local = T.alloc_local([local_size], in_dtype)
