@@ -234,14 +234,17 @@ class MatmulDequantizeScheduler(BaseScheduler):
         if fast_decoding is True:
             lop3_intrin_info = get_lop3_intrin_group(
                 out_dtype=out_dtype,
-                storage_dtype=storage_dtype,
                 source_format=source_format,
                 source_bit=num_bits,
+                storage_dtype=storage_dtype,
+                with_scaling=self.with_scaling,
+                with_zeros=self.with_zeros,
             )
             import_source = lop3_intrin_info["c_source"]
             func_name = lop3_intrin_info["func_name"]
             assert import_source is not None, "lop3_intrin_info is not found"
             assert func_name is not None, "lop3_intrin_info is not found"
+            import_source = self.common_header + import_source
 
         @T.prim_func
         def general_dequant_matmul(
@@ -286,11 +289,20 @@ class MatmulDequantizeScheduler(BaseScheduler):
                             B_local[v] = B_shared[vi, vj]
 
                         if fast_decoding is True:
-                            T.call_extern(
+                            self._normal_fast_dequant(
+                                B_local,
+                                B_dequantize_local,
+                                Scale,
+                                Zeros,
+                                Qzeros,
                                 func_name,
-                                T.address_of(B_local[0]),
-                                T.address_of(B_dequantize_local[0]),
-                                dtype=in_dtype,
+                                by,
+                                tx,
+                                k,
+                                i,
+                                block_N,
+                                block_K,
+                                threads,
                             )
                         else:
                             self._normal_dequant(
@@ -364,7 +376,6 @@ class MatmulDequantizeScheduler(BaseScheduler):
 
         return dequant_func
 
-    # proxy method for macro expansion
     def _normal_dequant(
         self,
         compressed_weight_local: T.Buffer,
@@ -401,17 +412,11 @@ class MatmulDequantizeScheduler(BaseScheduler):
             zeros_buffer: T.Buffer,
             qzeros_buffer: T.Buffer,
         ):
-            print("Normal Dequantize")
-            print("with_scaling", with_scaling)
-            print("with_zeros", with_zeros)
-            print("zeros_mode", zeros_mode)
-            print("num_bits", num_bits)
             for v in T.serial(0, local_size):
                 index = (i * threads * local_size_compressed + tx * local_size_compressed + v)
                 vi = index // (stride_k // num_elems_per_byte)
                 vj = index % (stride_k // num_elems_per_byte)
                 if not with_scaling:
-                    print("No Scaling")
                     dequant_weight_local[v] = self._decode_func(
                         num_bits,
                         compressed_weight_local[v // num_elems_per_byte],
@@ -419,7 +424,6 @@ class MatmulDequantizeScheduler(BaseScheduler):
                         dtype=in_dtype,
                     )
                 elif not with_zeros:
-                    print("No Zeros")
                     # Scaling only
                     dequant_weight_local[v] = (
                         self._decode_func(
@@ -429,7 +433,6 @@ class MatmulDequantizeScheduler(BaseScheduler):
                             dtype=in_dtype,
                         ) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size])
                 elif zeros_mode == "original":
-                    print("Original Zeros")
                     dequant_weight_local[v] = (self._decode_func(
                         num_bits,
                         compressed_weight_local[v // num_elems_per_byte],
@@ -439,7 +442,6 @@ class MatmulDequantizeScheduler(BaseScheduler):
                                      group_size]) * scale_buffer[pid_n * stride_n + vi,
                                                                  (k * stride_k + vj) // group_size]
                 elif zeros_mode == "rescale":
-                    print("rescale")
                     dequant_weight_local[v] = (
                         self._decode_func(
                             num_bits,
@@ -449,7 +451,6 @@ class MatmulDequantizeScheduler(BaseScheduler):
                         ) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size] -
                         zeros_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size])
                 elif zeros_mode == "quantized":
-                    print("Quantized Zeros")
                     dequant_qzeros = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                         num_bits,
                         qzeros_buffer[
@@ -469,6 +470,81 @@ class MatmulDequantizeScheduler(BaseScheduler):
                     )) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size]
 
         return _normal_dequant_impl(
+            compressed_weight_local,
+            dequant_weight_local,
+            scale_buffer,
+            zeros_buffer,
+            qzeros_buffer,
+        )
+
+    def _normal_fast_dequant(
+        self,
+        compressed_weight_local: T.Buffer,
+        dequant_weight_local: T.Buffer,
+        scale_buffer: T.Buffer,
+        zeros_buffer: T.Buffer,
+        qzeros_buffer: T.Buffer,
+        func_name: str,
+        pid_n: T.Var,
+        tx: T.Var,
+        k: T.Var,
+        i: T.Var,
+        stride_n: int,
+        stride_k: int,
+        threads: int,
+    ):
+        num_elems_per_byte = self.num_elems_per_byte
+        with_scaling = self.with_scaling
+        with_zeros = self.with_zeros
+        zeros_mode = self.zeros_mode
+        in_dtype = self.in_dtype
+        group_size = self.group_size
+
+        @T.macro
+        def _normal_fast_dequant_impl(
+            compressed_weight_local: T.Buffer,
+            dequant_weight_local: T.Buffer,
+            scale_buffer: T.Buffer,
+            zeros_buffer: T.Buffer,
+            qzeros_buffer: T.Buffer,
+        ):
+            if not with_scaling:
+                T.call_extern(
+                    func_name,
+                    T.address_of(compressed_weight_local[0]),
+                    T.address_of(dequant_weight_local[0]),
+                    dtype=in_dtype,
+                )
+            elif not with_zeros:
+                T.call_extern(
+                    func_name,
+                    T.address_of(compressed_weight_local[0]),
+                    T.address_of(dequant_weight_local[0]),
+                    T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    dtype=in_dtype,
+                )
+            elif zeros_mode in ["original", "rescale"]:
+                T.call_extern(
+                    func_name,
+                    T.address_of(compressed_weight_local[0]),
+                    T.address_of(dequant_weight_local[0]),
+                    T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    T.address_of(zeros_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    dtype=in_dtype,
+                )
+            elif zeros_mode == "quantized":
+                T.call_extern(
+                    func_name,
+                    T.address_of(compressed_weight_local[0]),
+                    T.address_of(dequant_weight_local[0]),
+                    T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    T.address_of(zeros_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    T.address_of(qzeros_buffer[k * stride_k // group_size,
+                                               pid_n * stride_n // num_elems_per_byte]),
+                    dtype=in_dtype,
+                )
+
+        return _normal_fast_dequant_impl(
             compressed_weight_local,
             dequant_weight_local,
             scale_buffer,
