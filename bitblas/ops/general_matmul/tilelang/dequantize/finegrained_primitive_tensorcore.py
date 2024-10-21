@@ -198,12 +198,12 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
 
     def apply_config(
         self,
-        block_row_warps:Optional[int] = None,
-        block_col_warps:Optional[int] = None,
-        warp_row_tiles:Optional[int] = None,
-        warp_col_tiles:Optional[int] = None,
-        chunk:Optional[int] = None,
-        num_stages:Optional[int] = None,
+        block_row_warps: Optional[int] = None,
+        block_col_warps: Optional[int] = None,
+        warp_row_tiles: Optional[int] = None,
+        warp_col_tiles: Optional[int] = None,
+        chunk: Optional[int] = None,
+        num_stages: Optional[int] = None,
         enable_rasterization=False,
     ):
         assert block_row_warps is not None, "block_row_warps is required"
@@ -328,14 +328,10 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
 
                 tx = T.thread_binding(0, threads, thread="threadIdx.x")
 
-                T.annotate_layout(
-                    {
-                        A_shared: make_swizzle_layout(A_shared),
-                        B_dequantize_shared: make_swizzle_layout(
-                            B_dequantize_shared
-                        ),
-                    }
-                )
+                T.annotate_layout({
+                    A_shared: make_swizzle_layout(A_shared),
+                    B_dequantize_shared: make_swizzle_layout(B_dequantize_shared),
+                })
 
                 T.use_swizzle(10, enable=enable_rasterization)
 
@@ -343,9 +339,7 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
 
                 T.clear(C_frag)
 
-                for ko in T.Pipelined(
-                    T.ceildiv(K, block_K), num_stages=num_stages
-                ):
+                for ko in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
 
                     T.copy(A[by * block_M, ko * block_K], A_shared)
                     T.copy(B[bx * block_N, ko * block_K // num_elems_per_byte], B_shared)

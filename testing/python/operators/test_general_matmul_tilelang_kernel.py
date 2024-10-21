@@ -510,12 +510,11 @@ def assert_matmul_fine_grained_dequant_with_default_correctness(
         fast_decoding=fast_decoding,
         zeros_mode=zeros_mode,
     ).with_default_config()
-    with tvm.transform.PassContext(
-        config={
+    with tvm.transform.PassContext(config={
             "tir.use_async_copy": True,
             "tir.disable_cse_tir": True,
             # "tir.merge_static_smem": True,
-        }):
+    }):
         mod, params = tl.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
@@ -641,6 +640,7 @@ def test_matmul_blocked_dequant_with_default():
         with_zeros=True,
         fast_decoding=True)
 
+
 def test_matmul_fine_grained_dequant_with_default():
     assert_matmul_fine_grained_dequant_with_default_correctness(
         1024, 1024, 1024, source_format="uint", bit=4)
@@ -662,8 +662,7 @@ def test_matmul_fine_grained_dequant_with_default():
         bit=4,
         with_scaling=True,
         with_zeros=True,
-        fast_decoding=True
-    )
+        fast_decoding=True)
 
 
 if __name__ == "__main__":
