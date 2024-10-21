@@ -383,14 +383,20 @@ class MatmulFineGrainScheduler(BaseScheduler):
 
     def apply_config(
         self,
-        block_row_warps=2,
-        block_col_warps=2,
-        warp_row_tiles=32,
-        warp_col_tiles=32,
-        chunk=16,
-        num_stages=2,
+        block_row_warps:Optional[int] = None,
+        block_col_warps:Optional[int] = None,
+        warp_row_tiles:Optional[int] = None,
+        warp_col_tiles:Optional[int] = None,
+        chunk:Optional[int] = None,
+        num_stages:Optional[int] = None,
         enable_rasterization=False,
     ):
+        assert block_row_warps is not None, "block_row_warps is required"
+        assert block_col_warps is not None, "block_col_warps is required"
+        assert warp_row_tiles is not None, "warp_row_tiles is required"
+        assert warp_col_tiles is not None, "warp_col_tiles is required"
+        assert chunk is not None, "chunk is required"
+        assert num_stages is not None, "num_stages is required"
 
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B

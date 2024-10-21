@@ -31,13 +31,14 @@ from bitblas.quantization import (
     _tir_u8_to_f8_e4m3_to_f16,
     _tir_packed_to_unsigned_convert_with_zeros,
 )
+from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
 
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
 
 
 @dataclass
-class MatmulDequantizeScheduler(BaseScheduler):
+class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
 
     # OP Related Config
     M: Optional[int] = None
@@ -60,12 +61,15 @@ class MatmulDequantizeScheduler(BaseScheduler):
     with_bias: bool = False
     zeros_mode: Literal["original", "rescale", "quantized"] = "original",
 
-    # Default Tile Related Params
-    block_M: int = 64
-    block_N: int = 64
-    block_K: int = 32
+    # Tensor Core Warp Configuration
+    block_row_warps: int = 2
+    block_col_warps: int = 2
+    warp_row_tiles: int = 64
+    warp_col_tiles: int = 64
+    chunk: int = 32  # Usually determines the K-dimension split size
+
+    # Other Optimization Parameters
     num_stages: int = 2
-    threads: int = 128
     enable_rasterization: bool = False  # Enhance L2 Locality
 
     class TLHint(BaseTLHint):
@@ -88,36 +92,43 @@ class MatmulDequantizeScheduler(BaseScheduler):
 
             block_row_warps = block[0] // warp[0]
             block_col_warps = block[1] // warp[1]
-            warp_size = 32  # NVIDIA GPU warp size is 32
+            warp_row_tiles = warp[0]
+            warp_col_tiles = warp[1]
+            chunk = rstep[0]
+
             if num_stages == 1:
                 num_stages = 0  # disable pipelining
 
-            tl_hint.block_M = block[0]
-            tl_hint.block_N = block[1]
-            tl_hint.block_K = rstep[0]
+            tl_hint.block_row_warps = block_row_warps
+            tl_hint.block_col_warps = block_col_warps
+            tl_hint.warp_row_tiles = warp_row_tiles
+            tl_hint.warp_col_tiles = warp_col_tiles
+            tl_hint.chunk = chunk
             tl_hint.num_stages = num_stages
-            tl_hint.threads = warp_size * block_row_warps * block_col_warps
             tl_hint.enable_rasterization = enable_rasterization
 
             return tl_hint
 
         def get_config_params(self):
             return {
-                "block_M": self.block_M,
-                "block_N": self.block_N,
-                "block_K": self.block_K,
+                "block_row_warps": self.block_row_warps,
+                "block_col_warps": self.block_col_warps,
+                "warp_row_tiles": self.warp_row_tiles,
+                "warp_col_tiles": self.warp_col_tiles,
+                "chunk": self.chunk,
                 "num_stages": self.num_stages,
-                "threads": self.threads,
                 "enable_rasterization": self.enable_rasterization,
             }
 
         def __repr__(self):
             return ("{"
-                    f"block_M={self.block_M},"
-                    f"block_N={self.block_N},"
-                    f"block_K={self.block_K},"
+                    f"block_M={self.block_row_warps * self.warp_row_tiles},"
+                    f"block_N={self.block_col_warps * self.warp_col_tiles},"
+                    f"warp_M={self.warp_row_tiles},"
+                    f"warp_N={self.warp_col_tiles},"
+                    f"block_K={self.chunk},"
+                    f"threads={self.block_row_warps * self.block_col_warps * warp_size},"
                     f"num_stages={self.num_stages},"
-                    f"threads={self.threads},"
                     f"enable_rasterization={self.enable_rasterization}"
                     "}")
 
@@ -167,56 +178,71 @@ class MatmulDequantizeScheduler(BaseScheduler):
         return self.get_roller_configs(arch, topk)
 
     def with_default_config(self):
-        block_M = getattr(self, "block_M", 64)
-        block_N = getattr(self, "block_N", 64)
-        block_K = getattr(self, "block_K", 32)
+        block_row_warps = getattr(self, "block_row_warps", 2)
+        block_col_warps = getattr(self, "block_col_warps", 2)
+        warp_row_tiles = getattr(self, "warp_row_tiles", 32)
+        warp_col_tiles = getattr(self, "warp_col_tiles", 32)
+        chunk = getattr(self, "chunk", 32)
         num_stages = getattr(self, "num_stages", 2)
-        threads = getattr(self, "threads", 128)
         enable_rasterization = getattr(self, "enable_rasterization", False)
 
         return self.apply_config(
-            block_M=block_M,
-            block_N=block_N,
-            block_K=block_K,
+            block_row_warps=block_row_warps,
+            block_col_warps=block_col_warps,
+            warp_row_tiles=warp_row_tiles,
+            warp_col_tiles=warp_col_tiles,
+            chunk=chunk,
             num_stages=num_stages,
-            threads=threads,
             enable_rasterization=enable_rasterization,
         )
 
-    def _apply_config_dequant_only(
+    def apply_config(
         self,
-        block_M: Optional[int] = None,
-        block_N: Optional[int] = None,
-        block_K: Optional[int] = None,
-        num_stages: Optional[int] = None,
-        threads: Optional[int] = None,
-        # Enhance L2 Locality
-        enable_rasterization: bool = False,
+        block_row_warps:Optional[int] = None,
+        block_col_warps:Optional[int] = None,
+        warp_row_tiles:Optional[int] = None,
+        warp_col_tiles:Optional[int] = None,
+        chunk:Optional[int] = None,
+        num_stages:Optional[int] = None,
+        enable_rasterization=False,
     ):
-        assert block_M is not None, "block_M is required"
-        assert block_N is not None, "block_N is required"
-        assert block_K is not None, "block_K is required"
+        assert block_row_warps is not None, "block_row_warps is required"
+        assert block_col_warps is not None, "block_col_warps is required"
+        assert warp_row_tiles is not None, "warp_row_tiles is required"
+        assert warp_col_tiles is not None, "warp_col_tiles is required"
+        assert chunk is not None, "chunk is required"
         assert num_stages is not None, "num_stages is required"
-        assert threads is not None, "threads is required"
+
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B
+
         assert trans_A is False, "Dequantize only implement for trans_A=False currently"
         assert trans_B is True, "Dequantize only implement for trans_B=TRue currently"
 
-        # check is dequantize only
+        in_dtype, out_dtype, accum_dtype = (
+            self.in_dtype,
+            self.out_dtype,
+            self.accum_dtype,
+        )
+        # Calculate the micro size per warp using a helper function
+        micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(in_dtype)
 
-        def check_is_dequantize_only():
-            return not self.with_scaling
+        block_M = block_row_warps * warp_row_tiles
+        block_N = block_col_warps * warp_col_tiles
+        block_K = chunk
+        threads = warp_size * (block_row_warps * block_col_warps)
 
-        if not check_is_dequantize_only():
-            raise ValueError("Not a Dequantize Only Configuration")
+        fragement_size = (micro_size_x * micro_size_y) // warp_size
+        warp_rows = warp_row_tiles // micro_size_x
+        warp_cols = warp_col_tiles // micro_size_y
 
-        in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
+        fast_decoding = self.fast_decoding
 
         num_bits = self.num_bits
         storage_dtype = self.storage_dtype
+        source_format = self.source_format
         storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
-        num_elems_per_byte = 8 // num_bits
+        num_elems_per_byte = self.num_elems_per_byte
 
         MAX_TRANSACTION_SIZE_IN_BITS = 128
         local_size = MAX_TRANSACTION_SIZE_IN_BITS // DataType(in_dtype).bits
@@ -227,50 +253,145 @@ class MatmulDequantizeScheduler(BaseScheduler):
             group_size = K
 
         A_shape = (M, K)
-        B_shape = (N, K // storage_nbit * num_bits)
+        B_shape = (N, K // num_elems_per_byte)
+        LUT_shape = (group_size, K // num_elems_per_byte)
+        Scale_shape = (N, K // group_size)
+        Zeros_shape = (N, K // group_size)
+        Qzeros_shape = ((K // group_size), N // storage_nbit * num_bits)
+        Bias_shape = (N,)
 
         A_shared_shape = (block_M, block_K)
         B_shared_shape = (block_N, block_K // num_elems_per_byte)
         B_dequantize_shared_shape = (block_N, block_K)
+        C_shared_shape = (
+            block_M // micro_size_x,
+            block_N // micro_size_y,
+            micro_size_x,
+            micro_size_y,
+        )
+
+        import_source: Optional[str] = None
+        func_name: str = ""
+        if fast_decoding is True:
+            lop3_intrin_info = get_lop3_intrin_group(
+                out_dtype=out_dtype,
+                source_format=source_format,
+                source_bit=num_bits,
+                storage_dtype=storage_dtype,
+                with_scaling=self.with_scaling,
+                with_zeros=self.with_zeros,
+            )
+            import_source = lop3_intrin_info["c_source"]
+            func_name = lop3_intrin_info["func_name"]
+            assert import_source is not None, "lop3_intrin_info is not found"
+            assert func_name is not None, "lop3_intrin_info is not found"
+            import_source = self.common_header + import_source
+
+        # Configure the tensor core intrinsic emitter
+        mma_emitter = TensorCoreIntrinEmitter(
+            a_dtype=in_dtype,
+            b_dtype=in_dtype,
+            accum_dtype=accum_dtype,
+            a_transposed=trans_A,
+            b_transposed=trans_B,
+            block_row_warps=block_row_warps,
+            block_col_warps=block_col_warps,
+            warp_row_tiles=warp_row_tiles,
+            warp_col_tiles=warp_col_tiles,
+            chunk=chunk,
+        )
 
         @T.prim_func
-        def main(
+        def general_dequant_matmul(
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, storage_dtype),
+                LUT: T.Buffer(LUT_shape, in_dtype),
+                Scale: T.Buffer(Scale_shape, in_dtype),
+                Qzeros: T.Buffer(Qzeros_shape, storage_dtype),
+                Zeros: T.Buffer(Zeros_shape, in_dtype),
+                Bias: T.Buffer(Bias_shape, in_dtype),
                 C: T.Buffer((M, N), out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
                 A_shared = T.alloc_shared(A_shared_shape, in_dtype)
                 B_shared = T.alloc_shared(B_shared_shape, storage_dtype)
+                B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, in_dtype)
+                C_shared = T.alloc_shared(C_shared_shape, out_dtype)
+
+                A_frag = T.alloc_local((warp_rows * fragement_size), in_dtype)
+                B_frag = T.alloc_local((warp_cols * fragement_size), in_dtype)
+                C_frag = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
+
                 B_local = T.alloc_local([local_size_compressed], storage_dtype)
                 B_dequantize_local = T.alloc_local([local_size], in_dtype)
-                B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, in_dtype)
-                C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
 
                 tx = T.thread_binding(0, threads, thread="threadIdx.x")
 
+                T.annotate_layout(
+                    {
+                        A_shared: make_swizzle_layout(A_shared),
+                        B_dequantize_shared: make_swizzle_layout(
+                            B_dequantize_shared
+                        ),
+                    }
+                )
+
                 T.use_swizzle(10, enable=enable_rasterization)
 
-                T.clear(C_local)
+                T.import_source(import_source)
 
-                for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
-                    T.copy(A[by * block_M, k * block_K], A_shared)
-                    T.copy(B[bx * block_N, k * block_K // num_elems_per_byte], B_shared)
+                T.clear(C_frag)
+
+                for ko in T.Pipelined(
+                    T.ceildiv(K, block_K), num_stages=num_stages
+                ):
+
+                    T.copy(A[by * block_M, ko * block_K], A_shared)
+                    T.copy(B[bx * block_N, ko * block_K // num_elems_per_byte], B_shared)
 
                     for i in T.serial(block_N * block_K // num_elems_per_byte //
                                       (threads * local_size_compressed)):
                         for v in T.vectorized(0, local_size_compressed):
-                            index = i * threads * local_size_compressed + tx * local_size_compressed + v
+                            index = (
+                                i * threads * local_size_compressed + tx * local_size_compressed +
+                                v)
                             vi = index // (block_K // num_elems_per_byte)
                             vj = index % (block_K // num_elems_per_byte)
                             B_local[v] = B_shared[vi, vj]
-                        for v in T.serial(0, local_size):
-                            B_dequantize_local[v] = self._decode_func(
-                                num_bits,
-                                B_local[v // num_elems_per_byte],
-                                v % num_elems_per_byte,
-                                dtype=in_dtype,
+
+                        if fast_decoding is True:
+                            self._normal_fast_dequant(
+                                B_local,
+                                B_dequantize_local,
+                                Scale,
+                                Zeros,
+                                Qzeros,
+                                func_name,
+                                by,
+                                tx,
+                                ko,
+                                i,
+                                block_N,
+                                block_K,
+                                threads,
+                            )
+                        else:
+                            self._normal_dequant(
+                                B_local,
+                                B_dequantize_local,
+                                Scale,
+                                Zeros,
+                                Qzeros,
+                                local_size,
+                                local_size_compressed,
+                                bx,
+                                tx,
+                                ko,
+                                i,
+                                block_N,
+                                block_K,
+                                threads,
                             )
                         for v in T.vectorized(0, local_size):
                             index = i * threads * local_size + tx * local_size + v
@@ -278,92 +399,45 @@ class MatmulDequantizeScheduler(BaseScheduler):
                             vj = index % block_K
                             B_dequantize_shared[vi, vj] = B_dequantize_local[v]
 
-                    T.gemm(A_shared, B_dequantize_shared, C_local, transpose_B=True)
+                    # Perform the matrix multiplication on tensor core fragments
+                    for ki in T.serial(0, (block_K // micro_size_k)):
 
-                T.copy(C_local, C[by * block_M, bx * block_N])
+                        # Load A fragment
+                        mma_emitter.ldmatrix_a(
+                            A_frag,
+                            A_shared,
+                            ki,
+                            thread_bindings=tx,
+                        )
 
-        return main
+                        # Load B fragment
+                        mma_emitter.ldmatrix_b(
+                            B_frag,
+                            B_dequantize_shared,
+                            ki,
+                            thread_bindings=tx,
+                        )
 
-    def _apply_config_with_scaling(
-        self,
-        block_M: Optional[int] = None,
-        block_N: Optional[int] = None,
-        block_K: Optional[int] = None,
-        num_stages: Optional[int] = None,
-        threads: Optional[int] = None,
-        # Enhance L2 Locality
-        enable_rasterization: bool = False,
-    ):
-        raise NotImplementedError("Scaling Configuration is not implemented")
+                        # Matrix multiplication on fragments
+                        mma_emitter.mma(A_frag, B_frag, C_frag)
 
-    def _apply_config_with_scaling_zeros_original_or_rescale(
-        self,
-        block_M: Optional[int] = None,
-        block_N: Optional[int] = None,
-        block_K: Optional[int] = None,
-        num_stages: Optional[int] = None,
-        threads: Optional[int] = None,
-        # Enhance L2 Locality
-        enable_rasterization: bool = False,
-    ):
-        raise NotImplementedError("Scaling and Zeros Original Configuration is not implemented")
+                # Store the result back to C shared memory
+                mma_emitter.stmatrix(
+                    C_frag,
+                    C_shared,
+                    thread_bindings=tx,
+                )
 
-    def _apply_config_with_scaling_zeros_quantized(
-        self,
-        block_M: Optional[int] = None,
-        block_N: Optional[int] = None,
-        block_K: Optional[int] = None,
-        num_stages: Optional[int] = None,
-        threads: Optional[int] = None,
-        # Enhance L2 Locality
-        enable_rasterization: bool = False,
-    ):
-        raise NotImplementedError("Scaling and Zeros Rescale Configuration is not implemented")
+                # Store results from shared memory to global memory
+                for i, j in T.Parallel(block_M, block_N):
+                    C[by * block_M + i, bx * block_N + j] = C_shared[
+                        i // micro_size_x,
+                        j // micro_size_y,
+                        i % micro_size_x,
+                        j % micro_size_y,
+                    ]
 
-    def apply_config(
-        self,
-        block_M: Optional[int] = None,
-        block_N: Optional[int] = None,
-        block_K: Optional[int] = None,
-        num_stages: Optional[int] = None,
-        threads: Optional[int] = None,
-        # Enhance L2 Locality
-        enable_rasterization: bool = False,
-    ):
-        assert block_M is not None, "block_M is required"
-        assert block_N is not None, "block_N is required"
-        assert block_K is not None, "block_K is required"
-        assert num_stages is not None, "num_stages is required"
-        assert threads is not None, "threads is required"
-        trans_A, trans_B = self.trans_A, self.trans_B
-
-        assert trans_A is False, "Dequantize only implement for trans_A=False currently"
-        assert trans_B is True, "Dequantize only implement for trans_B=TRue currently"
-
-        with_scaling = self.with_scaling
-        with_zeros = self.with_zeros
-        zeros_mode = self.zeros_mode
-
-        args = [block_M, block_N, block_K, num_stages, threads, enable_rasterization]
-
-        dequant_prim_func = None
-        if not with_scaling:
-            dequant_prim_func = self._apply_config_dequant_only(*args)
-
-        if not with_zeros:
-            dequant_prim_func = self._apply_config_with_scaling(*args)
-
-        if zeros_mode in ["original", "rescale"]:
-            dequant_prim_func = self._apply_config_with_scaling_zeros_original_or_rescale(*args)
-        elif zeros_mode == "quantized":
-            dequant_prim_func = self._apply_config_with_scaling_zeros_quantized(*args)
-        else:
-            raise ValueError("Unsupported zeros_mode: {}".format(zeros_mode))
-
-        if dequant_prim_func is None:
-            raise ValueError("Unsupported Configuration")
-
-        return self.maybe_simplify(dequant_prim_func)
+        return self.maybe_simplify(general_dequant_matmul)
 
     @property
     def _decode_func(self):
@@ -375,7 +449,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
         source_format = self.source_format
         storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
         storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
-        bit = self.bit
+        num_bits = self.num_bits
 
         dequant_func = None
 
@@ -385,17 +459,17 @@ class MatmulDequantizeScheduler(BaseScheduler):
         if with_zeros and zeros_mode == "quantized":
             dequant_func = _tir_packed_to_unsigned_convert_with_zeros(storage_type, storage_nbit)
         elif source_format == "uint":
-            if bit == 8:
-                # 8 bit does not need to be compressed
+            if num_bits == 8:
+                # 8 num_bits does not need to be compressed
                 dequant_func = naive_cast_dequant
             else:
                 dequant_func = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)
         elif source_format == "int":
-            if bit == 1:
+            if num_bits == 1:
                 # Dequantize int1 to -1 and 1. Without this step, the values would be 0 and 1, identical to uint1.
                 dequant_func = _tir_packed_int_to_int_convert(storage_type, storage_nbit)
-            elif bit == 8:
-                # 8 bit does not need to be compressed
+            elif num_bits == 8:
+                # 8 num_bits does not need to be compressed
                 dequant_func = naive_cast_dequant
             else:
                 dequant_func = _tir_packed_to_signed_convert(storage_type, storage_nbit)
@@ -408,6 +482,189 @@ class MatmulDequantizeScheduler(BaseScheduler):
 
         return dequant_func
 
+    def _normal_dequant(
+        self,
+        compressed_weight_local: T.Buffer,
+        dequant_weight_local: T.Buffer,
+        scale_buffer: T.Buffer,
+        zeros_buffer: T.Buffer,
+        qzeros_buffer: T.Buffer,
+        local_size: int,
+        local_size_compressed: int,
+        pid_n: T.Var,
+        tx: T.Var,
+        k: T.Var,
+        i: T.Var,
+        stride_n: int,
+        stride_k: int,
+        threads: int,
+    ):
+        num_elems_per_byte = self.num_elems_per_byte
+        with_scaling = self.with_scaling
+        with_zeros = self.with_zeros
+        zeros_mode = self.zeros_mode
+        num_bits = self.num_bits
+        in_dtype = self.in_dtype
+        group_size = self.group_size
+        storage_dtype = self.storage_dtype
+        storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
+        storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
+
+        @T.macro
+        def _normal_dequant_impl(
+            compressed_weight_local: T.Buffer,
+            dequant_weight_local: T.Buffer,
+            scale_buffer: T.Buffer,
+            zeros_buffer: T.Buffer,
+            qzeros_buffer: T.Buffer,
+        ):
+            for v in T.serial(0, local_size):
+                index = (i * threads * local_size_compressed + tx * local_size_compressed + v)
+                vi = index // (stride_k // num_elems_per_byte)
+                vj = index % (stride_k // num_elems_per_byte)
+                if not with_scaling:
+                    dequant_weight_local[v] = self._decode_func(
+                        num_bits,
+                        compressed_weight_local[v // num_elems_per_byte],
+                        v % num_elems_per_byte,
+                        dtype=in_dtype,
+                    )
+                elif not with_zeros:
+                    # Scaling only
+                    dequant_weight_local[v] = (
+                        self._decode_func(
+                            num_bits,
+                            compressed_weight_local[v // num_elems_per_byte],
+                            v % num_elems_per_byte,
+                            dtype=in_dtype,
+                        ) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size])
+                elif zeros_mode == "original":
+                    dequant_weight_local[v] = (self._decode_func(
+                        num_bits,
+                        compressed_weight_local[v // num_elems_per_byte],
+                        v % num_elems_per_byte,
+                        dtype=in_dtype,
+                    ) - zeros_buffer[pid_n * stride_n + vi, (k * stride_k + vj) //
+                                     group_size]) * scale_buffer[pid_n * stride_n + vi,
+                                                                 (k * stride_k + vj) // group_size]
+                elif zeros_mode == "rescale":
+                    dequant_weight_local[v] = (
+                        self._decode_func(
+                            num_bits,
+                            compressed_weight_local[v // num_elems_per_byte],
+                            v % num_elems_per_byte,
+                            dtype=in_dtype,
+                        ) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size] -
+                        zeros_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size])
+                elif zeros_mode == "quantized":
+                    dequant_qzeros = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                        num_bits,
+                        qzeros_buffer[
+                            (k * stride_k + vj) // group_size,
+                            (pid_n * stride_n + vi) // num_elems_per_byte,
+                        ],
+                        (pid_n * stride_n + vi) % num_elems_per_byte,
+                        dtype=storage_dtype,
+                    )
+
+                    dequant_weight_local[v] = (self._decode_func(
+                        num_bits,
+                        compressed_weight_local[v // num_elems_per_byte],
+                        v % num_elems_per_byte,
+                        zero=dequant_qzeros,
+                        dtype=in_dtype,
+                    )) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size]
+
+        return _normal_dequant_impl(
+            compressed_weight_local,
+            dequant_weight_local,
+            scale_buffer,
+            zeros_buffer,
+            qzeros_buffer,
+        )
+
+    def _normal_fast_dequant(
+        self,
+        compressed_weight_local: T.Buffer,
+        dequant_weight_local: T.Buffer,
+        scale_buffer: T.Buffer,
+        zeros_buffer: T.Buffer,
+        qzeros_buffer: T.Buffer,
+        func_name: str,
+        pid_n: T.Var,
+        tx: T.Var,
+        k: T.Var,
+        i: T.Var,
+        stride_n: int,
+        stride_k: int,
+        threads: int,
+    ):
+        num_elems_per_byte = self.num_elems_per_byte
+        with_scaling = self.with_scaling
+        with_zeros = self.with_zeros
+        zeros_mode = self.zeros_mode
+        in_dtype = self.in_dtype
+        group_size = self.group_size
+
+        @T.macro
+        def _normal_fast_dequant_impl(
+            compressed_weight_local: T.Buffer,
+            dequant_weight_local: T.Buffer,
+            scale_buffer: T.Buffer,
+            zeros_buffer: T.Buffer,
+            qzeros_buffer: T.Buffer,
+        ):
+            if not with_scaling:
+                T.call_extern(
+                    func_name,
+                    T.address_of(compressed_weight_local[0]),
+                    T.address_of(dequant_weight_local[0]),
+                    dtype=in_dtype,
+                )
+            elif not with_zeros:
+                T.call_extern(
+                    func_name,
+                    T.address_of(compressed_weight_local[0]),
+                    T.address_of(dequant_weight_local[0]),
+                    T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    dtype=in_dtype,
+                )
+            elif zeros_mode in ["original", "rescale"]:
+                T.call_extern(
+                    func_name,
+                    T.address_of(compressed_weight_local[0]),
+                    T.address_of(dequant_weight_local[0]),
+                    T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    T.address_of(zeros_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    dtype=in_dtype,
+                )
+            elif zeros_mode == "quantized":
+                T.call_extern(
+                    func_name,
+                    T.address_of(compressed_weight_local[0]),
+                    T.address_of(dequant_weight_local[0]),
+                    T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    T.address_of(zeros_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    T.address_of(qzeros_buffer[k * stride_k // group_size,
+                                               pid_n * stride_n // num_elems_per_byte]),
+                    dtype=in_dtype,
+                )
+
+        return _normal_fast_dequant_impl(
+            compressed_weight_local,
+            dequant_weight_local,
+            scale_buffer,
+            zeros_buffer,
+            qzeros_buffer,
+        )
+
+    @property
+    def num_elems_per_byte(self):
+        storage_nbit = int("".join(c for c in self.storage_dtype if c.isdigit()))
+        num_bits = self.num_bits
+        return storage_nbit // num_bits
+
     def __post_init__(self):
-        # Add Config Validation
-        return
+        # Legalize group_size
+        if self.with_scaling and self.group_size == -1:
+            object.__setattr__(self, "group_size", self.K)
