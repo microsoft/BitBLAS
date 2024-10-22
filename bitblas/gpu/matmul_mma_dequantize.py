@@ -693,6 +693,10 @@ class MatmulTensorizationMMAWithDequantizeInfo(GPUScheduleRule):
                 V
             compute
         """
+        weight_transform_kind = config.intrin_info.weight_transform_kind
+        if weight_transform_kind == TransformKind.LDMatrixTransform:
+            return self.sch_warp_memory_prefetch_with_config(func, config)
+
         from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
             get_mma_intrin_group,)
         from .intrin import get_lop3_intrin_group

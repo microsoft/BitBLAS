@@ -182,7 +182,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
 
                 T.clear(C_frag)
 
-                for ko in T.Pipelined(T.ceildiv(K, block_K), num_stages=0):
+                for ko in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
 
                     T.copy(A[by * block_M, ko * block_K], A_shared)
 

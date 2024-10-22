@@ -370,7 +370,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
     layout="nt",
     zeros_mode="original",
 ):
-    assert with_scaling, "Currently The test only support with scaling"
+
     if group_size == -1:
         group_size = K
     propagate_b = 3
@@ -411,7 +411,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
             "block": [16, 128],
             "warp": [16, 32],
             "rstep": [128],
-            "pipeline_stage": 4,
+            "pipeline_stage": 2,
             "use_async": True,
             "intrin_info": intrin_info,
             "shared_scope": "shared.dyn",
@@ -429,6 +429,8 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
             "tir.disable_cse_tir": True
     }):
         rt_mod = tvm.build(block_reduce_sch.mod, target=target)
+    src_code = rt_mod.imported_modules[0].get_source()
+    assert src_code is not None
 
     check_reduce(rt_mod)
 
@@ -500,28 +502,38 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
     transformed_b = transformed_b.cuda()
     c = c.cuda()
     scale = scale.cuda()
-    if zeros is not None:
+    args = [a, transformed_b]
+    if with_scaling:
+        args.append(scale)
+    if with_scaling and with_zeros:
         zeros = zeros.cuda()
-        torch_func(a, transformed_b, scale, zeros, c)
-    else:
-        torch_func(a, transformed_b, scale, c)
+        args.append(zeros)
+    args.append(c)
 
-    rescale_b = torch.empty_like(b, dtype=torch.float16)
-    for i in range(N):
-        for j in range(K):
-            if with_zeros:
-                if zeros_mode == "original":
-                    rescale_b[i,
-                              j] = (b[i, j] - zeros[i, j // group_size]) * scale[i, j // group_size]
-                elif zeros_mode == "rescale":
-                    rescale_b[i,
-                              j] = b[i, j] * scale[i, j // group_size] + zeros[i, j // group_size]
+    torch_func(*args)
+
+    args = [a]
+    if with_scaling:
+
+        rescale_b = torch.empty_like(b, dtype=torch.float16)
+        for i in range(N):
+            for j in range(K):
+                if with_zeros:
+                    if zeros_mode == "original":
+                        rescale_b[i,
+                                j] = (b[i, j] - zeros[i, j // group_size]) * scale[i, j // group_size]
+                    elif zeros_mode == "rescale":
+                        rescale_b[i,
+                                j] = b[i, j] * scale[i, j // group_size] + zeros[i, j // group_size]
+                    else:
+                        raise NotImplementedError
                 else:
-                    raise NotImplementedError
-            else:
-                rescale_b[i, j] = b[i, j] * scale[i, j // group_size]
+                    rescale_b[i, j] = b[i, j] * scale[i, j // group_size]
+        args.append(rescale_b.t().cuda())
+    else:
+        args.append(b.t().cuda().to(torch.float16))
 
-    ref_c = torch.matmul(a, rescale_b.t().cuda())
+    ref_c = torch.matmul(*args)
 
     print("rescale_b is \n", c)
     print("ref_c is \n", ref_c)
