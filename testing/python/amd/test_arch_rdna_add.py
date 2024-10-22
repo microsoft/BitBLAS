@@ -36,4 +36,10 @@ arch = RDNA(target)
 policy = DefaultPolicy(func=func, arch=arch)
 
 configs = policy.emit_config(topk=20)
-print(configs)
+#print(configs)
+
+cpresults, best = apply_and_build(func, configs, arch, parallel_build=True)
+
+print(cpresults)
+print(best)
+print(best.code)
