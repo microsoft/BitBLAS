@@ -1,9 +1,11 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+import bitblas
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
-from bitblas.base.arch import CUDA, RDNA
+from bitblas.base.arch import RDNA
 from bitblas.base.utils import apply_and_build
 import tvm
-from tvm import tir
 from tvm.script import tir as T
 
 M = N = 1024
