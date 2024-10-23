@@ -172,18 +172,18 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
         micro_size_k = 32
 
     # This is a debug config
-    block_row_warps = 1
-    block_col_warps = 4
+    block_row_warps = 2
+    block_col_warps = 2
 
-    warp_rows = 1
-    warp_cols = 2
+    warp_rows = 4
+    warp_cols = 4
     warp_row_tiles = micro_size_x * warp_rows
     warp_col_tiles = micro_size_y * warp_cols
     shared_scope = "shared.dyn"
 
     # Pipeline Stage
     stage = 2
-    reduce_k = 2
+    reduce_k = 1
 
     block_M = block_row_warps * warp_row_tiles
     block_N = block_col_warps * warp_col_tiles
@@ -423,6 +423,8 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
 
     # Get Reference Result
     ref_c = torch.matmul(A, B.T).to(getattr(torch, accum_dtype))
+    print("Ref C: ", ref_c)
+    print("C: ", C)
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
 
 
@@ -437,5 +439,4 @@ def test_assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4():
 
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    run_gemm(256, 256, 256, "float16", "float16", "float16", 128, 128, 32, num_threads=128)
+    bitblas.testing.main()
