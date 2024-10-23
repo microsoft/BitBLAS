@@ -17,6 +17,10 @@ from dataclasses import dataclass
 from bitblas.quantization import (
     _tir_packed_to_unsigned_convert,)
 from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
+from bitblas.gpu.matmul_analysis import (
+    get_propagate_map,
+    get_ladder_stage3_map,
+)
 
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
@@ -51,7 +55,8 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
 
         assert trans_A is False, "Dequantize only implement for trans_A=False currently"
         assert trans_B is True, "Dequantize only implement for trans_B=TRue currently"
-        assert weight_transform_kind == TransformKind.LDMatrixTransform, "Dequantize only implement for LDMatrixTransform currently"
+        assert (weight_transform_kind == TransformKind.LDMatrixTransform
+               ), "Dequantize only implement for LDMatrixTransform currently"
 
         in_dtype, out_dtype, accum_dtype = (
             self.in_dtype,
@@ -80,15 +85,18 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
 
         MAX_TRANSACTION_SIZE_IN_BITS = 128
         local_size = MAX_TRANSACTION_SIZE_IN_BITS // DataType(in_dtype).bits
-        local_size_compressed = local_size // num_elems_per_byte
 
         group_size = self.group_size
         if group_size == -1:
             group_size = K
 
         A_shape = (M, K)
-        B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y,
-                   micro_size_k // num_elems_per_byte)
+        B_shape = (
+            N // micro_size_y,
+            K // micro_size_k,
+            micro_size_y,
+            micro_size_k // num_elems_per_byte,
+        )
         LUT_shape = (group_size, K // num_elems_per_byte)
         Scale_shape = (N, K // group_size)
         Zeros_shape = (N, K // group_size)
@@ -120,6 +128,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                 storage_dtype=storage_dtype,
                 with_scaling=self.with_scaling,
                 with_zeros=self.with_zeros,
+                storage_scope="warp",  # to get the ladder transform lop3 intrin
             )
             import_source = lop3_intrin_info["c_source"]
             func_name = lop3_intrin_info["func_name"]
@@ -186,7 +195,6 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
 
                     T.copy(A[by * block_M, ko * block_K], A_shared)
 
-                    # TODO(lei): Layout Inference Pass is not efficient to handle the four dims int8 load
                     for i in T.serial(block_N * block_K // num_elems_per_byte //
                                       (threads * vec_load_qb)):
                         for v in T.vectorized(0, vec_load_qb):
@@ -198,9 +206,12 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                             vj = (idx // (micro_size_k // num_elems_per_byte) // micro_size_y //
                                   (block_K // micro_size_k)) % (
                                       block_N // micro_size_y)
-                            B_shared[vj, vk, vjj,
-                                     vkk] = B[bx * (block_N // micro_size_y) + vj,
-                                              ko * (block_K // micro_size_k) + vk, vjj, vkk]
+                            B_shared[vj, vk, vjj, vkk] = B[
+                                bx * (block_N // micro_size_y) + vj,
+                                ko * (block_K // micro_size_k) + vk,
+                                vjj,
+                                vkk,
+                            ]
 
                     # Perform the matrix multiplication on tensor core fragments
                     for ki in T.serial(0, (block_K // micro_size_k)):
@@ -221,10 +232,6 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                             thread_bindings=tx,
                         )
 
-                        i = (
-                            block_N * block_K // num_elems_per_byte //
-                            (threads * local_size_compressed))
-                        local_size_b = mma_emitter.local_size_b
                         if fast_decoding is True:
                             self._normal_fast_dequant(
                                 B_frag,
@@ -233,15 +240,15 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                                 Zeros,
                                 Qzeros,
                                 func_name,
-                                local_size_b,
+                                local_size,
                                 warp_cols,
-                                by,
+                                bx,
                                 tx,
+                                mma_emitter,
                                 ko,
-                                i,
+                                ki,
                                 block_N,
                                 block_K,
-                                threads,
                             )
                         else:
                             self._normal_dequant(
@@ -251,16 +258,14 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                                 Zeros,
                                 Qzeros,
                                 local_size,
-                                local_size_compressed,
-                                local_size_b,
                                 warp_cols,
                                 bx,
                                 tx,
+                                mma_emitter,
                                 ko,
-                                i,
+                                ki,
                                 block_N,
                                 block_K,
-                                threads,
                             )
 
                         # Matrix multiplication on fragments
@@ -292,16 +297,14 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         zeros_buffer: T.Buffer,
         qzeros_buffer: T.Buffer,
         local_size: int,
-        local_size_compressed: int,
-        local_size_b: int,
         warp_cols: int,
         pid_n: T.Var,
-        tx: T.Var,
-        k: T.Var,
-        i: T.Var,
+        thread_bindings: T.Var,
+        mma_emitter: TensorCoreIntrinEmitterWithLadderTransform,
+        ko: T.Var,
+        ki: T.Var,
         stride_n: int,
         stride_k: int,
-        threads: int,
     ):
         num_elems_per_byte = self.num_elems_per_byte
         with_scaling = self.with_scaling
@@ -313,6 +316,8 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         storage_dtype = self.storage_dtype
         storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
         storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
+        micro_size_k = mma_emitter.micro_size_k
+        k_inner_stride = micro_size_k // local_size
 
         @T.macro
         def _normal_dequant_impl(
@@ -324,70 +329,76 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         ):
             for j in T.serial(warp_cols):
                 for v in T.serial(0, local_size):
-                    index = (i * threads * local_size_compressed + tx * local_size_compressed + v)
-                    vi = index // (stride_k // num_elems_per_byte)
-                    vj = index % (stride_k // num_elems_per_byte)
+                    tx = thread_bindings % mma_emitter.WARP_SIZE
+                    tz = (thread_bindings // (mma_emitter.WARP_SIZE * mma_emitter.block_row_warps)
+                         ) % mma_emitter.block_col_warps
+                    vi = (
+                        tz * (warp_cols * mma_emitter.WARP_SIZE // k_inner_stride) + j *
+                        (mma_emitter.WARP_SIZE // k_inner_stride) + (tx // k_inner_stride))
+                    vj = ki * micro_size_k + (tx % k_inner_stride) * local_size + v
+                    remaped_i, remaped_j = self.get_param_indices(
+                        pid_n * stride_n + vi,
+                        ko * stride_k + vj,
+                        transform_kind=TransformKind.LDMatrixTransform,
+                        in_dtype=in_dtype,
+                        matrix_name="B",
+                        group_size=group_size,
+                    )
                     if not with_scaling:
-                        dequant_weight_local[j * local_size_b + v] = self._decode_func(
+                        dequant_weight_local[j * local_size + v] = self._decode_func(
                             num_bits,
-                            compressed_weight_local[j * local_size_b // num_elems_per_byte +
+                            compressed_weight_local[j * local_size // num_elems_per_byte +
                                                     v // num_elems_per_byte],
                             v % num_elems_per_byte,
                             dtype=in_dtype,
                         )
                     elif not with_zeros:
-                        # Scaling only
-                        dequant_weight_local[j * local_size_b + v] = (
+                        dequant_weight_local[j * local_size + v] = (
                             self._decode_func(
                                 num_bits,
-                                compressed_weight_local[j * local_size_b // num_elems_per_byte +
+                                compressed_weight_local[j * local_size // num_elems_per_byte +
                                                         v // num_elems_per_byte],
                                 v % num_elems_per_byte,
                                 dtype=in_dtype,
-                            ) * scale_buffer[pid_n * stride_n + vi,
-                                             (k * stride_k + vj) // group_size])
+                            ) * scale_buffer[remaped_i, remaped_j])
                     elif zeros_mode == "original":
-                        dequant_weight_local[j * local_size_b + v] = (self._decode_func(
+                        dequant_weight_local[j * local_size + v] = (self._decode_func(
                             num_bits,
-                            compressed_weight_local[j * local_size_b // num_elems_per_byte +
+                            compressed_weight_local[j * local_size // num_elems_per_byte +
                                                     v // num_elems_per_byte],
                             v % num_elems_per_byte,
                             dtype=in_dtype,
-                        ) - zeros_buffer[pid_n * stride_n + vi,
-                                         (k * stride_k + vj) // group_size]) * scale_buffer[
-                                             pid_n * stride_n + vi,
-                                             (k * stride_k + vj) // group_size]
+                        ) - zeros_buffer[remaped_i, remaped_j]) * scale_buffer[remaped_i, remaped_j]
                     elif zeros_mode == "rescale":
-                        dequant_weight_local[j * local_size_b + v] = (
+                        dequant_weight_local[j * local_size + v] = (
                             self._decode_func(
                                 num_bits,
-                                compressed_weight_local[j * local_size_b // num_elems_per_byte +
+                                compressed_weight_local[j * local_size // num_elems_per_byte +
                                                         v // num_elems_per_byte],
                                 v % num_elems_per_byte,
                                 dtype=in_dtype,
-                            ) * scale_buffer[pid_n * stride_n + vi,
-                                             (k * stride_k + vj) // group_size] -
-                            zeros_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size])
+                            ) * scale_buffer[remaped_i, remaped_j] -
+                            zeros_buffer[remaped_i, remaped_j])
                     elif zeros_mode == "quantized":
                         dequant_qzeros = _tir_packed_to_unsigned_convert(
                             storage_type, storage_nbit)(
                                 num_bits,
                                 qzeros_buffer[
-                                    (k * stride_k + vj) // group_size,
-                                    (pid_n * stride_n + vi) // num_elems_per_byte,
+                                    remaped_i,
+                                    remaped_j // num_elems_per_byte,
                                 ],
                                 (pid_n * stride_n + vi) % num_elems_per_byte,
                                 dtype=storage_dtype,
                             )
 
-                        dequant_weight_local[j * local_size_b + v] = (self._decode_func(
+                        dequant_weight_local[j * local_size + v] = (self._decode_func(
                             num_bits,
-                            compressed_weight_local[j * local_size_b // num_elems_per_byte +
+                            compressed_weight_local[j * local_size // num_elems_per_byte +
                                                     v // num_elems_per_byte],
                             v % num_elems_per_byte,
                             zero=dequant_qzeros,
                             dtype=in_dtype,
-                        )) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size]
+                        )) * scale_buffer[remaped_i, remaped_j]
 
         return _normal_dequant_impl(
             compressed_weight_local,
@@ -405,15 +416,15 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         zeros_buffer: T.Buffer,
         qzeros_buffer: T.Buffer,
         func_name: str,
-        local_size_b: int,
+        local_size: int,
         warp_cols: int,
         pid_n: T.Var,
-        tx: T.Var,
-        k: T.Var,
-        i: T.Var,
+        thread_bindings: T.Var,
+        mma_emitter: TensorCoreIntrinEmitterWithLadderTransform,
+        ko: T.Var,
+        ki: T.Var,
         stride_n: int,
         stride_k: int,
-        threads: int,
     ):
         num_elems_per_byte = self.num_elems_per_byte
         with_scaling = self.with_scaling
@@ -421,6 +432,9 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         zeros_mode = self.zeros_mode
         in_dtype = self.in_dtype
         group_size = self.group_size
+        micro_size_k = mma_emitter.micro_size_k
+        k_inner_stride = micro_size_k // local_size
+        grouped_k = scale_buffer.shape[-1]
 
         @T.macro
         def _normal_fast_dequant_impl(
@@ -431,45 +445,51 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
             qzeros_buffer: T.Buffer,
         ):
             for j in T.serial(warp_cols):
+                tx = thread_bindings % mma_emitter.WARP_SIZE
+                tz = (thread_bindings // (mma_emitter.WARP_SIZE * mma_emitter.block_row_warps)
+                     ) % mma_emitter.block_col_warps
+                vi = (
+                    tz * (warp_cols * mma_emitter.WARP_SIZE // k_inner_stride) + j *
+                    (mma_emitter.WARP_SIZE // k_inner_stride) + (tx // k_inner_stride))
+                vj = ki * micro_size_k + (tx % k_inner_stride) * local_size
+                remapped_i, remapped_j = self.get_param_indices(
+                    pid_n * stride_n + vi,
+                    ko * stride_k + vj,
+                    transform_kind=TransformKind.LDMatrixTransform,
+                    in_dtype=in_dtype,
+                    matrix_name="B",
+                    group_size=group_size,
+                )
                 if not with_scaling:
                     T.call_extern(
                         func_name,
-                        T.address_of(compressed_weight_local[j * local_size_b //
-                                                             num_elems_per_byte]),
-                        T.address_of(dequant_weight_local[j * local_size_b]),
+                        T.address_of(compressed_weight_local[j * local_size // num_elems_per_byte]),
+                        T.address_of(dequant_weight_local[j * local_size]),
                         dtype=in_dtype,
                     )
                 elif not with_zeros:
+                    # Scaling only
                     T.call_extern(
                         func_name,
-                        T.address_of(compressed_weight_local[j * local_size_b //
-                                                             num_elems_per_byte]),
-                        T.address_of(dequant_weight_local[j * local_size_b]),
-                        T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                        T.address_of(compressed_weight_local[j * local_size // num_elems_per_byte]),
+                        T.address_of(dequant_weight_local[j * local_size]),
+                        T.address_of(scale_buffer[remapped_i, remapped_j]),
+                        local_size * grouped_k,
+                        local_size,
                         dtype=in_dtype,
                     )
                 elif zeros_mode in ["original", "rescale"]:
                     T.call_extern(
                         func_name,
-                        T.address_of(compressed_weight_local[j * local_size_b //
-                                                             num_elems_per_byte]),
-                        T.address_of(dequant_weight_local[j * local_size_b]),
-                        T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
-                        T.address_of(zeros_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                        T.address_of(compressed_weight_local[j * local_size // num_elems_per_byte]),
+                        T.address_of(dequant_weight_local[j * local_size]),
+                        T.address_of(scale_buffer[remapped_i, remapped_j]),
+                        T.address_of(zeros_buffer[remapped_i, remapped_j]),
+                        local_size * grouped_k,
+                        local_size,
                         dtype=in_dtype,
                     )
-                elif zeros_mode == "quantized":
-                    T.call_extern(
-                        func_name,
-                        T.address_of(compressed_weight_local[j * local_size_b //
-                                                             num_elems_per_byte]),
-                        T.address_of(dequant_weight_local[j * local_size_b]),
-                        T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
-                        T.address_of(zeros_buffer[pid_n * stride_n, k * stride_k // group_size]),
-                        T.address_of(qzeros_buffer[k * stride_k // group_size,
-                                                   pid_n * stride_n // num_elems_per_byte]),
-                        dtype=in_dtype,
-                    )
+                # TODO: Implement quantized zeros
 
         return _normal_fast_dequant_impl(
             compressed_weight_local,
@@ -478,6 +498,41 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
             zeros_buffer,
             qzeros_buffer,
         )
+
+    def get_param_indices(
+        self,
+        rl,
+        rr,
+        l=16,
+        r=16,
+        transform_kind=TransformKind.LDMatrixTransform,  # noqa: E741
+        trans=True,
+        in_dtype="float16",
+        matrix_name="B",
+        group_size=1,
+    ):  # noqa: E741
+        intra_index_map, _ = get_propagate_map(trans=trans, dtype=in_dtype, matrix_name=matrix_name)
+
+        ladder_stage3_index_map, ladder_stage3_inverse_index_map = (
+            get_ladder_stage3_map(dtype=in_dtype))
+
+        # assume the param layout is n, k
+
+        warp_i, warp_j = rl % l, rr % r
+
+        spatial_i, spatial_j = rl // l, rr // r
+
+        # If is stage3 ladder transform
+        if transform_kind > 2:
+            warp_i, warp_j = ladder_stage3_inverse_index_map.map_indices([warp_i, warp_j])
+
+        warp_i, warp_j = intra_index_map.map_indices([warp_i, warp_j])
+        new_indices = (
+            spatial_i * l + warp_i,
+            (spatial_j * r + warp_j) // group_size,
+        )
+
+        return new_indices
 
     def __post_init__(self):
         # Legalize group_size

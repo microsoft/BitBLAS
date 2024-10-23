@@ -512,9 +512,9 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
             qzeros_buffer: T.Buffer,
         ):
             for v in T.serial(0, local_size):
-                index = (i * threads * local_size_compressed + tx * local_size_compressed + v)
-                vi = index // (stride_k // num_elems_per_byte)
-                vj = index % (stride_k // num_elems_per_byte)
+                index = (i * threads * local_size + tx * local_size + v)
+                vi = index // (stride_k)
+                vj = index % (stride_k)
                 if not with_scaling:
                     dequant_weight_local[v] = self._decode_func(
                         num_bits,
@@ -592,6 +592,7 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
         stride_k: int,
         threads: int,
     ):
+        # TODO(lei): un-used arguments should be removed
         num_elems_per_byte = self.num_elems_per_byte
         with_scaling = self.with_scaling
         with_zeros = self.with_zeros

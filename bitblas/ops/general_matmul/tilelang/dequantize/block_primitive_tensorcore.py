@@ -312,7 +312,6 @@ class MatmulDequantizeScheduler(BaseScheduler):
                                 Zeros,
                                 Qzeros,
                                 local_size,
-                                local_size_compressed,
                                 bx,
                                 tx,
                                 k,
@@ -384,7 +383,6 @@ class MatmulDequantizeScheduler(BaseScheduler):
         zeros_buffer: T.Buffer,
         qzeros_buffer: T.Buffer,
         local_size: int,
-        local_size_compressed: int,
         pid_n: T.Var,
         tx: T.Var,
         k: T.Var,
@@ -413,9 +411,9 @@ class MatmulDequantizeScheduler(BaseScheduler):
             qzeros_buffer: T.Buffer,
         ):
             for v in T.serial(0, local_size):
-                index = (i * threads * local_size_compressed + tx * local_size_compressed + v)
-                vi = index // (stride_k // num_elems_per_byte)
-                vj = index % (stride_k // num_elems_per_byte)
+                index = (i * threads * local_size + tx * local_size + v)
+                vi = index // stride_k
+                vj = index % stride_k
                 if not with_scaling:
                     dequant_weight_local[v] = self._decode_func(
                         num_bits,
@@ -486,12 +484,9 @@ class MatmulDequantizeScheduler(BaseScheduler):
         qzeros_buffer: T.Buffer,
         func_name: str,
         pid_n: T.Var,
-        tx: T.Var,
         k: T.Var,
-        i: T.Var,
         stride_n: int,
         stride_k: int,
-        threads: int,
     ):
         num_elems_per_byte = self.num_elems_per_byte
         with_scaling = self.with_scaling

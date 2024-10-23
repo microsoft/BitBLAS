@@ -408,9 +408,9 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
         matmul_func,
         config=bitblas.base.Hint.from_dict({
             "arch": arch,
-            "block": [16, 128],
-            "warp": [16, 32],
-            "rstep": [128],
+            "block": [128, 128],
+            "warp": [64, 64],
+            "rstep": [32],
             "pipeline_stage": 2,
             "use_async": True,
             "intrin_info": intrin_info,
@@ -419,7 +419,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
                 "b": 8,
                 "a": 8
             },
-            "block_reduction_depth": 2,
+            "block_reduction_depth": 1,
         }),
     )
 

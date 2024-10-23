@@ -21,6 +21,8 @@ import torch.backends
 
 torch.manual_seed(0)
 
+verbose = False
+
 
 def assert_matmul_blocked_with_default_correctness(
     M,
@@ -384,6 +386,7 @@ def assert_matmul_blocked_dequant_with_default_correctness(
 ):
     import numpy as np
     from bitblas.quantization import general_compress, interleave_weight
+
     matmul = MatmulDequantizeScheduler(
         M=M,
         N=N,
@@ -402,10 +405,12 @@ def assert_matmul_blocked_dequant_with_default_correctness(
         fast_decoding=fast_decoding,
         zeros_mode=zeros_mode,
     ).with_default_config()
+    print(matmul)
     mod, params = tl.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
+    print(src_code)
     input_shape = (M, K)
     weight_shape = (N, K)
     output_shape = (M, N)
@@ -439,17 +444,17 @@ def assert_matmul_blocked_dequant_with_default_correctness(
     if with_scaling:
         if group_size == -1:
             group_size = K
-        permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda())
+        permuted_inputs.append(torch.randn((N, K // group_size), dtype=torch.float16).cuda())
     if with_zeros:
         if zeros_mode == "original":
             permuted_inputs.append(
                 torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
         elif zeros_mode == "rescale":
-            original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros
+            original_zeros = (torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
             scaled_zeros = original_zeros * permuted_inputs[-1]
             permuted_inputs.append(scaled_zeros)
         elif zeros_mode == "quantized":
-            original_zeros = torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros
+            original_zeros = (torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros)
             qzeros = general_compress(
                 original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
             permuted_inputs.append(torch.from_numpy(qzeros).cuda())
@@ -464,7 +469,30 @@ def assert_matmul_blocked_dequant_with_default_correctness(
 
     print(permuted_inputs[-1])
 
-    ref_result = torch.matmul(inputs[0], inputs[1].t().to(torch.float16))
+    args = [inputs[0]]
+    b = inputs[1]
+    if with_scaling:
+        scale = permuted_inputs[2]
+        rescale_b = torch.empty_like(b, dtype=torch.float16)
+        for i in range(N):
+            for j in range(K):
+                if with_zeros:
+                    zeros = permuted_inputs[3]
+                    if zeros_mode == "original":
+                        rescale_b[i, j] = (b[i, j] - zeros[i, j // group_size]) * scale[i, j //
+                                                                                        group_size]
+                    elif zeros_mode == "rescale":
+                        rescale_b[i, j] = (
+                            b[i, j] * scale[i, j // group_size] + zeros[i, j // group_size])
+                    else:
+                        raise NotImplementedError
+                else:
+                    rescale_b[i, j] = b[i, j] * scale[i, j // group_size]
+        args.append(rescale_b.t().cuda())
+    else:
+        args.append(b.t().cuda().to(torch.float16))
+
+    ref_result = torch.matmul(*args)
 
     print(ref_result)
     if zeros_mode == "rescale":
@@ -493,6 +521,7 @@ def assert_matmul_fine_grained_dequant_with_default_correctness(
 ):
     import numpy as np
     from bitblas.quantization import general_compress, interleave_weight
+
     matmul = MatmulDequantizeFineGrainedScheduler(
         M=M,
         N=N,
@@ -552,14 +581,13 @@ def assert_matmul_fine_grained_dequant_with_default_correctness(
         permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda())
     if with_zeros:
         if zeros_mode == "original":
-            permuted_inputs.append(
-                torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
+            permuted_inputs.append(torch.randn((N, K // group_size), dtype=torch.float16).cuda())
         elif zeros_mode == "rescale":
-            original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros
+            original_zeros = (torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
             scaled_zeros = original_zeros * permuted_inputs[-1]
             permuted_inputs.append(scaled_zeros)
         elif zeros_mode == "quantized":
-            original_zeros = torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros
+            original_zeros = (torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros)
             qzeros = general_compress(
                 original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
             permuted_inputs.append(torch.from_numpy(qzeros).cuda())
@@ -574,7 +602,29 @@ def assert_matmul_fine_grained_dequant_with_default_correctness(
 
     print(permuted_inputs[-1])
 
-    ref_result = torch.matmul(inputs[0], inputs[1].t().to(torch.float16))
+    args = [inputs[0]]
+    b = inputs[1]
+    if with_scaling:
+        scale = permuted_inputs[2]
+        rescale_b = torch.empty_like(b, dtype=torch.float16)
+        for i in range(N):
+            for j in range(K):
+                if with_zeros:
+                    if zeros_mode == "original":
+                        rescale_b[i, j] = (b[i, j] - zeros[i, j // group_size]) * scale[i, j //
+                                                                                        group_size]
+                    elif zeros_mode == "rescale":
+                        rescale_b[i, j] = (
+                            b[i, j] * scale[i, j // group_size] + zeros[i, j // group_size])
+                    else:
+                        raise NotImplementedError
+                else:
+                    rescale_b[i, j] = b[i, j] * scale[i, j // group_size]
+        args.append(rescale_b.t().cuda())
+    else:
+        args.append(b.t().cuda().to(torch.float16))
+
+    ref_result = torch.matmul(*args)
 
     print(ref_result)
     if zeros_mode == "rescale":
@@ -603,6 +653,7 @@ def assert_matmul_weight_transform_dequant_with_default_correctness(
 ):
     import numpy as np
     from bitblas.quantization import general_compress, interleave_weight
+
     matmul = MatmulDequantizeWeightPropagationScheduler(
         M=M,
         N=N,
@@ -621,20 +672,24 @@ def assert_matmul_weight_transform_dequant_with_default_correctness(
         fast_decoding=fast_decoding,
         zeros_mode=zeros_mode,
     ).with_default_config()
-    print(matmul)
+    if verbose:
+        print(matmul)
     mod, params = tl.lower(matmul)
 
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
-    print("src_code", src_code)
+    if verbose:
+        print(src_code)
     input_shape = (M, K)
     weight_shape = (N, K)
     output_shape = (M, N)
     inputs = []
     inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda() - 0.5)
     maxq = 2**(bit - 1)
-    zeros = maxq
+    if group_size == -1:
+        group_size = K
+
     if source_format == "uint":
         inputs.append(torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda())
     elif source_format == "int":
@@ -648,8 +703,6 @@ def assert_matmul_weight_transform_dequant_with_default_correctness(
     intweight = intweight.cpu().to(torch.int8)
     if source_format == "int":
         intweight = intweight + maxq
-    if with_zeros:
-        intweight = intweight - zeros
 
     ladder_permutate_config = bitblas.ops.LadderPermutateConfig(
         M=N,
@@ -674,24 +727,22 @@ def assert_matmul_weight_transform_dequant_with_default_correctness(
     qw = qw.reshape(qw_shape)
     permuted_inputs.append(torch.from_numpy(qw).cuda())
     if with_scaling:
-        if group_size == -1:
-            group_size = K
-        permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda())
+        # permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda())
+        permuted_inputs.append(torch.randn((N, K // group_size), dtype=torch.float16).cuda())
+
+    zeros = None
     if with_zeros:
         if zeros_mode == "original":
-            permuted_inputs.append(
-                torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros)
+            zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * maxq
         elif zeros_mode == "rescale":
-            original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * zeros
-            scaled_zeros = original_zeros * permuted_inputs[-1]
-            permuted_inputs.append(scaled_zeros)
-        elif zeros_mode == "quantized":
-            original_zeros = torch.ones([K // group_size, N], dtype=torch.int8).cuda() * zeros
-            qzeros = general_compress(
-                original_zeros.cpu().numpy(), source_bits=bit, storage_dtype=np.int8)
-            permuted_inputs.append(torch.from_numpy(qzeros).cuda())
+            scale = permuted_inputs[2]
+            original_zeros = (torch.ones([N, K // group_size], dtype=torch.float16).cuda() * maxq)
+            zeros = -(original_zeros * scale.cuda())
         else:
             raise NotImplementedError
+
+    if with_scaling and with_zeros:
+        permuted_inputs.append(zeros)
 
     permuted_inputs.append(inputs[2])
 
@@ -701,13 +752,36 @@ def assert_matmul_weight_transform_dequant_with_default_correctness(
 
     print(permuted_inputs[-1])
 
-    ref_result = torch.matmul(inputs[0], inputs[1].t().to(torch.float16))
+    args = [inputs[0]]
+    b = inputs[1]
 
+    if with_scaling:
+        scale = permuted_inputs[2]
+        rescale_b = torch.empty_like(b, dtype=torch.float16)
+        for i in range(N):
+            for j in range(K):
+                if with_zeros:
+                    zeros = permuted_inputs[3]
+                    if zeros_mode == "original":
+                        rescale_b[i, j] = (b[i, j] - zeros[i, j // group_size]) * scale[i, j //
+                                                                                        group_size]
+                    elif zeros_mode == "rescale":
+                        rescale_b[i, j] = (
+                            b[i, j] * scale[i, j // group_size] + zeros[i, j // group_size])
+                    else:
+                        raise NotImplementedError
+                else:
+                    rescale_b[i, j] = b[i, j] * scale[i, j // group_size]
+        args.append(rescale_b.t().cuda())
+    else:
+        args.append(b.t().cuda().to(torch.float16))
+
+    ref_result = torch.matmul(*args)
     print(ref_result)
     if zeros_mode == "rescale":
-        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e2)
+        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e0)
     else:
-        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e2)
+        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e0)
 
 
 def test_matmul_blocked():
@@ -749,11 +823,25 @@ def test_matmul_blocked_dequant_with_default():
     assert_matmul_blocked_dequant_with_default_correctness(
         1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True)
     assert_matmul_blocked_dequant_with_default_correctness(
-        1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True, with_zeros=True)
+        1024,
+        1024,
+        1024,
+        source_format="uint",
+        bit=4,
+        with_scaling=True,
+        with_zeros=True,
+    )
     assert_matmul_blocked_dequant_with_default_correctness(
         1024, 1024, 1024, source_format="uint", bit=4, fast_decoding=True)
     assert_matmul_blocked_dequant_with_default_correctness(
-        1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True, fast_decoding=True)
+        1024,
+        1024,
+        1024,
+        source_format="uint",
+        bit=4,
+        with_scaling=True,
+        fast_decoding=True,
+    )
     assert_matmul_blocked_dequant_with_default_correctness(
         1024,
         1024,
@@ -762,7 +850,8 @@ def test_matmul_blocked_dequant_with_default():
         bit=4,
         with_scaling=True,
         with_zeros=True,
-        fast_decoding=True)
+        fast_decoding=True,
+    )
 
 
 def test_matmul_fine_grained_dequant_with_default():
@@ -773,11 +862,25 @@ def test_matmul_fine_grained_dequant_with_default():
     assert_matmul_fine_grained_dequant_with_default_correctness(
         1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True)
     assert_matmul_fine_grained_dequant_with_default_correctness(
-        1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True, with_zeros=True)
+        1024,
+        1024,
+        1024,
+        source_format="uint",
+        bit=4,
+        with_scaling=True,
+        with_zeros=True,
+    )
     assert_matmul_fine_grained_dequant_with_default_correctness(
         1024, 1024, 1024, source_format="uint", bit=4, fast_decoding=True)
     assert_matmul_fine_grained_dequant_with_default_correctness(
-        1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True, fast_decoding=True)
+        1024,
+        1024,
+        1024,
+        source_format="uint",
+        bit=4,
+        with_scaling=True,
+        fast_decoding=True,
+    )
     assert_matmul_fine_grained_dequant_with_default_correctness(
         1024,
         1024,
@@ -786,7 +889,8 @@ def test_matmul_fine_grained_dequant_with_default():
         bit=4,
         with_scaling=True,
         with_zeros=True,
-        fast_decoding=True)
+        fast_decoding=True,
+    )
 
 
 def test_matmul_weight_transform_dequant_with_default():
@@ -801,7 +905,14 @@ def test_matmul_weight_transform_dequant_with_default():
     assert_matmul_weight_transform_dequant_with_default_correctness(
         1024, 1024, 1024, source_format="uint", bit=4, fast_decoding=True)
     assert_matmul_weight_transform_dequant_with_default_correctness(
-        1024, 1024, 1024, source_format="uint", bit=4, with_scaling=True, fast_decoding=True)
+        1024,
+        1024,
+        1024,
+        source_format="uint",
+        bit=4,
+        with_scaling=True,
+        fast_decoding=True,
+    )
     assert_matmul_weight_transform_dequant_with_default_correctness(
         1024,
         1024,
@@ -809,8 +920,9 @@ def test_matmul_weight_transform_dequant_with_default():
         source_format="uint",
         bit=4,
         with_scaling=True,
+        fast_decoding=True,
         with_zeros=True,
-        fast_decoding=True)
+    )
 
 
 if __name__ == "__main__":
