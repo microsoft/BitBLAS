@@ -18,8 +18,10 @@ M = N = 1024
 in_dtype = "float32"
 out_dtype = "float32"
 
+
 @tvm.script.ir_module
 class Add:
+
     @T.prim_func
     def main(a: T.handle, b: T.handle, c: T.handle):
         T.func_attr({"global_symbol": "main", "tir.noalias": True})
@@ -33,6 +35,7 @@ class Add:
                 with T.init():
                     C[vi, vj] = tvm.tir.const(0, out_dtype)
                 C[vi, vj] = A[vi, vj].astype(out_dtype) + B[vi, vj].astype(out_dtype)
+
 
 ir_module = Add
 

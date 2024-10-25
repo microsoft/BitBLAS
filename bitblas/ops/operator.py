@@ -288,7 +288,7 @@ class Operator(object):
                     build_runtime_library_error = e
                     logger.debug(
                         "Failed to build runtime library {}".format(build_runtime_library_error))
-                    
+
         return rt_mod
 
     def scheduler_with_default(self, scheduler: BaseScheduler):

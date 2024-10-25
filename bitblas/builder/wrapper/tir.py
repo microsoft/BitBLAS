@@ -369,6 +369,7 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
 
 
 class TIRHIPSourceWrapper(TIRCUDASourceWrapper):
+
     def __init__(self, scheduled_ir_module: IRModule, source: str, arch: TileDevice):
         super().__init__(scheduled_ir_module, source, arch)
 
@@ -382,7 +383,7 @@ class TIRHIPSourceWrapper(TIRCUDASourceWrapper):
                                                            self.dynamic_smem_buf))
         # Format the initialization function using the call_str
         init_funcs = PREDEF_INIT_FUNC.format(call_str)
-        return init_funcs   
+        return init_funcs
 
     def update_lib_code(self, code: str):
         # Update the library code with the given code string
@@ -477,9 +478,9 @@ class TIRWrapper(BaseWrapper):
     # Get Scheduled Rt Module and return source to be compiled
     def wrap(self, c_source: str, is_dynamic: bool = False):
         assert self.scheduled_ir_module is not None, "Please assign optimized module first."
-        if(self.arch.platform == "CUDA"):
+        if (self.arch.platform == "CUDA"):
             wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
-        elif(self.arch.platform == "RDNA"):
+        elif (self.arch.platform == "RDNA"):
             wrapper_class = TIRHIPSourceWrapper
         wrapper = wrapper_class(self.scheduled_ir_module, c_source, self.arch)
         return wrapper.lib_code
