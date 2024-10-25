@@ -214,8 +214,54 @@ class Operator(object):
                         "optimized",
                         truncated_message,
                     ))
+        elif self.arch.platform == "RDNA":
+            if self.scheduled_ir_module is None:
+                return None
+
+            @tvm.register_func(func_name="tvm_callback_hip_postproc", override=True)
+            def tvm_callback_hip_postproc(code, _):
+                return self.post_process(code)
+
+            try:
+                with tvm.transform.PassContext(
+                        config={
+                            "tir.use_async_copy": True,
+                            "tir.disable_cse_tir": True,
+                            **(self.pass_context if self.pass_context else {}),
+                        }):
+                    if self.is_tir_backend():
+                        rt_mod = tvm.build(self.scheduled_ir_module, target=target)
+                    elif self.is_tilelang_backend():
+                        # check only have one function in the module
+                        if len(self.scheduled_ir_module.functions) > 1:
+                            raise ValueError("Only support one function in the module")
+                        tl_prim_func = list(self.scheduled_ir_module.functions.values())[0]
+                        with tvm.transform.PassContext(
+                                config={
+                                    "tir.use_async_copy": True,
+                                    "tir.disable_cse_tir": True,
+                                    **(self.pass_context if self.pass_context else {})
+                                }):
+                            rt_mod = tl.lower(tl_prim_func, target=target, runtime_only=True)
+                    else:
+                        raise ValueError(f"Unsupported backend: {self.backend}")
+            except Exception as build_runtime_error:  # noqa: F841
+                error_message = str(build_runtime_error)
+                # Truncate only if the message exceeds the maximum length
+                if len(error_message) > MAX_ERROR_MESSAGE_LENGTH:
+                    truncated_message = f"{error_message[-MAX_ERROR_MESSAGE_LENGTH:]} [...]"
+                else:
+                    truncated_message = error_message
+
+                logger.debug(
+                    BUILD_RUNTIME_LIBRARY_FAILED_MESSAGE.format(
+                        self.__class__.__name__,
+                        target,
+                        "optimized",
+                        truncated_message,
+                    ))
         else:
-            # For non-CUDA platforms or when no optimized function is available, build with the primary function
+            # For non-CUDA and non-hip platforms or when no optimized function is available, build with the primary function
             rt_mod = tvm.build(self.prim_func, target=target, name=self.name)
 
         # If the runtime module was successfully built, set up for evaluation
@@ -225,7 +271,7 @@ class Operator(object):
             self.time_evaluator = rt_mod.time_evaluator(
                 rt_mod.entry_name, self.arch.device, number=10)
             self.torch_func = to_pytorch_func(rt_mod)
-            if self.arch.platform == "CUDA":
+            if self.arch.platform in {"CUDA", "RDNA"}:
                 try:
                     is_dynamic = (
                         self.dynamic_range is not None and
@@ -242,7 +288,7 @@ class Operator(object):
                     build_runtime_library_error = e
                     logger.debug(
                         "Failed to build runtime library {}".format(build_runtime_library_error))
-
+                    
         return rt_mod
 
     def scheduler_with_default(self, scheduler: BaseScheduler):

@@ -368,6 +368,101 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
         return lib_code
 
 
+class TIRHIPSourceWrapper(TIRCUDASourceWrapper):
+    def __init__(self, scheduled_ir_module: IRModule, source: str, arch: TileDevice):
+        super().__init__(scheduled_ir_module, source, arch)
+
+    def get_hip_init_func(self):
+        # Initialize an empty string for the CUDA function call
+        call_str = """"""
+        # If dynamic shared memory buffer is specified, prepare the cudaFuncSetAttribute call
+        if self.dynamic_smem_buf is not None:
+            call_str = (
+                PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY.format(self.function_name,
+                                                           self.dynamic_smem_buf))
+        # Format the initialization function using the call_str
+        init_funcs = PREDEF_INIT_FUNC.format(call_str)
+        return init_funcs   
+
+    def update_lib_code(self, code: str):
+        # Update the library code with the given code string
+        self.lib_code = code
+        # Find the index of the global kernel function in the code
+        index = match_global_kernel(code)
+        # Extract the declaration of the function starting from the found index
+        declaration = code[index:].split(";")[0]
+
+        function_name = self.function_name
+        # Get the HIP initialization function
+        init_func = self.get_hip_init_func()
+
+        # Locate the opening brace of the function to insert arguments
+        index = code.index("{", index)
+        function_args = []
+        # Populate the function arguments from the primary function's parameters and buffers
+        for param in self.prim_func.params:
+            buffer = self.prim_func.buffer_map[param]
+            function_args.append({
+                "name": buffer.name,
+                "type": self._TYPE_MAP[buffer.dtype] + "* __restrict__",
+            })
+
+        dynamic_symbolic_set = self.get_dynamic_symbolic_set(self.prim_func)
+        # Add dynamic symbolic parameters as integers to the function arguments
+        for dyn_sym in dynamic_symbolic_set:
+            function_args.append({"name": dyn_sym, "type": "int"})
+
+        function_args.append({"name": "stream=hipStreamDefault", "type": "hipStream_t"},)
+        # Format the function arguments for declaration
+        def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
+
+        def func_call_args(s, function_args):
+            # Extract the function call arguments matching the function definition
+            pattern = r"[,\s]*(?:\w+\s*\*+\s*__restrict__\s+)?(\w+)"
+            matches = re.findall(pattern, s)
+            call_args = []
+            for match in matches:
+                for arg in function_args:
+                    if arg["name"] == match:
+                        call_args.append(match)
+            return call_args
+
+        call_args = ", ".join(func_call_args(declaration, function_args))
+        block_info, grid_info = self.block_info, self.grid_info
+
+        def legalize_c(p):
+            # Convert TIR expressions to legal C expressions
+            # Directly convert to string since the special case handling
+            # does not alter the string representation for `tvm.tir.Var` and `IntImm`.
+            # Replace Python's floor division operator with C's division operator
+            if isinstance(p, tvm.tir.IntImm):
+                p = int(p)
+            return str(p).replace("//", "/")
+
+        # Prepare the block and grid dimensions for the CUDA kernel launch
+        block_str = "dim3({}, {}, {})".format(
+            legalize_c(block_info[0]),
+            legalize_c(block_info[1]),
+            legalize_c(block_info[2]),
+        )
+        grid_str = "dim3({}, {}, {})".format(
+            legalize_c(grid_info[0]), legalize_c(grid_info[1]), legalize_c(grid_info[2]))
+        # Determine the shared memory size, defaulting to 0 if not specified
+        smem_str = 0 if self.dynamic_smem_buf is None else self.dynamic_smem_buf
+        # Format the CUDA kernel launch string
+        if len(dynamic_symbolic_set) != 0:
+            call_str = "if ({} == 0) return; \n\t\t".format(list(dynamic_symbolic_set)[0])
+        else:
+            call_str = ""
+        call_str += "{}<<<{}, {}, {}, stream>>>({});".format(function_name, grid_str, block_str,
+                                                             smem_str, call_args)
+        # Create the host function wrapper for the CUDA kernel
+        host_func = PREDEF_HOST_FUNC.format(def_args, call_str)
+        # Combine the source, initialization function, and host function to form the complete library code
+        lib_code = self.source + init_func + host_func
+        return lib_code
+
+
 class TIRWrapper(BaseWrapper):
 
     def __init__(self, arch: TileDevice):
@@ -382,6 +477,9 @@ class TIRWrapper(BaseWrapper):
     # Get Scheduled Rt Module and return source to be compiled
     def wrap(self, c_source: str, is_dynamic: bool = False):
         assert self.scheduled_ir_module is not None, "Please assign optimized module first."
-        wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
+        if(self.arch.platform == "CUDA"):
+            wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
+        elif(self.arch.platform == "RDNA"):
+            wrapper_class = TIRHIPSourceWrapper
         wrapper = wrapper_class(self.scheduled_ir_module, c_source, self.arch)
         return wrapper.lib_code
