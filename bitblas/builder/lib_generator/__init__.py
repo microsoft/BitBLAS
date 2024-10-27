@@ -51,7 +51,7 @@ class LibraryGenerator(object):
                 f"arch=compute_{compute_version},code=sm_{compute_version}",
             ]
 
-        elif (platform == "RDNA"):
+        elif (platform == "CDNA"):
             src = tempfile.NamedTemporaryFile(mode="w", suffix=".cpp", delete=False)
             libpath = src.name.replace(".cpp", ".so")
 

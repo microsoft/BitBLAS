@@ -3,7 +3,7 @@
 import bitblas
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
-from bitblas.base.arch import RDNA
+from bitblas.base.arch import CDNA
 from bitblas.base.utils import apply_and_build
 from bitblas.builder.wrapper import TIRWrapper
 from bitblas import set_log_level
@@ -39,7 +39,7 @@ class Add:
 ir_module = Add
 func = ir_module["main"]
 target = tvm.target.Target("hip")
-arch = RDNA(target)
+arch = CDNA(target)
 
 policy = DefaultPolicy(func=func, arch=arch)
 configs = policy.emit_config(topk=20)

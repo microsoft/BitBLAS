@@ -6,7 +6,7 @@ from tvm.target import Target
 from .arch_base import TileDevice
 from typing import List, Dict, Union
 
-class RDNA(TileDevice):
+class CDNA(TileDevice):
     def __init__(self, target: Union[Target, str]):
         if isinstance(target, str):
             target = tvm.target.Target(target) 
@@ -15,7 +15,7 @@ class RDNA(TileDevice):
         if not device.exist:
             raise RuntimeError("Cannot find HIP device 0.")
         self.device: tvm.runtime.Device = device
-        self.platform: str = "RDNA"
+        self.platform: str = "CDNA"
         self.smem_cap = device.max_shared_memory_per_block
         self.compute_max_core = device.multi_processor_count
         self.warp_size = device.warp_size

@@ -5,7 +5,7 @@ from tvm.target import Target
 import operator
 from functools import reduce
 from bitblas.base.arch.cuda import CUDA
-from bitblas.base.arch.rdna import RDNA
+from bitblas.base.arch.cdna import CDNA
 from bitblas.base.roller.hint import Hint
 from typing import Any, Literal, Optional, Tuple, Union
 from ..operator import OperatorConfig, Operator, OPExecutorCPU, BaseKernelNameGenerator
@@ -381,7 +381,7 @@ class Matmul(Operator):
         if(target.kind.name == "cuda"):
             self.arch = CUDA(target)
         elif(target.kind.name == "hip"):
-            self.arch = RDNA(target)
+            self.arch = CDNA(target)
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}

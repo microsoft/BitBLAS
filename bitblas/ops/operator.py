@@ -214,7 +214,7 @@ class Operator(object):
                         "optimized",
                         truncated_message,
                     ))
-        elif self.arch.platform == "RDNA":
+        elif self.arch.platform == "CDNA":
             if self.scheduled_ir_module is None:
                 return None
 
@@ -271,7 +271,7 @@ class Operator(object):
             self.time_evaluator = rt_mod.time_evaluator(
                 rt_mod.entry_name, self.arch.device, number=10)
             self.torch_func = to_pytorch_func(rt_mod)
-            if self.arch.platform in {"CUDA", "RDNA"}:
+            if self.arch.platform in {"CUDA", "CDNA"}:
                 try:
                     is_dynamic = (
                         self.dynamic_range is not None and

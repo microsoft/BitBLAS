@@ -3,7 +3,7 @@
 from .arch_base import TileDevice
 from .cuda import *
 from .cpu import *
-from .rdna import *
+from .cdna import *
 
 
 def get_arch(target: tvm.target.Target) -> TileDevice:
@@ -12,6 +12,6 @@ def get_arch(target: tvm.target.Target) -> TileDevice:
     elif target.kind.name == "llvm":
         return CPU(target)
     elif target.kind.name == "hip":
-        return RDNA(target)
+        return CDNA(target)
     else:
         raise ValueError(f"Unsupported target: {target.kind.name}")

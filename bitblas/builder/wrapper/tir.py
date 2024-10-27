@@ -480,7 +480,7 @@ class TIRWrapper(BaseWrapper):
         assert self.scheduled_ir_module is not None, "Please assign optimized module first."
         if (self.arch.platform == "CUDA"):
             wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
-        elif (self.arch.platform == "RDNA"):
+        elif (self.arch.platform == "CDNA"):
             wrapper_class = TIRHIPSourceWrapper
         wrapper = wrapper_class(self.scheduled_ir_module, c_source, self.arch)
         return wrapper.lib_code
