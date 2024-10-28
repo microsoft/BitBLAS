@@ -64,3 +64,9 @@ class BaseScheduler(ABC):
         **kwargs,
     ):
         pass
+
+    @property
+    def common_header(self):
+        # TODO(lei): For HIP Backend it should be different
+        common_header = "#include <tl_templates/cuda/common.h>\n"
+        return common_header
