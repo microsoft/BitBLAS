@@ -5,6 +5,14 @@ from .block_primitive_tensorcore import (
     MatmulDequantizeScheduler,  # noqa: F401
 )
 
+from .finegrained_primitive_tensorcore import (
+    MatmulDequantizeFineGrainedScheduler,  # noqa: F401
+)
+
+from .ladder_weight_transform_tensorcore import (
+    MatmulDequantizeWeightPropagationScheduler,  # noqa: F401
+)
+
 from bitblas.ops.common import TransformKind
 from typing import Union
 

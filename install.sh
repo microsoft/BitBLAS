@@ -12,7 +12,9 @@ IS_AARCH64=false
 EXTRACT_PATH="3rdparty"
 
 UBUNTU_VERSION="16.04"
-if [[ "$LLVM_VERSION" > "16.0.0" ]]; then
+if [[ "$LLVM_VERSION" > "17.0.0" ]]; then
+    UBUNTU_VERSION="22.04"
+elif [[ "$LLVM_VERSION" > "16.0.0" ]]; then
     UBUNTU_VERSION="20.04"
 elif [[ "$LLVM_VERSION" > "13.0.0" ]]; then
     UBUNTU_VERSION="18.04"
