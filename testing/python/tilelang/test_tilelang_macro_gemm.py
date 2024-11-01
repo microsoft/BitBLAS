@@ -709,13 +709,9 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
             B_shared = T.alloc_shared(B_shared_shape, storage_dtype, scope=shared_scope)
             C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
             A_local = T.alloc_local((warp_rows * local_size_a), in_dtype)
-            B_local = T.alloc_local(
-                (warp_cols * local_size_b // num_elems_per_byte), storage_dtype
-            )
+            B_local = T.alloc_local((warp_cols * local_size_b // num_elems_per_byte), storage_dtype)
             B_dequantize_local = T.alloc_local((warp_cols * local_size_b), in_dtype)
-            C_local = T.alloc_local(
-                (warp_rows * warp_cols * local_size_c), accum_dtype
-            )
+            C_local = T.alloc_local((warp_rows * warp_cols * local_size_c), accum_dtype)
             reduced_accum_res = T.alloc_local(0, accum_dtype)
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
             rk = T.thread_binding(0, reduce_k, "threadIdx.y")
@@ -773,9 +769,11 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
                     )
 
                     for j in T.serial(warp_cols):
-                        T.call_extern('handle', 'decode_i4u_to_f16',
-                                      T.address_of(B_local[j * mma_emitter.local_size_b // num_elems_per_byte]),
-                                      T.address_of(B_dequantize_local[j * mma_emitter.local_size_b]), 8)
+                        T.call_extern(
+                            'handle', 'decode_i4u_to_f16',
+                            T.address_of(B_local[j * mma_emitter.local_size_b //
+                                                 num_elems_per_byte]),
+                            T.address_of(B_dequantize_local[j * mma_emitter.local_size_b]), 8)
 
                     mma_emitter.mma(A_local, B_dequantize_local, C_local)
 

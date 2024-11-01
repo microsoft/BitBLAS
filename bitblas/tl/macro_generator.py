@@ -473,6 +473,7 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
 
         return _warp_mma(A_local_buf, B_local_buf, C_local_buf)
 
+
 class INT4TensorCoreIntrinEmitter(TensorCoreIntrinEmitter):
 
     def mma(self, A_local_buf, B_local_buf, C_local_buf):
@@ -533,9 +534,7 @@ class INT4TensorCoreIntrinEmitter(TensorCoreIntrinEmitter):
                     B_local_buf.data,
                     j * local_size_b + lift(local_size_b) // 2,
                     C_local_buf.data,
-                    i * warp_cols * local_size_out
-                    + j * local_size_out
-                    + lift(local_size_out) // 2,
+                    i * warp_cols * local_size_out + j * local_size_out + lift(local_size_out) // 2,
                     T.bool(False),
                 )
 
@@ -571,18 +570,14 @@ class INT4TensorCoreIntrinEmitter(TensorCoreIntrinEmitter):
                     B_local_buf.data,
                     j * local_size_b + lift(local_size_b) // 2 + lift(local_size_b) // 4,
                     C_local_buf.data,
-                    i * warp_cols * local_size_out
-                    + j * local_size_out
-                    + lift(local_size_out) // 2,
+                    i * warp_cols * local_size_out + j * local_size_out + lift(local_size_out) // 2,
                     T.bool(False),
                 )
 
         return _warp_mma(A_local_buf, B_local_buf, C_local_buf)
 
 
-class INT4TensorCoreIntrinEmitterWithLadderTransform(
-    TensorCoreIntrinEmitterWithLadderTransform
-):
+class INT4TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitterWithLadderTransform):
 
     def mma(self, A_local_buf, B_local_buf, C_local_buf):
 
@@ -643,9 +638,7 @@ class INT4TensorCoreIntrinEmitterWithLadderTransform(
                     B_local_buf.data,
                     j * local_size_b + lift(local_size_b) // 2,
                     C_local_buf.data,
-                    i * warp_cols * local_size_out
-                    + j * local_size_out
-                    + lift(local_size_out) // 2,
+                    i * warp_cols * local_size_out + j * local_size_out + lift(local_size_out) // 2,
                     T.bool(False),
                 )
 
@@ -681,11 +674,8 @@ class INT4TensorCoreIntrinEmitterWithLadderTransform(
                     B_local_buf.data,
                     j * local_size_b + lift(local_size_b) // 2 + lift(local_size_b) // 4,
                     C_local_buf.data,
-                    i * warp_cols * local_size_out
-                    + j * local_size_out
-                    + lift(local_size_out) // 2,
+                    i * warp_cols * local_size_out + j * local_size_out + lift(local_size_out) // 2,
                     T.bool(False),
                 )
-
 
         return _warp_mma(A_local_buf, B_local_buf, C_local_buf)
