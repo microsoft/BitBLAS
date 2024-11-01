@@ -70,3 +70,13 @@ class BaseScheduler(ABC):
         # TODO(lei): For HIP Backend it should be different
         common_header = "#include <tl_templates/cuda/common.h>\n"
         return common_header
+
+
+# Decorator to simplify the output of a function
+def simplify_prim_func(func: Callable):
+
+    def wrapper(*args, **kwargs):
+        stmt: Union[PrimFunc, IRModule] = (func)(*args, **kwargs)
+        return BaseScheduler.Simplify(stmt)
+
+    return wrapper

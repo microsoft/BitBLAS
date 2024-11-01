@@ -8,8 +8,8 @@ from typing import Union, Literal
 from .mma_layout import (
     ldmatrix_32x8_to_shared_16x16_layout,
     ldmatrix_trans_32x8_to_shared_16x16_layout,
-    ldmatrix_32x16_to_shared_16x32_layout_a,
-    ldmatrix_32x16_to_shared_16x32_layout_b,
+    ldmatrix_16x32_to_shared_16x32_layout_a,
+    ldmatrix_16x32_to_shared_16x32_layout_b,
     mma_store_32x8_to_shared_16x16_layout,
 )
 
@@ -70,28 +70,40 @@ def get_swizzle_layout(row_idx, col_idx, row_size, dtype: Union[DataType, str]):
     return row_idx, ana.simplify(new_col_idx_outer * bank_elems + col_idx_inner)
 
 
+# the original implementation and insight is from the following code snippet
+# 3rdparty/tvm/python/tvm/tir/tensor_intrin/cuda.py#get_ldmatrix_intrin
 def get_ldmatrix_offset(
     matrix: Literal["A", "B"],
     row_idx,
     col_idx,
     stride,
     dtype: Literal["float16", "int8"] = "float16",
-    transpose: bool = False,
+    transposed: bool = False,
 ):
     assert matrix in ["A", "B"], "matrix should be either A or B"
-    transform_func = (
-        ldmatrix_32x8_to_shared_16x16_layout
-        if dtype in ["float16", "bfloat16"] else ldmatrix_32x16_to_shared_16x32_layout_b)
-    transform_func_trans = (
-        ldmatrix_trans_32x8_to_shared_16x16_layout
-        if dtype in ["float16", "bfloat16"] else ldmatrix_32x16_to_shared_16x32_layout_a)
-    if matrix == "A":
-        assert not transpose, "A matrix should not be transposed"
-        new_row_idx, new_col_idx = transform_func(row_idx, col_idx)
-        return new_row_idx * stride + new_col_idx
+    dtype_bits = DataType(dtype).bits
+    if dtype_bits == 16:
+        transform_func = ldmatrix_32x8_to_shared_16x16_layout
+        transform_func_trans = ldmatrix_trans_32x8_to_shared_16x16_layout
+        if transposed:
+            new_row_idx, new_col_idx = transform_func_trans(row_idx, col_idx)
+            return new_row_idx * stride + new_col_idx
+        else:
+            new_row_idx, new_col_idx = transform_func(row_idx, col_idx)
+            return new_row_idx * stride + new_col_idx
+    elif dtype_bits == 8:
+        if matrix == "B" and transposed:
+            transform_func = ldmatrix_16x32_to_shared_16x32_layout_b
+            new_row_idx, new_col_idx = transform_func(row_idx, col_idx)
+            return new_row_idx * stride + new_col_idx
+        elif matrix == "A" and not transposed:
+            transform_func = ldmatrix_16x32_to_shared_16x32_layout_a
+            new_row_idx, new_col_idx = transform_func(row_idx, col_idx)
+            return new_row_idx * stride + new_col_idx
+        else:
+            raise ValueError("ldmatrix only supports B transposed and A non-transposed for int8")
     else:
-        new_row_idx, new_col_idx = transform_func_trans(row_idx, col_idx)
-        return new_row_idx * stride + new_col_idx
+        raise ValueError(f"Unsupported dtype {dtype}")
 
 
 def mma_store_index_map(*args, **kwargs):
