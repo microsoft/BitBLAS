@@ -231,7 +231,9 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
         block_K = chunk
         threads = warp_size * (block_row_warps * block_col_warps)
 
-        fragement_size = (micro_size_x * micro_size_y) // warp_size
+        fragement_size_a = (micro_size_x * micro_size_k) // warp_size
+        fragement_size_b = (micro_size_y * micro_size_k) // warp_size
+        fragement_size_c = (micro_size_x * micro_size_y) // warp_size
         warp_rows = warp_row_tiles // micro_size_x
         warp_cols = warp_col_tiles // micro_size_y
 
@@ -318,9 +320,9 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
                 B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, in_dtype)
                 C_shared = T.alloc_shared(C_shared_shape, out_dtype)
 
-                A_frag = T.alloc_local((warp_rows * fragement_size), in_dtype)
-                B_frag = T.alloc_local((warp_cols * fragement_size), in_dtype)
-                C_frag = T.alloc_local((warp_rows * warp_cols * fragement_size), accum_dtype)
+                A_frag = T.alloc_local((warp_rows * fragement_size_a), in_dtype)
+                B_frag = T.alloc_local((warp_cols * fragement_size_b), in_dtype)
+                C_frag = T.alloc_local((warp_rows * warp_cols * fragement_size_c), accum_dtype)
 
                 B_local = T.alloc_local([local_size_compressed], storage_dtype)
                 B_dequantize_local = T.alloc_local([local_size], in_dtype)
