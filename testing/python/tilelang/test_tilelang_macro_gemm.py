@@ -472,7 +472,9 @@ def tl_matmul_with_ladder_weight_only_transform(
 
     warp_size = 32
     threads = warp_size * (block_row_warps * block_col_warps)
-    local_size = (micro_size_x * micro_size_y) // warp_size
+    local_size_a = (micro_size_x * micro_size_k) // warp_size
+    local_size_b = (micro_size_y * micro_size_k) // warp_size
+    local_size_c = (micro_size_x * micro_size_y) // warp_size
     warp_rows = warp_row_tiles // micro_size_x
     warp_cols = warp_col_tiles // micro_size_y
 
@@ -501,9 +503,9 @@ def tl_matmul_with_ladder_weight_only_transform(
             A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
             B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
             C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
-            B_local = T.alloc_local((warp_cols * local_size), in_dtype)
-            C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
+            A_local = T.alloc_local((warp_rows * local_size_a), in_dtype)
+            B_local = T.alloc_local((warp_cols * local_size_b), in_dtype)
+            C_local = T.alloc_local((warp_rows * warp_cols * local_size_c), accum_dtype)
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 
             T.annotate_layout({
@@ -667,7 +669,9 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
 
     warp_size = 32
     threads = warp_size * (block_row_warps * block_col_warps)
-    local_size = (micro_size_x * micro_size_y) // warp_size
+    local_size_a = (micro_size_x * micro_size_k) // warp_size
+    local_size_b = (micro_size_y * micro_size_k) // warp_size
+    local_size_c = (micro_size_x * micro_size_y) // warp_size
     warp_rows = warp_row_tiles // micro_size_x
     warp_cols = warp_col_tiles // micro_size_y
 
@@ -704,10 +708,10 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
             A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
             B_shared = T.alloc_shared(B_shared_shape, storage_dtype, scope=shared_scope)
             C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
-            B_local = T.alloc_local((warp_cols * local_size // num_elems_per_byte), storage_dtype)
-            B_dequantize_local = T.alloc_local((warp_cols * local_size), in_dtype)
-            C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
+            A_local = T.alloc_local((warp_rows * local_size_a), in_dtype)
+            B_local = T.alloc_local((warp_cols * local_size_b // num_elems_per_byte), storage_dtype)
+            B_dequantize_local = T.alloc_local((warp_cols * local_size_b), in_dtype)
+            C_local = T.alloc_local((warp_rows * warp_cols * local_size_c), accum_dtype)
             reduced_accum_res = T.alloc_local(0, accum_dtype)
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
             rk = T.thread_binding(0, reduce_k, "threadIdx.y")
@@ -765,15 +769,16 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
                     )
 
                     for j in T.serial(warp_cols):
-                        local_size_b = mma_emitter.local_size_b
-                        T.call_extern('handle', 'decode_i4u_to_f16',
-                                      T.address_of(B_local[j * local_size_b // num_elems_per_byte]),
-                                      T.address_of(B_dequantize_local[j * local_size_b]), 8)
+                        T.call_extern(
+                            'handle', 'decode_i4u_to_f16',
+                            T.address_of(B_local[j * mma_emitter.local_size_b //
+                                                 num_elems_per_byte]),
+                            T.address_of(B_dequantize_local[j * mma_emitter.local_size_b]), 8)
 
                     mma_emitter.mma(A_local, B_dequantize_local, C_local)
 
             if reduce_k > 1:
-                for n in T.serial(warp_rows * warp_cols * local_size):
+                for n in T.serial(warp_rows * warp_cols * local_size_c):
                     T.attr(
                         T.comm_reducer(lambda x, y: x + y, [T.float16(0)]),
                         "reduce_scope",

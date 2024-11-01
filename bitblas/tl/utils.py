@@ -120,12 +120,12 @@ def get_mma_micro_size(dtype: Literal["float16", "int8"]):
     return micro_size_x, micro_size_y, micro_size_k
 
 
-def make_swizzle_layout(shared_buf):
+def make_swizzle_layout(shared_buf, is_smooth: bool = False):
     dtype = shared_buf.dtype
     shape = shared_buf.shape
 
     can_swizzle = shape[-1] * DataType(dtype).bits == 512
-    if not can_swizzle:
+    if is_smooth or not can_swizzle:
         return T.Layout(shape, lambda *args: args)
 
     def transform_func(i, j):
