@@ -14,6 +14,7 @@ from bitblas.tl.macro_generator import (
     TensorCoreIntrinEmitterWithLadderTransform,
 )
 from bitblas.gpu.intrin.lop3 import decode_i4_to_f16
+from bitblas.ops.base_scheduler import simplify_prim_func
 
 torch.manual_seed(0)
 
@@ -33,6 +34,7 @@ def make_swizzle_layout(shared_buf):
     return T.Layout(shape, transform_func)
 
 
+@simplify_prim_func
 def tl_matmul(
     M,
     N,
@@ -61,7 +63,8 @@ def tl_matmul(
     block_col_warps = 1
     warp_row_tiles = 16
     warp_col_tiles = 16
-    chunk = 32 if in_dtype == "float16" else 64
+    # chunk = 32 if in_dtype == "float16" else 64
+    chunk = 32
     shared_scope = "shared.dyn"
 
     # Pipeline Stage
@@ -84,7 +87,9 @@ def tl_matmul(
 
     warp_size = 32
     threads = warp_size * (block_row_warps * block_col_warps)
-    local_size = (micro_size_x * micro_size_y) // warp_size
+    local_size_a = (micro_size_x * micro_size_k) // warp_size
+    local_size_b = (micro_size_y * micro_size_k) // warp_size
+    local_size_c = (micro_size_x * micro_size_y) // warp_size
     warp_rows = warp_row_tiles // micro_size_x
     warp_cols = warp_col_tiles // micro_size_y
 
@@ -113,9 +118,9 @@ def tl_matmul(
             A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
             B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
             C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
-            B_local = T.alloc_local((warp_cols * local_size), in_dtype)
-            C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
+            A_local = T.alloc_local((warp_rows * local_size_a), in_dtype)
+            B_local = T.alloc_local((warp_cols * local_size_b), in_dtype)
+            C_local = T.alloc_local((warp_rows * warp_cols * local_size_c), accum_dtype)
 
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 
@@ -181,15 +186,18 @@ def tl_matmul(
 
 def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     matmul = tl_matmul(M, N, K, in_dtype, out_dtype, accum_dtype)
-
     mod, params = TL.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
-
     # src_code is the generated cuda source
     assert src_code is not None
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
+    if in_dtype == "int8":
+        A = torch.randint(-128, 127, (M, K), device="cuda", dtype=torch.int8)
+        B = torch.randint(-128, 127, (N, K), device="cuda", dtype=torch.int8)
+    else:
+        A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
+        B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
+
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
     mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
@@ -202,7 +210,9 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     assert latency is not None
 
     # Get Reference Result
-    ref_c = torch.matmul(A, B.T).to(getattr(torch, accum_dtype))
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, accum_dtype))
+    print(C)
+    print(ref_c)
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
 
 
@@ -873,6 +883,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
 def test_assert_tl_matmul():
     assert_tl_matmul_correctness(128, 128, 128, "float16", "float16", "float16")
     assert_tl_matmul_correctness(128, 256, 256, "float16", "float32", "float32")
+    assert_tl_matmul_correctness(128, 256, 256, "int8", "int32", "int32")
 
 
 def test_assert_tl_matmul_with_block_reduce():
