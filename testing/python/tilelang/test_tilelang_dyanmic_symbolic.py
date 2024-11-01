@@ -165,9 +165,12 @@ def tl_matmul_macro(
 
             # Store shared into global
             for i, j in T.Parallel(block_M, block_N):
-                C[by * block_M + i,
-                  bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
-                                               i % micro_size_x, j % micro_size_y,]
+                C[by * block_M + i, bx * block_N + j] = C_shared[
+                    i // micro_size_x,
+                    j // micro_size_y,
+                    i % micro_size_x,
+                    j % micro_size_y,
+                ]
 
     return main
 
@@ -369,13 +372,18 @@ def assert_tl_matmul_block_all_dynamic_correctness(
     )
     mod, params = TL.lower(program)
 
-    A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
-    B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
+    if trans_A:
+        A = torch.rand(K, M, device="cuda", dtype=getattr(torch, in_dtype))
+    else:
+        A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
+    if trans_B:
+        B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
+    else:
+        B = torch.rand(K, N, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
     mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
     mod(A, B, C)
-    print(mod.mod.imported_modules[0].get_source())
 
     def ref_program(A, B):
         import torch
@@ -415,6 +423,8 @@ def test_assert_tl_matmul_block_all_dynamic():
     assert_tl_matmul_block_all_dynamic_correctness(67, 128, 128, False, False, "float16", "float16",
                                                    "float16", 64, 64, 32)
     assert_tl_matmul_block_all_dynamic_correctness(36, 128, 128, False, False, "float16", "float16",
+                                                   "float16", 64, 64, 32)
+    assert_tl_matmul_block_all_dynamic_correctness(36, 115, 103, False, False, "float16", "float16",
                                                    "float16", 64, 64, 32)
 
 

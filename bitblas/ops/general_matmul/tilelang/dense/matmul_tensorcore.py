@@ -317,6 +317,8 @@ class MatmulFineGrainScheduler(BaseScheduler):
             return ("{"
                     f"block_M={self.block_row_warps * self.warp_row_tiles},"
                     f"block_N={self.block_col_warps * self.warp_col_tiles},"
+                    f"warp_M={self.warp_row_tiles},"
+                    f"warp_N={self.warp_col_tiles},"
                     f"block_K={self.chunk},"
                     f"threads={self.block_row_warps * self.block_col_warps * warp_size},"
                     f"num_stages={self.num_stages},"
@@ -381,14 +383,20 @@ class MatmulFineGrainScheduler(BaseScheduler):
 
     def apply_config(
         self,
-        block_row_warps=2,
-        block_col_warps=2,
-        warp_row_tiles=32,
-        warp_col_tiles=32,
-        chunk=16,
-        num_stages=2,
+        block_row_warps: Optional[int] = None,
+        block_col_warps: Optional[int] = None,
+        warp_row_tiles: Optional[int] = None,
+        warp_col_tiles: Optional[int] = None,
+        chunk: Optional[int] = None,
+        num_stages: Optional[int] = None,
         enable_rasterization=False,
     ):
+        assert block_row_warps is not None, "block_row_warps is required"
+        assert block_col_warps is not None, "block_col_warps is required"
+        assert warp_row_tiles is not None, "warp_row_tiles is required"
+        assert warp_col_tiles is not None, "warp_col_tiles is required"
+        assert chunk is not None, "chunk is required"
+        assert num_stages is not None, "num_stages is required"
 
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B
@@ -512,9 +520,12 @@ class MatmulFineGrainScheduler(BaseScheduler):
 
                 # Store results from shared memory to global memory
                 for i, j in T.Parallel(block_M, block_N):
-                    C[by * block_M + i,
-                      bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
-                                                   i % micro_size_x, j % micro_size_y,]
+                    C[by * block_M + i, bx * block_N + j] = C_shared[
+                        i // micro_size_x,
+                        j // micro_size_y,
+                        i % micro_size_x,
+                        j % micro_size_y,
+                    ]
 
         return self.maybe_simplify(main)
 
@@ -528,6 +539,9 @@ class MatmulFineGrainScheduler(BaseScheduler):
 
 @dataclass
 class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
+
+    # Ladder Transform Config
+    weight_transform_kind: TransformKind = TransformKind.LDMatrixTransform
 
     def apply_config(
         self,
@@ -599,7 +613,7 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
             warp_row_tiles=warp_row_tiles,
             warp_col_tiles=warp_col_tiles,
             chunk=chunk,
-            transform_kind_b=TransformKind.LDMatrixTransform,
+            transform_kind_b=self.weight_transform_kind,
         )
 
         # Define the main kernel using the generated configuration
@@ -649,8 +663,12 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
                             micro_size_y,
                             micro_size_k,
                     ):
-                        B_shared[j, k, jj, kk] = B[bx * (block_N // micro_size_y) + j,
-                                                   ko * (block_K // micro_size_k) + k, jj, kk,]
+                        B_shared[j, k, jj, kk] = B[
+                            bx * (block_N // micro_size_y) + j,
+                            ko * (block_K // micro_size_k) + k,
+                            jj,
+                            kk,
+                        ]
 
                     # Perform the matrix multiplication on tensor core fragments
                     for ki in T.serial(0, (block_K // micro_size_k)):
@@ -683,9 +701,12 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
 
                 # Store results from shared memory to global memory
                 for i, j in T.Parallel(block_M, block_N):
-                    C[by * block_M + i,
-                      bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
-                                                   i % micro_size_x, j % micro_size_y,]
+                    C[by * block_M + i, bx * block_N + j] = C_shared[
+                        i // micro_size_x,
+                        j // micro_size_y,
+                        i % micro_size_x,
+                        j % micro_size_y,
+                    ]
 
         return self.maybe_simplify(main)
 
@@ -864,9 +885,12 @@ def matmul_macro_tensorcore(
             )
 
             for i, j in T.Parallel(block_M, block_N):
-                C[by * block_M + i,
-                  bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
-                                               i % micro_size_x, j % micro_size_y,]
+                C[by * block_M + i, bx * block_N + j] = C_shared[
+                    i // micro_size_x,
+                    j // micro_size_y,
+                    i % micro_size_x,
+                    j % micro_size_y,
+                ]
 
     return main
 
@@ -976,8 +1000,12 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
                         micro_size_y,
                         micro_size_k,
                 ):
-                    B_shared[j, k, jj, kk] = B[bx * (block_N // micro_size_y) + j,
-                                               ko * (block_K // micro_size_k) + k, jj, kk,]
+                    B_shared[j, k, jj, kk] = B[
+                        bx * (block_N // micro_size_y) + j,
+                        ko * (block_K // micro_size_k) + k,
+                        jj,
+                        kk,
+                    ]
 
                 for ki in T.serial(0, (block_K // micro_size_k)):
 
@@ -1006,8 +1034,11 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
             )
 
             for i, j in T.Parallel(block_M, block_N):
-                C[by * block_M + i,
-                  bx * block_N + j] = C_shared[i // micro_size_x, j // micro_size_y,
-                                               i % micro_size_x, j % micro_size_y,]
+                C[by * block_M + i, bx * block_N + j] = C_shared[
+                    i // micro_size_x,
+                    j // micro_size_y,
+                    i % micro_size_x,
+                    j % micro_size_y,
+                ]
 
     return main

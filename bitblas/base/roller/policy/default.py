@@ -285,9 +285,7 @@ class DefaultPolicy:
                 all_steps[k] = list(filter(lambda x: x % rstep[k] == 0, all_steps[k]))
 
             def _score(rstep_id):
-                rstep = {
-                    k.var.name: all_steps[k.var.name][rstep_id[k.var.name]] for k in node.raxis
-                }
+                rstep = {k.var.name: all_steps[k.var.name][rstep_id[k.var.name]] for k in node.raxis}
                 score = 0
                 shape = node.propagate_inputs(td.get_tile(node), rstep=rstep)
                 for i, input_buffer in enumerate(node.input_buffers):
@@ -325,9 +323,7 @@ class DefaultPolicy:
                     break
                 else:
                     cur_rstep_id = new_rstep_id
-            rstep = {
-                k.var.name: all_steps[k.var.name][cur_rstep_id[k.var.name]] for k in node.raxis
-            }
+            rstep = {k.var.name: all_steps[k.var.name][cur_rstep_id[k.var.name]] for k in node.raxis}
             return rstep
 
         for node in self.ordered_nodes:

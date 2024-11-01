@@ -1,10 +1,22 @@
 from tvm import IRModule
 from tvm.tir import PrimFunc
-from typing import Union
+from typing import Union, Callable
 from dataclasses import dataclass, field
-from tvm.tir.transform import Simplify
+from tvm.tl.transform import Simplify
 from abc import ABC, abstractmethod
 from bitblas.base.arch import TileDevice
+
+
+# Decorator to simplify the output of a function
+def maybe_simplify(self, func: Callable):
+
+    def wrapper(*args, **kwargs):
+        stmt: Union[PrimFunc, IRModule] = (func)(*args, **kwargs)
+        if self._enable_simplify:
+            return self.Simplify(stmt)
+        return stmt
+
+    return wrapper
 
 
 @dataclass
@@ -15,7 +27,9 @@ class BaseScheduler(ABC):
     @staticmethod
     def Simplify(stmt: Union[PrimFunc, IRModule]):
         if isinstance(stmt, PrimFunc):
-            return Simplify()(IRModule.from_expr(stmt))["main"]
+            mod = Simplify()(IRModule.from_expr(stmt))
+            assert len(mod.functions) == 1, "Simplify should return a single function"
+            return list(mod.functions.values()).pop()
         elif isinstance(stmt, IRModule):
             return Simplify()(stmt)
         else:
@@ -50,3 +64,9 @@ class BaseScheduler(ABC):
         **kwargs,
     ):
         pass
+
+    @property
+    def common_header(self):
+        # TODO(lei): For HIP Backend it should be different
+        common_header = "#include <tl_templates/cuda/common.h>\n"
+        return common_header

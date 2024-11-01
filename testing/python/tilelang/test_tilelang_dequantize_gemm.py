@@ -8,28 +8,13 @@ from tvm import DataType
 from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.quantization import _tir_packed_to_unsigned_convert
-from bitblas.tl.utils import get_swizzle_layout
+from bitblas.tl.utils import (make_swizzle_layout)
 from bitblas.tl.macro_generator import (
     TensorCoreIntrinEmitterWithLadderTransform,)
 
 from bitblas.gpu.intrin.lop3 import decode_i4_to_f16
 
 torch.manual_seed(0)
-
-
-def make_swizzle_layout(shared_buf):
-    dtype = shared_buf.dtype
-    shape = shared_buf.shape
-
-    can_swizzle = shape[-1] * DataType(dtype).bits == 512
-    if not can_swizzle:
-        return T.Layout(shape, lambda *args: args)
-
-    def transform_func(i, j):
-        new_warp_i, new_warp_j = get_swizzle_layout(i, j, shape[-1], dtype)
-        return [new_warp_i, new_warp_j]
-
-    return T.Layout(shape, transform_func)
 
 
 def matmul(
@@ -48,11 +33,16 @@ def matmul(
 ):
     num_elems_per_byte = 8 // num_bits
     storage_dtype = "int8"
+    storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
+    storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
     A_shape = (M, K)
     B_shape = (N, K // num_elems_per_byte)
     A_shared_shape = (block_M, block_K)
     B_shared_shape = (block_N, block_K // num_elems_per_byte)
     B_dequantize_shared_shape = (block_N, block_K)
+    MAX_TRANSACTION_SIZE_IN_BITS = 128
+    local_size = MAX_TRANSACTION_SIZE_IN_BITS // DataType(in_dtype).bits
+    local_size_compressed = local_size // num_elems_per_byte
 
     import tvm.tl.language as T
 
@@ -65,8 +55,8 @@ def matmul(
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
             A_shared = T.alloc_shared(A_shared_shape, in_dtype)
             B_shared = T.alloc_shared(B_shared_shape, storage_dtype)
-            B_local = T.alloc_local([8], storage_dtype)
-            B_dequantize_local = T.alloc_local([16], in_dtype)
+            B_local = T.alloc_local([local_size_compressed], storage_dtype)
+            B_dequantize_local = T.alloc_local([local_size], in_dtype)
             B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, in_dtype)
             C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
 
@@ -75,27 +65,31 @@ def matmul(
             T.clear(C_local)
             for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
                 T.copy(A[by * block_M, k * block_K], A_shared)
+                T.copy(B[bx * block_N, k * block_K // num_elems_per_byte], B_shared)
 
-                for i, j in T.Parallel(block_N, block_K // num_elems_per_byte):
-                    B_shared[i, j] = B[bx * block_N + i, k * block_K // num_elems_per_byte + j]
-
-                for i in T.serial(block_N * block_K // num_elems_per_byte // (threads * 4)):
-                    for v in T.vectorized(0, 4):
-                        vi = (i * threads * 4 + tx * 4 + v) // (block_K // num_elems_per_byte)
-                        vj = (i * threads * 4 + tx * 4 + v) % (block_K // num_elems_per_byte)
+                for i in T.serial(block_N * block_K // num_elems_per_byte //
+                                  (threads * local_size_compressed)):
+                    for v in T.vectorized(0, local_size_compressed):
+                        index = i * threads * local_size_compressed + tx * local_size_compressed + v
+                        vi = index // (block_K // num_elems_per_byte)
+                        vj = index % (block_K // num_elems_per_byte)
                         B_local[v] = B_shared[vi, vj]
-                    for v in T.serial(0, 8):
-                        B_dequantize_local[v] = _tir_packed_to_unsigned_convert("int", 8)(
-                            num_bits,
-                            B_local[v // 2],
-                            v % 2,
-                            dtype=in_dtype,
-                        )
-                    for v in T.vectorized(0, 8):
-                        vi = (i * threads * 8 + tx * 8 + v) // (block_K)
-                        vj = (i * threads * 8 + tx * 8 + v) % (block_K)
+                    for v in T.serial(0, local_size):
+                        B_dequantize_local[v] = _tir_packed_to_unsigned_convert(
+                            storage_type, storage_nbit)(
+                                num_bits,
+                                B_local[v // num_elems_per_byte],
+                                v % num_elems_per_byte,
+                                dtype=in_dtype,
+                            )
+                    for v in T.vectorized(0, local_size):
+                        index = i * threads * local_size + tx * local_size + v
+                        vi = index // block_K
+                        vj = index % block_K
                         B_dequantize_shared[vi, vj] = B_dequantize_local[v]
+
                 T.gemm(A_shared, B_dequantize_shared, C_local, transpose_B=True)
+
             T.copy(C_local, C[by * block_M, bx * block_N])
 
     return main
@@ -178,18 +172,18 @@ def tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
         micro_size_k = 32
 
     # This is a debug config
-    block_row_warps = 1
-    block_col_warps = 4
+    block_row_warps = 2
+    block_col_warps = 2
 
-    warp_rows = 1
-    warp_cols = 2
+    warp_rows = 4
+    warp_cols = 4
     warp_row_tiles = micro_size_x * warp_rows
     warp_col_tiles = micro_size_y * warp_cols
     shared_scope = "shared.dyn"
 
     # Pipeline Stage
     stage = 2
-    reduce_k = 2
+    reduce_k = 1
 
     block_M = block_row_warps * warp_row_tiles
     block_N = block_col_warps * warp_col_tiles
@@ -429,10 +423,13 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
 
     # Get Reference Result
     ref_c = torch.matmul(A, B.T).to(getattr(torch, accum_dtype))
+    print("Ref C: ", ref_c)
+    print("C: ", C)
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
 
 
 def test_run_dequantize_gemm():
+    run_gemm(256, 256, 256, "float16", "float16", "float16", 128, 128, 32, num_threads=128)
     run_gemm(256, 256, 256, "int8", "int32", "int32", 128, 128, 32, num_threads=128)
 
 

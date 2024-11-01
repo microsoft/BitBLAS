@@ -1677,7 +1677,23 @@ def get_lop3_intrin_group(
     if is_ladder_stage3:
         key += "_offset"
 
+    if out_dtype == "float16":
+        d4f = "f16"
+    elif out_dtype == "int8":
+        d4f = "i8s"
+    else:
+        raise ValueError("Unsupported target dtype: {}".format(target_dtype))
+    source_symbol = "u" if source_format == "uint" else "s"
+    func_name = "decode_i{}{}_to_{}".format(source_bit, source_symbol, d4f)
+    if with_scaling:
+        func_name += "_scale"
+    if with_zeros:
+        func_name += f"_zeros_{zeros_mode}"
+    if is_ladder_stage3:
+        func_name += "_offset"
+
     return {
+        "func_name": func_name,
         "c_source": import_c_map[key],
         "compute": _intrin,
     }
