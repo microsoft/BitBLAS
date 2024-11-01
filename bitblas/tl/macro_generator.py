@@ -472,3 +472,220 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
                 )
 
         return _warp_mma(A_local_buf, B_local_buf, C_local_buf)
+
+class INT4TensorCoreIntrinEmitter(TensorCoreIntrinEmitter):
+
+    def mma(self, A_local_buf, B_local_buf, C_local_buf):
+        warp_rows = self.warp_rows
+        warp_cols = self.warp_cols
+        local_size_a = self.local_size_a
+        local_size_b = self.local_size_b
+        local_size_out = self.local_size_out
+        a_dtype_abbrv = "int4"
+        b_dtype_abbrv = "int4"
+        accum_dtype = self.accum_dtype
+        accum_dtype_abbrv = accum_dtype
+        mma_prefix = "m16n8k32"
+
+        @T.macro
+        def _warp_mma(A_local_buf, B_local_buf, C_local_buf):
+            for i, j in T.grid(warp_rows, warp_cols):
+                '''
+                    A[16, 32], B[16, 32], C[16, 16]
+                    A_local_size -> 16
+                    B_local_size -> 16
+                    C_local_size -> 8
+                    For each m16n8k32 inst
+                    For A: m16k32 consume 16 int4 elements -> 8 A_local_size
+                    For A: n8k32 consume 8 int4 elements -> 4 B_local_size
+                    For C: m16n8 consume 4 int32 elements -> 4 C_local_size
+                '''
+
+                # A[0:16, 0:16] * B[0:8, 0:16] -> C[0:16, 0:8]
+                T.ptx_mma(
+                    accum_dtype,
+                    mma_prefix,
+                    "row",
+                    "col",
+                    a_dtype_abbrv,
+                    b_dtype_abbrv,
+                    accum_dtype_abbrv,
+                    A_local_buf.data,
+                    i * local_size_a,
+                    B_local_buf.data,
+                    j * local_size_b,
+                    C_local_buf.data,
+                    i * warp_cols * local_size_out + j * local_size_out,
+                    T.bool(False),
+                )
+
+                # A[0:16, 0:16] * B[8:16, 0:16] -> C[0:16, 8:16]
+                T.ptx_mma(
+                    accum_dtype,
+                    mma_prefix,
+                    "row",
+                    "col",
+                    a_dtype_abbrv,
+                    b_dtype_abbrv,
+                    accum_dtype_abbrv,
+                    A_local_buf.data,
+                    i * local_size_a,
+                    B_local_buf.data,
+                    j * local_size_b + lift(local_size_b) // 2,
+                    C_local_buf.data,
+                    i * warp_cols * local_size_out
+                    + j * local_size_out
+                    + lift(local_size_out) // 2,
+                    T.bool(False),
+                )
+
+                # A[0:16, 16:32] * B[0:8, 16:32] -> C[0:16, 0:8]
+                T.ptx_mma(
+                    accum_dtype,
+                    mma_prefix,
+                    "row",
+                    "col",
+                    a_dtype_abbrv,
+                    b_dtype_abbrv,
+                    accum_dtype_abbrv,
+                    A_local_buf.data,
+                    i * local_size_a + lift(local_size_a) // 2,
+                    B_local_buf.data,
+                    j * local_size_b + lift(local_size_b) // 4,
+                    C_local_buf.data,
+                    i * warp_cols * local_size_out + j * local_size_out,
+                    T.bool(False),
+                )
+
+                # A[0:16, 16:32] * B[8:16, 16:32] -> C[0:16, 8:16]
+                T.ptx_mma(
+                    accum_dtype,
+                    mma_prefix,
+                    "row",
+                    "col",
+                    a_dtype_abbrv,
+                    b_dtype_abbrv,
+                    accum_dtype_abbrv,
+                    A_local_buf.data,
+                    i * local_size_a + lift(local_size_b) // 2,
+                    B_local_buf.data,
+                    j * local_size_b + lift(local_size_b) // 2 + lift(local_size_b) // 4,
+                    C_local_buf.data,
+                    i * warp_cols * local_size_out
+                    + j * local_size_out
+                    + lift(local_size_out) // 2,
+                    T.bool(False),
+                )
+
+        return _warp_mma(A_local_buf, B_local_buf, C_local_buf)
+
+
+class INT4TensorCoreIntrinEmitterWithLadderTransform(
+    TensorCoreIntrinEmitterWithLadderTransform
+):
+
+    def mma(self, A_local_buf, B_local_buf, C_local_buf):
+
+        warp_rows = self.warp_rows
+        warp_cols = self.warp_cols
+        local_size_a = self.local_size_a
+        local_size_b = self.local_size_b
+        local_size_out = self.local_size_out
+        a_dtype_abbrv = "int4"
+        b_dtype_abbrv = "int4"
+        accum_dtype = self.accum_dtype
+        accum_dtype_abbrv = "int32"
+        mma_prefix = "m16n8k32"
+
+        @T.macro
+        def _warp_mma(A_local_buf, B_local_buf, C_local_buf):
+            for i, j in T.grid(warp_rows, warp_cols):
+                '''
+                    A[16, 32], B[16, 32], C[16, 16]
+                    A_local_size -> 16
+                    B_local_size -> 16
+                    C_local_size -> 8
+                    For each m16n8k32 inst
+                    For A: m16k32 consume 16 int4 elements -> 8 A_local_size
+                    For A: n8k32 consume 8 int4 elements -> 4 B_local_size
+                    For C: m16n8 consume 4 int32 elements -> 4 C_local_size
+                '''
+
+                # A[0:16, 0:16] * B[0:8, 0:16] -> C[0:16, 0:8]
+                T.ptx_mma(
+                    accum_dtype,
+                    mma_prefix,
+                    "row",
+                    "col",
+                    a_dtype_abbrv,
+                    b_dtype_abbrv,
+                    accum_dtype_abbrv,
+                    A_local_buf.data,
+                    i * local_size_a,
+                    B_local_buf.data,
+                    j * local_size_b,
+                    C_local_buf.data,
+                    i * warp_cols * local_size_out + j * local_size_out,
+                    T.bool(False),
+                )
+
+                # A[0:16, 0:16] * B[8:16, 0:16] -> C[0:16, 8:16]
+                T.ptx_mma(
+                    accum_dtype,
+                    mma_prefix,
+                    "row",
+                    "col",
+                    a_dtype_abbrv,
+                    b_dtype_abbrv,
+                    accum_dtype_abbrv,
+                    A_local_buf.data,
+                    i * local_size_a,
+                    B_local_buf.data,
+                    j * local_size_b + lift(local_size_b) // 2,
+                    C_local_buf.data,
+                    i * warp_cols * local_size_out
+                    + j * local_size_out
+                    + lift(local_size_out) // 2,
+                    T.bool(False),
+                )
+
+                # A[0:16, 16:32] * B[0:8, 16:32] -> C[0:16, 0:8]
+                T.ptx_mma(
+                    accum_dtype,
+                    mma_prefix,
+                    "row",
+                    "col",
+                    a_dtype_abbrv,
+                    b_dtype_abbrv,
+                    accum_dtype_abbrv,
+                    A_local_buf.data,
+                    i * local_size_a + lift(local_size_a) // 2,
+                    B_local_buf.data,
+                    j * local_size_b + lift(local_size_b) // 4,
+                    C_local_buf.data,
+                    i * warp_cols * local_size_out + j * local_size_out,
+                    T.bool(False),
+                )
+
+                # A[0:16, 16:32] * B[8:16, 16:32] -> C[0:16, 8:16]
+                T.ptx_mma(
+                    accum_dtype,
+                    mma_prefix,
+                    "row",
+                    "col",
+                    a_dtype_abbrv,
+                    b_dtype_abbrv,
+                    accum_dtype_abbrv,
+                    A_local_buf.data,
+                    i * local_size_a + lift(local_size_b) // 2,
+                    B_local_buf.data,
+                    j * local_size_b + lift(local_size_b) // 2 + lift(local_size_b) // 4,
+                    C_local_buf.data,
+                    i * warp_cols * local_size_out
+                    + j * local_size_out
+                    + lift(local_size_out) // 2,
+                    T.bool(False),
+                )
+
+
+        return _warp_mma(A_local_buf, B_local_buf, C_local_buf)
