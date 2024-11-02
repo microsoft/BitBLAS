@@ -10,9 +10,7 @@ from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.tl.utils import make_swizzle_layout
 from bitblas.tl.macro_generator import (
-    INT4TensorCoreIntrinEmitterWithLadderTransform,
-)
-from bitblas.gpu.intrin.lop3 import decode_i4_to_f16
+    INT4TensorCoreIntrinEmitterWithLadderTransform,)
 from bitblas.ops.base_scheduler import simplify_prim_func
 
 torch.manual_seed(0)
@@ -59,7 +57,7 @@ def tl_matmul(
     block_M = block_row_warps * warp_row_tiles
     block_N = block_col_warps * warp_col_tiles
     block_K = chunk
-    
+
     is_smooth_a = False
     can_swizzle = block_K * DataType(in_dtype).bits == 512
     apply_pad_a = not (is_smooth_a or can_swizzle)
@@ -105,6 +103,7 @@ def tl_matmul(
         chunk=chunk,
         transform_kind_b=transform_b,
     )
+
     @T.prim_func
     def main(
             A: T.Buffer(A_shape, in_dtype),
@@ -118,9 +117,7 @@ def tl_matmul(
             C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
             A_local = T.alloc_local((warp_rows * local_size_a), in_dtype)
             B_local = T.alloc_local((warp_cols * local_size_b), in_dtype)
-            C_local = T.alloc_local(
-                (warp_rows * warp_cols * local_size_c), accum_dtype
-            )
+            C_local = T.alloc_local((warp_rows * warp_cols * local_size_c), accum_dtype)
 
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 
@@ -193,7 +190,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     # src_code is the generated cuda source
     assert src_code is not None
     transform_b = 3
-    
+
     A = torch.randint(0, 4, (M, K), device="cuda", dtype=getattr(torch, in_dtype))
     B = torch.randint(0, 4, (N, K), device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
@@ -222,9 +219,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     assert latency is not None
 
     # Get Reference Result
-    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(
-        getattr(torch, accum_dtype)
-    )
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, accum_dtype))
     print(C)
     print(ref_c)
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)

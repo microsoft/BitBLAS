@@ -4,16 +4,12 @@
 import torch
 import torch.backends
 from bitblas import tvm as tvm
-import bitblas.testing
 from tvm import DataType
 from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.tl.utils import get_swizzle_layout
 from bitblas.tl.macro_generator import (
-    TensorCoreIntrinEmitter,
-    TensorCoreIntrinEmitterWithLadderTransform,
-)
-from bitblas.gpu.intrin.lop3 import decode_i4_to_f16
+    TensorCoreIntrinEmitter,)
 from bitblas.ops.base_scheduler import simplify_prim_func
 
 torch.manual_seed(0)
@@ -119,9 +115,7 @@ def tl_matmul(
             C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
             A_local = T.alloc_local((warp_rows * local_size_a), in_dtype)
             B_local = T.alloc_local((warp_cols * local_size_b), in_dtype)
-            C_local = T.alloc_local(
-                (warp_rows * warp_cols * local_size_c), accum_dtype
-            )
+            C_local = T.alloc_local((warp_rows * warp_cols * local_size_c), accum_dtype)
 
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 
@@ -204,16 +198,14 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
 
     mod(A, B, C)
-    
+
     latency = mod.do_bench(mod.func, warmup=25)
     print(f"Latency: {latency}")
     # Ensure that the latency is not None
     assert latency is not None
 
     # Get Reference Result
-    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(
-        getattr(torch, accum_dtype)
-    )
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, accum_dtype))
     print(C)
     print(ref_c)
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)

@@ -10,12 +10,12 @@ from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.tl.utils import make_swizzle_layout, index_to_coordinates
 from bitblas.tl.macro_generator import (
-    INT4TensorCoreIntrinEmitterWithLadderTransform,
-)
+    INT4TensorCoreIntrinEmitterWithLadderTransform,)
 from bitblas.gpu.intrin.lop3 import decode_i2s_to_i4s
 from bitblas.ops.base_scheduler import simplify_prim_func
 
 torch.manual_seed(0)
+
 
 @simplify_prim_func
 def tl_matmul(
@@ -66,14 +66,15 @@ def tl_matmul(
     block_M = block_row_warps * warp_row_tiles
     block_N = block_col_warps * warp_col_tiles
     block_K = chunk
-    
+
     is_smooth_a = False
     can_swizzle = block_K * DataType(in_dtype).bits == 512
     apply_pad_a = not (is_smooth_a or can_swizzle)
     pad_factor = 8
 
     A_shape = (M, K)
-    B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y, micro_size_k // num_elems_per_byte)
+    B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y,
+               micro_size_k // num_elems_per_byte)
     A_shared_shape = (
         block_M,
         (block_K + pad_factor) if apply_pad_a else block_K,
@@ -118,7 +119,7 @@ def tl_matmul(
         chunk=chunk,
         transform_kind_b=transform_b,
     )
-    
+
     vec_load_qb = 16
     if block_N * (block_K) // num_elems_per_byte // threads < vec_load_qb:
         vec_load_qb = block_N * (block_K) // num_elems_per_byte // threads
@@ -129,17 +130,20 @@ def tl_matmul(
             B: T.Buffer(B_shape, storage_dtype),
             C: T.Buffer((M, N), out_dtype),
     ):
-        with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads, prelude=decode_i2s_to_i4s) as (bx, by):
+        with T.Kernel(
+                T.ceildiv(N, block_N),
+                T.ceildiv(M, block_M),
+                threads=threads,
+                prelude=decode_i2s_to_i4s) as (bx, by):
 
             A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
             B_shared = T.alloc_shared(B_shared_shape, storage_dtype, scope=shared_scope)
-            B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, in_dtype, scope=shared_scope)
+            B_dequantize_shared = T.alloc_shared(
+                B_dequantize_shared_shape, in_dtype, scope=shared_scope)
             C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
             A_frag = T.alloc_local((warp_rows * fragement_size_a), in_dtype)
             B_frag = T.alloc_local((warp_cols * fragement_size_b), in_dtype)
-            C_frag = T.alloc_local(
-                (warp_rows * warp_cols * fragement_size_c), accum_dtype
-            )
+            C_frag = T.alloc_local((warp_rows * warp_cols * fragement_size_c), accum_dtype)
             B_local = T.alloc_local([local_size_compressed], storage_dtype)
             B_dequantize_local = T.alloc_local([local_size], in_dtype)
 
@@ -174,17 +178,18 @@ def tl_matmul(
                                           ko * (block_K // micro_size_k) + vk, vjj, vkk]
 
                 for i in T.serial(block_N * block_K // num_elems_per_byte //
-                                    (threads * local_size_compressed)):
+                                  (threads * local_size_compressed)):
                     for v in T.vectorized(0, local_size_compressed):
                         index = (
-                            i * threads * local_size_compressed + thread_bindings * local_size_compressed +
-                            v)
+                            i * threads * local_size_compressed +
+                            thread_bindings * local_size_compressed + v)
                         vi, vj, vii, vjj = index_to_coordinates(index, B_shared_shape)
                         B_local[v] = B_shared[vi, vj, vii, vjj]
-                    
+
                     if fast_decoding:
-                         # Simulated dequantization
-                        T.call_extern('handle', 'decode_i2u_to_i4s', T.address_of(B_local[0]), T.address_of(B_dequantize_local[0]), 32)
+                        # Simulated dequantization
+                        T.call_extern('handle', 'decode_i2u_to_i4s', T.address_of(B_local[0]),
+                                      T.address_of(B_dequantize_local[0]), 32)
                     else:
                         for v in T.serial(0, local_size):
                             int2x2_value = (B_local[v // 2] >> ((v % 2) * 4)) & 0x0F
@@ -193,7 +198,7 @@ def tl_matmul(
                             int4_1 = (int2x2_value >> 2) & 0x03
 
                             B_dequantize_local[v] = (int4_1 << 4) | int4_0
-                       
+
                     for v in T.vectorized(0, local_size):
                         index = i * threads * local_size + thread_bindings * local_size + v
                         vi, vj, vii, vjj = index_to_coordinates(index, B_dequantize_shared_shape)
@@ -248,7 +253,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype, fast
     print(src_code)
     assert src_code is not None
     transform_b = 3
-    
+
     # A = torch.ones(M, K, device="cuda", dtype=getattr(torch, in_dtype))
     # B = torch.ones(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     A = torch.randint(0, 4, (M, K), device="cuda", dtype=getattr(torch, in_dtype))
@@ -286,7 +291,10 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype, fast
     int2_shape = (ladder_shape[:-1] + (ladder_shape[-1] // 2,))
     int2_tensor = torch.zeros(int2_shape, device="cuda", dtype=torch.int8)
     for i in range(int2_tensor.shape[-1]):
-        int2_tensor[..., i] = (compressed_B_ladder[..., 2 * i] & 0x03) | ((compressed_B_ladder[..., 2 * i] >> 4) & 0x03) << 2 | ((compressed_B_ladder[..., 2 * i + 1] & 0x03) << 4) | ((compressed_B_ladder[..., 2 * i + 1] >> 4) << 6)
+        int2_tensor[..., i] = (compressed_B_ladder[..., 2 * i] & 0x03) | (
+            (compressed_B_ladder[..., 2 * i] >> 4) & 0x03) << 2 | (
+                (compressed_B_ladder[..., 2 * i + 1] & 0x03) << 4) | (
+                    (compressed_B_ladder[..., 2 * i + 1] >> 4) << 6)
 
     raw_tensor_shape = int2_tensor.shape
     print(f"{raw_tensor_shape=}")
@@ -304,9 +312,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype, fast
     assert latency is not None
 
     # Get Reference Result
-    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(
-        getattr(torch, accum_dtype)
-    )
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, accum_dtype))
     print(C)
     print(ref_c)
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)

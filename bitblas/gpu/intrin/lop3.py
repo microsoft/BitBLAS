@@ -1019,6 +1019,7 @@ __device__ void decode_i2u_to_i4s(T1 *_i4u, T2 *B_local_decode, const int N = 16
 }
 """
 
+
 def get_fast_decode_intrin(
     source_bit=4,
     storage_dtype="int8",

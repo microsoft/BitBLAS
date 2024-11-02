@@ -4,20 +4,17 @@
 import torch
 import torch.backends
 from bitblas import tvm as tvm
-import bitblas.testing
-from tvm import DataType
 from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.tl.utils import (
-    make_swizzle_layout,
-)
+    make_swizzle_layout,)
 
 from bitblas.tl.macro_generator import (
-    INT4TensorCoreIntrinEmitter,
-)
+    INT4TensorCoreIntrinEmitter,)
 from bitblas.ops.base_scheduler import simplify_prim_func
 
 torch.manual_seed(0)
+
 
 @simplify_prim_func
 def tl_matmul(
@@ -60,8 +57,8 @@ def tl_matmul(
     block_N = block_col_warps * warp_col_tiles
     block_K = chunk
 
-    A_shape = (M, K) # int8 storage represents int4*2
-    B_shape = (N, K) # int8 storage represents int4*2
+    A_shape = (M, K)  # int8 storage represents int4*2
+    B_shape = (N, K)  # int8 storage represents int4*2
     A_shared_shape = (block_M, block_K)
     B_shared_shape = (block_N, block_K)
     C_shared_shape = (
@@ -106,9 +103,7 @@ def tl_matmul(
             C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
             A_local = T.alloc_local((warp_rows * local_size_a), in_dtype)
             B_local = T.alloc_local((warp_cols * local_size_b), in_dtype)
-            C_local = T.alloc_local(
-                (warp_rows * warp_cols * local_size_c), accum_dtype
-            )
+            C_local = T.alloc_local((warp_rows * warp_cols * local_size_c), accum_dtype)
 
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 
@@ -196,9 +191,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     assert latency is not None
 
     # Get Reference Result
-    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(
-        getattr(torch, accum_dtype)
-    )
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, accum_dtype))
 
     print(ref_c)
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)

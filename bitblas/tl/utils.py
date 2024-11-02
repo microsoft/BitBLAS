@@ -134,6 +134,7 @@ def make_swizzle_layout(shared_buf, is_smooth: bool = False):
 
     return T.Layout(shape, transform_func)
 
+
 def index_to_coordinates(index, shape):
     '''
     General Implementation of:
