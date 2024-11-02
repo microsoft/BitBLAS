@@ -797,3 +797,89 @@ __device__ void decode_i1u_to_i8s(T1 *_i1u, T2 *B_local_decode, const int N = 16
 {
     decode_i1b_to_i8s<T1, T2, false>(_i1u, B_local_decode, N);
 }
+
+
+void general_interleave_int4(int8_t *origin_arr, int8_t *interleaved, const int nbit, size_t size_in_bytes, bool verbose = false)
+{
+    // For int4 example
+    // i2s        {e15,e14,e13,e12,e11,e10,e9,e8,e7,e6,e5,e4,e3,e2,e1,e0}
+    //            |-----8b-----||-----8b-----||-----8b-----||-----8b-----|
+    //              0b00110011    0b00110011    0b00110011    0b00110011
+    // interleave {e15,e7,e14,e6,e13,e5,e12,e4,e11,e3,e10,e2,e9,e1,e8,e0}
+
+    size_t size = size_in_bytes / sizeof(int32_t);
+    int32_t *int32_origin = (int32_t *)origin_arr;
+    int32_t *int32_interleaved = (int32_t *)interleaved;
+
+    constexpr int bits_stride = 4;
+    int elems_per_group = bits_stride / nbit;
+    int mask = (1 << nbit) - 1;
+    int num_groups = 32 / bits_stride;
+
+    for (int idx = 0; idx < size; ++idx)
+    {
+        int32_t current_value = int32_origin[idx];
+        int32_t new_value = 0;
+        for (int i = 0; i < num_groups; ++i)
+        {
+            for (int j = 0; j < elems_per_group; ++j)
+            {
+                int offset = i * elems_per_group + j;
+                int shift = (offset % num_groups) * bits_stride + (offset / num_groups) * nbit;
+                int group_value = (current_value >> (nbit * (i * elems_per_group + j))) & mask;
+                new_value |= group_value << shift;
+                if (verbose)
+                    printf("put %d to %d\n", offset, shift);
+            }
+        }
+        if (nbit == 1)
+        {
+            throw std::runtime_error("Not implemented");
+        }
+        else
+            int32_interleaved[idx] = new_value;
+    }
+
+    // Convert back to int8_t if needed
+    memcpy(interleaved, int32_interleaved, size * sizeof(int32_t));
+}
+
+
+template <typename T1, typename T2, bool isSigned>
+__device__ void decode_i2b_to_i4s(T1 *_i2b, T2 *_i4s, const int N = 16)
+{
+    uint *i4s = reinterpret_cast<uint *>(_i4s);
+    uint *i2b = reinterpret_cast<uint *>(_i2b);
+    // First, we extract the i4s and construct an intermediate i8 number.
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x33333333;          // 0xf -> 0b1111 select 0,2,4,6,8,10,12
+    static constexpr uint I4b_TO_I8s_MAGIC_NUM = 0x00000000; // 0
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x33333333 : 0x00000000;
+
+#pragma unroll
+    for (int i = 0; i < (N / 8); i++)
+    {
+        // Extract elt_01 - (i4s & 0x000f000f) | 0x64006400
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
+                     : "=r"(i4s[i])
+                     : "r"(i2b[0] >> (2 * i)), "n"(BOTTOM_MASK), "n"(I4b_TO_I8s_MAGIC_NUM), "n"(immLut));
+        if constexpr (isSigned)
+        {
+            // TODO(lei): uint4 sub should be enhanced.
+            i4s[i] = __vsubss4(i4s[i], MEDIAN_NUM);
+        }
+    }
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i2s_to_i4s(T1 *_i4s, T2 *B_local_decode, const int N = 16)
+{
+    decode_i2b_to_i4s<T1, T2, true>(_i4s, B_local_decode, N);
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i2u_to_i4s(T1 *_i4u, T2 *B_local_decode, const int N = 16)
+{
+    decode_i2b_to_i4s<T1, T2, false>(_i4u, B_local_decode, N);
+}
+
