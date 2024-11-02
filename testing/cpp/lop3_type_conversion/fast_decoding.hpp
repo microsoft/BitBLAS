@@ -862,11 +862,12 @@ __device__ void decode_i2b_to_i4s(T1 *_i2b, T2 *_i4s, const int N = 16)
         // Extract elt_01 - (i4s & 0x000f000f) | 0x64006400
         asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
                      : "=r"(i4s[i])
-                     : "r"(i2b[0] >> (2 * i)), "n"(BOTTOM_MASK), "n"(I4b_TO_I8s_MAGIC_NUM), "n"(immLut));
+                     : "r"(i2b[i / 2] >> (2 * (i % 2))), "n"(BOTTOM_MASK), "n"(I4b_TO_I8s_MAGIC_NUM), "n"(immLut));
         if constexpr (isSigned)
         {
             // TODO(lei): uint4 sub should be enhanced.
-            i4s[i] = __vsubss4(i4s[i], MEDIAN_NUM);
+            // 0x03 0x03 0x03 0x03
+            i4s[i] = (((i4s[i] << 1) | i4s[i]) << 1) | i4s[i];
         }
     }
 }

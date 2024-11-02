@@ -53,6 +53,7 @@ REGISTER_GLOBAL_DEVICE_INVOKER(kernelWrapper_i2u_to_i4s, decode_i2u_to_i4s)
 //     }
 
 //     // print input data
+//     printf("in_data \n");
 //     for (int i = 0; i < N; i++)
 //     {
 //         printf("i:%d %d %x \n", i, in_data[i], in_data[i]);
