@@ -84,6 +84,8 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 |     INT8    |    UINT1    |      INT32      | FP32/INT32/FP16/INT8 |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |   FP8_E4M3  |   FP8_E4M3  |       FP32      |       FP32/FP16      |        **√**        |                    RTX 4090(SM_89)                   |
 |   FP8_E5M2  |   FP8_E5M2  |       FP32      |       FP32/FP16      |        **√**        |                    RTX 4090(SM_89)                   |
+|     INT4    |     INT4    |      INT32      |       FP32/FP16      |        **√**        |                    RTX 4090(SM_89)                   |
+|     INT4    |     INT4    |      INT32      |       FP32/FP16      |        **√**        |                    RTX 4090(SM_89)                   |
 
 We are continuously expanding the support matrix. If you have any specific requirements, please feel free to open an issue or PR.
 

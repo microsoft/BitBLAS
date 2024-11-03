@@ -87,8 +87,13 @@ def select_scheduler(
         conditions.append(propagate_b == TransformKind.LDMatrixTransform)
         return all(conditions)
 
+    def is_int4_dtype(dtype):
+        return dtype == "int4" or dtype == "uint4"
+
     if can_apply_weight_propagation_scheduler(trans_A, trans_B, propagate_a, propagate_b):
-        return MatmulWeightPropagationScheduler(
+        Scheduler = MatmulWeightPropagationScheduler if not is_int4_dtype(
+            in_dtype) else MatmulINT4WeightPropagationScheduler
+        return Scheduler(
             M=M,
             N=N,
             K=K,
@@ -99,7 +104,9 @@ def select_scheduler(
             accum_dtype=accum_dtype,
         )
     if can_apply_fine_grain_scheduler(trans_A, trans_B, propagate_a, propagate_b):
-        return MatmulFineGrainScheduler(
+        Scheduler = MatmulFineGrainScheduler if not is_int4_dtype(
+            in_dtype) else MatmulINT4FineGrainScheduler
+        return Scheduler(
             M=M,
             N=N,
             K=K,

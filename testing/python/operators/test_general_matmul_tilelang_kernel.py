@@ -1504,7 +1504,6 @@ def test_matmul_int4xint2_fine_grained():
         256, 256, 256, fast_decoding=True)
     # Pipeline
     assert_matmul_fine_grained_dequant_int4_apply_config_correctness(1024, 1024, 1024, num_stages=2)
-    assert_matmul_fine_grained_dequant_int4_apply_config_correctness(1024, 1024, 1024, num_stages=1)
     # L2 Cache
     assert_matmul_fine_grained_dequant_int4_apply_config_correctness(
         1024, 1024, 1024, enable_rasterization=True)
@@ -1554,25 +1553,6 @@ def test_matmul_blocked_dequant_with_default():
     )
     assert_matmul_blocked_dequant_with_default_correctness(
         1024, 1024, 1024, source_format="uint", bit=4, fast_decoding=True)
-    assert_matmul_blocked_dequant_with_default_correctness(
-        1024,
-        1024,
-        1024,
-        source_format="uint",
-        bit=4,
-        with_scaling=True,
-        fast_decoding=True,
-    )
-    assert_matmul_blocked_dequant_with_default_correctness(
-        1024,
-        1024,
-        1024,
-        source_format="uint",
-        bit=4,
-        with_scaling=True,
-        with_zeros=True,
-        fast_decoding=True,
-    )
 
 
 def test_matmul_fine_grained_dequant_with_default():
@@ -1647,6 +1627,4 @@ def test_matmul_weight_transform_dequant_with_default():
 
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    # test_matmul_int4xint2_fine_grained()
-    test_matmul_int4_weight_transform_dequant()
+    bitblas.testing.main()

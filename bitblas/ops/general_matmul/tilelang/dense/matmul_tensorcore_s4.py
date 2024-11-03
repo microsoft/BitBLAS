@@ -17,15 +17,11 @@ from bitblas.tl.macro_generator import (
     INT4TensorCoreIntrinEmitter,
     INT4TensorCoreIntrinEmitterWithLadderTransform,
 )
-from bitblas.ops.common import TransformKind
-from bitblas.ops.base_scheduler import BaseScheduler
 from bitblas.base.arch import TileDevice
 from bitblas.base.roller.hint import Hint
-from bitblas.base.roller.rasterization import NoRasterization
 from bitblas.base.utils import get_roller_hints_from_func
 from dataclasses import dataclass
 from bitblas.ops.general_matmul.tirscript import (matmul_select_implementation)
-from bitblas.tl.base_hint import BaseTLHint
 
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
@@ -36,7 +32,7 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
-        K = self.K // 2 # 2xint4 should be packed into one single int8
+        K = self.K // 2  # 2xint4 should be packed into one single int8
         # Simple TIR Compute Expression
         storage_dtype = "int8"
         ir_module = matmul_select_implementation(
@@ -234,7 +230,6 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
 @dataclass
 class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
 
-
     def apply_config(
         self,
         block_row_warps=2,
@@ -412,4 +407,3 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
         assert self.trans_B is True, "Currently only support Matrix B transposed"
 
         return
-

@@ -248,6 +248,7 @@ class Operator(object):
     def scheduler_with_default(self, scheduler: BaseScheduler):
         scheduled_ir_module = IRModule.from_expr(scheduler.with_default_config())
         if scheduled_ir_module is not None:
+            self.ir_module = scheduled_ir_module
             return scheduled_ir_module
         return None
 

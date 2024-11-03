@@ -297,12 +297,9 @@ class MatmulDequantizeScheduler(BaseScheduler):
                                 Qzeros,
                                 func_name,
                                 by,
-                                tx,
                                 k,
-                                i,
                                 block_N,
                                 block_K,
-                                threads,
                             )
                         else:
                             self._normal_dequant(

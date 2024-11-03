@@ -16,8 +16,7 @@ from bitblas.ops.common import TransformKind  # noqa: F401
 from dataclasses import dataclass
 from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
 from bitblas.ops.general_matmul.tilelang.dequantize.ladder_weight_transform_tensorcore import (
-    MatmulDequantizeWeightPropagationScheduler,
-)
+    MatmulDequantizeWeightPropagationScheduler,)
 
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
@@ -81,7 +80,6 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
 
         num_bits = self.num_bits
         source_format = self.source_format
-        storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
         num_elems_per_byte = self.num_elems_per_byte
 
         MAX_TRANSACTION_SIZE_IN_BITS = 128
@@ -124,7 +122,7 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
         func_name: str = ""
         if fast_decoding is True:
             lop3_intrin_info = get_lop3_intrin_group(
-                out_dtype=storage_dtype,
+                out_dtype=in_dtype,
                 source_format=source_format,
                 source_bit=num_bits,
                 storage_dtype=storage_dtype,
@@ -171,8 +169,7 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
                 C_shared = T.alloc_shared(C_shared_shape, out_dtype)
 
                 A_frag = T.alloc_local((warp_rows * fragement_size_a), storage_dtype)
-                B_frag = T.alloc_local((warp_cols * fragement_size_b),
-                                       storage_dtype)
+                B_frag = T.alloc_local((warp_cols * fragement_size_b), storage_dtype)
                 C_frag = T.alloc_local((warp_rows * warp_cols * fragement_size_c), accum_dtype)
                 B_local = T.alloc_local([local_size_compressed], storage_dtype)
                 B_dequantize_local = T.alloc_local([local_size], storage_dtype)
@@ -196,27 +193,27 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
                     # Load B into shared memory
                     # TODO(lei): Layout Inference Pass is not efficient to handle the four dims int8 load
                     for i in T.serial(block_N * block_K // num_elems_per_byte //
-                                    (threads * vec_load_qb)):
+                                      (threads * vec_load_qb)):
                         for v in T.vectorized(0, vec_load_qb):
                             idx = i * threads * vec_load_qb + threads * vec_load_qb + tx * vec_load_qb + v
                             vj, vk, vjj, vkk = index_to_coordinates(idx, B_shared_shape)
                             B_shared[vj, vk, vjj,
-                                    vkk] = B[bx * (block_N // micro_size_y) + vj,
-                                            ko * (block_K // micro_size_k) + vk, vjj, vkk]
+                                     vkk] = B[bx * (block_N // micro_size_y) + vj,
+                                              ko * (block_K // micro_size_k) + vk, vjj, vkk]
 
                     for i in T.serial(block_N * block_K // num_elems_per_byte //
-                                    (threads * local_size_compressed)):
+                                      (threads * local_size_compressed)):
                         for v in T.vectorized(0, local_size_compressed):
                             index = (
-                                i * threads * local_size_compressed +
-                                tx * local_size_compressed + v)
+                                i * threads * local_size_compressed + tx * local_size_compressed +
+                                v)
                             vi, vj, vii, vjj = index_to_coordinates(index, B_shared_shape)
                             B_local[v] = B_shared[vi, vj, vii, vjj]
 
                         if fast_decoding:
                             # Simulated dequantization
                             T.call_extern('handle', func_name, T.address_of(B_local[0]),
-                                        T.address_of(B_dequantize_local[0]), 32)
+                                          T.address_of(B_dequantize_local[0]), 32)
                         else:
                             for v in T.serial(0, local_size):
                                 int2x2_value = (B_local[v // 2] >> ((v % 2) * 4)) & 0x0F
@@ -228,7 +225,8 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
 
                         for v in T.vectorized(0, local_size):
                             index = i * threads * local_size + tx * local_size + v
-                            vi, vj, vii, vjj = index_to_coordinates(index, B_dequantize_shared_shape)
+                            vi, vj, vii, vjj = index_to_coordinates(index,
+                                                                    B_dequantize_shared_shape)
                             B_dequantize_shared[vi, vj, vii, vjj] = B_dequantize_local[v]
 
                     # Perform the matrix multiplication on tensor core fragments

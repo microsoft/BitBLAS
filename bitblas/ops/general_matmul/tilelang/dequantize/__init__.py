@@ -94,6 +94,53 @@ def select_scheduler(
         conditions.append(propagate_b == TransformKind.NonTransform)
         return all(conditions)
 
+    def is_int4_dtype(dtype):
+        return dtype == "int4" or dtype == "uint4"
+
+    if can_apply_weight_propagation_scheduler(trans_A, trans_B, propagate_a, propagate_b):
+        Scheduler = MatmulDequantizeWeightPropagationScheduler if not is_int4_dtype(
+            in_dtype) else MatmulINT4DequantizeWeightPropagationScheduler
+        return Scheduler(
+            M=M,
+            N=N,
+            K=K,
+            trans_A=trans_A,
+            trans_B=trans_B,
+            in_dtype=in_dtype,
+            out_dtype=out_dtype,
+            accum_dtype=accum_dtype,
+            num_bits=bit,
+            storage_dtype=storage_dtype,
+            source_format=source_format,
+            with_scaling=with_scaling,
+            with_zeros=with_zeros,
+            group_size=group_size,
+            fast_decoding=fast_decoding,
+            with_bias=with_bias,
+            zeros_mode=zeros_mode,
+        )
+    if can_apply_fine_grain_scheduler(trans_A, trans_B, propagate_a, propagate_b):
+        Scheduler = MatmulDequantizeFineGrainedScheduler if not is_int4_dtype(
+            in_dtype) else MatmulINT4DequantizeFineGrainedScheduler
+        return Scheduler(
+            M=M,
+            N=N,
+            K=K,
+            trans_A=trans_A,
+            trans_B=trans_B,
+            in_dtype=in_dtype,
+            out_dtype=out_dtype,
+            accum_dtype=accum_dtype,
+            num_bits=bit,
+            storage_dtype=storage_dtype,
+            source_format=source_format,
+            with_scaling=with_scaling,
+            with_zeros=with_zeros,
+            group_size=group_size,
+            fast_decoding=fast_decoding,
+            with_bias=with_bias,
+            zeros_mode=zeros_mode,
+        )
     if can_apply_block_scheduler(propagate_a, propagate_b):
         return MatmulDequantizeScheduler(
             M=M,

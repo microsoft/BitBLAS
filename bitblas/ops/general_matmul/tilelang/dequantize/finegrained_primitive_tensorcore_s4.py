@@ -3,7 +3,7 @@
 from bitblas import tvm as tvm
 from tvm import DataType
 import tvm.tl.language as T
-from typing import Optional, List, Literal
+from typing import Optional, List
 from bitblas.tl.utils import (
     get_mma_micro_size,  # noqa: F401
     make_swizzle_layout,  # noqa: F401
@@ -13,27 +13,14 @@ from bitblas.tl.utils import (
 from bitblas.tl.macro_generator import (
     INT4TensorCoreIntrinEmitter,  # noqa: F401
 )
-from bitblas.ops.common import TransformKind  # noqa: F401
-from bitblas.ops.base_scheduler import BaseScheduler
 from bitblas.base.arch import TileDevice
 from bitblas.base.roller.hint import Hint
-from bitblas.base.roller.rasterization import NoRasterization
 from bitblas.base.utils import get_roller_hints_from_func
 from dataclasses import dataclass
 from bitblas.ops.general_matmul.tirscript import (
     matmul_dequantize_select_implementation,)
 from bitblas.ops.general_matmul.tilelang.dequantize.finegrained_primitive_tensorcore import (
-    MatmulDequantizeFineGrainedScheduler,
-)
-from bitblas.tl.base_hint import BaseTLHint
-from bitblas.quantization import (
-    _tir_packed_int_to_int_convert,
-    _tir_packed_to_signed_convert,
-    _tir_packed_to_unsigned_convert,
-    _tir_u32_to_f4_to_f16,
-    _tir_u8_to_f8_e4m3_to_f16,
-    _tir_packed_to_unsigned_convert_with_zeros,
-)
+    MatmulDequantizeFineGrainedScheduler,)
 from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
 
 # GPU warp configuration for NVIDIA GPUs
@@ -45,10 +32,10 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
-        K = self.K // 2 # 2xint4 should be packed into one single int8
+        K = self.K // 2  # 2xint4 should be packed into one single int8
         storage_dtype = "int8"
         num_bits = self.num_bits * 2
-        # INT4XINT2 is euqal to int8xint4 with reduced shape
+        # INT4XINT2 is equal to int8xint4 with reduced shape
         # Simple TIR Compute Expression
         ir_module = matmul_dequantize_select_implementation(
             M=self.M,
@@ -118,7 +105,7 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
             self.out_dtype,
             self.accum_dtype,
         )
-        
+
         assert in_dtype == "int4", "Only support int4 input"
         assert accum_dtype == "int32", "Only support int32 accumulation"
         storage_dtype = self.storage_dtype
@@ -141,7 +128,6 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
 
         num_bits = self.num_bits
         source_format = self.source_format
-        storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
         num_elems_per_byte = self.num_elems_per_byte
 
         MAX_TRANSACTION_SIZE_IN_BITS = 128
@@ -245,7 +231,7 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
 
                         if fast_decoding:
                             T.call_extern('handle', func_name, T.address_of(B_local[0]),
-                                        T.address_of(B_dequantize_local[0]), 32)
+                                          T.address_of(B_dequantize_local[0]), 32)
                         else:
                             for v in T.serial(0, local_size):
                                 int2x2_value = (B_local[v // 2] >> ((v % 2) * 4)) & 0x0F
@@ -254,7 +240,7 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
                                 int4_1 = (int2x2_value >> 2) & 0x03
 
                                 B_dequantize_local[v] = (int4_1 << 4) | int4_0
-                                
+
                         for v in T.vectorized(0, local_size):
                             index = i * threads * local_size + tx * local_size + v
                             vi, vj = index_to_coordinates(index, B_dequantize_shared_shape)
