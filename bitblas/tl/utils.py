@@ -133,3 +133,24 @@ def make_swizzle_layout(shared_buf, is_smooth: bool = False):
         return [new_warp_i, new_warp_j]
 
     return T.Layout(shape, transform_func)
+
+
+def index_to_coordinates(index, shape):
+    '''
+    General Implementation of:
+        vjj = index % (micro_size_k // num_elems_per_byte)
+        coordinates[-1] = index % shape[-1]; 
+        vii = index // (micro_size_k // num_elems_per_byte) % micro_size_y
+        index = index // shape[-1]; coordinates[-2] = index % shape[-2];
+        vj = index // (micro_size_k // num_elems_per_byte * micro_size_y) % block_K // (micro_size_k // num_elems_per_byte)
+        index = index // shape[-2]; coordinates[-3] = index % shape[-3];
+        vi = index // (micro_size_k // num_elems_per_byte * micro_size_y * (block_K // (micro_size_k // num_elems_per_byte))) % block_N // micro_size_y
+        index = index // shape[-3]; coordinates[-4] = index % shape[-4];
+    '''
+    coordinates = []
+    dims = len(shape)
+    for i in range(dims):
+        coordinates.append(index % shape[dims - i - 1])
+        index = index // shape[dims - i - 1]
+    coordinates.reverse()
+    return coordinates

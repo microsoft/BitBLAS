@@ -978,6 +978,47 @@ __device__ void decode_i4u_to_i8s(T1 *_i4b, T2 *_i8s, const int N = 16)
 }
 """
 
+decode_i2s_to_i4s = r"""
+template <typename T1, typename T2, bool isSigned>
+__device__ void decode_i2b_to_i4s(T1 *_i2b, T2 *_i4s, const int N = 16)
+{
+    uint *i4s = reinterpret_cast<uint *>(_i4s);
+    uint *i2b = reinterpret_cast<uint *>(_i2b);
+    // First, we extract the i4s and construct an intermediate i8 number.
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x33333333;          // 0xf -> 0b1111 select 0,2,4,6,8,10,12
+    static constexpr uint I4b_TO_I8s_MAGIC_NUM = 0x00000000; // 0
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x33333333 : 0x00000000;
+
+#pragma unroll
+    for (int i = 0; i < (N / 8); i++)
+    {
+        // Extract elt_01 - (i4s & 0x000f000f) | 0x64006400
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
+                     : "=r"(i4s[i])
+                     : "r"(i2b[i / 2] >> (2 * (i % 2))), "n"(BOTTOM_MASK), "n"(I4b_TO_I8s_MAGIC_NUM), "n"(immLut));
+        if constexpr (isSigned)
+        {
+            // TODO(lei): uint4 sub should be enhanced.
+            // 0x03 0x03 0x03 0x03
+            i4s[i] = (((i4s[i] << 1) | i4s[i]) << 1) | i4s[i];
+        }
+    }
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i2s_to_i4s(T1 *_i4s, T2 *B_local_decode, const int N = 16)
+{
+    decode_i2b_to_i4s<T1, T2, true>(_i4s, B_local_decode, N);
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i2u_to_i4s(T1 *_i4u, T2 *B_local_decode, const int N = 16)
+{
+    decode_i2b_to_i4s<T1, T2, false>(_i4u, B_local_decode, N);
+}
+"""
+
 
 def get_fast_decode_intrin(
     source_bit=4,
