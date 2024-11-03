@@ -53,8 +53,8 @@ def tl_matmul(
     # This is a debug config
     block_row_warps = 2
     block_col_warps = 2
-    warp_row_tiles = 64
-    warp_col_tiles = 64
+    warp_row_tiles = 32
+    warp_col_tiles = 32
     chunk = 32 if in_dtype == "float16" else 64
     shared_scope = "shared.dyn"
     storage_dtype = "int8"
@@ -271,5 +271,5 @@ if __name__ == "__main__":
     # assert_tl_matmul_correctness(128, 128, 128, "float16", "float16", "float16")
     # assert_tl_matmul_correctness(16384, 16384, 16384, "int8", "int32", "int32")
     # assert_tl_matmul_correctness(16384, 16384, 16384, "int8", "int32", "int32")
-    # assert_tl_matmul_correctness(128, 128, 128, "int8", "int32", "int32")
-    assert_tl_matmul_correctness(16384, 16384, 16384, "int8", "int32", "int32")
+    assert_tl_matmul_correctness(256, 256, 256, "int8", "int32", "int32")
+    # assert_tl_matmul_correctness(16384, 16384, 16384, "int8", "int32", "int32")

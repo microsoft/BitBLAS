@@ -14,6 +14,13 @@ from bitblas.ops.general_matmul.tilelang.dequantize import (
     MatmulDequantizeScheduler,
     MatmulDequantizeFineGrainedScheduler,
     MatmulDequantizeWeightPropagationScheduler,
+    MatmulINT4DequantizeFineGrainedScheduler,
+    MatmulINT4DequantizeWeightPropagationScheduler,
+)
+
+from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore_s4 import (
+    MatmulINT4FineGrainScheduler,
+    MatmulINT4WeightPropagationScheduler,
 )
 
 import torch
@@ -366,6 +373,672 @@ def assert_matmul_weight_propagation_apply_config_correctness(
     torch.testing.assert_close(C, ref_c, rtol=1e0, atol=1e0)
 
 
+def assert_matmul_int4_fine_grained_with_default_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="int4",
+    out_dtype="int32",
+    accum_dtype="int32",
+):
+
+    matmul = MatmulINT4FineGrainScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+    ).with_default_config()
+
+    mod, params = tl.lower(matmul)
+    src_code = mod.imported_modules[0].get_source()
+    # src_code is the generated cuda source
+    assert src_code is not None
+    storage_dtype = "int8"
+    A = torch.randint(0, 4, (M, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    B = torch.randint(0, 4, (N, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
+
+    compressed_A = (A[:, ::2] & 0x0F) + ((A[:, 1::2] & 0x0F) << 4)
+    compressed_B = (B[:, ::2] & 0x0F) + ((B[:, 1::2] & 0x0F) << 4)
+    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+
+    latency = mod.do_bench(mod.func, warmup=25, profiler="tvm")
+    print(latency)
+
+    # Ensure that the latency is not None
+    assert latency is not None
+
+    mod(compressed_A, compressed_B, C)
+    print(C)
+
+    # Get Reference Result
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, out_dtype))
+    print(ref_c)
+    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-1)
+
+
+def assert_matmul_int4_fine_grained_apply_config_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="int4",
+    out_dtype="int32",
+    accum_dtype="int32",
+    block_row_warps=1,
+    block_col_warps=1,
+    warp_row_tiles=16,
+    warp_col_tiles=16,
+    chunk=32,
+    num_stages=2,
+    enable_rasterization=False,
+):
+
+    matmul = MatmulINT4FineGrainScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+    ).apply_config(
+        block_row_warps=block_row_warps,
+        block_col_warps=block_col_warps,
+        warp_row_tiles=warp_row_tiles,
+        warp_col_tiles=warp_col_tiles,
+        chunk=chunk,
+        num_stages=num_stages,
+        enable_rasterization=enable_rasterization,
+    )
+
+    mod, params = tl.lower(matmul)
+    src_code = mod.imported_modules[0].get_source()
+    # src_code is the generated cuda source
+    assert src_code is not None
+    storage_dtype = "int8"
+    A = torch.randint(0, 4, (M, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    B = torch.randint(0, 4, (N, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
+
+    compressed_A = (A[:, ::2] & 0x0F) + ((A[:, 1::2] & 0x0F) << 4)
+    compressed_B = (B[:, ::2] & 0x0F) + ((B[:, 1::2] & 0x0F) << 4)
+    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+
+    latency = mod.do_bench(mod.func, warmup=25, profiler="tvm")
+    print(latency)
+
+    # Ensure that the latency is not None
+    assert latency is not None
+
+    mod(compressed_A, compressed_B, C)
+    print(C)
+
+    # Get Reference Result
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, out_dtype))
+    print(ref_c)
+    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-1)
+
+
+def assert_matmul_int4_weight_propagation_with_default_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="int4",
+    out_dtype="int32",
+    accum_dtype="int32",
+):
+
+    matmul = MatmulINT4WeightPropagationScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+    ).with_default_config()
+    print(matmul)
+    mod, params = tl.lower(matmul)
+    src_code = mod.imported_modules[0].get_source()
+
+    # src_code is the generated cuda source
+    assert src_code is not None
+    storage_dtype = "int8"
+    A = torch.randint(0, 4, (M, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    B = torch.randint(0, 4, (N, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
+    compressed_A = (A[:, ::2] & 0x0F) + ((A[:, 1::2] & 0x0F) << 4)
+    compressed_B = (B[:, ::2] & 0x0F) + ((B[:, 1::2] & 0x0F) << 4)
+
+    ladder_permutate_config = bitblas.ops.LadderPermutateConfig(
+        M=N,
+        N=(K // 2),
+        datatype="int8",
+        storage_dtype="int8",
+        transform_kind=3,
+        transpose_matrix=True,
+    )
+
+    ladder_permutate = bitblas.ops.LadderPermutate(ladder_permutate_config)
+
+    LB = ladder_permutate(compressed_B.cpu()).cuda()
+
+    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+
+    mod(compressed_A, LB, C)
+
+    latency = mod.do_bench(mod.func, warmup=25)
+
+    # Ensure that the latency is not None
+    assert latency is not None
+
+    # Get Reference Result
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, out_dtype))
+    print(C)
+    print(ref_c)
+    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
+
+
+def assert_matmul_int4_weight_propagation_apply_config__correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="int4",
+    out_dtype="int32",
+    accum_dtype="int32",
+    block_row_warps=1,
+    block_col_warps=1,
+    warp_row_tiles=16,
+    warp_col_tiles=16,
+    chunk=32,
+    num_stages=2,
+    enable_rasterization=False,
+):
+
+    matmul = MatmulINT4WeightPropagationScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+    ).apply_config(
+        block_row_warps=block_row_warps,
+        block_col_warps=block_col_warps,
+        warp_row_tiles=warp_row_tiles,
+        warp_col_tiles=warp_col_tiles,
+        chunk=chunk,
+        num_stages=num_stages,
+        enable_rasterization=enable_rasterization,
+    )
+
+    print(matmul)
+    mod, params = tl.lower(matmul)
+    src_code = mod.imported_modules[0].get_source()
+
+    # src_code is the generated cuda source
+    assert src_code is not None
+    storage_dtype = "int8"
+    A = torch.randint(0, 4, (M, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    B = torch.randint(0, 4, (N, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
+    compressed_A = (A[:, ::2] & 0x0F) + ((A[:, 1::2] & 0x0F) << 4)
+    compressed_B = (B[:, ::2] & 0x0F) + ((B[:, 1::2] & 0x0F) << 4)
+
+    ladder_permutate_config = bitblas.ops.LadderPermutateConfig(
+        M=N,
+        N=(K // 2),
+        datatype="int8",
+        storage_dtype="int8",
+        transform_kind=3,
+        transpose_matrix=True,
+    )
+
+    ladder_permutate = bitblas.ops.LadderPermutate(ladder_permutate_config)
+
+    LB = ladder_permutate(compressed_B.cpu()).cuda()
+
+    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+
+    mod(compressed_A, LB, C)
+
+    latency = mod.do_bench(mod.func, warmup=25)
+
+    # Ensure that the latency is not None
+    assert latency is not None
+
+    # Get Reference Result
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, out_dtype))
+    print(C)
+    print(ref_c)
+    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
+
+
+def assert_matmul_fine_grained_dequant_int4_with_default_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="int4",
+    out_dtype="int32",
+    accum_dtype="int32",
+    bit=2,
+    storage_dtype="int8",
+    source_format="int",
+    with_scaling=False,
+    with_zeros=False,
+    group_size=-1,
+    fast_decoding=False,
+    zeros_mode="original",
+):
+    matmul = MatmulINT4DequantizeFineGrainedScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        num_bits=bit,
+        storage_dtype=storage_dtype,
+        source_format=source_format,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        group_size=group_size,
+        fast_decoding=fast_decoding,
+        zeros_mode=zeros_mode,
+    ).with_default_config()
+
+    mod, params = tl.lower(matmul)
+    src_code = mod.imported_modules[0].get_source()
+    # src_code is the generated cuda source
+    assert src_code is not None
+
+    A = torch.randint(0, 4, (M, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    B = torch.randint(0, 2, (N, K), device="cuda", dtype=getattr(torch, storage_dtype))
+
+    lop3_permutate_config = bitblas.ops.LOP3PermutateConfig(
+        M=N,
+        N=K,
+        datatype=in_dtype,
+        dequantize_bits=bit,
+        storage_dtype=storage_dtype,
+    )
+    lop3_permutate = bitblas.ops.LOP3Permutate(
+        config=lop3_permutate_config,
+        target=tvm.target.Target("llvm"),
+    )
+
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
+
+    compressed_A = (A[:, ::2] & 0x0F) + ((A[:, 1::2] & 0x0F) << 4)
+    compressed_B = (B[:, ::4] & 0x03) + ((B[:, 1::4] & 0x03) << 2) + ((B[:, 2::4] & 0x03) << 4) + (
+        (B[:, 3::4] & 0x03) << 6)
+
+    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    print(f"{compressed_B=}")
+    if fast_decoding:
+        lop3_compressed_B = lop3_permutate(compressed_B.cpu()).cuda()
+    else:
+        lop3_compressed_B = compressed_B
+    print(f"{lop3_compressed_B=}")
+    mod(compressed_A, lop3_compressed_B, C)
+    print(C)
+    latency = mod.do_bench(mod.func, warmup=25, profiler="tvm")
+    print(latency)
+    # Ensure that the latency is not None
+    assert latency is not None
+
+    # Get Reference Result
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, out_dtype))
+
+    print(ref_c)
+    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
+
+
+def assert_matmul_fine_grained_dequant_int4_apply_config_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="int4",
+    out_dtype="int32",
+    accum_dtype="int32",
+    bit=2,
+    storage_dtype="int8",
+    source_format="int",
+    with_scaling=False,
+    with_zeros=False,
+    group_size=-1,
+    fast_decoding=False,
+    zeros_mode="original",
+    block_row_warps=1,
+    block_col_warps=1,
+    warp_row_tiles=16,
+    warp_col_tiles=16,
+    chunk=32,
+    num_stages=2,
+    enable_rasterization=False,
+):
+    matmul = MatmulINT4DequantizeFineGrainedScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        num_bits=bit,
+        storage_dtype=storage_dtype,
+        source_format=source_format,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        group_size=group_size,
+        fast_decoding=fast_decoding,
+        zeros_mode=zeros_mode,
+    ).apply_config(
+        block_row_warps=block_row_warps,
+        block_col_warps=block_col_warps,
+        warp_row_tiles=warp_row_tiles,
+        warp_col_tiles=warp_col_tiles,
+        chunk=chunk,
+        num_stages=num_stages,
+        enable_rasterization=enable_rasterization,
+    )
+
+    mod, params = tl.lower(matmul)
+    src_code = mod.imported_modules[0].get_source()
+    # src_code is the generated cuda source
+    assert src_code is not None
+
+    A = torch.randint(0, 4, (M, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    B = torch.randint(0, 2, (N, K), device="cuda", dtype=getattr(torch, storage_dtype))
+
+    lop3_permutate_config = bitblas.ops.LOP3PermutateConfig(
+        M=N,
+        N=K,
+        datatype=in_dtype,
+        dequantize_bits=bit,
+        storage_dtype=storage_dtype,
+    )
+    lop3_permutate = bitblas.ops.LOP3Permutate(
+        config=lop3_permutate_config,
+        target=tvm.target.Target("llvm"),
+    )
+
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
+
+    compressed_A = (A[:, ::2] & 0x0F) + ((A[:, 1::2] & 0x0F) << 4)
+    compressed_B = (B[:, ::4] & 0x03) + ((B[:, 1::4] & 0x03) << 2) + ((B[:, 2::4] & 0x03) << 4) + (
+        (B[:, 3::4] & 0x03) << 6)
+
+    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    print(f"{compressed_B=}")
+    if fast_decoding:
+        lop3_compressed_B = lop3_permutate(compressed_B.cpu()).cuda()
+    else:
+        lop3_compressed_B = compressed_B
+    print(f"{lop3_compressed_B=}")
+    mod(compressed_A, lop3_compressed_B, C)
+    print(C)
+    latency = mod.do_bench(mod.func, warmup=25, profiler="tvm")
+    print(latency)
+    # Ensure that the latency is not None
+    assert latency is not None
+
+    # Get Reference Result
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, out_dtype))
+
+    print(ref_c)
+    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
+
+
+def assert_matmul_weight_transform_dequant_int4_with_default_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="int4",
+    out_dtype="int32",
+    accum_dtype="int32",
+    bit=2,
+    storage_dtype="int8",
+    source_format="int",
+    with_scaling=False,
+    with_zeros=False,
+    group_size=-1,
+    fast_decoding=False,
+    zeros_mode="original",
+):
+    matmul = MatmulINT4DequantizeWeightPropagationScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        num_bits=bit,
+        storage_dtype=storage_dtype,
+        source_format=source_format,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        group_size=group_size,
+        fast_decoding=fast_decoding,
+        zeros_mode=zeros_mode,
+    ).with_default_config()
+    print(matmul)
+    mod, params = tl.lower(matmul)
+    src_code = mod.imported_modules[0].get_source()
+    # src_code is the generated cuda source
+    assert src_code is not None
+    transform_b = 3  # assume ladder stage 3 transform
+    A = torch.randint(0, 4, (M, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    B = torch.randint(0, 2, (N, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
+
+    compressed_A = (A[:, ::2] & 0x0F) + ((A[:, 1::2] & 0x0F) << 4)
+    compressed_B = (B[:, ::2] & 0x0F) + ((B[:, 1::2] & 0x0F) << 4)
+
+    lop3_permutate_config = bitblas.ops.LOP3PermutateConfig(
+        M=N,
+        N=K,
+        datatype="int4",
+        dequantize_bits=2,
+        storage_dtype="int8",
+    )
+    lop3_permutate = bitblas.ops.LOP3Permutate(
+        config=lop3_permutate_config,
+        target=tvm.target.Target("llvm"),
+    )
+
+    ladder_permutate_config = bitblas.ops.LadderPermutateConfig(
+        M=N,
+        N=(K // 2),
+        datatype="int8",
+        storage_dtype="int8",
+        transform_kind=transform_b,
+        transpose_matrix=True,
+    )
+
+    ladder_permutate = bitblas.ops.LadderPermutate(ladder_permutate_config)
+
+    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    compressed_B_ladder = ladder_permutate(compressed_B.cpu()).cuda()
+    ladder_shape = compressed_B_ladder.shape
+    int2_shape = (ladder_shape[:-1] + (ladder_shape[-1] // 2,))
+    int2_tensor = torch.zeros(int2_shape, device="cuda", dtype=torch.int8)
+    for i in range(int2_tensor.shape[-1]):
+        int2_tensor[..., i] = (compressed_B_ladder[..., 2 * i] & 0x03) | (
+            (compressed_B_ladder[..., 2 * i] >> 4) & 0x03) << 2 | (
+                (compressed_B_ladder[..., 2 * i + 1] & 0x03) << 4) | (
+                    (compressed_B_ladder[..., 2 * i + 1] >> 4) << 6)
+
+    raw_tensor_shape = int2_tensor.shape
+    print(f"{raw_tensor_shape=}")
+    if fast_decoding:
+        lop3_compressed_B = lop3_permutate(int2_tensor.cpu()).cuda()
+        lop3_compressed_B = lop3_compressed_B.view(raw_tensor_shape)
+    else:
+        lop3_compressed_B = int2_tensor
+
+    mod(compressed_A, lop3_compressed_B, C)
+
+    latency = mod.do_bench(mod.func, warmup=25)
+    print(f"Latency: {latency}")
+    # Ensure that the latency is not None
+    assert latency is not None
+
+    # Get Reference Result
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, accum_dtype))
+    print(C)
+    print(ref_c)
+    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
+
+
+def assert_matmul_weight_transform_dequant_int4_apply_config_correctness(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="int4",
+    out_dtype="int32",
+    accum_dtype="int32",
+    bit=2,
+    storage_dtype="int8",
+    source_format="int",
+    with_scaling=False,
+    with_zeros=False,
+    group_size=-1,
+    fast_decoding=False,
+    zeros_mode="original",
+    block_row_warps=1,
+    block_col_warps=1,
+    warp_row_tiles=16,
+    warp_col_tiles=16,
+    chunk=32,
+    num_stages=2,
+    enable_rasterization=False,
+):
+    matmul = MatmulINT4DequantizeWeightPropagationScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        num_bits=bit,
+        storage_dtype=storage_dtype,
+        source_format=source_format,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        group_size=group_size,
+        fast_decoding=fast_decoding,
+        zeros_mode=zeros_mode,
+    ).apply_config(
+        block_row_warps=block_row_warps,
+        block_col_warps=block_col_warps,
+        warp_row_tiles=warp_row_tiles,
+        warp_col_tiles=warp_col_tiles,
+        chunk=chunk,
+        num_stages=num_stages,
+        enable_rasterization=enable_rasterization,
+    )
+
+    print(matmul)
+    mod, params = tl.lower(matmul)
+    src_code = mod.imported_modules[0].get_source()
+    # src_code is the generated cuda source
+    assert src_code is not None
+    transform_b = 3  # assume ladder stage 3 transform
+    A = torch.randint(0, 4, (M, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    B = torch.randint(0, 2, (N, K), device="cuda", dtype=getattr(torch, storage_dtype))
+    C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
+
+    compressed_A = (A[:, ::2] & 0x0F) + ((A[:, 1::2] & 0x0F) << 4)
+    compressed_B = (B[:, ::2] & 0x0F) + ((B[:, 1::2] & 0x0F) << 4)
+
+    lop3_permutate_config = bitblas.ops.LOP3PermutateConfig(
+        M=N,
+        N=K,
+        datatype="int4",
+        dequantize_bits=2,
+        storage_dtype="int8",
+    )
+    lop3_permutate = bitblas.ops.LOP3Permutate(
+        config=lop3_permutate_config,
+        target=tvm.target.Target("llvm"),
+    )
+
+    ladder_permutate_config = bitblas.ops.LadderPermutateConfig(
+        M=N,
+        N=(K // 2),
+        datatype="int8",
+        storage_dtype="int8",
+        transform_kind=transform_b,
+        transpose_matrix=True,
+    )
+
+    ladder_permutate = bitblas.ops.LadderPermutate(ladder_permutate_config)
+
+    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    compressed_B_ladder = ladder_permutate(compressed_B.cpu()).cuda()
+    ladder_shape = compressed_B_ladder.shape
+    int2_shape = (ladder_shape[:-1] + (ladder_shape[-1] // 2,))
+    int2_tensor = torch.zeros(int2_shape, device="cuda", dtype=torch.int8)
+    for i in range(int2_tensor.shape[-1]):
+        int2_tensor[..., i] = (compressed_B_ladder[..., 2 * i] & 0x03) | (
+            (compressed_B_ladder[..., 2 * i] >> 4) & 0x03) << 2 | (
+                (compressed_B_ladder[..., 2 * i + 1] & 0x03) << 4) | (
+                    (compressed_B_ladder[..., 2 * i + 1] >> 4) << 6)
+
+    raw_tensor_shape = int2_tensor.shape
+    print(f"{raw_tensor_shape=}")
+    if fast_decoding:
+        lop3_compressed_B = lop3_permutate(int2_tensor.cpu()).cuda()
+        lop3_compressed_B = lop3_compressed_B.view(raw_tensor_shape)
+    else:
+        lop3_compressed_B = int2_tensor
+
+    mod(compressed_A, lop3_compressed_B, C)
+
+    latency = mod.do_bench(mod.func, warmup=25)
+    print(f"Latency: {latency}")
+    # Ensure that the latency is not None
+    assert latency is not None
+
+    # Get Reference Result
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, accum_dtype))
+    print(C)
+    print(ref_c)
+    torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
+
+
 def assert_matmul_blocked_dequant_with_default_correctness(
     M,
     N,
@@ -611,11 +1284,9 @@ def assert_matmul_fine_grained_dequant_with_default_correctness(
             for j in range(K):
                 if with_zeros:
                     if zeros_mode == "original":
-                        rescale_b[i, j] = (b[i, j] - zeros[i, j // group_size]) * scale[i, j //
-                                                                                        group_size]
+                        rescale_b[i, j] = (b[i, j] - zeros) * scale[i, j // group_size]
                     elif zeros_mode == "rescale":
-                        rescale_b[i, j] = (
-                            b[i, j] * scale[i, j // group_size] + zeros[i, j // group_size])
+                        rescale_b[i, j] = (b[i, j] * scale[i, j // group_size] + zeros)
                     else:
                         raise NotImplementedError
                 else:
@@ -804,6 +1475,56 @@ def test_matmul_fine_grained():
     assert_matmul_fine_grained_apply_config_correctness(1024, 1024, 1024, enable_rasterization=True)
 
 
+def test_matmul_int4_fine_grained():
+    # Default
+    assert_matmul_int4_fine_grained_with_default_correctness(256, 256, 256)
+    # Pipeline
+    assert_matmul_int4_fine_grained_apply_config_correctness(1024, 1024, 1024, num_stages=2)
+    assert_matmul_int4_fine_grained_apply_config_correctness(1024, 1024, 1024, num_stages=1)
+    # L2 Cache
+    assert_matmul_int4_fine_grained_apply_config_correctness(
+        1024, 1024, 1024, enable_rasterization=True)
+
+
+def test_matmul_int4_weight_propagation():
+    # Default
+    assert_matmul_int4_weight_propagation_with_default_correctness(256, 256, 256)
+    # Pipeline
+    assert_matmul_int4_weight_propagation_apply_config__correctness(1024, 1024, 1024, num_stages=2)
+    assert_matmul_int4_weight_propagation_apply_config__correctness(1024, 1024, 1024, num_stages=1)
+    # L2 Cache
+    assert_matmul_int4_weight_propagation_apply_config__correctness(
+        1024, 1024, 1024, enable_rasterization=True)
+
+
+def test_matmul_int4xint2_fine_grained():
+    # Default
+    assert_matmul_fine_grained_dequant_int4_with_default_correctness(256, 256, 256)
+    assert_matmul_fine_grained_dequant_int4_with_default_correctness(
+        256, 256, 256, fast_decoding=True)
+    # Pipeline
+    assert_matmul_fine_grained_dequant_int4_apply_config_correctness(1024, 1024, 1024, num_stages=2)
+    assert_matmul_fine_grained_dequant_int4_apply_config_correctness(1024, 1024, 1024, num_stages=1)
+    # L2 Cache
+    assert_matmul_fine_grained_dequant_int4_apply_config_correctness(
+        1024, 1024, 1024, enable_rasterization=True)
+
+
+def test_matmul_int4_weight_transform_dequant():
+    # Default
+    assert_matmul_weight_transform_dequant_int4_with_default_correctness(256, 256, 256)
+    assert_matmul_weight_transform_dequant_int4_with_default_correctness(
+        256, 256, 256, fast_decoding=True)
+    # Pipeline
+    assert_matmul_weight_transform_dequant_int4_apply_config_correctness(
+        1024, 1024, 1024, num_stages=2)
+    assert_matmul_weight_transform_dequant_int4_apply_config_correctness(
+        1024, 1024, 1024, num_stages=1)
+    # L2 Cache
+    assert_matmul_weight_transform_dequant_int4_apply_config_correctness(
+        1024, 1024, 1024, enable_rasterization=True)
+
+
 def test_matmul_weight_propagation():
     # Default
     assert_matmul_weight_propagation_with_default_correctness(1024, 1024, 1024)
@@ -926,4 +1647,6 @@ def test_matmul_weight_transform_dequant_with_default():
 
 
 if __name__ == "__main__":
-    bitblas.testing.main()
+    # bitblas.testing.main()
+    # test_matmul_int4xint2_fine_grained()
+    test_matmul_int4_weight_transform_dequant()

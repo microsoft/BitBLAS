@@ -17,6 +17,11 @@ from .matmul_tensorcore import (
     MatmulWeightPropagationScheduler,  # noqa: F401
 )
 
+from .matmul_tensorcore_s4 import (
+    MatmulINT4FineGrainScheduler,  # noqa: F401
+    MatmulINT4WeightPropagationScheduler,  # noqa: F401
+)
+
 from bitblas.ops.common import TransformKind
 from typing import Union
 

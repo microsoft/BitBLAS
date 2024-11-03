@@ -13,6 +13,14 @@ from .ladder_weight_transform_tensorcore import (
     MatmulDequantizeWeightPropagationScheduler,  # noqa: F401
 )
 
+from .finegrained_primitive_tensorcore_s4 import (
+    MatmulINT4DequantizeFineGrainedScheduler,  # noqa: F401
+)
+
+from .ladder_weight_transform_tensorcore_s4 import (
+    MatmulINT4DequantizeWeightPropagationScheduler,  # noqa: F401
+)
+
 from bitblas.ops.common import TransformKind
 from typing import Union
 

@@ -46,8 +46,8 @@ def tl_matmul(
     # This is a debug config
     block_row_warps = 2
     block_col_warps = 2
-    warp_row_tiles = 64
-    warp_col_tiles = 64
+    warp_row_tiles = 32
+    warp_col_tiles = 32
     chunk = 32 if in_dtype == "float16" else 64
     shared_scope = "shared.dyn"
 
@@ -185,6 +185,7 @@ def tl_matmul(
 
 def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     matmul = tl_matmul(M, N, K, in_dtype, out_dtype, accum_dtype)
+    print(matmul)
     mod, params = TL.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
@@ -219,7 +220,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     assert latency is not None
 
     # Get Reference Result
-    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, accum_dtype))
+    ref_c = torch.matmul(A.to(torch.float32), B.T.to(torch.float32)).to(getattr(torch, out_dtype))
     print(C)
     print(ref_c)
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
@@ -235,4 +236,4 @@ if __name__ == "__main__":
     # assert_tl_matmul_correctness(128, 128, 128, "float16", "float16", "float16")
     # assert_tl_matmul_correctness(128, 128, 128, "int8", "int32", "int32")
     # assert_tl_matmul_correctness(16384, 16384, 16384, "int8", "int32", "int32")
-    assert_tl_matmul_correctness(128, 128, 128, "int8", "int32", "int32")
+    assert_tl_matmul_correctness(256, 256, 256, "int8", "int32", "int32")

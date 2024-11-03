@@ -182,6 +182,9 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
         warp_row_tiles = getattr(self, "warp_row_tiles", 32)
         warp_col_tiles = getattr(self, "warp_col_tiles", 32)
         chunk = getattr(self, "chunk", 32)
+        if DataType(self.in_dtype).bits <= 8:
+            chunk = 64
+
         num_stages = getattr(self, "num_stages", 2)
         enable_rasterization = getattr(self, "enable_rasterization", False)
 
@@ -275,7 +278,7 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
         func_name: str = ""
         if fast_decoding is True:
             lop3_intrin_info = get_lop3_intrin_group(
-                out_dtype=out_dtype,
+                out_dtype=in_dtype,
                 source_format=source_format,
                 source_bit=num_bits,
                 storage_dtype=storage_dtype,

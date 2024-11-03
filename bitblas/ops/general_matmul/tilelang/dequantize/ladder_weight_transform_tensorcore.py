@@ -124,7 +124,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         func_name: str = ""
         if fast_decoding is True:
             lop3_intrin_info = get_lop3_intrin_group(
-                out_dtype=out_dtype,
+                out_dtype=in_dtype,
                 source_format=source_format,
                 source_bit=num_bits,
                 storage_dtype=storage_dtype,
