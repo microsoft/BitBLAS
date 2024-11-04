@@ -71,7 +71,9 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         block_K = chunk
         threads = warp_size * (block_row_warps * block_col_warps)
 
-        fragement_size = (micro_size_x * micro_size_y) // warp_size
+        fragement_size_a = (micro_size_x * micro_size_k) // warp_size
+        fragement_size_b = (micro_size_y * micro_size_k) // warp_size
+        fragement_size_c = (micro_size_x * micro_size_y) // warp_size
         warp_rows = warp_row_tiles // micro_size_x
         warp_cols = warp_col_tiles // micro_size_y
 
@@ -122,7 +124,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         func_name: str = ""
         if fast_decoding is True:
             lop3_intrin_info = get_lop3_intrin_group(
-                out_dtype=out_dtype,
+                out_dtype=in_dtype,
                 source_format=source_format,
                 source_bit=num_bits,
                 storage_dtype=storage_dtype,
@@ -173,11 +175,11 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                 B_shared = T.alloc_shared(B_shared_shape, storage_dtype)
                 C_shared = T.alloc_shared(C_shared_shape, out_dtype)
 
-                A_frag = T.alloc_local((warp_rows * fragement_size), in_dtype)
-                B_frag = T.alloc_local((warp_cols * fragement_size // num_elems_per_byte),
+                A_frag = T.alloc_local((warp_rows * fragement_size_a), in_dtype)
+                B_frag = T.alloc_local((warp_cols * fragement_size_b // num_elems_per_byte),
                                        storage_dtype)
-                B_dequantize_frag = T.alloc_local((warp_cols * fragement_size), in_dtype)
-                C_frag = T.alloc_local((warp_rows * warp_cols * fragement_size), accum_dtype)
+                B_dequantize_frag = T.alloc_local((warp_cols * fragement_size_b), in_dtype)
+                C_frag = T.alloc_local((warp_rows * warp_cols * fragement_size_c), accum_dtype)
 
                 tx = T.thread_binding(0, threads, thread="threadIdx.x")
 

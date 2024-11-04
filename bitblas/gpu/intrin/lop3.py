@@ -978,6 +978,47 @@ __device__ void decode_i4u_to_i8s(T1 *_i4b, T2 *_i8s, const int N = 16)
 }
 """
 
+decode_i2s_to_i4s = r"""
+template <typename T1, typename T2, bool isSigned>
+__device__ void decode_i2b_to_i4s(T1 *_i2b, T2 *_i4s, const int N = 16)
+{
+    uint *i4s = reinterpret_cast<uint *>(_i4s);
+    uint *i2b = reinterpret_cast<uint *>(_i2b);
+    // First, we extract the i4s and construct an intermediate i8 number.
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x33333333;          // 0xf -> 0b1111 select 0,2,4,6,8,10,12
+    static constexpr uint I4b_TO_I8s_MAGIC_NUM = 0x00000000; // 0
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x33333333 : 0x00000000;
+
+#pragma unroll
+    for (int i = 0; i < (N / 8); i++)
+    {
+        // Extract elt_01 - (i4s & 0x000f000f) | 0x64006400
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\n"
+                     : "=r"(i4s[i])
+                     : "r"(i2b[i / 2] >> (2 * (i % 2))), "n"(BOTTOM_MASK), "n"(I4b_TO_I8s_MAGIC_NUM), "n"(immLut));
+        if constexpr (isSigned)
+        {
+            // TODO(lei): uint4 sub should be enhanced.
+            // 0x03 0x03 0x03 0x03
+            // i4s[i] = (((i4s[i] << 1) | i4s[i]) << 1) | i4s[i];
+        }
+    }
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i2s_to_i4s(T1 *_i4s, T2 *B_local_decode, const int N = 16)
+{
+    decode_i2b_to_i4s<T1, T2, true>(_i4s, B_local_decode, N);
+}
+
+template <typename T1, typename T2>
+__device__ void decode_i2u_to_i4s(T1 *_i4u, T2 *B_local_decode, const int N = 16)
+{
+    decode_i2b_to_i4s<T1, T2, false>(_i4u, B_local_decode, N);
+}
+"""
+
 
 def get_fast_decode_intrin(
     source_bit=4,
@@ -1584,7 +1625,7 @@ registered_intrins = initialize_tensor_intrin()
 
 
 def get_lop3_intrin_group(
-    out_dtype: Literal["float16", "int8"],
+    out_dtype: Literal["float16", "int8", "int4"],
     source_format: Literal["int", "uint"] = "uint",
     source_bit: int = 4,
     storage_dtype: Literal["int32", "int8"] = "int8",
@@ -1603,8 +1644,8 @@ def get_lop3_intrin_group(
     in_dtype : Literal["int8"]
         The data type of the input. It should be "int8".
 
-    out_dtype : Literal["float16", "int8"]
-        The data type of the output. It can be either "float16" or "int8".
+    out_dtype : Literal["float16", "int8", "int4"]
+        The data type of the output. It can be either "float16" or "int8" or "int4".
 
     storage_nbit : int, optional
         The number of bits used for storage. By default, it is 4.
@@ -1626,10 +1667,11 @@ def get_lop3_intrin_group(
     Dict[str, str]
         A dictionary mapping the names of the intrinsics to their corresponding implementations.
     """
-    assert out_dtype in ["float16",
-                         "int8"], (f"Invalid out_dtype: {out_dtype}. Expected 'float16' or 'int8'.")
+    assert out_dtype in [
+        "float16", "int8", "int4"
+    ], (f"Invalid out_dtype: {out_dtype}. Expected 'float16' or 'int8' or 'int4' .")
 
-    dtype_mapping = {"float16": "f16", "int8": "i8", "int32": "i32"}
+    dtype_mapping = {"float16": "f16", "int4": "i4", "int8": "i8", "int32": "i32"}
     target_dtype = dtype_mapping[out_dtype]
     target_bits = tvm.DataType(out_dtype).bits
     loop_extent = 128 // target_bits
@@ -1666,6 +1708,7 @@ def get_lop3_intrin_group(
         "i1_to_i8": decode_i1s_to_i8s,
         "i2_to_i8": decode_i2s_to_i8s,
         "i4_to_i8": decode_i4s_to_i8s,
+        "i2_to_i4": decode_i2s_to_i4s,
     }
     key = f"i{source_bit}_to_{target_dtype}"
     if with_scaling:
@@ -1681,6 +1724,8 @@ def get_lop3_intrin_group(
         d4f = "f16"
     elif out_dtype == "int8":
         d4f = "i8s"
+    elif out_dtype == "int4":
+        d4f = "i4s"
     else:
         raise ValueError("Unsupported target dtype: {}".format(target_dtype))
     source_symbol = "u" if source_format == "uint" else "s"
