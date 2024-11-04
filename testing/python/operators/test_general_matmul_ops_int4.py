@@ -29,6 +29,8 @@ def matmul_int4_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
 
     matmul = bitblas.Matmul(config=matmul_config, enable_tuning=False)
 
+    # if finetuning is needed, uncomment the following line
+    # matmul.hardware_aware_finetune(topk=20)
 
     print(matmul.get_source())
     storage_dtype = "int8"
