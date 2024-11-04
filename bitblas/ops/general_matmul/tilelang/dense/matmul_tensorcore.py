@@ -368,6 +368,9 @@ class MatmulFineGrainScheduler(BaseScheduler):
         warp_row_tiles = getattr(self, "warp_row_tiles", 32)
         warp_col_tiles = getattr(self, "warp_col_tiles", 32)
         chunk = getattr(self, "chunk", 32)
+        # Swizzle size for INT8 Storage is 64
+        if DataType(self.in_dtype).bits <= 8:
+            chunk = 64
         num_stages = getattr(self, "num_stages", 2)
         enable_rasterization = getattr(self, "enable_rasterization", False)
 
@@ -597,7 +600,9 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
         threads = warp_size * (block_row_warps * block_col_warps)
 
         # Calculate local fragment sizes for tensor core
-        local_size = (micro_size_x * micro_size_y) // warp_size
+        local_size_a = (micro_size_x * micro_size_k) // warp_size
+        local_size_b = (micro_size_y * micro_size_k) // warp_size
+        local_size_c = (micro_size_x * micro_size_y) // warp_size
         warp_rows = warp_row_tiles // micro_size_x
         warp_cols = warp_col_tiles // micro_size_y
 
@@ -633,9 +638,9 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
                 A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
                 B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
                 C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
-                A_local = T.alloc_local((warp_rows * local_size), in_dtype)
-                B_local = T.alloc_local((warp_cols * local_size), in_dtype)
-                C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
+                A_local = T.alloc_local((warp_rows * local_size_a), in_dtype)
+                B_local = T.alloc_local((warp_cols * local_size_b), in_dtype)
+                C_local = T.alloc_local((warp_rows * warp_cols * local_size_c), accum_dtype)
 
                 # Thread-level parallelism for Tensor Cores
                 thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
@@ -809,7 +814,9 @@ def matmul_macro_tensorcore(
 
     warp_size = 32  # nvidia gpu warp size is 32
     threads = warp_size * (block_row_warps * block_col_warps)
-    local_size = (micro_size_x * micro_size_y) // warp_size
+    local_size_a = (micro_size_x * micro_size_k) // warp_size
+    local_size_b = (micro_size_y * micro_size_k) // warp_size
+    local_size_c = (micro_size_x * micro_size_y) // warp_size
     warp_rows = warp_row_tiles // micro_size_x
     warp_cols = warp_col_tiles // micro_size_y
 
@@ -838,9 +845,9 @@ def matmul_macro_tensorcore(
             A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
             B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
             C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
-            B_local = T.alloc_local((warp_cols * local_size), in_dtype)
-            C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
+            A_local = T.alloc_local((warp_rows * local_size_a), in_dtype)
+            B_local = T.alloc_local((warp_cols * local_size_b), in_dtype)
+            C_local = T.alloc_local((warp_rows * warp_cols * local_size_c), accum_dtype)
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 
             T.annotate_layout({
@@ -947,7 +954,9 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
 
     warp_size = 32  # nvidia gpu warp size is 32
     threads = warp_size * (block_row_warps * block_col_warps)
-    local_size = (micro_size_x * micro_size_y) // warp_size
+    local_size_a = (micro_size_x * micro_size_k) // warp_size
+    local_size_b = (micro_size_y * micro_size_k) // warp_size
+    local_size_c = (micro_size_x * micro_size_y) // warp_size
     warp_rows = warp_row_tiles // micro_size_x
     warp_cols = warp_col_tiles // micro_size_y
 
@@ -977,9 +986,9 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
             A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
             B_shared = T.alloc_shared(B_shared_shape, in_dtype, scope=shared_scope)
             C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
-            A_local = T.alloc_local((warp_rows * local_size), in_dtype)
-            B_local = T.alloc_local((warp_cols * local_size), in_dtype)
-            C_local = T.alloc_local((warp_rows * warp_cols * local_size), accum_dtype)
+            A_local = T.alloc_local((warp_rows * local_size_a), in_dtype)
+            B_local = T.alloc_local((warp_cols * local_size_b), in_dtype)
+            C_local = T.alloc_local((warp_rows * warp_cols * local_size_c), accum_dtype)
             thread_bindings = T.thread_binding(0, threads, "threadIdx.x")
 
             T.annotate_layout({

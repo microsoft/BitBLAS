@@ -1001,7 +1001,7 @@ __device__ void decode_i2b_to_i4s(T1 *_i2b, T2 *_i4s, const int N = 16)
         {
             // TODO(lei): uint4 sub should be enhanced.
             // 0x03 0x03 0x03 0x03
-            i4s[i] = (((i4s[i] << 1) | i4s[i]) << 1) | i4s[i];
+            // i4s[i] = (((i4s[i] << 1) | i4s[i]) << 1) | i4s[i];
         }
     }
 }
@@ -1625,7 +1625,7 @@ registered_intrins = initialize_tensor_intrin()
 
 
 def get_lop3_intrin_group(
-    out_dtype: Literal["float16", "int8"],
+    out_dtype: Literal["float16", "int8", "int4"],
     source_format: Literal["int", "uint"] = "uint",
     source_bit: int = 4,
     storage_dtype: Literal["int32", "int8"] = "int8",
@@ -1644,8 +1644,8 @@ def get_lop3_intrin_group(
     in_dtype : Literal["int8"]
         The data type of the input. It should be "int8".
 
-    out_dtype : Literal["float16", "int8"]
-        The data type of the output. It can be either "float16" or "int8".
+    out_dtype : Literal["float16", "int8", "int4"]
+        The data type of the output. It can be either "float16" or "int8" or "int4".
 
     storage_nbit : int, optional
         The number of bits used for storage. By default, it is 4.
@@ -1667,10 +1667,11 @@ def get_lop3_intrin_group(
     Dict[str, str]
         A dictionary mapping the names of the intrinsics to their corresponding implementations.
     """
-    assert out_dtype in ["float16",
-                         "int8"], (f"Invalid out_dtype: {out_dtype}. Expected 'float16' or 'int8'.")
+    assert out_dtype in [
+        "float16", "int8", "int4"
+    ], (f"Invalid out_dtype: {out_dtype}. Expected 'float16' or 'int8' or 'int4' .")
 
-    dtype_mapping = {"float16": "f16", "int8": "i8", "int32": "i32"}
+    dtype_mapping = {"float16": "f16", "int4": "i4", "int8": "i8", "int32": "i32"}
     target_dtype = dtype_mapping[out_dtype]
     target_bits = tvm.DataType(out_dtype).bits
     loop_extent = 128 // target_bits
@@ -1707,6 +1708,7 @@ def get_lop3_intrin_group(
         "i1_to_i8": decode_i1s_to_i8s,
         "i2_to_i8": decode_i2s_to_i8s,
         "i4_to_i8": decode_i4s_to_i8s,
+        "i2_to_i4": decode_i2s_to_i4s,
     }
     key = f"i{source_bit}_to_{target_dtype}"
     if with_scaling:
@@ -1722,6 +1724,8 @@ def get_lop3_intrin_group(
         d4f = "f16"
     elif out_dtype == "int8":
         d4f = "i8s"
+    elif out_dtype == "int4":
+        d4f = "i4s"
     else:
         raise ValueError("Unsupported target dtype: {}".format(target_dtype))
     source_symbol = "u" if source_format == "uint" else "s"
