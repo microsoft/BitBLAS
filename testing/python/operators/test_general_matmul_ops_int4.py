@@ -1,7 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
-from bitblas import MatmulConfig, Matmul
 import logging
 from bitblas import set_log_level
 
@@ -12,7 +11,17 @@ def get_codegen_result(ops):
     code = ops.get_source()
     return code
 
-def matmul_int4_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layout, propagate_b, fast_decoding=False):
+
+def matmul_int4_torch_forward(M,
+                              N,
+                              K,
+                              A_dtype,
+                              W_dtype,
+                              accum_dtype,
+                              out_dtype,
+                              layout,
+                              propagate_b,
+                              fast_decoding=False):
     import torch
     matmul_config = bitblas.MatmulConfig(
         M=M,  # M dimension
@@ -59,8 +68,8 @@ def matmul_int4_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
     elif W_dtype == "int2":
         B = torch.randint(0, 2, (N, K), device="cuda", dtype=getattr(torch, storage_dtype))
         compressed_A = (A[:, ::2] & 0x0F) + ((A[:, 1::2] & 0x0F) << 4)
-        compressed_B = (B[:, ::4] & 0x03) + ((B[:, 1::4] & 0x03) << 2) + ((B[:, 2::4] & 0x03) << 4) + (
-            (B[:, 3::4] & 0x03) << 6)
+        compressed_B = (B[:, ::4] & 0x03) + ((B[:, 1::4] & 0x03) << 2) + (
+            (B[:, 2::4] & 0x03) << 4) + ((B[:, 3::4] & 0x03) << 6)
         if propagate_b:
             compressed_B = (B[:, ::2] & 0x0F) + ((B[:, 1::2] & 0x0F) << 4)
 
@@ -135,6 +144,7 @@ def matmul_int4_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
     print(ref_c)
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
 
+
 def test_matmul_torch_forward():
     matmul_int4_torch_forward(128, 128, 128, "int4", "int4", "int32", "int32", "nt", False)
     matmul_int4_torch_forward(128, 128, 128, "int4", "int4", "int32", "int32", "nt", True)
@@ -142,6 +152,7 @@ def test_matmul_torch_forward():
     matmul_int4_torch_forward(128, 128, 128, "int4", "int2", "int32", "int32", "nt", False, True)
     matmul_int4_torch_forward(128, 128, 128, "int4", "int2", "int32", "int32", "nt", True, False)
     matmul_int4_torch_forward(128, 128, 128, "int4", "int2", "int32", "int32", "nt", True, True)
+
 
 # fmt: on
 if __name__ == "__main__":
