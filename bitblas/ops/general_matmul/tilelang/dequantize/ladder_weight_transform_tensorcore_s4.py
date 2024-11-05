@@ -36,7 +36,7 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
         K = self.K // 2  # 2xint4 should be packed into one single int8
         storage_dtype = "int8"
         num_bits = self.num_bits * 2
-        
+
         # This is a hack to utilize tensor core
         if isinstance(M, int) and M < 16:
             M = 16
