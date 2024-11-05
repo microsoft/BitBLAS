@@ -22,7 +22,7 @@
 from typing import Callable, List
 
 from tvm import tir
-
+from bitblas.utils import retrieve_func_from_module
 from .analysis import BlockInfo
 
 
@@ -74,7 +74,7 @@ def get_output_blocks(
     """
 
     # collect arguments buffer
-    func = sch.mod["main"]
+    func = retrieve_func_from_module(sch.mod)
     args = list(func.buffer_map.values())
 
     output_blocks = []

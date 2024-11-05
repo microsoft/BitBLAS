@@ -14,9 +14,13 @@ from bitblas.base.arch import CUDA
 from bitblas.base.utils import get_dummy_input_arrays
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
-from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
+from bitblas.utils import (
+    tensor_replace_dp4a,
+    tensor_remove_make_int4,
+    tensor_remove_make_int2,
+    retrieve_func_from_module,
+)
 from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
-
 import logging
 import tempfile
 
@@ -52,7 +56,7 @@ class CompileResult:
         self.time_evaluator = None
 
     def profile(self, data_distribution="uniform"):
-        func = self.sch.mod["main"]
+        func = retrieve_func_from_module(self.sch.mod)
         device = self.config.arch.device
         profile_tensors = get_dummy_input_arrays(func, device, distribution=data_distribution)
         latency = self.time_evaluator(*profile_tensors).mean * 1e3
