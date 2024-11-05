@@ -32,11 +32,17 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
+        M = self.M
         K = self.K // 2  # 2xint4 should be packed into one single int8
         # Simple TIR Compute Expression
         storage_dtype = "int8"
+        
+        # This is a hack to utilize tensor core
+        if isinstance(M, int) and M < 16:
+            M = 16
+
         ir_module = matmul_select_implementation(
-            M=self.M,
+            M=M,
             N=self.N,
             K=K,
             in_dtype=storage_dtype,
@@ -232,17 +238,24 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
+        M = self.M
         K = self.K // 2  # 2xint4 should be packed into one single int8
         # Simple TIR Compute Expression
         storage_dtype = "int8"
+
+        # This is a hack to utilize tensor core
+        if isinstance(M, int) and M < 16:
+            M = 16
+
         ir_module = matmul_select_implementation(
-            M=self.M,
+            M=M,
             N=self.N,
             K=K,
             in_dtype=storage_dtype,
             out_dtype=self.out_dtype,
             accum_dtype=self.accum_dtype,
             layout=layout,
+            propagate_b=self.weight_transform_kind
         )
 
         roller_hints = get_roller_hints_from_func(

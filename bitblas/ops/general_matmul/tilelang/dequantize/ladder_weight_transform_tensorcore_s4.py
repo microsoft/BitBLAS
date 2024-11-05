@@ -32,13 +32,19 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
+        M = self.M
         K = self.K // 2  # 2xint4 should be packed into one single int8
         storage_dtype = "int8"
         num_bits = self.num_bits * 2
+        
+        # This is a hack to utilize tensor core
+        if isinstance(M, int) and M < 16:
+            M = 16
+
         # INT4XINT2 is equal to int8xint4 with reduced shape
         # Simple TIR Compute Expression
         ir_module = matmul_dequantize_select_implementation(
-            M=self.M,
+            M=M,
             N=self.N,
             K=K,
             in_dtype=storage_dtype,

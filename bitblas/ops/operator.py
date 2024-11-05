@@ -318,6 +318,7 @@ class Operator(object):
         elif self.is_tilelang_backend():
             # Finetune the schedule
             tuning_configs = self.get_tl_tuning_config(topk=topk)
+            assert len(tuning_configs) > 0, "No tuning config found for this operator."
             _, best = tl_apply_and_build(
                 func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=parallel_build)
             # Return the best Config as Hint
