@@ -3,18 +3,23 @@
 from bitblas import tvm as tvm
 from tvm import DataType
 import tvm.tl.language as T
-from typing import Optional
+from typing import Optional, List
 from bitblas.tl.utils import (
     get_mma_micro_size,  # noqa: F401
     make_swizzle_layout,  # noqa: F401
     index_to_coordinates,  # noqa: F401
 )
+from bitblas.base.arch import TileDevice
+from bitblas.base.roller.hint import Hint
 from bitblas.tl.macro_generator import (
     INT4TensorCoreIntrinEmitterWithLadderTransform,  # noqa: F401
 )
 from bitblas.ops.common import TransformKind  # noqa: F401
 from dataclasses import dataclass
+from bitblas.base.utils import get_roller_hints_from_func
 from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
+from bitblas.ops.general_matmul.tirscript import (
+    matmul_dequantize_select_implementation,)
 from bitblas.ops.general_matmul.tilelang.dequantize.ladder_weight_transform_tensorcore import (
     MatmulDequantizeWeightPropagationScheduler,)
 
@@ -24,6 +29,54 @@ warp_size = 32
 
 @dataclass
 class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropagationScheduler):
+
+    def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
+        layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
+        K = self.K // 2  # 2xint4 should be packed into one single int8
+        storage_dtype = "int8"
+        num_bits = self.num_bits * 2
+        # INT4XINT2 is equal to int8xint4 with reduced shape
+        # Simple TIR Compute Expression
+        ir_module = matmul_dequantize_select_implementation(
+            M=self.M,
+            N=self.N,
+            K=K,
+            in_dtype=storage_dtype,
+            out_dtype=self.out_dtype,
+            accum_dtype=self.accum_dtype,
+            layout=layout,
+            bit=num_bits,
+            storage_dtype=self.storage_dtype,
+            source_format=self.source_format,
+            with_scaling=self.with_scaling,
+            with_zeros=self.with_zeros,
+            group_size=self.group_size,
+            fast_decoding=self.fast_decoding,
+            with_bias=self.with_bias,
+            zeros_mode=self.zeros_mode)
+
+        roller_hints = get_roller_hints_from_func(
+            ir_module,
+            arch,
+            topk,
+            tensorcore_only=True,
+            allow_gemv=True,
+        )
+
+        if roller_hints is None:
+            raise ValueError("No Roller Hints Found for TensorCore Scheduling")
+
+        for hint in roller_hints:
+            print(hint)
+
+        def serialze_hints_to_configs(hints: List[Hint]):
+            configs = []
+            for hint in hints:
+                config = self.TLHint.from_roller_hint(hint)
+                configs.append(config)
+            return configs
+
+        return serialze_hints_to_configs(roller_hints)
 
     def apply_config(
         self,

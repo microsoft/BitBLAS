@@ -56,7 +56,7 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
             zeros_mode=self.zeros_mode)
 
         roller_hints = get_roller_hints_from_func(
-            ir_module["main"],
+            ir_module,
             arch,
             topk,
             tensorcore_only=True,

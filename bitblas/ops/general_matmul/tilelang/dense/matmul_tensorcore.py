@@ -141,7 +141,7 @@ class MatmulScheduler(BaseScheduler):
         )
 
         roller_hints = get_roller_hints_from_func(
-            ir_module["main"],
+            ir_module,
             arch,
             topk,
             tensorcore_only=True,
@@ -340,7 +340,7 @@ class MatmulFineGrainScheduler(BaseScheduler):
         )
 
         roller_hints = get_roller_hints_from_func(
-            ir_module["main"],
+            ir_module,
             arch,
             topk,
             tensorcore_only=True,
