@@ -76,3 +76,6 @@ models/frozenmodels/
 
 # .bitblas_database
 .bitblas_database
+
+# rocprof workloads
+workloads
