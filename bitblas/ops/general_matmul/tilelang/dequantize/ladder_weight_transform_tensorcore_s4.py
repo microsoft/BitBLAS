@@ -9,7 +9,7 @@ from bitblas.tl.utils import (
     make_swizzle_layout,  # noqa: F401
     index_to_coordinates,  # noqa: F401
 )
-from bitblas.tl.macro_generator import (
+from bitblas.tl.mma_macro_generator import (
     INT4TensorCoreIntrinEmitterWithLadderTransform,  # noqa: F401
 )
 from bitblas.ops.common import TransformKind  # noqa: F401

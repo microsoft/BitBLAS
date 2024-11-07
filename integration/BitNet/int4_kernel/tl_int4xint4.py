@@ -9,7 +9,7 @@ import tvm.tl.language as T
 from bitblas.tl.utils import (
     make_swizzle_layout,)
 
-from bitblas.tl.macro_generator import (
+from bitblas.tl.mma_macro_generator import (
     INT4TensorCoreIntrinEmitter,)
 from bitblas.ops.base_scheduler import simplify_prim_func
 

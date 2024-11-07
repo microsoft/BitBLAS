@@ -11,7 +11,7 @@ import tvm.tl.language as T
 from bitblas.tl.utils import (make_swizzle_layout, index_to_coordinates)
 from bitblas.gpu.intrin.lop3 import decode_i2s_to_i4s
 
-from bitblas.tl.macro_generator import (
+from bitblas.tl.mma_macro_generator import (
     INT4TensorCoreIntrinEmitter,)
 from bitblas.ops.base_scheduler import simplify_prim_func
 
