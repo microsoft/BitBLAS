@@ -9,7 +9,7 @@ from bitblas.tl.utils import (
     make_swizzle_layout,  # noqa: F401
 )
 from .finegrained_primitive_tensorcore import MatmulDequantizeFineGrainedScheduler
-from bitblas.tl.macro_generator import (
+from bitblas.tl.mma_macro_generator import (
     TensorCoreIntrinEmitterWithLadderTransform,  # noqa: F401
 )
 from bitblas.ops.common import TransformKind  # noqa: F401

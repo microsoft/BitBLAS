@@ -9,7 +9,7 @@ from tvm import DataType
 from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.tl.utils import get_swizzle_layout
-from bitblas.tl.macro_generator import (TensorCoreIntrinEmitter)
+from bitblas.tl.mma_macro_generator import (TensorCoreIntrinEmitter)
 
 torch.manual_seed(0)
 

@@ -10,7 +10,7 @@ from bitblas.tl.utils import (
     index_to_coordinates,  # noqa: F401
 )
 
-from bitblas.tl.macro_generator import (
+from bitblas.tl.mma_macro_generator import (
     INT4TensorCoreIntrinEmitter,  # noqa: F401
 )
 from bitblas.base.arch import TileDevice
