@@ -93,13 +93,15 @@ if TVM_IMPORT_PYTHON_PATH is not None:
     sys.path.insert(0, TVM_IMPORT_PYTHON_PATH + "/python")
 else:
     # remove the existing tvm path in PYTHONPATH
-    remove_tvm_path = lambda path: "tvm" in path
+    def remove_tvm_path(path):
+        return "tvm" in path
 
     # installed 3rdparty tvm
     install_tvm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tvm")
     if os.path.exists(install_tvm_path) and install_tvm_path not in sys.path:
         os.environ["PYTHONPATH"] = ":".join(
-            filter(remove_tvm_path, os.environ.get("PYTHONPATH", "").split(":")))
+            filter(remove_tvm_path,
+                   os.environ.get("PYTHONPATH", "").split(":")))
         sys.path = [path for path in sys.path if not remove_tvm_path(path)]
 
         os.environ["PYTHONPATH"] = (
@@ -111,7 +113,8 @@ else:
         os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "tvm")
     if os.path.exists(develop_tvm_path) and develop_tvm_path not in sys.path:
         os.environ["PYTHONPATH"] = ":".join(
-            filter(remove_tvm_path, os.environ.get("PYTHONPATH", "").split(":")))
+            filter(remove_tvm_path,
+                   os.environ.get("PYTHONPATH", "").split(":")))
         sys.path = [path for path in sys.path if not remove_tvm_path(path)]
         os.environ["PYTHONPATH"] = (
             develop_tvm_path + "/python:" + os.environ.get("PYTHONPATH", ""))
@@ -150,6 +153,5 @@ from .ops.general_matmul import MatmulConfig, Matmul  # noqa: F401
 from .ops.general_matmul_splitk import MatmulConfigWithSplitK, MatmulWithSplitK  # noqa: F401
 from .ops.general_flashatten import FlashAttenConfig, FlashAtten  # noqa: F401
 from .module import Linear  # noqa: F401
-
 
 __version__ = "0.0.1.dev15"

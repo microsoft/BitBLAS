@@ -3,14 +3,10 @@
 
 import tvm.tl.language as T
 
-from typing import Union
-from bitblas.ops.common import TransformKind
 from tvm import DataType
 from tvm.runtime import convert
 from .utils import (
-    mfma_store_index_map,
-)
-
+    mfma_store_index_map,)
 
 lift = convert
 
@@ -92,12 +88,20 @@ class MatrixCoreIntrinEmitter(object):
 
     def _initialize_mfma_prefix(self, k_dim=16):
         in_dtype, out_dtype = self.a_dtype, self.accum_dtype
-        M_DIM, N_DIM = self.M_DIM, self.N_DIM        
-        out_dtype_abbrv = {"float16": "f16",
-                        "float32": "f32", "int8": "i8", "int32": "i32"}[out_dtype]
+        M_DIM, N_DIM = self.M_DIM, self.N_DIM
+        out_dtype_abbrv = {
+            "float16": "f16",
+            "float32": "f32",
+            "int8": "i8",
+            "int32": "i32"
+        }[out_dtype]
 
-        in_dtype_abbrv = {"float16": "f16",
-                        "float32": "f32", "int8": "i8", "int32": "i32"}[in_dtype]
+        in_dtype_abbrv = {
+            "float16": "f16",
+            "float32": "f32",
+            "int8": "i8",
+            "int32": "i32"
+        }[in_dtype]
 
         self.mfma_suffix = f"{out_dtype_abbrv}_{M_DIM}x{N_DIM}x{k_dim}{in_dtype_abbrv}"
 
@@ -105,7 +109,7 @@ class MatrixCoreIntrinEmitter(object):
         self.micro_size_x = m_dim
         self.micro_size_y = n_dim
         self.micro_size_k = k_dim
-    
+
     def get_ldmatrix_index_map(self, is_b=False):
         from .mfma_layout import (
             shared_16x4_to_local_64x1_layout_A,
@@ -166,21 +170,16 @@ class MatrixCoreIntrinEmitter(object):
                 for i in T.serial(warp_cols):
                     for local_id in T.vectorized(local_size_a):
                         row, col = T.meta_var(reverse_index_map(tx, local_id))
-                        l, r = (rk * chunk + ki * micro_size_k, tz * warp_col_tiles + i * micro_size_x)
-                        A_local_buf[i * local_size_a + local_id] = A_shared_buf[
-                            l + row,
-                            r + col
-                        ]
+                        l, r = (rk * chunk + ki * micro_size_k,
+                                tz * warp_col_tiles + i * micro_size_x)
+                        A_local_buf[i * local_size_a + local_id] = A_shared_buf[l + row, r + col]
             else:
                 for i in T.serial(warp_cols):
                     for local_id in T.vectorized(local_size_a):
                         row, col = T.meta_var(reverse_index_map(tx, local_id))
                         l, r = (tz * warp_col_tiles + i * micro_size_x,
-                            rk * chunk + ki * micro_size_k)
-                        A_local_buf[i * local_size_a + local_id] = A_shared_buf[
-                            l + row,
-                            r + col
-                        ]
+                                rk * chunk + ki * micro_size_k)
+                        A_local_buf[i * local_size_a + local_id] = A_shared_buf[l + row, r + col]
 
         return _warp_ldmatrix_a(A_local_buf, A_shared_buf, ki, thread_bindings, rk)
 
@@ -208,23 +207,25 @@ class MatrixCoreIntrinEmitter(object):
         ):
             tx = thread_bindings % WARP_SIZE
             ty = (thread_bindings // WARP_SIZE) % block_col_warps
-            
+
             if is_transposed:
                 for j in T.serial(warp_cols):
                     for local_id in T.vectorized(local_size_b):
                         row, col = T.meta_var(reverse_index_map(tx, local_id))
-                        l, r = (ty * warp_col_tiles + j * micro_size_y, rk * chunk + ki * micro_size_k,)
-                        B_local_buf[j * local_size_b + local_id] = B_shared_buf[
-                            l + row, r + col
-                        ]
+                        l, r = (
+                            ty * warp_col_tiles + j * micro_size_y,
+                            rk * chunk + ki * micro_size_k,
+                        )
+                        B_local_buf[j * local_size_b + local_id] = B_shared_buf[l + row, r + col]
             else:
                 for j in T.serial(warp_cols):
                     for local_id in T.vectorized(local_size_b):
                         row, col = T.meta_var(reverse_index_map(tx, local_id))
-                        l, r = (rk * chunk + ki * micro_size_k, ty * warp_col_tiles + j * micro_size_y,)
-                        B_local_buf[j * local_size_b + local_id] = B_shared_buf[
-                            l + row, r + col
-                        ]
+                        l, r = (
+                            rk * chunk + ki * micro_size_k,
+                            ty * warp_col_tiles + j * micro_size_y,
+                        )
+                        B_local_buf[j * local_size_b + local_id] = B_shared_buf[l + row, r + col]
 
         return _warp_ldmatrix_b(B_local_buf, B_shared_buf, ki, thread_bindings, rk)
 
@@ -268,12 +269,12 @@ class MatrixCoreIntrinEmitter(object):
         warp_rows = self.warp_rows
         warp_cols = self.warp_cols
         local_size_out = self.local_size_out
-        
+
         is_global = pid_m is not None and pid_n is not None
         BLOCK_M = block_row_warps * warp_rows
         BLOCK_N = block_col_warps * warp_cols
         M_DIM, N_DIM = self.M_DIM, self.N_DIM
-        
+
         # STS
         # MMA Store must be in simulated instead of TVM Intrins
         # As TVM Intrins is like a hack that the threadIdx.x should be always
@@ -283,22 +284,28 @@ class MatrixCoreIntrinEmitter(object):
             tx = thread_bindings % WARP_SIZE
             ty = (thread_bindings // WARP_SIZE) % block_row_warps
             tz = (thread_bindings // (WARP_SIZE * block_row_warps)) % block_col_warps
-            
+
             for i, j in T.grid(warp_rows, warp_cols):
                 for local_id in T.serial(local_size_out):
                     row, col = T.meta_var(mfma_store_index_map(tx, local_id))
-                    C_buf[ty * warp_rows + i, tz * warp_cols + j, row, col] = C_local_buf[i * warp_cols * local_size_out + j * local_size_out + local_id]
+                    C_buf[ty * warp_rows + i, tz * warp_cols + j, row,
+                          col] = C_local_buf[i * warp_cols * local_size_out + j * local_size_out +
+                                             local_id]
 
         @T.macro
         def _warp_stmatrix_global(C_local_buf, C_buf, thread_bindings):
             tx = thread_bindings % WARP_SIZE
             ty = (thread_bindings // WARP_SIZE) % block_row_warps
             tz = (thread_bindings // (WARP_SIZE * block_row_warps)) % block_col_warps
-            
+
             for i, j in T.grid(warp_rows, warp_cols):
                 for local_id in T.serial(local_size_out):
                     row, col = T.meta_var(mfma_store_index_map(tx, local_id))
-                    C_buf[(pid_m * BLOCK_M + tz * warp_rows + i) * M_DIM + row, (pid_n * BLOCK_N + ty * warp_cols + j) * N_DIM + col] = C_local_buf[i * warp_cols * local_size_out + j * local_size_out + local_id]
+                    C_buf[(pid_m * BLOCK_M + tz * warp_rows + i) * M_DIM + row,
+                          (pid_n * BLOCK_N + ty * warp_cols + j) * N_DIM +
+                          col] = C_local_buf[i * warp_cols * local_size_out + j * local_size_out +
+                                             local_id]
 
-        return _warp_stmatrix_global(C_local_buf, C_buf, thread_bindings) if is_global else _warp_stmatrix_shared(C_local_buf, C_buf, thread_bindings)
-
+        return _warp_stmatrix_global(C_local_buf, C_buf,
+                                     thread_bindings) if is_global else _warp_stmatrix_shared(
+                                         C_local_buf, C_buf, thread_bindings)
