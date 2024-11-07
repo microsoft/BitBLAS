@@ -431,9 +431,8 @@ def get_dequantize_block(sch, blocks) -> Optional[BlockRV]:
         has_uint_input = any("uint" in str(region.buffer.dtype) for region in block_stmt.reads)
         if not has_uint_input:
             return False
-        if len(block_stmt.writes) != 1 or "float" not in str(block_stmt.writes[0].buffer.dtype):
-            return False
-        return True
+        return not (len(block_stmt.writes) != 1 or
+                    "float" not in str(block_stmt.writes[0].buffer.dtype))
 
     dequantize_blocks = [block for block in blocks if is_dequantize(block)]
     return dequantize_blocks[0] if len(dequantize_blocks) == 1 else None
@@ -552,9 +551,7 @@ def get_tensorized_func_and_tags(
             len(
                 collect_block_iter_vars_used_in_access_region(block_stmt,
                                                               block_stmt.writes[0].region)) > 0)
-        if not all(conditions):
-            return False
-        return True
+        return all(conditions)
 
     # step2. transform function to tensorcore matmul (e.g. conv2d with im2col)
     def check_sm_version(arch: str) -> int:
@@ -677,14 +674,20 @@ def get_tensorized_func_and_tags(
         block_stmt = sch.get(main_block)
 
         # 16 for 16 bits tensor core while 32 for 8bits tensorcore.
-        minimal_tensorize_threshold = 16 if in_dtype in ["bfloat16", "float16"] else 32
+        minimal_tensorize_spatial_threshold = 16
+        minimal_tensorize_reduce_threshold = 16 if in_dtype in ["bfloat16", "float16"] else 32
         # the batch dimension is not taken into consideration.
-        extent = block_stmt.iter_vars[1].dom.extent
-        if isinstance(extent, tir.expr.IntImm) and (extent.value < (1 if allow_gemv else
-                                                                    minimal_tensorize_threshold)):
-            return func, None
-        for item_var in block_stmt.iter_vars[2:]:
+        for item_var in block_stmt.iter_vars[1:]:
             extent = item_var.dom.extent
+            iter_type = item_var.iter_type
+
+            if iter_type is IterVar.DataPar:
+                minimal_tensorize_threshold = minimal_tensorize_spatial_threshold
+            elif iter_type is IterVar.CommReduce:
+                minimal_tensorize_threshold = minimal_tensorize_reduce_threshold
+            else:
+                raise ValueError(f"Unknown IterVar type {iter_type}")
+
             if (isinstance(extent, tir.expr.IntImm) and extent.value < minimal_tensorize_threshold):
                 return func, None
         tags = analysis_tensorcore_tags(sch, main_block, target)

@@ -21,6 +21,7 @@ from bitblas.base.roller.hint import Hint
 from bitblas.builder.wrapper import TIRWrapper, TLWrapper
 from bitblas.builder.lib_generator import LibraryGenerator
 from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
+from bitblas.utils import retrieve_func_from_module
 from dataclasses import dataclass
 import logging
 import re
@@ -317,6 +318,7 @@ class Operator(object):
         elif self.is_tilelang_backend():
             # Finetune the schedule
             tuning_configs = self.get_tl_tuning_config(topk=topk)
+            assert len(tuning_configs) > 0, "No tuning config found for this operator."
             _, best = tl_apply_and_build(
                 func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=parallel_build)
             # Return the best Config as Hint
@@ -368,11 +370,9 @@ class Operator(object):
             assert (
                 len(scheduled_mod.get_global_vars()) == 1
             ), "The optimized module should only have one global variable for default schedule."
-            assert (
-                "main" in scheduled_mod
-            ), "The optimized module should have a function named 'main' for default schedule."
             default_kernal_name = self.kernel_name_generator.generate(best_hint)
-            func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
+            func = retrieve_func_from_module(scheduled_mod).with_attr("global_symbol",
+                                                                      default_kernal_name)
             scheduled_ir_module = tvm.IRModule({default_kernal_name: func})
             self._update_optimized_mod(scheduled_ir_module)
 
@@ -464,9 +464,6 @@ class Operator(object):
 
     def __call__(self, *args: Any) -> Any:
         return self.forward(*args)
-
-    def update_func(self, func: PrimFunc):
-        self.ir_module["main"] = func
 
     def update_runtime_module(self, rt_mod=None, srcpath=None, libpath=None):
         if rt_mod is not None:
