@@ -6,10 +6,12 @@ from tvm.target import Target
 from .arch_base import TileDevice
 from typing import List, Dict, Union
 
+
 class CDNA(TileDevice):
+
     def __init__(self, target: Union[Target, str]):
         if isinstance(target, str):
-            target = tvm.target.Target(target) 
+            target = tvm.target.Target(target)
         self.target = target
         device = tvm.runtime.rocm(0)
         if not device.exist:
@@ -25,5 +27,5 @@ class CDNA(TileDevice):
         self.sm_partition: int = 4
         self.l2_cache_size_bytes: int = target.l2_cache_size_bytes
         self.transaction_size: List[int] = [32, 128]  # in bytes
-    
+
         self.bandwidth: List[int] = [1300, 14000]

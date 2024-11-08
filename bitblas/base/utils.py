@@ -387,7 +387,7 @@ def fast_tune(
 
     if target.kind.name == "cuda":
         arch = CUDA(target)
-    elif target.kind.name == "hip": 
+    elif target.kind.name == "hip":
         arch = CDNA(target)
 
     policy = DefaultPolicy(func=func, arch=arch)

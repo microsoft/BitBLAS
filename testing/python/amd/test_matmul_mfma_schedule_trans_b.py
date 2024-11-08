@@ -64,22 +64,22 @@ def assert_correctness_with_block_reduce(
             },
         }),
     )
-    
+
     with tvm.transform.PassContext():
         ref_rt_mod = tvm.build(ref_sch.mod, target=target)
-    
+
     ctx = tvm.rocm(0)
     np.random.seed(0)
     a_np = (np.random.rand(M, K)).astype("float16")
     print(a_np)
-    b_np = (np.random.rand(N, K)).astype("float16") 
+    b_np = (np.random.rand(N, K)).astype("float16")
 
     rocm_a = tvm.nd.array((a_np).astype("float16"), ctx)
     rocm_b = tvm.nd.array((b_np).astype("float16"), ctx)
     rocm_c = tvm.nd.array(np.zeros((M, N)).astype("float32"), ctx)
 
     ref_rt_mod(rocm_a, rocm_b, rocm_c)
-    
+
     c_np = rocm_c.numpy()
     np.testing.assert_allclose(
         c_np, np.matmul(a_np.astype("float32"), b_np.astype("float32").T), rtol=1e-2, atol=1e-2
@@ -104,4 +104,3 @@ def test_assert_correctness_with_block_reduce():
 if __name__ == "__main__":
     # bitblas.testing.main()
     test_assert_correctness_with_block_reduce()
-

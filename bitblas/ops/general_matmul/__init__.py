@@ -391,9 +391,9 @@ class Matmul(Operator):
                      source_format: str = "uint",
                      enable_tuning: bool = True):
         '''Dispatch the tir script implementation'''
-        if(target.kind.name == "cuda"):
+        if (target.kind.name == "cuda"):
             self.arch = CUDA(target)
-        elif(target.kind.name == "hip"):
+        elif (target.kind.name == "hip"):
             self.arch = CDNA(target)
 
         if isinstance(self.M, Tuple):

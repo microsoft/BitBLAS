@@ -68,26 +68,26 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
     The schedule rule for float16 tensor core matmul computation.
     func with attr 'dlight.do_not_tensorize' will not be tensorized.
     """
-    def apply_config(self, 
-                     func: tir.PrimFunc,
-                     config: Hint,
+
+    def apply_config(
+        self,
+        func: tir.PrimFunc,
+        config: Hint,
     ) -> Optional[tir.Schedule]:
-    
+
         from bitblas.gpu.intrin.hip import (
-            get_mfma_intrin_group,
-        )
+            get_mfma_intrin_group,)
 
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
         blocks = sch.get_child_blocks(root_block)
 
-
         reduction_blocks = get_reduction_blocks(sch, blocks)
         if reduction_blocks is None:
             return None
-        
+
         main_block = reduction_blocks[0]
-        
+
         output_blocks = [sch.get(block) for block in sch.get_output_blocks(root_block)]
 
         #cache_write_required = True
@@ -107,10 +107,10 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
         )
 
         # Start schedule
-        warp_row_tiles = config.warp[0] 
-        warp_col_tiles = config.warp[1] 
-        block_row_warps = config.block[0] // warp_row_tiles 
-        block_col_warps = config.block[1] // warp_col_tiles 
+        warp_row_tiles = config.warp[0]
+        warp_col_tiles = config.warp[1]
+        block_row_warps = config.block[0] // warp_row_tiles
+        block_col_warps = config.block[1] // warp_col_tiles
 
         #tensor core intrinsic size
         micro_size_x, micro_size_y, micro_size_k = intrin_group["micro_kernel"]
@@ -118,7 +118,7 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
         # get the axis for layout transform
         def get_axis(l, r, trans):
             return (r, l) if trans else (l, r)
-        
+
         a_lr = get_axis(micro_size_x, micro_size_k, intrin_info.trans_a)
         b_lr = get_axis(micro_size_k, micro_size_y, intrin_info.trans_b)
 
@@ -129,21 +129,21 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
         block = main_block
 
         (i, j, k) = sch.get_loops(block)
-        by, i = sch.split(i, factors=[None, config.block[0]]) #[2, 128]
-        bx, j = sch.split(j, factors=[None, config.block[1]]) #[2, 128]
-        bk, k = sch.split(k, factors=[None, (config.chunk[0] * micro_size_k)]) #[8, 32]
+        by, i = sch.split(i, factors=[None, config.block[0]])  #[2, 128]
+        bx, j = sch.split(j, factors=[None, config.block[1]])  #[2, 128]
+        bk, k = sch.split(k, factors=[None, (config.chunk[0] * micro_size_k)])  #[8, 32]
 
         sch.reorder(by, bx, bk, i, j, k)
 
         sch.bind(bx, "blockIdx.x")
         sch.bind(by, "blockIdx.y")
 
-        block_tz, block_inner_i = sch.split(i, factors=[block_row_warps, None]) 
+        block_tz, block_inner_i = sch.split(i, factors=[block_row_warps, None])
 
-        block_ty, block_inner_j = sch.split(j, factors=[block_col_warps, None]) 
+        block_ty, block_inner_j = sch.split(j, factors=[block_col_warps, None])
 
         sch.reorder(block_tz, block_ty, bk, block_inner_i, block_inner_j, k)
-        
+
         sch.bind(block_tz, "threadIdx.z")
         sch.bind(block_ty, "threadIdx.y")
 
@@ -154,13 +154,11 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
             fused = sch.fuse(*sch.get_loops(block_read)[-2:])
 
             _, f_0, f_1, f_2, f_3 = sch.split(
-                fused, factors=[None, block_row_warps, block_col_warps, warp_size, vec_len] 
-            )
+                fused, factors=[None, block_row_warps, block_col_warps, warp_size, vec_len])
             sch.bind(f_2, "threadIdx.x")
             sch.bind(f_1, "threadIdx.y")
             sch.bind(f_0, "threadIdx.z")
             sch.vectorize(f_3)
-        
 
         # fetch A,B to shared
         # 0->A, 1->B
@@ -168,17 +166,12 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
         fetch_to_shared(main_block, 1)
 
         # blockize for mma tensorize
-        block_inner_i, block_inner_i_tc = sch.split(
-            block_inner_i, factors=[None, micro_size_x]
-        )
-        block_inner_j, block_inner_j_tc = sch.split(
-            block_inner_j, factors=[None, micro_size_y]
-        )
-        k ,k_tc = sch.split(k, factors=[None, micro_size_k])
+        block_inner_i, block_inner_i_tc = sch.split(block_inner_i, factors=[None, micro_size_x])
+        block_inner_j, block_inner_j_tc = sch.split(block_inner_j, factors=[None, micro_size_y])
+        k, k_tc = sch.split(k, factors=[None, micro_size_k])
 
         if intrin_info.trans_b:
-            sch.reorder(k, block_inner_i, block_inner_j,
-                block_inner_i_tc, block_inner_j_tc, k_tc)  
+            sch.reorder(k, block_inner_i, block_inner_j, block_inner_i_tc, block_inner_j_tc, k_tc)
         else:
             sch.reorder(block_inner_i, block_inner_j, k, block_inner_i_tc, block_inner_j_tc, k_tc)
 
@@ -210,16 +203,13 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
             a_loop_warp, _ = sch.get_loops(A_mat)[-2:]
             b_loop_warp, _ = sch.get_loops(B_mat)[-2:]
 
-
         block_init_c = sch.decompose_reduction(main_block, bk)
 
         # Tensorization by hardware intrinsics
         index_map_a, index_map_b, index_map_c = intrin_group["index_map"]
 
-        sch.transform_layout(
-            A_mat, 
-            ("write", 0), 
-            get_warp_index_map(index_map_a, *b_lr, intrin_info.inter_transform_a))
+        sch.transform_layout(A_mat, ("write", 0),
+                             get_warp_index_map(index_map_a, *b_lr, intrin_info.inter_transform_a))
 
         sch.transform_layout(
             B_mat,
@@ -237,7 +227,7 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
         sch.tensorize(b_loop_warp, intrin_group["load_b"])
 
         sch.tensorize(block_inner_i_tc, intrin_group["compute"])
-        
+
         sch.tensorize(sch.get_loops(block_init_c)[-2], intrin_group["init"])
 
         sch.tensorize(sch.get_loops(C_store)[-2], intrin_group["store"])

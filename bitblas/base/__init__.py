@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
 """Base infra"""
 from .analysis import (
     BlockInfo,
