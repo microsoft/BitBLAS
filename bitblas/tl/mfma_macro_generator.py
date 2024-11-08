@@ -2,8 +2,9 @@
 # Licensed under the MIT License.
 
 import tvm.tl.language as T
-
+from typing import Tuple
 from tvm import DataType
+from tvm.tir import PrimExpr
 from tvm.runtime import convert
 from .utils import (
     mfma_store_index_map,)
@@ -142,12 +143,17 @@ class MatrixCoreIntrinEmitter(object):
 
         return index_map, reverse_index_map
 
-    def ldmatrix_a(self, A_local_buf, A_shared_buf, ki, thread_bindings, rk=0):
+    def extract_thread_binding(self, thread_id) -> Tuple[PrimExpr, PrimExpr, PrimExpr]:
         WARP_SIZE = self.WARP_SIZE
         block_row_warps = self.block_row_warps
         block_col_warps = self.block_col_warps
+        return thread_id % WARP_SIZE, (thread_id // WARP_SIZE) % block_col_warps, (
+            thread_id // (WARP_SIZE * block_col_warps)
+        ) % block_row_warps
+
+    def ldmatrix_a(self, A_local_buf, A_shared_buf, ki, thread_bindings, rk=0):
         warp_row_tiles = self.warp_row_tiles
-        warp_cols = self.warp_cols
+        warp_rows = self.warp_rows
         chunk = self.chunk
         micro_size_x = self.micro_size_x
         micro_size_k = self.micro_size_k
@@ -164,17 +170,16 @@ class MatrixCoreIntrinEmitter(object):
             thread_bindings,
             rk=0,
         ):
-            tx = thread_bindings % WARP_SIZE
-            tz = (thread_bindings // (WARP_SIZE * block_col_warps)) % block_row_warps
+            tx, _, tz = self.extract_thread_binding(thread_bindings)
             if is_transposed:
-                for i in T.serial(warp_cols):
+                for i in T.serial(warp_rows):
                     for local_id in T.vectorized(local_size_a):
                         row, col = T.meta_var(reverse_index_map(tx, local_id))
                         l, r = (rk * chunk + ki * micro_size_k,
                                 tz * warp_row_tiles + i * micro_size_x)
                         A_local_buf[i * local_size_a + local_id] = A_shared_buf[l + row, r + col]
             else:
-                for i in T.serial(warp_cols):
+                for i in T.serial(warp_rows):
                     for local_id in T.vectorized(local_size_a):
                         row, col = T.meta_var(reverse_index_map(tx, local_id))
                         l, r = (tz * warp_row_tiles + i * micro_size_x,
@@ -184,9 +189,6 @@ class MatrixCoreIntrinEmitter(object):
         return _warp_ldmatrix_a(A_local_buf, A_shared_buf, ki, thread_bindings, rk)
 
     def ldmatrix_b(self, B_local_buf, B_shared_buf, ki, thread_bindings, rk=0):
-
-        WARP_SIZE = self.WARP_SIZE
-        block_col_warps = self.block_col_warps
         warp_col_tiles = self.warp_col_tiles
         warp_cols = self.warp_cols
         chunk = self.chunk
@@ -205,8 +207,7 @@ class MatrixCoreIntrinEmitter(object):
             thread_bindings,
             rk=0,
         ):
-            tx = thread_bindings % WARP_SIZE
-            ty = (thread_bindings // WARP_SIZE) % block_col_warps
+            tx, ty, _ = self.extract_thread_binding(thread_bindings)
 
             if is_transposed:
                 for j in T.serial(warp_cols):
@@ -281,23 +282,17 @@ class MatrixCoreIntrinEmitter(object):
         # equal to the warp_size
         @T.macro
         def _warp_stmatrix_shared(C_local_buf, C_buf, thread_bindings):
-            tx = thread_bindings % WARP_SIZE
-            ty = (thread_bindings // WARP_SIZE) % block_row_warps
-            tz = (thread_bindings // (WARP_SIZE * block_row_warps)) % block_col_warps
-
+            tx, ty, tz = self.extract_thread_binding(thread_bindings)
             for i, j in T.grid(warp_rows, warp_cols):
                 for local_id in T.serial(local_size_out):
                     row, col = T.meta_var(mfma_store_index_map(tx, local_id))
-                    C_buf[ty * warp_rows + i, tz * warp_cols + j, row,
+                    C_buf[tz * warp_rows + i, ty * warp_cols + j, row,
                           col] = C_local_buf[i * warp_cols * local_size_out + j * local_size_out +
                                              local_id]
 
         @T.macro
         def _warp_stmatrix_global(C_local_buf, C_buf, thread_bindings):
-            tx = thread_bindings % WARP_SIZE
-            ty = (thread_bindings // WARP_SIZE) % block_row_warps
-            tz = (thread_bindings // (WARP_SIZE * block_row_warps)) % block_col_warps
-
+            tx, ty, tz = self.extract_thread_binding(thread_bindings)
             for i, j in T.grid(warp_rows, warp_cols):
                 for local_id in T.serial(local_size_out):
                     row, col = T.meta_var(mfma_store_index_map(tx, local_id))
