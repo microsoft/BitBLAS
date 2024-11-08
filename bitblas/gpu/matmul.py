@@ -28,6 +28,7 @@ from .matmul_wmma import (
     MatmulInt8Tensorization,
     MatmulTensorizationWMMA,
 )
+from .matmul_mfma import MatmulTensorizationMFMA
 from functools import reduce
 import logging
 
@@ -54,7 +55,7 @@ class Matmul(GPUScheduleRule):
 
     def get_configs(self, target: Target) -> Config:
         """Get the schedule config for the target"""
-        if target.kind.name == "cuda" or target.kind.name == "rocm":
+        if target.kind.name in {"cuda", "rocm", "hip"}:
             return Matmul.Config(
                 block_size_x=8,
                 block_size_y=16,
@@ -109,10 +110,11 @@ class Matmul(GPUScheduleRule):
         if sch is None:
             return None
 
-        # Step 1. Check Tensor Core support
+        # Step 1. Check Tensor Core support or Matrix core support
         # Tensorization config:
         # If any value of I, J, K is fixed and less than this threshold,
         # tensorization rule will not be applied.
+        #TODO check matrix core support, now there is a trick: MI250 can use Matrix core.
         minimal_tensorize_threshold = 64
         block_stmt = sch.get(main_block)
         if target.kind.name == "cuda" and utils.get_sm_version(target) >= 70:
@@ -136,6 +138,23 @@ class Matmul(GPUScheduleRule):
                 else:
                     # For other GPUs, use WMMA tensorization.
                     tensorize_sch = MatmulTensorizationWMMA().apply(func, target, _)
+                if tensorize_sch is not None:
+                    return tensorize_sch
+        if target.kind.name == "hip":
+            apply_tensorization: bool = True
+            # the batch dimension is not taken into consideration.
+            # Analyze read/write buffers and choose correct tensorizer: int8 or fp16.
+            in_dtype, out_dtype = get_in_out_dtypes(block_stmt)
+            if in_dtype not in ["int8", "float16"]:
+                apply_tensorization = False
+            for item_var in block_stmt.iter_vars[1:]:
+                extent = item_var.dom.extent
+                if isinstance(extent,
+                              tir.expr.IntImm) and extent.value <= minimal_tensorize_threshold:
+                    apply_tensorization = False
+            if apply_tensorization:
+                # For MI250
+                tensorize_sch = MatmulTensorizationMFMA().apply(func, target, _)
                 if tensorize_sch is not None:
                     return tensorize_sch
 

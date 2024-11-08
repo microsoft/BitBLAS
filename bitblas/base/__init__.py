@@ -16,3 +16,4 @@ from .schedule_rule import ScheduleRule
 from .transform import ApplyDefaultSchedule, ApplyFastTuning
 from .utils import fast_tune, fast_tune_with_dynamic_range
 from .roller import *
+from .arch import CUDA, CDNA
