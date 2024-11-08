@@ -410,5 +410,8 @@ class TIRWrapper(BaseWrapper):
             wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
         elif self.arch.platform == "CDNA":
             wrapper_class = TIRHIPSourceWrapper
+        else:
+            raise ValueError(f"Unsupported platform: {self.arch.platform}")
+
         wrapper = wrapper_class(self.scheduled_ir_module, c_source, self.arch)
         return wrapper.lib_code

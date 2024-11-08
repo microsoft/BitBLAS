@@ -110,7 +110,7 @@ class Matmul(GPUScheduleRule):
         if sch is None:
             return None
 
-        # Step 1. Check Tensor Core support or Matrix core support
+        # Step 1. Check hardware supports tensorization.
         # Tensorization config:
         # If any value of I, J, K is fixed and less than this threshold,
         # tensorization rule will not be applied.
@@ -140,7 +140,7 @@ class Matmul(GPUScheduleRule):
                     tensorize_sch = MatmulTensorizationWMMA().apply(func, target, _)
                 if tensorize_sch is not None:
                     return tensorize_sch
-        if target.kind.name == "hip":
+        elif target.kind.name == "hip":
             apply_tensorization: bool = True
             # the batch dimension is not taken into consideration.
             # Analyze read/write buffers and choose correct tensorizer: int8 or fp16.
