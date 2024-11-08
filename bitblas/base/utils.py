@@ -389,6 +389,8 @@ def fast_tune(
         arch = CUDA(target)
     elif target.kind.name == "hip":
         arch = CDNA(target)
+    else:
+        raise ValueError(f"Unsupported target: {target.kind.name}")
 
     policy = DefaultPolicy(func=func, arch=arch)
     try:

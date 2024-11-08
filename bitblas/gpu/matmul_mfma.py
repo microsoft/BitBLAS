@@ -13,7 +13,6 @@ from ..base.roller import Hint
 from ..base.roller.rasterization import NoRasterization
 from ..base import analysis
 from .base import GPUScheduleRule
-from .matmul_mfma_dequantize import MatmulTensorizationMFMAWithDequantizeInfo
 from ..base.analysis import get_coalesced_veclen
 from .matmul_analysis import (
     auto_inline_consumer_chain,
@@ -78,6 +77,10 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
         from bitblas.gpu.intrin.hip import (
             get_mfma_intrin_group,)
 
+        is_cross_thread_reduce = (
+            hasattr(config, "block_reduction_depth") and config.block_reduction_depth is not None)
+        block_reduction_depth = config.block_reduction_depth if is_cross_thread_reduce else 1
+
         sch = tir.Schedule(func)
         root_block = analysis.get_root_block(sch)
         blocks = sch.get_child_blocks(root_block)
@@ -111,6 +114,8 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
         warp_col_tiles = config.warp[1]
         block_row_warps = config.block[0] // warp_row_tiles
         block_col_warps = config.block[1] // warp_col_tiles
+        reduce_k = block_reduction_depth
+        chunk = int(config.rstep[0] / reduce_k)
 
         #tensor core intrinsic size
         micro_size_x, micro_size_y, micro_size_k = intrin_group["micro_kernel"]
@@ -129,9 +134,9 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
         block = main_block
 
         (i, j, k) = sch.get_loops(block)
-        by, i = sch.split(i, factors=[None, config.block[0]])  #[2, 128]
-        bx, j = sch.split(j, factors=[None, config.block[1]])  #[2, 128]
-        bk, k = sch.split(k, factors=[None, (config.chunk[0] * micro_size_k)])  #[8, 32]
+        by, i = sch.split(i, factors=[None, config.block[0]])
+        bx, j = sch.split(j, factors=[None, config.block[1]])
+        bk, k = sch.split(k, factors=[None, (chunk * micro_size_k)])
 
         sch.reorder(by, bx, bk, i, j, k)
 

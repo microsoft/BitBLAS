@@ -163,7 +163,6 @@ class Hint(object):
         self.thread = []
         # Special axes for MFMA
         self.warp = []
-        self.chunk = []
         # Reduce axes tiling info
         self.rstep = []
         self.reduce_thread = []
@@ -193,7 +192,6 @@ class Hint(object):
         else:
             dic["thread"] = self.thread
         dic["rstep"] = self.rstep
-        dic["chunk"] = self.chunk
         if np.prod(self.reduce_thread) > 1:
             dic["reduce_thread"] = self.reduce_thread
         if self.use_tc:

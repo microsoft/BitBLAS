@@ -52,8 +52,9 @@ def assert_correctness_with_block_reduce(
             "arch": arch,
             "block": [128, 128],
             "warp": [64, 64],
-            "rstep": [10],
+            "rstep": [32],
             "chunk": [2],
+            "block_reduction_depth": 16,
             "pipeline_stage": 2,
             "use_async": True,
             "intrin_info": intrin_info,
@@ -99,8 +100,6 @@ def test_assert_correctness_with_block_reduce():
         propagate_a=0,
         propagate_b=0)
 
-
 # fmt: on
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_assert_correctness_with_block_reduce()
+    bitblas.testing.main()
