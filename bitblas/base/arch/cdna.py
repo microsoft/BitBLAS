@@ -4,7 +4,7 @@
 from bitblas import tvm
 from tvm.target import Target
 from .arch_base import TileDevice
-from typing import List, Dict, Union
+from typing import List, Union
 
 
 class CDNA(TileDevice):

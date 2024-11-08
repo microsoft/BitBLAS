@@ -252,7 +252,7 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
         last_range = 0
         num_items = len(function_informations)
         _call_str = """"""
-        for function_name, info in function_informations.items():
+        for last_range, (function_name, info) in enumerate(function_informations.items()):
             # Prepare block and grid configurations for kernel launches
             block_info, grid_info = info["block_info"], info["grid_info"]
             block_str = "dim3({}, {}, {})".format(
@@ -295,7 +295,6 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
             if last_range == num_items - 1:
                 call_str += ("  else {{\n    {}<<<{}, {}, {}, stream>>>({}); \n  }}\n".format(
                     function_name, grid_str, block_str, smem_str, call_args))
-            last_range += 1
             _call_str += call_str
 
         # Wrap the kernel dispatch logic in an external C function

@@ -1,8 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import bitblas
-from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
-from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
+from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags  # noqa: F401
+from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy  # noqa: F401
 from bitblas.base.arch import CDNA
 from bitblas.base.utils import apply_and_build
 from bitblas.builder.lib_generator import LibraryGenerator

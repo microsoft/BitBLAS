@@ -9,7 +9,7 @@ from tvm.contrib.debugger import debug_executor
 from tvm.contrib import graph_executor
 from ladder.utils import write_mod
 import os
-import torch
+import torch  # noqa: F401
 import logging
 
 ladder.set_log_level(logging.INFO)
@@ -50,7 +50,7 @@ def run(prefix, arch, async_propagate):
     write_mod(mod, log_path, "load_from_onnx")
 
     if args.nhwc:
-        # must convert bias_add -> broadcast_add to propogate the layout
+        # must convert bias_add -> broadcast_add to propagate the layout
         mod = relay.transform.InferType()(mod)
         mod = relay.transform.CanonicalizeOps()(mod)
         write_mod(mod, log_path, "CanonicalizeOps")

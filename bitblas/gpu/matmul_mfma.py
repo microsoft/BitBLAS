@@ -3,30 +3,14 @@
 
 # pylint: disable=missing-docstring, invalid-name
 """A GEMM schedule rule for GPU operators."""
-from typing import Literal, Optional, List
+from typing import Optional
 
-from tvm import tir, DataType
-from tvm.target import Target
+from tvm import tir
 
-from ..ops.common import TransformKind
 from ..base.roller import Hint
-from ..base.roller.rasterization import NoRasterization
 from ..base import analysis
 from .base import GPUScheduleRule
-from ..base.analysis import get_coalesced_veclen
-from .matmul_analysis import (
-    auto_inline_consumer_chain,
-    is_transpose_block,
-    is_identity_block,
-    _collect_producers,
-    inline_transpose_block,
-    auto_inline_producers,
-    get_index_map,
-    get_reduction_blocks,
-    get_dequantize_block,
-    normalize_to_matmul,
-    get_propagate_map,
-)
+from .matmul_analysis import get_reduction_blocks
 
 
 def get_index_map_3d(index_map, l=16, r=16):  # noqa: E741
@@ -90,8 +74,6 @@ class MatmulTensorizationMFMA(GPUScheduleRule):
             return None
 
         main_block = reduction_blocks[0]
-
-        output_blocks = [sch.get(block) for block in sch.get_output_blocks(root_block)]
 
         #cache_write_required = True
 

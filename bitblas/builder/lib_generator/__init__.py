@@ -62,10 +62,9 @@ class LibraryGenerator(object):
                 "--shared",
                 src.name,
             ]
-        
+
         else:
             raise ValueError(f"Unsupported platform: {platform}")
-            
 
         if with_tl:
             install_tvm_path = os.path.join(

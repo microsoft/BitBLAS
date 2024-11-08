@@ -3,13 +3,10 @@
 import bitblas
 from bitblas import tvm
 from bitblas.ops.general_matmul.tirscript import (
-    matmul_select_implementation,
-    matmul_dequantize_select_implementation,
-)
+    matmul_select_implementation,)
 import logging
 from bitblas import set_log_level
 import numpy as np
-import tvm
 
 np.random.seed(0)
 
