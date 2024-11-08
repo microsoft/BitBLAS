@@ -146,7 +146,7 @@ class MatrixCoreIntrinEmitter(object):
         WARP_SIZE = self.WARP_SIZE
         block_row_warps = self.block_row_warps
         block_col_warps = self.block_col_warps
-        warp_col_tiles = self.warp_col_tiles
+        warp_row_tiles = self.warp_row_tiles
         warp_cols = self.warp_cols
         chunk = self.chunk
         micro_size_x = self.micro_size_x
@@ -171,13 +171,13 @@ class MatrixCoreIntrinEmitter(object):
                     for local_id in T.vectorized(local_size_a):
                         row, col = T.meta_var(reverse_index_map(tx, local_id))
                         l, r = (rk * chunk + ki * micro_size_k,
-                                tz * warp_col_tiles + i * micro_size_x)
+                                tz * warp_row_tiles + i * micro_size_x)
                         A_local_buf[i * local_size_a + local_id] = A_shared_buf[l + row, r + col]
             else:
                 for i in T.serial(warp_cols):
                     for local_id in T.vectorized(local_size_a):
                         row, col = T.meta_var(reverse_index_map(tx, local_id))
-                        l, r = (tz * warp_col_tiles + i * micro_size_x,
+                        l, r = (tz * warp_row_tiles + i * micro_size_x,
                                 rk * chunk + ki * micro_size_k)
                         A_local_buf[i * local_size_a + local_id] = A_shared_buf[l + row, r + col]
 
