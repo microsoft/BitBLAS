@@ -8,10 +8,12 @@ from typing import Union, Literal
 from .mma_layout import (
     ldmatrix_32x8_to_shared_16x16_layout,
     ldmatrix_trans_32x8_to_shared_16x16_layout,
-    ldmatrix_32x16_to_shared_16x32_layout_a,
-    ldmatrix_32x16_to_shared_16x32_layout_b,
+    ldmatrix_16x32_to_shared_16x32_layout_a,
+    ldmatrix_16x32_to_shared_16x32_layout_b,
     mma_store_32x8_to_shared_16x16_layout,
 )
+from .mfma_layout import (
+    thread_id_shared_access_64x4_to_16x16_layout_C,)
 
 
 def get_swizzle_layout(row_idx, col_idx, row_size, dtype: Union[DataType, str]):
@@ -70,32 +72,48 @@ def get_swizzle_layout(row_idx, col_idx, row_size, dtype: Union[DataType, str]):
     return row_idx, ana.simplify(new_col_idx_outer * bank_elems + col_idx_inner)
 
 
+# the original implementation and insight is from the following code snippet
+# 3rdparty/tvm/python/tvm/tir/tensor_intrin/cuda.py#get_ldmatrix_intrin
 def get_ldmatrix_offset(
     matrix: Literal["A", "B"],
     row_idx,
     col_idx,
     stride,
     dtype: Literal["float16", "int8"] = "float16",
-    transpose: bool = False,
+    transposed: bool = False,
 ):
     assert matrix in ["A", "B"], "matrix should be either A or B"
-    transform_func = (
-        ldmatrix_32x8_to_shared_16x16_layout
-        if dtype in ["float16", "bfloat16"] else ldmatrix_32x16_to_shared_16x32_layout_b)
-    transform_func_trans = (
-        ldmatrix_trans_32x8_to_shared_16x16_layout
-        if dtype in ["float16", "bfloat16"] else ldmatrix_32x16_to_shared_16x32_layout_a)
-    if matrix == "A":
-        assert not transpose, "A matrix should not be transposed"
-        new_row_idx, new_col_idx = transform_func(row_idx, col_idx)
-        return new_row_idx * stride + new_col_idx
+    dtype_bits = DataType(dtype).bits
+    if dtype_bits == 16:
+        transform_func = ldmatrix_32x8_to_shared_16x16_layout
+        transform_func_trans = ldmatrix_trans_32x8_to_shared_16x16_layout
+        if transposed:
+            new_row_idx, new_col_idx = transform_func_trans(row_idx, col_idx)
+            return new_row_idx * stride + new_col_idx
+        else:
+            new_row_idx, new_col_idx = transform_func(row_idx, col_idx)
+            return new_row_idx * stride + new_col_idx
+    elif dtype_bits == 8:
+        if matrix == "B" and transposed:
+            transform_func = ldmatrix_16x32_to_shared_16x32_layout_b
+            new_row_idx, new_col_idx = transform_func(row_idx, col_idx)
+            return new_row_idx * stride + new_col_idx
+        elif matrix == "A" and not transposed:
+            transform_func = ldmatrix_16x32_to_shared_16x32_layout_a
+            new_row_idx, new_col_idx = transform_func(row_idx, col_idx)
+            return new_row_idx * stride + new_col_idx
+        else:
+            raise ValueError("ldmatrix only supports B transposed and A non-transposed for int8")
     else:
-        new_row_idx, new_col_idx = transform_func_trans(row_idx, col_idx)
-        return new_row_idx * stride + new_col_idx
+        raise ValueError(f"Unsupported dtype {dtype}")
 
 
 def mma_store_index_map(*args, **kwargs):
     return mma_store_32x8_to_shared_16x16_layout(*args, **kwargs)
+
+
+def mfma_store_index_map(*args, **kwargs):
+    return thread_id_shared_access_64x4_to_16x16_layout_C(*args, **kwargs)
 
 
 def get_mma_micro_size(dtype: Literal["float16", "int8"]):
@@ -108,12 +126,12 @@ def get_mma_micro_size(dtype: Literal["float16", "int8"]):
     return micro_size_x, micro_size_y, micro_size_k
 
 
-def make_swizzle_layout(shared_buf):
+def make_swizzle_layout(shared_buf, is_smooth: bool = False):
     dtype = shared_buf.dtype
     shape = shared_buf.shape
 
     can_swizzle = shape[-1] * DataType(dtype).bits == 512
-    if not can_swizzle:
+    if is_smooth or not can_swizzle:
         return T.Layout(shape, lambda *args: args)
 
     def transform_func(i, j):
@@ -121,3 +139,24 @@ def make_swizzle_layout(shared_buf):
         return [new_warp_i, new_warp_j]
 
     return T.Layout(shape, transform_func)
+
+
+def index_to_coordinates(index, shape):
+    '''
+    General Implementation of:
+        vjj = index % (micro_size_k // num_elems_per_byte)
+        coordinates[-1] = index % shape[-1]; 
+        vii = index // (micro_size_k // num_elems_per_byte) % micro_size_y
+        index = index // shape[-1]; coordinates[-2] = index % shape[-2];
+        vj = index // (micro_size_k // num_elems_per_byte * micro_size_y) % block_K // (micro_size_k // num_elems_per_byte)
+        index = index // shape[-2]; coordinates[-3] = index % shape[-3];
+        vi = index // (micro_size_k // num_elems_per_byte * micro_size_y * (block_K // (micro_size_k // num_elems_per_byte))) % block_N // micro_size_y
+        index = index // shape[-3]; coordinates[-4] = index % shape[-4];
+    '''
+    coordinates = []
+    dims = len(shape)
+    for i in range(dims):
+        coordinates.append(index % shape[dims - i - 1])
+        index = index // shape[dims - i - 1]
+    coordinates.reverse()
+    return coordinates

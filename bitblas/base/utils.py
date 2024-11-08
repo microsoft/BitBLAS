@@ -21,7 +21,12 @@ from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
 import tempfile
 import itertools
 from tvm.ir.supply import GlobalVarSupply
-from bitblas.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
+from bitblas.utils import (
+    tensor_replace_dp4a,
+    tensor_remove_make_int4,
+    tensor_remove_make_int2,
+    retrieve_func_from_module,
+)
 from bitblas.utils.tensor_adapter import (
     np_float2np_bf16,)
 import logging
@@ -58,18 +63,28 @@ class CompileResult:
         self.time_evaluator = None
 
     def profile(self, data_distribution="uniform"):
-        func = self.sch.mod["main"]
+        func = retrieve_func_from_module(self.sch.mod)
         device = self.config.arch.device
         profile_tensors = get_dummy_input_arrays(func, device, distribution=data_distribution)
         latency = self.time_evaluator(*profile_tensors).mean * 1e3
         return latency
 
 
-def get_roller_hints_from_func(func: tir.PrimFunc,
+def get_roller_hints_from_func(func_or_module: Union[tir.PrimFunc, IRModule],
                                arch: TileDevice,
                                topk: int = 10,
                                tensorcore_only: bool = False,
                                allow_gemv: bool = False) -> Optional[List[Hint]]:
+    func = None
+    if isinstance(func_or_module, tir.PrimFunc):
+        func = func_or_module
+    elif isinstance(func_or_module, IRModule):
+        func = retrieve_func_from_module(func_or_module)
+    else:
+        raise ValueError("Not supported type: ", type(func_or_module))
+
+    assert func is not None, "The function should not be None"
+
     if tensorcore_only:
         try:
             tensorized_func, tags = get_tensorized_func_and_tags(

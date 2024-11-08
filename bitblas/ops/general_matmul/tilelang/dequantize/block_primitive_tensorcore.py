@@ -136,7 +136,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
         )
 
         roller_hints = get_roller_hints_from_func(
-            ir_module["main"],
+            ir_module,
             arch,
             topk,
             tensorcore_only=True,
@@ -233,7 +233,7 @@ class MatmulDequantizeScheduler(BaseScheduler):
         func_name: str = ""
         if fast_decoding is True:
             lop3_intrin_info = get_lop3_intrin_group(
-                out_dtype=out_dtype,
+                out_dtype=in_dtype,
                 source_format=source_format,
                 source_bit=num_bits,
                 storage_dtype=storage_dtype,
@@ -297,12 +297,9 @@ class MatmulDequantizeScheduler(BaseScheduler):
                                 Qzeros,
                                 func_name,
                                 by,
-                                tx,
                                 k,
-                                i,
                                 block_N,
                                 block_K,
-                                threads,
                             )
                         else:
                             self._normal_dequant(

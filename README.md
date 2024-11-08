@@ -14,7 +14,7 @@ Some of the key features of BitBLAS include:
   - Support customizing mixed-precision DNN operations for your specific scenarios via the flexible DSL (TIR Script).
 
 ## Latest News
-
+- 11/04/2024 🚀🚀: We've supported high performance A INT4 x W INT4/INT2 Matmul.
 - 10/02/2024 🚀🚀: We've added initial Flash Attention Ops and its implementation in Tilelang! Please refer to [PythonAPI](https://github.com/microsoft/BitBLAS/blob/main/docs/PythonAPI.md) and [QuickStart](https://github.com/microsoft/BitBLAS/blob/main/docs/QuickStart.md) docs and [PR #202](https://github.com/microsoft/BitBLAS/pull/202).
 - 08/12/2024 🚀🚀: We've improved performance for contiguous batching. To enable it, you'll need to set specific flags. For more details, please refer to [PR #133](https://github.com/microsoft/BitBLAS/pull/133).
 - 07/11/2024 ✨: Ladder is published and presented in OSDI'24. Please find [Ladder paper and presentation](https://www.usenix.org/conference/osdi24/presentation/wang-lei) if you are interested in the technical details of BitBLAS.
@@ -84,6 +84,8 @@ For more detailed information on benchmark sets with other formats (NF4/FP4) and
 |     INT8    |    UINT1    |      INT32      | FP32/INT32/FP16/INT8 |        **√**        | V100(SM_70)/A100(SM_80)/A6000(SM_86)/RTX 4090(SM_89) |
 |   FP8_E4M3  |   FP8_E4M3  |       FP32      |       FP32/FP16      |        **√**        |                    RTX 4090(SM_89)                   |
 |   FP8_E5M2  |   FP8_E5M2  |       FP32      |       FP32/FP16      |        **√**        |                    RTX 4090(SM_89)                   |
+|     INT4    |     INT4    |      INT32      |       FP32/FP16      |        **√**        |                    RTX 4090(SM_89)                   |
+|     INT4    |     INT4    |      INT32      |       FP32/FP16      |        **√**        |                    RTX 4090(SM_89)                   |
 
 We are continuously expanding the support matrix. If you have any specific requirements, please feel free to open an issue or PR.
 

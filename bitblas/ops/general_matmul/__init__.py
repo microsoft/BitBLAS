@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from bitblas import tvm
+from tvm import DataType
 from tvm.target import Target
 import operator
 from functools import reduce
@@ -36,6 +37,9 @@ NATIVE_COMPUTE_PATTERNS = [
     ("float16", "float16"),
     ("bfloat16", "bfloat16"),
     ("int8", "int8"),
+    ("uint8", "uint8"),
+    ("int4", "int4"),
+    ("uint4", "uint4"),
     ("e4m3_float8", "e4m3_float8"),
     ("e4m3_float8", "e5m2_float8"),
     ("e5m2_float8", "e4m3_float8"),
@@ -143,6 +147,11 @@ class MatmulConfig(OperatorConfig):
         if self.A_dtype in ["e4m3_float8", "e5m2_float8", "bfloat16"]:
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
             object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
+        if self.A_dtype in ["int4", "uint4"]:
+            object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
+            # TODO(lei): tl doesn't implement IntraWarpTransform
+            if self.propagate_b == TransformKind.IntraWarpTransform:
+                object.__setattr__(self, "propagate_b", TransformKind.LDMatrixTransform)
 
         # TODO(lei): propagation can only be enabled on SM80+ Devices and MI200+
         # We should add a check here to disable the propagation if the device is not supported.
@@ -359,6 +368,10 @@ class Matmul(Operator):
 
         self.source_format = source_format
         self.bit = bit
+
+        # This is a hack to support the int4 and uint4
+        if config.A_dtype in ["int4", "uint4"]:
+            backend = "tl"
         super().__init__(name, config, target, backend)
 
         if source_format == "int" and self.with_zeros:
@@ -475,10 +488,13 @@ class Matmul(Operator):
             # weight transform should be done in the unpacked level
             # otherwise the bit trick should be applied and that is
             # too complex to be implemented in the ladder permutation.
+            datatype = self.A_dtype
+            if DataType(datatype).bits < 8:
+                datatype = self.storage_dtype
             ladder_permutate_config = LadderPermutateConfig(
                 M=self.N,
                 N=self.K,
-                datatype=self.A_dtype,
+                datatype=datatype,
                 dequantize_bits=-1,
                 storage_dtype=self.storage_dtype,
                 propagate_kind="B",

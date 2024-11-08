@@ -126,6 +126,8 @@ def tir_interleave_weight(
         return interleave_weight_f16_1b
     elif target_dtype == "int8" and bits == 1:
         return interleave_weight_int8_1b
+    elif target_dtype == "int4" and bits == 2:
+        pass
 
     return interleave_weight
 
