@@ -148,8 +148,7 @@ class MatrixCoreIntrinEmitter(object):
         block_row_warps = self.block_row_warps
         block_col_warps = self.block_col_warps
         return thread_id % WARP_SIZE, (thread_id // WARP_SIZE) % block_col_warps, (
-            thread_id // (WARP_SIZE * block_col_warps)
-        ) % block_row_warps
+            thread_id // (WARP_SIZE * block_col_warps)) % block_row_warps
 
     def ldmatrix_a(self, A_local_buf, A_shared_buf, ki, thread_bindings, rk=0):
         warp_row_tiles = self.warp_row_tiles
@@ -264,7 +263,6 @@ class MatrixCoreIntrinEmitter(object):
         return _warp_mma(A_local_buf, B_local_buf, C_local_buf)
 
     def stmatrix(self, C_local_buf, C_buf, thread_bindings, pid_m=None, pid_n=None):
-        WARP_SIZE = self.WARP_SIZE
         block_row_warps = self.block_row_warps
         block_col_warps = self.block_col_warps
         warp_rows = self.warp_rows
