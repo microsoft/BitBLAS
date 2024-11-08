@@ -31,7 +31,7 @@ class LibraryGenerator(object):
     def compile_lib(self, timeout: float = None, with_tl: bool = False):
         arch = self.arch
         platform = arch.platform
-        if (platform == "CUDA"):
+        if platform == "CUDA":
             src = tempfile.NamedTemporaryFile(mode="w", suffix=".cu", delete=False)
             compute_version = arch.compute_capability
             libpath = src.name.replace(".cu", ".so")
