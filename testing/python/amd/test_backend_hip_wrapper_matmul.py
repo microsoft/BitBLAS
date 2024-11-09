@@ -47,6 +47,7 @@ def matmul_backend_code_wrap(
     wrapped_code = backend.wrap(matmul.get_source(kenrel_only=True), is_dynamic=is_dynamic)
     assert "void call" in wrapped_code
 
+
 @tvm.testing.requires_rocm
 def test_matmul_transform_weight():
     matmul_backend_code_wrap(128, 128, 128, "float16", "float16", "float16", "float16", False)
