@@ -85,7 +85,7 @@ def assert_correctness_with_block_reduce(
     print(c_np)
     print(np.matmul(a_np.astype("float32"), b_np.astype("float32").T))
 
-
+@tvm.testing.requires_rocm
 def test_assert_correctness_with_block_reduce():
     assert_correctness_with_block_reduce(
         M=256,
