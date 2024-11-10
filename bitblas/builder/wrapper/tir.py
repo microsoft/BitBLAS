@@ -85,7 +85,7 @@ class TIRCUDASourceWrapper(object):
         init_funcs = PREDEF_INIT_FUNC.format(call_str)
         return init_funcs
 
-    def get_stream_type(function_args):
+    def get_stream_type(self, function_args):
         function_args.append({"name": "stream=cudaStreamDefault", "type": "cudaStream_t"},)
 
     def update_lib_code(self, code: str):
@@ -387,7 +387,7 @@ class TIRHIPSourceWrapper(TIRCUDASourceWrapper):
         init_funcs = PREDEF_INIT_FUNC.format(call_str)
         return init_funcs
 
-    def get_stream_type(function_args):
+    def get_stream_type(self, function_args):
         function_args.append({"name": "stream=hipStreamDefault", "type": "hipStream_t"},)
 
 
