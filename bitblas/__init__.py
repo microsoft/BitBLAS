@@ -137,8 +137,6 @@ from . import gpu  # noqa: F401
 from .base import (
     TileDevice,  # noqa: F401
     fast_tune,  # noqa: F401
-    ApplyDefaultSchedule,  # noqa: F401
-    ApplyFastTuning,  # noqa: F401
     BlockInfo,  # noqa: F401
     IterInfo,  # noqa: F401
     ScheduleRule,  # noqa: F401
