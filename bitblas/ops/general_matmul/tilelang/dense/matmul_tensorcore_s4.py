@@ -13,7 +13,7 @@ from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
     MatmulFineGrainScheduler,
     MatmulWeightPropagationScheduler,
 )
-from bitblas.tl.macro_generator import (
+from bitblas.tl.mma_macro_generator import (
     INT4TensorCoreIntrinEmitter,
     INT4TensorCoreIntrinEmitterWithLadderTransform,
 )

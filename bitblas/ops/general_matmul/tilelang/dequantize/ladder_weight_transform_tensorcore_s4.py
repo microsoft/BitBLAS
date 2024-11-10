@@ -11,7 +11,7 @@ from bitblas.tl.utils import (
 )
 from bitblas.base.arch import TileDevice
 from bitblas.base.roller.hint import Hint
-from bitblas.tl.macro_generator import (
+from bitblas.tl.mma_macro_generator import (
     INT4TensorCoreIntrinEmitterWithLadderTransform,  # noqa: F401
 )
 from bitblas.ops.common import TransformKind  # noqa: F401

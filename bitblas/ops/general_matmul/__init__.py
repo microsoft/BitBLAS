@@ -6,6 +6,7 @@ from tvm.target import Target
 import operator
 from functools import reduce
 from bitblas.base.arch.cuda import CUDA
+from bitblas.base.arch.cdna import CDNA
 from bitblas.base.roller.hint import Hint
 from typing import Any, Literal, Optional, Tuple, Union
 from ..operator import OperatorConfig, Operator, OPExecutorCPU, BaseKernelNameGenerator
@@ -379,8 +380,8 @@ class Matmul(Operator):
             )
 
         target = self.target
-        if target.kind.name != "cuda":
-            raise ValueError("Currently only support cuda target")
+        if target.kind.name not in ("cuda", "hip"):
+            raise ValueError("Currently only support cuda and hip target")
 
         self.dispatch_tir(target, from_database, source_format, enable_tuning)
 
@@ -390,7 +391,10 @@ class Matmul(Operator):
                      source_format: str = "uint",
                      enable_tuning: bool = True):
         '''Dispatch the tir script implementation'''
-        self.arch = CUDA(target)
+        if (target.kind.name == "cuda"):
+            self.arch = CUDA(target)
+        elif (target.kind.name == "hip"):
+            self.arch = CDNA(target)
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}

@@ -9,7 +9,7 @@ from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.quantization import _tir_packed_to_unsigned_convert
 from bitblas.tl.utils import (make_swizzle_layout)
-from bitblas.tl.macro_generator import (
+from bitblas.tl.mma_macro_generator import (
     TensorCoreIntrinEmitterWithLadderTransform,)
 
 from bitblas.gpu.intrin.lop3 import decode_i4_to_f16

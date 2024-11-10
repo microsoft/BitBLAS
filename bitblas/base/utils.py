@@ -13,7 +13,7 @@ from tvm.tir import Schedule
 from tvm.relax.expr import Function
 import bitblas
 from .analysis import get_root_block, get_reduction_blocks, find_var_from_func
-from bitblas.base.arch import TileDevice, CUDA
+from bitblas.base.arch import TileDevice, CUDA, CDNA
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.hint import Hint
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
@@ -357,8 +357,8 @@ def fast_tune(
     if not isinstance(func, tir.PrimFunc):
         raise ValueError("Only support func is PrimFunc")  # pragma: no cover
 
-    if target.kind.name != "cuda":
-        logger.error("Only support CUDA target")
+    if target.kind.name not in ["cuda", "hip"]:
+        logger.error("Only support CUDA and hip target")
         return None, None
 
     specilized_func = func
@@ -385,7 +385,12 @@ def fast_tune(
                     var: shape.astype(var.dtype)
                 }).with_attr("is_specialized")
 
-    arch = CUDA(target)
+    if target.kind.name == "cuda":
+        arch = CUDA(target)
+    elif target.kind.name == "hip":
+        arch = CDNA(target)
+    else:
+        raise ValueError(f"Unsupported target: {target.kind.name}")
 
     policy = DefaultPolicy(func=func, arch=arch)
     try:

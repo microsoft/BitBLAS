@@ -85,6 +85,9 @@ class TIRCUDASourceWrapper(object):
         init_funcs = PREDEF_INIT_FUNC.format(call_str)
         return init_funcs
 
+    def get_stream_type(self, function_args):
+        function_args.append({"name": "stream=cudaStreamDefault", "type": "cudaStream_t"},)
+
     def update_lib_code(self, code: str):
         # Update the library code with the given code string
         self.lib_code = code
@@ -113,7 +116,7 @@ class TIRCUDASourceWrapper(object):
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
 
-        function_args.append({"name": "stream=cudaStreamDefault", "type": "cudaStream_t"},)
+        self.get_stream_type(function_args)
         # Format the function arguments for declaration
         def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
 
@@ -249,7 +252,7 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
         last_range = 0
         num_items = len(function_informations)
         _call_str = """"""
-        for function_name, info in function_informations.items():
+        for last_range, (function_name, info) in enumerate(function_informations.items()):
             # Prepare block and grid configurations for kernel launches
             block_info, grid_info = info["block_info"], info["grid_info"]
             block_str = "dim3({}, {}, {})".format(
@@ -292,7 +295,6 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
             if last_range == num_items - 1:
                 call_str += ("  else {{\n    {}<<<{}, {}, {}, stream>>>({}); \n  }}\n".format(
                     function_name, grid_str, block_str, smem_str, call_args))
-            last_range += 1
             _call_str += call_str
 
         # Wrap the kernel dispatch logic in an external C function
@@ -368,6 +370,27 @@ class TIRCUDASourceWrapperWithDynamic(TIRCUDASourceWrapper):
         return lib_code
 
 
+class TIRHIPSourceWrapper(TIRCUDASourceWrapper):
+
+    def __init__(self, scheduled_ir_module: IRModule, source: str, arch: TileDevice):
+        super().__init__(scheduled_ir_module, source, arch)
+
+    def get_hip_init_func(self):
+        # Initialize an empty string for the CUDA function call
+        call_str = """"""
+        # If dynamic shared memory buffer is specified, prepare the cudaFuncSetAttribute call
+        if self.dynamic_smem_buf is not None:
+            call_str = (
+                PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY.format(self.function_name,
+                                                           self.dynamic_smem_buf))
+        # Format the initialization function using the call_str
+        init_funcs = PREDEF_INIT_FUNC.format(call_str)
+        return init_funcs
+
+    def get_stream_type(self, function_args):
+        function_args.append({"name": "stream=hipStreamDefault", "type": "hipStream_t"},)
+
+
 class TIRWrapper(BaseWrapper):
 
     def __init__(self, arch: TileDevice):
@@ -382,6 +405,12 @@ class TIRWrapper(BaseWrapper):
     # Get Scheduled Rt Module and return source to be compiled
     def wrap(self, c_source: str, is_dynamic: bool = False):
         assert self.scheduled_ir_module is not None, "Please assign optimized module first."
-        wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
+        if self.arch.platform == "CUDA":
+            wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
+        elif self.arch.platform == "CDNA":
+            wrapper_class = TIRHIPSourceWrapper
+        else:
+            raise ValueError(f"Unsupported platform: {self.arch.platform}")
+
         wrapper = wrapper_class(self.scheduled_ir_module, c_source, self.arch)
         return wrapper.lib_code

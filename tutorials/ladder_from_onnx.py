@@ -9,7 +9,7 @@ from tvm.contrib.debugger import debug_executor
 from tvm.contrib import graph_executor
 from ladder.utils import write_mod
 import os
-import torch
+import torch  # noqa: F401
 import logging
 
 ladder.set_log_level(logging.INFO)
@@ -26,52 +26,56 @@ parser.add_argument('--arch', type=str, default="cuda")
 parser.add_argument('--cublas', action="store_true")
 parser.add_argument('--cudnn', action="store_false")
 parser.add_argument('--nhwc', action="store_false")
-parser.add_argument('--async_propagation', action="store_true", help="Use async propagation and async instructions, which should be only enabled on data center GPUs with async copy instructions.", default=False)
-parser.add_argument("--prebuilt_path", type=str, default=None, help="Path to the prebuilt model. If set, the script will run from the prebuilt model.")
+parser.add_argument(
+    '--async_propagation',
+    action="store_true",
+    help="Use async propagation and async instructions, which should be only enabled on data center GPUs with async copy instructions.",
+    default=False)
+parser.add_argument(
+    "--prebuilt_path",
+    type=str,
+    default=None,
+    help="Path to the prebuilt model. If set, the script will run from the prebuilt model.")
 parser.add_argument("--fast_decoding", action="store_false", help="Enable fast decoding mode.")
 
 args = parser.parse_args()
+
 
 def run(prefix, arch, async_propagate):
     if ".onnx" in prefix:
         onnx_model = onnx.load(prefix)
     else:
         onnx_model = onnx.load(osp.join(prefix, "model.onnx"))
-    mod, params = relay.frontend.from_onnx(
-        onnx_model, convert_config={"use_welder_matmul": False})
+    mod, params = relay.frontend.from_onnx(onnx_model, convert_config={"use_welder_matmul": False})
     write_mod(mod, log_path, "load_from_onnx")
 
     if args.nhwc:
-        # must convert bias_add -> broadcast_add to propogate the layout
+        # must convert bias_add -> broadcast_add to propagate the layout
         mod = relay.transform.InferType()(mod)
         mod = relay.transform.CanonicalizeOps()(mod)
         write_mod(mod, log_path, "CanonicalizeOps")
-        mod = relay.transform.ConvertLayout(
-            {"nn.conv2d": ["NHWC", "default"]})(mod)
+        mod = relay.transform.ConvertLayout({"nn.conv2d": ["NHWC", "default"]})(mod)
         write_mod(mod, log_path, "ConvertLayout")
     mod = relay.transform.FoldConstant()(mod)
     write_mod(mod, log_path, "FoldConstant")
     mod = ladder.relay.transform.WelderExprRewrite(enable_softmax=True)(mod)
     write_mod(mod, log_path, "expr_rewrite")
-   
+
     if args.cudnn:
         from tvm.relay.op.contrib.cudnn import pattern_table
-        seq = tvm.transform.Sequential(
-            [
-                relay.transform.InferType(),
-                relay.transform.MergeComposite(pattern_table()),
-                relay.transform.AnnotateTarget("cudnn"),
-                relay.transform.PartitionGraph(bind_constants=False),
-                relay.transform.InferType(),
-            ]
-        )
+        seq = tvm.transform.Sequential([
+            relay.transform.InferType(),
+            relay.transform.MergeComposite(pattern_table()),
+            relay.transform.AnnotateTarget("cudnn"),
+            relay.transform.PartitionGraph(bind_constants=False),
+            relay.transform.InferType(),
+        ])
         mod = seq(mod)
 
-    mod = ladder.relay.transform.LadderConvImplicitGemm(
-        use_async_propagation=async_propagate)(mod)
+    mod = ladder.relay.transform.LadderConvImplicitGemm(use_async_propagation=async_propagate)(mod)
     write_mod(mod, log_path, "LadderConvImplicitGemm")
-    mod = ladder.relay.transform.LadderPerfectGemmTransform(
-        use_async_propagation=async_propagate)(mod)
+    mod = ladder.relay.transform.LadderPerfectGemmTransform(use_async_propagation=async_propagate)(
+        mod)
     write_mod(mod, log_path, "LadderPerfectGemmTransform")
     mod = ladder.relay.transform.WelderConvImplicitGemm()(mod)
     write_mod(mod, log_path, "WelderConvImplicitGemm")
@@ -83,15 +87,13 @@ def run(prefix, arch, async_propagate):
     write_mod(mod, log_path, "LadderRewriteInceptionLayout")
     if args.cublas:
         from tvm.relay.op.contrib.cublas import pattern_table
-        seq = tvm.transform.Sequential(
-            [
-                relay.transform.InferType(),
-                relay.transform.MergeComposite(pattern_table()),
-                relay.transform.AnnotateTarget("cublas"),
-                relay.transform.PartitionGraph(bind_constants=False),
-                relay.transform.InferType(),
-            ]
-        )
+        seq = tvm.transform.Sequential([
+            relay.transform.InferType(),
+            relay.transform.MergeComposite(pattern_table()),
+            relay.transform.AnnotateTarget("cublas"),
+            relay.transform.PartitionGraph(bind_constants=False),
+            relay.transform.InferType(),
+        ])
         mod = seq(mod)
     write_mod(mod, log_path, "cublas_partition")
     mod = relay.transform.DeadCodeElimination()(mod)
@@ -110,7 +112,9 @@ def run(prefix, arch, async_propagate):
         mod = ladder.relay.transform.AnnotateFastDecoding()(mod)
         write_mod(mod, log_path, "AnnotateFastDecoding")
 
-    mod = ladder.relay.transform.WelderTunePass(arch, topk=40,save_perf_log="./debug_group_info")(mod)
+    mod = ladder.relay.transform.WelderTunePass(
+        arch, topk=40, save_perf_log="./debug_group_info")(
+            mod)
     write_mod(mod, log_path, "WelderTunePass")
 
     factory = relay.build(mod, arch.target, params=params)
@@ -119,8 +123,7 @@ def run(prefix, arch, async_propagate):
         f.write(factory.get_graph_json())
     with open(osp.join(log_path, "graph.params"), "wb") as f_params:
         f_params.write(tvm.runtime.save_param_dict(factory.get_params()))
-    lib = ladder.relay.update_lib(
-    factory.get_lib(), arch, osp.join(log_path, "model.so"))
+    lib = ladder.relay.update_lib(factory.get_lib(), arch, osp.join(log_path, "model.so"))
 
     rt_mod = graph_executor.create(factory.get_graph_json(), lib, tvm.cuda(0))
     rt_mod.set_input(**factory.get_params())
