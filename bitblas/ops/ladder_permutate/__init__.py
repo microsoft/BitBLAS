@@ -37,7 +37,7 @@ class LadderPermutate(Operator):
         super().__init__(name, config, target)
 
         target = self.target
-        if target.kind.name == "cuda":
+        if target.kind.name == "cuda" or target.kind.name == "hip":
             self.scheduled_ir_module = self.apply_default_schedule(self.ir_module, target)
             if enable_tuning:
                 self.hardware_aware_finetune()
