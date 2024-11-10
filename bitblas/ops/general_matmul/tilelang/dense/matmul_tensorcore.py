@@ -328,9 +328,14 @@ class MatmulFineGrainScheduler(BaseScheduler):
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
 
+        M = self.M
+        # This is a hack to utilize tensor core
+        if isinstance(M, int) and M < 16:
+            M = 16
+
         # Simple TIR Compute Expression
         ir_module = matmul_select_implementation(
-            M=self.M,
+            M=M,
             N=self.N,
             K=self.K,
             in_dtype=self.in_dtype,

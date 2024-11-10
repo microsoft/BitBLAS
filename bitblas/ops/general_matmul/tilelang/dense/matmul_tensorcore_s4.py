@@ -165,7 +165,7 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
                 # Apply memory layout optimizations
                 T.annotate_layout({
                     A_shared: make_swizzle_layout(A_shared),
-                    B_shared: make_swizzle_layout(B_shared),
+                    B_shared: make_swizzle_layout(B_shared, is_smooth=True),
                 })
 
                 # Optional rasterization for L2 locality enhancement
