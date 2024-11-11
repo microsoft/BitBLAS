@@ -37,7 +37,6 @@ count = 0
 
 bitblas.set_log_level("Debug")
 
-
 def write_code(code, path, fname):
     global count
     fname = str(count) + "." + fname
