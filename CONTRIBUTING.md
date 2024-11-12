@@ -2,12 +2,12 @@
 
 That would be awesome if you want to contribute something to BitBLAS!
 
-- [Contributing](contributing.md#contributing)
-  - [Reporting Bugs](contributing.md#reporting-bugs)
-  - [Asking Questions](contributing.md#asking-questions)
-  - [Submitting Pull Requests](contributing.md#submitting-pull-requests)
-  - [Repository Setup](contributing.md#repository-setup)
-  - [Running Tests](contributing.md#running-tests)
+- [Contributing](CONTRIBUTING.md#contributing)
+  - [Reporting Bugs](CONTRIBUTING.md#reporting-bugs)
+  - [Asking Questions](CONTRIBUTING.md#asking-questions)
+  - [Submitting Pull Requests](CONTRIBUTING.md#submitting-pull-requests)
+  - [Repository Setup](CONTRIBUTING.md#repository-setup)
+  - [Running Tests](CONTRIBUTING.md#running-tests)
 
 ## Reporting Bugs
 
@@ -42,7 +42,7 @@ python setup.py install
 
 ## Running Tests
 
-To run the tests, start by building the project as described in the [Repository Setup](contributing.md#repository-setup) section.
+To run the tests, start by building the project as described in the [Repository Setup](CONTRIBUTING.md#repository-setup) section.
 
 Then you can rerun the tests with:
 
