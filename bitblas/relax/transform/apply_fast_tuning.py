@@ -15,9 +15,9 @@ from tvm import meta_schedule as ms
 from tvm.ir import IRModule
 from tvm.ir.transform import PassContext, module_pass
 from tvm.target import Target
-from .schedule_rule import ScheduleRule
-from ..base.analysis import check_func_with_dynamic
-from .utils import fast_tune, fast_tune_with_dynamic_range
+from bitblas.base.schedule_rule import ScheduleRule
+from bitblas.base.analysis import check_func_with_dynamic
+from bitblas.base.utils import fast_tune, fast_tune_with_dynamic_range
 import logging
 
 logger = logging.getLogger(__name__)

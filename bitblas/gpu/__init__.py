@@ -13,6 +13,7 @@ from .matmul import (
     Matmul,  # noqa: F401
     MatmulTensorizationMMA,  # noqa: F401
     MatmulTensorizationWMMA,  # noqa: F401
+    MatmulTensorizationMFMA,  # noqa: F401
 )
 from .matmul_mma_dequantize import (
     MatmulTensorizationMMAWithDequantizeInfo,  # noqa: F401

@@ -1,5 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-from .annotate_decode_block import AnnotateDecodeInformation
-from .weight_only_propagate import WeightOnlyLayoutPropagation
+from .weight_only_propagate import WeightOnlyLayoutPropagation  # noqa: F401
+from .apply_fast_tuning import (
+    ApplyDefaultSchedule,  # noqa: F401
+    ApplyFastTuning,  # noqa: F401
+)

@@ -137,8 +137,6 @@ from . import gpu  # noqa: F401
 from .base import (
     TileDevice,  # noqa: F401
     fast_tune,  # noqa: F401
-    ApplyDefaultSchedule,  # noqa: F401
-    ApplyFastTuning,  # noqa: F401
     BlockInfo,  # noqa: F401
     IterInfo,  # noqa: F401
     ScheduleRule,  # noqa: F401
@@ -146,7 +144,10 @@ from .base import (
     try_inline,  # noqa: F401
     try_inline_contiguous_spatial,  # noqa: F401
 )
-
+from .relax import (
+    ApplyDefaultSchedule,  # noqa: F401
+    ApplyFastTuning,  # noqa: F401
+)
 from . import testing  # noqa: F401
 from .utils import auto_detect_nvidia_target, apply_transform_on_input  # noqa: F401
 from .ops.general_matmul import MatmulConfig, Matmul  # noqa: F401

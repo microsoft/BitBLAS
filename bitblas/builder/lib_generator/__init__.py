@@ -30,24 +30,41 @@ class LibraryGenerator(object):
 
     def compile_lib(self, timeout: float = None, with_tl: bool = False):
         arch = self.arch
-        src = tempfile.NamedTemporaryFile(mode="w", suffix=".cu", delete=False)
-        compute_version = arch.compute_capability
-        libpath = src.name.replace(".cu", ".so")
+        platform = arch.platform
+        if platform == "CUDA":
+            src = tempfile.NamedTemporaryFile(mode="w", suffix=".cu", delete=False)
+            compute_version = arch.compute_capability
+            libpath = src.name.replace(".cu", ".so")
 
-        command = [
-            "nvcc",
-            "-std=c++17",
-            "-Xcudafe",
-            "--diag_suppress=177",
-            "--compiler-options",
-            "'-fPIC'",
-            "-lineinfo",
-            "--shared",
-            src.name,
-            "-lcuda",
-            "-gencode",
-            f"arch=compute_{compute_version},code=sm_{compute_version}",
-        ]
+            command = [
+                "nvcc",
+                "-std=c++17",
+                "-Xcudafe",
+                "--diag_suppress=177",
+                "--compiler-options",
+                "'-fPIC'",
+                "-lineinfo",
+                "--shared",
+                src.name,
+                "-lcuda",
+                "-gencode",
+                f"arch=compute_{compute_version},code=sm_{compute_version}",
+            ]
+
+        elif platform == "CDNA":
+            src = tempfile.NamedTemporaryFile(mode="w", suffix=".cpp", delete=False)
+            libpath = src.name.replace(".cpp", ".so")
+
+            command = [
+                "hipcc",
+                "-std=c++17",
+                "-fPIC",
+                "--shared",
+                src.name,
+            ]
+
+        else:
+            raise ValueError(f"Unsupported platform: {platform}")
 
         if with_tl:
             install_tvm_path = os.path.join(

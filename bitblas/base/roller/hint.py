@@ -161,7 +161,7 @@ class Hint(object):
         # Special axes tiling info
         self.block = []
         self.thread = []
-        # Special axes for MMA
+        # Special axes for MFMA
         self.warp = []
         # Reduce axes tiling info
         self.rstep = []
