@@ -19,8 +19,8 @@ if $USER_IS_ROOT; then
     apt-get install llvm-16
 else 
     wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
-    echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-16 main" | sudo tee /etc/apt/sources.list
-    echo "deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-16 main" | sudo tee /etc/apt/sources.list
+    echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-16 main" | sudo tee >> /etc/apt/sources.list
+    echo "deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-16 main" | sudo tee >> /etc/apt/sources.list
     sudo apt-get install llvm-16
 fi
 
