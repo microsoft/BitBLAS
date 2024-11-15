@@ -4,51 +4,53 @@
 from bitblas import tvm as tvm
 from tvm import tl
 
+
 @tvm.register_func("tvm_callback_hip_postproc", override=True)
 def tvm_callback_hip_postproc(code, _):
     print(code)
-#     code = '''
-#     #include <hip/hip_runtime.h>
-# #include <tl_templates/hip/gemm.h>
-# #include <tl_templates/hip/copy.h>
-# #include <tl_templates/hip/reduce.h>
-# #include <tl_templates/hip/ldsm.h>
-# #include <tl_templates/hip/threadblock_swizzle.h>
+    #     code = '''
+    #     #include <hip/hip_runtime.h>
+    # #include <tl_templates/hip/gemm.h>
+    # #include <tl_templates/hip/copy.h>
+    # #include <tl_templates/hip/reduce.h>
+    # #include <tl_templates/hip/ldsm.h>
+    # #include <tl_templates/hip/threadblock_swizzle.h>
 
-# extern "C" __global__ void __launch_bounds__(128) main_kernel(half_t* __restrict__ A, half_t* __restrict__ B, half_t* __restrict__ C) {
-#   float C_local[128];
-#   __shared__ half_t A_shared[4096];
-#   __shared__ half_t B_shared[4096];
-#   #pragma unroll
-#   for (int i = 0; i < 64; ++i) {
-#     *(float2*)(C_local + (i * 2)) = make_float2(0.000000e+00f, 0.000000e+00f);
-#   }
-#   #pragma unroll
-#   for (int i_1 = 0; i_1 < 4; ++i_1) {
-#     *(uint4*)(A_shared + ((((i_1 * 1024) + ((((int)threadIdx.x) >> 2) * 32)) + (((((((int)threadIdx.x) & 31) >> 4) + ((((int)threadIdx.x) & 3) >> 1)) & 1) * 16)) + (((((((int)threadIdx.x) & 15) >> 3) + (((int)threadIdx.x) & 1)) & 1) * 8))) = *(uint4*)(A + ((i_1 * 1024) + (((int)threadIdx.x) * 8)));
-#   }
-#   #pragma unroll
-#   for (int i_2 = 0; i_2 < 4; ++i_2) {
-#     *(uint4*)(B_shared + ((((i_2 * 1024) + ((((int)threadIdx.x) >> 2) * 32)) + (((((((int)threadIdx.x) & 31) >> 4) + ((((int)threadIdx.x) & 3) >> 1)) & 1) * 16)) + (((((((int)threadIdx.x) & 15) >> 3) + (((int)threadIdx.x) & 1)) & 1) * 8))) = *(uint4*)(B + ((i_2 * 1024) + (((int)threadIdx.x) * 8)));
-#   }
-#   __syncthreads();
-#   tl::gemm_ss<128, 128, 32, 2, 2, 0, 1>((&(A_shared[0])), (&(B_shared[0])), (&(C_local[0])));
-#   if(threadIdx.x == 0){
-#     for (size_t i = 0; i < 128; i++) {
-#       printf("%f ", C_local[i]);
-#     }
-#   }
-#   #pragma unroll
-#   for (int i_3 = 0; i_3 < 64; ++i_3) {
-#     uint1 __1;
-#     float2 v_ = *(float2*)(C_local + (i_3 * 2));
-#     ((half2*)(&(__1.x)))->x = (half_t)(v_.x);
-#     ((half2*)(&(__1.x)))->y = (half_t)(v_.y);
-#     *(uint1*)(C + (((((((((i_3 & 7) >> 1) * 4096) + (((((int)threadIdx.x) & 63) >> 5) * 2048)) + ((i_3 & 1) * 1024)) + (((((int)threadIdx.x) & 31) >> 2) * 128)) + ((i_3 >> 3) * 16)) + ((((int)threadIdx.x) >> 6) * 8)) + ((((int)threadIdx.x) & 3) * 2))) = __1;
-#   }
-# }
-#     '''
+    # extern "C" __global__ void __launch_bounds__(128) main_kernel(half_t* __restrict__ A, half_t* __restrict__ B, half_t* __restrict__ C) {
+    #   float C_local[128];
+    #   __shared__ half_t A_shared[4096];
+    #   __shared__ half_t B_shared[4096];
+    #   #pragma unroll
+    #   for (int i = 0; i < 64; ++i) {
+    #     *(float2*)(C_local + (i * 2)) = make_float2(0.000000e+00f, 0.000000e+00f);
+    #   }
+    #   #pragma unroll
+    #   for (int i_1 = 0; i_1 < 4; ++i_1) {
+    #     *(uint4*)(A_shared + ((((i_1 * 1024) + ((((int)threadIdx.x) >> 2) * 32)) + (((((((int)threadIdx.x) & 31) >> 4) + ((((int)threadIdx.x) & 3) >> 1)) & 1) * 16)) + (((((((int)threadIdx.x) & 15) >> 3) + (((int)threadIdx.x) & 1)) & 1) * 8))) = *(uint4*)(A + ((i_1 * 1024) + (((int)threadIdx.x) * 8)));
+    #   }
+    #   #pragma unroll
+    #   for (int i_2 = 0; i_2 < 4; ++i_2) {
+    #     *(uint4*)(B_shared + ((((i_2 * 1024) + ((((int)threadIdx.x) >> 2) * 32)) + (((((((int)threadIdx.x) & 31) >> 4) + ((((int)threadIdx.x) & 3) >> 1)) & 1) * 16)) + (((((((int)threadIdx.x) & 15) >> 3) + (((int)threadIdx.x) & 1)) & 1) * 8))) = *(uint4*)(B + ((i_2 * 1024) + (((int)threadIdx.x) * 8)));
+    #   }
+    #   __syncthreads();
+    #   tl::gemm_ss<128, 128, 32, 2, 2, 0, 1>((&(A_shared[0])), (&(B_shared[0])), (&(C_local[0])));
+    #   if(threadIdx.x == 0){
+    #     for (size_t i = 0; i < 128; i++) {
+    #       printf("%f ", C_local[i]);
+    #     }
+    #   }
+    #   #pragma unroll
+    #   for (int i_3 = 0; i_3 < 64; ++i_3) {
+    #     uint1 __1;
+    #     float2 v_ = *(float2*)(C_local + (i_3 * 2));
+    #     ((half2*)(&(__1.x)))->x = (half_t)(v_.x);
+    #     ((half2*)(&(__1.x)))->y = (half_t)(v_.y);
+    #     *(uint1*)(C + (((((((((i_3 & 7) >> 1) * 4096) + (((((int)threadIdx.x) & 63) >> 5) * 2048)) + ((i_3 & 1) * 1024)) + (((((int)threadIdx.x) & 31) >> 2) * 128)) + ((i_3 >> 3) * 16)) + ((((int)threadIdx.x) >> 6) * 8)) + ((((int)threadIdx.x) & 3) * 2))) = __1;
+    #   }
+    # }
+    #     '''
     return code
+
 
 def matmul(
     M,
@@ -73,13 +75,11 @@ def matmul(
 
     @T.prim_func
     def main(
-        A: T.Buffer(A_shape, dtypeAB),
-        B: T.Buffer(B_shape, dtypeAB),
-        C: T.Buffer((M, N), dtypeC),
+            A: T.Buffer(A_shape, dtypeAB),
+            B: T.Buffer(B_shape, dtypeAB),
+            C: T.Buffer((M, N), dtypeC),
     ):
-        with T.Kernel(
-            T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads
-        ) as (bx, by):
+        with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
             A_shared = T.alloc_shared(A_shared_shape, dtypeAB, scope="shared")
             B_shared = T.alloc_shared(B_shared_shape, dtypeAB, scope="shared")
             C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
@@ -144,6 +144,7 @@ def run_gemm(
     print(f"Latency: {latency}")
 
     torch.testing.assert_close(c, ref_c, rtol=1e-2, atol=1e-2)
+
 
 if __name__ == "__main__":
     # run_gemm(

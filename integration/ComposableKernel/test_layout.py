@@ -1,4 +1,3 @@
-import os
 import subprocess
 
 layouts = [
@@ -42,26 +41,37 @@ for layout in layouts:
 
     log_path = f"block_{block_layout_0}_{block_layout_1}_warp_{warp_layout_0}_{warp_layout_1}.log"
 
-    new_func = raw_func.replace("base_layout->Repeat({block_m / warp_m, block_n / warp_n}, false, false);",f"base_layout->Repeat({{block_m / warp_m, block_n / warp_n}}, {block_layout_0}, {block_layout_1});").replace("warp_layout->Repeat({warp_m / 16, warp_n / 16}, true, true);",f"warp_layout->Repeat({{warp_m / 16, warp_n / 16}}, {warp_layout_0}, {warp_layout_1});")
+    new_func = raw_func.replace(
+        "base_layout->Repeat({block_m / warp_m, block_n / warp_n}, false, false);",
+        f"base_layout->Repeat({{block_m / warp_m, block_n / warp_n}}, {block_layout_0}, {block_layout_1});"
+    ).replace(
+        "warp_layout->Repeat({warp_m / 16, warp_n / 16}, true, true);",
+        f"warp_layout->Repeat({{warp_m / 16, warp_n / 16}}, {warp_layout_0}, {warp_layout_1});")
     print(new_func)
     with open(file_path, "r") as f:
         content = f.read()
         content = content.replace(raw_func, new_func)
     with open(file_path, "w") as f:
         f.write(content)
-    
+
     with open(log_path, "w") as log_file:
         # build tvm
-        subprocess.run(["make", "-j8"], cwd="/home/aiscuser/leiwang/BitBLAS/3rdparty/tvm/build", stdout=log_file, stderr=log_file)
-        
+        subprocess.run(["make", "-j8"],
+                       cwd="/home/aiscuser/leiwang/BitBLAS/3rdparty/tvm/build",
+                       stdout=log_file,
+                       stderr=log_file)
+
         # Execute Test log
-        subprocess.run(["python", "/home/aiscuser/leiwang/BitBLAS/integration/ComposableKernel/test_block_gemm.py"], cwd="/home/aiscuser/leiwang/BitBLAS/integration/ComposableKernel", stdout=log_file, stderr=log_file)
-    
-    
+        subprocess.run([
+            "python",
+            "/home/aiscuser/leiwang/BitBLAS/integration/ComposableKernel/test_block_gemm.py"
+        ],
+                       cwd="/home/aiscuser/leiwang/BitBLAS/integration/ComposableKernel",
+                       stdout=log_file,
+                       stderr=log_file)
+
     # Recover
     content = content.replace(new_func, raw_func)
-    
+
     with open(file_path, "w") as f:
         f.write(content)
-    
-        
