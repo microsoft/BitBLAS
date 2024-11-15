@@ -62,7 +62,34 @@ echo "set(USE_LLVM llvm-config-16)" >> config.cmake && echo "set(USE_ROCM /opt/r
 
 cmake .. && make -j && cd ../../..
 
-echo "export TVM_HOME=$(pwd)/3rdparty/tvm" >> ~/.bashrc
-echo "export PYTHONPATH=\$TVM_HOME/python:$(pwd):\$PYTHONPATH" >> ~/.bashrc
-echo "export CUDA_DEVICE_ORDER=PCI_BUS_ID" >> ~/.bashrc
+# Define the lines to be added
+TVM_HOME_ENV="export TVM_HOME=$(pwd)/3rdparty/tvm"
+BITBLAS_PYPATH_ENV="export PYTHONPATH=\$TVM_HOME/python:$(pwd):\$PYTHONPATH"
+CUDA_DEVICE_ORDER_ENV="export CUDA_DEVICE_ORDER=PCI_BUS_ID"
+
+# Check and add the first line if not already present
+if ! grep -qxF "$TVM_HOME_ENV" ~/.bashrc; then
+    echo "$TVM_HOME_ENV" >> ~/.bashrc
+    echo "Added TVM_HOME to ~/.bashrc"
+else
+    echo "TVM_HOME is already set in ~/.bashrc"
+fi
+
+# Check and add the second line if not already present
+if ! grep -qxF "$BITBLAS_PYPATH_ENV" ~/.bashrc; then
+    echo "$BITBLAS_PYPATH_ENV" >> ~/.bashrc
+    echo "Added PYTHONPATH to ~/.bashrc"
+else
+    echo "PYTHONPATH is already set in ~/.bashrc"
+fi
+
+# Check and add the third line if not already present
+if ! grep -qxF "$CUDA_DEVICE_ORDER_ENV" ~/.bashrc; then
+    echo "$CUDA_DEVICE_ORDER_ENV" >> ~/.bashrc
+    echo "Added CUDA_DEVICE_ORDER to ~/.bashrc"
+else
+    echo "CUDA_DEVICE_ORDER is already set in ~/.bashrc"
+fi
+
+# Reload ~/.bashrc to apply the changes
 source ~/.bashrc
