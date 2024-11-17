@@ -17,7 +17,6 @@ layouts = [
     [False, True, True, False, True],
     [False, True, True, True, False],
     [False, True, True, True, True],
-
     [True, False, False, False, False],
     [True, False, False, False, True],
     [True, False, False, True, False],
@@ -69,7 +68,7 @@ for layout in layouts:
         "auto block_layout = warp_layout->Repeat({warp_m / 16, block_k / 16}, false, false);",
         f"auto block_layout = warp_layout->Repeat({{block_m / warp_m, 1}}, {warp_layout_0})->Replicate(block_n / warp_n);"
     )
-        
+
     print(new_func)
     with open(file_path, "r") as f:
         content = f.read()

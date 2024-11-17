@@ -47,13 +47,14 @@ for layout in layouts:
     # ).replace(
     #     "warp_layout->Repeat({warp_m / 16, warp_n / 16}, true, true);",
     #     f"warp_layout->Repeat({{warp_m / 16, warp_n / 16}}, {warp_layout_0}, {warp_layout_1});")
-    
+
     new_func = raw_func.replace(
         "base_layout->Repeat({block_m / warp_m, block_n / warp_n}, false, false);",
         f"base_layout->Repeat({{warp_m / 16, warp_n / 16}}, {block_layout_0}, {block_layout_1});"
     ).replace(
         "warp_layout->Repeat({warp_m / 16, warp_n / 16}, true, true);",
-        f"warp_layout->Repeat({{block_m / warp_m, block_n / warp_n}}, {warp_layout_0}, {warp_layout_1});")
+        f"warp_layout->Repeat({{block_m / warp_m, block_n / warp_n}}, {warp_layout_0}, {warp_layout_1});"
+    )
     print(new_func)
     with open(file_path, "r") as f:
         content = f.read()
@@ -70,8 +71,7 @@ for layout in layouts:
 
         # Execute Test log
         subprocess.run([
-            "python",
-            "/home/aiscuser/lei/BitBLAS/integration/ComposableKernel/test_block_gemm.py"
+            "python", "/home/aiscuser/lei/BitBLAS/integration/ComposableKernel/test_block_gemm.py"
         ],
                        cwd="/home/aiscuser/lei/BitBLAS/integration/ComposableKernel",
                        stdout=log_file,

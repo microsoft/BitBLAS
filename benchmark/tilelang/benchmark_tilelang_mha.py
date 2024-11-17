@@ -6,6 +6,7 @@ from tvm.tl.autotuner import *
 from functools import partial
 import itertools
 
+
 def get_configs():
     block_M = [128]
     block_N = [128]
@@ -13,11 +14,14 @@ def get_configs():
     thread_num = [256]
     _configs = list(itertools.product(block_M, block_N, num_stages, thread_num))
 
-    configs = [
-        {'block_M': c[0], 'block_N': c[1], 'num_stages': c[2], 'thread_num': c[3]}
-        for c in _configs
-    ]
+    configs = [{
+        'block_M': c[0],
+        'block_N': c[1],
+        'num_stages': c[2],
+        'thread_num': c[3]
+    } for c in _configs]
     return configs
+
 
 def ref_program(Q, K, Vt, casual):
     import torch.nn.functional as F
@@ -31,12 +35,23 @@ def ref_program(Q, K, Vt, casual):
     output = torch.einsum('bhqk,bdhk->bqhd', attention_weights, Vt)
     return output
 
+
 def flashattn(batch, heads, seq_len, dim, is_casual):
 
-    @autotune(configs=get_configs(), keys=['block_M', 'block_N', 'num_stages', 'thread_num'], warmup=10, rep=5)
-    @jit(out_idx=[3], supply_type=tl.TensorSupplyType.Normal, ref_prog=partial(ref_program, casual=is_casual), rtol=0.01, atol=0.01, target="hip")
-    def kernel(block_M = None, block_N = None, num_stages = None, thread_num = None):
-        scale = (1.0 / dim) ** 0.5 * 1.44269504  # log2(e)
+    @autotune(
+        configs=get_configs(),
+        keys=['block_M', 'block_N', 'num_stages', 'thread_num'],
+        warmup=10,
+        rep=5)
+    @jit(
+        out_idx=[3],
+        supply_type=tl.TensorSupplyType.Normal,
+        ref_prog=partial(ref_program, casual=is_casual),
+        rtol=0.01,
+        atol=0.01,
+        target="hip")
+    def kernel(block_M=None, block_N=None, num_stages=None, thread_num=None):
+        scale = (1.0 / dim)**0.5 * 1.44269504  # log2(e)
         shape = [batch, seq_len, heads, dim]
         vt_shape = [batch, dim, heads, seq_len]
         dtype = "float16"
@@ -44,12 +59,13 @@ def flashattn(batch, heads, seq_len, dim, is_casual):
 
         @T.prim_func
         def main(
-            Q: T.Buffer(shape, dtype), # type: ignore
-            K: T.Buffer(shape, dtype), # type: ignore
-            Vt: T.Buffer(vt_shape, dtype), # type: ignore
-            Output: T.Buffer(shape, dtype), # type: ignore
+                Q: T.Buffer(shape, dtype),  # type: ignore
+                K: T.Buffer(shape, dtype),  # type: ignore
+                Vt: T.Buffer(vt_shape, dtype),  # type: ignore
+                Output: T.Buffer(shape, dtype),  # type: ignore
         ):
-            with T.Kernel(T.ceildiv(seq_len, block_M), heads, batch, threads=thread_num) as (bx, by, bz):
+            with T.Kernel(
+                    T.ceildiv(seq_len, block_M), heads, batch, threads=thread_num) as (bx, by, bz):
                 Q_shared = T.alloc_shared([block_M, dim], dtype)
                 K_shared = T.alloc_shared([block_N, dim], dtype)
                 Vt_shared = T.alloc_shared([dim, block_N], dtype)
@@ -63,24 +79,28 @@ def flashattn(batch, heads, seq_len, dim, is_casual):
                 logsum = T.alloc_fragment([block_M], accum_dtype)
 
                 # T.annotate_layout({Q_shared: tl.layout.make_swizzled_layout(Q_shared)})
-                T.copy(Q[bz, bx * block_M : (bx + 1) * block_M, by, :], Q_shared)
+                T.copy(Q[bz, bx * block_M:(bx + 1) * block_M, by, :], Q_shared)
                 T.fill(acc_o, 0)
                 T.fill(logsum, 0)
                 T.fill(scores_max, -T.infinity(accum_dtype))
                 loop_range = (
-                    T.ceildiv((bx + 1) * block_M, block_N) if is_casual else T.ceildiv(seq_len, block_N)
-                )
+                    T.ceildiv(
+                        (bx + 1) * block_M, block_N) if is_casual else T.ceildiv(seq_len, block_N))
                 for k in T.Pipelined(loop_range, num_stages=num_stages):
-                    T.copy(K[bz, k * block_N : (k + 1) * block_N, by, :], K_shared)
+                    T.copy(K[bz, k * block_N:(k + 1) * block_N, by, :], K_shared)
                     if is_casual:
                         for i, j in T.Parallel(block_M, block_N):
-                            acc_s[i, j] = T.if_then_else(
-                                bx * block_M + i >= k * block_N + j, 0, -T.infinity(acc_s.dtype)
-                            )
+                            acc_s[i, j] = T.if_then_else(bx * block_M + i >= k * block_N + j, 0,
+                                                         -T.infinity(acc_s.dtype))
                     else:
                         T.clear(acc_s)
-                    T.gemm(Q_shared, K_shared, acc_s, transpose_B=True, policy=T.GemmWarpPolicy.FullRow)
-                    T.copy(Vt[bz, :, by, k * block_N : (k + 1) * block_N], Vt_shared)
+                    T.gemm(
+                        Q_shared,
+                        K_shared,
+                        acc_s,
+                        transpose_B=True,
+                        policy=T.GemmWarpPolicy.FullRow)
+                    T.copy(Vt[bz, :, by, k * block_N:(k + 1) * block_N], Vt_shared)
                     for i, j in T.Parallel(block_M, dim):
                         acc_s[i, j] *= scale
                     T.copy(scores_max, scores_max_prev)
@@ -93,15 +113,21 @@ def flashattn(batch, heads, seq_len, dim, is_casual):
                     for i, j in T.Parallel(block_M, block_N):
                         acc_s[i, j] = T.exp2(acc_s[i, j] - scores_max[i])
                     T.copy(acc_s, acc_s_cast)
-                    T.gemm(acc_s_cast, Vt_shared, acc_o, transpose_B=True, policy=T.GemmWarpPolicy.FullRow)
+                    T.gemm(
+                        acc_s_cast,
+                        Vt_shared,
+                        acc_o,
+                        transpose_B=True,
+                        policy=T.GemmWarpPolicy.FullRow)
                     T.reduce_sum(acc_s, scores_sum, dim=1)
                     for i in T.Parallel(block_M):
                         logsum[i] = logsum[i] * scores_scale[i] + scores_sum[i]
                 for i, j in T.Parallel(block_M, dim):
                     acc_o[i, j] /= logsum[i]
-                T.copy(acc_o, Output[bz, bx * block_M : (bx + 1) * block_M, by, :])
+                T.copy(acc_o, Output[bz, bx * block_M:(bx + 1) * block_M, by, :])
 
         return main
+
     return kernel()
 
 

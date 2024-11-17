@@ -4,15 +4,10 @@
 import torch
 import torch.backends
 from bitblas import tvm as tvm
-import bitblas.testing
-from tvm import DataType
 from tvm import tl as TL
 import tvm.tl.language as T
-from bitblas.tl.utils import make_swizzle_layout
-from bitblas.tl.mfma_macro_generator import (
-    MatrixCoreIntrinEmitter,
-)
 from bitblas.ops.base_scheduler import simplify_prim_func
+
 
 def make_pad_layout(shared_buf, pad_offset=4):
     shape = shared_buf.shape
@@ -44,24 +39,19 @@ def tl_matmul(
         "int32",
     ], "Currently only float16, float32 and int32 are supported"
 
-    micro_size_x = micro_size_y = micro_size_k = 16
-
-    if out_dtype == "int32":
-        micro_size_k = 32
-
     # This is a debug config
     # block_row_warps = 2
     # block_col_warps = 2
     # warp_row_tiles = 64
     # warp_col_tiles = 64
     # chunk = 32
-    
+
     block_row_warps = 2
     block_col_warps = 2
     warp_row_tiles = 32
     warp_col_tiles = 32
     chunk = 32
-    
+
     # shared_scope = "shared.dyn"
     shared_scope = "shared"
 
@@ -71,23 +61,20 @@ def tl_matmul(
     block_M = block_row_warps * warp_row_tiles
     block_N = block_col_warps * warp_col_tiles
     block_K = chunk
-    
+
     A_shape = (M, K)
     B_shape = (N, K)
     C_shape = (M, N)
     A_shared_shape = (block_M, block_K)
     B_shared_shape = (block_N, block_K)
-    C_shared_shape = (
-        block_M,
-        block_N
-    )
+    C_shared_shape = (block_M, block_N)
 
     warp_size = 64
     threads = warp_size * (block_row_warps * block_col_warps)
 
-
     @T.prim_func
-    def main(A: T.Buffer(A_shape, in_dtype), B: T.Buffer(B_shape, in_dtype), C: T.Buffer(C_shape, out_dtype)):
+    def main(A: T.Buffer(A_shape, in_dtype), B: T.Buffer(B_shape, in_dtype),
+             C: T.Buffer(C_shape, out_dtype)):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
             A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
             A_local = T.alloc_fragment(A_shared_shape, in_dtype)
@@ -95,12 +82,13 @@ def tl_matmul(
             C_local = T.alloc_fragment(C_shared_shape, accum_dtype)
 
             T.clear(C_local)
-            for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=0):
+            for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=stage):
                 T.copy(A[by * block_M, k * block_K], A_shared)
                 T.copy(B[bx * block_N, k * block_K], B_shared)
                 T.copy(A_shared, A_local)
                 T.gemm(A_local, B_shared, C_local, transpose_B=True)
             T.copy(C_local, C[by * block_M, bx * block_N])
+
     return main
 
 
