@@ -140,8 +140,8 @@ def run_gemm(
     ref_c = torch.matmul(a, b.T).to(torch.__getattribute__(dtypeC))
     print(ref_c)
 
-    latency = mod.do_bench(mod.func, profiler="tvm")
-    print(f"Latency: {latency}")
+    # latency = mod.do_bench(mod.func, profiler="tvm")
+    # print(f"Latency: {latency}")
 
     torch.testing.assert_close(c, ref_c, rtol=1e-2, atol=1e-2)
 
