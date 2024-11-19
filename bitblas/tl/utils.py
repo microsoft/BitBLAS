@@ -12,9 +12,7 @@ from .mma_layout import (
     ldmatrix_16x32_to_shared_16x32_layout_b,
     mma_store_32x8_to_shared_16x16_layout,
 )
-from .mfma_layout import (
-    thread_id_shared_access_64x4_to_16x16_layout_C_n_m
-)
+from .mfma_layout import (thread_id_shared_access_64x4_to_16x16_layout_C_n_m)
 
 
 def get_swizzle_layout(row_idx, col_idx, row_size, dtype: Union[DataType, str]):

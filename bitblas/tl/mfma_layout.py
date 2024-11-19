@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import os
 from tvm.runtime import convert
 
 
@@ -66,6 +65,7 @@ def thread_id_shared_access_64x4_to_16x16_layout_C_m_n(thread_id, local_id):
     i = local_id + (thread_id // 16) * 4
     j = thread_id % 16
     return i, j
+
 
 def thread_id_shared_access_64x4_to_16x16_layout_C_n_m(thread_id, local_id):
     i = thread_id % 16
