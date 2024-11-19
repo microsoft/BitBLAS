@@ -121,7 +121,7 @@ def run_gemm(
         dtypeAccum,
         num_threads,
     )
-    mod, params = tl.lower(program, target="hip")
+    mod, params = tl.lower(program)
     # print(mod.imported_modules[0].get_source())
     mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
     import torch
