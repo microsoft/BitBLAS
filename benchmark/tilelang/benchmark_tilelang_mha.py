@@ -8,10 +8,10 @@ import itertools
 
 
 def get_configs():
-    block_M = [128]
-    block_N = [128]
-    num_stages = [2]
-    thread_num = [256]
+    block_M = [32, 64, 128]
+    block_N = [32, 64, 128]
+    num_stages = [0, 1, 2]
+    thread_num = [128, 256]
     _configs = list(itertools.product(block_M, block_N, num_stages, thread_num))
 
     configs = [{
@@ -70,6 +70,7 @@ def flashattn(batch, heads, seq_len, dim, is_casual):
                 K_shared = T.alloc_shared([block_N, dim], dtype)
                 Vt_shared = T.alloc_shared([dim, block_N], dtype)
                 acc_s = T.alloc_fragment([block_M, block_N], accum_dtype)
+                acc_s_shared = T.alloc_shared([block_M, block_N], accum_dtype)
                 acc_s_cast = T.alloc_fragment([block_M, block_N], dtype)
                 acc_o = T.alloc_fragment([block_M, dim], accum_dtype)
                 scores_max = T.alloc_fragment([block_M], accum_dtype)
@@ -112,7 +113,9 @@ def flashattn(batch, heads, seq_len, dim, is_casual):
                         acc_o[i, j] *= scores_scale[i]
                     for i, j in T.Parallel(block_M, block_N):
                         acc_s[i, j] = T.exp2(acc_s[i, j] - scores_max[i])
-                    T.copy(acc_s, acc_s_cast)
+                    # T.copy(acc_s, acc_s_cast)
+                    T.copy(acc_s, acc_s_shared)
+                    T.copy(acc_s_shared, acc_s_cast)
                     T.gemm(
                         acc_s_cast,
                         Vt_shared,
