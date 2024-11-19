@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-import os
 from tvm.runtime import convert
 
 
@@ -62,19 +61,13 @@ def shared_16x16_to_local_64x4_layout_B(i, j):
     return thread_id, local
 
 
-def thread_id_shared_access_64x4_to_16x16_layout_C_smooth(thread_id, local_id):
-    i = thread_id % 16
-    j = local_id + (thread_id // 16) * 4
-    return j, i
-
-
-def thread_id_shared_access_64x4_to_16x16_layout_C(thread_id, local_id):
-    # This is a hacky implementation to simulate the performance
-    is_smooth = os.environ.get("TILE_LANG_SMOOTH_LAYOUT") == "1"
-    print(is_smooth)
-    if is_smooth:
-        return thread_id_shared_access_64x4_to_16x16_layout_C_smooth(thread_id, local_id)
-
+def thread_id_shared_access_64x4_to_16x16_layout_C_m_n(thread_id, local_id):
     i = local_id + (thread_id // 16) * 4
     j = thread_id % 16
+    return i, j
+
+
+def thread_id_shared_access_64x4_to_16x16_layout_C_n_m(thread_id, local_id):
+    i = thread_id % 16
+    j = local_id + (thread_id // 16) * 4
     return i, j
