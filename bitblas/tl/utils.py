@@ -14,6 +14,9 @@ from .mma_layout import (
 )
 from .mfma_layout import (thread_id_shared_access_64x4_to_16x16_layout_C_n_m)
 
+from .mma_layout import make_mma_swizzle_layout # noqa: F401
+from .mfma_layout import make_mfma_swizzle_layout   # noqa: F401
+
 
 def get_swizzle_layout(row_idx, col_idx, row_size, dtype: Union[DataType, str]):
     ana = arith.Analyzer()
@@ -123,21 +126,6 @@ def get_mma_micro_size(dtype: Literal["float16", "int8"]):
     if dtype == "int8":
         micro_size_k = 32
     return micro_size_x, micro_size_y, micro_size_k
-
-
-def make_swizzle_layout(shared_buf, is_smooth: bool = False):
-    dtype = shared_buf.dtype
-    shape = shared_buf.shape
-
-    can_swizzle = shape[-1] * DataType(dtype).bits == 512
-    if is_smooth or not can_swizzle:
-        return T.Layout(shape, lambda *args: args)
-
-    def transform_func(i, j):
-        new_warp_i, new_warp_j = get_swizzle_layout(i, j, shape[-1], dtype)
-        return [new_warp_i, new_warp_j]
-
-    return T.Layout(shape, transform_func)
 
 
 def index_to_coordinates(index, shape):

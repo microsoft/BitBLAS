@@ -7,7 +7,7 @@ from bitblas import tvm as tvm
 from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.tl.utils import (
-    make_swizzle_layout,)
+    make_mma_swizzle_layout as make_swizzle_layout,)
 
 from bitblas.tl.mma_macro_generator import (
     INT4TensorCoreIntrinEmitter,)

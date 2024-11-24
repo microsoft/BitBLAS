@@ -1,5 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+
+from tvm import DataType
+import tvm.tl.language as T
 from tvm.runtime import convert
 
 
@@ -71,3 +74,49 @@ def thread_id_shared_access_64x4_to_16x16_layout_C_n_m(thread_id, local_id):
     i = thread_id % 16
     j = local_id + (thread_id // 16) * 4
     return i, j
+
+
+def thread_id_shared_access_64x8_to_16x32_layout_A(thread_id, local_id):
+    i = thread_id % 16
+    j = (thread_id // 16) * 8 + local_id
+    return i, j
+
+
+def shared_16x32_to_local_64x8_layout_A(i, j):
+    thread_id = i + 16 * (j // 8)
+    local = (j % 8)
+    return thread_id, local
+
+def thread_id_shared_access_64x8_to_16x32_layout_B(thread_id, local_id):
+    i = local_id + (thread_id // 16) * 8
+    j = thread_id % 16
+    return i, j
+
+def shared_16x32_to_local_64x8_layout_B(i, j):
+    thread_id = j + (i // 8) * 16
+    local = (i % 8)
+    return thread_id, local
+
+def make_mfma_swizzle_layout(shared_buf, vecSize=8):
+    dtype = shared_buf.dtype
+    shape = shared_buf.shape
+
+    numBanks = 32
+    bankBitWidth = 32
+    SIMDWidth = 16
+
+    innerDimLength = shape[-1]
+    typeWidthInBit = DataType(dtype).bits
+
+    elemsPerOneBanksRow = (numBanks * bankBitWidth) // typeWidthInBit
+    perPhase = max(1, elemsPerOneBanksRow // innerDimLength)
+    maxPhase = min(SIMDWidth // perPhase, innerDimLength // vecSize)
+
+    def transform(row, col):
+        phase = (row // perPhase) % maxPhase
+        colOffSwizzled = ((col // vecSize) ^ phase) * vecSize
+        colOffOrdered = col % vecSize
+        colOff = colOffSwizzled + colOffOrdered
+        return row, colOff
+
+    return T.Layout(shape, transform)

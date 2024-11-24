@@ -6,7 +6,7 @@ import tvm.tl.language as T
 from typing import Optional, List
 from bitblas.tl.utils import (
     get_mma_micro_size,  # noqa: F401
-    make_swizzle_layout,  # noqa: F401
+    make_mma_swizzle_layout as make_swizzle_layout,  # noqa: F401
     index_to_coordinates,  # noqa: F401
 )
 from bitblas.base.arch import TileDevice

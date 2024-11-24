@@ -1,6 +1,9 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+from tvm import DataType
+import tvm.tl.language as T
+from bitblas.tl import get_swizzle_layout
 
 def ldmatrix_32x8_to_shared_16x16_layout(thread_id, local_id):
     row = thread_id % 16
@@ -42,3 +45,18 @@ def shared_16x32_to_mma_32x16_smoothlayout(i, j):
 
 def shared_32x16_to_mma_32x16_smoothlayout(i, j):
     return (i * 2 + j // 16, j % 16)
+
+
+def make_mma_swizzle_layout(shared_buf, is_smooth: bool = False):
+    dtype = shared_buf.dtype
+    shape = shared_buf.shape
+
+    can_swizzle = shape[-1] * DataType(dtype).bits == 512
+    if is_smooth or not can_swizzle:
+        return T.Layout(shape, lambda *args: args)
+
+    def transform_func(i, j):
+        new_warp_i, new_warp_j = get_swizzle_layout(i, j, shape[-1], dtype)
+        return [new_warp_i, new_warp_j]
+
+    return T.Layout(shape, transform_func)
