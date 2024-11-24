@@ -87,15 +87,18 @@ def shared_16x32_to_local_64x8_layout_A(i, j):
     local = (j % 8)
     return thread_id, local
 
+
 def thread_id_shared_access_64x8_to_16x32_layout_B(thread_id, local_id):
     i = local_id + (thread_id // 16) * 8
     j = thread_id % 16
     return i, j
 
+
 def shared_16x32_to_local_64x8_layout_B(i, j):
     thread_id = j + (i // 8) * 16
     local = (i % 8)
     return thread_id, local
+
 
 def make_mfma_swizzle_layout(shared_buf, vecSize=8):
     dtype = shared_buf.dtype

@@ -1,10 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-from tvm import arith
 from tvm import DataType
-import tvm.tl.language as T
-from typing import Union, Literal
+from typing import Literal
 from .mma_layout import (
     ldmatrix_32x8_to_shared_16x16_layout,
     ldmatrix_trans_32x8_to_shared_16x16_layout,
@@ -15,8 +13,9 @@ from .mma_layout import (
 from .mfma_layout import (thread_id_shared_access_64x4_to_16x16_layout_C_n_m)
 
 from .mma_layout import get_swizzle_layout  # noqa: F401
-from .mma_layout import make_mma_swizzle_layout # noqa: F401
-from .mfma_layout import make_mfma_swizzle_layout   # noqa: F401
+from .mma_layout import make_mma_swizzle_layout  # noqa: F401
+from .mfma_layout import make_mfma_swizzle_layout  # noqa: F401
+
 
 # the original implementation and insight is from the following code snippet
 # 3rdparty/tvm/python/tvm/tir/tensor_intrin/cuda.py#get_ldmatrix_intrin

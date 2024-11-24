@@ -5,13 +5,11 @@ import torch
 import torch.backends
 from bitblas import tvm as tvm
 import bitblas.testing
-from tvm import DataType
 from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.tl.utils import make_mfma_swizzle_layout as make_swizzle_layout
 from bitblas.tl.mfma_macro_generator import (
-    MatrixCoreIntrinEmitter,
-)
+    MatrixCoreIntrinEmitter,)
 from bitblas.ops.base_scheduler import simplify_prim_func
 
 torch.manual_seed(0)
@@ -202,6 +200,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype="floa
     print(C)
     print(ref_c)
     torch.testing.assert_close(C, ref_c, rtol=1e-2, atol=1e-2)
+
 
 @bitblas.testing.requires_rocm
 def test_assert_tl_matmul():
