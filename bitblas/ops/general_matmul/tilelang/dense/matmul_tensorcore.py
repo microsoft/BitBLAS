@@ -6,7 +6,7 @@ import tvm.tl.language as T
 from typing import Optional, List
 from bitblas.tl.utils import (
     get_mma_micro_size,
-    make_swizzle_layout,
+    make_mma_swizzle_layout as make_swizzle_layout,
 )
 
 from bitblas.tl.mma_macro_generator import (
