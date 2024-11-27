@@ -64,9 +64,9 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
                                            layout, with_bias, group_size, with_scaling, with_zeros,
                                            zeros_mode):
     import torch
-    torch.random.manual_seed(0)
     import numpy as np
     from bitblas.quantization import general_compress
+    torch.random.manual_seed(0)
 
     matmul_config = MatmulConfig(
         M=M,
@@ -111,10 +111,7 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
     if with_zeros:
         inputs[1] = inputs[1] - zeros
     bias = torch.rand((output_shape[-1],), dtype=getattr(torch, out_dtype)).cuda()
-    ref_result = torch.matmul(inputs[0], (inputs[1].t() if layout == "nt" else inputs[1]).to(
-        getattr(torch, A_dtype))).to(getattr(torch, out_dtype))
-    if with_bias:
-        ref_result = ref_result + bias
+
     permuted_inputs = []
     permuted_inputs.append(inputs[0])
     if matmul.weight_transform is not None:
@@ -124,8 +121,7 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
     if with_scaling:
         if group_size == -1:
             group_size = K
-        permuted_inputs.append(
-            torch.ones([N, K // group_size], dtype=getattr(torch, A_dtype)).cuda())
+        permuted_inputs.append(torch.randn((N, K // group_size), dtype=getattr(torch, A_dtype)).cuda())
     if with_zeros:
         if zeros_mode == "original":
             permuted_inputs.append(
@@ -146,8 +142,35 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
         permuted_inputs.append(bias)
     permuted_inputs.append(inputs[2])
     matmul(*permuted_inputs[:-1], output=permuted_inputs[-1])
+
+    args = [inputs[0]]
+    b = inputs[1]
+    if with_scaling:
+        scale = permuted_inputs[2]
+        rescale_b = torch.empty_like(b, dtype=torch.bfloat16)
+        for i in range(N):
+            for j in range(K):
+                if with_zeros:
+                    zeros = permuted_inputs[3]
+                    if zeros_mode == "original":
+                        rescale_b[i, j] = (b[i, j] - zeros[i, j // group_size]) * scale[i, j //
+                                                                                        group_size]
+                    elif zeros_mode == "rescale":
+                        rescale_b[i, j] = (
+                            b[i, j] * scale[i, j // group_size] + zeros[i, j // group_size])
+                    else:
+                        raise NotImplementedError
+                else:
+                    rescale_b[i, j] = b[i, j] * scale[i, j // group_size]
+        args.append(rescale_b.t().cuda())
+    else:
+        args.append(b.t().cuda().to(getattr(torch, A_dtype)))
+    ref_result = torch.matmul(*args).to(getattr(torch, out_dtype))
     print(permuted_inputs[-1])
     print(ref_result)
+    if not with_scaling:
+        # when scaling is not enabled, we should have some mismatch due to the scaling factor
+        bitblas.testing.torch_assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
     if zeros_mode == "rescale":
         torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
     else:
