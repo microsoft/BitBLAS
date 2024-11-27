@@ -8,7 +8,7 @@ from tvm import DataType
 from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.quantization import _tir_packed_to_unsigned_convert
-from bitblas.tl.utils import (make_swizzle_layout)
+from bitblas.tl.utils import make_mma_swizzle_layout as make_swizzle_layout
 from bitblas.tl.mma_macro_generator import (
     TensorCoreIntrinEmitterWithLadderTransform,)
 
