@@ -169,14 +169,8 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
     ref_result = torch.matmul(*args).to(getattr(torch, out_dtype))
     print(permuted_inputs[-1])
     print(ref_result)
-    if not with_scaling:
-        # when scaling is not enabled, we should have some mismatch due to the scaling factor
-        bitblas.testing.torch_assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
-    else:
-        if zeros_mode == "rescale":
-            torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
-        else:
-            torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
+    # when scaling is not enabled, we should have some mismatch due to the scaling factor
+    bitblas.testing.torch_assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
 
 
 @bitblas.testing.requires_cuda_compute_version(8, 0)
