@@ -5,7 +5,6 @@ import inspect
 import pytest
 from bitblas.base import DefaultPolicy, TensorCorePolicy
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
-from bitblas import tvm  # pylint: disable=import-error
 from tvm.testing.utils import *
 
 
