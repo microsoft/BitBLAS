@@ -121,7 +121,8 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
     if with_scaling:
         if group_size == -1:
             group_size = K
-        permuted_inputs.append(torch.randn((N, K // group_size), dtype=getattr(torch, A_dtype)).cuda())
+        permuted_inputs.append(
+            torch.randn((N, K // group_size), dtype=getattr(torch, A_dtype)).cuda())
     if with_zeros:
         if zeros_mode == "original":
             permuted_inputs.append(
