@@ -4,6 +4,12 @@ import tvm.tl.language as T
 from tvm.tl.autotuner import *
 import itertools
 
+import logging
+
+logger = logging.getLogger(__name__)
+
+logger.setLevel(logging.DEBUG)
+
 
 def ref_program(A, B):
     return A @ B.T
@@ -16,8 +22,11 @@ def get_configs():
     num_stages = [0, 1, 2, 3, 4]
     thread_num = [128, 256]
     enable_rasteration = [True, False]
+    k_pack = [1, 2]
+
     _configs = list(
-        itertools.product(block_M, block_N, block_K, num_stages, thread_num, enable_rasteration))
+        itertools.product(block_M, block_N, block_K, num_stages, thread_num, enable_rasteration,
+                          k_pack))
 
     configs = [{
         'block_M': c[0],
@@ -25,7 +34,8 @@ def get_configs():
         'block_K': c[2],
         'num_stages': c[3],
         'thread_num': c[4],
-        'enable_rasteration': c[5]
+        'enable_rasteration': c[5],
+        'k_pack': c[6]
     } for c in _configs]
     return configs
 
@@ -34,14 +44,17 @@ def matmul(M, N, K):
 
     @autotune(
         configs=get_configs(),
-        keys=['block_M', 'block_N', 'block_K', 'num_stages', 'thread_num'],
+        keys=[
+            'block_M', 'block_N', 'block_K', 'num_stages', 'thread_num', 'enable_rasteration',
+            'k_pack'
+        ],
         warmup=3,
         rep=5)
     @jit(
         out_idx=[2],
         supply_type=tl.TensorSupplyType.Integer,
         ref_prog=ref_program,
-        skip_check=True,
+        skip_check=False,
         profiler="tvm",
         target="hip")
     def kernel(block_M=None,
@@ -49,7 +62,8 @@ def matmul(M, N, K):
                block_K=None,
                num_stages=None,
                thread_num=None,
-               enable_rasteration=None):
+               enable_rasteration=None,
+               k_pack=None):
         dtype = "float16"
         accum_dtype = "float"
 
@@ -66,9 +80,9 @@ def matmul(M, N, K):
 
                 T.clear(C_local)
                 for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
-                    T.copy(A[by * block_M, k * block_K], A_shared)
-                    T.copy(B[bx * block_N, k * block_K], B_shared)
-                    T.gemm(A_shared, B_shared, C_local, transpose_B=True)
+                    T.copy(A[by * block_M, k * block_K], A_shared, coalesced_width=4 * k_pack)
+                    T.copy(B[bx * block_N, k * block_K], B_shared, coalesced_width=4 * k_pack)
+                    T.gemm(A_shared, B_shared, C_local, transpose_B=True, k_pack=k_pack)
                 T.copy(C_local, C[by * block_M, bx * block_N])
 
         return main
