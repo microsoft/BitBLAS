@@ -1398,7 +1398,6 @@ def assert_matmul_weight_transform_dequant_with_default_correctness(
     qw = qw.reshape(qw_shape)
     permuted_inputs.append(torch.from_numpy(qw).cuda())
     if with_scaling:
-        # permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda())
         permuted_inputs.append(torch.randn((N, K // group_size), dtype=torch.float16).cuda())
 
     zeros = None
