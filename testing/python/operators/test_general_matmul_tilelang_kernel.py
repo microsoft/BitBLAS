@@ -5,7 +5,7 @@ from bitblas import tvm as tvm
 import bitblas.testing
 from tvm import tl
 from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
-    MatmulScheduler,
+    MatmulBlockScheduler,
     MatmulFineGrainScheduler,
     MatmulWeightPropagationScheduler,
 )
@@ -41,7 +41,7 @@ def assert_matmul_blocked_with_default_correctness(
     out_dtype="float16",
     accum_dtype="float16",
 ):
-    matmul = MatmulScheduler(
+    matmul = MatmulBlockScheduler(
         M=M,
         N=N,
         K=K,
@@ -92,7 +92,7 @@ def assert_matmul_blocked_apply_config_correctness(
     threads=128,
     enable_rasterization=False,
 ):
-    matmul = MatmulScheduler(
+    matmul = MatmulBlockScheduler(
         M=M,
         N=N,
         K=K,
