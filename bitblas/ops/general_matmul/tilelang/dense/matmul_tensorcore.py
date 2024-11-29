@@ -26,6 +26,7 @@ from bitblas.tl.base_hint import BaseTLHint
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
 
+
 class MatmulBaseScheduler(BaseScheduler):
     # OP Related Config
     M: Optional[int] = None
