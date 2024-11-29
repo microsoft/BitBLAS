@@ -39,10 +39,6 @@ class MatmulBaseScheduler(BaseScheduler):
     accum_dtype: str = "float16"
     with_bias: bool = False
 
-    def serialze_hints_to_configs(self, hints: List[Hint]) -> List[BaseTLHint]:
-        # Convert Roller Hints to TileLang Hints
-        raise NotImplementedError
-
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
 

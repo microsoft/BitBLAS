@@ -28,8 +28,7 @@ warp_size = 32
 
 
 @dataclass
-class MatmulDequantizeScheduler(BaseScheduler):
-
+class MatmulDequantizeBaseScheduler(BaseScheduler):
     # OP Related Config
     M: Optional[int] = None
     N: Optional[int] = None
@@ -49,7 +48,50 @@ class MatmulDequantizeScheduler(BaseScheduler):
     group_size: int = -1
     fast_decoding: bool = False
     with_bias: bool = False
-    zeros_mode: Literal["original", "rescale", "quantized"] = ("original",)
+    zeros_mode: Literal["original", "rescale", "quantized"] = "original"
+
+    def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
+        layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
+
+        # Simple TIR Compute Expression
+        ir_module = matmul_dequantize_select_implementation(
+            M=self.M,
+            N=self.N,
+            K=self.K,
+            in_dtype=self.in_dtype,
+            out_dtype=self.out_dtype,
+            accum_dtype=self.accum_dtype,
+            layout=layout,
+            bit=self.num_bits,
+            storage_dtype=self.storage_dtype,
+            source_format=self.source_format,
+            with_scaling=self.with_scaling,
+            with_zeros=self.with_zeros,
+            group_size=self.group_size,
+            fast_decoding=self.fast_decoding,
+            with_bias=self.with_bias,
+            zeros_mode=self.zeros_mode,
+        )
+
+        roller_hints = get_roller_hints_from_func(
+            ir_module,
+            arch,
+            topk,
+            tensorcore_only=True,
+            allow_gemv=True,
+        )
+
+        if roller_hints is None:
+            raise ValueError("No Roller Hints Found for TensorCore Scheduling")
+
+        return self.serialze_hints_to_configs(roller_hints)
+
+    def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
+        return self.get_roller_configs(arch, topk)
+
+
+@dataclass
+class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
 
     # Default Tile Related Params
     block_M: int = 128
@@ -112,51 +154,12 @@ class MatmulDequantizeScheduler(BaseScheduler):
                     f"enable_rasterization={self.enable_rasterization}"
                     "}")
 
-    def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
-        layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
-
-        # Simple TIR Compute Expression
-        ir_module = matmul_dequantize_select_implementation(
-            M=self.M,
-            N=self.N,
-            K=self.K,
-            in_dtype=self.in_dtype,
-            out_dtype=self.out_dtype,
-            accum_dtype=self.accum_dtype,
-            layout=layout,
-            bit=self.num_bits,
-            storage_dtype=self.storage_dtype,
-            source_format=self.source_format,
-            with_scaling=self.with_scaling,
-            with_zeros=self.with_zeros,
-            group_size=self.group_size,
-            fast_decoding=self.fast_decoding,
-            with_bias=self.with_bias,
-            zeros_mode=self.zeros_mode,
-        )
-
-        roller_hints = get_roller_hints_from_func(
-            ir_module,
-            arch,
-            topk,
-            tensorcore_only=True,
-            allow_gemv=True,
-        )
-
-        if roller_hints is None:
-            raise ValueError("No Roller Hints Found for TensorCore Scheduling")
-
-        def serialze_hints_to_configs(hints: List[Hint]):
-            configs = []
-            for hint in hints:
-                config = self.TLHint.from_roller_hint(hint)
-                configs.append(config)
-            return configs
-
-        return serialze_hints_to_configs(roller_hints)
-
-    def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
-        return self.get_roller_configs(arch, topk)
+    def serialze_hints_to_configs(self, hints: List[Hint]):
+        configs = []
+        for hint in hints:
+            config = self.TLHint.from_roller_hint(hint)
+            configs.append(config)
+        return configs
 
     def with_default_config(self):
         block_M = getattr(self, "block_M", 64)

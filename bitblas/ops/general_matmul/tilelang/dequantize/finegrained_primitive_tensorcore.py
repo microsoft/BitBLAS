@@ -3,7 +3,7 @@
 from bitblas import tvm as tvm
 from tvm import DataType
 import tvm.tl.language as T
-from typing import Optional, List, Literal
+from typing import Optional, List
 from bitblas.tl.utils import (
     get_mma_micro_size,  # noqa: F401
     make_mma_swizzle_layout as make_swizzle_layout,  # noqa: F401
@@ -12,15 +12,12 @@ from bitblas.tl.utils import (
 from bitblas.tl.mma_macro_generator import (
     TensorCoreIntrinEmitter,  # noqa: F401
 )
-from bitblas.ops.common import TransformKind  # noqa: F401
-from bitblas.ops.base_scheduler import BaseScheduler
-from bitblas.base.arch import TileDevice
 from bitblas.base.roller.hint import Hint
 from bitblas.base.roller.rasterization import NoRasterization
-from bitblas.base.utils import get_roller_hints_from_func
 from dataclasses import dataclass
-from bitblas.ops.general_matmul.tirscript import (
-    matmul_dequantize_select_implementation,)
+from bitblas.ops.general_matmul.tilelang.dequantize.block_primitive_tensorcore import (
+    MatmulDequantizeBaseScheduler,  # noqa: F401
+)
 from bitblas.tl.base_hint import BaseTLHint
 from bitblas.quantization import (
     _tir_packed_int_to_int_convert,
@@ -37,28 +34,7 @@ warp_size = 32
 
 
 @dataclass
-class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
-
-    # OP Related Config
-    M: Optional[int] = None
-    N: Optional[int] = None
-    K: Optional[int] = None
-    trans_A: bool = False
-    trans_B: bool = False
-    in_dtype: str = "float16"
-    out_dtype: str = "float16"
-    accum_dtype: str = "float16"
-
-    # Dequantize Config
-    num_bits: int = 4
-    storage_dtype: str = "int8"
-    source_format: str = "uint"
-    with_scaling: bool = False
-    with_zeros: bool = False
-    group_size: int = -1
-    fast_decoding: bool = False
-    with_bias: bool = False
-    zeros_mode: Literal["original", "rescale", "quantized"] = "original",
+class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
 
     # Tensor Core Warp Configuration
     block_row_warps: int = 2
@@ -131,50 +107,12 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
                     f"enable_rasterization={self.enable_rasterization}"
                     "}")
 
-    def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
-        layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
-
-        # Simple TIR Compute Expression
-        ir_module = matmul_dequantize_select_implementation(
-            M=self.M,
-            N=self.N,
-            K=self.K,
-            in_dtype=self.in_dtype,
-            out_dtype=self.out_dtype,
-            accum_dtype=self.accum_dtype,
-            layout=layout,
-            bit=self.num_bits,
-            storage_dtype=self.storage_dtype,
-            source_format=self.source_format,
-            with_scaling=self.with_scaling,
-            with_zeros=self.with_zeros,
-            group_size=self.group_size,
-            fast_decoding=self.fast_decoding,
-            with_bias=self.with_bias,
-            zeros_mode=self.zeros_mode)
-
-        roller_hints = get_roller_hints_from_func(
-            ir_module,
-            arch,
-            topk,
-            tensorcore_only=True,
-            allow_gemv=True,
-        )
-
-        if roller_hints is None:
-            raise ValueError("No Roller Hints Found for TensorCore Scheduling")
-
-        def serialze_hints_to_configs(hints: List[Hint]):
-            configs = []
-            for hint in hints:
-                config = self.TLHint.from_roller_hint(hint)
-                configs.append(config)
-            return configs
-
-        return serialze_hints_to_configs(roller_hints)
-
-    def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
-        return self.get_roller_configs(arch, topk)
+    def serialze_hints_to_configs(self, hints: List[Hint]):
+        configs = []
+        for hint in hints:
+            config = self.TLHint.from_roller_hint(hint)
+            configs.append(config)
+        return configs
 
     def with_default_config(self):
         block_row_warps = getattr(self, "block_row_warps", 2)
