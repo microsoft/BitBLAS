@@ -12,7 +12,7 @@ from .matmul_tensorcore import (
 )
 
 from .matmul_tensorcore import (
-    MatmulScheduler,  # noqa: F401
+    MatmulBlockScheduler,  # noqa: F401
     MatmulFineGrainScheduler,  # noqa: F401
     MatmulWeightPropagationScheduler,  # noqa: F401
 )
@@ -60,8 +60,6 @@ def select_scheduler(
         propagate_a = TransformKind(propagate_a)
     if isinstance(propagate_b, int):
         propagate_b = TransformKind(propagate_b)
-    if with_bias:
-        raise NotImplementedError
 
     trans_A, trans_B = parse_layout(layout)
 
@@ -102,6 +100,7 @@ def select_scheduler(
             in_dtype=in_dtype,
             out_dtype=out_dtype,
             accum_dtype=accum_dtype,
+            with_bias=with_bias,
         )
     if can_apply_fine_grain_scheduler(trans_A, trans_B, propagate_a, propagate_b):
         Scheduler = MatmulFineGrainScheduler if not is_int4_dtype(
@@ -115,9 +114,10 @@ def select_scheduler(
             in_dtype=in_dtype,
             out_dtype=out_dtype,
             accum_dtype=accum_dtype,
+            with_bias=with_bias,
         )
     elif can_apply_block_scheduler(propagate_a, propagate_b):
-        return MatmulScheduler(
+        return MatmulBlockScheduler(
             M=M,
             N=N,
             K=K,
@@ -126,6 +126,7 @@ def select_scheduler(
             in_dtype=in_dtype,
             out_dtype=out_dtype,
             accum_dtype=accum_dtype,
+            with_bias=with_bias,
         )
     else:
         raise ValueError(f"Unsupported configuration: {layout}, {propagate_a}, {propagate_b}")

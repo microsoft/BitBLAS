@@ -21,6 +21,7 @@ class MatmulFineGrainSIMTScheduler(BaseScheduler):
     trans_A: bool = False
     trans_B: bool = True
     accum_dtype: str = "float16"
+    with_bias: bool = False
 
     # Tensor Core Warp Configuration
     block_row_warps: int = 2

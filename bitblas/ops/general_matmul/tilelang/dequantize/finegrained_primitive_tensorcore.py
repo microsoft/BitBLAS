@@ -26,7 +26,7 @@ from bitblas.quantization import (
     _tir_packed_int_to_int_convert,
     _tir_packed_to_signed_convert,
     _tir_packed_to_unsigned_convert,
-    _tir_u32_to_f4_to_f16,
+    _tir_packed_to_fp4_to_f16,
     _tir_u8_to_f8_e4m3_to_f16,
     _tir_packed_to_unsigned_convert_with_zeros,
 )
@@ -472,7 +472,7 @@ class MatmulDequantizeFineGrainedScheduler(BaseScheduler):
             else:
                 dequant_func = _tir_packed_to_signed_convert(storage_type, storage_nbit)
         elif source_format == "fp":
-            dequant_func = _tir_u32_to_f4_to_f16
+            dequant_func = _tir_packed_to_fp4_to_f16(storage_type, storage_nbit)
         elif source_format == "fp_e4m3":
             dequant_func = _tir_u8_to_f8_e4m3_to_f16
         else:

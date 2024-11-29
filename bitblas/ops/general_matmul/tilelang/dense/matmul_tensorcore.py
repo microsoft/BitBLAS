@@ -26,10 +26,7 @@ from bitblas.tl.base_hint import BaseTLHint
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
 
-
-@dataclass
-class MatmulScheduler(BaseScheduler):
-
+class MatmulBaseScheduler(BaseScheduler):
     # OP Related Config
     M: Optional[int] = None
     N: Optional[int] = None
@@ -39,6 +36,45 @@ class MatmulScheduler(BaseScheduler):
     in_dtype: str = "float16"
     out_dtype: str = "float16"
     accum_dtype: str = "float16"
+    with_bias: bool = False
+
+    def serialze_hints_to_configs(self, hints: List[Hint]) -> List[BaseTLHint]:
+        # Convert Roller Hints to TileLang Hints
+        raise NotImplementedError
+
+    def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
+        layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
+
+        # Simple TIR Compute Expression
+        ir_module = matmul_select_implementation(
+            M=self.M,
+            N=self.N,
+            K=self.K,
+            in_dtype=self.in_dtype,
+            out_dtype=self.out_dtype,
+            accum_dtype=self.accum_dtype,
+            layout=layout,
+        )
+
+        roller_hints = get_roller_hints_from_func(
+            ir_module,
+            arch,
+            topk,
+            tensorcore_only=True,
+            allow_gemv=True,
+        )
+
+        if roller_hints is None:
+            raise ValueError("No Roller Hints Found for TensorCore Scheduling")
+
+        return self.serialze_hints_to_configs(roller_hints)
+
+    def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
+        return self.get_roller_configs(arch, topk)
+
+
+@dataclass
+class MatmulBlockScheduler(MatmulBaseScheduler):
 
     # Default Tile Related Params
     block_M: int = 64
@@ -126,42 +162,12 @@ class MatmulScheduler(BaseScheduler):
         configs = [{**c, 'num_stages': num_stages} for c in configs]
         return configs
 
-    def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
-        layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
-
-        # Simple TIR Compute Expression
-        ir_module = matmul_select_implementation(
-            M=self.M,
-            N=self.N,
-            K=self.K,
-            in_dtype=self.in_dtype,
-            out_dtype=self.out_dtype,
-            accum_dtype=self.accum_dtype,
-            layout=layout,
-        )
-
-        roller_hints = get_roller_hints_from_func(
-            ir_module,
-            arch,
-            topk,
-            tensorcore_only=True,
-            allow_gemv=True,
-        )
-
-        if roller_hints is None:
-            raise ValueError("No Roller Hints Found for TensorCore Scheduling")
-
-        def serialze_hints_to_configs(hints: List[Hint]):
-            configs = []
-            for hint in hints:
-                config = self.TLHint.from_roller_hint(hint)
-                configs.append(config)
-            return configs
-
-        return serialze_hints_to_configs(roller_hints)
-
-    def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
-        return self.get_roller_configs(arch, topk)
+    def serialze_hints_to_configs(self, hints: List[Hint]):
+        configs = []
+        for hint in hints:
+            config = self.TLHint.from_roller_hint(hint)
+            configs.append(config)
+        return configs
 
     def with_default_config(self):
         block_M = getattr(self, "block_M", 64)
@@ -199,9 +205,12 @@ class MatmulScheduler(BaseScheduler):
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
+        with_bias = self.with_bias
 
         A_shape = (K, M) if trans_A else (M, K)
         B_shape = (N, K) if trans_B else (K, N)
+        C_shape = (M, N)
+        Bias_shape = (N,) if with_bias else None
         A_shared_shape = (block_K, block_M) if trans_A else (block_M, block_K)
         B_shared_shape = (block_N, block_K) if trans_B else (block_K, block_N)
 
@@ -209,7 +218,8 @@ class MatmulScheduler(BaseScheduler):
         def main(
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, in_dtype),
-                C: T.Buffer((M, N), out_dtype),
+                C: T.Buffer(C_shape, out_dtype),
+                Bias: T.Buffer(Bias_shape, out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
@@ -230,6 +240,11 @@ class MatmulScheduler(BaseScheduler):
                     else:
                         T.copy(B[k * block_K, bx * block_N], B_shared)
                     T.gemm(A_shared, B_shared, C_local, trans_A, trans_B)
+
+                if with_bias:
+                    for i, j in T.Parallel(block_M, block_N):
+                        C_local[i, j] += Bias[bx * block_N + j]
+
                 T.copy(C_local, C[by * block_M, bx * block_N])
 
         return self.maybe_simplify(main)
@@ -240,19 +255,9 @@ class MatmulScheduler(BaseScheduler):
 
 
 @dataclass
-class MatmulFineGrainScheduler(BaseScheduler):
+class MatmulFineGrainScheduler(MatmulBaseScheduler):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
-
-    # Operation Configuration
-    M: Optional[int] = None
-    N: Optional[int] = None
-    K: Optional[int] = None
-    in_dtype: str = "float16"
-    out_dtype: str = "float16"
-    trans_A: bool = False
-    trans_B: bool = True
-    accum_dtype: str = "float16"
 
     # Tensor Core Warp Configuration
     block_row_warps: int = 2
@@ -325,47 +330,12 @@ class MatmulFineGrainScheduler(BaseScheduler):
                     f"enable_rasterization={self.enable_rasterization}"
                     "}")
 
-    def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
-        layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
-
-        M = self.M
-        # This is a hack to utilize tensor core
-        if isinstance(M, int) and M < 16:
-            M = 16
-
-        # Simple TIR Compute Expression
-        ir_module = matmul_select_implementation(
-            M=M,
-            N=self.N,
-            K=self.K,
-            in_dtype=self.in_dtype,
-            out_dtype=self.out_dtype,
-            accum_dtype=self.accum_dtype,
-            layout=layout,
-        )
-
-        roller_hints = get_roller_hints_from_func(
-            ir_module,
-            arch,
-            topk,
-            tensorcore_only=True,
-            allow_gemv=True,
-        )
-
-        if roller_hints is None:
-            raise ValueError("No Roller Hints Found for TensorCore Scheduling")
-
-        def serialze_hints_to_configs(hints: List[Hint]):
-            configs = []
-            for hint in hints:
-                config = self.TLHint.from_roller_hint(hint)
-                configs.append(config)
-            return configs
-
-        return serialze_hints_to_configs(roller_hints)
-
-    def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
-        return self.get_roller_configs(arch, topk)
+    def serialze_hints_to_configs(self, hints: List[Hint]):
+        configs = []
+        for hint in hints:
+            config = self.TLHint.from_roller_hint(hint)
+            configs.append(config)
+        return configs
 
     def with_default_config(self):
         block_row_warps = getattr(self, "block_row_warps", 2)
