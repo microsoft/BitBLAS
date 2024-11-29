@@ -218,7 +218,7 @@ class MatmulBlockScheduler(MatmulBaseScheduler):
         A_shape = (K, M) if trans_A else (M, K)
         B_shape = (N, K) if trans_B else (K, N)
         C_shape = (M, N)
-        Bias_shape = (N,) if with_bias else None
+        Bias_shape = (N,)
         A_shared_shape = (block_K, block_M) if trans_A else (block_M, block_K)
         B_shared_shape = (block_N, block_K) if trans_B else (block_K, block_N)
 
@@ -588,7 +588,7 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
         A_shape = (M, K)
         B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y, micro_size_k)
         C_shape = (M, N)
-        Bias_shape = (N,) if with_bias else None
+        Bias_shape = (N,)
 
         A_shared_shape = (block_M, (block_K + pad_factor) if apply_pad_a else block_K)
         B_shared_shape = (
