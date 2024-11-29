@@ -89,6 +89,15 @@ class MatmulDequantizeBaseScheduler(BaseScheduler):
     def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
         return self.get_roller_configs(arch, topk)
 
+    # check if required shared memory cache
+    def check_require_cache(self)->bool:
+        with_bias = self.with_bias
+
+        conditions = []
+        conditions.append(False)
+        # Bias Add should be done in shared memory
+        conditions.append(with_bias == True)
+        return any(conditions) # Always set to False Currently
 
 @dataclass
 class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
@@ -205,6 +214,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
             self.accum_dtype,
         )
         fast_decoding = self.fast_decoding
+        with_bias = self.with_bias
 
         num_bits = self.num_bits
         storage_dtype = self.storage_dtype
@@ -226,6 +236,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
         Scale_shape = (N, K // group_size)
         Zeros_shape = (N, K // group_size)
         Qzeros_shape = ((K // group_size), N // storage_nbit * num_bits)
+        C_shape = (M, N)
         Bias_shape = (N,)
 
         A_shared_shape = (block_M, block_K)
@@ -249,6 +260,8 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
             assert func_name is not None, "lop3_intrin_info is not found"
             import_source = self.common_header + import_source
 
+        cache_write_required = self.check_require_cache()
+
         @T.prim_func
         def general_dequant_matmul(
                 A: T.Buffer(A_shape, in_dtype),
@@ -257,8 +270,8 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
                 Scale: T.Buffer(Scale_shape, in_dtype),
                 Qzeros: T.Buffer(Qzeros_shape, storage_dtype),
                 Zeros: T.Buffer(Zeros_shape, in_dtype),
+                C: T.Buffer(C_shape, out_dtype),
                 Bias: T.Buffer(Bias_shape, in_dtype),
-                C: T.Buffer((M, N), out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
@@ -267,6 +280,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
                 B_local = T.alloc_local([local_size_compressed], storage_dtype)
                 B_dequantize_local = T.alloc_local([local_size], in_dtype)
                 B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, in_dtype)
+                C_shared = T.alloc_shared([block_M, block_N], out_dtype)
                 C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
 
                 tx = T.thread_binding(0, threads, thread="threadIdx.x")
@@ -327,7 +341,19 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
                             B_dequantize_shared[vi, vj] = B_dequantize_local[v]
 
                     T.gemm(A_shared, B_dequantize_shared, C_local, transpose_B=True)
-                T.copy(C_local, C[by * block_M, bx * block_N])
+
+                if cache_write_required:
+                    T.copy(C_local, C_shared)
+                    if with_bias:
+                        for i, j in T.grid(block_M, block_N):
+                            C_shared[i, j] += Bias[bx * block_N + j]
+
+                    T.copy(C_shared, C[by * block_M, bx * block_N])
+                else:
+                    if with_bias:
+                        for i, j in T.grid(block_M, block_N):
+                            C_local[i, j] += Bias[bx * block_N + j]
+                    T.copy(C_local, C[by * block_M, bx * block_N])
 
         return self.maybe_simplify(general_dequant_matmul)
 
