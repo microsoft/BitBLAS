@@ -105,16 +105,18 @@ class Operator(object):
         self.target = target
         self.backend = backend
 
-        self.ir_module: Optional[IRModule] = (
-            self._select_implementation() if self.is_tir_backend() else None)
-        self.scheduler: Optional[BaseScheduler] = (
-            self._select_scheduler() if self.is_tilelang_backend() else None)
-
         self.scheduled_ir_module: Optional[IRModule] = None
         self.rt_mod: Optional[Module] = None
         self.time_evaluator: Optional[Callable] = None
         self.dynamic_range: Optional[Dict] = None
         self.arch: Optional[TileDevice] = get_arch(target) if target else None
+
+        # selector must be invoked after arch is initialized
+        self.ir_module: Optional[IRModule] = (
+            self._select_implementation() if self.is_tir_backend() else None)
+        self.scheduler: Optional[BaseScheduler] = (
+            self._select_scheduler() if self.is_tilelang_backend() else None)
+
         self.pass_context: Optional[Dict] = None
 
         self.kernel_name_generator: Optional[BaseKernelNameGenerator] = (

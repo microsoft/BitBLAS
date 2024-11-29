@@ -21,6 +21,11 @@ from .ladder_weight_transform_tensorcore_s4 import (
     MatmulINT4DequantizeWeightPropagationScheduler,  # noqa: F401
 )
 
+from bitblas.base.roller import TileDevice
+from bitblas.base.arch import (
+    is_ampere_arch,
+    is_volta_arch,
+)
 from bitblas.ops.common import TransformKind
 from typing import Union
 
@@ -39,7 +44,54 @@ def is_non_transform_kind(kind) -> bool:
     return kind == TransformKind.NonTransform
 
 
-def select_scheduler(
+def volta_select_scheduler(
+    M=None,
+    N=1024,
+    K=1024,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+    bit=4,
+    storage_dtype="int8",
+    source_format="uint",
+    with_scaling=False,
+    with_zeros=False,
+    group_size=-1,
+    fast_decoding=False,
+    with_bias=False,
+    layout="nt",
+    zeros_mode="original",
+    propagate_a: Union[int, TransformKind] = TransformKind.NonTransform,
+    propagate_b: Union[int, TransformKind] = TransformKind.NonTransform,
+):
+    '''
+        Fine-grained Interface is preferred as it provides more flexibility
+        and can be used to implement high performance kernel.
+    '''
+    if isinstance(propagate_a, int):
+        propagate_a = TransformKind(propagate_a)
+    if isinstance(propagate_b, int):
+        propagate_b = TransformKind(propagate_b)
+
+    trans_A, trans_B = parse_layout(layout)
+
+    def check_if_not_supported():
+        conditions = [True]
+        conditions.append(propagate_a == TransformKind.NonTransform)
+        conditions.append(propagate_b == TransformKind.NonTransform)
+        conditions.append(trans_A is False)
+        conditions.append(trans_B is True)
+        conditions.append(in_dtype in ["int8", "float16", "float32"])
+        conditions.append(accum_dtype in ["int32", "float32"])
+        return all(conditions)
+
+    if not check_if_not_supported():
+        raise ValueError(f"Unsupported configuration: {layout}, {propagate_a}, {propagate_b}")
+
+    raise NotImplementedError
+
+
+def ampere_select_scheduler(
     M=None,
     N=1024,
     K=1024,
@@ -161,3 +213,51 @@ def select_scheduler(
         )
     else:
         raise ValueError(f"Unsupported configuration: {layout}, {propagate_a}, {propagate_b}")
+
+
+def select_scheduler(
+    arch: TileDevice,
+    M=None,
+    N=1024,
+    K=1024,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+    bit=4,
+    storage_dtype="int8",
+    source_format="uint",
+    with_scaling=False,
+    with_zeros=False,
+    group_size=-1,
+    fast_decoding=False,
+    with_bias=False,
+    layout="nt",
+    zeros_mode="original",
+    propagate_a: Union[int, TransformKind] = TransformKind.NonTransform,
+    propagate_b: Union[int, TransformKind] = TransformKind.NonTransform,
+):
+    if is_ampere_arch(arch):
+        return ampere_select_scheduler(
+            M=M,
+            N=N,
+            K=K,
+            in_dtype=in_dtype,
+            out_dtype=out_dtype,
+            accum_dtype=accum_dtype,
+            bit=bit,
+            storage_dtype=storage_dtype,
+            source_format=source_format,
+            with_scaling=with_scaling,
+            with_zeros=with_zeros,
+            group_size=group_size,
+            fast_decoding=fast_decoding,
+            with_bias=with_bias,
+            layout=layout,
+            zeros_mode=zeros_mode,
+            propagate_a=propagate_a,
+            propagate_b=propagate_b,
+        )
+    elif is_volta_arch(arch):
+        raise NotImplementedError
+    else:
+        raise ValueError(f"Unsupported target: {arch.name}")
