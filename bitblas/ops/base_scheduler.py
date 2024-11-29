@@ -56,7 +56,7 @@ class BaseScheduler(ABC):
         return stmt
 
     @abstractmethod
-    def with_default_config(self):
+    def with_default_config(self) -> PrimFunc:
         pass
 
     @abstractmethod

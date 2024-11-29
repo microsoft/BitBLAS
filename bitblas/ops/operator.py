@@ -371,6 +371,8 @@ class Operator(object):
                 func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=parallel_build)
             # Return the best Config as Hint
             return (best.sch.mod, best.config) if best is not None else (None, None)
+        else:
+            raise ValueError(f"Unsupported backend: {self.backend}")
 
     def apply_fast_tuning_with_dynamic_range(
         self,
@@ -378,17 +380,30 @@ class Operator(object):
         target: Target,
         topk: int = 20,
         dynamic_range: Dict[str, List[int]] = None,
+        parallel_build=True,
     ):
-        scheduled_ir_module = fast_tune_with_dynamic_range(
-            func_or_scheduler,
-            target,
-            topk=topk,
-            parallel_build=True,
-            dynamic_range=dynamic_range,
-            kernel_name_generator=self.kernel_name_generator,
-        )
-        if scheduled_ir_module is not None:
-            return scheduled_ir_module
+        if self.is_tir_backend():
+            scheduled_ir_module = fast_tune_with_dynamic_range(
+                func_or_scheduler,
+                target,
+                topk=topk,
+                parallel_build=parallel_build,
+                dynamic_range=dynamic_range,
+                kernel_name_generator=self.kernel_name_generator,
+            )
+            if scheduled_ir_module is not None:
+                return scheduled_ir_module
+        elif self.is_tilelang_backend():
+            # Finetune the schedule
+            tuning_configs = self.get_tl_tuning_config(topk=topk)
+            assert len(tuning_configs) > 0, "No tuning config found for this operator."
+            _, best = tl_apply_and_build(
+                func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=parallel_build)
+            # Return the best Config as Hint
+            return (best.sch.mod, best.config) if best is not None else (None, None)
+        else:
+            raise ValueError(f"Unsupported backend: {self.backend}")
+
         return None
 
     def hardware_aware_finetune(
@@ -406,7 +421,9 @@ class Operator(object):
                 self.scheduled_ir_module = self.apply_fast_tuning_with_dynamic_range(
                     func, target, topk, dynamic_range)
             elif self.is_tilelang_backend():
-                raise NotImplementedError("Not support dynamic range for tilelang backend")
+                func = self.scheduler.with_default_config()
+                self.scheduled_ir_module = self.apply_fast_tuning_with_dynamic_range(
+                    func, target, topk, dynamic_range)
         else:
             func_or_scheduler = (self.prim_func if self.is_tir_backend() else self.scheduler)
             scheduled_mod, best_hint = self.apply_fast_tuning(

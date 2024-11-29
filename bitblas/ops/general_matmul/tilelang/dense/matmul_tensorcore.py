@@ -517,7 +517,12 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
                     # Do bias addition
                     if with_bias:
                         for i, j in T.Parallel(block_M, block_N):
-                            C_shared[i, j] += Bias[bx * block_N + j]
+                            C_shared[
+                                i // micro_size_x,
+                                j // micro_size_y,
+                                i % micro_size_x,
+                                j % micro_size_y,
+                            ] += Bias[bx * block_N + j]
 
                     # Store results from shared memory to global memory
                     for i, j in T.Parallel(block_M, block_N):
@@ -721,7 +726,12 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
                     # Do bias addition
                     if with_bias:
                         for i, j in T.Parallel(block_M, block_N):
-                            C_shared[i, j] += Bias[bx * block_N + j]
+                            C_shared[
+                                i // micro_size_x,
+                                j // micro_size_y,
+                                i % micro_size_x,
+                                j % micro_size_y,
+                            ] += Bias[bx * block_N + j]
 
                     # Store results from shared memory to global memory
                     for i, j in T.Parallel(block_M, block_N):

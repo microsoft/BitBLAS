@@ -97,10 +97,8 @@ def should_do_global_cleanup_after_test(request) -> bool:
     to initialize torch.
     """
 
-    if request.node.get_closest_marker("skip_global_cleanup"):
+    if not request.node.get_closest_marker("skip_global_cleanup"):
         return False
-
-    return True
 
 
 @pytest.fixture(autouse=True)

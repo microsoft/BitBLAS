@@ -209,7 +209,7 @@ def select_scheduler(
             propagate_b=propagate_b,
         )
     elif is_volta_arch(arch):
-        volta_select_schduler(
+        return volta_select_schduler(
             M=M,
             N=N,
             K=K,

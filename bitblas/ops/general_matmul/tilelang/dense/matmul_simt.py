@@ -5,11 +5,14 @@ from typing import Optional, List
 from bitblas.ops.base_scheduler import BaseScheduler
 import tvm.tl.language as T
 from tvm import DataType
+from tvm.tir import PrimFunc
 
 from dataclasses import dataclass
 from bitblas.base.utils import get_roller_hints_from_func
 from bitblas.ops.general_matmul.tirscript import (matmul_select_implementation)
 from bitblas.base.arch import TileDevice
+from bitblas.tl.base_hint import BaseTLHint
+from bitblas.base.roller.hint import Hint
 
 
 @dataclass
@@ -46,8 +49,7 @@ class MatmulSIMTBaseScheduler(BaseScheduler):
             ir_module,
             arch,
             topk,
-            tensorcore_only=True,
-            allow_gemv=True,
+            tensorcore_only=False,
         )
 
         if roller_hints is None:
@@ -81,7 +83,61 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
     thread_col_tiles: int = 16
     chunk: int = 16  # Usually determines the K-dimension split size
 
-    def with_default_config(self):
+    class TLHint(BaseTLHint):
+
+        def __init__(self):
+            super().__init__()
+
+        @classmethod
+        def from_roller_hint(cls, hint: Hint):
+            tl_hint = cls()
+            for key, value in hint.__dict__.items():
+                setattr(tl_hint, key, value)
+
+            block_row_warps = hint.block[0] // (hint.thread[0] * hint.step[0])
+            block_col_warps = hint.block[1] // (hint.thread[1] * hint.step[1])
+            thread_row_tiles = hint.thread[0] // (hint.step[0] * 2)
+            thread_col_tiles = hint.thread[1] // (hint.step[1] * 2)
+            vthread_row_tiles = (hint.step[0] * 2)  # expand vtrhead to avoid load band conflict
+            vthread_col_tiles = (hint.step[1] * 2)  # expand vtrhead to avoid load band conflict
+            chunk = hint.rstep[0]
+
+            tl_hint.block_size_x = block_row_warps
+            tl_hint.block_size_y = block_col_warps
+            tl_hint.thread_row_tiles = thread_row_tiles
+            tl_hint.thread_col_tiles = thread_col_tiles
+            tl_hint.vthread_row_tiles = vthread_row_tiles
+            tl_hint.vthread_col_tiles = vthread_col_tiles
+            tl_hint.chunk = chunk
+
+            return tl_hint
+
+        def get_config_params(self):
+            return {
+                "block_size_x": self.block_size_x,
+                "block_size_y": self.block_size_y,
+                "thread_row_tiles": self.thread_row_tiles,
+                "thread_col_tiles": self.thread_col_tiles,
+                "chunk": self.chunk,
+            }
+
+        def __repr__(self):
+            return ("{"
+                    f"block_size_x: {self.block_size_x}, "
+                    f"block_size_y: {self.block_size_y}, "
+                    f"thread_row_tiles: {self.thread_row_tiles}, "
+                    f"thread_col_tiles: {self.thread_col_tiles}, "
+                    f"chunk: {self.chunk}"
+                    "}")
+
+    def serialze_hints_to_configs(self, hints: List[Hint]):
+        configs = []
+        for hint in hints:
+            config = self.TLHint.from_roller_hint(hint)
+            configs.append(config)
+        return configs
+
+    def with_default_config(self) -> PrimFunc:
         block_size_x = getattr(self, "block_size_x", 2)
         block_size_y = getattr(self, "block_size_y", 2)
         thread_row_tiles = getattr(self, "thread_row_tiles", 16)

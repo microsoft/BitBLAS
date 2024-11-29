@@ -392,8 +392,9 @@ class Matmul(Operator):
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
-            self.ir_module["main"] = self.ir_module["main"].with_attrs(
-                {"opt_shapes": self.dynamic_range})
+            if self.is_tir_backend():
+                self.ir_module["main"] = self.ir_module["main"].with_attrs(
+                    {"opt_shapes": self.dynamic_range})
         else:
             self.dynamic_range = None
 
