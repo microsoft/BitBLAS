@@ -5,8 +5,6 @@ from tvm import DataType
 from tvm.target import Target
 import operator
 from functools import reduce
-from bitblas.base.arch.cuda import CUDA
-from bitblas.base.arch.cdna import CDNA
 from bitblas.base.roller.hint import Hint
 from typing import Any, Literal, Optional, Tuple, Union
 from ..operator import OperatorConfig, Operator, OPExecutorCPU, BaseKernelNameGenerator
@@ -290,24 +288,25 @@ class MatmulKernelNameGenerator(BaseKernelNameGenerator):
 
         precision_str = (f"{A_dtype}x{W_dtype}")
         kernel_name = "_".join([kernel_name, shape_str, precision_str])
+        '''
+            if config.with_scaling:
+                kernel_name += "Scale"
 
-        # if config.with_scaling:
-        #     kernel_name += "Scale"
+            if config.with_zeros:
+                if config.zeros_mode == "original":
+                    kernel_name += "OriginalZeros"
+                elif config.zeros_mode == "rescale":
+                    precision_str += "RescaleZeros"
+                elif config.zeros_mode == "quantized":
+                    precision_str += "QuantizedZeros"
+                else:
+                    raise ValueError(f"Unsupported zeros mode: {config.zeros_mode}")
 
-        # if config.with_zeros:
-        #     if config.zeros_mode == "original":
-        #         kernel_name += "OriginalZeros"
-        #     elif config.zeros_mode == "rescale":
-        #         precision_str += "RescaleZeros"
-        #     elif config.zeros_mode == "quantized":
-        #         precision_str += "QuantizedZeros"
-        #     else:
-        #         raise ValueError(f"Unsupported zeros mode: {config.zeros_mode}")
-
-        # if config.propagate_a is not TransformKind.NonTransform:
-        #     kernel_name += f"_pa{config.propagate_a.value}"
-        # if config.propagate_b is not TransformKind.NonTransform:
-        #     kernel_name += f"_pb{config.propagate_b.value}"
+            if config.propagate_a is not TransformKind.NonTransform:
+                kernel_name += f"_pa{config.propagate_a.value}"
+            if config.propagate_b is not TransformKind.NonTransform:
+                kernel_name += f"_pb{config.propagate_b.value}"
+        '''
 
         kernel_name = "_".join([kernel_name, self.serialize_hint(hint)])
         assert self.is_valid(kernel_name), "Kernel name invalid"
@@ -390,16 +389,12 @@ class Matmul(Operator):
                      from_database: bool = False,
                      source_format: str = "uint",
                      enable_tuning: bool = True):
-        '''Dispatch the tir script implementation'''
-        if (target.kind.name == "cuda"):
-            self.arch = CUDA(target)
-        elif (target.kind.name == "hip"):
-            self.arch = CDNA(target)
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
-            self.ir_module["main"] = self.ir_module["main"].with_attrs(
-                {"opt_shapes": self.dynamic_range})
+            if self.is_tir_backend():
+                self.ir_module["main"] = self.ir_module["main"].with_attrs(
+                    {"opt_shapes": self.dynamic_range})
         else:
             self.dynamic_range = None
 
@@ -600,6 +595,7 @@ class Matmul(Operator):
     def _select_scheduler(self):
         if is_native_compute(self.A_dtype, self.W_dtype):
             return consistent_scheduler(
+                arch=self.arch,
                 M=self.M,
                 N=self.N,
                 K=self.K,
@@ -613,6 +609,7 @@ class Matmul(Operator):
             )
         else:
             return weight_dequantize_scheduler(
+                arch=self.arch,
                 M=self.M,
                 N=self.N,
                 K=self.K,

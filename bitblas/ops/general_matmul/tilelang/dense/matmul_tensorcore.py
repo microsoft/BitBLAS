@@ -28,8 +28,7 @@ warp_size = 32
 
 
 @dataclass
-class MatmulScheduler(BaseScheduler):
-
+class MatmulBaseScheduler(BaseScheduler):
     # OP Related Config
     M: Optional[int] = None
     N: Optional[int] = None
@@ -39,6 +38,51 @@ class MatmulScheduler(BaseScheduler):
     in_dtype: str = "float16"
     out_dtype: str = "float16"
     accum_dtype: str = "float16"
+    with_bias: bool = False
+
+    def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
+        layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
+
+        # Simple TIR Compute Expression
+        ir_module = matmul_select_implementation(
+            M=self.M,
+            N=self.N,
+            K=self.K,
+            in_dtype=self.in_dtype,
+            out_dtype=self.out_dtype,
+            accum_dtype=self.accum_dtype,
+            layout=layout,
+        )
+
+        roller_hints = get_roller_hints_from_func(
+            ir_module,
+            arch,
+            topk,
+            tensorcore_only=True,
+            allow_gemv=True,
+        )
+
+        if roller_hints is None:
+            raise ValueError("No Roller Hints Found for TensorCore Scheduling")
+
+        return self.serialze_hints_to_configs(roller_hints)
+
+    def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
+        return self.get_roller_configs(arch, topk)
+
+    # check if required shared memory cache
+    def check_require_cache(self) -> bool:
+        with_bias = self.with_bias
+
+        conditions: List[bool] = []
+        conditions.append(False)
+        # Bias Add should be done in shared memory
+        conditions.append(with_bias)
+        return any(conditions)  # Always set to False Currently
+
+
+@dataclass
+class MatmulBlockScheduler(MatmulBaseScheduler):
 
     # Default Tile Related Params
     block_M: int = 64
@@ -126,42 +170,12 @@ class MatmulScheduler(BaseScheduler):
         configs = [{**c, 'num_stages': num_stages} for c in configs]
         return configs
 
-    def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
-        layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
-
-        # Simple TIR Compute Expression
-        ir_module = matmul_select_implementation(
-            M=self.M,
-            N=self.N,
-            K=self.K,
-            in_dtype=self.in_dtype,
-            out_dtype=self.out_dtype,
-            accum_dtype=self.accum_dtype,
-            layout=layout,
-        )
-
-        roller_hints = get_roller_hints_from_func(
-            ir_module,
-            arch,
-            topk,
-            tensorcore_only=True,
-            allow_gemv=True,
-        )
-
-        if roller_hints is None:
-            raise ValueError("No Roller Hints Found for TensorCore Scheduling")
-
-        def serialze_hints_to_configs(hints: List[Hint]):
-            configs = []
-            for hint in hints:
-                config = self.TLHint.from_roller_hint(hint)
-                configs.append(config)
-            return configs
-
-        return serialze_hints_to_configs(roller_hints)
-
-    def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
-        return self.get_roller_configs(arch, topk)
+    def serialze_hints_to_configs(self, hints: List[Hint]):
+        configs = []
+        for hint in hints:
+            config = self.TLHint.from_roller_hint(hint)
+            configs.append(config)
+        return configs
 
     def with_default_config(self):
         block_M = getattr(self, "block_M", 64)
@@ -199,9 +213,12 @@ class MatmulScheduler(BaseScheduler):
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
+        with_bias = self.with_bias
 
         A_shape = (K, M) if trans_A else (M, K)
         B_shape = (N, K) if trans_B else (K, N)
+        C_shape = (M, N)
+        Bias_shape = (N,)
         A_shared_shape = (block_K, block_M) if trans_A else (block_M, block_K)
         B_shared_shape = (block_N, block_K) if trans_B else (block_K, block_N)
 
@@ -209,7 +226,8 @@ class MatmulScheduler(BaseScheduler):
         def main(
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, in_dtype),
-                C: T.Buffer((M, N), out_dtype),
+                C: T.Buffer(C_shape, out_dtype),
+                Bias: T.Buffer(Bias_shape, out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
@@ -230,6 +248,11 @@ class MatmulScheduler(BaseScheduler):
                     else:
                         T.copy(B[k * block_K, bx * block_N], B_shared)
                     T.gemm(A_shared, B_shared, C_local, trans_A, trans_B)
+
+                if with_bias:
+                    for i, j in T.Parallel(block_M, block_N):
+                        C_local[i, j] += Bias[bx * block_N + j]
+
                 T.copy(C_local, C[by * block_M, bx * block_N])
 
         return self.maybe_simplify(main)
@@ -240,19 +263,9 @@ class MatmulScheduler(BaseScheduler):
 
 
 @dataclass
-class MatmulFineGrainScheduler(BaseScheduler):
+class MatmulFineGrainScheduler(MatmulBaseScheduler):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
-
-    # Operation Configuration
-    M: Optional[int] = None
-    N: Optional[int] = None
-    K: Optional[int] = None
-    in_dtype: str = "float16"
-    out_dtype: str = "float16"
-    trans_A: bool = False
-    trans_B: bool = True
-    accum_dtype: str = "float16"
 
     # Tensor Core Warp Configuration
     block_row_warps: int = 2
@@ -325,47 +338,12 @@ class MatmulFineGrainScheduler(BaseScheduler):
                     f"enable_rasterization={self.enable_rasterization}"
                     "}")
 
-    def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
-        layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
-
-        M = self.M
-        # This is a hack to utilize tensor core
-        if isinstance(M, int) and M < 16:
-            M = 16
-
-        # Simple TIR Compute Expression
-        ir_module = matmul_select_implementation(
-            M=M,
-            N=self.N,
-            K=self.K,
-            in_dtype=self.in_dtype,
-            out_dtype=self.out_dtype,
-            accum_dtype=self.accum_dtype,
-            layout=layout,
-        )
-
-        roller_hints = get_roller_hints_from_func(
-            ir_module,
-            arch,
-            topk,
-            tensorcore_only=True,
-            allow_gemv=True,
-        )
-
-        if roller_hints is None:
-            raise ValueError("No Roller Hints Found for TensorCore Scheduling")
-
-        def serialze_hints_to_configs(hints: List[Hint]):
-            configs = []
-            for hint in hints:
-                config = self.TLHint.from_roller_hint(hint)
-                configs.append(config)
-            return configs
-
-        return serialze_hints_to_configs(roller_hints)
-
-    def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
-        return self.get_roller_configs(arch, topk)
+    def serialze_hints_to_configs(self, hints: List[Hint]):
+        configs = []
+        for hint in hints:
+            config = self.TLHint.from_roller_hint(hint)
+            configs.append(config)
+        return configs
 
     def with_default_config(self):
         block_row_warps = getattr(self, "block_row_warps", 2)
@@ -409,6 +387,7 @@ class MatmulFineGrainScheduler(BaseScheduler):
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
+        with_bias = self.with_bias
 
         # Calculate the micro size per warp using a helper function
         micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(in_dtype)
@@ -420,6 +399,8 @@ class MatmulFineGrainScheduler(BaseScheduler):
         # Define the shapes of matrices and shared memory buffers
         A_shape = (M, K)
         B_shape = (N, K)
+        C_shape = (M, N)
+        Bias_shape = (N,)
         A_shared_shape = (block_M, block_K)
         B_shared_shape = (block_N, block_K)
         C_shared_shape = (
@@ -454,12 +435,16 @@ class MatmulFineGrainScheduler(BaseScheduler):
             chunk=chunk,
         )
 
+        # cache_write_required = self.check_require_cache()
+        cache_write_required = False
+
         # Define the main kernel using the generated configuration
         @T.prim_func
         def main(
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, in_dtype),
-                C: T.Buffer((M, N), out_dtype),
+                C: T.Buffer(C_shape, out_dtype),
+                Bias: T.Buffer(Bias_shape, out_dtype),
         ):
             # Grid and thread configuration for CUDA kernel
             with T.Kernel(
@@ -521,21 +506,41 @@ class MatmulFineGrainScheduler(BaseScheduler):
                         # Matrix multiplication on fragments
                         mma_emitter.mma(A_local, B_local, C_local)
 
-                # Store the result back to C shared memory
-                mma_emitter.stmatrix(
-                    C_local,
-                    C_shared,
-                    thread_bindings=thread_bindings,
-                )
+                if cache_write_required:
+                    # Store the result back to C shared memory
+                    mma_emitter.stmatrix(
+                        C_local,
+                        C_shared,
+                        thread_bindings=thread_bindings,
+                    )
 
-                # Store results from shared memory to global memory
-                for i, j in T.Parallel(block_M, block_N):
-                    C[by * block_M + i, bx * block_N + j] = C_shared[
-                        i // micro_size_x,
-                        j // micro_size_y,
-                        i % micro_size_x,
-                        j % micro_size_y,
-                    ]
+                    # Do bias addition
+                    if with_bias:
+                        for i, j in T.Parallel(block_M, block_N):
+                            C_shared[
+                                i // micro_size_x,
+                                j // micro_size_y,
+                                i % micro_size_x,
+                                j % micro_size_y,
+                            ] += Bias[bx * block_N + j]
+
+                    # Store results from shared memory to global memory
+                    for i, j in T.Parallel(block_M, block_N):
+                        C[by * block_M + i, bx * block_N + j] = C_shared[
+                            i // micro_size_x,
+                            j // micro_size_y,
+                            i % micro_size_x,
+                            j % micro_size_y,
+                        ]
+                else:
+                    # Store the result directly to global memory
+                    mma_emitter.stmatrix(
+                        C_local,
+                        C,
+                        thread_bindings=thread_bindings,
+                        pid_m=by,
+                        pid_n=bx,
+                    )
 
         return self.maybe_simplify(main)
 
@@ -567,6 +572,7 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
         M, N, K = self.M, self.N, self.K
         trans_A, trans_B = self.trans_A, self.trans_B
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
+        with_bias = self.with_bias
 
         # Calculate the micro size per warp using a helper function
         micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(in_dtype)
@@ -586,6 +592,9 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
         # Define the shapes of matrices and shared memory buffers
         A_shape = (M, K)
         B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y, micro_size_k)
+        C_shape = (M, N)
+        Bias_shape = (N,)
+
         A_shared_shape = (block_M, (block_K + pad_factor) if apply_pad_a else block_K)
         B_shared_shape = (
             block_N // micro_size_y,
@@ -628,12 +637,14 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
             transform_kind_b=self.weight_transform_kind,
         )
 
+        cache_write_required = self.check_require_cache()
         # Define the main kernel using the generated configuration
         @T.prim_func
         def main(
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, in_dtype),
-                C: T.Buffer((M, N), out_dtype),
+                C: T.Buffer(C_shape, out_dtype),
+                Bias: T.Buffer(Bias_shape, out_dtype),
         ):
             # Grid and thread configuration for CUDA kernel
             with T.Kernel(
@@ -704,21 +715,41 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
                         # Matrix multiplication on fragments
                         mma_emitter.mma(A_local, B_local, C_local)
 
-                # Store the result back to C shared memory
-                mma_emitter.stmatrix(
-                    C_local,
-                    C_shared,
-                    thread_bindings=thread_bindings,
-                )
+                if cache_write_required:
+                    # Store the result back to C shared memory
+                    mma_emitter.stmatrix(
+                        C_local,
+                        C_shared,
+                        thread_bindings=thread_bindings,
+                    )
 
-                # Store results from shared memory to global memory
-                for i, j in T.Parallel(block_M, block_N):
-                    C[by * block_M + i, bx * block_N + j] = C_shared[
-                        i // micro_size_x,
-                        j // micro_size_y,
-                        i % micro_size_x,
-                        j % micro_size_y,
-                    ]
+                    # Do bias addition
+                    if with_bias:
+                        for i, j in T.Parallel(block_M, block_N):
+                            C_shared[
+                                i // micro_size_x,
+                                j // micro_size_y,
+                                i % micro_size_x,
+                                j % micro_size_y,
+                            ] += Bias[bx * block_N + j]
+
+                    # Store results from shared memory to global memory
+                    for i, j in T.Parallel(block_M, block_N):
+                        C[by * block_M + i, bx * block_N + j] = C_shared[
+                            i // micro_size_x,
+                            j // micro_size_y,
+                            i % micro_size_x,
+                            j % micro_size_y,
+                        ]
+                else:
+                    # Store the result directly to global memory
+                    mma_emitter.stmatrix(
+                        C_local,
+                        C,
+                        thread_bindings=thread_bindings,
+                        pid_m=by,
+                        pid_n=bx,
+                    )
 
         return self.maybe_simplify(main)
 
@@ -748,6 +779,7 @@ def matmul_blocked(
 ):
     A_shape = (K, M) if trans_A else (M, K)
     B_shape = (N, K) if trans_B else (K, N)
+    C_shape = (M, N)
     A_shared_shape = (block_K, block_M) if trans_A else (block_M, block_K)
     B_shared_shape = (block_N, block_K) if trans_B else (block_K, block_N)
 
@@ -755,7 +787,7 @@ def matmul_blocked(
     def main(
             A: T.Buffer(A_shape, in_dtype),
             B: T.Buffer(B_shape, in_dtype),
-            C: T.Buffer((M, N), out_dtype),
+            C: T.Buffer(C_shape, out_dtype),
     ):
         with T.Kernel(T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
             A_shared = T.alloc_shared(A_shared_shape, in_dtype)

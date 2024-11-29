@@ -2,10 +2,10 @@
 # Licensed under the MIT License.
 
 import tvm.tl.language as T
-
-from typing import Union
+from typing import Union, Tuple, Optional
 from bitblas.ops.common import TransformKind
 from tvm import DataType
+from tvm.tir import PrimExpr
 from tvm.runtime import convert
 from .utils import (
     mma_store_index_map,
@@ -33,20 +33,24 @@ class TensorCoreIntrinEmitter(object):
         "e5m2_float8": "e5m2",
     }
 
+    # Represent the thread binding in the form of (tx, warp_n, warp_m)
+    is_m_first = False
+
     def __init__(
         self,
-        a_dtype="float16",
-        b_dtype="float16",
-        accum_dtype="float16",
-        a_transposed=False,
-        b_transposed=False,
-        block_row_warps=2,
-        block_col_warps=2,
-        warp_row_tiles=8,
-        warp_col_tiles=8,
-        chunk=16,
-        reduce_k=1,
-        num_elems_per_byte=1,
+        a_dtype: str = "float16",
+        b_dtype: str = "float16",
+        accum_dtype: str = "float16",
+        a_transposed: bool = False,
+        b_transposed: bool = False,
+        block_row_warps: int = 2,
+        block_col_warps: int = 2,
+        warp_row_tiles: int = 8,
+        warp_col_tiles: int = 8,
+        chunk: int = 16,
+        reduce_k: int = 1,
+        num_elems_per_byte: int = 1,
+        is_m_first: Optional[bool] = False,
     ):
         self.a_dtype = a_dtype
         self.b_dtype = b_dtype
@@ -64,10 +68,12 @@ class TensorCoreIntrinEmitter(object):
         self._initialize_local_size(self.M_DIM, self.N_DIM, self.k_dim, self.WARP_SIZE)
         self._initialize_mma_prefix(self.k_dim)
         self._initialize_micro_size(self.M_DIM, self.N_DIM, self.k_dim)
+        self._initialize_is_m_first(is_m_first)
+
         self.warp_rows = warp_row_tiles // self.micro_size_x
         self.warp_cols = warp_col_tiles // self.micro_size_y
         self.reduce_k = reduce_k
-        self.threads = (self.WARP_SIZE * (block_row_warps * block_col_warps) * reduce_k)
+        self.threads = self.WARP_SIZE * (block_row_warps * block_col_warps) * reduce_k
         self.num_elems_per_byte = num_elems_per_byte
 
     def _initialize_k_dim(self, a_dtype="float16"):
@@ -98,17 +104,50 @@ class TensorCoreIntrinEmitter(object):
         self.micro_size_y = n_dim
         self.micro_size_k = k_dim
 
-    def ldmatrix_a(self, A_local_buf, A_shared_buf, ki, thread_bindings, rk=0):
+    def _initialize_is_m_first(self, is_m_first: Optional[bool] = False):
+        if is_m_first is not None:
+            self.is_m_first = is_m_first
+
+    def extract_thread_binding(self,
+                               thread_id,
+                               is_m_first=None) -> Tuple[PrimExpr, PrimExpr, PrimExpr]:
+        """
+        is_m_first: True if the thread binding is in the form of (tx, warp_n, warp_m)
+        which represents [warp_size, block_row_warps (split n), block_col_warps (split m)]
+        Otherwise, it is in the form of [warp_size, block_col_warps (split m), block_row_warps (split n)]
+        """
         WARP_SIZE = self.WARP_SIZE
         block_row_warps = self.block_row_warps
+        block_col_warps = self.block_col_warps
+
+        # if is_m_first is None, then use the default value
+        if is_m_first is None:
+            is_m_first = self.is_m_first
+
+        if is_m_first:
+            lane_id, warp_n, warp_m = (
+                thread_id % WARP_SIZE,
+                (thread_id // WARP_SIZE) % block_col_warps,
+                (thread_id // (WARP_SIZE * block_col_warps)) % block_row_warps,
+            )
+            return lane_id, warp_n, warp_m
+        else:
+            lane_id, warp_m, warp_n = (
+                thread_id % WARP_SIZE,
+                (thread_id // WARP_SIZE) % block_row_warps,
+                (thread_id // (WARP_SIZE * block_row_warps)) % block_col_warps,
+            )
+            return lane_id, warp_n, warp_m
+
+    def ldmatrix_a(self, A_local_buf, A_shared_buf, ki, thread_bindings, rk=0):
         warp_row_tiles = self.warp_row_tiles
         warp_rows = self.warp_rows
         chunk = self.chunk
         micro_size_x = self.micro_size_x
         micro_size_k = self.micro_size_k
+        local_size_a = self.local_size_a
         a_dtype = self.a_dtype
         a_transposed = self.a_transposed
-        local_size_a = self.local_size_a
 
         @T.macro
         def _warp_ldmatrix_a(
@@ -119,9 +158,7 @@ class TensorCoreIntrinEmitter(object):
             rk=0,
         ):
             stride = A_shared_buf.shape[-1]
-            tx = thread_bindings % WARP_SIZE
-            ty = (thread_bindings // WARP_SIZE) % block_row_warps
-
+            tx, _, warp_m = self.extract_thread_binding(thread_bindings)
             for i in T.serial(warp_rows):
                 T.ptx_ldmatrix(
                     a_dtype,
@@ -131,7 +168,7 @@ class TensorCoreIntrinEmitter(object):
                     A_local_buf.data,
                     i * local_size_a,
                     T.address_of(A_shared_buf[
-                        ty * warp_row_tiles + i * micro_size_x,
+                        warp_m * warp_row_tiles + i * micro_size_x,
                         rk * chunk + ki * micro_size_k,
                     ]),
                     get_ldmatrix_offset("A", tx, 0, stride, a_dtype, a_transposed),
@@ -140,10 +177,6 @@ class TensorCoreIntrinEmitter(object):
         return _warp_ldmatrix_a(A_local_buf, A_shared_buf, ki, thread_bindings, rk)
 
     def ldmatrix_b(self, B_local_buf, B_shared_buf, ki, thread_bindings, rk=0):
-
-        WARP_SIZE = self.WARP_SIZE
-        block_row_warps = self.block_row_warps
-        block_col_warps = self.block_col_warps
         warp_col_tiles = self.warp_col_tiles
         warp_cols = self.warp_cols
         chunk = self.chunk
@@ -162,13 +195,12 @@ class TensorCoreIntrinEmitter(object):
             rk=0,
         ):
             stride = B_shared_buf.shape[-1]
-            tx = thread_bindings % WARP_SIZE
-            tz = (thread_bindings // (WARP_SIZE * block_row_warps)) % block_col_warps
+            tx, warp_n, _ = self.extract_thread_binding(thread_bindings)
 
             for j in T.serial(warp_cols):
                 # Assign B_shared_elem
                 ri, rj = (
-                    tz * warp_col_tiles + j * micro_size_y,
+                    warp_n * warp_col_tiles + j * micro_size_y,
                     rk * chunk + ki * micro_size_k,
                 )
                 B_shared_elem = B_shared_buf[ri, rj]
@@ -237,33 +269,50 @@ class TensorCoreIntrinEmitter(object):
 
         return _warp_mma(A_local_buf, B_local_buf, C_local_buf)
 
-    def stmatrix(self, C_local_buf, C_shared_buf, thread_bindings):
-        WARP_SIZE = self.WARP_SIZE
+    def stmatrix(self, C_local_buf, C_buf, thread_bindings, pid_m=None, pid_n=None):
         block_row_warps = self.block_row_warps
         block_col_warps = self.block_col_warps
         warp_rows = self.warp_rows
         warp_cols = self.warp_cols
         local_size_out = self.local_size_out
 
+        is_global = pid_m is not None and pid_n is not None
+        BLOCK_M = block_row_warps * warp_rows
+        BLOCK_N = block_col_warps * warp_cols
+        M_DIM, N_DIM = self.M_DIM, self.N_DIM
+
         # STS
         # MMA Store must be in simulated instead of TVM Intrins
         # As TVM Intrins is like a hack that the threadIdx.x should be always
         # equal to the warp_size
         @T.macro
-        def _warp_stmatrix(C_local_buf, C_shared_buf, thread_bindings):
-            tx = thread_bindings % WARP_SIZE
-            ty = (thread_bindings // WARP_SIZE) % block_row_warps
-            tz = (thread_bindings // (WARP_SIZE * block_row_warps)) % block_col_warps
+        def _warp_stmatrix_shared(C_local_buf, C_buf, thread_bindings):
+            tx, warp_n, warp_m = self.extract_thread_binding(thread_bindings)
             for i, j in T.grid(warp_rows, warp_cols):
                 for local_id_o in T.serial(local_size_out // 2):
                     for local_id_i in T.vectorized(2):
                         local_id = local_id_o * 2 + local_id_i
                         row, col = T.meta_var(mma_store_index_map(tx, local_id))
-                        C_shared_buf[ty * warp_rows + i, tz * warp_cols + j, row,
-                                     col] = C_local_buf[i * (warp_cols * local_size_out) +
-                                                        j * local_size_out + local_id]
+                        C_buf[warp_m * warp_rows + i, warp_n * warp_cols + j, row,
+                              col] = C_local_buf[i * (warp_cols * local_size_out) +
+                                                 j * local_size_out + local_id]
 
-        return _warp_stmatrix(C_local_buf, C_shared_buf, thread_bindings)
+        @T.macro
+        def _warp_stmatrix_global(C_local_buf, C_buf, thread_bindings):
+            tx, warp_n, warp_m = self.extract_thread_binding(thread_bindings)
+            for i, j in T.grid(warp_rows, warp_cols):
+                for local_id_o in T.serial(local_size_out // 2):
+                    for local_id_i in T.vectorized(2):
+                        local_id = local_id_o * 2 + local_id_i
+                        row, col = T.meta_var(mma_store_index_map(tx, local_id))
+                        C_buf[
+                            (pid_m * BLOCK_M + warp_m * warp_rows + i) * M_DIM + row,
+                            (pid_n * BLOCK_N + warp_n * warp_cols + j) * N_DIM + col,
+                        ] = C_local_buf[i * warp_cols * local_size_out + j * local_size_out +
+                                        local_id]
+
+        return (_warp_stmatrix_global(C_local_buf, C_buf, thread_bindings)
+                if is_global else _warp_stmatrix_shared(C_local_buf, C_buf, thread_bindings))
 
 
 class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
@@ -274,20 +323,21 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
 
     def __init__(
         self,
-        a_dtype="float16",
-        b_dtype="float16",
-        accum_dtype="float16",
-        a_transposed=False,
-        b_transposed=False,
-        block_row_warps=2,
-        block_col_warps=2,
-        warp_row_tiles=8,
-        warp_col_tiles=8,
-        chunk=16,
-        reduce_k=1,
+        a_dtype: str = "float16",
+        b_dtype: str = "float16",
+        accum_dtype: str = "float16",
+        a_transposed: bool = False,
+        b_transposed: bool = False,
+        block_row_warps: int = 2,
+        block_col_warps: int = 2,
+        warp_row_tiles: int = 8,
+        warp_col_tiles: int = 8,
+        chunk: int = 16,
+        reduce_k: int = 1,
+        num_elems_per_byte: int = 1,
+        is_m_first: Optional[bool] = False,
         transform_kind_a: Union[int, TransformKind] = 0,
         transform_kind_b: Union[int, TransformKind] = 0,
-        num_elems_per_byte=1,
     ):
         super().__init__(
             a_dtype=a_dtype,
@@ -302,6 +352,7 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
             chunk=chunk,
             reduce_k=reduce_k,
             num_elems_per_byte=num_elems_per_byte,
+            is_m_first=is_m_first,
         )
         self._initialize_transform_kind(transform_kind_a, transform_kind_b)
 
@@ -352,9 +403,6 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
         assert transform_kind_b in [0, 3], "Currently only support 0 and 3"
 
     def ldmatrix_b(self, B_local_buf, B_shared_buf, ki, thread_bindings, rk=0):
-        WARP_SIZE = self.WARP_SIZE
-        block_row_warps = self.block_row_warps
-        block_col_warps = self.block_col_warps
         warp_col_tiles = self.warp_col_tiles
         warp_cols = self.warp_cols
         chunk = self.chunk
@@ -375,14 +423,13 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
             rk=0,
         ):
             stride = B_shared_buf.shape[-1]
-            tx = thread_bindings % WARP_SIZE
-            tz = (thread_bindings // (WARP_SIZE * block_row_warps)) % block_col_warps
+            tx, warp_n, _ = self.extract_thread_binding(thread_bindings)
 
             if transform_kind_b < TransformKind.LDMatrixTransform:
                 for j in T.serial(warp_cols):
                     # Assign B_shared_elem
                     ri, rj = (
-                        tz * warp_col_tiles + j * micro_size_y,
+                        warp_n * warp_col_tiles + j * micro_size_y,
                         rk * chunk + ki * micro_size_k,
                     )
                     ni, nj, nii, njj = (
@@ -391,7 +438,7 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
                         (ri) % micro_size_y,
                         (rj) % micro_size_k,
                     )
-                    args = ((ni, nj, nii, njj) if transform_kind_b > 0 else (ri, rj))
+                    args = (ni, nj, nii, njj) if transform_kind_b > 0 else (ri, rj)
                     B_shared_elem = B_shared_buf[args]
 
                     T.ptx_ldmatrix(
@@ -410,7 +457,7 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
                     for local_id in T.vectorized(local_size_dequantize):
                         # Assign B_shared_elem
                         ri, rj = (
-                            tz * warp_cols + j,
+                            warp_n * warp_cols + j,
                             rk * (chunk // micro_size_k) + ki,
                         )
                         rii, rjj = (tx * local_size_dequantize +
@@ -491,16 +538,16 @@ class INT4TensorCoreIntrinEmitter(TensorCoreIntrinEmitter):
         @T.macro
         def _warp_mma(A_local_buf, B_local_buf, C_local_buf):
             for i, j in T.grid(warp_rows, warp_cols):
-                '''
-                    A[16, 32], B[16, 32], C[16, 16]
-                    A_local_size -> 16
-                    B_local_size -> 16
-                    C_local_size -> 8
-                    For each m16n8k32 inst
-                    For A: m16k32 consume 16 int4 elements -> 8 A_local_size
-                    For A: n8k32 consume 8 int4 elements -> 4 B_local_size
-                    For C: m16n8 consume 4 int32 elements -> 4 C_local_size
-                '''
+                """
+                A[16, 32], B[16, 32], C[16, 16]
+                A_local_size -> 16
+                B_local_size -> 16
+                C_local_size -> 8
+                For each m16n8k32 inst
+                For A: m16k32 consume 16 int4 elements -> 8 A_local_size
+                For A: n8k32 consume 8 int4 elements -> 4 B_local_size
+                For C: m16n8 consume 4 int32 elements -> 4 C_local_size
+                """
 
                 # A[0:16, 0:16] * B[0:8, 0:16] -> C[0:16, 0:8]
                 T.ptx_mma(
@@ -595,16 +642,16 @@ class INT4TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitterWith
         @T.macro
         def _warp_mma(A_local_buf, B_local_buf, C_local_buf):
             for i, j in T.grid(warp_rows, warp_cols):
-                '''
-                    A[16, 32], B[16, 32], C[16, 16]
-                    A_local_size -> 16
-                    B_local_size -> 16
-                    C_local_size -> 8
-                    For each m16n8k32 inst
-                    For A: m16k32 consume 16 int4 elements -> 8 A_local_size
-                    For A: n8k32 consume 8 int4 elements -> 4 B_local_size
-                    For C: m16n8 consume 4 int32 elements -> 4 C_local_size
-                '''
+                """
+                A[16, 32], B[16, 32], C[16, 16]
+                A_local_size -> 16
+                B_local_size -> 16
+                C_local_size -> 8
+                For each m16n8k32 inst
+                For A: m16k32 consume 16 int4 elements -> 8 A_local_size
+                For A: n8k32 consume 8 int4 elements -> 4 B_local_size
+                For C: m16n8 consume 4 int32 elements -> 4 C_local_size
+                """
 
                 # A[0:16, 0:16] * B[0:8, 0:16] -> C[0:16, 0:8]
                 T.ptx_mma(

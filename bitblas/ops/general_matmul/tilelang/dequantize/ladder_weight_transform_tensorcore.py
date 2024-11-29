@@ -78,6 +78,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         warp_cols = warp_col_tiles // micro_size_y
 
         fast_decoding = self.fast_decoding
+        with_bias = self.with_bias
 
         num_bits = self.num_bits
         storage_dtype = self.storage_dtype
@@ -103,6 +104,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         Scale_shape = (N, K // group_size)
         Zeros_shape = (N, K // group_size)
         Qzeros_shape = ((K // group_size), N // storage_nbit * num_bits)
+        C_shape = (M, N)
         Bias_shape = (N,)
 
         A_shared_shape = (block_M, block_K)
@@ -158,6 +160,8 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         if block_N * block_K // num_elems_per_byte // threads < vec_load_qb:
             vec_load_qb = block_N * block_K // num_elems_per_byte // threads
 
+        cache_write_required = self.check_require_cache()
+
         @T.prim_func
         def general_dequant_matmul(
                 A: T.Buffer(A_shape, in_dtype),
@@ -166,8 +170,8 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                 Scale: T.Buffer(Scale_shape, in_dtype),
                 Qzeros: T.Buffer(Qzeros_shape, storage_dtype),
                 Zeros: T.Buffer(Zeros_shape, in_dtype),
+                C: T.Buffer(C_shape, out_dtype),
                 Bias: T.Buffer(Bias_shape, in_dtype),
-                C: T.Buffer((M, N), out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
@@ -273,21 +277,39 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                         # Matrix multiplication on fragments
                         mma_emitter.mma(A_frag, B_dequantize_frag, C_frag)
 
-                # Store the result back to C shared memory
-                mma_emitter.stmatrix(
-                    C_frag,
-                    C_shared,
-                    thread_bindings=tx,
-                )
+                if cache_write_required:
+                    # Store the result back to C shared memory
+                    mma_emitter.stmatrix(
+                        C_frag,
+                        C_shared,
+                        thread_bindings=tx,
+                    )
 
-                # Store results from shared memory to global memory
-                for i, j in T.Parallel(block_M, block_N):
-                    C[by * block_M + i, bx * block_N + j] = C_shared[
-                        i // micro_size_x,
-                        j // micro_size_y,
-                        i % micro_size_x,
-                        j % micro_size_y,
-                    ]
+                    if with_bias:
+                        for i, j in T.Parallel(block_M, block_N):
+                            C_shared[
+                                i // micro_size_x,
+                                j // micro_size_y,
+                                i % micro_size_x,
+                                j % micro_size_y,
+                            ] += Bias[j]
+
+                    # Store results from shared memory to global memory
+                    for i, j in T.Parallel(block_M, block_N):
+                        C[by * block_M + i, bx * block_N + j] = C_shared[
+                            i // micro_size_x,
+                            j // micro_size_y,
+                            i % micro_size_x,
+                            j % micro_size_y,
+                        ]
+                else:
+                    mma_emitter.stmatrix(
+                        C_frag,
+                        C,
+                        thread_bindings=tx,
+                        pid_m=by,
+                        pid_n=bx,
+                    )
 
         return self.maybe_simplify(general_dequant_matmul)
 

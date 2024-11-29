@@ -123,21 +123,37 @@ def _tir_u32_to_f4_to_f32(nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr, dtype
     return tir.Select(e_f4 == tir.const(0, "uint32"), tir.const(0, "float32"), val_f32)
 
 
-def _tir_u32_to_f4_to_f16(nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr, dtype: str):
+def _tir_packed_to_fp4_to_f16(nbit: int, val: tir.PrimExpr, pos: tir.PrimExpr, dtype: str):
     assert nbit == 4
     assert dtype == "float16"
     assert val.dtype == "uint32"
     # e_f4 == 0 -> e_f16 = 0
     # e_f4 != 0 -> e_f16 = e_f4 + 8 = e_f4 | (1000)_2
-    mask = tvm.tir.const((1 << nbit) - 1, "uint32")
-    f4 = (val >> (pos.astype("uint32") * tir.const(nbit, "uint32"))) & mask
-    s = f4 >> tir.const(3, "uint32")
-    e_f4 = f4 & tir.const(7, "uint32")
-    e_f16 = e_f4 | tir.const(8, "uint32")
+    mask = tvm.tir.const((1 << nbit) - 1, "uint16")
+    f4 = (val >> (pos.astype("uint16") * tir.const(nbit, "uint16"))) & mask
+    s = f4 >> tir.const(3, "uint16")
+    e_f4 = f4 & tir.const(7, "uint16")
+    e_f16 = e_f4 | tir.const(8, "uint16")
     val_f16 = tir.reinterpret("float16",
-                              (e_f16 | (s << tir.const(5, "uint32"))) << tir.const(10, "uint32"))
-    return tir.Select(e_f4 == tir.const(0, "uint32"), tir.const(0, "float16"), val_f16)
+                              ((e_f16 | (s << tir.const(5, "uint16"))) << tir.const(10, "uint16")).astype("uint16"))
+    return tir.Select(e_f4 == tir.const(0, "uint16"), tir.const(0, "float16"), val_f16)
 
+def _tir_packed_to_fp4_to_f16(storage_type="uint", storage_nbit=8):
+    storage_dtype = storage_type + str(storage_nbit)
+
+    def f_convert(nbit: int, val: tvm.tir.PrimExpr, pos: tvm.tir.PrimExpr, dtype: str):
+        assert val.dtype == storage_dtype, f"{val.dtype} != {storage_dtype}"
+        mask = tvm.tir.const((1 << nbit) - 1, storage_dtype)
+        f4 = ((val >> (pos * nbit).astype(storage_dtype)) & mask).astype(storage_dtype)
+        f4 = (val >> (pos.astype(storage_dtype) * tir.const(nbit, storage_dtype))) & mask
+        s = f4 >> tir.const(3, storage_dtype)
+        e_f4 = f4 & tir.const(7, storage_dtype)
+        e_f16 = e_f4 | tir.const(8, storage_dtype)
+        val_f16 = tir.reinterpret("float16",
+                                ((e_f16 | (s << tir.const(5, storage_dtype))) << tir.const(10, storage_dtype)).astype("uint16"))
+        return tir.Select(e_f4 == tir.const(0, storage_dtype), tir.const(0, "float16"), val_f16)
+
+    return f_convert
 
 def _tir_u8_to_f8_e4m3_to_f16_naive(nbit: int, val: tir.PrimExpr, dtype: str):
     assert nbit == 8

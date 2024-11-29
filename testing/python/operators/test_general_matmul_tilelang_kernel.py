@@ -5,7 +5,7 @@ from bitblas import tvm as tvm
 import bitblas.testing
 from tvm import tl
 from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
-    MatmulScheduler,
+    MatmulBlockScheduler,
     MatmulFineGrainScheduler,
     MatmulWeightPropagationScheduler,
 )
@@ -41,7 +41,7 @@ def assert_matmul_blocked_with_default_correctness(
     out_dtype="float16",
     accum_dtype="float16",
 ):
-    matmul = MatmulScheduler(
+    matmul = MatmulBlockScheduler(
         M=M,
         N=N,
         K=K,
@@ -92,7 +92,7 @@ def assert_matmul_blocked_apply_config_correctness(
     threads=128,
     enable_rasterization=False,
 ):
-    matmul = MatmulScheduler(
+    matmul = MatmulBlockScheduler(
         M=M,
         N=N,
         K=K,
@@ -1398,7 +1398,6 @@ def assert_matmul_weight_transform_dequant_with_default_correctness(
     qw = qw.reshape(qw_shape)
     permuted_inputs.append(torch.from_numpy(qw).cuda())
     if with_scaling:
-        # permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda())
         permuted_inputs.append(torch.randn((N, K // group_size), dtype=torch.float16).cuda())
 
     zeros = None

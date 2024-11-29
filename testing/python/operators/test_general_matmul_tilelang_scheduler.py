@@ -5,7 +5,7 @@ from bitblas import tvm as tvm
 import bitblas.testing
 from tvm.ir import structural_equal
 from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
-    MatmulScheduler,)
+    MatmulBlockScheduler,)
 from bitblas.ops.general_matmul.tilelang.dequantize import (MatmulDequantizeScheduler)
 
 
@@ -17,7 +17,7 @@ def assert_dense_scheduler_simplify(M,
                                     in_dtype="float16",
                                     out_dtype="float16",
                                     accum_dtype="float16"):
-    matmul = MatmulScheduler(
+    matmul = MatmulBlockScheduler(
         M=M,
         N=N,
         K=K,
@@ -28,7 +28,7 @@ def assert_dense_scheduler_simplify(M,
         accum_dtype=accum_dtype,
     ).deactivate_simplify().with_default_config()
 
-    simplified = MatmulScheduler.Simplify(matmul)
+    simplified = MatmulBlockScheduler.Simplify(matmul)
 
     is_equal = structural_equal(matmul, simplified)
     if is_equal:

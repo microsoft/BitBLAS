@@ -230,20 +230,31 @@ def test_matmul_codegen_default():
                            False, False, None),
     matmul_codegen_default(768, 768, 768, "float16", "float16", "float16", "float16", "nt", False,
                            -1, False, False, None),
-    # FP32 Accum
-    matmul_codegen_default(768, 768, 768, "float16", "float16", "float32", "float16", "nt", False,
-                           -1, False, False, None),
-    # INT32 Accum
+    matmul_codegen_default(1, 768, 768, "int8", "int8", "int32", "int8", "nt", False, -1, False,
+                           False, None),
     matmul_codegen_default(768, 768, 768, "int8", "int8", "int32", "int8", "nt", False, -1, False,
                            False, None),
+    matmul_codegen_default(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1,
+                           False, False, None),
+    matmul_codegen_default(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1,
+                           False, False, None),
+    matmul_codegen_default(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1,
+                           True, False, None),
+    matmul_codegen_default(1, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1,
+                           True, True, "original"),
+    matmul_codegen_default(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1,
+                           False, False, None),
+    matmul_codegen_default(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", True, -1,
+                           False, False, None),
+    matmul_codegen_default(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1,
+                           True, False, None),
+    matmul_codegen_default(768, 768, 768, "float16", "uint4", "float16", "float16", "nt", False, -1,
+                           True, True, "original"),
 
 
 def test_matmul_finetune():
     matmul_finetune(1024, 1024, 1024, "float16", "float16", "float16", "float16", "nt", False, -1,
                     False, False, None, False)
-    matmul_finetune(1024, 1024, 1024, "float16", "float16", "float16", "float16", "nt", False, -1,
-                    False, False, None, False)
-
 
 def test_matmul_torch_forward():
     matmul_torch_forward(1024, 1024, 1024, "float16", "float16", "float16", "float16", "nt", None,

@@ -1,10 +1,12 @@
 from tvm import IRModule
 from tvm.tir import PrimFunc
-from typing import Union, Callable
+from typing import Union, Callable, List
 from dataclasses import dataclass, field
 from tvm.tl.transform import Simplify
 from abc import ABC, abstractmethod
 from bitblas.base.arch import TileDevice
+from bitblas.base.roller.hint import Hint
+from bitblas.tl.base_hint import BaseTLHint
 
 
 # Decorator to simplify the output of a function
@@ -54,7 +56,7 @@ class BaseScheduler(ABC):
         return stmt
 
     @abstractmethod
-    def with_default_config(self):
+    def with_default_config(self) -> PrimFunc:
         pass
 
     @abstractmethod
@@ -64,6 +66,10 @@ class BaseScheduler(ABC):
         **kwargs,
     ):
         pass
+
+    def serialze_hints_to_configs(self, hints: List[Hint]) -> List[BaseTLHint]:
+        # Convert Roller Hints to TileLang Hints
+        raise NotImplementedError
 
     @property
     def common_header(self):
