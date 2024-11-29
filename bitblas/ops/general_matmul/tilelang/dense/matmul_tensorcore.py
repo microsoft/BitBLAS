@@ -710,36 +710,36 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
                         # Matrix multiplication on fragments
                         mma_emitter.mma(A_local, B_local, C_local)
 
-            if cache_write_required:
-                # Store the result back to C shared memory
-                mma_emitter.stmatrix(
-                    C_local,
-                    C_shared,
-                    thread_bindings=thread_bindings,
-                )
+                if cache_write_required:
+                    # Store the result back to C shared memory
+                    mma_emitter.stmatrix(
+                        C_local,
+                        C_shared,
+                        thread_bindings=thread_bindings,
+                    )
 
-                # Do bias addition
-                if with_bias:
+                    # Do bias addition
+                    if with_bias:
+                        for i, j in T.Parallel(block_M, block_N):
+                            C_shared[i, j] += Bias[bx * block_N + j]
+
+                    # Store results from shared memory to global memory
                     for i, j in T.Parallel(block_M, block_N):
-                        C_shared[i, j] += Bias[bx * block_N + j]
-
-                # Store results from shared memory to global memory
-                for i, j in T.Parallel(block_M, block_N):
-                    C[by * block_M + i, bx * block_N + j] = C_shared[
-                        i // micro_size_x,
-                        j // micro_size_y,
-                        i % micro_size_x,
-                        j % micro_size_y,
-                    ]
-            else:
-                # Store the result directly to global memory
-                mma_emitter.stmatrix(
-                    C_local,
-                    C,
-                    thread_bindings=thread_bindings,
-                    pid_m=by,
-                    pid_n=bx,
-                )
+                        C[by * block_M + i, bx * block_N + j] = C_shared[
+                            i // micro_size_x,
+                            j // micro_size_y,
+                            i % micro_size_x,
+                            j % micro_size_y,
+                        ]
+                else:
+                    # Store the result directly to global memory
+                    mma_emitter.stmatrix(
+                        C_local,
+                        C,
+                        thread_bindings=thread_bindings,
+                        pid_m=by,
+                        pid_n=bx,
+                    )
 
         return self.maybe_simplify(main)
 

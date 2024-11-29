@@ -437,7 +437,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
             qzeros_buffer: T.Buffer,
         ):
             for v in T.serial(0, local_size):
-                index = (i * threads * local_size + tx * local_size + v)
+                index = i * threads * local_size + tx * local_size + v
                 vi = index // stride_k
                 vj = index % stride_k
                 if not with_scaling:
@@ -560,8 +560,10 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
                     T.address_of(dequant_weight_local[0]),
                     T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
                     T.address_of(zeros_buffer[pid_n * stride_n, k * stride_k // group_size]),
-                    T.address_of(qzeros_buffer[k * stride_k // group_size,
-                                               pid_n * stride_n // num_elems_per_byte]),
+                    T.address_of(qzeros_buffer[
+                        k * stride_k // group_size,
+                        pid_n * stride_n // num_elems_per_byte,
+                    ]),
                     dtype=in_dtype,
                 )
 

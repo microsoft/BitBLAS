@@ -67,8 +67,6 @@ def select_scheduler(
         propagate_a = TransformKind(propagate_a)
     if isinstance(propagate_b, int):
         propagate_b = TransformKind(propagate_b)
-    if with_bias:
-        raise NotImplementedError
 
     trans_A, trans_B = parse_layout(layout)
 
