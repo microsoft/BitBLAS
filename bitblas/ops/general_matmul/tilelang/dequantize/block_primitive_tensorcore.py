@@ -90,14 +90,15 @@ class MatmulDequantizeBaseScheduler(BaseScheduler):
         return self.get_roller_configs(arch, topk)
 
     # check if required shared memory cache
-    def check_require_cache(self)->bool:
+    def check_require_cache(self) -> bool:
         with_bias = self.with_bias
 
-        conditions = []
+        conditions: List[bool] = []
         conditions.append(False)
         # Bias Add should be done in shared memory
-        conditions.append(with_bias == True)
-        return any(conditions) # Always set to False Currently
+        conditions.append(with_bias)
+        return any(conditions)  # Always set to False Currently
+
 
 @dataclass
 class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):

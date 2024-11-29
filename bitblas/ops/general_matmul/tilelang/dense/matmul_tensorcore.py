@@ -26,6 +26,7 @@ from bitblas.tl.base_hint import BaseTLHint
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
 
+
 @dataclass
 class MatmulBaseScheduler(BaseScheduler):
     # OP Related Config
@@ -70,14 +71,15 @@ class MatmulBaseScheduler(BaseScheduler):
         return self.get_roller_configs(arch, topk)
 
     # check if required shared memory cache
-    def check_require_cache(self)->bool:
+    def check_require_cache(self) -> bool:
         with_bias = self.with_bias
 
-        conditions = []
+        conditions: List[bool] = []
         conditions.append(False)
         # Bias Add should be done in shared memory
-        conditions.append(with_bias == True)
-        return any(conditions) # Always set to False Currently
+        conditions.append(with_bias)
+        return any(conditions)  # Always set to False Currently
+
 
 @dataclass
 class MatmulBlockScheduler(MatmulBaseScheduler):
@@ -432,7 +434,7 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
             warp_col_tiles=warp_col_tiles,
             chunk=chunk,
         )
-        
+
         # cache_write_required = self.check_require_cache()
         cache_write_required = False
 
