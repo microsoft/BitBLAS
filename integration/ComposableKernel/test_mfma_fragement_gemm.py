@@ -6,7 +6,7 @@ import torch.backends
 from bitblas import tvm as tvm
 from tvm import tl as TL
 import tvm.tl.language as T
-from bitblas.ops.base_scheduler import simplify_prim_func
+from bitblas.base.base_scheduler import simplify_prim_func
 
 
 def make_pad_layout(shared_buf, pad_offset=4):

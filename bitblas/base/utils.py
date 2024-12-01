@@ -342,4 +342,3 @@ def apply_and_build(
     max_workers = 10 if parallel_build else 1
     return apply_and_build_parallel(
         func, configs, arch, max_workers=max_workers, data_distribution=data_distribution)
-

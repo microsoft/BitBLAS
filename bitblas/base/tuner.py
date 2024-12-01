@@ -16,6 +16,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def fast_tune(
     func: tir.PrimFunc,
     target: tvm.target.Target,
@@ -273,6 +274,7 @@ def fast_tune_with_dynamic_range_tir(
         "The length of global_symbols should be equal to the length of specilized_tuned_funcs")
     return create_dispatch_mod(global_symbol, func, specilized_tuned_funcs, function_symbols)
 
+
 def fast_tune_with_dynamic_range_tilelang(
     scheduler: BaseScheduler,
     target: tvm.target.Target,
@@ -334,6 +336,7 @@ def fast_tune_with_dynamic_range_tilelang(
         "The length of global_symbols should be equal to the length of specilized_tuned_funcs")
     return create_dispatch_mod(global_symbol, func, specilized_tuned_funcs, function_symbols)
 
+
 def fast_tune_with_dynamic_range(
     func_or_scheduler: tir.PrimFunc,
     target: tvm.target.Target,
@@ -344,10 +347,11 @@ def fast_tune_with_dynamic_range(
     kernel_name_generator: Optional[Callable] = None,
 ) -> IRModule:
     if isinstance(func_or_scheduler, tir.PrimFunc):
-        return fast_tune_with_dynamic_range_tir(
-            func_or_scheduler, target, topk, parallel_build, global_symbol, dynamic_range, kernel_name_generator)
+        return fast_tune_with_dynamic_range_tir(func_or_scheduler, target, topk, parallel_build,
+                                                global_symbol, dynamic_range, kernel_name_generator)
     elif isinstance(func_or_scheduler, BaseScheduler):
-        return fast_tune_with_dynamic_range_tilelang(
-            func_or_scheduler, target, topk, parallel_build, global_symbol, dynamic_range, kernel_name_generator)
+        return fast_tune_with_dynamic_range_tilelang(func_or_scheduler, target, topk,
+                                                     parallel_build, global_symbol, dynamic_range,
+                                                     kernel_name_generator)
     else:
         raise ValueError("Not supported type: ", type(func_or_scheduler))

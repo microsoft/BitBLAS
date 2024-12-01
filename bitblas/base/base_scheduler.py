@@ -25,7 +25,7 @@ def maybe_simplify(self, func: Callable):
 class BaseScheduler(ABC):
 
     _enable_simplify: bool = field(default=True, init=False, repr=False)
-    
+
     _dynamic_range: bool = field(default=True, init=False, repr=False)
 
     @staticmethod

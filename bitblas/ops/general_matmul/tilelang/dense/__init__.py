@@ -74,7 +74,7 @@ def volta_select_schduler(
         return all(conditions)
 
     if not check_if_not_supported():
-        raise ValueError(f"Unsupported configuration: {layout}, {propagate_a}, {propagate_b}")
+        raise ValueError(f"Unsupported configuration: {layout=}, {propagate_a=}, {propagate_b=}")
 
     Scheduler = MatmulFineGrainSIMTScheduler
     return Scheduler(

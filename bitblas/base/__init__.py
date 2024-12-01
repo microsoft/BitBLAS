@@ -15,4 +15,4 @@ from .schedule_rule import ScheduleRule  # noqa: F401
 from .tuner import fast_tune, fast_tune_with_dynamic_range  # noqa: F401
 from .roller import *
 from .arch import CUDA, CDNA  # noqa: F401
-from .operator_common import TransformKind, OptimizeStrategy, BackendKind # noqa: F401
+from .operator_common import TransformKind, OptimizeStrategy, BackendKind  # noqa: F401
