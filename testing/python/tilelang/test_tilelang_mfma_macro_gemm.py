@@ -10,7 +10,7 @@ import tvm.tl.language as T
 from bitblas.tl.utils import make_mfma_swizzle_layout as make_swizzle_layout
 from bitblas.tl.mfma_macro_generator import (
     MatrixCoreIntrinEmitter,)
-from bitblas.base import simplify_prim_fun
+from bitblas.base import simplify_prim_func
 
 torch.manual_seed(0)
 
