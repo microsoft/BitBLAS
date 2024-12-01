@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 
 from bitblas import tvm as tvm
-from bitblas.ops.base_scheduler import BaseScheduler
+from bitblas.base.base_scheduler import BaseScheduler
 import tvm.tl.language as T
 from dataclasses import dataclass
 from typing import Optional

@@ -3,13 +3,14 @@
 
 from bitblas import tvm
 import os
+import logging
+import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Tuple, Optional, Literal
 from tvm import tir, IRModule
 from tvm.runtime import Module
 from tvm.tir import Schedule
 import tvm.tl as tl
-from bitblas.ops.base_scheduler import BaseScheduler
 from bitblas.base.arch import CUDA
 from bitblas.base.utils import get_dummy_input_arrays
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
@@ -21,8 +22,7 @@ from bitblas.utils import (
     retrieve_func_from_module,
 )
 from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
-import logging
-import tempfile
+from bitblas.base.base_scheduler import BaseScheduler
 
 logger = logging.getLogger(__name__)
 

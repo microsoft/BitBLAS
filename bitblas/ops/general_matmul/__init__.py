@@ -8,7 +8,7 @@ from functools import reduce
 from bitblas.base.roller.hint import Hint
 from typing import Any, Literal, Optional, Tuple, Union
 from ..operator import OperatorConfig, Operator, OPExecutorCPU, BaseKernelNameGenerator
-from ..common import TransformKind, OptimizeStrategy
+from bitblas.base.operator_common import TransformKind, OptimizeStrategy
 from .tirscript.matmul_dequantize_impl import select_implementation as weight_dequantize_implementation
 from .tirscript.matmul_impl import select_implementation as consistent_implementation
 from .tilelang.dense import select_scheduler as consistent_scheduler
@@ -395,6 +395,8 @@ class Matmul(Operator):
             if self.is_tir_backend():
                 self.ir_module["main"] = self.ir_module["main"].with_attrs(
                     {"opt_shapes": self.dynamic_range})
+            elif self.is_tilelang_backend():
+                self.scheduler.set_dynamic_range(self.dynamic_range)
         else:
             self.dynamic_range = None
 

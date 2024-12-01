@@ -26,7 +26,7 @@ from bitblas.base.arch import (
     is_ampere_arch,
     is_volta_arch,
 )
-from bitblas.ops.common import TransformKind
+from bitblas.base.operator_common import TransformKind
 from typing import Union
 
 

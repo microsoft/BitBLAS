@@ -25,6 +25,8 @@ def maybe_simplify(self, func: Callable):
 class BaseScheduler(ABC):
 
     _enable_simplify: bool = field(default=True, init=False, repr=False)
+    
+    _dynamic_range: bool = field(default=True, init=False, repr=False)
 
     @staticmethod
     def Simplify(stmt: Union[PrimFunc, IRModule]):
@@ -54,6 +56,20 @@ class BaseScheduler(ABC):
         if self._enable_simplify:
             return self.Simplify(stmt)
         return stmt
+
+    def with_self_attrs(self, func: PrimFunc):
+        if self._dynamic_range:
+            func = func.with_attr("opt_shapes", self._dynamic_range)
+        return func
+
+    def post_process(self, func: PrimFunc):
+        func = self.with_self_attrs(func)
+        func = self.maybe_simplify(func)
+        return func
+
+    def set_dynamic_range(self, dynamic_range: bool):
+        self._dynamic_range = dynamic_range
+        return self
 
     @abstractmethod
     def with_default_config(self) -> PrimFunc:

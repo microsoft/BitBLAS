@@ -223,7 +223,7 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
                         j % micro_size_y,
                     ]
 
-        return self.maybe_simplify(main)
+        return self.post_process(main)
 
     def __post_init__(self):
         # Validate the matrix transpose settings
@@ -446,7 +446,7 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
                         j % micro_size_y,
                     ]
 
-        return self.maybe_simplify(main)
+        return self.post_process(main)
 
     def __post_init__(self):
         # Validate the matrix transpose settings

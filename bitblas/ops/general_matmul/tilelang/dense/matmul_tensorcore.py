@@ -13,8 +13,8 @@ from bitblas.tl.mma_macro_generator import (
     TensorCoreIntrinEmitter,
     TensorCoreIntrinEmitterWithLadderTransform,
 )
-from bitblas.ops.common import TransformKind
-from bitblas.ops.base_scheduler import BaseScheduler
+from bitblas.base.operator_common import TransformKind
+from bitblas.base.base_scheduler import BaseScheduler
 from bitblas.base.arch import TileDevice
 from bitblas.base.roller.hint import Hint
 from bitblas.base.roller.rasterization import NoRasterization
@@ -255,7 +255,7 @@ class MatmulBlockScheduler(MatmulBaseScheduler):
 
                 T.copy(C_local, C[by * block_M, bx * block_N])
 
-        return self.maybe_simplify(main)
+        return self.post_process(main)
 
     def __post_init__(self):
         # Add Config Validation
@@ -542,7 +542,7 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
                         pid_n=bx,
                     )
 
-        return self.maybe_simplify(main)
+        return self.post_process(main)
 
     def __post_init__(self):
         # Validate the matrix transpose settings
@@ -751,7 +751,7 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
                         pid_n=bx,
                     )
 
-        return self.maybe_simplify(main)
+        return self.post_process(main)
 
     def __post_init__(self):
         # Validate the matrix transpose settings

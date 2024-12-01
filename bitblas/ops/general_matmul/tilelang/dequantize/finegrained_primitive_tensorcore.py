@@ -395,7 +395,7 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
                         pid_n=bx,
                     )
 
-        return self.maybe_simplify(general_dequant_matmul)
+        return self.post_process(general_dequant_matmul)
 
     @property
     def _decode_func(self):

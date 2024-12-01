@@ -290,7 +290,7 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
                         j % micro_size_y,
                     ]
 
-        return self.maybe_simplify(general_dequant_matmul)
+        return self.post_process(general_dequant_matmul)
 
     @property
     def num_elems_per_byte(self):

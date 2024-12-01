@@ -12,7 +12,7 @@ from .finegrained_primitive_tensorcore import MatmulDequantizeFineGrainedSchedul
 from bitblas.tl.mma_macro_generator import (
     TensorCoreIntrinEmitterWithLadderTransform,  # noqa: F401
 )
-from bitblas.ops.common import TransformKind  # noqa: F401
+from bitblas.base.operator_common import TransformKind  # noqa: F401
 from dataclasses import dataclass
 from bitblas.quantization import (
     _tir_packed_to_unsigned_convert,)
@@ -311,7 +311,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                         pid_n=bx,
                     )
 
-        return self.maybe_simplify(general_dequant_matmul)
+        return self.post_process(general_dequant_matmul)
 
     def _normal_dequant(
         self,

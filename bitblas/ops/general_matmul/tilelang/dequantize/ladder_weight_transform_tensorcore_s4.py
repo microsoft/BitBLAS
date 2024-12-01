@@ -14,7 +14,7 @@ from bitblas.base.roller.hint import Hint
 from bitblas.tl.mma_macro_generator import (
     INT4TensorCoreIntrinEmitterWithLadderTransform,  # noqa: F401
 )
-from bitblas.ops.common import TransformKind  # noqa: F401
+from bitblas.base.operator_common import TransformKind  # noqa: F401
 from dataclasses import dataclass
 from bitblas.base.utils import get_roller_hints_from_func
 from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
@@ -326,7 +326,7 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
                         j % micro_size_y,
                     ]
 
-        return self.maybe_simplify(general_dequant_matmul)
+        return self.post_process(general_dequant_matmul)
 
     @property
     def num_elems_per_byte(self):

@@ -12,6 +12,7 @@ from .analysis import (
 )  # noqa: F401
 from .common_schedules import get_block, get_output_blocks, try_inline, try_inline_contiguous_spatial  # noqa: F401
 from .schedule_rule import ScheduleRule  # noqa: F401
-from .utils import fast_tune, fast_tune_with_dynamic_range  # noqa: F401
+from .tuner import fast_tune, fast_tune_with_dynamic_range  # noqa: F401
 from .roller import *
 from .arch import CUDA, CDNA  # noqa: F401
+from .operator_common import TransformKind, OptimizeStrategy, BackendKind # noqa: F401

@@ -2,7 +2,7 @@
 # Licensed under the MIT License.
 from bitblas import tvm as tvm
 from typing import Optional, List
-from bitblas.ops.base_scheduler import BaseScheduler
+from bitblas.base.base_scheduler import BaseScheduler
 import tvm.tl.language as T
 from tvm import DataType
 from tvm.tir import PrimFunc
@@ -167,6 +167,9 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
         assert chunk is not None, "chunk must be provided"
 
         M, N, K = self.M, self.N, self.K
+        if not isinstance(M, int):
+            M = tvm.te.var("m")
+
         in_dtype, out_dtype, accum_dtype = (
             self.in_dtype,
             self.out_dtype,
@@ -259,7 +262,7 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                         bx * block_N + warp_n * local_size_b + j,
                     ] = C_local[i * local_size_b + j]
 
-        return self.maybe_simplify(main)
+        return self.post_process(main)
 
     def __post_init__(self):
         # Validate the matrix transpose settings

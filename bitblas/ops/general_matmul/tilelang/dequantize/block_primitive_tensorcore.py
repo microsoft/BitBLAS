@@ -4,7 +4,7 @@ from bitblas import tvm as tvm
 from tvm import DataType
 import tvm.tl.language as T
 from typing import Optional, List, Literal
-from bitblas.ops.base_scheduler import BaseScheduler
+from bitblas.base.base_scheduler import BaseScheduler
 from bitblas.base.arch import TileDevice
 from bitblas.base.roller.hint import Hint
 from bitblas.base.roller.rasterization import NoRasterization
@@ -356,7 +356,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
                             C_local[i, j] += Bias[bx * block_N + j]
                     T.copy(C_local, C[by * block_M, bx * block_N])
 
-        return self.maybe_simplify(general_dequant_matmul)
+        return self.post_process(general_dequant_matmul)
 
     @property
     def _decode_func(self):

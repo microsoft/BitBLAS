@@ -10,12 +10,12 @@ from tvm.tir import PrimFunc
 from tvm.contrib.dlpack import to_pytorch_func
 import bitblas
 import ctypes
-from typing import List, Dict, Any, Optional, Tuple, Literal, Callable
+from typing import List, Dict, Any, Optional, Tuple, Literal, Callable, Union
 import numpy as np
-from bitblas.base import fast_tune, fast_tune_with_dynamic_range
 from bitblas.tl.tuner import apply_and_build as tl_apply_and_build
 from copy import deepcopy
-from bitblas.ops.base_scheduler import BaseScheduler
+from bitblas.base.base_scheduler import BaseScheduler
+from bitblas.base.tuner import fast_tune, fast_tune_with_dynamic_range
 from bitblas.base.arch import get_arch, TileDevice
 from bitblas.base.roller.hint import Hint
 from bitblas.builder.wrapper import TIRWrapper, TLWrapper
@@ -376,7 +376,7 @@ class Operator(object):
 
     def apply_fast_tuning_with_dynamic_range(
         self,
-        func_or_scheduler: PrimFunc,
+        func_or_scheduler: Union[PrimFunc, BaseScheduler],
         target: Target,
         topk: int = 20,
         dynamic_range: Dict[str, List[int]] = None,
@@ -394,13 +394,16 @@ class Operator(object):
             if scheduled_ir_module is not None:
                 return scheduled_ir_module
         elif self.is_tilelang_backend():
-            # Finetune the schedule
-            tuning_configs = self.get_tl_tuning_config(topk=topk)
-            assert len(tuning_configs) > 0, "No tuning config found for this operator."
-            _, best = tl_apply_and_build(
-                func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=parallel_build)
-            # Return the best Config as Hint
-            return (best.sch.mod, best.config) if best is not None else (None, None)
+            scheduled_ir_module = fast_tune_with_dynamic_range(
+                func_or_scheduler,
+                target,
+                topk=topk,
+                parallel_build=parallel_build,
+                dynamic_range=dynamic_range,
+                kernel_name_generator=self.kernel_name_generator,
+            )
+            if scheduled_ir_module is not None:
+                return scheduled_ir_module
         else:
             raise ValueError(f"Unsupported backend: {self.backend}")
 
@@ -421,9 +424,9 @@ class Operator(object):
                 self.scheduled_ir_module = self.apply_fast_tuning_with_dynamic_range(
                     func, target, topk, dynamic_range)
             elif self.is_tilelang_backend():
-                func = self.scheduler.with_default_config()
+                scheduler = self.scheduler
                 self.scheduled_ir_module = self.apply_fast_tuning_with_dynamic_range(
-                    func, target, topk, dynamic_range)
+                    scheduler, target, topk, dynamic_range)
         else:
             func_or_scheduler = (self.prim_func if self.is_tir_backend() else self.scheduler)
             scheduled_mod, best_hint = self.apply_fast_tuning(
