@@ -14,7 +14,7 @@ from bitblas.tl.mma_macro_generator import (
     TensorCoreIntrinEmitterWithLadderTransform,
 )
 from bitblas.gpu.intrin.lop3 import decode_i4_to_f16
-from bitblas.base.base_scheduler import simplify_prim_func
+from bitblas.base import simplify_prim_fun
 
 torch.manual_seed(0)
 

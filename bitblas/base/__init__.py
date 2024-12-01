@@ -11,6 +11,7 @@ from .analysis import (
     normalize_prim_func,  # noqa: F401
 )  # noqa: F401
 from .common_schedules import get_block, get_output_blocks, try_inline, try_inline_contiguous_spatial  # noqa: F401
+from .base_scheduler import simplify_prim_func  # noqa: F401
 from .schedule_rule import ScheduleRule  # noqa: F401
 from .tuner import fast_tune, fast_tune_with_dynamic_range  # noqa: F401
 from .roller import *

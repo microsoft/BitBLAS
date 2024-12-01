@@ -13,7 +13,7 @@ from bitblas.gpu.intrin.lop3 import decode_i2s_to_i4s
 
 from bitblas.tl.mma_macro_generator import (
     INT4TensorCoreIntrinEmitter,)
-from bitblas.base.base_scheduler import simplify_prim_func
+from bitblas.base import simplify_prim_fun
 
 torch.manual_seed(0)
 

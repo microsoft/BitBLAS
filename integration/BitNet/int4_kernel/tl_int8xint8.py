@@ -10,7 +10,7 @@ import tvm.tl.language as T
 from bitblas.tl.utils import get_swizzle_layout
 from bitblas.tl.mma_macro_generator import (
     TensorCoreIntrinEmitter,)
-from bitblas.base.base_scheduler import simplify_prim_func
+from bitblas.base import simplify_prim_fun
 
 torch.manual_seed(0)
 
