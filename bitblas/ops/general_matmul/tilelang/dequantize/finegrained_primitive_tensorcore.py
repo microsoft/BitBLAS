@@ -107,7 +107,7 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
                     f"enable_rasterization={self.enable_rasterization}"
                     "}")
 
-    def serialze_hints_to_configs(self, hints: List[Hint]):
+    def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
         for hint in hints:
             config = self.TLHint.from_roller_hint(hint)

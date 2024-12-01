@@ -19,6 +19,7 @@ from .matmul_tensorcore import (
     MatmulINT4WeightPropagationScheduler,  # noqa: F401
 )
 
+from .matmul import MatmulScheduler  # noqa: F401
 from bitblas.base.roller import TileDevice
 from bitblas.base.arch import (
     is_ampere_arch,

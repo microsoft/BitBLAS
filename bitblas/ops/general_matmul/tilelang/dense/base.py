@@ -21,5 +21,5 @@ class MatmulBaseParams(BaseScheduler):
     with_bias: bool = False
 
     # Ladder Transform Config
-    input_transform_kind: TransformKind = TransformKind.LDMatrixTransform
-    weight_transform_kind: TransformKind = TransformKind.LDMatrixTransform
+    input_transform_kind: TransformKind = TransformKind.NonTransform
+    weight_transform_kind: TransformKind = TransformKind.NonTransform

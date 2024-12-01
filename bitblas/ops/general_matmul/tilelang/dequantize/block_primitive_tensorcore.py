@@ -84,7 +84,7 @@ class MatmulDequantizeBaseScheduler(BaseScheduler):
         if roller_hints is None:
             raise ValueError("No Roller Hints Found for TensorCore Scheduling")
 
-        return self.serialze_hints_to_configs(roller_hints)
+        return self.serialize_hints_to_configs(roller_hints)
 
     def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
         return self.get_roller_configs(arch, topk)
@@ -164,7 +164,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
                     f"enable_rasterization={self.enable_rasterization}"
                     "}")
 
-    def serialze_hints_to_configs(self, hints: List[Hint]):
+    def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
         for hint in hints:
             config = self.TLHint.from_roller_hint(hint)

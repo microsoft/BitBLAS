@@ -72,14 +72,14 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
         if roller_hints is None:
             raise ValueError("No Roller Hints Found for TensorCore Scheduling")
 
-        def serialze_hints_to_configs(hints: List[Hint]):
+        def serialize_hints_to_configs(hints: List[Hint]):
             configs = []
             for hint in hints:
                 config = self.TLHint.from_roller_hint(hint)
                 configs.append(config)
             return configs
 
-        return serialze_hints_to_configs(roller_hints)
+        return serialize_hints_to_configs(roller_hints)
 
     def apply_config(
         self,

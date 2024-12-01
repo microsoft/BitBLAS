@@ -26,6 +26,9 @@ from .matmul_tensorcore import (
     MatmulINT4WeightPropagationScheduler,
 )
 
+import logging
+logger = logging.getLogger(__name__)
+
 def is_tensorcore_precision_supported(in_dtype:str, accum_dtype:str, arch:TileDevice) -> bool:
     volta_tensorcore_supported = [
         ("float16", "float32"),
@@ -49,7 +52,7 @@ def is_tensorcore_precision_supported(in_dtype:str, accum_dtype:str, arch:TileDe
     
 
 @dataclass
-class MatmulFineGrainSIMTScheduler(MatmulBaseParams):
+class MatmulScheduler(MatmulBaseParams):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
     
@@ -109,7 +112,7 @@ class MatmulFineGrainSIMTScheduler(MatmulBaseParams):
             self.accum_dtype,
         )
         if self.weight_transform_kind != TransformKind.NonTransform:
-            raise ValueError("Weight propagation is not supported for Volta")
+            raise ValueError(f"Weight propagation {self.weight_transform_kind} is not supported for Volta")
         if in_dtype not in ["int8", "float16", "float32", "float64"]:
             raise ValueError(f"Unsupported input data type: {in_dtype}")
 
@@ -124,13 +127,15 @@ class MatmulFineGrainSIMTScheduler(MatmulBaseParams):
             if M < minimal_tensorcore_threshold[0] or N < minimal_tensorcore_threshold[1] or K < minimal_tensorcore_threshold[2]:
                 return self.gemv_scheduler
             elif is_tensorcore_precision_supported(in_dtype, accum_dtype, arch):
-                return self.matmul_fine_grain_scheduler
+                # Fine-grained scheduler (mma) is not supported for Volta
+                return self.matmul_block_scheduler
             else:
                 return self.matmul_simt_scheduler       
 
     def with_default_config(self, arch: Optional[TileDevice] = None) -> PrimFunc:
         if arch is None:
             arch = auto_infer_current_arch()
+            logger.debug(f"arch is not specified in with_default_config, auto-infer to {arch}")
 
         dispatched_scheduler: Optional[BaseScheduler] = None
         if is_ampere_arch(arch):
@@ -144,12 +149,13 @@ class MatmulFineGrainSIMTScheduler(MatmulBaseParams):
 
     def apply_config(
         self,
-        block_size_x: Optional[int] = None,
-        block_size_y: Optional[int] = None,
-        thread_row_tiles: Optional[int] = None,
-        thread_col_tiles: Optional[int] = None,
-        chunk: Optional[int] = None,
+        hint: Optional[BaseTLHint] = None,
+        arch: Optional[TileDevice] = None,
     ):
+        if arch is None:
+            arch = auto_infer_current_arch()
+            logger.debug(f"arch is not specified in apply_config, auto-infer to {arch}")
+
         dispatched_scheduler: Optional[BaseScheduler] = None
         if is_ampere_arch(arch):
             dispatched_scheduler = self.dispatch_ampere_scheduler(arch)
@@ -174,3 +180,5 @@ class MatmulFineGrainSIMTScheduler(MatmulBaseParams):
         assert self.input_transform_kind == TransformKind.NonTransform, "Currently only support NonTransform for input"
 
         return
+
+__all__ = ["MatmulScheduler"]

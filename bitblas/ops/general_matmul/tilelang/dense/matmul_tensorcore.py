@@ -56,7 +56,7 @@ class MatmulBaseScheduler(MatmulBaseParams):
         if roller_hints is None:
             raise ValueError("No Roller Hints Found for TensorCore Scheduling")
 
-        return self.serialze_hints_to_configs(roller_hints)
+        return self.serialize_hints_to_configs(roller_hints)
 
     def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
         return self.get_roller_configs(arch, topk)
@@ -161,7 +161,7 @@ class MatmulBlockScheduler(MatmulBaseScheduler):
         configs = [{**c, 'num_stages': num_stages} for c in configs]
         return configs
 
-    def serialze_hints_to_configs(self, hints: List[Hint]):
+    def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
         for hint in hints:
             config = self.TLHint.from_roller_hint(hint)
@@ -329,7 +329,7 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
                     f"enable_rasterization={self.enable_rasterization}"
                     "}")
 
-    def serialze_hints_to_configs(self, hints: List[Hint]):
+    def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
         for hint in hints:
             config = self.TLHint.from_roller_hint(hint)
@@ -784,14 +784,14 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
         if roller_hints is None:
             raise ValueError("No Roller Hints Found for TensorCore Scheduling")
 
-        def serialze_hints_to_configs(hints: List[Hint]):
+        def serialize_hints_to_configs(hints: List[Hint]):
             configs = []
             for hint in hints:
                 config = self.TLHint.from_roller_hint(hint)
                 configs.append(config)
             return configs
 
-        return serialze_hints_to_configs(roller_hints)
+        return serialize_hints_to_configs(roller_hints)
 
     def apply_config(
         self,
@@ -990,14 +990,14 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
         if roller_hints is None:
             raise ValueError("No Roller Hints Found for TensorCore Scheduling")
 
-        def serialze_hints_to_configs(hints: List[Hint]):
+        def serialize_hints_to_configs(hints: List[Hint]):
             configs = []
             for hint in hints:
                 config = self.TLHint.from_roller_hint(hint)
                 configs.append(config)
             return configs
 
-        return serialze_hints_to_configs(roller_hints)
+        return serialize_hints_to_configs(roller_hints)
 
     def apply_config(
         self,

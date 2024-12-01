@@ -60,7 +60,7 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                     f"reduce_thread: {self.reduce_thread}, "
                     "}")
 
-    def serialze_hints_to_configs(self, hints: List[Hint]):
+    def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
         for hint in hints:
             config = self.TLHint.from_roller_hint(hint)
@@ -133,9 +133,17 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
 
                     for v in T.vectorized(vec_size):
                         B_local[v] = B[bx * n_partition + ni, ko * block_K + kr * vec_size + v]
-
-                    for ki in T.serial(vec_size):
-                        accum_res[0] += A_local[ki] * B_local[ki]
+                        
+                    if use_dp4a:
+                        for ki in T.serial(vec_size // dp4a_size):
+                            T.dp4a(
+                                A_local[ki * dp4a_size],
+                                B_local[ki * dp4a_size],
+                                accum_res[0],
+                            )
+                    else:
+                        for ki in T.serial(vec_size):
+                            accum_res[0] += A_local[ki] * B_local[ki]
 
                 with T.attr(
                         T.comm_reducer(lambda x, y: x + y, [T.float16(0)]),

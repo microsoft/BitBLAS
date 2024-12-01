@@ -83,7 +83,7 @@ class BaseScheduler(ABC):
     ) -> PrimFunc:
         pass
 
-    def serialze_hints_to_configs(self, hints: List[Hint]) -> List[BaseTLHint]:
+    def serialize_hints_to_configs(self, hints: List[Hint]) -> List[BaseTLHint]:
         # Convert Roller Hints to TileLang Hints
         raise NotImplementedError
 
