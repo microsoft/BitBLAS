@@ -15,9 +15,6 @@ from .matmul_tensorcore import (
     MatmulBlockScheduler,  # noqa: F401
     MatmulFineGrainScheduler,  # noqa: F401
     MatmulWeightPropagationScheduler,  # noqa: F401
-)
-
-from .matmul_tensorcore_s4 import (
     MatmulINT4FineGrainScheduler,  # noqa: F401
     MatmulINT4WeightPropagationScheduler,  # noqa: F401
 )

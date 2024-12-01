@@ -308,8 +308,15 @@ def fast_tune_with_dynamic_range_tilelang(
     specilized_tuned_funcs: List[tir.PrimFunc] = []
     for item in specialize_items:
         # Fast Tune with specialized function
-        # Get the best configuration
-        # Apply into a dynamic version
+        # Step 1. Send m(dynamic symbolic) -> scheduler(dispatch different scheduler based on input shape)
+        # Step 2. Scheduler -> tuning and return the best tile hints
+        # Step 3. Apply into a dynamic version (must be aligned with the same scheduler as Step 1)
+        # So we should we should have a general scheduler for operators
+        # For example, MatmulDispatcher, Conv2DDispatcher, etc.
+        # The dispatcher should have a method to dispatch the specialized tilelang template
+        # for static shape with default configuration, we handle the dispatch within with default schedule
+        # for static shape with customized configuration, we handle the dispatch within with apply config
+        # which is similar to what we did at /root/BitBLAS/bitblas/base/utils.py
 
         func = func.with_attr("opt_shapes", item)
         _, best = fast_tune(func, target, topk, parallel_build)

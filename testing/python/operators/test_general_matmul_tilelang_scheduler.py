@@ -129,5 +129,4 @@ def test_dequantize_scheduler_simplify():
 
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    assert_gemv_scheduler_simplify(128, 128, 128)
+    bitblas.testing.main()

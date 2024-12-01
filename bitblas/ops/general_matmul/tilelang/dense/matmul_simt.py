@@ -13,23 +13,13 @@ from bitblas.ops.general_matmul.tirscript import (matmul_select_implementation)
 from bitblas.base.arch import TileDevice
 from bitblas.tl.base_hint import BaseTLHint
 from bitblas.base.roller.hint import Hint
+from .base import MatmulBaseParams
 
 
 @dataclass
-class MatmulSIMTBaseScheduler(BaseScheduler):
+class MatmulSIMTBaseScheduler(MatmulBaseParams):
     # Base class for matrix multiplication scheduler
     # Contains the basic configuration for matrix multiplication
-
-    # Operation Configuration
-    M: Optional[int] = None
-    N: Optional[int] = None
-    K: Optional[int] = None
-    in_dtype: str = "float16"
-    out_dtype: str = "float16"
-    trans_A: bool = False
-    trans_B: bool = True
-    accum_dtype: str = "float16"
-    with_bias: bool = False
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"

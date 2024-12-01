@@ -84,8 +84,7 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
         assert n_partition is not None, "n_partition must be provided"
         assert reduce_thread is not None, (
             "reduce_thread must be provided currently, as related bitblas.gpu.gemv.GEMV"
-            "sch_outer_reduction_with_config is not implemented"
-        )
+            "sch_outer_reduction_with_config is not implemented")
 
         M, N, K = self.M, self.N, self.K
         if not isinstance(M, int):

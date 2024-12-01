@@ -4,9 +4,13 @@ from .arch_base import TileDevice
 from .cuda import *
 from .cpu import *
 from .cdna import *
+from typing import Union
 
 
-def get_arch(target: tvm.target.Target) -> TileDevice:
+def get_arch(target: Union[str, tvm.target.Target] = "cuda") -> TileDevice:
+    if isinstance(target, str):
+        target = tvm.target.Target(target)
+
     if target.kind.name == "cuda":
         return CUDA(target)
     elif target.kind.name == "llvm":
@@ -15,6 +19,12 @@ def get_arch(target: tvm.target.Target) -> TileDevice:
         return CDNA(target)
     else:
         raise ValueError(f"Unsupported target: {target.kind.name}")
+
+
+def auto_infer_current_arch() -> TileDevice:
+    # TODO(lei): This is a temporary solution to infer the current architecture
+    # Can be replaced by a more sophisticated method in the future
+    return get_arch("cuda")
 
 
 def is_ampere_arch(arch: TileDevice) -> bool:

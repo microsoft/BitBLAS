@@ -72,7 +72,7 @@ class BaseScheduler(ABC):
         return self
 
     @abstractmethod
-    def with_default_config(self) -> PrimFunc:
+    def with_default_config(self, *args, **kwargs) -> PrimFunc:
         pass
 
     @abstractmethod
@@ -80,7 +80,7 @@ class BaseScheduler(ABC):
         self,
         *args,
         **kwargs,
-    ):
+    ) -> PrimFunc:
         pass
 
     def serialze_hints_to_configs(self, hints: List[Hint]) -> List[BaseTLHint]:
