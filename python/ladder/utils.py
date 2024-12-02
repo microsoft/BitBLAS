@@ -182,7 +182,7 @@ extern "C" int {symbol}({def_args}) {{
             ]
         elif "ROCm" in arch.platform:
             profiling_code = self._create_rocm_code_for_profiling()
-            src = tempfile.NamedTemporaryFile(mode="w", suffix=".cpp")
+            src = tempfile.NamedTemporaryFile(mode="w", suffix=".cpp", delete=False)
             lib_name = src.name.replace(".cpp", ".so")
             compute_version = arch.compute_capability
             command = [
@@ -197,6 +197,7 @@ extern "C" int {symbol}({def_args}) {{
             ]
         else:
             raise NotImplementedError(arch.platform)
+        print(" ".join(command))
         self.profiling_code = profiling_code
         src.write(profiling_code)
         src.flush()
@@ -336,8 +337,10 @@ extern "C" float profile({}) {{
         self.close_lib()
 
 
-def compile_and_load_parallel(cpresults, arch, timeout: float = None):
-    with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
+def compile_and_load_parallel(cpresults, arch, timeout: float = None, max_workers=None):
+    if max_workers is None:
+        max_workers = os.cpu_count()
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
         libs = executor.map(
             CompileResult.compile_and_load,
             cpresults,

@@ -76,6 +76,9 @@ class LadderPolicy(DefaultPolicy):
         if len(output_shape) == 2:
             M = output_shape[0]
             N = output_shape[1]
+        elif len(output_shape) == 3:
+            M = output_shape[1]
+            N = output_shape[2]
         elif len(output_shape) == 4:
             if is_matmul:
                 M = output_shape[0] * output_shape[2]
@@ -129,7 +132,7 @@ class LadderPolicy(DefaultPolicy):
 
         if len(node.raxis) == 1:
             for k in node.raxis:
-                if output_dtype == "float16":
+                if output_dtype == "float16" or output_dtype == "float32":
                     result[k] = 32
                 elif output_dtype == "int32" or output_dtype == "int8":
                     result[k] = 64

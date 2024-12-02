@@ -18,11 +18,18 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
             WMMA_SYNC_16x16x16_f16f16f16_INTRIN,
             WMMA_STORE_16x16x16_F16_GLOBAL_INTRIN,
             WMMA_STORE_16x16x16_F16_SHARED_INTRIN,
+            WMMA_FILL_16x16x16_F32_INTRIN,
+            WMMA_SYNC_16x16x16_f16f16f32_INTRIN,
+            WMMA_SYNC_16x16x16_f16f16f32_TRANS_INTRIN,
+            WMMA_STORE_16x16x16_F32_GLOBAL_INTRIN,
+            WMMA_STORE_16x16x16_F32_SHARED_INTRIN,
         )
         # const val for testing
         warp_size = 32
         wmma_m, wmma_n, wmma_k = 16, 16, 16
         sch, config = self.sche, self.config
+        compute_dtype = self.reduce_op.output(0).dtype
+        print(f"compute_dtype: {compute_dtype}")
         write_sch(sch, "original")
         C = sch.get_block(self.reduce_op.name)
         A_ax_m, A_ax_k, B_ax_k, B_ax_n, C_ax_m, C_ax_n = config.tc_extra_conf.tc_axis
@@ -56,7 +63,10 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         if len(output_shape) == 2:  
             M = int(output_shape[0])
             N = int(output_shape[1])
-        elif len(output_shape) == 2:
+        elif len(output_shape) == 3:
+            M = int(output_shape[1])
+            N = int(output_shape[2])
+        elif len(output_shape) == 4:
             # nhwc or mn1616
             if is_matmul:
                 M = output_shape[0] * output_shape[2]
@@ -141,15 +151,17 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
             sch.get_loops(C_warp)[-3],
             preserve_unit_loops=True,
         )
-        def transform_out(i, j):
-            return (i // wmma_m, j // wmma_n, i % wmma_m, j % wmma_n)
+        def transform_out(*args):
+            i, j = args[-2], args[-1]
+            other_args = args[:-2]
+            return (*other_args, i // wmma_m, j // wmma_n, i % wmma_m, j % wmma_n)
         sch.transform_layout(C_warp, ("write", 0), transform_out)
         sch.transform_layout(C_warp, ("read", 0), transform_out)
         
         def schedule_shared_output(block):
             o_shared_fused = sch.fuse(*sch.get_loops(block)[-2:])
             _, o_shared_tx, o_shared_vi = sch.split(
-                o_shared_fused, factors=[None, warp_size, vec]
+                o_shared_fused, factors=[None, warp_size, 4]
             )     
             sch.vectorize(o_shared_vi)
             sch.bind(o_shared_tx, "threadIdx.x")
@@ -170,7 +182,7 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
             sch.bind(shared_tx, "threadIdx.x")
             sch.bind(shared_ty, "threadIdx.y")
             sch.bind(shared_tz, "threadIdx.z")
-            sch.storage_align(block, 0, axis=-2, factor=32, offset=8)
+            # sch.storage_align(block, 0, axis=-2, factor=32, offset=8)
 
         cooperative_fetch(AS, dims=2, vec=1)
         cooperative_fetch(BS, dims=2, vec=1 if transpose_B else vec)
@@ -202,19 +214,29 @@ class TIRLadderMMAPadScheduler2D(TIRSchedulerBase):
         write_sch(sch, "decompose_reduction")
         init_block_b_loops = sch.get_loops(init_block_b)
         init_block_b_i, init_block_b_j = sch.get_loops(init_block_b)[-4:-2]
-        sch.tensorize(sch.get_loops(init_block_b)[-2], WMMA_FILL_16x16x16_F16_INTRIN)
+        sch.tensorize(sch.get_loops(init_block_b)[-2], WMMA_FILL_16x16x16_F16_INTRIN if compute_dtype == "float16" else WMMA_FILL_16x16x16_F32_INTRIN)
         sch.tensorize(
             sch.get_loops(AW)[-2], WMMA_LOAD_16x16x16_F16_A_INTRIN
         )
         sch.tensorize(
             sch.get_loops(BW)[-2], WMMA_LOAD_16x16x16_F16_B_INTRIN if not transpose_B else WMMA_LOAD_16x16x16_F16_B_TRANS_INTRIN
         )
-        sch.tensorize(kernel_i, WMMA_SYNC_16x16x16_f16f16f16_INTRIN if not transpose_B else WMMA_SYNC_16x16x16_f16f16f16_TRANS_INTRIN)
+        if compute_dtype == "float16":
+            sch.tensorize(kernel_i, WMMA_SYNC_16x16x16_f16f16f16_INTRIN if not transpose_B else WMMA_SYNC_16x16x16_f16f16f16_TRANS_INTRIN)
+        else:
+            sch.tensorize(kernel_i, WMMA_SYNC_16x16x16_f16f16f32_INTRIN if not transpose_B else WMMA_SYNC_16x16x16_f16f16f32_TRANS_INTRIN)
 
-        sch.tensorize(
-            sch.get_loops(C_warp)[-2],
-            WMMA_STORE_16x16x16_F16_SHARED_INTRIN,
-        )
+        if compute_dtype == "float16":
+            sch.tensorize(
+                sch.get_loops(C_warp)[-2],
+                WMMA_STORE_16x16x16_F16_SHARED_INTRIN,
+            )
+        else:
+            sch.tensorize(
+                sch.get_loops(C_warp)[-2],
+                WMMA_STORE_16x16x16_F32_SHARED_INTRIN,
+            )
+
         write_sch(sch, "tensorize_store")
         if raster > 0:
             sch.annotate(init_block_b_loops[-4], ann_key="thread_rasterization", ann_val=raster)
