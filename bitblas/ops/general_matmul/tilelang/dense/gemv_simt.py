@@ -133,7 +133,7 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
 
                     for v in T.vectorized(vec_size):
                         B_local[v] = B[bx * n_partition + ni, ko * block_K + kr * vec_size + v]
-                        
+
                     if use_dp4a:
                         for ki in T.serial(vec_size // dp4a_size):
                             T.dp4a(

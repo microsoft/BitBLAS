@@ -193,31 +193,52 @@ def select_scheduler(
     propagate_a: Union[int, TransformKind] = TransformKind.NonTransform,
     propagate_b: Union[int, TransformKind] = TransformKind.NonTransform,
 ):
-    if is_ampere_arch(arch):
-        return ampere_select_scheduler(
-            M=M,
-            N=N,
-            K=K,
-            in_dtype=in_dtype,
-            out_dtype=out_dtype,
-            accum_dtype=accum_dtype,
-            with_bias=with_bias,
-            layout=layout,
-            propagate_a=propagate_a,
-            propagate_b=propagate_b,
-        )
-    elif is_volta_arch(arch):
-        return volta_select_schduler(
-            M=M,
-            N=N,
-            K=K,
-            in_dtype=in_dtype,
-            out_dtype=out_dtype,
-            accum_dtype=accum_dtype,
-            with_bias=with_bias,
-            layout=layout,
-            propagate_a=propagate_a,
-            propagate_b=propagate_b,
-        )
-    else:
-        raise ValueError(f"Unsupported arch: {arch.name}")
+    if isinstance(propagate_a, int):
+        propagate_a = TransformKind(propagate_a)
+    if isinstance(propagate_b, int):
+        propagate_b = TransformKind(propagate_b)
+
+    trans_A, trans_B = parse_layout(layout)
+
+    return MatmulScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        with_bias=with_bias,
+        input_transform_kind=propagate_a,
+        weight_transform_kind=propagate_b,
+    )
+
+    # if is_ampere_arch(arch):
+    #     return ampere_select_scheduler(
+    #         M=M,
+    #         N=N,
+    #         K=K,
+    #         in_dtype=in_dtype,
+    #         out_dtype=out_dtype,
+    #         accum_dtype=accum_dtype,
+    #         with_bias=with_bias,
+    #         layout=layout,
+    #         propagate_a=propagate_a,
+    #         propagate_b=propagate_b,
+    #     )
+    # elif is_volta_arch(arch):
+    #     return volta_select_schduler(
+    #         M=M,
+    #         N=N,
+    #         K=K,
+    #         in_dtype=in_dtype,
+    #         out_dtype=out_dtype,
+    #         accum_dtype=accum_dtype,
+    #         with_bias=with_bias,
+    #         layout=layout,
+    #         propagate_a=propagate_a,
+    #         propagate_b=propagate_b,
+    #     )
+    # else:
+    #     raise ValueError(f"Unsupported arch: {arch.name}")

@@ -17,7 +17,6 @@ from bitblas.tl.mma_macro_generator import (
 from bitblas.base.operator_common import TransformKind  # noqa: F401
 from dataclasses import dataclass
 from bitblas.base.utils import get_roller_hints_from_func
-from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
 from bitblas.ops.general_matmul.tirscript import (
     matmul_dequantize_select_implementation,)
 from bitblas.ops.general_matmul.tilelang.dequantize.ladder_weight_transform_tensorcore import (
@@ -180,6 +179,10 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
         import_source: Optional[str] = None
         func_name: str = ""
         if fast_decoding is True:
+            # Lazy import to save the startup time
+            # as intrin registry may take a while to load
+            from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
+
             lop3_intrin_info = get_lop3_intrin_group(
                 out_dtype=in_dtype,
                 source_format=source_format,

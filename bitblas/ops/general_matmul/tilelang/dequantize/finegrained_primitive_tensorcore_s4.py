@@ -21,7 +21,6 @@ from bitblas.ops.general_matmul.tirscript import (
     matmul_dequantize_select_implementation,)
 from bitblas.ops.general_matmul.tilelang.dequantize.finegrained_primitive_tensorcore import (
     MatmulDequantizeFineGrainedScheduler,)
-from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
 
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
@@ -160,6 +159,10 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
         import_source: Optional[str] = None
         func_name: str = ""
         if fast_decoding is True:
+            # Lazy import to save the startup time
+            # as intrin registry may take a while to load
+            from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
+
             lop3_intrin_info = get_lop3_intrin_group(
                 out_dtype=in_dtype,
                 source_format=source_format,

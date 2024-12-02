@@ -113,16 +113,15 @@ def assert_dequantize_scheduler_simplify(
     is_equal = structural_equal(matmul, simplified)  # noqa: F841
     assert simplified is not None, "Simplify should return a schedule"
 
-def assert_matmul_scheduler_with_default(
-    M,
-    N,
-    K,
-    trans_A=False,
-    trans_B=True,
-    in_dtype="float16",
-    out_dtype="float16",
-    accum_dtype="float16"
-):
+
+def assert_matmul_scheduler_with_default(M,
+                                         N,
+                                         K,
+                                         trans_A=False,
+                                         trans_B=True,
+                                         in_dtype="float16",
+                                         out_dtype="float16",
+                                         accum_dtype="float16"):
     matmul = MatmulScheduler(
         M=M,
         N=N,
@@ -135,6 +134,34 @@ def assert_matmul_scheduler_with_default(
     ).deactivate_simplify().with_default_config()
     print(matmul)
     assert matmul is not None, "with_default_config should return a schedule"
+
+
+def assert_matmul_scheduler_get_hints(
+    M,
+    N,
+    K,
+    trans_A=False,
+    trans_B=True,
+    in_dtype="float16",
+    out_dtype="float16",
+    accum_dtype="float16",
+):
+    scheduler = MatmulScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+    )
+    hints = scheduler.get_hardware_aware_configs()
+    for hint in hints:
+        print(type(hint), hint)
+    matmul = scheduler.apply_config(hint=hints[0])
+    print(matmul)
+    assert hints is not None, "with_default_config should return a schedule"
 
 
 def test_scheduler_simplify():
@@ -151,10 +178,16 @@ def test_dequantize_scheduler_simplify():
     assert_dequantize_scheduler_simplify(
         128, 128, 128, with_scaling=True, with_zeros=True, zeros_mode="quantized")
 
+
 def test_matmul_scheduler_with_default():
     assert_matmul_scheduler_with_default(1, 128, 128)
     assert_matmul_scheduler_with_default(128, 128, 128)
 
+
+def test_matmul_scheduler_get_hints():
+    assert_matmul_scheduler_get_hints(1, 128, 128)
+    assert_matmul_scheduler_get_hints(128, 128, 128)
+
+
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    assert_matmul_scheduler_with_default(1, 128, 128)
+    bitblas.testing.main()

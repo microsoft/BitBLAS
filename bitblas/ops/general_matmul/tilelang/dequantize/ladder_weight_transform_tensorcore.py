@@ -16,7 +16,6 @@ from bitblas.base.operator_common import TransformKind  # noqa: F401
 from dataclasses import dataclass
 from bitblas.quantization import (
     _tir_packed_to_unsigned_convert,)
-from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
 from bitblas.gpu.matmul_analysis import (
     get_propagate_map,
     get_ladder_stage3_map,
@@ -125,6 +124,9 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         import_source: Optional[str] = None
         func_name: str = ""
         if fast_decoding is True:
+            # Lazy import to save the startup time
+            # as intrin registry may take a while to load
+            from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
             lop3_intrin_info = get_lop3_intrin_group(
                 out_dtype=in_dtype,
                 source_format=source_format,

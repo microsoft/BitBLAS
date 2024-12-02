@@ -11,7 +11,8 @@ from tvm import tir, IRModule
 from tvm.runtime import Module
 from tvm.tir import Schedule
 import tvm.tl as tl
-from bitblas.base.arch import CUDA
+from bitblas.tl.base_hint import BaseTLHint
+from bitblas.base.arch import CUDA, TileDevice
 from bitblas.base.utils import get_dummy_input_arrays
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
@@ -65,7 +66,8 @@ class CompileResult:
 
 def _apply_config(
     scheduler: BaseScheduler,
-    config=None,
+    config: BaseTLHint = None,
+    arch: TileDevice = None,
 ) -> Optional[IRModule]:
     """
     find rules:
@@ -75,7 +77,7 @@ def _apply_config(
     case 4. else we should use general reduction rule.
     """
     logger.debug("Scheduler Apply config {}".format(config))
-    scheduled_func = scheduler.apply_config(**config.get_config_params())
+    scheduled_func = scheduler.apply_config(config, arch)
     if scheduled_func is None:
         return None
     else:
@@ -96,16 +98,16 @@ def apply_and_build_parallel(scheduler,
     # apply config in thread parallel
     _scheduled_ir_modules: List[Schedule] = []
 
-    def _submit_config(f, c):
+    def _submit_config(f, c, a):
         try:
-            scheduled_ir_module = _apply_config(f, c)
+            scheduled_ir_module = _apply_config(f, c, a)
         except Exception as apply_schedule_error:
             logger.debug("Apply schedule failed: {}".format(apply_schedule_error))
             scheduled_ir_module = None
         return scheduled_ir_module
 
     with ThreadPoolExecutor(max_workers=max_workers) as _scheduler:
-        futures = {_scheduler.submit(_submit_config, scheduler, config) for config in configs}
+        futures = {_scheduler.submit(_submit_config, scheduler, config, arch) for config in configs}
         for future in as_completed(futures, timeout=timeout):
             _scheduled_ir_modules.append(future.result())
 
@@ -212,66 +214,3 @@ def apply_and_build(
     max_workers = 10 if parallel_build else 1
     return apply_and_build_parallel(
         scheduler, configs, arch, max_workers=max_workers, data_distribution=data_distribution)
-
-
-def fast_tune(
-    func: tir.PrimFunc,
-    target: tvm.target.Target,
-    topk: int = 10,
-    parallel_build: bool = True,
-    data_distribution: Literal["uniform", "onefill"] = "uniform",
-):
-    # check the function is a primfunc
-    if not isinstance(func, tir.PrimFunc):
-        raise ValueError("Only support func is PrimFunc")  # pragma: no cover
-
-    if target.kind.name != "cuda":
-        logger.error("Only support CUDA target")
-        return None, None
-
-    specilized_func = func
-    if func.attrs is not None and "opt_shapes" in func.attrs:
-        opt_shapes = func.attrs["opt_shapes"]
-        # should be int value
-        if not all([isinstance(v.value, int) for v in opt_shapes.values()]):
-            logger.error("The opt_shapes should be int value")
-            return None, None
-        # currently only support one dynamic range
-        if len(opt_shapes) > 1:
-            logger.error("Currently only support one dynamic range")
-            return None, None
-
-        for buffer in func.buffer_map.values():
-            for axis in buffer.shape:
-                if isinstance(axis, tvm.tir.Var) and axis.name not in opt_shapes:
-                    raise NotImplementedError(
-                        "Currently do not support fast tune with none-dynamic range set")
-        if opt_shapes:
-            raise NotImplementedError(
-                "Currently do not support fast tune with none-dynamic range set")
-
-    arch = CUDA(target)
-
-    policy = DefaultPolicy(func=func, arch=arch)
-    try:
-        specilized_func, tags = get_tensorized_func_and_tags(specilized_func, arch.target)
-    except Exception as e_msg:
-        logger.debug("Get tensorized func and tags failed: ", e_msg)
-        tags = None
-    if tags:
-        policy = TensorCorePolicy(func=specilized_func, arch=arch, tags=tags)
-
-    configs = policy.emit_config(topk)
-
-    if len(configs) == 0:
-        raise ValueError("No valid config generated")
-
-    cpresults, best = apply_and_build(
-        func,
-        configs,
-        arch,
-        parallel_build=parallel_build,
-        data_distribution=data_distribution,
-    )
-
-    return cpresults, best

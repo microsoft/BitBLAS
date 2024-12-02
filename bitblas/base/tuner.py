@@ -2,8 +2,9 @@
 # Licensed under the MIT License.
 
 from bitblas import tvm
-from typing import List, Optional, Dict, Literal, Callable
+from typing import List, Optional, Dict, Literal, Callable, Union
 from tvm import tir, IRModule
+from tvm.tir import PrimFunc
 from .analysis import find_var_from_func
 from bitblas.base.arch import CUDA, CDNA
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
@@ -11,14 +12,14 @@ from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 import itertools
 from tvm.ir.supply import GlobalVarSupply
 from bitblas.base.base_scheduler import BaseScheduler
-from bitblas.base.utils import apply_and_build
+from bitblas.base.utils import apply_and_build as tir_apply_and_build
+from bitblas.tl.tuner import apply_and_build as tl_apply_and_build
 import logging
 
 logger = logging.getLogger(__name__)
 
-
-def fast_tune(
-    func: tir.PrimFunc,
+def fast_tune_tir(
+    func: PrimFunc,
     target: tvm.target.Target,
     topk: int = 10,
     parallel_build: bool = True,
@@ -46,15 +47,19 @@ def fast_tune(
 
         for buffer in func.buffer_map.values():
             for axis in buffer.shape:
-                if isinstance(axis, tvm.tir.Var) and axis.name not in opt_shapes:
+                if (
+                    isinstance(axis, tvm.tir.Var)
+                    and axis.name not in opt_shapes
+                ):
                     raise NotImplementedError(
-                        "Currently do not support fast tune with none-dynamic range set")
+                        "Currently do not support fast tune with none-dynamic range set"
+                    )
         if opt_shapes:
             for name, shape in opt_shapes.items():
                 var = find_var_from_func(func, name)
-                specilized_func = func.specialize({
-                    var: shape.astype(var.dtype)
-                }).with_attr("is_specialized")
+                specilized_func = func.specialize(
+                    {var: shape.astype(var.dtype)}
+                ).with_attr("is_specialized")
 
     if target.kind.name == "cuda":
         arch = CUDA(target)
@@ -65,7 +70,9 @@ def fast_tune(
 
     policy = DefaultPolicy(func=func, arch=arch)
     try:
-        specilized_func, tags = get_tensorized_func_and_tags(specilized_func, arch.target)
+        specilized_func, tags = get_tensorized_func_and_tags(
+            specilized_func, arch.target
+        )
     except Exception as e_msg:
         logger.debug("Get tensorized func and tags failed: ", e_msg)
         tags = None
@@ -77,7 +84,7 @@ def fast_tune(
     if len(configs) == 0:
         raise ValueError("No valid config generated")
 
-    cpresults, best = apply_and_build(
+    cpresults, best = tir_apply_and_build(
         func,
         configs,
         arch,
@@ -87,6 +94,46 @@ def fast_tune(
 
     return cpresults, best
 
+def fast_tune_tilelang(
+    scheduler: BaseScheduler,
+    target: tvm.target.Target,
+    topk: int = 10,
+    parallel_build: bool = True,
+    data_distribution: Literal["uniform", "onefill"] = "uniform",
+):
+    if target.kind.name not in ["cuda", "hip"]:
+        logger.error("Only support CUDA and hip target")
+        return None, None
+
+    arch: Union[CUDA, CDNA] = None
+    if target.kind.name == "cuda":
+        arch = CUDA(target)
+    elif target.kind.name == "hip":
+        arch = CDNA(target)
+    else:
+        raise ValueError(f"Unsupported target: {target.kind.name}")
+
+    tuning_configs = scheduler.get_hardware_aware_configs(arch, topk)
+    assert len(tuning_configs) > 0, "No tuning config found for this operator."
+    cpresults, best = tl_apply_and_build(
+        scheduler, tuning_configs, arch=arch, parallel_build=parallel_build,
+        data_distribution=data_distribution
+    )
+    return cpresults, best
+
+def fast_tune(
+    func_or_scheduler: Union[PrimFunc, BaseScheduler],
+    target: tvm.target.Target,
+    topk: int = 10,
+    parallel_build: bool = True,
+    data_distribution: Literal["uniform", "onefill"] = "uniform",
+):
+    if isinstance(func_or_scheduler, tir.PrimFunc):
+        return fast_tune_tir(func_or_scheduler, target, topk, parallel_build, data_distribution)
+    elif isinstance(func_or_scheduler, BaseScheduler):
+        return fast_tune_tilelang(func_or_scheduler, target, topk, parallel_build, data_distribution)
+    else:
+        raise ValueError("Not supported type: ", type(func_or_scheduler))
 
 # always use the first function as the base
 def collect_buffers_to_declare(func):
@@ -284,6 +331,7 @@ def fast_tune_with_dynamic_range_tilelang(
     dynamic_range: Optional[Dict[str, List[int]]] = None,
     kernel_name_generator: Optional[Callable] = None,
 ) -> IRModule:
+    from copy import deepcopy
     if dynamic_range is None:
         dynamic_range = {}
     if target.kind.name != "cuda":
@@ -317,9 +365,12 @@ def fast_tune_with_dynamic_range_tilelang(
         # for static shape with default configuration, we handle the dispatch within with default schedule
         # for static shape with customized configuration, we handle the dispatch within with apply config
         # which is similar to what we did at /root/BitBLAS/bitblas/base/utils.py
-
-        func = func.with_attr("opt_shapes", item)
-        _, best = fast_tune(func, target, topk, parallel_build)
+        print(f"item: {item}")
+        print(f"{scheduler._dynamic_range=}")
+        # get specialized scheduler
+        specialized_scheduler = scheduler.specialize_from_dynamic_range(dynamic_range=item)
+        print(f"{specialized_scheduler=}")
+        _, best = fast_tune(specialized_scheduler, target, topk, parallel_build)
         if best is None:
             return None
         specialized_func = best.sch.mod["main"]

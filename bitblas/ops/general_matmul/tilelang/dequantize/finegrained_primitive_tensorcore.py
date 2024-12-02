@@ -27,7 +27,6 @@ from bitblas.quantization import (
     _tir_u8_to_f8_e4m3_to_f16,
     _tir_packed_to_unsigned_convert_with_zeros,
 )
-from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
 
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
@@ -217,6 +216,9 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
         import_source: Optional[str] = None
         func_name: str = ""
         if fast_decoding is True:
+            # Lazy import to save the startup time
+            # as intrin registry may take a while to load
+            from bitblas.gpu.intrin.lop3 import get_lop3_intrin_group
             lop3_intrin_info = get_lop3_intrin_group(
                 out_dtype=in_dtype,
                 source_format=source_format,

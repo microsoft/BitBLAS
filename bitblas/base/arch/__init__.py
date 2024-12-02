@@ -41,5 +41,6 @@ def is_volta_arch(arch: TileDevice) -> bool:
     conditions.append(arch.sm_version < 80)
     return all(conditions)
 
+
 def is_cdna_arch(arch: TileDevice) -> bool:
     return isinstance(arch, CDNA)

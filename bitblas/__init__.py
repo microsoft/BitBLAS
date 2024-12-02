@@ -133,7 +133,6 @@ if os.environ.get("TL_CUTLASS_PATH", None) is None:
         logger.warning(CUTLASS_NOT_FOUND_MESSAGE)
 
 import tvm as tvm  # noqa: E402
-from . import gpu  # noqa: F401
 from .base import (
     TileDevice,  # noqa: F401
     fast_tune,  # noqa: F401
@@ -148,7 +147,6 @@ from .relax import (
     ApplyDefaultSchedule,  # noqa: F401
     ApplyFastTuning,  # noqa: F401
 )
-from . import testing  # noqa: F401
 from .utils import auto_detect_nvidia_target, apply_transform_on_input  # noqa: F401
 from .ops.general_matmul import MatmulConfig, Matmul  # noqa: F401
 from .ops.general_matmul_splitk import MatmulConfigWithSplitK, MatmulWithSplitK  # noqa: F401

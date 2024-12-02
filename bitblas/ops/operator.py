@@ -12,7 +12,6 @@ import bitblas
 import ctypes
 from typing import List, Dict, Any, Optional, Tuple, Literal, Callable, Union
 import numpy as np
-from bitblas.tl.tuner import apply_and_build as tl_apply_and_build
 from copy import deepcopy
 from bitblas.base.base_scheduler import BaseScheduler
 from bitblas.base.tuner import fast_tune, fast_tune_with_dynamic_range
@@ -351,7 +350,7 @@ class Operator(object):
 
     def apply_fast_tuning(
         self,
-        func_or_scheduler: PrimFunc,
+        func_or_scheduler: Union[PrimFunc, BaseScheduler],
         target: Target,
         topk: int = 20,
         parallel_build=True,
@@ -365,10 +364,12 @@ class Operator(object):
             return (best.sch.mod, best.config) if best is not None else (None, None)
         elif self.is_tilelang_backend():
             # Finetune the schedule
-            tuning_configs = self.get_tl_tuning_config(topk=topk)
-            assert len(tuning_configs) > 0, "No tuning config found for this operator."
-            _, best = tl_apply_and_build(
-                func_or_scheduler, tuning_configs, arch=self.arch, parallel_build=parallel_build)
+            _, best = fast_tune(
+                func_or_scheduler,
+                target,
+                topk=topk,
+                parallel_build=parallel_build,
+            )
             # Return the best Config as Hint
             return (best.sch.mod, best.config) if best is not None else (None, None)
         else:
