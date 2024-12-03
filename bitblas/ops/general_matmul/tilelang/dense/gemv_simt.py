@@ -3,15 +3,11 @@
 from bitblas import tvm as tvm
 from functools import reduce
 from typing import Optional, List
-from bitblas.base.base_scheduler import BaseScheduler
 import tvm.tl.language as T
 from tvm import DataType
 from tvm.tir import PrimFunc
 
 from dataclasses import dataclass
-from bitblas.base.utils import get_roller_hints_from_func
-from bitblas.ops.general_matmul.tirscript import (matmul_select_implementation)
-from bitblas.base.arch import TileDevice
 from bitblas.tl.base_hint import BaseTLHint
 from bitblas.base.roller.hint import Hint
 from .matmul_simt import MatmulSIMTBaseScheduler

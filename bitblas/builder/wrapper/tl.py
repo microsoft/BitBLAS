@@ -3,7 +3,6 @@
 from bitblas import tvm
 from typing import Optional, List, Dict, Union
 from tvm import IRModule
-from tvm.tir import PrimFunc
 from bitblas.base.arch import TileDevice, is_cuda_arch, is_cdna_arch
 from bitblas.utils import match_global_kernel
 from bitblas.utils.rtmod_analysis import get_annotated_device_mod
@@ -173,16 +172,14 @@ class TLCUDASourceWrapper(object):
         else:
             for _, function in self.mod.functions_items():
                 attr = function.attrs
-                if "tir.is_global_func" in attr and attr["tir.is_global_func"] == True:
+                if "tir.is_global_func" in attr and attr["tir.is_global_func"]:
                     return function
             raise ValueError("Cannot find primary function in the module.")
-            
+
 
 class TLCUDASourceWrapperWithDynamic(TLCUDASourceWrapper):
 
-    def __init__(
-        self, scheduled_ir_module: IRModule, source: str, arch: TileDevice
-    ):
+    def __init__(self, scheduled_ir_module: IRModule, source: str, arch: TileDevice):
         super().__init__(scheduled_ir_module, source, arch)
 
     def get_cuda_init_func(self):
@@ -193,8 +190,7 @@ class TLCUDASourceWrapperWithDynamic(TLCUDASourceWrapper):
             if dynamic_smem_buf is not None:
                 # Format the cudaFuncSetAttribute call for dynamic shared memory
                 call_str += PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY.format(
-                    function_name, dynamic_smem_buf
-                )
+                    function_name, dynamic_smem_buf)
         # Define the init function that will set the attributes for each kernel
         init_funcs = PREDEF_INIT_FUNC.format(call_str)
         return init_funcs
@@ -217,24 +213,18 @@ class TLCUDASourceWrapperWithDynamic(TLCUDASourceWrapper):
         # Collect function arguments based on primary function's parameters and buffer mappings
         for param in self.prim_func.params:
             buffer = self.prim_func.buffer_map[param]
-            function_args.append(
-                {
-                    "name": buffer.name,
-                    "type": self._TYPE_MAP[buffer.dtype] + "* __restrict__",
-                }
-            )
+            function_args.append({
+                "name": buffer.name,
+                "type": self._TYPE_MAP[buffer.dtype] + "* __restrict__",
+            })
         # Add dynamic symbols as integer arguments
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
 
-        function_args.append(
-            {"name": "stream=cudaStreamDefault", "type": "cudaStream_t"},
-        )
+        function_args.append({"name": "stream=cudaStreamDefault", "type": "cudaStream_t"},)
 
         # Format the argument definitions for function declaration
-        def_args = ", ".join(
-            [f"{arg['type']} {arg['name']}" for arg in function_args]
-        )
+        def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
 
         def func_call_args(s: str, function_args):
             # Extract and clean the function call arguments to match the declaration
@@ -263,9 +253,7 @@ class TLCUDASourceWrapperWithDynamic(TLCUDASourceWrapper):
         last_range = 0
         num_items = len(function_informations)
         _call_str = """"""
-        for last_range, (function_name, info) in enumerate(
-            function_informations.items()
-        ):
+        for last_range, (function_name, info) in enumerate(function_informations.items()):
             # Prepare block and grid configurations for kernel launches
             block_info, grid_info = info["block_info"], info["grid_info"]
             block_str = "dim3({}, {}, {})".format(
@@ -279,19 +267,13 @@ class TLCUDASourceWrapperWithDynamic(TLCUDASourceWrapper):
                 legalize_c(grid_info[2]),
             )
             # Handle dynamic shared memory specification
-            smem_str = (
-                0
-                if info["dynamic_smem_buf"] is None
-                else info["dynamic_smem_buf"]
-            )
+            smem_str = (0 if info["dynamic_smem_buf"] is None else info["dynamic_smem_buf"])
             opt_shapes = info["opt_shapes"]
             # Generate conditional kernel launch code based on dynamic symbolic ranges
             (symbolic,) = list(dynamic_symbolic_set)
             range_str = opt_shapes[symbolic]
             if last_range == 0:
-                call_str = "  if ({} == 0) return; \n".format(
-                    symbolic,
-                )
+                call_str = "  if ({} == 0) return; \n".format(symbolic,)
                 call_str += "  if ({} <= {}) {{\n    {}<<<{}, {}, {}, stream>>>({}); \n  }}\n".format(
                     symbolic,
                     range_str,
@@ -313,8 +295,7 @@ class TLCUDASourceWrapperWithDynamic(TLCUDASourceWrapper):
                 )
             if last_range == num_items - 1:
                 call_str += "  else {{\n    {}<<<{}, {}, {}, stream>>>({}); \n  }}\n".format(
-                    function_name, grid_str, block_str, smem_str, call_args
-                )
+                    function_name, grid_str, block_str, smem_str, call_args)
             _call_str += call_str
 
         # Wrap the kernel dispatch logic in an external C function
@@ -359,9 +340,7 @@ class TLCUDASourceWrapperWithDynamic(TLCUDASourceWrapper):
         for g_var, func in self.mod.functions.items():
             function_name = g_var.name_hint
             # Do not update function with dispatch host function
-            if (function_name not in self.block_info) or (
-                function_name not in self.grid_info
-            ):
+            if (function_name not in self.block_info) or (function_name not in self.grid_info):
                 continue
 
             attrs = func.attrs
@@ -383,8 +362,7 @@ class TLCUDASourceWrapperWithDynamic(TLCUDASourceWrapper):
             sorted(
                 function_informations.items(),
                 key=lambda item: compare_map_objects(item[1]["opt_shapes"]),
-            )
-        )
+            ))
 
         self.lib_code = code
 
@@ -398,9 +376,7 @@ class TLCUDASourceWrapperWithDynamic(TLCUDASourceWrapper):
 
 class TLHIPSourceWrapper(TLCUDASourceWrapper):
 
-    def __init__(
-        self, scheduled_ir_module: IRModule, source: str, arch: TileDevice
-    ):
+    def __init__(self, scheduled_ir_module: IRModule, source: str, arch: TileDevice):
         super().__init__(scheduled_ir_module, source, arch)
 
     def get_hip_init_func(self):
@@ -408,17 +384,14 @@ class TLHIPSourceWrapper(TLCUDASourceWrapper):
         call_str = """"""
         # If dynamic shared memory buffer is specified, prepare the cudaFuncSetAttribute call
         if self.dynamic_smem_buf is not None:
-            call_str = PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY.format(
-                self.function_name, self.dynamic_smem_buf
-            )
+            call_str = PREDEF_ARRTIBUTE_SET_DYNAMIC_MEMORY.format(self.function_name,
+                                                                  self.dynamic_smem_buf)
         # Format the initialization function using the call_str
         init_funcs = PREDEF_INIT_FUNC.format(call_str)
         return init_funcs
 
     def get_stream_type(self, function_args):
-        function_args.append(
-            {"name": "stream=hipStreamDefault", "type": "hipStream_t"},
-        )
+        function_args.append({"name": "stream=hipStreamDefault", "type": "hipStream_t"},)
 
 
 class TLWrapper(BaseWrapper):
@@ -437,10 +410,7 @@ class TLWrapper(BaseWrapper):
         assert self.scheduled_ir_module is not None, "Please assign optimized module first."
         if is_cuda_arch(self.arch):
             wrapper_class = (
-                TLCUDASourceWrapper
-                if not is_dynamic
-                else TLCUDASourceWrapperWithDynamic
-            )
+                TLCUDASourceWrapper if not is_dynamic else TLCUDASourceWrapperWithDynamic)
         elif is_cdna_arch(self.arch):
             wrapper_class = TLHIPSourceWrapper
         else:

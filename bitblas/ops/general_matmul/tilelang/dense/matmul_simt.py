@@ -2,7 +2,6 @@
 # Licensed under the MIT License.
 from bitblas import tvm as tvm
 from typing import Optional, List
-from bitblas.base.base_scheduler import BaseScheduler
 import tvm.tl.language as T
 from tvm import DataType
 from tvm.tir import PrimFunc

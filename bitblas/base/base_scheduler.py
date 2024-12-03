@@ -92,7 +92,9 @@ class BaseScheduler(ABC):
         # Convert Roller Hints to TileLang Hints
         raise NotImplementedError("Serialization of hints to configs is not implemented")
 
-    def specialize_from_dynamic_range(self, dynamic_range: Optional[Dict[str, int]]=None) -> "BaseScheduler":
+    def specialize_from_dynamic_range(self,
+                                      dynamic_range: Optional[Dict[str,
+                                                                   int]] = None) -> "BaseScheduler":
         raise NotImplementedError("Specialization from dynamic range is not implemented")
 
     @property

@@ -12,7 +12,7 @@ from tvm.runtime import Module
 from tvm.tir import Schedule
 from tvm.relax.expr import Function
 import bitblas
-from .analysis import get_root_block, get_reduction_blocks, find_var_from_func
+from .analysis import get_root_block, get_reduction_blocks
 from bitblas.base.arch import TileDevice
 from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
 from bitblas.base.roller.hint import Hint

@@ -112,9 +112,7 @@ def fast_tune_tilelang(
     specialized_scheduler = scheduler
     if scheduler.has_dynamic_range():
         specialized_scheduler = scheduler.specialize_from_dynamic_range()
-    tuning_configs = specialized_scheduler.get_hardware_aware_configs(
-        arch, topk
-    )
+    tuning_configs = specialized_scheduler.get_hardware_aware_configs(arch, topk)
     assert len(tuning_configs) > 0, "No tuning config found for this operator."
     cpresults, best = tl_apply_and_build(
         scheduler,

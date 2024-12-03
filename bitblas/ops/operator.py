@@ -15,7 +15,7 @@ import numpy as np
 from copy import deepcopy
 from bitblas.base.base_scheduler import BaseScheduler
 from bitblas.base.tuner import fast_tune, fast_tune_with_dynamic_range
-from bitblas.base.arch import get_arch, TileDevice, is_cuda_arch, is_cdna_arch, is_cpu_arch
+from bitblas.base.arch import get_arch, TileDevice, is_cuda_arch, is_cdna_arch
 from bitblas.base.roller.hint import Hint
 from bitblas.builder.wrapper import TIRWrapper, TLWrapper
 from bitblas.builder.lib_generator import LibraryGenerator
@@ -209,9 +209,8 @@ class Operator(object):
                         self.__class__.__name__,
                         target,
                         "optimized",
-                        error_message,
-                    )
-                )
+                        truncated_message,
+                    ))
         else:
             # For non-CUDA and non-HIP platforms or when no optimized function is available, build with the primary function
             rt_mod = tvm.build(self.prim_func, target=target, name=self.name)
@@ -224,10 +223,8 @@ class Operator(object):
                 rt_mod.entry_name, self.arch.device, number=10)
             self.torch_func = to_pytorch_func(rt_mod)
             if is_cuda_arch(self.arch) or is_cdna_arch(self.arch):
-                # try:
                 is_dynamic = (
-                    self.dynamic_range is not None and
-                    len(self.scheduled_ir_module.functions) > 1)
+                    self.dynamic_range is not None and len(self.scheduled_ir_module.functions) > 1)
                 self.wrapper.assign_optimized_module(self.scheduled_ir_module)
                 wrapped_source = self.wrapper.wrap(
                     self.get_source(target, kenrel_only=True), is_dynamic)
@@ -235,11 +232,6 @@ class Operator(object):
                 self.lib_generator.compile_lib(with_tl=self.is_tilelang_backend())
                 self.lib = self.lib_generator.load_lib()
                 self.lib.init()
-
-                # except Exception as e:
-                #     build_runtime_library_error = e
-                #     logger.debug(
-                #         "Failed to build runtime library {}".format(build_runtime_library_error))
             else:
                 raise ValueError(f"Unsupported target: {self.arch.kind.name}")
         return rt_mod
@@ -334,7 +326,7 @@ class Operator(object):
         dynamic_range: Dict[str, List[int]] = None,
         parallel_build=True,
     ):
-        if self.is_tir_backend():
+        if self.is_tir_backend() or self.is_tilelang_backend():
             scheduled_ir_module = fast_tune_with_dynamic_range(
                 func_or_scheduler,
                 target,
@@ -343,21 +335,11 @@ class Operator(object):
                 dynamic_range=dynamic_range,
                 kernel_name_generator=self.kernel_name_generator,
             )
-            if scheduled_ir_module is not None:
-                return scheduled_ir_module
-        elif self.is_tilelang_backend():
-            scheduled_ir_module = fast_tune_with_dynamic_range(
-                func_or_scheduler,
-                target,
-                topk=topk,
-                parallel_build=parallel_build,
-                dynamic_range=dynamic_range,
-                kernel_name_generator=self.kernel_name_generator,
-            )
-            if scheduled_ir_module is not None:
-                return scheduled_ir_module
         else:
             raise ValueError(f"Unsupported backend: {self.backend}")
+
+        if scheduled_ir_module is not None:
+            return scheduled_ir_module
 
         return None
 

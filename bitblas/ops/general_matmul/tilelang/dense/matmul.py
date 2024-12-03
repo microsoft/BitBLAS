@@ -88,8 +88,8 @@ class MatmulScheduler(MatmulBaseParams):
             minimal_tensorcore_threshold: List[int, int,
                                                int] = [8, 16, 32
                                                       ] if accum_dtype == "int32" else [8, 16, 16]
-            if M < minimal_tensorcore_threshold[0] or N < minimal_tensorcore_threshold[
-                    1] or K < minimal_tensorcore_threshold[2]:
+            if minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[
+                    1] > N or minimal_tensorcore_threshold[2] > K:
                 return self.gemv_scheduler
             elif is_tensorcore_precision_supported(in_dtype, accum_dtype, arch):
                 if self.weight_transform_kind != TransformKind.NonTransform:
@@ -120,8 +120,8 @@ class MatmulScheduler(MatmulBaseParams):
                 return self.matmul_simt_scheduler
         else:
             minimal_tensorcore_threshold: List[int, int, int] = [8, 16, 16]
-            if M < minimal_tensorcore_threshold[0] or N < minimal_tensorcore_threshold[
-                    1] or K < minimal_tensorcore_threshold[2]:
+            if minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[
+                    1] > N or minimal_tensorcore_threshold[2] > K:
                 return self.gemv_scheduler
             elif is_tensorcore_precision_supported(in_dtype, accum_dtype, arch):
                 # Fine-grained scheduler (mma) is not supported for Volta
@@ -186,13 +186,14 @@ class MatmulScheduler(MatmulBaseParams):
 
         return target_scheduler.apply_config(**hint.get_config_params())
 
-    def specialize_from_dynamic_range(self, dynamic_range: Optional[Dict[str, int]]=None) -> "MatmulScheduler":
+    def specialize_from_dynamic_range(self,
+                                      dynamic_range: Optional[Dict[str, int]] = None
+                                     ) -> "MatmulScheduler":
         if dynamic_range is None:
             dynamic_range = self._dynamic_range
 
-        assert (
-            dynamic_range is not None
-        ), "dynamic_range is required for specialize_from_dynamic_range"
+        assert (dynamic_range
+                is not None), "dynamic_range is required for specialize_from_dynamic_range"
 
         class_attributes = self.params_as_dict()
         for symbol, value in dynamic_range.items():

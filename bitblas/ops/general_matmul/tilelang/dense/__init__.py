@@ -6,25 +6,15 @@ from .matmul_simt import (
 )
 
 from .matmul_tensorcore import (
-    matmul_blocked,  # noqa: F401
-    matmul_macro_tensorcore,  # noqa: F401
-    matmul_macro_tensorcore_weight_propagation_level_ldmatrix  # noqa: F401
+    MatmulBlockScheduler,
+    MatmulFineGrainScheduler,
+    MatmulWeightPropagationScheduler,
+    MatmulINT4FineGrainScheduler,
+    MatmulINT4WeightPropagationScheduler,
 )
 
-from .matmul_tensorcore import (
-    MatmulBlockScheduler,  # noqa: F401
-    MatmulFineGrainScheduler,  # noqa: F401
-    MatmulWeightPropagationScheduler,  # noqa: F401
-    MatmulINT4FineGrainScheduler,  # noqa: F401
-    MatmulINT4WeightPropagationScheduler,  # noqa: F401
-)
-
-from .matmul import MatmulScheduler  # noqa: F401
+from .matmul import MatmulScheduler
 from bitblas.base.roller import TileDevice
-from bitblas.base.arch import (
-    is_ampere_arch,
-    is_volta_arch,
-)
 from bitblas.base.operator_common import TransformKind
 from typing import Union
 
@@ -213,32 +203,3 @@ def select_scheduler(
         input_transform_kind=propagate_a,
         weight_transform_kind=propagate_b,
     )
-
-    # if is_ampere_arch(arch):
-    #     return ampere_select_scheduler(
-    #         M=M,
-    #         N=N,
-    #         K=K,
-    #         in_dtype=in_dtype,
-    #         out_dtype=out_dtype,
-    #         accum_dtype=accum_dtype,
-    #         with_bias=with_bias,
-    #         layout=layout,
-    #         propagate_a=propagate_a,
-    #         propagate_b=propagate_b,
-    #     )
-    # elif is_volta_arch(arch):
-    #     return volta_select_schduler(
-    #         M=M,
-    #         N=N,
-    #         K=K,
-    #         in_dtype=in_dtype,
-    #         out_dtype=out_dtype,
-    #         accum_dtype=accum_dtype,
-    #         with_bias=with_bias,
-    #         layout=layout,
-    #         propagate_a=propagate_a,
-    #         propagate_b=propagate_b,
-    #     )
-    # else:
-    #     raise ValueError(f"Unsupported arch: {arch.name}")
