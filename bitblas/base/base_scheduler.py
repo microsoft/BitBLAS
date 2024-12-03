@@ -1,3 +1,4 @@
+from tvm import te
 from tvm import IRModule
 from tvm.tir import PrimFunc
 from typing import Optional, Union, Callable, List, Dict
@@ -75,6 +76,12 @@ class BaseScheduler(ABC):
 
     def has_dynamic_range(self) -> bool:
         return bool(self._dynamic_range)
+
+    @staticmethod
+    def maybe_dynamic(arg: Union[int, List[int]], dynamic_symbol: str = "m") -> PrimFunc:
+        if isinstance(arg, int):
+            return arg
+        return te.var(dynamic_symbol)
 
     @abstractmethod
     def with_default_config(self, *args, **kwargs) -> PrimFunc:

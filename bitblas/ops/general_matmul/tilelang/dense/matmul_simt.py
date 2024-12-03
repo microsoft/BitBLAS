@@ -155,9 +155,9 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
         assert thread_col_tiles is not None, "thread_col_tiles must be provided"
         assert chunk is not None, "chunk must be provided"
 
-        M, N, K = self.M, self.N, self.K
-        if not isinstance(M, int):
-            M = tvm.te.var("m")
+        M = self.maybe_dynamic(self.M, "m")
+        N, K = self.N, self.K
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
 
         in_dtype, out_dtype, accum_dtype = (
             self.in_dtype,

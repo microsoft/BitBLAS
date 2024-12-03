@@ -3,8 +3,7 @@
 from bitblas import tvm as tvm
 from tvm import DataType
 import tvm.tl.language as T
-from typing import Optional, List, Literal
-from bitblas.base.base_scheduler import BaseScheduler
+from typing import Optional, List
 from bitblas.base.arch import TileDevice
 from bitblas.base.roller.hint import Hint
 from bitblas.base.roller.rasterization import NoRasterization
@@ -22,32 +21,14 @@ from bitblas.quantization import (
     _tir_packed_to_unsigned_convert_with_zeros,
 )
 
+from .base import MatmulDequantizeBaseParams
+
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
 
 
 @dataclass
-class MatmulDequantizeBaseScheduler(BaseScheduler):
-    # OP Related Config
-    M: Optional[int] = None
-    N: Optional[int] = None
-    K: Optional[int] = None
-    trans_A: bool = False
-    trans_B: bool = False
-    in_dtype: str = "float16"
-    out_dtype: str = "float16"
-    accum_dtype: str = "float16"
-
-    # Dequantize Config
-    num_bits: int = 4
-    storage_dtype: str = "int8"
-    source_format: str = "uint"
-    with_scaling: bool = False
-    with_zeros: bool = False
-    group_size: int = -1
-    fast_decoding: bool = False
-    with_bias: bool = False
-    zeros_mode: Literal["original", "rescale", "quantized"] = "original"
+class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
@@ -202,9 +183,11 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
         assert block_K is not None, "block_K is required"
         assert num_stages is not None, "num_stages is required"
         assert threads is not None, "threads is required"
-        M, N, K = self.M, self.N, self.K
-        if not isinstance(M, int):
-            M = tvm.te.var("m")
+
+        M = self.maybe_dynamic(self.M, "m")
+        N, K = self.N, self.K
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
+
         trans_A, trans_B = self.trans_A, self.trans_B
 
         assert trans_A is False, "Dequantize only implement for trans_A=False currently"

@@ -201,9 +201,9 @@ class MatmulBlockScheduler(MatmulBaseScheduler):
         assert num_stages is not None, "num_stages is required"
         assert threads is not None, "threads is required"
 
-        M, N, K = self.M, self.N, self.K
-        if not isinstance(M, int):
-            M = tvm.te.var("m")
+        M = self.maybe_dynamic(self.M, "m")
+        N, K = self.N, self.K
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
 
         trans_A, trans_B = self.trans_A, self.trans_B
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
@@ -378,9 +378,9 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
         assert chunk is not None, "chunk is required"
         assert num_stages is not None, "num_stages is required"
 
-        M, N, K = self.M, self.N, self.K
-        if not isinstance(M, int):
-            M = tvm.te.var("m")
+        M = self.maybe_dynamic(self.M, "m")
+        N, K = self.N, self.K
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
 
         trans_A, trans_B = self.trans_A, self.trans_B
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
@@ -563,9 +563,9 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
         enable_rasterization=False,
     ):
 
-        M, N, K = self.M, self.N, self.K
-        if not isinstance(M, int):
-            M = tvm.te.var("m")
+        M = self.maybe_dynamic(self.M, "m")
+        N, K = self.N, self.K
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
 
         trans_A, trans_B = self.trans_A, self.trans_B
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
@@ -819,9 +819,9 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
         assert chunk is not None, "chunk is required"
         assert num_stages is not None, "num_stages is required"
 
-        M, N, K = self.M, self.N, self.K
-        if not isinstance(M, int):
-            M = tvm.te.var("m")
+        M = self.maybe_dynamic(self.M, "m")
+        N, K = self.N, self.K
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
         K = K // 2  # 2xint4 should be packed into one single int8
         trans_A, trans_B = self.trans_A, self.trans_B
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
@@ -1021,9 +1021,9 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
         enable_rasterization=False,
     ):
 
-        M, N, K = self.M, self.N, self.K
-        if not isinstance(M, int):
-            M = tvm.te.var("m")
+        M = self.maybe_dynamic(self.M, "m")
+        N, K = self.N, self.K
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
         K = K // 2  # 2xint4 should be packed into one single int8
         trans_A, trans_B = self.trans_A, self.trans_B
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
