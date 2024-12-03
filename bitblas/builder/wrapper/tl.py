@@ -33,6 +33,8 @@ class TLCUDASourceWrapper(object):
         "uchar": "uint8_t",
     }
 
+    backend = "tl"
+
     def __init__(self, scheduled_ir_module: IRModule, source: str, arch: TileDevice):
         self.mod = scheduled_ir_module
         self.arch = arch
@@ -47,7 +49,7 @@ class TLCUDASourceWrapper(object):
         self.lib_code: Optional[str] = self.update_lib_code(source)
 
     def parse_source_information(self):
-        device_mod = get_annotated_device_mod(self.mod, self.arch.target, backend="tl")
+        device_mod = get_annotated_device_mod(self.mod, self.arch.target, backend=self.backend)
         assert (len(device_mod.functions) == 1
                ), "Only support one function in the module for static shape kernel."
         for g_var, func in device_mod.functions.items():
@@ -304,7 +306,7 @@ class TLCUDASourceWrapperWithDynamic(TLCUDASourceWrapper):
 
     def parse_source_information(self):
         # Parse device module to extract execution configurations for each function
-        device_mod = get_annotated_device_mod(self.mod, self.arch.target)
+        device_mod = get_annotated_device_mod(self.mod, self.arch.target, backend=self.backend)
         block_info_map = {}
         grid_info_map = {}
         dynamic_smem_buf_map = {}

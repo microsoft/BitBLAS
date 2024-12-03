@@ -153,6 +153,8 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
         assert num_stages is not None, "num_stages is required"
 
         M, N, K = self.M, self.N, self.K
+        if not isinstance(M, int):
+            M = tvm.te.var("m")
         trans_A, trans_B = self.trans_A, self.trans_B
 
         assert trans_A is False, "Dequantize only implement for trans_A=False currently"

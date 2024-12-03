@@ -98,6 +98,8 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
         assert num_stages is not None, "num_stages is required"
 
         M, N, K = self.M, self.N, self.K
+        if not isinstance(M, int):
+            M = tvm.te.var("m")
         K = K // 2  # 2xint4 should be packed into one single int8
 
         trans_A, trans_B = self.trans_A, self.trans_B

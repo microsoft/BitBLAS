@@ -25,7 +25,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def is_tensorcore_precision_supported(in_dtype: str, accum_dtype: str, arch: TileDevice) -> bool:
+def is_tensorcore_supported_precision(in_dtype: str, accum_dtype: str, arch: TileDevice) -> bool:
     volta_tensorcore_supported = [
         ("float16", "float32"),
         ("float16", "float16"),
@@ -73,6 +73,9 @@ class MatmulScheduler(MatmulBaseParams):
 
     def dispatch_ampere_scheduler(self, arch: TileDevice) -> BaseScheduler:
         M, N, K = self.M, self.N, self.K
+        if not isinstance(M, int):
+            M = tvm.te.var("m")
+
         is_dynamic = self.is_dynamic
         in_dtype, accum_dtype = (
             self.in_dtype,
@@ -80,7 +83,7 @@ class MatmulScheduler(MatmulBaseParams):
         )
         if is_dynamic:
             # Dynamic Dispatcher
-            if is_tensorcore_precision_supported(in_dtype, accum_dtype, arch):
+            if is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 return self.matmul_fine_grain_scheduler
             else:
                 return self.matmul_simt_scheduler
@@ -91,7 +94,7 @@ class MatmulScheduler(MatmulBaseParams):
             if minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[
                     1] > N or minimal_tensorcore_threshold[2] > K:
                 return self.gemv_scheduler
-            elif is_tensorcore_precision_supported(in_dtype, accum_dtype, arch):
+            elif is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 if self.weight_transform_kind != TransformKind.NonTransform:
                     return self.matmul_weight_propagation_scheduler
                 else:
@@ -101,6 +104,9 @@ class MatmulScheduler(MatmulBaseParams):
 
     def dispatch_volta_scheduler(self, arch: TileDevice) -> BaseScheduler:
         M, N, K = self.M, self.N, self.K
+        if not isinstance(M, int):
+            M = tvm.te.var("m")
+
         is_dynamic = self.is_dynamic
         in_dtype, accum_dtype = (
             self.in_dtype,
@@ -114,8 +120,8 @@ class MatmulScheduler(MatmulBaseParams):
 
         if is_dynamic:
             # Dynamic Dispatcher
-            if is_tensorcore_precision_supported(in_dtype, accum_dtype, arch):
-                return self.matmul_fine_grain_scheduler
+            if is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
+                return self.matmul_block_scheduler
             else:
                 return self.matmul_simt_scheduler
         else:
@@ -123,7 +129,7 @@ class MatmulScheduler(MatmulBaseParams):
             if minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[
                     1] > N or minimal_tensorcore_threshold[2] > K:
                 return self.gemv_scheduler
-            elif is_tensorcore_precision_supported(in_dtype, accum_dtype, arch):
+            elif is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 # Fine-grained scheduler (mma) is not supported for Volta
                 return self.matmul_block_scheduler
             else:

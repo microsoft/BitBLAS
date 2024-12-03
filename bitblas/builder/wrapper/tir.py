@@ -33,6 +33,8 @@ class TIRCUDASourceWrapper(object):
         "uchar": "uint8_t",
     }
 
+    backend = "tir"
+
     def __init__(self, scheduled_ir_module: IRModule, source: str, arch: TileDevice):
         self.mod = scheduled_ir_module
         self.arch = arch
