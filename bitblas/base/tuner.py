@@ -18,6 +18,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def fast_tune_tir(
     func: PrimFunc,
     target: tvm.target.Target,
@@ -47,19 +48,15 @@ def fast_tune_tir(
 
         for buffer in func.buffer_map.values():
             for axis in buffer.shape:
-                if (
-                    isinstance(axis, tvm.tir.Var)
-                    and axis.name not in opt_shapes
-                ):
+                if (isinstance(axis, tvm.tir.Var) and axis.name not in opt_shapes):
                     raise NotImplementedError(
-                        "Currently do not support fast tune with none-dynamic range set"
-                    )
+                        "Currently do not support fast tune with none-dynamic range set")
         if opt_shapes:
             for name, shape in opt_shapes.items():
                 var = find_var_from_func(func, name)
-                specilized_func = func.specialize(
-                    {var: shape.astype(var.dtype)}
-                ).with_attr("is_specialized")
+                specilized_func = func.specialize({
+                    var: shape.astype(var.dtype)
+                }).with_attr("is_specialized")
 
     if target.kind.name == "cuda":
         arch = CUDA(target)
@@ -70,9 +67,7 @@ def fast_tune_tir(
 
     policy = DefaultPolicy(func=func, arch=arch)
     try:
-        specilized_func, tags = get_tensorized_func_and_tags(
-            specilized_func, arch.target
-        )
+        specilized_func, tags = get_tensorized_func_and_tags(specilized_func, arch.target)
     except Exception as e_msg:
         logger.debug("Get tensorized func and tags failed: ", e_msg)
         tags = None
@@ -94,6 +89,7 @@ def fast_tune_tir(
 
     return cpresults, best
 
+
 def fast_tune_tilelang(
     scheduler: BaseScheduler,
     target: tvm.target.Target,
@@ -113,13 +109,21 @@ def fast_tune_tilelang(
     else:
         raise ValueError(f"Unsupported target: {target.kind.name}")
 
-    tuning_configs = scheduler.get_hardware_aware_configs(arch, topk)
+    specialized_scheduler = scheduler
+    if scheduler.has_dynamic_range():
+        specialized_scheduler = scheduler.specialize_from_dynamic_range()
+    tuning_configs = specialized_scheduler.get_hardware_aware_configs(
+        arch, topk
+    )
     assert len(tuning_configs) > 0, "No tuning config found for this operator."
     cpresults, best = tl_apply_and_build(
-        scheduler, tuning_configs, arch=arch, parallel_build=parallel_build,
-        data_distribution=data_distribution
-    )
+        scheduler,
+        tuning_configs,
+        arch=arch,
+        parallel_build=parallel_build,
+        data_distribution=data_distribution)
     return cpresults, best
+
 
 def fast_tune(
     func_or_scheduler: Union[PrimFunc, BaseScheduler],
@@ -131,9 +135,11 @@ def fast_tune(
     if isinstance(func_or_scheduler, tir.PrimFunc):
         return fast_tune_tir(func_or_scheduler, target, topk, parallel_build, data_distribution)
     elif isinstance(func_or_scheduler, BaseScheduler):
-        return fast_tune_tilelang(func_or_scheduler, target, topk, parallel_build, data_distribution)
+        return fast_tune_tilelang(func_or_scheduler, target, topk, parallel_build,
+                                  data_distribution)
     else:
         raise ValueError("Not supported type: ", type(func_or_scheduler))
+
 
 # always use the first function as the base
 def collect_buffers_to_declare(func):
@@ -161,8 +167,11 @@ def refactor_specialized_func(g_var, func, params, buffers_to_declare):
     body = func.body
     attrs = func.attrs
     global_symbol = g_var
+    opt_shapes: Optional[Dict[str, int]] = None
     if "opt_shapes" in func.attrs:
         opt_shapes = func.attrs["opt_shapes"]
+
+    assert opt_shapes is not None, "The opt_shapes should not be None"
 
     def serialize_name(opt_shapes: Dict):
         return "_opt_" + "_".join([f"{k}_{v}" for k, v in opt_shapes.items()])
@@ -331,9 +340,11 @@ def fast_tune_with_dynamic_range_tilelang(
     dynamic_range: Optional[Dict[str, List[int]]] = None,
     kernel_name_generator: Optional[Callable] = None,
 ) -> IRModule:
-    from copy import deepcopy
     if dynamic_range is None:
         dynamic_range = {}
+    if not global_symbol:
+        global_symbol = scheduler.global_symbol
+
     if target.kind.name != "cuda":
         logger.error("Only support CUDA target")
         return None
@@ -343,15 +354,11 @@ def fast_tune_with_dynamic_range_tilelang(
     opt_shapes = dynamic_range
 
     logger.info("Start fast tuning with dynamic range")
-    print(f"opt_shapes: {opt_shapes}")
-    print(f"dynamic_range: {dynamic_range}")
 
     # Step 1.Calculate the Cartesian product using itertools.product
     product_list = list(itertools.product(*(opt_shapes[key] for key in opt_shapes)))
-    print(f"product_list: {product_list}")
     # Convert the Cartesian product to a list of dictionaries
     specialize_items: List[Dict] = [dict(zip(opt_shapes.keys(), values)) for values in product_list]
-    print(f"specialize_items: {specialize_items}")
     function_symbols: List[str] = []
     specilized_tuned_funcs: List[tir.PrimFunc] = []
     for item in specialize_items:
@@ -365,12 +372,10 @@ def fast_tune_with_dynamic_range_tilelang(
         # for static shape with default configuration, we handle the dispatch within with default schedule
         # for static shape with customized configuration, we handle the dispatch within with apply config
         # which is similar to what we did at /root/BitBLAS/bitblas/base/utils.py
-        print(f"item: {item}")
-        print(f"{scheduler._dynamic_range=}")
+
         # get specialized scheduler
-        specialized_scheduler = scheduler.specialize_from_dynamic_range(dynamic_range=item)
-        print(f"{specialized_scheduler=}")
-        _, best = fast_tune(specialized_scheduler, target, topk, parallel_build)
+        unit_scheduler = scheduler.set_dynamic_range(dynamic_range=item)
+        _, best = fast_tune(unit_scheduler, target, topk, parallel_build)
         if best is None:
             return None
         specialized_func = best.sch.mod["main"]
@@ -392,7 +397,10 @@ def fast_tune_with_dynamic_range_tilelang(
     assert global_symbol is not None, "The global_symbol should not be None"
     assert len(function_symbols) == len(specilized_tuned_funcs), (
         "The length of global_symbols should be equal to the length of specilized_tuned_funcs")
-    return create_dispatch_mod(global_symbol, func, specilized_tuned_funcs, function_symbols)
+
+    default_func = scheduler.with_default_config()  # only for kernel config analysis
+    return create_dispatch_mod(global_symbol, default_func, specilized_tuned_funcs,
+                               function_symbols)
 
 
 def fast_tune_with_dynamic_range(

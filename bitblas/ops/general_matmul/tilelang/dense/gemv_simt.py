@@ -146,7 +146,7 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                             accum_res[0] += A_local[ki] * B_local[ki]
 
                 with T.attr(
-                        T.comm_reducer(lambda x, y: x + y, [T.float16(0)]),
+                        T.comm_reducer(lambda x, y: x + y, [T.Cast(accum_dtype, 0)]),
                         "reduce_scope",
                         T.reinterpret(T.uint64(0), dtype="handle"),
                 ):

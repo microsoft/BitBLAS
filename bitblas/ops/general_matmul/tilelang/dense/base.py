@@ -43,6 +43,11 @@ class MatmulBaseParams(BaseScheduler):
     def class_attributes(self):
         return self.params_as_dict()
 
+    @property
+    def global_symbol(self):
+        # For kernel name generation
+        return f"matmul"
+
     def __repr__(self) -> str:
         cls_name = self.__class__.__name__
         fields = self.class_attributes

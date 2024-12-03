@@ -1,6 +1,6 @@
 from tvm import IRModule
 from tvm.tir import PrimFunc
-from typing import Union, Callable, List, Dict
+from typing import Optional, Union, Callable, List, Dict
 from dataclasses import dataclass, field
 from tvm.tl.transform import Simplify
 from abc import ABC, abstractmethod
@@ -26,7 +26,7 @@ class BaseScheduler(ABC):
 
     _enable_simplify: bool = field(default=True, init=False, repr=False)
 
-    _dynamic_range: bool = field(default=True, init=False, repr=False)
+    _dynamic_range: Dict[str, int] = field(default_factory=dict, init=False, repr=False)
 
     @staticmethod
     def Simplify(stmt: Union[PrimFunc, IRModule]) -> Union[PrimFunc, IRModule]:
@@ -39,7 +39,9 @@ class BaseScheduler(ABC):
         else:
             raise ValueError(f"Unsupported type: {type(stmt)}")
 
-    def get_hardware_aware_configs(self, arch: TileDevice = None, topk: int = 10) -> List[BaseTLHint]:
+    def get_hardware_aware_configs(self,
+                                   arch: TileDevice = None,
+                                   topk: int = 10) -> List[BaseTLHint]:
         raise NotImplementedError(
             f"{self.__class__.__name__} does not support hardware-aware tuning for {arch} with topk={topk}"
         )
@@ -67,9 +69,12 @@ class BaseScheduler(ABC):
         func = self.maybe_simplify(func)
         return func
 
-    def set_dynamic_range(self, dynamic_range: bool) -> "BaseScheduler":
+    def set_dynamic_range(self, dynamic_range: Dict[str, int]) -> "BaseScheduler":
         self._dynamic_range = dynamic_range
         return self
+
+    def has_dynamic_range(self) -> bool:
+        return bool(self._dynamic_range)
 
     @abstractmethod
     def with_default_config(self, *args, **kwargs) -> PrimFunc:
@@ -87,9 +92,7 @@ class BaseScheduler(ABC):
         # Convert Roller Hints to TileLang Hints
         raise NotImplementedError("Serialization of hints to configs is not implemented")
 
-    def specialize_from_dynamic_range(
-        self, dynamic_range: Dict[str, int]
-    ) -> "BaseScheduler":
+    def specialize_from_dynamic_range(self, dynamic_range: Optional[Dict[str, int]]=None) -> "BaseScheduler":
         raise NotImplementedError("Specialization from dynamic range is not implemented")
 
     @property
@@ -97,6 +100,11 @@ class BaseScheduler(ABC):
         # TODO(lei): For HIP Backend it should be different
         common_header = "#include <tl_templates/cuda/common.h>\n"
         return common_header
+
+    @property
+    def global_symbol(self):
+        # For kernel name generation
+        return "default"
 
 
 # Decorator to simplify the output of a function

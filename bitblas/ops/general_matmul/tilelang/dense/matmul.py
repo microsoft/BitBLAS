@@ -1,18 +1,12 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from bitblas import tvm as tvm
-from tvm import DataType
-import tvm.tl.language as T
 from typing import Optional, List, Dict
 from tvm.tir import PrimFunc
 from bitblas.base.operator_common import TransformKind
 from bitblas.base.base_scheduler import BaseScheduler
 from bitblas.base.arch import TileDevice, auto_infer_current_arch, is_ampere_arch, is_volta_arch
-from bitblas.base.roller.hint import Hint
-from bitblas.base.roller.rasterization import NoRasterization
-from bitblas.base.utils import get_roller_hints_from_func
 from dataclasses import dataclass
-from bitblas.ops.general_matmul.tirscript import (matmul_select_implementation)
 from bitblas.tl.base_hint import BaseTLHint
 
 from .base import MatmulBaseParams
@@ -192,28 +186,38 @@ class MatmulScheduler(MatmulBaseParams):
 
         return target_scheduler.apply_config(**hint.get_config_params())
 
-    def specialize_from_dynamic_range(
-        self, dynamic_range: Dict[str, int]
-    ) -> "MatmulScheduler":
+    def specialize_from_dynamic_range(self, dynamic_range: Optional[Dict[str, int]]=None) -> "MatmulScheduler":
+        if dynamic_range is None:
+            dynamic_range = self._dynamic_range
+
+        assert (
+            dynamic_range is not None
+        ), "dynamic_range is required for specialize_from_dynamic_range"
+
         class_attributes = self.params_as_dict()
         for symbol, value in dynamic_range.items():
             attribute_name = symbol.upper()
             if attribute_name not in class_attributes:
                 raise ValueError(f"Unknown symbol: {symbol}")
-            print("set attribute_name", attribute_name, "to", value)
             class_attributes[attribute_name] = value
-            print("class_attributes", class_attributes)
-            print(f"Specializing {symbol} to {value}")
-        return MatmulScheduler(**class_attributes)
+        return MatmulScheduler(**class_attributes).set_dynamic_range(dynamic_range)
+
+    def set_dynamic_range(self, dynamic_range: Dict[str, int]) -> "BaseScheduler":
+        super().set_dynamic_range(dynamic_range)
+        for scheduler in [
+                self.gemv_scheduler,
+                self.matmul_simt_scheduler,
+                self.matmul_block_scheduler,
+                self.matmul_fine_grain_scheduler,
+                self.matmul_weight_propagation_scheduler,
+        ]:
+            scheduler.set_dynamic_range(dynamic_range)
+        return self
 
     @property
     def is_dynamic(self) -> bool:
         M, N, K = self.M, self.N, self.K
-        return (
-            (not isinstance(M, int))
-            or (not isinstance(N, int))
-            or (not isinstance(K, int))
-        )
+        return ((not isinstance(M, int)) or (not isinstance(N, int)) or (not isinstance(K, int)))
 
     def __post_init__(self):
         # Validate the matrix transpose settings

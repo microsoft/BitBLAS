@@ -26,17 +26,22 @@ def auto_infer_current_arch() -> TileDevice:
     # Can be replaced by a more sophisticated method in the future
     return get_arch("cuda")
 
+def is_cpu_arch(arch: TileDevice) -> bool:
+    return isinstance(arch, CPU)
+
+def is_cuda_arch(arch: TileDevice) -> bool:
+    return isinstance(arch, CUDA)
 
 def is_ampere_arch(arch: TileDevice) -> bool:
     conditions = [True]
-    conditions.append(isinstance(arch, CUDA))
-    conditions.append(arch.sm_version >= 80)
+    conditions.append(is_cuda_arch(arch))
+    conditions.append(arch.sm_version >= 80 and arch.sm_version < 90)
     return all(conditions)
 
 
 def is_volta_arch(arch: TileDevice) -> bool:
     conditions = [True]
-    conditions.append(isinstance(arch, CUDA))
+    conditions.append(is_cuda_arch(arch))
     conditions.append(arch.sm_version >= 70)
     conditions.append(arch.sm_version < 80)
     return all(conditions)

@@ -6,16 +6,14 @@ import os
 import logging
 import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Tuple, Optional, Literal
-from tvm import tir, IRModule
+from typing import List, Tuple, Optional
+from tvm import IRModule
 from tvm.runtime import Module
 from tvm.tir import Schedule
 import tvm.tl as tl
 from bitblas.tl.base_hint import BaseTLHint
-from bitblas.base.arch import CUDA, TileDevice
+from bitblas.base.arch import TileDevice
 from bitblas.base.utils import get_dummy_input_arrays
-from bitblas.base.roller.policy import TensorCorePolicy, DefaultPolicy
-from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.utils import (
     tensor_replace_dp4a,
     tensor_remove_make_int4,
@@ -26,21 +24,6 @@ from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
 from bitblas.base.base_scheduler import BaseScheduler
 
 logger = logging.getLogger(__name__)
-
-
-def get_rasterization_code(pannel_width: int = 8) -> str:
-    return f"""
-        const int MAX_BLOCK_N = {pannel_width};
-        const auto baseBlockIdx = blockIdx.x + gridDim.x *blockIdx.y;
-        const auto totalPanel = (gridDim.x * gridDim.y +MAX_BLOCK_N * gridDim.x - 1) / (MAX_BLOCK_N * gridDim.x);
-        const auto totalBlock = gridDim.x * gridDim.y;
-        const auto panelIdx = baseBlockIdx / (MAX_BLOCK_N *gridDim.x);
-        const auto strideLd = panelIdx + 1 < totalPanel ?MAX_BLOCK_N : (totalBlock - panelIdx * (MAX_BLOCK_N *gridDim.x)) / gridDim.x;
-        const auto bx = (panelIdx & 1) ? gridDim.x -(baseBlockIdx - panelIdx * MAX_BLOCK_N * gridDim.x) /strideLd - 1 : (baseBlockIdx - panelIdx * MAX_BLOCK_N *gridDim.x) / strideLd;
-        const auto by = (baseBlockIdx - panelIdx * MAX_BLOCK_N *gridDim.x) % strideLd + panelIdx * MAX_BLOCK_N;
-        const auto bz = blockIdx.z;
-        const dim3 blockIdx(bx, by, bz);
-    """
 
 
 class CompileResult:
@@ -165,7 +148,7 @@ def apply_and_build_parallel(scheduler,
 
                 if artifact_path is None:
                     ARTIFACT_NOT_FOUND = f"Apply config {config} failed, artifact path is None"
-                    print(ARTIFACT_NOT_FOUND)
+                    logger.error(ARTIFACT_NOT_FOUND)
                     continue
 
                 rt_mod = tvm.runtime.load_module(artifact_path)
@@ -182,7 +165,7 @@ def apply_and_build_parallel(scheduler,
                     local_build_error = (
                         local_build_error[:MAX_ERROR_MESSAGE_LENGTH] + "\t...\t" +
                         local_build_error[-MAX_ERROR_MESSAGE_LENGTH:])
-                print(f"An exception occurred for index {idx}: {local_build_error}")
+                logger.error(f"An exception occurred for index {idx}: {local_build_error}")
 
     best = None
     best_latency = 1e9
