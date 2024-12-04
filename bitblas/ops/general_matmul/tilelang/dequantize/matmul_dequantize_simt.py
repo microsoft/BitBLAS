@@ -560,7 +560,7 @@ class MatmulDequantizeSIMTScheduler(MatmulDequantizeSIMTBaseScheduler):
 
                     # Load B into shared memory
                     for j, k in T.Parallel(block_N, block_K // num_elems_per_byte):
-                        B_shared[j, k] = B[bx * block_N + j, ko * block_K + k]
+                        B_shared[j, k] = B[bx * block_N + j, ko * block_K // num_elems_per_byte + k]
                     
                     for i in T.serial(
                         block_N
