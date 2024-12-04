@@ -81,7 +81,7 @@ class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
 
 
 @dataclass
-class MatmulDequantizeScheduler(MatmulDequantizeBaseScheduler):
+class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
 
     # Default Tile Related Params
     block_M: int = 128

@@ -5,7 +5,13 @@ from typing import Optional, List, Dict
 from tvm.tir import PrimFunc
 from bitblas.base.operator_common import TransformKind
 from bitblas.base.base_scheduler import BaseScheduler
-from bitblas.base.arch import TileDevice, auto_infer_current_arch, is_ampere_arch, is_volta_arch
+from bitblas.base.arch import (
+    TileDevice,
+    auto_infer_current_arch,
+    is_ampere_arch,
+    is_volta_arch,
+    is_tensorcore_supported_precision,
+)
 from dataclasses import dataclass
 from bitblas.tl.base_hint import BaseTLHint
 
@@ -23,28 +29,6 @@ from .matmul_tensorcore import (
 import logging
 
 logger = logging.getLogger(__name__)
-
-
-def is_tensorcore_supported_precision(in_dtype: str, accum_dtype: str, arch: TileDevice) -> bool:
-    volta_tensorcore_supported = [
-        ("float16", "float32"),
-        ("float16", "float16"),
-    ]
-    ampere_tensorcore_supported = [
-        ("float16", "float32"),
-        ("float16", "float16"),
-        ("int8", "int32"),
-        ("int4", "int32"),
-        ("int2", "int32"),
-        ("int1", "int32"),
-    ]
-
-    if is_volta_arch(arch):
-        return (in_dtype, accum_dtype) in volta_tensorcore_supported
-    elif is_ampere_arch(arch):
-        return (in_dtype, accum_dtype) in ampere_tensorcore_supported
-    else:
-        raise ValueError(f"Unsupported architecture: {arch}")
 
 
 @dataclass(repr=False)

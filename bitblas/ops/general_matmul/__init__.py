@@ -597,7 +597,6 @@ class Matmul(Operator):
     def _select_scheduler(self):
         if is_native_compute(self.A_dtype, self.W_dtype):
             return consistent_scheduler(
-                arch=self.arch,
                 M=self.M,
                 N=self.N,
                 K=self.K,
@@ -611,7 +610,6 @@ class Matmul(Operator):
             )
         else:
             return weight_dequantize_scheduler(
-                arch=self.arch,
                 M=self.M,
                 N=self.N,
                 K=self.K,

@@ -171,7 +171,6 @@ def ampere_select_scheduler(
 
 
 def select_scheduler(
-    arch: TileDevice,
     M=None,
     N=16384,
     K=16384,

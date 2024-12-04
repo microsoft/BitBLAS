@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from bitblas.base.base_scheduler import BaseScheduler
 from bitblas.base.operator_common import TransformKind
 
-
+c
 @dataclass
 class MatmulDequantizeBaseParams(BaseScheduler):
     # OP Related Config
@@ -34,6 +34,7 @@ class MatmulDequantizeBaseParams(BaseScheduler):
     input_transform_kind: TransformKind = TransformKind.NonTransform
     weight_transform_kind: TransformKind = TransformKind.NonTransform
 
+    # Dequantize Stage
     def params_as_dict(self):
         return {
             "M": self.M,

@@ -52,3 +52,27 @@ def is_volta_arch(arch: TileDevice) -> bool:
 
 def is_cdna_arch(arch: TileDevice) -> bool:
     return isinstance(arch, CDNA)
+
+
+def is_tensorcore_supported_precision(
+    in_dtype: str, accum_dtype: str, arch: TileDevice
+) -> bool:
+    volta_tensorcore_supported = [
+        ("float16", "float32"),
+        ("float16", "float16"),
+    ]
+    ampere_tensorcore_supported = [
+        ("float16", "float32"),
+        ("float16", "float16"),
+        ("int8", "int32"),
+        ("int4", "int32"),
+        ("int2", "int32"),
+        ("int1", "int32"),
+    ]
+
+    if is_volta_arch(arch):
+        return (in_dtype, accum_dtype) in volta_tensorcore_supported
+    elif is_ampere_arch(arch):
+        return (in_dtype, accum_dtype) in ampere_tensorcore_supported
+    else:
+        raise ValueError(f"Unsupported architecture: {arch}")

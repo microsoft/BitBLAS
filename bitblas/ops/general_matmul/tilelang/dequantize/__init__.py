@@ -1,25 +1,21 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-from .block_primitive_tensorcore import (
-    MatmulDequantizeScheduler,  # noqa: F401
+from .matmul_dequantize_tensorcore import (
+    MatmulDequantizeBlockScheduler,  # noqa: F401
 )
 
-from .finegrained_primitive_tensorcore import (
+from .matmul_dequantize_tensorcore_finegrained import (
     MatmulDequantizeFineGrainedScheduler,  # noqa: F401
-)
-
-from .ladder_weight_transform_tensorcore import (
-    MatmulDequantizeWeightPropagationScheduler,  # noqa: F401
-)
-
-from .finegrained_primitive_tensorcore_s4 import (
     MatmulINT4DequantizeFineGrainedScheduler,  # noqa: F401
 )
 
-from .ladder_weight_transform_tensorcore_s4 import (
+from .matmul_dequantize_tensorcore_weight_transform import (
+    MatmulDequantizeWeightPropagationScheduler,  # noqa: F401
     MatmulINT4DequantizeWeightPropagationScheduler,  # noqa: F401
 )
+
+from .matmul_dequantize import MatmulDequantizeScheduler
 
 from bitblas.base.roller import TileDevice
 from bitblas.base.arch import (
@@ -216,7 +212,6 @@ def ampere_select_scheduler(
 
 
 def select_scheduler(
-    arch: TileDevice,
     M=None,
     N=1024,
     K=1024,
@@ -236,28 +231,30 @@ def select_scheduler(
     propagate_a: Union[int, TransformKind] = TransformKind.NonTransform,
     propagate_b: Union[int, TransformKind] = TransformKind.NonTransform,
 ):
-    if is_ampere_arch(arch):
-        return ampere_select_scheduler(
-            M=M,
-            N=N,
-            K=K,
-            in_dtype=in_dtype,
-            out_dtype=out_dtype,
-            accum_dtype=accum_dtype,
-            bit=bit,
-            storage_dtype=storage_dtype,
-            source_format=source_format,
-            with_scaling=with_scaling,
-            with_zeros=with_zeros,
-            group_size=group_size,
-            fast_decoding=fast_decoding,
-            with_bias=with_bias,
-            layout=layout,
-            zeros_mode=zeros_mode,
-            propagate_a=propagate_a,
-            propagate_b=propagate_b,
-        )
-    elif is_volta_arch(arch):
-        raise NotImplementedError
-    else:
-        raise ValueError(f"Unsupported target: {arch.name}")
+    if isinstance(propagate_a, int):
+        propagate_a = TransformKind(propagate_a)
+    if isinstance(propagate_b, int):
+        propagate_b = TransformKind(propagate_b)
+
+    trans_A, trans_B = parse_layout(layout)
+    return MatmulDequantizeScheduler(
+        M=M,
+        N=N,
+        K=K,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        num_bits=bit,
+        storage_dtype=storage_dtype,
+        source_format=source_format,
+        with_scaling=with_scaling,
+        with_zeros=with_zeros,
+        group_size=group_size,
+        fast_decoding=fast_decoding,
+        with_bias=with_bias,
+        zeros_mode=zeros_mode,
+        input_transform_kind=propagate_a,
+        weight_transform_kind=propagate_b,
+    )

@@ -15,7 +15,7 @@ import numpy as np
 from copy import deepcopy
 from bitblas.base.base_scheduler import BaseScheduler
 from bitblas.base.tuner import fast_tune, fast_tune_with_dynamic_range
-from bitblas.base.arch import get_arch, TileDevice, is_cuda_arch, is_cdna_arch
+from bitblas.base.arch import get_arch, TileDevice, is_cuda_arch, is_cdna_arch, is_cpu_arch
 from bitblas.base.roller.hint import Hint
 from bitblas.builder.wrapper import TIRWrapper, TLWrapper
 from bitblas.builder.lib_generator import LibraryGenerator
@@ -172,7 +172,7 @@ class Operator(object):
         # Check if the platform is CUDA and we have an optimized function
         if is_cuda_arch(self.arch) or is_cdna_arch(self.arch):
             if self.scheduled_ir_module is None:
-                raise ValueError("No optimized function available for CUDA/CDNA platform")
+                raise ValueError(f"No optimized function available for platform {self.arch.kind.name}")
 
             @tvm.register_func(func_name="tvm_callback_cuda_postproc", override=True)
             def tvm_callback_cuda_postproc(code, _):
@@ -216,7 +216,7 @@ class Operator(object):
             rt_mod = tvm.build(self.prim_func, target=target, name=self.name)
 
         # If the runtime module was successfully built, set up for evaluation
-        if rt_mod is not None:
+        if rt_mod is not None and not is_cpu_arch(self.arch):
             self.rt_mod = rt_mod
             # Initialize a time evaluator with the built module, specifying the device and the number of runs
             self.time_evaluator = rt_mod.time_evaluator(

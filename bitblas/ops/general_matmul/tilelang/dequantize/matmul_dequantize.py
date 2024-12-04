@@ -10,78 +10,41 @@ from bitblas.base.arch import (
     auto_infer_current_arch,
     is_ampere_arch,
     is_volta_arch,
+    is_tensorcore_supported_precision,
 )
 from dataclasses import dataclass
 from bitblas.tl.base_hint import BaseTLHint
 
 from .base import MatmulDequantizeBaseParams
-from .block_primitive_tensorcore import MatmulDequantizeScheduler
-from .finegrained_primitive_tensorcore import MatmulDequantizeFineGrainedScheduler
-from .finegrained_primitive_tensorcore_s4 import MatmulINT4DequantizeFineGrainedScheduler
-from .ladder_weight_transform_tensorcore import MatmulDequantizeWeightPropagationScheduler
+from .matmul_dequantize_tensorcore import MatmulDequantizeBlockScheduler
+from .matmul_dequantize_tensorcore_finegrained import (
+    MatmulDequantizeFineGrainedScheduler,
+    MatmulINT4DequantizeFineGrainedScheduler,
+)
+from .matmul_dequantize_tensorcore_weight_transform import (
+    MatmulDequantizeWeightPropagationScheduler,
+    MatmulINT4DequantizeWeightPropagationScheduler,
+)
 
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-def is_tensorcore_supported_precision(
-    in_dtype: str, accum_dtype: str, arch: TileDevice
-) -> bool:
-    volta_tensorcore_supported = [
-        ("float16", "float32"),
-        ("float16", "float16"),
-    ]
-    ampere_tensorcore_supported = [
-        ("float16", "float32"),
-        ("float16", "float16"),
-        ("int8", "int32"),
-        ("int4", "int32"),
-        ("int2", "int32"),
-        ("int1", "int32"),
-    ]
-
-    if is_volta_arch(arch):
-        return (in_dtype, accum_dtype) in volta_tensorcore_supported
-    elif is_ampere_arch(arch):
-        return (in_dtype, accum_dtype) in ampere_tensorcore_supported
-    else:
-        raise ValueError(f"Unsupported architecture: {arch}")
-
-
 @dataclass(repr=False)
-class MatmulDequantizeScheduler(MatmulBaseParams):
+class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
 
-    gemv_scheduler: Optional[GemvFineGrainSIMTScheduler] = None
-    matmul_simt_scheduler: Optional[MatmulFineGrainSIMTScheduler] = None
-    matmul_block_scheduler: Optional[MatmulBlockScheduler] = None
-    matmul_fine_grain_scheduler: Optional[MatmulFineGrainScheduler] = None
-    matmul_weight_propagation_scheduler: Optional[
-        MatmulWeightPropagationScheduler
-    ] = None
-    matmul_int4_fine_grain_scheduler: Optional[MatmulINT4FineGrainScheduler] = (
-        None
-    )
-    matmul_int4_weight_propagation_scheduler: Optional[
-        MatmulINT4WeightPropagationScheduler
-    ] = None
+    matmul_dequantize_block_scheduler: Optional[MatmulDequantizeBlockScheduler] = None
+    matmul_dequantize_fine_grained_scheduler: Optional[MatmulDequantizeFineGrainedScheduler] = None
 
     def __init__(self, **kwargs):
-        self.gemv_scheduler = GemvFineGrainSIMTScheduler(**kwargs)
-        self.matmul_simt_scheduler = MatmulFineGrainSIMTScheduler(**kwargs)
-        self.matmul_block_scheduler = MatmulBlockScheduler(**kwargs)
-        self.matmul_fine_grain_scheduler = MatmulFineGrainScheduler(**kwargs)
-        self.matmul_weight_propagation_scheduler = (
-            MatmulWeightPropagationScheduler(**kwargs)
-        )
-        self.matmul_int4_fine_grain_scheduler = MatmulINT4FineGrainScheduler(
+        self.matmul_dequantize_block_scheduler = MatmulDequantizeBlockScheduler(
             **kwargs
         )
-        self.matmul_int4_weight_propagation_scheduler = (
-            MatmulINT4WeightPropagationScheduler(**kwargs)
-        )
+        self.matmul_dequantize_fine_grained_scheduler = MatmulDequantizeFineGrainedScheduler(**kwargs)
+
         super().__init__(**kwargs)
 
     def dispatch_ampere_scheduler(self, arch: TileDevice) -> BaseScheduler:
@@ -142,7 +105,7 @@ class MatmulDequantizeScheduler(MatmulBaseParams):
         if is_dynamic:
             # Dynamic Dispatcher
             if is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
-                return self.matmul_block_scheduler
+                return self.matmul_dequantize_block_scheduler
             else:
                 return self.matmul_simt_scheduler
         else:
@@ -155,7 +118,7 @@ class MatmulDequantizeScheduler(MatmulBaseParams):
                 return self.gemv_scheduler
             elif is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 # Fine-grained scheduler (mma) is not supported for Volta
-                return self.matmul_block_scheduler
+                return self.matmul_dequantize_block_scheduler
             else:
                 return self.matmul_simt_scheduler
 
@@ -169,11 +132,7 @@ class MatmulDequantizeScheduler(MatmulBaseParams):
 
     def detect_scheduler_from_hint(self, hint: BaseTLHint) -> BaseScheduler:
         for scheduler in [
-            self.gemv_scheduler,
-            self.matmul_simt_scheduler,
-            self.matmul_block_scheduler,
-            self.matmul_fine_grain_scheduler,
-            self.matmul_weight_propagation_scheduler,
+            self.matmul_dequantize_block_scheduler,
         ]:
             if isinstance(hint, scheduler.TLHint):
                 return scheduler
@@ -248,11 +207,7 @@ class MatmulDequantizeScheduler(MatmulBaseParams):
     ) -> "BaseScheduler":
         super().set_dynamic_range(dynamic_range)
         for scheduler in [
-            self.gemv_scheduler,
-            self.matmul_simt_scheduler,
-            self.matmul_block_scheduler,
-            self.matmul_fine_grain_scheduler,
-            self.matmul_weight_propagation_scheduler,
+            self.matmul_dequantize_block_scheduler,
         ]:
             scheduler.set_dynamic_range(dynamic_range)
         return self
