@@ -65,7 +65,7 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
 
-    # Tensor Core Warp Configuration
+    # SIMT Warp Configuration
     block_size_x: int = 8
     block_size_y: int = 8
     thread_row_tiles: int = 16

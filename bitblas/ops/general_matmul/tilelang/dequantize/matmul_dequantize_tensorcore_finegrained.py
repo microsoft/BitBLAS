@@ -314,7 +314,7 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
                                 Zeros,
                                 Qzeros,
                                 func_name,
-                                by,
+                                bx,
                                 tx,
                                 ko,
                                 i,
@@ -330,7 +330,6 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
                                 Zeros,
                                 Qzeros,
                                 local_size,
-                                local_size_compressed,
                                 bx,
                                 tx,
                                 ko,
@@ -454,7 +453,6 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
         zeros_buffer: T.Buffer,
         qzeros_buffer: T.Buffer,
         local_size: int,
-        local_size_compressed: int,
         pid_n: T.Var,
         tx: T.Var,
         k: T.Var,
@@ -538,6 +536,8 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
                         zero=dequant_qzeros,
                         dtype=in_dtype,
                     )) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size]
+                else:
+                    raise ValueError(f"Unsupported zeros_mode: {zeros_mode}")
 
         return _normal_dequant_impl(
             compressed_weight_local,

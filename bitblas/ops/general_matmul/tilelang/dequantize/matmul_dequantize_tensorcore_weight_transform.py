@@ -521,7 +521,8 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                         local_size,
                         dtype=in_dtype,
                     )
-                # TODO: Implement quantized zeros
+                else:
+                    raise ValueError(f"Unsupported zeros_mode: {zeros_mode}")
 
         return _normal_fast_dequant_impl(
             compressed_weight_local,

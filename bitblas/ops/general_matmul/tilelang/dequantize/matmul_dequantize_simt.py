@@ -2,17 +2,16 @@
 # Licensed under the MIT License.
 from bitblas import tvm as tvm
 from tvm import DataType
+from tvm.tir import PrimFunc
 import tvm.tl.language as T
 from typing import Optional, List
 from bitblas.base.arch import TileDevice
 from bitblas.base.roller.hint import Hint
-from bitblas.base.roller.rasterization import NoRasterization
 from bitblas.base.utils import get_roller_hints_from_func
 from dataclasses import dataclass
 from bitblas.ops.general_matmul.tirscript import (
     matmul_dequantize_select_implementation,
 )
-from bitblas.base.operator_common import QuantizationMemoryStage
 from bitblas.tl.base_hint import BaseTLHint
 from bitblas.quantization import (
     _tir_packed_int_to_int_convert,
@@ -30,7 +29,7 @@ warp_size = 32
 
 
 @dataclass
-class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
+class MatmulDequantizeSIMTBaseScheduler(MatmulDequantizeBaseParams):
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
@@ -59,8 +58,7 @@ class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
             ir_module,
             arch,
             topk,
-            tensorcore_only=True,
-            allow_gemv=True,
+            tensorcore_only=False,
         )
 
         if roller_hints is None:
@@ -347,15 +345,14 @@ class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
 
 
 @dataclass
-class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
+class MatmulDequantizeSIMTScheduler(MatmulDequantizeSIMTBaseScheduler):
 
-    # Default Tile Related Params
-    block_M: int = 128
-    block_N: int = 128
-    block_K: int = 32
-    num_stages: int = 2
-    threads: int = 128
-    enable_rasterization: bool = False  # Enhance L2 Locality
+    # SIMT Warp Configuration
+    block_size_x: int = 8
+    block_size_y: int = 8
+    thread_row_tiles: int = 16
+    thread_col_tiles: int = 16
+    chunk: int = 16  # Usually determines the K-dimension split size
 
     class TLHint(BaseTLHint):
 
@@ -368,49 +365,41 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
             for key, value in hint.__dict__.items():
                 setattr(tl_hint, key, value)
 
-            block = hint.block
-            warp = hint.warp
-            rstep = hint.rstep
-            num_stages = hint.pipeline_stage
-            rasterization_plan = hint.rasterization_plan
-            enable_rasterization = not isinstance(rasterization_plan, NoRasterization)
+            block_row_warps = hint.block[0] // (hint.thread[0] * hint.step[0])
+            block_col_warps = hint.block[1] // (hint.thread[1] * hint.step[1])
+            thread_row_tiles = hint.thread[0] // (hint.step[0] * 2)
+            thread_col_tiles = hint.thread[1] // (hint.step[1] * 2)
+            vthread_row_tiles = (hint.step[0] * 2)  # expand vtrhead to avoid load band conflict
+            vthread_col_tiles = (hint.step[1] * 2)  # expand vtrhead to avoid load band conflict
+            chunk = hint.rstep[0]
 
-            block_row_warps = block[0] // warp[0]
-            block_col_warps = block[1] // warp[1]
-            warp_size = 32  # NVIDIA GPU warp size is 32
-            if num_stages == 1:
-                num_stages = 0  # disable pipelining
-
-            tl_hint.block_M = block[0]
-            tl_hint.block_N = block[1]
-            tl_hint.block_K = rstep[0]
-            tl_hint.num_stages = num_stages
-            tl_hint.threads = warp_size * block_row_warps * block_col_warps
-            tl_hint.enable_rasterization = enable_rasterization
+            tl_hint.block_size_x = block_row_warps
+            tl_hint.block_size_y = block_col_warps
+            tl_hint.thread_row_tiles = thread_row_tiles
+            tl_hint.thread_col_tiles = thread_col_tiles
+            tl_hint.vthread_row_tiles = vthread_row_tiles
+            tl_hint.vthread_col_tiles = vthread_col_tiles
+            tl_hint.chunk = chunk
 
             return tl_hint
 
         def get_config_params(self):
             return {
-                "block_M": self.block_M,
-                "block_N": self.block_N,
-                "block_K": self.block_K,
-                "num_stages": self.num_stages,
-                "threads": self.threads,
-                "enable_rasterization": self.enable_rasterization,
+                "block_size_x": self.block_size_x,
+                "block_size_y": self.block_size_y,
+                "thread_row_tiles": self.thread_row_tiles,
+                "thread_col_tiles": self.thread_col_tiles,
+                "chunk": self.chunk,
             }
 
         def __repr__(self):
-            return (
-                "{"
-                f"block_M={self.block_M},"
-                f"block_N={self.block_N},"
-                f"block_K={self.block_K},"
-                f"num_stages={self.num_stages},"
-                f"threads={self.threads},"
-                f"enable_rasterization={self.enable_rasterization}"
-                "}"
-            )
+            return ("{"
+                    f"block_size_x: {self.block_size_x}, "
+                    f"block_size_y: {self.block_size_y}, "
+                    f"thread_row_tiles: {self.thread_row_tiles}, "
+                    f"thread_col_tiles: {self.thread_col_tiles}, "
+                    f"chunk: {self.chunk}"
+                    "}")
 
     def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
@@ -419,44 +408,38 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
             configs.append(config)
         return configs
 
-    def with_default_config(self):
-        block_M = getattr(self, "block_M", 64)
-        block_N = getattr(self, "block_N", 64)
-        block_K = getattr(self, "block_K", 32)
-        num_stages = getattr(self, "num_stages", 2)
-        threads = getattr(self, "threads", 128)
-        enable_rasterization = getattr(self, "enable_rasterization", False)
+    def with_default_config(self) -> PrimFunc:
+        block_size_x = getattr(self, "block_size_x", 2)
+        block_size_y = getattr(self, "block_size_y", 2)
+        thread_row_tiles = getattr(self, "thread_row_tiles", 16)
+        thread_col_tiles = getattr(self, "thread_col_tiles", 16)
+        chunk = getattr(self, "chunk", 16)
 
         return self.apply_config(
-            block_M=block_M,
-            block_N=block_N,
-            block_K=block_K,
-            num_stages=num_stages,
-            threads=threads,
-            enable_rasterization=enable_rasterization,
+            block_size_x=block_size_x,
+            block_size_y=block_size_y,
+            thread_row_tiles=thread_row_tiles,
+            thread_col_tiles=thread_col_tiles,
+            chunk=chunk,
         )
 
     def apply_config(
         self,
-        block_M: Optional[int] = None,
-        block_N: Optional[int] = None,
-        block_K: Optional[int] = None,
-        num_stages: Optional[int] = None,
-        threads: Optional[int] = None,
-        # Enhance L2 Locality
-        enable_rasterization: bool = False,
-    ):
-        assert block_M is not None, "block_M is required"
-        assert block_N is not None, "block_N is required"
-        assert block_K is not None, "block_K is required"
-        assert num_stages is not None, "num_stages is required"
-        assert threads is not None, "threads is required"
+        block_size_x: Optional[int] = None,
+        block_size_y: Optional[int] = None,
+        thread_row_tiles: Optional[int] = None,
+        thread_col_tiles: Optional[int] = None,
+        chunk: Optional[int] = None,
+    ) -> PrimFunc:
+        assert block_size_x is not None, "block_size_x must be provided"
+        assert block_size_y is not None, "block_size_y must be provided"
+        assert thread_row_tiles is not None, "thread_row_tiles must be provided"
+        assert thread_col_tiles is not None, "thread_col_tiles must be provided"
+        assert chunk is not None, "chunk must be provided"
 
         M = self.maybe_dynamic(self.M, "m")
         N, K = self.N, self.K
-        assert isinstance(N, int) and isinstance(
-            K, int
-        ), "Do not support dynamic N and K Currently"
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
 
         trans_A, trans_B = self.trans_A, self.trans_B
 
@@ -478,8 +461,8 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
         num_elems_per_byte = self.num_elems_per_byte
 
         MAX_TRANSACTION_SIZE_IN_BITS = 128
-        local_size = MAX_TRANSACTION_SIZE_IN_BITS // DataType(in_dtype).bits
-        local_size_compressed = local_size // num_elems_per_byte
+        micro_size_k = MAX_TRANSACTION_SIZE_IN_BITS // DataType(in_dtype).bits
+        micro_size_k_compressed = micro_size_k // num_elems_per_byte
 
         group_size = self.group_size
         if group_size == -1:
@@ -494,9 +477,25 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
         C_shape = (M, N)
         Bias_shape = (N,)
 
+
+        shared_scope = "shared"
+
+        block_M = block_size_x * thread_row_tiles
+        block_N = block_size_y * thread_col_tiles
+        block_K = chunk
+
         A_shared_shape = (block_M, block_K)
         B_shared_shape = (block_N, block_K // num_elems_per_byte)
         B_dequantize_shared_shape = (block_N, block_K)
+        
+        threads = thread_row_tiles * thread_col_tiles
+
+        local_size_a = block_M // thread_row_tiles
+        local_size_b = block_N // thread_col_tiles
+        local_size_c = (block_M // thread_row_tiles) * (block_N // thread_col_tiles)
+
+        dp4a_size = 4
+        use_dp4a = in_dtype == "int8" and accum_dtype == "int32"
 
         import_source: Optional[str] = None
         func_name: str = ""
@@ -519,7 +518,6 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
             assert func_name is not None, "lop3_intrin_info is not found"
             import_source = self.common_header + import_source
 
-        cache_write_required = self.check_require_cache()
 
         @T.prim_func
         def general_shared_dequant_matmul(
@@ -533,106 +531,128 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
             Bias: T.Buffer(Bias_shape, in_dtype),
         ):
             with T.Kernel(
-                T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads
-            ) as (bx, by):
-                A_shared = T.alloc_shared(A_shared_shape, in_dtype)
-                B_shared = T.alloc_shared(B_shared_shape, storage_dtype)
-                B_local = T.alloc_local([local_size_compressed], storage_dtype)
-                B_dequantize_local = T.alloc_local([local_size], in_dtype)
+                    T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
+
+                A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
+                B_shared = T.alloc_shared(B_shared_shape, storage_dtype, scope=shared_scope)
+                B_quant_local = T.alloc_local([micro_size_k_compressed], storage_dtype)
+                B_dequantize_local = T.alloc_local([micro_size_k], in_dtype)
                 B_dequantize_shared = T.alloc_shared(
-                    B_dequantize_shared_shape, in_dtype
+                    B_dequantize_shared_shape, in_dtype, scope=shared_scope
                 )
-                C_shared = T.alloc_shared([block_M, block_N], out_dtype)
-                C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
 
-                tx = T.thread_binding(0, threads, thread="threadIdx.x")
+                A_local = T.alloc_local((local_size_a, micro_size_k), in_dtype)
+                B_local = T.alloc_local((local_size_b, micro_size_k), in_dtype)
+                C_local = T.alloc_local((local_size_c,), accum_dtype)
 
-                T.use_swizzle(10, enable=enable_rasterization)
+                thread_binding = T.thread_binding(threads, "threadIdx.x")
 
-                T.import_source(import_source)
+                warp_m = thread_binding % thread_row_tiles
+                warp_n = thread_binding // thread_row_tiles
 
                 T.clear(C_local)
 
-                for k in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
-                    T.copy(A[by * block_M, k * block_K], A_shared)
-                    T.copy(B[bx * block_N, k * block_K // num_elems_per_byte], B_shared)
+                for ko in T.serial(K // block_K):
 
+                    # Load A into shared memory
+                    for i, k in T.Parallel(block_M, block_K):
+                        A_shared[i, k] = A[by * block_M + i, ko * block_K + k]
+
+                    # Load B into shared memory
+                    for j, k in T.Parallel(block_N, block_K // num_elems_per_byte):
+                        B_shared[j, k] = B[bx * block_N + j, ko * block_K + k]
+                    
                     for i in T.serial(
                         block_N
                         * block_K
                         // num_elems_per_byte
-                        // (threads * local_size_compressed)
+                        // (threads * micro_size_k_compressed)
                     ):
-                        for v in T.vectorized(0, local_size_compressed):
+                        for v in T.vectorized(0, micro_size_k_compressed):
                             index = (
-                                i * threads * local_size_compressed
-                                + tx * local_size_compressed
+                                i * threads * micro_size_k_compressed
+                                + thread_binding * micro_size_k_compressed
                                 + v
                             )
                             vi = index // (block_K // num_elems_per_byte)
                             vj = index % (block_K // num_elems_per_byte)
-                            B_local[v] = B_shared[vi, vj]
+                            B_quant_local[v] = B_shared[vi, vj]
 
                         if fast_decoding is True:
                             self._normal_fast_dequant(
-                                B_local,
+                                B_quant_local,
                                 B_dequantize_local,
                                 Scale,
                                 Zeros,
                                 Qzeros,
                                 func_name,
                                 bx,
-                                k,
+                                ko,
                                 block_N,
                                 block_K,
                             )
                         else:
                             self._normal_dequant(
-                                B_local,
+                                B_quant_local,
                                 B_dequantize_local,
                                 Scale,
                                 Zeros,
                                 Qzeros,
-                                local_size,
+                                micro_size_k,
                                 bx,
-                                tx,
-                                k,
+                                thread_binding,
+                                ko,
                                 i,
                                 block_N,
                                 block_K,
                                 threads,
                             )
-                        for v in T.vectorized(0, local_size):
-                            index = i * threads * local_size + tx * local_size + v
+                        for v in T.vectorized(0, micro_size_k):
+                            index = i * threads * micro_size_k + thread_binding * micro_size_k + v
                             vi = index // block_K
                             vj = index % block_K
                             B_dequantize_shared[vi, vj] = B_dequantize_local[v]
 
-                    T.gemm(A_shared, B_dequantize_shared, C_local, transpose_B=True)
+                    for ki in T.serial((block_K // micro_size_k)):
+                        for i in T.serial(local_size_a):
+                            for mk in T.vectorized(micro_size_k):
+                                A_local[i, mk] = A_shared[warp_m * local_size_a + i,
+                                                          ki * micro_size_k + mk]
 
-                if cache_write_required:
-                    T.copy(C_local, C_shared)
-                    if with_bias:
-                        for i, j in T.grid(block_M, block_N):
-                            C_shared[i, j] += Bias[bx * block_N + j]
+                        for i in T.serial(local_size_b):
+                            for mk in T.vectorized(micro_size_k):
+                                B_local[i, mk] = B_dequantize_shared[warp_n * local_size_b + i,
+                                                          ki * micro_size_k + mk]
 
-                    T.copy(C_shared, C[by * block_M, bx * block_N])
-                else:
-                    if with_bias:
-                        for i, j in T.grid(block_M, block_N):
-                            C_local[i, j] += Bias[bx * block_N + j]
-                    T.copy(C_local, C[by * block_M, bx * block_N])
+                        for i, j in T.grid(local_size_a, local_size_b):
+                            for mk in T.serial(micro_size_k // dp4a_size):
+                                if use_dp4a:
+                                    T.dp4a(
+                                        A_local[i, mk * dp4a_size],
+                                        B_local[j, mk * dp4a_size],
+                                        C_local[i * local_size_b + j],
+                                    )
+                                else:
+                                    for dp4a_idx in T.serial(dp4a_size):
+                                        C_local[i * local_size_b + j] += (
+                                            A_local[i, mk * dp4a_size + dp4a_idx] *
+                                            B_local[j, mk * dp4a_size + dp4a_idx])
+                if with_bias:
+                    for i in T.serial(local_size_c):
+                        C_local[i] += Bias[bx * block_N + warp_n * local_size_a + i]
+
+                for i, j in T.grid(local_size_a, local_size_b):
+                    C[
+                        by * block_M + warp_m * local_size_a + i,
+                        bx * block_N + warp_n * local_size_b + j,
+                    ] = C_local[i * local_size_b + j]
 
         return self.post_process(general_shared_dequant_matmul)
 
-    def infer_default_quantization_memory_stage(self):
-        # Dequantize Stage
-        # We automatically set the quantization memory stage by set the value to None
-        # By default we dequantize in shared memory
-        quantization_memory_stage = QuantizationMemoryStage.Shared
-        return quantization_memory_stage
-
     def __post_init__(self):
-        # Legalize group_size
-        if self.with_scaling and self.group_size == -1:
-            object.__setattr__(self, "group_size", self.K)
+        # Validate the matrix transpose settings
+        assert self.trans_A is False, "Currently only support Matrix A not transposed"
+        assert self.trans_B is True, "Currently only support Matrix B transposed"
+        assert self.with_bias is False, "Currently only support without bias"
+
+        return

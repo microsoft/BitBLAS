@@ -10,11 +10,11 @@ from tvm.tir import PrimFunc
 from dataclasses import dataclass
 from bitblas.tl.base_hint import BaseTLHint
 from bitblas.base.roller.hint import Hint
-from .matmul_simt import MatmulSIMTBaseScheduler
+from .matmul_dequantize_simt import MatmulDequantizeSIMTBaseScheduler
 
 
 @dataclass
-class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
+class GemvDequantizeSIMTScheduler(MatmulDequantizeSIMTBaseScheduler):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
 

@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from bitblas.tl.base_hint import BaseTLHint
 
 from .base import MatmulDequantizeBaseParams
+from .matmul_dequantize_simt import MatmulDequantizeSIMTScheduler
 from .matmul_dequantize_tensorcore import MatmulDequantizeBlockScheduler
 from .matmul_dequantize_tensorcore_finegrained import (
     MatmulDequantizeFineGrainedScheduler,
@@ -34,11 +35,12 @@ logger = logging.getLogger(__name__)
 class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
-
+    matmul_dequantize_simt_scheduler: Optional[MatmulDequantizeSIMTScheduler] = None
     matmul_dequantize_block_scheduler: Optional[MatmulDequantizeBlockScheduler] = None
     matmul_dequantize_fine_grained_scheduler: Optional[MatmulDequantizeFineGrainedScheduler] = None
 
     def __init__(self, **kwargs):
+        self.matmul_dequantize_simt_scheduler = MatmulDequantizeSIMTScheduler(**kwargs)
         self.matmul_dequantize_block_scheduler = MatmulDequantizeBlockScheduler(**kwargs)
         self.matmul_dequantize_fine_grained_scheduler = MatmulDequantizeFineGrainedScheduler(
             **kwargs)
@@ -104,7 +106,8 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
                 return self.gemv_scheduler
             elif is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 # Fine-grained scheduler (mma) is not supported for Volta
-                return self.matmul_dequantize_block_scheduler
+                # return self.matmul_dequantize_block_scheduler
+                return self.matmul_dequantize_simt_scheduler
             else:
                 return self.matmul_simt_scheduler
 
@@ -177,7 +180,9 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     def set_dynamic_range(self, dynamic_range: Dict[str, int]) -> "BaseScheduler":
         super().set_dynamic_range(dynamic_range)
         for scheduler in [
-                self.matmul_dequantize_block_scheduler,
+            self.matmul_dequantize_simt_scheduler,
+            self.matmul_dequantize_block_scheduler,
+            self.matmul_dequantize_fine_grained_scheduler,
         ]:
             scheduler.set_dynamic_range(dynamic_range)
         return self
@@ -185,6 +190,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     def with_arch(self, arch):
         super().with_arch(arch)
         for scheduler in [
+            self.matmul_dequantize_simt_scheduler,
             self.matmul_dequantize_block_scheduler,
             self.matmul_dequantize_fine_grained_scheduler,
         ]:
