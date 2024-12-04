@@ -51,12 +51,10 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
             }
 
         def __repr__(self):
-            return (
-                "{"
-                f"n_partition: {self.n_partition}, "
-                f"reduce_thread: {self.reduce_thread}, "
-                "}"
-            )
+            return ("{"
+                    f"n_partition: {self.n_partition}, "
+                    f"reduce_thread: {self.reduce_thread}, "
+                    "}")
 
     def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
@@ -82,14 +80,11 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
         assert n_partition is not None, "n_partition must be provided"
         assert reduce_thread is not None, (
             "reduce_thread must be provided currently, as related bitblas.gpu.gemv.GEMV"
-            "sch_outer_reduction_with_config is not implemented"
-        )
+            "sch_outer_reduction_with_config is not implemented")
 
         M = self.maybe_dynamic(self.M, "m")
         N, K = self.N, self.K
-        assert isinstance(N, int) and isinstance(
-            K, int
-        ), "Do not support dynamic N and K Currently"
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
 
         in_dtype, out_dtype, accum_dtype = (
             self.in_dtype,
@@ -110,17 +105,17 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
 
         @T.prim_func
         def main(
-            A: T.Buffer(A_shape, in_dtype),
-            B: T.Buffer(B_shape, in_dtype),
-            C: T.Buffer(C_shape, out_dtype),
+                A: T.Buffer(A_shape, in_dtype),
+                B: T.Buffer(B_shape, in_dtype),
+                C: T.Buffer(C_shape, out_dtype),
         ):
             with T.Kernel(
-                T.ceildiv(N, n_partition),
-                M,
-                threads=(reduce_thread, n_partition),
+                    T.ceildiv(N, n_partition),
+                    M,
+                    threads=(reduce_thread, n_partition),
             ) as (
-                bx,
-                by,
+                    bx,
+                    by,
             ):
                 A_local = T.alloc_local((vec_size,), in_dtype)
                 B_local = T.alloc_local((vec_size,), in_dtype)
@@ -153,11 +148,9 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                             accum_res[0] += A_local[ki] * B_local[ki]
 
                 with T.attr(
-                    T.comm_reducer(
-                        lambda x, y: x + y, [T.Cast(accum_dtype, 0)]
-                    ),
-                    "reduce_scope",
-                    T.reinterpret(T.uint64(0), dtype="handle"),
+                        T.comm_reducer(lambda x, y: x + y, [T.Cast(accum_dtype, 0)]),
+                        "reduce_scope",
+                        T.reinterpret(T.uint64(0), dtype="handle"),
                 ):
                     T.evaluate(
                         T.tvm_thread_allreduce(
@@ -167,8 +160,7 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                             reduced_accum_res[0],
                             kr,
                             dtype="handle",
-                        )
-                    )
+                        ))
                 if kr == 0:
                     C[by, bx * n_partition + ni] = reduced_accum_res[0]
 
@@ -176,11 +168,7 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
 
     def __post_init__(self):
         # Validate the matrix transpose settings
-        assert (
-            self.trans_A is False
-        ), "Currently only support Matrix A not transposed"
-        assert (
-            self.trans_B is True
-        ), "Currently only support Matrix B transposed"
+        assert (self.trans_A is False), "Currently only support Matrix A not transposed"
+        assert (self.trans_B is True), "Currently only support Matrix B transposed"
         assert self.with_bias is False, "Currently only support without bias"
         return

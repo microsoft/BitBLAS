@@ -7,7 +7,6 @@ from bitblas.base.operator_common import TransformKind
 from bitblas.base.base_scheduler import BaseScheduler
 from bitblas.base.arch import (
     TileDevice,
-    auto_infer_current_arch,
     is_ampere_arch,
     is_volta_arch,
     is_tensorcore_supported_precision,
@@ -141,8 +140,7 @@ class MatmulScheduler(MatmulBaseParams):
 
     def with_default_config(self, arch: Optional[TileDevice] = None) -> PrimFunc:
         if arch is None:
-            arch = auto_infer_current_arch()
-            logger.debug(f"arch is not specified in with_default_config, auto-infer to {arch}")
+            arch = self.arch
 
         dispatched_scheduler = self.dispatch_scheduler(arch)
 
@@ -152,9 +150,7 @@ class MatmulScheduler(MatmulBaseParams):
                                    arch: Optional[TileDevice] = None,
                                    topk: int = 10) -> List[PrimFunc]:
         if arch is None:
-            arch = auto_infer_current_arch()
-            logger.debug(
-                f"arch is not specified in get_hardware_aware_configs, auto-infer to {arch}")
+            arch = self.arch
 
         dispatched_scheduler = self.dispatch_scheduler(arch)
 
@@ -169,8 +165,7 @@ class MatmulScheduler(MatmulBaseParams):
             raise ValueError("hint is required for apply_config")
 
         if arch is None:
-            arch = auto_infer_current_arch()
-            logger.debug(f"arch is not specified in apply_config, auto-infer to {arch}")
+            arch = self.arch
 
         target_scheduler = self.detect_scheduler_from_hint(hint)
 
@@ -203,6 +198,18 @@ class MatmulScheduler(MatmulBaseParams):
                 self.matmul_weight_propagation_scheduler,
         ]:
             scheduler.set_dynamic_range(dynamic_range)
+        return self
+
+    def with_arch(self, arch):
+        super().with_arch(arch)
+        for scheduler in [
+            self.gemv_scheduler,
+            self.matmul_simt_scheduler,
+            self.matmul_block_scheduler,
+            self.matmul_fine_grain_scheduler,
+            self.matmul_weight_propagation_scheduler,
+        ]:
+            scheduler.with_arch(arch)
         return self
 
     @property

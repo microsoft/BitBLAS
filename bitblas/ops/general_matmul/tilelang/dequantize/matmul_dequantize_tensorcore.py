@@ -10,7 +10,9 @@ from bitblas.base.roller.rasterization import NoRasterization
 from bitblas.base.utils import get_roller_hints_from_func
 from dataclasses import dataclass
 from bitblas.ops.general_matmul.tirscript import (
-    matmul_dequantize_select_implementation,)
+    matmul_dequantize_select_implementation,
+)
+from bitblas.base.operator_common import QuantizationMemoryStage
 from bitblas.tl.base_hint import BaseTLHint
 from bitblas.quantization import (
     _tir_packed_int_to_int_convert,
@@ -135,14 +137,16 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
             }
 
         def __repr__(self):
-            return ("{"
-                    f"block_M={self.block_M},"
-                    f"block_N={self.block_N},"
-                    f"block_K={self.block_K},"
-                    f"num_stages={self.num_stages},"
-                    f"threads={self.threads},"
-                    f"enable_rasterization={self.enable_rasterization}"
-                    "}")
+            return (
+                "{"
+                f"block_M={self.block_M},"
+                f"block_N={self.block_N},"
+                f"block_K={self.block_K},"
+                f"num_stages={self.num_stages},"
+                f"threads={self.threads},"
+                f"enable_rasterization={self.enable_rasterization}"
+                "}"
+            )
 
     def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
@@ -186,7 +190,9 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
 
         M = self.maybe_dynamic(self.M, "m")
         N, K = self.N, self.K
-        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
+        assert isinstance(N, int) and isinstance(
+            K, int
+        ), "Do not support dynamic N and K Currently"
 
         trans_A, trans_B = self.trans_A, self.trans_B
 
@@ -252,23 +258,26 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
         cache_write_required = self.check_require_cache()
 
         @T.prim_func
-        def general_dequant_matmul(
-                A: T.Buffer(A_shape, in_dtype),
-                B: T.Buffer(B_shape, storage_dtype),
-                LUT: T.Buffer(LUT_shape, in_dtype),
-                Scale: T.Buffer(Scale_shape, in_dtype),
-                Qzeros: T.Buffer(Qzeros_shape, storage_dtype),
-                Zeros: T.Buffer(Zeros_shape, in_dtype),
-                C: T.Buffer(C_shape, out_dtype),
-                Bias: T.Buffer(Bias_shape, in_dtype),
+        def general_shared_dequant_matmul(
+            A: T.Buffer(A_shape, in_dtype),
+            B: T.Buffer(B_shape, storage_dtype),
+            LUT: T.Buffer(LUT_shape, in_dtype),
+            Scale: T.Buffer(Scale_shape, in_dtype),
+            Qzeros: T.Buffer(Qzeros_shape, storage_dtype),
+            Zeros: T.Buffer(Zeros_shape, in_dtype),
+            C: T.Buffer(C_shape, out_dtype),
+            Bias: T.Buffer(Bias_shape, in_dtype),
         ):
             with T.Kernel(
-                    T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
+                T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads
+            ) as (bx, by):
                 A_shared = T.alloc_shared(A_shared_shape, in_dtype)
                 B_shared = T.alloc_shared(B_shared_shape, storage_dtype)
                 B_local = T.alloc_local([local_size_compressed], storage_dtype)
                 B_dequantize_local = T.alloc_local([local_size], in_dtype)
-                B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, in_dtype)
+                B_dequantize_shared = T.alloc_shared(
+                    B_dequantize_shared_shape, in_dtype
+                )
                 C_shared = T.alloc_shared([block_M, block_N], out_dtype)
                 C_local = T.alloc_fragment((block_M, block_N), accum_dtype)
 
@@ -284,12 +293,18 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
                     T.copy(A[by * block_M, k * block_K], A_shared)
                     T.copy(B[bx * block_N, k * block_K // num_elems_per_byte], B_shared)
 
-                    for i in T.serial(block_N * block_K // num_elems_per_byte //
-                                      (threads * local_size_compressed)):
+                    for i in T.serial(
+                        block_N
+                        * block_K
+                        // num_elems_per_byte
+                        // (threads * local_size_compressed)
+                    ):
                         for v in T.vectorized(0, local_size_compressed):
                             index = (
-                                i * threads * local_size_compressed + tx * local_size_compressed +
-                                v)
+                                i * threads * local_size_compressed
+                                + tx * local_size_compressed
+                                + v
+                            )
                             vi = index // (block_K // num_elems_per_byte)
                             vj = index % (block_K // num_elems_per_byte)
                             B_local[v] = B_shared[vi, vj]
@@ -344,7 +359,7 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
                             C_local[i, j] += Bias[bx * block_N + j]
                     T.copy(C_local, C[by * block_M, bx * block_N])
 
-        return self.post_process(general_dequant_matmul)
+        return self.post_process(general_shared_dequant_matmul)
 
     @property
     def _decode_func(self):
@@ -364,17 +379,23 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
             return x.astype(in_dtype)
 
         if with_zeros and zeros_mode == "quantized":
-            dequant_func = _tir_packed_to_unsigned_convert_with_zeros(storage_type, storage_nbit)
+            dequant_func = _tir_packed_to_unsigned_convert_with_zeros(
+                storage_type, storage_nbit
+            )
         elif source_format == "uint":
             if num_bits == 8:
                 # 8 num_bits does not need to be compressed
                 dequant_func = naive_cast_dequant
             else:
-                dequant_func = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)
+                dequant_func = _tir_packed_to_unsigned_convert(
+                    storage_type, storage_nbit
+                )
         elif source_format == "int":
             if num_bits == 1:
                 # Dequantize int1 to -1 and 1. Without this step, the values would be 0 and 1, identical to uint1.
-                dequant_func = _tir_packed_int_to_int_convert(storage_type, storage_nbit)
+                dequant_func = _tir_packed_int_to_int_convert(
+                    storage_type, storage_nbit
+                )
             elif num_bits == 8:
                 # 8 num_bits does not need to be compressed
                 dequant_func = naive_cast_dequant
@@ -443,16 +464,25 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
                             compressed_weight_local[v // num_elems_per_byte],
                             v % num_elems_per_byte,
                             dtype=in_dtype,
-                        ) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size])
+                        )
+                        * scale_buffer[
+                            pid_n * stride_n + vi, (k * stride_k + vj) // group_size
+                        ]
+                    )
                 elif zeros_mode == "original":
-                    dequant_weight_local[v] = (self._decode_func(
-                        num_bits,
-                        compressed_weight_local[v // num_elems_per_byte],
-                        v % num_elems_per_byte,
-                        dtype=in_dtype,
-                    ) - zeros_buffer[pid_n * stride_n + vi, (k * stride_k + vj) //
-                                     group_size]) * scale_buffer[pid_n * stride_n + vi,
-                                                                 (k * stride_k + vj) // group_size]
+                    dequant_weight_local[v] = (
+                        self._decode_func(
+                            num_bits,
+                            compressed_weight_local[v // num_elems_per_byte],
+                            v % num_elems_per_byte,
+                            dtype=in_dtype,
+                        )
+                        - zeros_buffer[
+                            pid_n * stride_n + vi, (k * stride_k + vj) // group_size
+                        ]
+                    ) * scale_buffer[
+                        pid_n * stride_n + vi, (k * stride_k + vj) // group_size
+                    ]
                 elif zeros_mode == "rescale":
                     dequant_weight_local[v] = (
                         self._decode_func(
@@ -460,10 +490,18 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
                             compressed_weight_local[v // num_elems_per_byte],
                             v % num_elems_per_byte,
                             dtype=in_dtype,
-                        ) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size] -
-                        zeros_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size])
+                        )
+                        * scale_buffer[
+                            pid_n * stride_n + vi, (k * stride_k + vj) // group_size
+                        ]
+                        - zeros_buffer[
+                            pid_n * stride_n + vi, (k * stride_k + vj) // group_size
+                        ]
+                    )
                 elif zeros_mode == "quantized":
-                    dequant_qzeros = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                    dequant_qzeros = _tir_packed_to_unsigned_convert(
+                        storage_type, storage_nbit
+                    )(
                         num_bits,
                         qzeros_buffer[
                             (k * stride_k + vj) // group_size,
@@ -473,13 +511,17 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
                         dtype=storage_dtype,
                     )
 
-                    dequant_weight_local[v] = (self._decode_func(
-                        num_bits,
-                        compressed_weight_local[v // num_elems_per_byte],
-                        v % num_elems_per_byte,
-                        zero=dequant_qzeros,
-                        dtype=in_dtype,
-                    )) * scale_buffer[pid_n * stride_n + vi, (k * stride_k + vj) // group_size]
+                    dequant_weight_local[v] = (
+                        self._decode_func(
+                            num_bits,
+                            compressed_weight_local[v // num_elems_per_byte],
+                            v % num_elems_per_byte,
+                            zero=dequant_qzeros,
+                            dtype=in_dtype,
+                        )
+                    ) * scale_buffer[
+                        pid_n * stride_n + vi, (k * stride_k + vj) // group_size
+                    ]
 
         return _normal_dequant_impl(
             compressed_weight_local,
@@ -529,7 +571,9 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
                     func_name,
                     T.address_of(compressed_weight_local[0]),
                     T.address_of(dequant_weight_local[0]),
-                    T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    T.address_of(
+                        scale_buffer[pid_n * stride_n, k * stride_k // group_size]
+                    ),
                     dtype=in_dtype,
                 )
             elif zeros_mode in ["original", "rescale"]:
@@ -537,8 +581,12 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
                     func_name,
                     T.address_of(compressed_weight_local[0]),
                     T.address_of(dequant_weight_local[0]),
-                    T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
-                    T.address_of(zeros_buffer[pid_n * stride_n, k * stride_k // group_size]),
+                    T.address_of(
+                        scale_buffer[pid_n * stride_n, k * stride_k // group_size]
+                    ),
+                    T.address_of(
+                        zeros_buffer[pid_n * stride_n, k * stride_k // group_size]
+                    ),
                     dtype=in_dtype,
                 )
             elif zeros_mode == "quantized":
@@ -546,12 +594,18 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
                     func_name,
                     T.address_of(compressed_weight_local[0]),
                     T.address_of(dequant_weight_local[0]),
-                    T.address_of(scale_buffer[pid_n * stride_n, k * stride_k // group_size]),
-                    T.address_of(zeros_buffer[pid_n * stride_n, k * stride_k // group_size]),
-                    T.address_of(qzeros_buffer[
-                        k * stride_k // group_size,
-                        pid_n * stride_n // num_elems_per_byte,
-                    ]),
+                    T.address_of(
+                        scale_buffer[pid_n * stride_n, k * stride_k // group_size]
+                    ),
+                    T.address_of(
+                        zeros_buffer[pid_n * stride_n, k * stride_k // group_size]
+                    ),
+                    T.address_of(
+                        qzeros_buffer[
+                            k * stride_k // group_size,
+                            pid_n * stride_n // num_elems_per_byte,
+                        ]
+                    ),
                     dtype=in_dtype,
                 )
 
@@ -568,6 +622,13 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
         storage_nbit = int("".join(c for c in self.storage_dtype if c.isdigit()))
         num_bits = self.num_bits
         return storage_nbit // num_bits
+
+    def infer_default_quantization_memory_stage(self):
+        # Dequantize Stage
+        # We automatically set the quantization memory stage by set the value to None
+        # By default we dequantize in shared memory
+        quantization_memory_stage = QuantizationMemoryStage.Shared
+        return quantization_memory_stage
 
     def __post_init__(self):
         # Legalize group_size

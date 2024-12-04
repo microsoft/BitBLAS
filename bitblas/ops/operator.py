@@ -114,7 +114,7 @@ class Operator(object):
         self.ir_module: Optional[IRModule] = (
             self._select_implementation() if self.is_tir_backend() else None)
         self.scheduler: Optional[BaseScheduler] = (
-            self._select_scheduler() if self.is_tilelang_backend() else None)
+            self._select_scheduler().with_arch(self.arch) if self.is_tilelang_backend() else None)
 
         self.pass_context: Optional[Dict] = None
 
@@ -172,7 +172,8 @@ class Operator(object):
         # Check if the platform is CUDA and we have an optimized function
         if is_cuda_arch(self.arch) or is_cdna_arch(self.arch):
             if self.scheduled_ir_module is None:
-                raise ValueError(f"No optimized function available for platform {self.arch.kind.name}")
+                raise ValueError(
+                    f"No optimized function available for platform {self.arch.kind.name}")
 
             @tvm.register_func(func_name="tvm_callback_cuda_postproc", override=True)
             def tvm_callback_cuda_postproc(code, _):

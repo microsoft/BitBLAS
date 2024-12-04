@@ -2,15 +2,10 @@
 # Licensed under the MIT License.
 
 import tvm.tl.language as T
-from typing import Union, Tuple, Optional
-from bitblas.base.operator_common import TransformKind
+from typing import Tuple, Optional
 from tvm import DataType
 from tvm.tir import PrimExpr
 from tvm.runtime import convert
-from .utils import (
-    mma_store_index_map,
-    get_ldmatrix_offset,
-)
 
 lift = convert
 
@@ -148,17 +143,14 @@ class WMMAIntrinEmitter(object):
         num_fragments_per_row = stride // n_dim
         return frag_index_m * num_fragments_per_row + frag_index_n
 
-    def fill(self, C_local_buf, value:float=0):
+    # Not implemented yet
+    def fill(self, C_local_buf, value: float = 0):
         m_dim = 16
         n_dim = 16
         k_dim = 16
+
         @T.macro
         def _wmma_fill(C_local_buf):
-            block_row_warps = self.block_row_warps
-            block_col_warps = self.block_col_warps
-            warp_rows = self.warp_rows
-            warp_cols = self.warp_cols
-            local_size_out = self.local_size_out
 
             T.evaluate(
                 T.tvm_fill_fragment(
@@ -166,187 +158,21 @@ class WMMAIntrinEmitter(object):
                     m_dim,
                     n_dim,
                     k_dim,
-                    self.get_wmma_fragment_index(
-                        C_local_buf, 16, m_dim, n_dim
-                    ),
+                    self.get_wmma_fragment_index(C_local_buf, 16, m_dim, n_dim),
                     T.float32(value),
                     dtype="handle",
-                )
-            )
+                ))
 
         return _wmma_fill(C_local_buf)
 
     def load_matrix_sync_a(self, A_local_buf, A_shared_buf, ki, thread_bindings, rk=0):
-        warp_row_tiles = self.warp_row_tiles
-        warp_rows = self.warp_rows
-        chunk = self.chunk
-        micro_size_x = self.micro_size_x
-        micro_size_k = self.micro_size_k
-        local_size_a = self.local_size_a
-        a_dtype = self.a_dtype
-        a_transposed = self.a_transposed
-
-        @T.macro
-        def _warp_ldmatrix_a(
-            A_local_buf,
-            A_shared_buf,
-            ki,
-            thread_bindings,
-            rk=0,
-        ):
-            stride = A_shared_buf.shape[-1]
-            tx, _, warp_m = self.extract_thread_binding(thread_bindings)
-            for i in T.serial(warp_rows):
-                T.ptx_ldmatrix(
-                    a_dtype,
-                    T.bool(False),
-                    4,
-                    ".b16",
-                    A_local_buf.data,
-                    i * local_size_a,
-                    T.address_of(A_shared_buf[
-                        warp_m * warp_row_tiles + i * micro_size_x,
-                        rk * chunk + ki * micro_size_k,
-                    ]),
-                    get_ldmatrix_offset("A", tx, 0, stride, a_dtype, a_transposed),
-                )
-
-        return _warp_ldmatrix_a(A_local_buf, A_shared_buf, ki, thread_bindings, rk)
+        raise NotImplementedError
 
     def load_matrix_sync_b(self, B_local_buf, B_shared_buf, ki, thread_bindings, rk=0):
-        warp_col_tiles = self.warp_col_tiles
-        warp_cols = self.warp_cols
-        chunk = self.chunk
-        micro_size_y = self.micro_size_y
-        micro_size_k = self.micro_size_k
-        local_size_b = self.local_size_b
-        b_dtype = self.b_dtype
-        b_transposed = self.b_transposed
-
-        @T.macro
-        def _warp_ldmatrix_b(
-            B_local_buf,
-            B_shared_buf,
-            ki,
-            thread_bindings,
-            rk=0,
-        ):
-            stride = B_shared_buf.shape[-1]
-            tx, warp_n, _ = self.extract_thread_binding(thread_bindings)
-
-            for j in T.serial(warp_cols):
-                # Assign B_shared_elem
-                ri, rj = (
-                    warp_n * warp_col_tiles + j * micro_size_y,
-                    rk * chunk + ki * micro_size_k,
-                )
-                B_shared_elem = B_shared_buf[ri, rj]
-
-                T.ptx_ldmatrix(
-                    b_dtype,
-                    T.bool(False),  # TODO(lei): should be optimized
-                    4,
-                    ".b16",
-                    B_local_buf.data,
-                    j * local_size_b,
-                    T.address_of(B_shared_elem),
-                    get_ldmatrix_offset("B", tx, 0, stride, b_dtype, b_transposed),
-                )
-
-        return _warp_ldmatrix_b(B_local_buf, B_shared_buf, ki, thread_bindings, rk)
+        raise NotImplementedError
 
     def sync(self, A_local_buf, B_local_buf, C_local_buf):
-        warp_rows = self.warp_rows
-        warp_cols = self.warp_cols
-        local_size_a = self.local_size_a
-        local_size_b = self.local_size_b
-        local_size_out = self.local_size_out
-        a_dtype_abbrv = self.a_dtype_abbrv
-        b_dtype_abbrv = self.b_dtype_abbrv
-        accum_dtype = self.accum_dtype
-        accum_dtype_abbrv = self.accum_dtype_abbrv
-        mma_prefix = self.mma_prefix
-
-        @T.macro
-        def _warp_mma(A_local_buf, B_local_buf, C_local_buf):
-            for i, j in T.grid(warp_rows, warp_cols):
-                T.ptx_mma(
-                    accum_dtype,
-                    mma_prefix,
-                    "row",
-                    "col",
-                    a_dtype_abbrv,
-                    b_dtype_abbrv,
-                    accum_dtype_abbrv,
-                    A_local_buf.data,
-                    i * local_size_a,
-                    B_local_buf.data,
-                    j * local_size_b,
-                    C_local_buf.data,
-                    i * warp_cols * local_size_out + j * local_size_out,
-                    T.bool(False),
-                )
-
-                T.ptx_mma(
-                    accum_dtype,
-                    mma_prefix,
-                    "row",
-                    "col",
-                    a_dtype_abbrv,
-                    b_dtype_abbrv,
-                    accum_dtype_abbrv,
-                    A_local_buf.data,
-                    i * local_size_a,
-                    B_local_buf.data,
-                    j * local_size_b + lift(local_size_b) // 2,
-                    C_local_buf.data,
-                    i * warp_cols * local_size_out + j * local_size_out + lift(local_size_out) // 2,
-                    T.bool(False),
-                )
-
-        return _warp_mma(A_local_buf, B_local_buf, C_local_buf)
+        raise NotImplementedError
 
     def stmatrix(self, C_local_buf, C_buf, thread_bindings, pid_m=None, pid_n=None):
-        block_row_warps = self.block_row_warps
-        block_col_warps = self.block_col_warps
-        warp_rows = self.warp_rows
-        warp_cols = self.warp_cols
-        local_size_out = self.local_size_out
-
-        is_global = pid_m is not None and pid_n is not None
-        BLOCK_M = block_row_warps * warp_rows
-        BLOCK_N = block_col_warps * warp_cols
-        M_DIM, N_DIM = self.M_DIM, self.N_DIM
-
-        # STS
-        # MMA Store must be in simulated instead of TVM Intrins
-        # As TVM Intrins is like a hack that the threadIdx.x should be always
-        # equal to the warp_size
-        @T.macro
-        def _warp_stmatrix_shared(C_local_buf, C_buf, thread_bindings):
-            tx, warp_n, warp_m = self.extract_thread_binding(thread_bindings)
-            for i, j in T.grid(warp_rows, warp_cols):
-                for local_id_o in T.serial(local_size_out // 2):
-                    for local_id_i in T.vectorized(2):
-                        local_id = local_id_o * 2 + local_id_i
-                        row, col = T.meta_var(mma_store_index_map(tx, local_id))
-                        C_buf[warp_m * warp_rows + i, warp_n * warp_cols + j, row,
-                              col] = C_local_buf[i * (warp_cols * local_size_out) +
-                                                 j * local_size_out + local_id]
-
-        @T.macro
-        def _warp_stmatrix_global(C_local_buf, C_buf, thread_bindings):
-            tx, warp_n, warp_m = self.extract_thread_binding(thread_bindings)
-            for i, j in T.grid(warp_rows, warp_cols):
-                for local_id_o in T.serial(local_size_out // 2):
-                    for local_id_i in T.vectorized(2):
-                        local_id = local_id_o * 2 + local_id_i
-                        row, col = T.meta_var(mma_store_index_map(tx, local_id))
-                        C_buf[
-                            (pid_m * BLOCK_M + warp_m * warp_rows + i) * M_DIM + row,
-                            (pid_n * BLOCK_N + warp_n * warp_cols + j) * N_DIM + col,
-                        ] = C_local_buf[i * warp_cols * local_size_out + j * local_size_out +
-                                        local_id]
-
-        return (_warp_stmatrix_global(C_local_buf, C_buf, thread_bindings)
-                if is_global else _warp_stmatrix_shared(C_local_buf, C_buf, thread_bindings))
+        raise NotImplementedError

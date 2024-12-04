@@ -7,7 +7,6 @@ from bitblas.base.operator_common import TransformKind
 from bitblas.base.base_scheduler import BaseScheduler
 from bitblas.base.arch import (
     TileDevice,
-    auto_infer_current_arch,
     is_ampere_arch,
     is_volta_arch,
     is_tensorcore_supported_precision,
@@ -40,19 +39,16 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     matmul_dequantize_fine_grained_scheduler: Optional[MatmulDequantizeFineGrainedScheduler] = None
 
     def __init__(self, **kwargs):
-        self.matmul_dequantize_block_scheduler = MatmulDequantizeBlockScheduler(
-            **kwargs
-        )
-        self.matmul_dequantize_fine_grained_scheduler = MatmulDequantizeFineGrainedScheduler(**kwargs)
+        self.matmul_dequantize_block_scheduler = MatmulDequantizeBlockScheduler(**kwargs)
+        self.matmul_dequantize_fine_grained_scheduler = MatmulDequantizeFineGrainedScheduler(
+            **kwargs)
 
         super().__init__(**kwargs)
 
     def dispatch_ampere_scheduler(self, arch: TileDevice) -> BaseScheduler:
         M = self.maybe_dynamic(self.M, "m")
         N, K = self.N, self.K
-        assert isinstance(N, int) and isinstance(
-            K, int
-        ), "Do not support dynamic N and K Currently"
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
 
         is_dynamic = self.is_dynamic
         in_dtype, accum_dtype = (
@@ -66,14 +62,10 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
             else:
                 return self.matmul_simt_scheduler
         else:
-            minimal_tensorcore_threshold: List[int, int, int] = (
-                [8, 16, 32] if accum_dtype == "int32" else [8, 16, 16]
-            )
-            if (
-                minimal_tensorcore_threshold[0] > M
-                or minimal_tensorcore_threshold[1] > N
-                or minimal_tensorcore_threshold[2] > K
-            ):
+            minimal_tensorcore_threshold: List[int, int, int] = ([8, 16, 32] if accum_dtype
+                                                                 == "int32" else [8, 16, 16])
+            if (minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[1] > N or
+                    minimal_tensorcore_threshold[2] > K):
                 return self.gemv_scheduler
             elif is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 if self.weight_transform_kind != TransformKind.NonTransform:
@@ -86,9 +78,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     def dispatch_volta_scheduler(self, arch: TileDevice) -> BaseScheduler:
         M = self.maybe_dynamic(self.M, "m")
         N, K = self.N, self.K
-        assert isinstance(N, int) and isinstance(
-            K, int
-        ), "Do not support dynamic N and K Currently"
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
 
         is_dynamic = self.is_dynamic
         in_dtype, accum_dtype = (
@@ -97,8 +87,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
         )
         if self.weight_transform_kind != TransformKind.NonTransform:
             raise ValueError(
-                f"Weight propagation {self.weight_transform_kind} is not supported for Volta"
-            )
+                f"Weight propagation {self.weight_transform_kind} is not supported for Volta")
         if in_dtype not in ["int8", "float16", "float32", "float64"]:
             raise ValueError(f"Unsupported input data type: {in_dtype}")
 
@@ -110,11 +99,8 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
                 return self.matmul_simt_scheduler
         else:
             minimal_tensorcore_threshold: List[int, int, int] = [8, 16, 16]
-            if (
-                minimal_tensorcore_threshold[0] > M
-                or minimal_tensorcore_threshold[1] > N
-                or minimal_tensorcore_threshold[2] > K
-            ):
+            if (minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[1] > N or
+                    minimal_tensorcore_threshold[2] > K):
                 return self.gemv_scheduler
             elif is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 # Fine-grained scheduler (mma) is not supported for Volta
@@ -132,33 +118,25 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
 
     def detect_scheduler_from_hint(self, hint: BaseTLHint) -> BaseScheduler:
         for scheduler in [
-            self.matmul_dequantize_block_scheduler,
+                self.matmul_dequantize_block_scheduler,
         ]:
             if isinstance(hint, scheduler.TLHint):
                 return scheduler
         raise ValueError(f"Unsupported hint type: {type(hint)}")
 
-    def with_default_config(
-        self, arch: Optional[TileDevice] = None
-    ) -> PrimFunc:
+    def with_default_config(self, arch: Optional[TileDevice] = None) -> PrimFunc:
         if arch is None:
-            arch = auto_infer_current_arch()
-            logger.debug(
-                f"arch is not specified in with_default_config, auto-infer to {arch}"
-            )
+            arch = self.arch
 
         dispatched_scheduler = self.dispatch_scheduler(arch)
 
         return dispatched_scheduler.with_default_config()
 
-    def get_hardware_aware_configs(
-        self, arch: Optional[TileDevice] = None, topk: int = 10
-    ) -> List[PrimFunc]:
+    def get_hardware_aware_configs(self,
+                                   arch: Optional[TileDevice] = None,
+                                   topk: int = 10) -> List[PrimFunc]:
         if arch is None:
-            arch = auto_infer_current_arch()
-            logger.debug(
-                f"arch is not specified in get_hardware_aware_configs, auto-infer to {arch}"
-            )
+            arch = self.arch
 
         dispatched_scheduler = self.dispatch_scheduler(arch)
 
@@ -173,24 +151,20 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
             raise ValueError("hint is required for apply_config")
 
         if arch is None:
-            arch = auto_infer_current_arch()
-            logger.debug(
-                f"arch is not specified in apply_config, auto-infer to {arch}"
-            )
+            arch = self.arch
 
         target_scheduler = self.detect_scheduler_from_hint(hint)
 
         return target_scheduler.apply_config(**hint.get_config_params())
 
-    def specialize_from_dynamic_range(
-        self, dynamic_range: Optional[Dict[str, int]] = None
-    ) -> "MatmulDequantizeScheduler":
+    def specialize_from_dynamic_range(self,
+                                      dynamic_range: Optional[Dict[str, int]] = None
+                                     ) -> "MatmulDequantizeScheduler":
         if dynamic_range is None:
             dynamic_range = self._dynamic_range
 
-        assert (
-            dynamic_range is not None
-        ), "dynamic_range is required for specialize_from_dynamic_range"
+        assert (dynamic_range
+                is not None), "dynamic_range is required for specialize_from_dynamic_range"
 
         class_attributes = self.params_as_dict()
         for symbol, value in dynamic_range.items():
@@ -198,41 +172,37 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
             if attribute_name not in class_attributes:
                 raise ValueError(f"Unknown symbol: {symbol}")
             class_attributes[attribute_name] = value
-        return MatmulDequantizeScheduler(**class_attributes).set_dynamic_range(
-            dynamic_range
-        )
+        return MatmulDequantizeScheduler(**class_attributes).set_dynamic_range(dynamic_range)
 
-    def set_dynamic_range(
-        self, dynamic_range: Dict[str, int]
-    ) -> "BaseScheduler":
+    def set_dynamic_range(self, dynamic_range: Dict[str, int]) -> "BaseScheduler":
         super().set_dynamic_range(dynamic_range)
         for scheduler in [
-            self.matmul_dequantize_block_scheduler,
+                self.matmul_dequantize_block_scheduler,
         ]:
             scheduler.set_dynamic_range(dynamic_range)
+        return self
+
+    def with_arch(self, arch):
+        super().with_arch(arch)
+        for scheduler in [
+            self.matmul_dequantize_block_scheduler,
+            self.matmul_dequantize_fine_grained_scheduler,
+        ]:
+            scheduler.with_arch(arch)
         return self
 
     @property
     def is_dynamic(self) -> bool:
         M, N, K = self.M, self.N, self.K
-        return (
-            (not isinstance(M, int))
-            or (not isinstance(N, int))
-            or (not isinstance(K, int))
-        )
+        return ((not isinstance(M, int)) or (not isinstance(N, int)) or (not isinstance(K, int)))
 
     def __post_init__(self):
         # Validate the matrix transpose settings
-        assert (
-            self.trans_A is False
-        ), "Currently only support Matrix A not transposed"
-        assert (
-            self.trans_B is True
-        ), "Currently only support Matrix B transposed"
+        assert (self.trans_A is False), "Currently only support Matrix A not transposed"
+        assert (self.trans_B is True), "Currently only support Matrix B transposed"
         assert self.with_bias is False, "Currently only support without bias"
-        assert (
-            self.input_transform_kind == TransformKind.NonTransform
-        ), "Currently only support NonTransform for input"
+        assert (self.input_transform_kind == TransformKind.NonTransform
+               ), "Currently only support NonTransform for input"
 
         return
 

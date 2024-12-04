@@ -54,9 +54,7 @@ def is_cdna_arch(arch: TileDevice) -> bool:
     return isinstance(arch, CDNA)
 
 
-def is_tensorcore_supported_precision(
-    in_dtype: str, accum_dtype: str, arch: TileDevice
-) -> bool:
+def is_tensorcore_supported_precision(in_dtype: str, accum_dtype: str, arch: TileDevice) -> bool:
     volta_tensorcore_supported = [
         ("float16", "float32"),
         ("float16", "float16"),

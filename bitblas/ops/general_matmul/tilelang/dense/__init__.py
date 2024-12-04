@@ -14,7 +14,6 @@ from .matmul_tensorcore import (
 )
 
 from .matmul import MatmulScheduler
-from bitblas.base.roller import TileDevice
 from bitblas.base.operator_common import TransformKind
 from typing import Union
 

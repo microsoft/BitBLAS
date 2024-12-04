@@ -11,6 +11,7 @@ from .matmul_tensorcore import MatmulBaseScheduler
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
 
+
 # TODO(lei): This is not implemented in the current version of the codebase
 @dataclass
 class MatmulFineGrainScheduler(MatmulBaseScheduler):
@@ -44,9 +45,7 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
             rstep = hint.rstep
             num_stages = hint.pipeline_stage
             rasterization_plan = hint.rasterization_plan
-            enable_rasterization = not isinstance(
-                rasterization_plan, NoRasterization
-            )
+            enable_rasterization = not isinstance(rasterization_plan, NoRasterization)
 
             block_row_warps = block[0] // warp[0]
             block_col_warps = block[1] // warp[1]
@@ -79,26 +78,20 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
             }
 
         def __repr__(self):
-            return (
-                "{"
-                f"block_M={self.block_row_warps * self.warp_row_tiles},"
-                f"block_N={self.block_col_warps * self.warp_col_tiles},"
-                f"warp_M={self.warp_row_tiles},"
-                f"warp_N={self.warp_col_tiles},"
-                f"block_K={self.chunk},"
-                f"threads={self.block_row_warps * self.block_col_warps * warp_size},"
-                f"num_stages={self.num_stages},"
-                f"enable_rasterization={self.enable_rasterization}"
-                "}"
-            )
+            return ("{"
+                    f"block_M={self.block_row_warps * self.warp_row_tiles},"
+                    f"block_N={self.block_col_warps * self.warp_col_tiles},"
+                    f"warp_M={self.warp_row_tiles},"
+                    f"warp_N={self.warp_col_tiles},"
+                    f"block_K={self.chunk},"
+                    f"threads={self.block_row_warps * self.block_col_warps * warp_size},"
+                    f"num_stages={self.num_stages},"
+                    f"enable_rasterization={self.enable_rasterization}"
+                    "}")
 
     def __post_init__(self):
         # Validate the matrix transpose settings
-        assert (
-            self.trans_A is False
-        ), "Currently only support Matrix A not transposed"
-        assert (
-            self.trans_B is True
-        ), "Currently only support Matrix B transposed"
+        assert (self.trans_A is False), "Currently only support Matrix A not transposed"
+        assert (self.trans_B is True), "Currently only support Matrix B transposed"
 
         return

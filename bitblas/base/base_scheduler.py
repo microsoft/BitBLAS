@@ -5,7 +5,7 @@ from typing import Optional, Union, Callable, List, Dict
 from dataclasses import dataclass, field
 from tvm.tl.transform import Simplify
 from abc import ABC, abstractmethod
-from bitblas.base.arch import TileDevice
+from bitblas.base.arch import TileDevice, is_volta_arch, is_ampere_arch, is_cdna_arch, auto_infer_current_arch
 from bitblas.base.roller.hint import Hint
 from bitblas.tl.base_hint import BaseTLHint
 
@@ -24,6 +24,8 @@ def maybe_simplify(self, func: Callable) -> Callable:
 
 @dataclass
 class BaseScheduler(ABC):
+
+    _arch : TileDevice = field(default=auto_infer_current_arch, init=False, repr=False)
 
     _enable_simplify: bool = field(default=True, init=False, repr=False)
 
@@ -77,6 +79,22 @@ class BaseScheduler(ABC):
     def has_dynamic_range(self) -> bool:
         return bool(self._dynamic_range)
 
+    def with_arch(self, arch: TileDevice) -> "BaseScheduler":
+        self._arch = arch
+        return self
+    
+    def has_arch(self) -> bool:
+        return self._arch is not None
+    
+    def is_volta_arch(self) -> bool:
+        return is_volta_arch(self._arch) if self._arch is not None else False
+
+    def is_ampere_arch(self) -> bool:
+        return is_ampere_arch(self._arch) if self._arch is not None else False
+    
+    def is_cdna_arch(self) -> bool:
+        return is_cdna_arch(self._arch) if self._arch is not None else False
+
     @staticmethod
     def maybe_dynamic(arg: Union[int, List[int]], dynamic_symbol: str = "m") -> PrimFunc:
         if isinstance(arg, int):
@@ -114,6 +132,10 @@ class BaseScheduler(ABC):
     def global_symbol(self):
         # For kernel name generation
         return "default"
+
+    @property
+    def arch(self) -> TileDevice:
+        return self._arch
 
 
 # Decorator to simplify the output of a function
