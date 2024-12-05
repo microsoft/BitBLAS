@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+from bitblas import tvm as tvm
 from bitblas import MatmulConfig, Matmul
 import logging
 from bitblas import set_log_level
