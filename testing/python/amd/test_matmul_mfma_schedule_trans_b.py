@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
-from bitblas import tvm
+from bitblas import tvm as tvm
 from bitblas.ops.general_matmul.tirscript import (
     matmul_select_implementation,)
 import logging
