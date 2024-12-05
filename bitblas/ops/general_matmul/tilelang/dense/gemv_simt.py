@@ -92,13 +92,22 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
             self.accum_dtype,
         )
 
-        vec_size = 128 // DataType(in_dtype).bits
+        trans_A, trans_B = self.trans_A, self.trans_B
 
-        block_K = reduce_thread * vec_size
+        assert trans_A is False, "Dequantize only implement for trans_A=False currently"
+        assert trans_B is True, "Dequantize only implement for trans_B=TRue currently"
+
+        with_bias = self.with_bias
+
+        MAX_TRANSACTION_SIZE_IN_BITS = 128
+        micro_size_k = MAX_TRANSACTION_SIZE_IN_BITS // DataType(in_dtype).bits
+
+        block_K = reduce_thread * micro_size_k
 
         A_shape = (M, K)
         B_shape = (N, K)
         C_shape = (M, N)
+        Bias_shape = (N,)
 
         dp4a_size = 4
         use_dp4a = in_dtype == "int8" and accum_dtype == "int32"
@@ -108,14 +117,15 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, in_dtype),
                 C: T.Buffer(C_shape, out_dtype),
+                Bias: T.Buffer(Bias_shape, out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, n_partition), M, threads=(reduce_thread, n_partition)) as (
                         bx,
                         by,
                     ):
-                A_local = T.alloc_local((vec_size,), in_dtype)
-                B_local = T.alloc_local((vec_size,), in_dtype)
+                A_local = T.alloc_local((micro_size_k,), in_dtype)
+                B_local = T.alloc_local((micro_size_k,), in_dtype)
                 accum_res = T.alloc_local((1,), accum_dtype)
                 reduced_accum_res = T.alloc_local((1,), accum_dtype)
 
@@ -124,21 +134,24 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
 
                 T.clear(accum_res)
                 for ko in T.serial(T.ceildiv(K, block_K)):
-                    for v in T.vectorized(vec_size):
-                        A_local[v] = A[by, ko * block_K + kr * vec_size + v]
+                    for v in T.vectorized(micro_size_k):
+                        A_local[v] = A[by, ko * block_K + kr * micro_size_k + v]
 
-                    for v in T.vectorized(vec_size):
-                        B_local[v] = B[bx * n_partition + ni, ko * block_K + kr * vec_size + v]
+                    for v in T.vectorized(micro_size_k):
+                        B_local[v] = B[
+                            bx * n_partition + ni,
+                            ko * block_K + kr * micro_size_k + v,
+                        ]
 
                     if use_dp4a:
-                        for ki in T.serial(vec_size // dp4a_size):
+                        for ki in T.serial(micro_size_k // dp4a_size):
                             T.dp4a(
                                 A_local[ki * dp4a_size],
                                 B_local[ki * dp4a_size],
                                 accum_res[0],
                             )
                     else:
-                        for ki in T.serial(vec_size):
+                        for ki in T.serial(micro_size_k):
                             accum_res[0] += A_local[ki] * B_local[ki]
 
                 with T.attr(
@@ -156,7 +169,11 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                             dtype="handle",
                         ))
                 if kr == 0:
-                    C[by, bx * n_partition + ni] = reduced_accum_res[0]
+                    if with_bias:
+                        C[by, bx * n_partition +
+                          ni] = reduced_accum_res[0] + Bias[bx * n_partition + ni]
+                    else:
+                        C[by, bx * n_partition + ni] = reduced_accum_res[0]
 
         return self.post_process(main)
 

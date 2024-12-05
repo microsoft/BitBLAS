@@ -5,6 +5,7 @@ from tvm import DataType
 from tvm.target import Target
 import operator
 from functools import reduce
+from bitblas.base.arch import has_mma_support
 from bitblas.base.roller.hint import Hint
 from typing import Any, Literal, Optional, Tuple, Union
 from ..operator import OperatorConfig, Operator, OPExecutorCPU, BaseKernelNameGenerator
@@ -792,11 +793,17 @@ class Matmul(Operator):
 
     @property
     def propagate_a(self):
-        return self.config.propagate_a
+        if has_mma_support(self.arch):
+            return self.config.propagate_a
+        else:
+            return TransformKind.NonTransform
 
     @property
     def propagate_b(self):
-        return self.config.propagate_b
+        if has_mma_support(self.arch):
+            return self.config.propagate_b
+        else:
+            return TransformKind.NonTransform
 
     @property
     def layout(self):

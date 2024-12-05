@@ -172,8 +172,7 @@ class Operator(object):
         # Check if the platform is CUDA and we have an optimized function
         if is_cuda_arch(self.arch) or is_cdna_arch(self.arch):
             if self.scheduled_ir_module is None:
-                raise ValueError(
-                    f"No optimized function available for platform {self.arch.kind.name}")
+                raise ValueError(f"No optimized function available for platform {self.arch}")
 
             @tvm.register_func(func_name="tvm_callback_cuda_postproc", override=True)
             def tvm_callback_cuda_postproc(code, _):
@@ -217,7 +216,7 @@ class Operator(object):
             rt_mod = tvm.build(self.prim_func, target=target, name=self.name)
 
         # If the runtime module was successfully built, set up for evaluation
-        if rt_mod is not None and not is_cpu_arch(self.arch):
+        if rt_mod is not None:
             self.rt_mod = rt_mod
             # Initialize a time evaluator with the built module, specifying the device and the number of runs
             self.time_evaluator = rt_mod.time_evaluator(
@@ -233,8 +232,8 @@ class Operator(object):
                 self.lib_generator.compile_lib(with_tl=self.is_tilelang_backend())
                 self.lib = self.lib_generator.load_lib()
                 self.lib.init()
-            else:
-                raise ValueError(f"Unsupported target: {self.arch.kind.name}")
+            elif not is_cpu_arch(self.arch):
+                raise ValueError(f"Unsupported target: {self.arch}")
         return rt_mod
 
     def scheduler_with_default(self, scheduler: BaseScheduler):

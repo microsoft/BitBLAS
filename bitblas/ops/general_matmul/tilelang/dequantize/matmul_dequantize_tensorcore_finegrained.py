@@ -230,6 +230,7 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
                 storage_dtype=storage_dtype,
                 with_scaling=self.with_scaling,
                 with_zeros=self.with_zeros,
+                zeros_mode=self.zeros_mode,
             )
             import_source = lop3_intrin_info["c_source"]
             func_name = lop3_intrin_info["func_name"]
@@ -629,11 +630,6 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
         num_bits = self.num_bits
         return storage_nbit // num_bits
 
-    def __post_init__(self):
-        # Legalize group_size
-        if self.with_scaling and self.group_size == -1:
-            object.__setattr__(self, "group_size", self.K)
-
 
 @dataclass
 class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedScheduler):
@@ -782,6 +778,7 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
                 storage_dtype=storage_dtype,
                 with_scaling=self.with_scaling,
                 with_zeros=self.with_zeros,
+                zeros_mode=self.zeros_mode,
             )
             import_source = lop3_intrin_info["c_source"]
             func_name = lop3_intrin_info["func_name"]
@@ -921,8 +918,3 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
         storage_nbit = 4
         num_bits = self.num_bits
         return storage_nbit // num_bits
-
-    def __post_init__(self):
-        # Legalize group_size
-        if self.with_scaling and self.group_size == -1:
-            object.__setattr__(self, "group_size", self.K)

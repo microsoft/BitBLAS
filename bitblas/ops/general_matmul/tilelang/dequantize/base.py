@@ -71,3 +71,15 @@ class MatmulDequantizeBaseParams(BaseScheduler):
         fields = self.class_attributes
         field_str = ", ".join(f"{key}={value!r}" for key, value in fields.items())
         return f"{cls_name}({field_str})"
+
+    def __post_init__(self):
+        # Validate the matrix transpose settings
+        assert (self.trans_A is False), "Currently only support Matrix A not transposed"
+        assert (self.trans_B is True), "Currently only support Matrix B transposed"
+        assert (self.input_transform_kind == TransformKind.NonTransform
+               ), "Currently only support NonTransform for input"
+
+        # Legalize group_size
+        if self.with_scaling and self.group_size == -1:
+            object.__setattr__(self, "group_size", self.K)
+        return

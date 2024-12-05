@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from bitblas.tl.base_hint import BaseTLHint
 
 from .base import MatmulDequantizeBaseParams
+from .gemv_dequantize_simt import GemvDequantizeSIMTScheduler
 from .matmul_dequantize_simt import MatmulDequantizeSIMTScheduler
 from .matmul_dequantize_tensorcore import MatmulDequantizeBlockScheduler
 from .matmul_dequantize_tensorcore_finegrained import (
@@ -35,14 +36,28 @@ logger = logging.getLogger(__name__)
 class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
+    gemv_dequantize_simt_scheduler: Optional[GemvDequantizeSIMTScheduler] = None
     matmul_dequantize_simt_scheduler: Optional[MatmulDequantizeSIMTScheduler] = None
     matmul_dequantize_block_scheduler: Optional[MatmulDequantizeBlockScheduler] = None
     matmul_dequantize_fine_grained_scheduler: Optional[MatmulDequantizeFineGrainedScheduler] = None
+    matmul_dequantize_weight_propagation_scheduler: Optional[
+        MatmulDequantizeWeightPropagationScheduler] = None
+    matmul_int4_dequantize_fine_grain_scheduler: Optional[
+        MatmulINT4DequantizeFineGrainedScheduler] = None
+    matmul_int4_dequantize_weight_propagation_scheduler: Optional[
+        MatmulINT4DequantizeWeightPropagationScheduler] = None
 
     def __init__(self, **kwargs):
+        self.gemv_dequantize_simt_scheduler = GemvDequantizeSIMTScheduler(**kwargs)
         self.matmul_dequantize_simt_scheduler = MatmulDequantizeSIMTScheduler(**kwargs)
         self.matmul_dequantize_block_scheduler = MatmulDequantizeBlockScheduler(**kwargs)
         self.matmul_dequantize_fine_grained_scheduler = MatmulDequantizeFineGrainedScheduler(
+            **kwargs)
+        self.matmul_dequantize_weight_propagation_scheduler = MatmulDequantizeWeightPropagationScheduler(
+            **kwargs)
+        self.matmul_int4_dequantize_fine_grain_scheduler = MatmulINT4DequantizeFineGrainedScheduler(
+            **kwargs)
+        self.matmul_int4_dequantize_weight_propagation_scheduler = MatmulINT4DequantizeWeightPropagationScheduler(
             **kwargs)
 
         super().__init__(**kwargs)
@@ -68,7 +83,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
                                                                  == "int32" else [8, 16, 16])
             if (minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[1] > N or
                     minimal_tensorcore_threshold[2] > K):
-                return self.gemv_scheduler
+                return self.gemv_dequantize_simt_scheduler
             elif is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 if self.weight_transform_kind != TransformKind.NonTransform:
                     return self.matmul_weight_propagation_scheduler
@@ -103,11 +118,10 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
             minimal_tensorcore_threshold: List[int, int, int] = [8, 16, 16]
             if (minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[1] > N or
                     minimal_tensorcore_threshold[2] > K):
-                return self.gemv_scheduler
+                return self.gemv_dequantize_simt_scheduler
             elif is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 # Fine-grained scheduler (mma) is not supported for Volta
-                # return self.matmul_dequantize_block_scheduler
-                return self.matmul_dequantize_simt_scheduler
+                return self.matmul_dequantize_block_scheduler
             else:
                 return self.matmul_simt_scheduler
 
@@ -180,9 +194,13 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     def set_dynamic_range(self, dynamic_range: Dict[str, int]) -> "BaseScheduler":
         super().set_dynamic_range(dynamic_range)
         for scheduler in [
-            self.matmul_dequantize_simt_scheduler,
-            self.matmul_dequantize_block_scheduler,
-            self.matmul_dequantize_fine_grained_scheduler,
+                self.gemv_dequantize_simt_scheduler,
+                self.matmul_dequantize_simt_scheduler,
+                self.matmul_dequantize_block_scheduler,
+                self.matmul_dequantize_fine_grained_scheduler,
+                self.matmul_dequantize_weight_propagation_scheduler,
+                self.matmul_int4_dequantize_fine_grain_scheduler,
+                self.matmul_int4_dequantize_weight_propagation_scheduler,
         ]:
             scheduler.set_dynamic_range(dynamic_range)
         return self
@@ -190,9 +208,13 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     def with_arch(self, arch):
         super().with_arch(arch)
         for scheduler in [
-            self.matmul_dequantize_simt_scheduler,
-            self.matmul_dequantize_block_scheduler,
-            self.matmul_dequantize_fine_grained_scheduler,
+                self.gemv_dequantize_simt_scheduler,
+                self.matmul_dequantize_simt_scheduler,
+                self.matmul_dequantize_block_scheduler,
+                self.matmul_dequantize_fine_grained_scheduler,
+                self.matmul_dequantize_weight_propagation_scheduler,
+                self.matmul_int4_dequantize_fine_grain_scheduler,
+                self.matmul_int4_dequantize_weight_propagation_scheduler,
         ]:
             scheduler.with_arch(arch)
         return self
@@ -201,16 +223,6 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     def is_dynamic(self) -> bool:
         M, N, K = self.M, self.N, self.K
         return ((not isinstance(M, int)) or (not isinstance(N, int)) or (not isinstance(K, int)))
-
-    def __post_init__(self):
-        # Validate the matrix transpose settings
-        assert (self.trans_A is False), "Currently only support Matrix A not transposed"
-        assert (self.trans_B is True), "Currently only support Matrix B transposed"
-        assert self.with_bias is False, "Currently only support without bias"
-        assert (self.input_transform_kind == TransformKind.NonTransform
-               ), "Currently only support NonTransform for input"
-
-        return
 
 
 __all__ = ["MatmulDequantizeScheduler"]

@@ -131,11 +131,12 @@ def matmul_torch_forward_dequant(M,
                                  accum_dtype,
                                  out_dtype,
                                  layout,
-                                 with_bias,
-                                 group_size,
-                                 with_scaling,
-                                 with_zeros,
-                                 zeros_mode,
+                                 with_bias=False,
+                                 group_size=-1,
+                                 with_scaling=False,
+                                 with_zeros=False,
+                                 zeros_mode="original",
+                                 fast_decoding=True,
                                  propagate_b=None):
     import torch
     torch.random.manual_seed(0)
@@ -156,6 +157,7 @@ def matmul_torch_forward_dequant(M,
         with_scaling=with_scaling,
         with_zeros=with_zeros,
         zeros_mode=zeros_mode,
+        fast_decoding=fast_decoding,
         propagate_a=False,
         propagate_b=propagate_b,
     )
@@ -220,6 +222,8 @@ def matmul_torch_forward_dequant(M,
     matmul(*permuted_inputs[:-1], output=permuted_inputs[-1])
     print(permuted_inputs[-1])
     print(ref_result)
+    # print(matmul.get_source())
+    print(matmul.scheduled_ir_module)
     if zeros_mode == "rescale":
         torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
     else:
@@ -268,8 +272,22 @@ def test_matmul_torch_forward():
 
 
 def test_matmul_torch_dequant_forward():
-    matmul_torch_forward_dequant(1024, 1024, 1024, "float16", "int4", "float16", "float16", "nt",
-                                 None, None, None, None, None, False)
+    # GEMV Test
+    matmul_torch_forward_dequant(1, 256, 256, "float16", "uint4", "float16", "float16", "nt")
+    matmul_torch_forward_dequant(1, 256, 256, "float16", "uint4", "float16", "float16", "nt", fast_decoding=False)
+    matmul_torch_forward_dequant(1, 256, 256, "float16", "int4", "float16", "float16", "nt", group_size=-1, with_scaling=True)
+    matmul_torch_forward_dequant(1, 256, 256, "float16", "int4", "float16", "float16", "nt", group_size=32, with_scaling=True)
+    matmul_torch_forward_dequant(1, 256, 256, "float16", "uint4", "float16", "float16", "nt", group_size=32, with_scaling=True, with_zeros=True, zeros_mode="original")
+    matmul_torch_forward_dequant(1, 256, 256, "float16", "uint4", "float16", "float16", "nt", group_size=32, with_scaling=True, with_zeros=True, zeros_mode="rescale")
+    matmul_torch_forward_dequant(1, 256, 256, "float16", "uint4", "float16", "float16", "nt", group_size=32, with_scaling=True, with_zeros=True, zeros_mode="quantized")
+
+    # GEMM Test
+    matmul_torch_forward_dequant(256, 256, 256, "float16", "uint4", "float16", "float16", "nt", propagate_b=False)
+    matmul_torch_forward_dequant(256, 256, 256, "float16", "int4", "float16", "float16", "nt", group_size=-1, with_scaling=True)
+    matmul_torch_forward_dequant(256, 256, 256, "float16", "int4", "float16", "float16", "nt", group_size=32, with_scaling=True)
+    matmul_torch_forward_dequant(256, 256, 256, "float16", "uint4", "float16", "float16", "nt", group_size=32, with_scaling=True, with_zeros=True, zeros_mode="original")
+    matmul_torch_forward_dequant(256, 256, 256, "float16", "uint4", "float16", "float16", "nt", group_size=32, with_scaling=True, with_zeros=True, zeros_mode="rescale")
+    matmul_torch_forward_dequant(256, 256, 256, "float16", "uint4", "float16", "float16", "nt", group_size=32, with_scaling=True, with_zeros=True, zeros_mode="quantized")
 
 
 # fmt: on

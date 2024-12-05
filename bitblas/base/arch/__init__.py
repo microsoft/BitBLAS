@@ -54,6 +54,13 @@ def is_cdna_arch(arch: TileDevice) -> bool:
     return isinstance(arch, CDNA)
 
 
+def has_mma_support(arch: TileDevice) -> bool:
+    conditions = [True]
+    conditions.append(is_cuda_arch(arch))
+    conditions.append(arch.sm_version >= 80)
+    return all(conditions)
+
+
 def is_tensorcore_supported_precision(in_dtype: str, accum_dtype: str, arch: TileDevice) -> bool:
     volta_tensorcore_supported = [
         ("float16", "float32"),

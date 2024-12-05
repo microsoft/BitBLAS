@@ -140,6 +140,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                 storage_dtype=storage_dtype,
                 with_scaling=self.with_scaling,
                 with_zeros=self.with_zeros,
+                zeros_mode=self.zeros_mode,
                 storage_scope="warp",  # to get the ladder transform lop3 intrin
             )
             import_source = lop3_intrin_info["c_source"]
@@ -567,11 +568,6 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
 
         return new_indices
 
-    def __post_init__(self):
-        # Legalize group_size
-        if self.with_scaling and self.group_size == -1:
-            object.__setattr__(self, "group_size", self.K)
-
 
 @dataclass
 class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropagationScheduler):
@@ -739,6 +735,7 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
                 storage_dtype=storage_dtype,
                 with_scaling=self.with_scaling,
                 with_zeros=self.with_zeros,
+                zeros_mode=self.zeros_mode,
                 storage_scope="warp",  # to get the ladder transform lop3 intrin
             )
             import_source = lop3_intrin_info["c_source"]
@@ -886,8 +883,3 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
         storage_nbit = 4
         num_bits = self.num_bits
         return storage_nbit // num_bits
-
-    def __post_init__(self):
-        # Legalize group_size
-        if self.with_scaling and self.group_size == -1:
-            object.__setattr__(self, "group_size", self.K)

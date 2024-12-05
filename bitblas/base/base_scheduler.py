@@ -25,7 +25,7 @@ def maybe_simplify(self, func: Callable) -> Callable:
 @dataclass
 class BaseScheduler(ABC):
 
-    _arch : TileDevice = field(default=auto_infer_current_arch, init=False, repr=False)
+    _arch: TileDevice = field(default=auto_infer_current_arch, init=False, repr=False)
 
     _enable_simplify: bool = field(default=True, init=False, repr=False)
 
@@ -82,16 +82,16 @@ class BaseScheduler(ABC):
     def with_arch(self, arch: TileDevice) -> "BaseScheduler":
         self._arch = arch
         return self
-    
+
     def has_arch(self) -> bool:
         return self._arch is not None
-    
+
     def is_volta_arch(self) -> bool:
         return is_volta_arch(self._arch) if self._arch is not None else False
 
     def is_ampere_arch(self) -> bool:
         return is_ampere_arch(self._arch) if self._arch is not None else False
-    
+
     def is_cdna_arch(self) -> bool:
         return is_cdna_arch(self._arch) if self._arch is not None else False
 

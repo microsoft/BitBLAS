@@ -345,7 +345,7 @@ __device__ void decode_i4b_to_f16_scale_zeros_quantized(T1 *_i4s, T2 *B_local_de
     T3 const scale_r = *scale;
     uint const packed_scales = __pack_half2(scale_r, scale_r);
     // input zeros maybe int32(qzeros) or half format
-    T4 const zero_r = *zeros;
+    int16_t const zero_r = *((int16_t*)zeros);
     uint median_num = ((0xe400 | zero_r) << 16) | (0xe400 | zero_r);
 
 #pragma unroll
@@ -597,7 +597,7 @@ __device__ void decode_i2b_to_f16_scale_zeros_quantized(T1 *_i2s, T2 *B_local_de
     int16_t const i2s_i16 = *reinterpret_cast<int16_t *>(_i2s);
     T3 const scale_r = *scale;
     uint const packed_scales = __pack_half2(scale_r, scale_r);
-    T4 const zero_r = *zeros;
+    int16_t const zero_r = *((int16_t*)zeros);
     uint median_num = ((0xe400 | zero_r) << 16) | (0xe400 | zero_r);
 
     // decode 2 elems at one time.
@@ -1677,6 +1677,9 @@ def get_lop3_intrin_group(
     loop_extent = 128 // target_bits
     if source_format not in ["int", "uint"]:
         raise ValueError("Invalid source_format. Expected 'int' or 'uint'.")
+    if with_zeros and source_format == "int":
+        raise ValueError("Zeros are not supported for signed integers.")
+
     source_symbol = "i" if source_format == "int" else "u"
 
     _intrin = f"lop3_fast_decode_{source_symbol}{source_bit}_to_{storage_dtype}_to_{out_dtype}_l{loop_extent}_"

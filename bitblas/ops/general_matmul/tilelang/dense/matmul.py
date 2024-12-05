@@ -203,11 +203,11 @@ class MatmulScheduler(MatmulBaseParams):
     def with_arch(self, arch):
         super().with_arch(arch)
         for scheduler in [
-            self.gemv_scheduler,
-            self.matmul_simt_scheduler,
-            self.matmul_block_scheduler,
-            self.matmul_fine_grain_scheduler,
-            self.matmul_weight_propagation_scheduler,
+                self.gemv_scheduler,
+                self.matmul_simt_scheduler,
+                self.matmul_block_scheduler,
+                self.matmul_fine_grain_scheduler,
+                self.matmul_weight_propagation_scheduler,
         ]:
             scheduler.with_arch(arch)
         return self
