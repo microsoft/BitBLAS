@@ -6,7 +6,6 @@ from bitblas import MatmulConfig, Matmul
 import logging
 from bitblas import set_log_level
 from bitblas.builder.wrapper import TIRWrapper
-import tvm
 
 set_log_level(logging.DEBUG)
 
