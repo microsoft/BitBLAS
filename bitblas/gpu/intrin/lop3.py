@@ -297,8 +297,8 @@ __device__ void decode_i4b_to_f16_scale_zeros_rescale_offset(T1 *_i4s, T2 *B_loc
     // input zeros maybe int32(qzeros) or half format
     T3 const zeros_l = *zeros;
     T3 const zeros_r = *(zeros + offset);
-    uint const packed_zeros_l = __pack_half2(zeros_l, zeros_l);
-    uint const packed_zeros_r = __pack_half2(zeros_r, zeros_r);
+    uint const packed_zeros_l = 0x80008000 | __pack_half2(zeros_l, zeros_l);
+    uint const packed_zeros_r = 0x80008000 | __pack_half2(zeros_r, zeros_r);
 
 #pragma unroll
     // decode 2 elems at one time.
