@@ -222,6 +222,8 @@ def matmul_torch_forward_dequant(M,
     matmul(*permuted_inputs[:-1], output=permuted_inputs[-1])
     print(permuted_inputs[-1])
     print(ref_result)
+
+    # print source and ir
     # print(matmul.get_source())
     print(matmul.scheduled_ir_module)
     if zeros_mode == "rescale":

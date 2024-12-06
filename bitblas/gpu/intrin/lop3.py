@@ -370,6 +370,67 @@ __device__ void decode_i4u_to_f16_scale_zeros_quantized(storage_dtype *_i4u, tar
 }
 """
 
+decode_i4_to_f16_scale_zeros_quantized_offset = """
+template <typename T1, typename T2, typename T3, bool isSigned = false>
+__device__ void decode_i4b_to_f16_scale_zeros_quantized_offset(T1 *_i4s, T2 *B_local_decode, const int N = 8, const T3 *scale = nullptr, const T1 *qzeros = nullptr, const int scale_offset = 0, const int qzeros_offset = 0, const int group_offset = 0)
+{
+    uint *h = reinterpret_cast<uint *>(B_local_decode);
+
+    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
+    static constexpr uint BOTTOM_MASK = 0x000f000f;
+    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
+    // Minus 7 to scale the value to signed
+    uint const i4s = *reinterpret_cast<uint *>(_i4s);
+
+    T3 const scale_l = *scale;
+    T3 const scale_r = *(scale + scale_offset);
+    uint const packed_scales_l = __pack_half2(scale_l, scale_l);
+    uint const packed_scales_r = __pack_half2(scale_r, scale_r);
+    
+    const int num_elems_per_storage_dtype = sizeof(T1) * 8 / 4;
+
+    T1 const qzeros_l = *qzeros;
+    T1 const qzeros_r = *(qzeros + qzeros_offset);
+    int16_t const zero_l = (qzeros_l >> (group_offset * 4) & 0xf);
+    int16_t const zero_r = (qzeros_r >> (group_offset * 4) & 0xf);
+    
+    uint median_num_l = ((0xe400 | zero_l) << 16) | (0xe400 | zero_l);
+    uint median_num_r = ((0xe400 | zero_r) << 16) | (0xe400 | zero_r);
+
+    printf("thread Idx %d : num_elems_per_storage_dtype is %d zero_l is %d zero_r %d \\n", threadIdx.x, num_elems_per_storage_dtype, zero_l, zero_r);
+
+#pragma unroll
+    // decode 2 elems at one time.
+    for (int i = 0; i < (N / 2); i++)
+    {
+
+        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
+                     : "=r"(h[i])
+                     : "r"(i4s >> (4 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
+    }
+    #pragma unroll
+    for (int i = 0; i < (N / 4); i++)
+    {
+        asm volatile("add.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(median_num_l));
+
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_scales_l), "r"(0));
+    }
+#pragma unroll
+    for (int i = (N / 4); i < (N / 2); i++)
+    {
+        asm volatile("add.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(median_num_r));
+
+        asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(packed_scales_r), "r"(0));
+    }
+}
+
+template <typename storage_dtype, typename target_dtype, typename scale_dtype>
+__device__ void decode_i4u_to_f16_scale_zeros_quantized_offset(storage_dtype *_i4u, target_dtype *B_local_decode, scale_dtype *scale = nullptr, storage_dtype *qzeros = nullptr, const int scale_offset = 0, const int zero_offset = 0, const int group_offset = 0, const int N = 8)
+{
+    decode_i4b_to_f16_scale_zeros_quantized_offset<storage_dtype, target_dtype, scale_dtype, false>(_i4u, B_local_decode, N, scale, qzeros, scale_offset, zero_offset, group_offset);
+}
+"""
+
 decode_i2_to_f16 = """
 template <typename T1, typename T2, bool isSigned = false>
 __device__ void decode_i2b_to_f16(T1 *_i2s, T2 *B_local_decode, const int N = 8)
@@ -1708,6 +1769,7 @@ def get_lop3_intrin_group(
         "i1_to_f16_scale_zeros_rescale": decode_i1_to_f16_scale_zeros_rescale,
         "i4_to_f16_scale_zeros_quantized": decode_i4_to_f16_scale_zeros_quantized,
         "i2_to_f16_scale_zeros_quantized": decode_i2_to_f16_scale_zeros_quantized,
+        "i4_to_f16_scale_zeros_quantized_offset": decode_i4_to_f16_scale_zeros_quantized_offset,
         "i1_to_i8": decode_i1s_to_i8s,
         "i2_to_i8": decode_i2s_to_i8s,
         "i4_to_i8": decode_i4s_to_i8s,

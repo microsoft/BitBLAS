@@ -61,7 +61,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         assert trans_A is False, "Dequantize only implement for trans_A=False currently"
         assert trans_B is True, "Dequantize only implement for trans_B=TRue currently"
         assert (weight_transform_kind == TransformKind.LDMatrixTransform
-               ), "Dequantize only implement for LDMatrixTransform currently"
+               ), f"Dequantize only implement for LDMatrixTransform currently, got {weight_transform_kind}"
 
         in_dtype, out_dtype, accum_dtype = (
             self.in_dtype,
@@ -493,6 +493,8 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                     matrix_name="B",
                     group_size=group_size,
                 )
+                qzeros_remapped_i, qzeros_remapped_j = remapped_j, remapped_i
+
                 if not with_scaling:
                     T.call_extern(
                         func_name,
@@ -523,7 +525,27 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                         dtype=in_dtype,
                     )
                 else:
-                    raise ValueError(f"Unsupported zeros_mode: {zeros_mode}")
+                    T.call_extern(
+                        func_name,
+                        T.address_of(
+                            compressed_weight_local[
+                                j * local_size // num_elems_per_byte
+                            ]
+                        ),
+                        T.address_of(dequant_weight_local[j * local_size]),
+                        T.address_of(scale_buffer[remapped_i, remapped_j]),
+                        T.address_of(
+                            qzeros_buffer[
+                                qzeros_remapped_i,
+                                (qzeros_remapped_j // num_elems_per_byte),
+                            ]
+                        ),
+                        local_size * grouped_k,
+                        local_size // num_elems_per_byte,
+                        qzeros_remapped_j % num_elems_per_byte,
+                        local_size,
+                        dtype=in_dtype,
+                    )
 
         return _normal_fast_dequant_impl(
             compressed_weight_local,
@@ -654,7 +676,7 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
         assert trans_A is False, "Dequantize only implement for trans_A=False currently"
         assert trans_B is True, "Dequantize only implement for trans_B=TRue currently"
         assert (weight_transform_kind == TransformKind.LDMatrixTransform
-               ), "Dequantize only implement for LDMatrixTransform currently"
+               ), f"Dequantize only implement for LDMatrixTransform currently, got {weight_transform_kind}"
 
         in_dtype, out_dtype, accum_dtype = (
             self.in_dtype,

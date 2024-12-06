@@ -122,11 +122,11 @@ class MatmulConfig(OperatorConfig):
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
 
         if (self.M == 1 or (self.N % MICRO_KERNEL_SIZE) != 0 or (self.K % MICRO_KERNEL_SIZE) != 0 or
-                isinstance(self.M, Tuple) or (self.with_zeros and self.zeros_mode == "quantized")):
+                isinstance(self.M, Tuple)):
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
             object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
         else:
-            object.__setattr__(self, "propagate_b", TransformKind.IntraWarpTransform)
+            object.__setattr__(self, "propagate_b", TransformKind.LDMatrixTransform)
 
         # set a and b value if is not None
         if propagate_a is not None:

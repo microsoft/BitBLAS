@@ -72,25 +72,43 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
             self.in_dtype,
             self.accum_dtype,
         )
+        weight_transform_kind = self.weight_transform_kind
         if is_dynamic:
             # Dynamic Dispatcher
             if is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
-                return self.matmul_fine_grain_scheduler
+                if weight_transform_kind != TransformKind.NonTransform:
+                    # INT4 Can be fused into general dequantize
+                    return (self.matmul_int4_dequantize_weight_propagation_scheduler if in_dtype
+                            == "int4" else self.matmul_dequantize_weight_propagation_scheduler)
+                else:
+                    return self.matmul_int4_dequantize_fine_grain_scheduler if in_dtype == "int4" else self.matmul_dequantize_fine_grained_scheduler
             else:
-                return self.matmul_simt_scheduler
+                if in_dtype == "int4":
+                    raise ValueError("INT4 is not supported for non-TensorCore architectures")
+                if weight_transform_kind != TransformKind.NonTransform:
+                    raise ValueError(
+                        "Weight propagation is not supported for non-TensorCore architectures")
+                return self.matmul_dequantize_simt_scheduler
         else:
             minimal_tensorcore_threshold: List[int, int, int] = ([8, 16, 32] if accum_dtype
                                                                  == "int32" else [8, 16, 16])
             if (minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[1] > N or
                     minimal_tensorcore_threshold[2] > K):
+                if in_dtype == "int4":
+                    raise ValueError("INT4 is not supported for non-TensorCore architectures")
+                if weight_transform_kind != TransformKind.NonTransform:
+                    raise ValueError(
+                        "Weight propagation is not supported for non-TensorCore architectures")
                 return self.gemv_dequantize_simt_scheduler
             elif is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 if self.weight_transform_kind != TransformKind.NonTransform:
-                    return self.matmul_weight_propagation_scheduler
+                    return (
+                        self.matmul_int4_dequantize_weight_propagation_scheduler
+                    ) if in_dtype == "int4" else self.matmul_dequantize_weight_propagation_scheduler
                 else:
-                    return self.matmul_fine_grain_scheduler
+                    return self.matmul_int4_dequantize_fine_grain_scheduler if in_dtype == "int4" else self.matmul_dequantize_fine_grained_scheduler
             else:
-                return self.matmul_simt_scheduler
+                return self.matmul_dequantize_simt_scheduler
 
     def dispatch_volta_scheduler(self, arch: TileDevice) -> BaseScheduler:
         M = self.maybe_dynamic(self.M, "m")
@@ -113,7 +131,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
             if is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 return self.matmul_dequantize_block_scheduler
             else:
-                return self.matmul_simt_scheduler
+                return self.matmul_dequantize_simt_scheduler
         else:
             minimal_tensorcore_threshold: List[int, int, int] = [8, 16, 16]
             if (minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[1] > N or
@@ -123,7 +141,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
                 # Fine-grained scheduler (mma) is not supported for Volta
                 return self.matmul_dequantize_block_scheduler
             else:
-                return self.matmul_simt_scheduler
+                return self.matmul_dequantize_simt_scheduler
 
     def dispatch_scheduler(self, arch: TileDevice) -> BaseScheduler:
         if is_ampere_arch(arch):
