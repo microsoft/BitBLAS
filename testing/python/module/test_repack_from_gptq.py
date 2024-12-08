@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+import bitblas.testing
 import torch
 
 try:

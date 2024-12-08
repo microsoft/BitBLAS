@@ -35,6 +35,9 @@ warp_size = 32
 @dataclass
 class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedScheduler):
 
+    # force set default weight transform kind to LDMatrixTransform
+    weight_transform_kind: TransformKind = TransformKind.LDMatrixTransform
+
     def apply_config(
         self,
         block_row_warps: Optional[int] = None,

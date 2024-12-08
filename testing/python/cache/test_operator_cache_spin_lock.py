@@ -2,6 +2,7 @@ import pytest
 import os
 import torch
 import bitblas
+import bitblas.testing
 import threading
 from bitblas import Matmul, MatmulConfig
 from bitblas.cache import global_operator_cache

@@ -64,10 +64,14 @@ class MatmulScheduler(MatmulBaseParams):
             self.in_dtype,
             self.accum_dtype,
         )
+        weight_transform_kind = self.weight_transform_kind
         if is_dynamic:
             # Dynamic Dispatcher
             if is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
-                return self.matmul_fine_grain_scheduler
+                if weight_transform_kind != TransformKind.NonTransform:
+                    # INT4 Can be fused into general dequantize
+                    return self.matmul_int4_weight_propagation_scheduler if in_dtype == "int4" else self.matmul_weight_propagation_scheduler
+                return self.matmul_int4_fine_grain_scheduler if in_dtype == "int4" else self.matmul_fine_grain_scheduler
             else:
                 return self.matmul_simt_scheduler
         else:
@@ -76,12 +80,21 @@ class MatmulScheduler(MatmulBaseParams):
                                                       ] if accum_dtype == "int32" else [8, 16, 16]
             if minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[
                     1] > N or minimal_tensorcore_threshold[2] > K:
+                if in_dtype == "int4":
+                    raise ValueError("INT4 is not supported for non-TensorCore architectures")
+                if weight_transform_kind != TransformKind.NonTransform:
+                    raise ValueError(
+                        "Weight propagation is not supported for non-TensorCore architectures")
                 return self.gemv_scheduler
             elif is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 if self.weight_transform_kind != TransformKind.NonTransform:
-                    return self.matmul_weight_propagation_scheduler
+                    return (
+                        self.matmul_int4_weight_propagation_scheduler
+                        if in_dtype == "int4"
+                        else self.matmul_weight_propagation_scheduler
+                    )
                 else:
-                    return self.matmul_fine_grain_scheduler
+                    return self.matmul_int4_fine_grain_scheduler if in_dtype == "int4" else self.matmul_block_scheduler
             else:
                 return self.matmul_simt_scheduler
 
@@ -128,11 +141,13 @@ class MatmulScheduler(MatmulBaseParams):
 
     def detect_scheduler_from_hint(self, hint: BaseTLHint) -> BaseScheduler:
         for scheduler in [
-                self.gemv_scheduler,
-                self.matmul_simt_scheduler,
-                self.matmul_block_scheduler,
-                self.matmul_fine_grain_scheduler,
-                self.matmul_weight_propagation_scheduler,
+            self.gemv_scheduler,
+            self.matmul_simt_scheduler,
+            self.matmul_block_scheduler,
+            self.matmul_fine_grain_scheduler,
+            self.matmul_weight_propagation_scheduler,
+            self.matmul_int4_fine_grain_scheduler,
+            self.matmul_int4_weight_propagation_scheduler,
         ]:
             if isinstance(hint, scheduler.TLHint):
                 return scheduler
@@ -191,11 +206,13 @@ class MatmulScheduler(MatmulBaseParams):
     def set_dynamic_range(self, dynamic_range: Dict[str, int]) -> "BaseScheduler":
         super().set_dynamic_range(dynamic_range)
         for scheduler in [
-                self.gemv_scheduler,
-                self.matmul_simt_scheduler,
-                self.matmul_block_scheduler,
-                self.matmul_fine_grain_scheduler,
-                self.matmul_weight_propagation_scheduler,
+            self.gemv_scheduler,
+            self.matmul_simt_scheduler,
+            self.matmul_block_scheduler,
+            self.matmul_fine_grain_scheduler,
+            self.matmul_weight_propagation_scheduler,
+            self.matmul_int4_fine_grain_scheduler,
+            self.matmul_int4_weight_propagation_scheduler,
         ]:
             scheduler.set_dynamic_range(dynamic_range)
         return self
@@ -203,11 +220,13 @@ class MatmulScheduler(MatmulBaseParams):
     def with_arch(self, arch):
         super().with_arch(arch)
         for scheduler in [
-                self.gemv_scheduler,
-                self.matmul_simt_scheduler,
-                self.matmul_block_scheduler,
-                self.matmul_fine_grain_scheduler,
-                self.matmul_weight_propagation_scheduler,
+            self.gemv_scheduler,
+            self.matmul_simt_scheduler,
+            self.matmul_block_scheduler,
+            self.matmul_fine_grain_scheduler,
+            self.matmul_weight_propagation_scheduler,
+            self.matmul_int4_fine_grain_scheduler,
+            self.matmul_int4_weight_propagation_scheduler,
         ]:
             scheduler.with_arch(arch)
         return self

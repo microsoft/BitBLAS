@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+import bitblas.testing
 from bitblas import MatmulConfig, Matmul
 import logging
 from bitblas import set_log_level
@@ -166,33 +167,28 @@ def matmul_torch_forward_dequant(M,
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
     output_shape = (M, N)
-    inputs = []
-    inputs.append(torch.rand(input_shape, dtype=torch.float16).cuda() - 0.5)
+
+    A = torch.rand(input_shape, dtype=torch.float16).cuda() - 0.5
+
     source_format, bit = matmul.BITBLAS_TRICK_DTYPE_MAP[W_dtype]
     maxq = 2**(bit - 1)
     zeros = maxq
     if source_format == "uint":
-        inputs.append(torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda())
+        intweight = torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda()
     elif source_format == "int":
-        inputs.append(torch.randint(-maxq, maxq, weight_shape, dtype=torch.int8).cuda())
+        intweight = torch.randint(-maxq, maxq, weight_shape, dtype=torch.int8).cuda()
     else:
         raise NotImplementedError
 
-    inputs.append(torch.rand(output_shape, dtype=torch.float16).cuda())
+    ref_inputs = []
+    ref_inputs.append(A)
+    ref_inputs.append(intweight)
 
-    intweight = inputs[1]
-    intweight = intweight.cpu().to(torch.int8)
     if source_format == "int":
         intweight = intweight + maxq
-    if with_zeros:
-        inputs[1] = inputs[1] - zeros
-    bias = torch.rand((output_shape[-1],), dtype=torch.float16).cuda()
-    ref_result = torch.matmul(inputs[0],
-                              (inputs[1].t() if layout == "nt" else inputs[1]).to(torch.float16))
-    if with_bias:
-        ref_result = ref_result + bias
+
     permuted_inputs = []
-    permuted_inputs.append(inputs[0])
+    permuted_inputs.append(A)
     if matmul.weight_transform is not None:
         permuted_inputs.append(matmul.weight_transform(intweight.cpu()).cuda())
     else:
@@ -200,7 +196,8 @@ def matmul_torch_forward_dequant(M,
     if with_scaling:
         if group_size == -1:
             group_size = K
-        permuted_inputs.append(torch.ones([N, K // group_size], dtype=torch.float16).cuda())
+        permuted_inputs.append(torch.rand([N, K // group_size], dtype=torch.float16).cuda())
+        ref_inputs.append(permuted_inputs[-1])
     if with_zeros:
         if zeros_mode == "original":
             permuted_inputs.append(
@@ -216,20 +213,75 @@ def matmul_torch_forward_dequant(M,
             permuted_inputs.append(torch.from_numpy(qzeros).cuda())
         else:
             raise NotImplementedError
+        ref_inputs.append(permuted_inputs[-1])
+    
+    C = torch.zeros(output_shape, dtype=torch.float16).cuda()
+    Bias = torch.rand((output_shape[-1],), dtype=torch.float16).cuda()
+    
     if with_bias:
-        permuted_inputs.append(bias)
-    permuted_inputs.append(inputs[2])
-    matmul(*permuted_inputs[:-1], output=permuted_inputs[-1])
-    print(permuted_inputs[-1])
-    print(ref_result)
+        permuted_inputs.append(Bias)
+        ref_inputs.append(Bias)
 
+    permuted_inputs.append(C)
+    matmul(*permuted_inputs[:-1], output=permuted_inputs[-1])
+    
+    def ref_program(A, intweight, scale=None, zeros=None, Bias=None):
+        import torch
+        
+        B = intweight
+        _, K = B.shape
+
+        if with_scaling:
+            # Calculate group indices for each column (group_size determines the grouping)
+            group_indices = torch.arange(K, device=B.device) // group_size
+
+            # Broadcast zeros and scale to match the shape of B
+            scale_expanded = scale[:, group_indices]  # Shape: [N, K]
+
+            if with_zeros:            
+                if zeros_mode == "original":
+                    zeros_expanded = zeros[:, group_indices]  # Shape: [N, K]
+                    # Subtract zeros and then scale
+                    rescale_b = (B - zeros_expanded) * scale_expanded
+                elif zeros_mode == "rescale":
+                    zeros_expanded = zeros[:, group_indices]  # Shape: [N, K]
+                    # Scale first and then add zeros
+                    rescale_b = B * scale_expanded - zeros_expanded
+                elif zeros_mode == "quantized":
+                    dequant_zeros = (
+                        torch.zeros(zeros.shape[0], zeros.shape[1] * 8 // 4,
+                                    dtype=torch.half).to(torch.half).to(zeros.device))
+                    for i in range(dequant_zeros.shape[0]):
+                        for j in range(dequant_zeros.shape[1]):
+                            dequant_zeros[i][j] = ((zeros[i][j // 2] >> (4 * (j % 2))) & 0xF).to(torch.half)
+                    zeros_expanded = dequant_zeros[group_indices, :]  # Shape: [N, K]
+                    # Subtract zeros and then scale
+                    rescale_b = (B - zeros_expanded) * scale_expanded
+                else:
+                    # Raise an error for unsupported zeros_mode
+                    raise NotImplementedError(f"Unsupported zeros_mode: {zeros_mode}")
+            else:
+                # Apply scaling without zeros adjustment
+                rescale_b = B * scale_expanded
+        else:
+            # If scaling is disabled, directly use B
+            rescale_b = B
+
+        C = torch.matmul(A.to(torch.float), rescale_b.T.to(torch.float))
+        C = C.to(torch.__getattribute__(out_dtype))
+        if with_bias:
+            C = C + Bias
+        return C
+    
+    print("Ref result:")
+    ref_result = ref_program(*ref_inputs)
+    print(ref_result)
+    print("Bitblas result:")
+    print(permuted_inputs[-1])
     # print source and ir
     # print(matmul.get_source())
-    print(matmul.scheduled_ir_module)
-    if zeros_mode == "rescale":
-        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
-    else:
-        torch.testing.assert_close(permuted_inputs[-1], ref_result, rtol=1e2, atol=1e0)
+    # print(matmul.scheduled_ir_module)
+    bitblas.testing.torch_assert_close(permuted_inputs[-1], ref_result, rtol=1e-2, atol=1e-2, max_mismatched_ratio=0.05)
 
 
 def test_matmul_codegen_default():

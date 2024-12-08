@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+import bitblas.testing
 import torch
 from bitblas.gpu.matmul_analysis import (get_ladder_stage3_map)
 

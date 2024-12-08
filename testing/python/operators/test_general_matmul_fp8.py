@@ -1,5 +1,6 @@
 import torch
 import bitblas
+import bitblas.testing
 from bitblas import MatmulConfig, Matmul
 import logging
 from bitblas import set_log_level

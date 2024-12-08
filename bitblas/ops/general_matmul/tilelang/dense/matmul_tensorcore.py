@@ -552,6 +552,9 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
 @dataclass
 class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
 
+    # force set default weight transform kind to LDMatrixTransform
+    weight_transform_kind: TransformKind = TransformKind.LDMatrixTransform
+
     def apply_config(
         self,
         block_row_warps=2,

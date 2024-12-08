@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+import bitblas.testing
 from bitblas import FlashAttenConfig, FlashAtten
 import logging
 from bitblas import set_log_level

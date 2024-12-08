@@ -397,8 +397,6 @@ __device__ void decode_i4b_to_f16_scale_zeros_quantized_offset(T1 *_i4s, T2 *B_l
     uint median_num_l = ((0xe400 | zero_l) << 16) | (0xe400 | zero_l);
     uint median_num_r = ((0xe400 | zero_r) << 16) | (0xe400 | zero_r);
 
-    printf("thread Idx %d : num_elems_per_storage_dtype is %d zero_l is %d zero_r %d \\n", threadIdx.x, num_elems_per_storage_dtype, zero_l, zero_r);
-
 #pragma unroll
     // decode 2 elems at one time.
     for (int i = 0; i < (N / 2); i++)

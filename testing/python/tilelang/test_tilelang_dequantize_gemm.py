@@ -3,6 +3,7 @@
 import torch
 import torch.backends
 import bitblas
+import bitblas.testing
 from bitblas import tvm as tvm
 from tvm import DataType
 from tvm import tl as TL

@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+import bitblas.testing
 from bitblas import tvm as tvm
 from bitblas import MatmulConfig, Matmul
 import logging
@@ -48,7 +49,7 @@ def matmul_backend_code_wrap(
     assert "void call" in wrapped_code
 
 
-@tvm.testing.requires_rocm
+@bitblas.testing.requires_rocm
 def test_matmul_transform_weight():
     matmul_backend_code_wrap(128, 128, 128, "float16", "float16", "float16", "float16", False)
     matmul_backend_code_wrap(1, 256, 256, "float16", "float16", "uint4", "float16", False)

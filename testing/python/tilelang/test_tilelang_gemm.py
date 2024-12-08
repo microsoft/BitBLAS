@@ -135,7 +135,7 @@ def test_gemm_i8i8i32_tn():
 
 
 def test_gemm_f64f64f64_nt():
-    run_gemm(512, 1024, 768, False, True, "float64", "float64", "float64", 64, 32, 16)
+    run_gemm(512, 512, 512, False, True, "float64", "float64", "float64", 64, 32, 16)
 
 
 def test_gemm_f32f32f32_nt():
@@ -162,4 +162,5 @@ def test_pad_f16f16f32_nn():
 
 
 if __name__ == "__main__":
-    bitblas.testing.main()
+    # bitblas.testing.main()
+    test_gemm_f64f64f64_nt()

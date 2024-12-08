@@ -2,6 +2,7 @@
 # Licensed under the MIT License.
 
 import bitblas
+import bitblas.testing
 from bitblas.ops.general_matmul_splitk import MatmulWithSplitK, MatmulConfigWithSplitK
 
 

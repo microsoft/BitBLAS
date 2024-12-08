@@ -1,5 +1,6 @@
 import torch
 import bitblas
+import bitblas.testing
 from bitblas import MatmulConfig, Matmul
 import logging
 from bitblas import set_log_level
@@ -50,14 +51,6 @@ def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
     new_torch_b = matmul.transform_weight(torch_b)
     bitblas_out = matmul(torch_a, new_torch_b)
     print("bitblas_out", bitblas_out)
-
-
-# @bitblas.testing.requires_cuda_compute_version(8, 0)
-# def test_matmul_torch_forward():
-#     matmul_torch_forward(1, 1024, 1024, "bfloat16", "bfloat16", "float32", "float32", "nt", None,
-#                          None, None, None, None)
-#     matmul_torch_forward(1024, 1024, 1024, "bfloat16", "bfloat16", "float32", "float32", "nt", None,
-#                          None, None, None, None)
 
 
 def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype,
