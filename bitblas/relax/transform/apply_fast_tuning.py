@@ -136,7 +136,7 @@ class ApplyFastTuning:  # pylint: disable=too-few-public-methods
                         trace.apply_to_schedule(sch, remove_postproc=False)
                         updated_functions[g_var] = sch.mod["main"].with_attr("tir.is_scheduled", 1)
                         continue
-                
+
                 specalized_function = func.with_attr("global_symbol", g_var.name_hint)
 
                 if check_func_with_dynamic(specalized_function):
