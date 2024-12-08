@@ -1,149 +1,149 @@
-# name: Benchmark
+name: Benchmark
 
-# on:
-#   issue_comment:
-#     types: created
+on:
+  issue_comment:
+    types: created
 
-# jobs:
-#   benchmark_base:
-#     # On pull requests and if the comment starts with `/run-benchmark`
-#     if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/run-benchmark')
-#     runs-on: self-hosted
+jobs:
+  benchmark_base:
+    # On pull requests and if the comment starts with `/run-benchmark`
+    if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/run-benchmark')
+    runs-on: self-hosted
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
-#         with:
-#           ref: main
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: main
 
-#       - name: Get base branch commit ID
-#         id: get_base_commit
-#         run: echo "BASE_COMMIT_ID=$(git rev-parse HEAD)" > base_commit_id.txt
+      - name: Get base branch commit ID
+        id: get_base_commit
+        run: echo "BASE_COMMIT_ID=$(git rev-parse HEAD)" > base_commit_id.txt
 
-#       - name: Upload base commit ID
-#         uses: actions/upload-artifact@v3
-#         with:
-#           name: base-commit-id
-#           path: base_commit_id.txt
+      - name: Upload base commit ID
+        uses: actions/upload-artifact@v4
+        with:
+          name: base-commit-id
+          path: base_commit_id.txt
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v2
-#         with:
-#           python-version: '3.9'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
 
-#       - name: Create virtual environment
-#         run: python -m venv bitblas_benchmark
+      - name: Create virtual environment
+        run: python -m venv bitblas_benchmark
 
-#       - name: Activate virtual environment and install dependencies
-#         run: |
-#           source bitblas_benchmark/bin/activate
-#           python -m pip install --upgrade pip
-#           if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
+      - name: Activate virtual environment and install dependencies
+        run: |
+          source bitblas_benchmark/bin/activate
+          python -m pip install --upgrade pip
+          if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
 
-#       - name: Install project in wheel mode
-#         run: |
-#           source bitblas_benchmark/bin/activate
-#           python -m pip install .
+      - name: Install project in wheel mode
+        run: |
+          source bitblas_benchmark/bin/activate
+          python -m pip install .
       
-#       - name: Matmul Benchmark
-#         run: |
-#           source bitblas_benchmark/bin/activate
-#           cd benchmark/operators
-#           python ./benchmark_ops_matmul.py
+      - name: Matmul Benchmark
+        run: |
+          source bitblas_benchmark/bin/activate
+          cd benchmark/operators
+          python ./benchmark_ops_matmul.py
 
-#   benchmark_head:
-#     # On pull requests and if the comment starts with `/run-benchmark`
-#     if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/run-benchmark')
-#     runs-on: self-hosted
-#     needs: [benchmark_base]
+  benchmark_head:
+    # On pull requests and if the comment starts with `/run-benchmark`
+    if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/run-benchmark')
+    runs-on: self-hosted
+    needs: [benchmark_base]
 
-#     steps:
-#       - name: Checkout PR branch code
-#         uses: actions/checkout@v2
-#         with:
-#           fetch-depth: 0
-#           ref: ${{ github.event.pull_request.head.ref }}
+    steps:
+      - name: Checkout PR branch code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
 
-#       - name: Get PR branch commit ID
-#         id: get_pr_commit
-#         run: echo "PR_COMMIT_ID=$(git rev-parse HEAD)" > pr_commit_id.txt
+      - name: Get PR branch commit ID
+        id: get_pr_commit
+        run: echo "PR_COMMIT_ID=$(git rev-parse HEAD)" > pr_commit_id.txt
 
-#       - name: Upload PR commit ID
-#         uses: actions/upload-artifact@v3
-#         with:
-#           name: pr-commit-id
-#           path: pr_commit_id.txt
+      - name: Upload PR commit ID
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-commit-id
+          path: pr_commit_id.txt
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v2
-#         with:
-#           python-version: '3.9'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
 
-#       - name: Create virtual environment
-#         run: python -m venv bitblas_benchmark
+      - name: Create virtual environment
+        run: python -m venv bitblas_benchmark
 
-#       - name: Activate virtual environment and install dependencies
-#         run: |
-#           source bitblas_benchmark/bin/activate
-#           python -m pip install --upgrade pip
-#           if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
+      - name: Activate virtual environment and install dependencies
+        run: |
+          source bitblas_benchmark/bin/activate
+          python -m pip install --upgrade pip
+          if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
 
-#       - name: Install project in wheel mode
-#         run: |
-#           source bitblas_benchmark/bin/activate
-#           python -m pip install .
+      - name: Install project in wheel mode
+        run: |
+          source bitblas_benchmark/bin/activate
+          python -m pip install .
       
-#       - name: Matmul Benchmark
-#         run: |
-#           source bitblas_benchmark/bin/activate
-#           cd benchmark/operators
-#           python ./benchmark_ops_matmul.py
+      - name: Matmul Benchmark
+        run: |
+          source bitblas_benchmark/bin/activate
+          cd benchmark/operators
+          python ./benchmark_ops_matmul.py
 
-#   benchmark_compare:
-#     if: github.event.issue.pull_request != null && contains(github.event.comment.body, '/run-benchmark')
-#     needs: [benchmark_base, benchmark_head]
-#     runs-on: self-hosted
+  benchmark_compare:
+    if: github.event.issue.pull_request != null && contains(github.event.comment.body, '/run-benchmark')
+    needs: [benchmark_base, benchmark_head]
+    runs-on: self-hosted
 
-#     steps:
-#       - name: Download commit IDs
-#         uses: actions/download-artifact@v4.1.7
-#         with:
-#           name: base-commit-id
-#           path: .
+    steps:
+      - name: Download commit IDs
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: base-commit-id
+          path: .
 
-#       - name: Download PR commit ID
-#         uses: actions/download-artifact@v4.1.7
-#         with:
-#           name: pr-commit-id
-#           path: .
+      - name: Download PR commit ID
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: pr-commit-id
+          path: .
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v2
-#         with:
-#           python-version: '3.9'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
 
-#       - name: Create virtual environment
-#         run: python -m venv bitblas_benchmark
+      - name: Create virtual environment
+        run: python -m venv bitblas_benchmark
 
-#       - name: Activate virtual environment and install dependencies
-#         run: |
-#           source bitblas_benchmark/bin/activate
-#           python -m pip install --upgrade pip
-#           if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
+      - name: Activate virtual environment and install dependencies
+        run: |
+          source bitblas_benchmark/bin/activate
+          python -m pip install --upgrade pip
+          if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
 
-#       - name: Compare benchmark results
-#         run: |
-#           source bitblas_benchmark/bin/activate
-#           cd benchmark/operators
-#           python ./compare_benchmark.py --base $(cat base_commit_id.txt) --head $(cat pr_commit_id.txt) 2>&1 | tee compare_results.txt
+      - name: Compare benchmark results
+        run: |
+          source bitblas_benchmark/bin/activate
+          cd benchmark/operators
+          python ./compare_benchmark.py --base $(cat base_commit_id.txt) --head $(cat pr_commit_id.txt) 2>&1 | tee compare_results.txt
 
-#       - name: Authenticate GitHub CLI
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#         run: |
-#           echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+      - name: Authenticate GitHub CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
-#       - name: Post benchmark results
-#         run: |
-#           cat compare_results.txt
-#           gh pr comment ${{ github.event.issue.number }} --body "$(cat compare_results.txt)"
+      - name: Post benchmark results
+        run: |
+          cat compare_results.txt
+          gh pr comment ${{ github.event.issue.number }} --body "$(cat compare_results.txt)"
