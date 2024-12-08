@@ -6,5 +6,5 @@ cd BitBLAS/docker
 # build the image, this may take a while (around 10+ minutes on our test machine)
 docker build -t bitblas_cuda -f Dockerfile.cu120 .
 # run the container
-nvidia-docker run -it --cap-add=SYS_ADMIN --network=host --gpus all --cap-add=SYS_PTRACE --shm-size=4G --security-opt seccomp=unconfined --security-opt apparmor=unconfined --name ladder_test ladder_cuda bash
+docker run -it --cap-add=SYS_ADMIN --network=host --gpus all --cap-add=SYS_PTRACE --shm-size=4G --security-opt seccomp=unconfined --security-opt apparmor=unconfined --name bitblas_test bitblas_cuda bash
 ```
