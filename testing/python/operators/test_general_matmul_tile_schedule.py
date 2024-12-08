@@ -10,6 +10,7 @@ from bitblas.ops.general_matmul.tirscript import (
 import logging
 from bitblas import set_log_level
 import numpy as np
+
 print("bitblas. path is ", bitblas.__path__)
 np.random.seed(0)
 
@@ -443,7 +444,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
 
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
-    
+
     a = torch.randn(input_shape, dtype=torch.float16).cuda() - 0.5
     weight_shape = (N, K)
     maxq = 2**(bit - 1)
@@ -533,7 +534,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
 
     def ref_program(A, intweight, scale=None, zeros=None, Bias=None):
         import torch
-        
+
         B = intweight
         _, K = B.shape
 
@@ -544,7 +545,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
             # Broadcast zeros and scale to match the shape of B
             scale_expanded = scale[:, group_indices]  # Shape: [N, K]
 
-            if with_zeros:            
+            if with_zeros:
                 if zeros_mode == "original":
                     zeros_expanded = zeros[:, group_indices]  # Shape: [N, K]
                     # Subtract zeros and then scale

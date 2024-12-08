@@ -162,5 +162,4 @@ def test_pad_f16f16f32_nn():
 
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_gemm_f64f64f64_nt()
+    bitblas.testing.main()

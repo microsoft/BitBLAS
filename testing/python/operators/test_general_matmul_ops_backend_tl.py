@@ -214,20 +214,20 @@ def matmul_torch_forward_dequant(M,
         else:
             raise NotImplementedError
         ref_inputs.append(permuted_inputs[-1])
-    
+
     C = torch.zeros(output_shape, dtype=torch.float16).cuda()
     Bias = torch.rand((output_shape[-1],), dtype=torch.float16).cuda()
-    
+
     if with_bias:
         permuted_inputs.append(Bias)
         ref_inputs.append(Bias)
 
     permuted_inputs.append(C)
     matmul(*permuted_inputs[:-1], output=permuted_inputs[-1])
-    
+
     def ref_program(A, intweight, scale=None, zeros=None, Bias=None):
         import torch
-        
+
         B = intweight
         _, K = B.shape
 
@@ -238,7 +238,7 @@ def matmul_torch_forward_dequant(M,
             # Broadcast zeros and scale to match the shape of B
             scale_expanded = scale[:, group_indices]  # Shape: [N, K]
 
-            if with_zeros:            
+            if with_zeros:
                 if zeros_mode == "original":
                     zeros_expanded = zeros[:, group_indices]  # Shape: [N, K]
                     # Subtract zeros and then scale
@@ -272,7 +272,7 @@ def matmul_torch_forward_dequant(M,
         if with_bias:
             C = C + Bias
         return C
-    
+
     print("Ref result:")
     ref_result = ref_program(*ref_inputs)
     print(ref_result)

@@ -428,5 +428,4 @@ def test_assert_tl_matmul_block_all_dynamic():
 
 
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    test_assert_tl_matmul_block_all_dynamic()
+    bitblas.testing.main()
