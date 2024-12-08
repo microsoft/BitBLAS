@@ -15,7 +15,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# 
+#
 # Modifications Copyright (c) Microsoft.
 # The code below is mostly copied from apache/tvm schedule_rule.py in dlight.
 """A lightweight wrapper on an arbitrary function that can be used to schedule a TIR PrimFunc."""
@@ -75,14 +75,14 @@ class ScheduleRule:  # pylint: disable=too-few-public-methods
         target : Target
             The compilation target the schedule is supposed to be built for.
         configs :
-            # todo: Discribe the configs
+            # todo: Describe the configs
         Returns
         -------
         results : Union[None, tir.Schedule, List[tir.Schedule]]
             Either a Schedule, a list of Schedules, or None, where None means that the rule
             is not applicable to the given PrimFunc.
         """
-        raise NotImplementedError
+        raise NotImplementedError("apply_config is not implemented")
 
     @staticmethod
     def from_callable(
@@ -94,7 +94,7 @@ class ScheduleRule:  # pylint: disable=too-few-public-methods
                 Union[None, tir.Schedule, List[tir.Schedule]],
             ],
         ],
-        "ScheduleRule",
+            "ScheduleRule",
     ]:
         """Create a ScheduleRule from a callable.
 
@@ -117,7 +117,9 @@ class ScheduleRule:  # pylint: disable=too-few-public-methods
         """
 
         def decorator(f) -> "ScheduleRule":  # pylint: disable=invalid-name
+
             class _Rule(ScheduleRule):
+
                 def apply(
                     self,
                     func: tir.PrimFunc,
@@ -131,9 +133,7 @@ class ScheduleRule:  # pylint: disable=too-few-public-methods
 
         return decorator
 
-    def is_target_available(
-        self, target: Target
-    ) -> bool:  # pylint: disable=unused-argument
+    def is_target_available(self, target: Target) -> bool:  # pylint: disable=unused-argument
         """Check whether the rule is available for the given target.
 
         Parameters

@@ -17,7 +17,7 @@ from tvm.ir.transform import PassContext, module_pass
 from tvm.target import Target
 from bitblas.base.schedule_rule import ScheduleRule
 from bitblas.base.analysis import check_func_with_dynamic
-from bitblas.base.utils import fast_tune, fast_tune_with_dynamic_range
+from bitblas.base.tuner import fast_tune, fast_tune_with_dynamic_range
 import logging
 
 logger = logging.getLogger(__name__)

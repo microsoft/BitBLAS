@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+import bitblas.testing
 from bitblas import tvm
 from bitblas.ops.general_matmul.tirscript import (
     matmul_select_implementation,
@@ -10,6 +11,7 @@ import logging
 from bitblas import set_log_level
 import numpy as np
 
+print("bitblas. path is ", bitblas.__path__)
 np.random.seed(0)
 
 set_log_level(logging.DEBUG)
@@ -430,6 +432,7 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
     }):
         rt_mod = tvm.build(block_reduce_sch.mod, target=target)
     src_code = rt_mod.imported_modules[0].get_source()
+    # print(src_code)
     assert src_code is not None
 
     check_reduce(rt_mod)
@@ -439,21 +442,37 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
     import torch
     torch.manual_seed(0)
 
-    a = torch.randn(M, K, dtype=torch.float16)
-    b = torch.randint(0, 4, (N, K), dtype=torch.int8)
-    qb = bitblas.quantization.general_compress(b.numpy())
+    input_shape = (M, K)
+    weight_shape = (N, K) if layout == "nt" else (K, N)
+
+    a = torch.randn(input_shape, dtype=torch.float16).cuda() - 0.5
+    weight_shape = (N, K)
+    maxq = 2**(bit - 1)
+    if source_format == "uint":
+        b = torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda()
+    elif source_format == "int":
+        b = torch.randint(-maxq, maxq, weight_shape, dtype=torch.int8).cuda()
+    else:
+        raise NotImplementedError
+    ref_inputs = []
+    ref_inputs.append(a)
+    ref_inputs.append(b)
+    qb = bitblas.quantization.general_compress(b.cpu().numpy())
     qb = torch.from_numpy(qb)
     scale = torch.randn((N, K // group_size), dtype=torch.float16)
     maxq = 2**(bit - 1)
     zeros = None
-    if with_zeros:
+    if with_scaling:
+        ref_inputs.append(scale.cuda())
+    if with_scaling and with_zeros:
         if zeros_mode == "original":
             zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * maxq
         elif zeros_mode == "rescale":
             original_zeros = torch.ones([N, K // group_size], dtype=torch.float16).cuda() * maxq
-            zeros = -(original_zeros * scale.cuda())
+            zeros = (original_zeros * scale.cuda())
         else:
             raise NotImplementedError
+        ref_inputs.append(zeros)
 
     c = torch.randn(M, N, dtype=torch.float16)
 
@@ -512,33 +531,63 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
 
     torch_func(*args)
 
-    args = [a]
-    if with_scaling:
 
-        rescale_b = torch.empty_like(b, dtype=torch.float16)
-        for i in range(N):
-            for j in range(K):
-                if with_zeros:
-                    if zeros_mode == "original":
-                        rescale_b[i,
-                                j] = (b[i, j] - zeros[i, j // group_size]) * scale[i, j // group_size]
-                    elif zeros_mode == "rescale":
-                        rescale_b[i,
-                                j] = b[i, j] * scale[i, j // group_size] + zeros[i, j // group_size]
-                    else:
-                        raise NotImplementedError
+    def ref_program(A, intweight, scale=None, zeros=None, Bias=None):
+        import torch
+
+        B = intweight
+        _, K = B.shape
+
+        if with_scaling:
+            # Calculate group indices for each column (group_size determines the grouping)
+            group_indices = torch.arange(K, device=B.device) // group_size
+
+            # Broadcast zeros and scale to match the shape of B
+            scale_expanded = scale[:, group_indices]  # Shape: [N, K]
+
+            if with_zeros:
+                if zeros_mode == "original":
+                    zeros_expanded = zeros[:, group_indices]  # Shape: [N, K]
+                    # Subtract zeros and then scale
+                    rescale_b = (B - zeros_expanded) * scale_expanded
+                elif zeros_mode == "rescale":
+                    zeros_expanded = zeros[:, group_indices]  # Shape: [N, K]
+                    # Scale first and then add zeros
+                    rescale_b = B * scale_expanded - zeros_expanded
+                elif zeros_mode == "quantized":
+                    dequant_zeros = (
+                        torch.zeros(zeros.shape[0], zeros.shape[1] * 8 // 4,
+                                    dtype=torch.half).to(torch.half).to(zeros.device))
+                    for i in range(dequant_zeros.shape[0]):
+                        for j in range(dequant_zeros.shape[1]):
+                            dequant_zeros[i][j] = ((zeros[i][j // 2] >> (4 * (j % 2))) & 0xF).to(torch.half)
+                    zeros_expanded = dequant_zeros[group_indices, :]  # Shape: [N, K]
+                    # Subtract zeros and then scale
+                    rescale_b = (B - zeros_expanded) * scale_expanded
                 else:
-                    rescale_b[i, j] = b[i, j] * scale[i, j // group_size]
-        args.append(rescale_b.t().cuda())
-    else:
-        args.append(b.t().cuda().to(torch.float16))
+                    # Raise an error for unsupported zeros_mode
+                    raise NotImplementedError(f"Unsupported zeros_mode: {zeros_mode}")
+            else:
+                # Apply scaling without zeros adjustment
+                rescale_b = B * scale_expanded
+        else:
+            # If scaling is disabled, directly use B
+            rescale_b = B
 
-    ref_c = torch.matmul(*args)
+        C = torch.matmul(A.to(torch.float), rescale_b.T.to(torch.float))
+        C = C.to(torch.__getattribute__(out_dtype))
+        if with_bias:
+            C = C + Bias
+        return C
 
-    print("rescale_b is \n", c)
-    print("ref_c is \n", ref_c)
+    print(f"A = {a}")
+    print(f"intweight = {b}")
+    print(f"scale = {scale if with_scaling else None}")
+    ref_result = ref_program(*ref_inputs)
+    print("c is \n", c)
+    print("ref_c is \n", ref_result)
 
-    torch.testing.assert_close(c.cpu(), ref_c.cpu(), rtol=1e2, atol=1e0)
+    bitblas.testing.torch_assert_close(c, ref_result, rtol=1e2, atol=1e0)
 
 
 def test_assert_dequantize_correctness_with_ladder_ldmatrix_propagate():

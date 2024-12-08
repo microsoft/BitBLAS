@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+import bitblas.testing
 from bitblas import FlashAttenConfig, FlashAtten
 import logging
 from bitblas import set_log_level
@@ -33,12 +34,11 @@ def flashatten_codegen_default(batch, heads, seq_len, dim, Q_dtype, K_dtype, V_d
     assert get_codegen_result(flashatten)
 
 
-def test_matmul_codegen_default():
+def test_fa_codegen_default():
     flashatten_codegen_default(1, 4, 256, 256, "float16", "float16", "float16", "float32",
                                "float16", "nnn", False)
     flashatten_codegen_default(1, 4, 256, 256, "float16", "float16", "float16", "float32",
                                "float16", "ntn", False)
-
 
 # fmt: on
 if __name__ == "__main__":

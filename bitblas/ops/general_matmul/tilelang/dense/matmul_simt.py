@@ -2,7 +2,6 @@
 # Licensed under the MIT License.
 from bitblas import tvm as tvm
 from typing import Optional, List
-from bitblas.ops.base_scheduler import BaseScheduler
 import tvm.tl.language as T
 from tvm import DataType
 from tvm.tir import PrimFunc
@@ -13,23 +12,13 @@ from bitblas.ops.general_matmul.tirscript import (matmul_select_implementation)
 from bitblas.base.arch import TileDevice
 from bitblas.tl.base_hint import BaseTLHint
 from bitblas.base.roller.hint import Hint
+from .base import MatmulBaseParams
 
 
 @dataclass
-class MatmulSIMTBaseScheduler(BaseScheduler):
+class MatmulSIMTBaseScheduler(MatmulBaseParams):
     # Base class for matrix multiplication scheduler
     # Contains the basic configuration for matrix multiplication
-
-    # Operation Configuration
-    M: Optional[int] = None
-    N: Optional[int] = None
-    K: Optional[int] = None
-    in_dtype: str = "float16"
-    out_dtype: str = "float16"
-    trans_A: bool = False
-    trans_B: bool = True
-    accum_dtype: str = "float16"
-    with_bias: bool = False
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
@@ -55,7 +44,7 @@ class MatmulSIMTBaseScheduler(BaseScheduler):
         if roller_hints is None:
             raise ValueError("No Roller Hints Found for TensorCore Scheduling")
 
-        return self.serialze_hints_to_configs(roller_hints)
+        return self.serialize_hints_to_configs(roller_hints)
 
     def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
         return self.get_roller_configs(arch, topk)
@@ -76,7 +65,7 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
 
-    # Tensor Core Warp Configuration
+    # SIMT Warp Configuration
     block_size_x: int = 8
     block_size_y: int = 8
     thread_row_tiles: int = 16
@@ -130,7 +119,7 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                     f"chunk: {self.chunk}"
                     "}")
 
-    def serialze_hints_to_configs(self, hints: List[Hint]):
+    def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
         for hint in hints:
             config = self.TLHint.from_roller_hint(hint)
@@ -166,7 +155,10 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
         assert thread_col_tiles is not None, "thread_col_tiles must be provided"
         assert chunk is not None, "chunk must be provided"
 
-        M, N, K = self.M, self.N, self.K
+        M = self.maybe_dynamic(self.M, "m")
+        N, K = self.N, self.K
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
+
         in_dtype, out_dtype, accum_dtype = (
             self.in_dtype,
             self.out_dtype,
@@ -259,7 +251,7 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                         bx * block_N + warp_n * local_size_b + j,
                     ] = C_local[i * local_size_b + j]
 
-        return self.maybe_simplify(main)
+        return self.post_process(main)
 
     def __post_init__(self):
         # Validate the matrix transpose settings

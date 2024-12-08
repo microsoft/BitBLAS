@@ -3,7 +3,7 @@
 from bitblas.base.roller.hint import Hint
 from tvm.target import Target
 from .tilelang import select_scheduler as consistent_scheduler
-from ..base_scheduler import BaseScheduler
+from bitblas.base.base_scheduler import BaseScheduler
 from ..operator import OperatorConfig, Operator, BaseKernelNameGenerator
 from ...base.arch.cuda import CUDA
 from ...utils import auto_detect_nvidia_target

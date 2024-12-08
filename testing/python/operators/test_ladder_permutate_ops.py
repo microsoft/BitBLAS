@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+import bitblas.testing
 from bitblas.ops.ladder_permutate import LadderPermutate, LadderPermutateConfig
 from bitblas import tvm
 

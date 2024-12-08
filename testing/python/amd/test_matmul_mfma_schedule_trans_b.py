@@ -1,7 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
-from bitblas import tvm
+import bitblas.testing
+from bitblas import tvm as tvm
 from bitblas.ops.general_matmul.tirscript import (
     matmul_select_implementation,)
 import logging
@@ -85,7 +86,7 @@ def assert_correctness_with_block_reduce(
     print(c_np)
     print(np.matmul(a_np.astype("float32"), b_np.astype("float32").T))
 
-@tvm.testing.requires_rocm
+@bitblas.testing.requires_rocm
 def test_assert_correctness_with_block_reduce():
     assert_correctness_with_block_reduce(
         M=256,

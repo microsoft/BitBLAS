@@ -2,10 +2,13 @@
 # Licensed under the MIT License.
 import pytest
 import bitblas
+import bitblas.testing
 from bitblas.ops.lop3_permutate import LOP3Permutate, LOP3PermutateConfig
 
 from bitblas import tvm
+
 target = tvm.target.Target("llvm")
+
 
 # fmt: off
 @pytest.mark.parametrize("M,N,datatype,dequantize_bits,storage_dtype", [

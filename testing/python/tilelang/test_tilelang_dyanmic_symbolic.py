@@ -371,7 +371,6 @@ def assert_tl_matmul_block_all_dynamic_correctness(
         num_threads,
     )
     mod, params = TL.lower(program)
-
     if trans_A:
         A = torch.rand(K, M, device="cuda", dtype=getattr(torch, in_dtype))
     else:

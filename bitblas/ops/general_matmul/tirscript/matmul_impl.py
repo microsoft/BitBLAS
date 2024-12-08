@@ -4,7 +4,7 @@
 from bitblas import tvm
 from tvm import te
 from bitblas.gpu.matmul_analysis import get_propagate_map
-from bitblas.ops.common import TransformKind
+from bitblas.base.operator_common import TransformKind
 from typing import Union
 
 

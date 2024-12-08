@@ -18,7 +18,7 @@ from bitblas.ops.general_matmul.tilelang.dequantize import (
     MatmulINT4DequantizeWeightPropagationScheduler,
 )
 
-from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore_s4 import (
+from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
     MatmulINT4FineGrainScheduler,
     MatmulINT4WeightPropagationScheduler,
 )

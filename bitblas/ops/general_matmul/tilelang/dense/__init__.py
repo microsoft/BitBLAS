@@ -6,28 +6,15 @@ from .matmul_simt import (
 )
 
 from .matmul_tensorcore import (
-    matmul_blocked,  # noqa: F401
-    matmul_macro_tensorcore,  # noqa: F401
-    matmul_macro_tensorcore_weight_propagation_level_ldmatrix  # noqa: F401
+    MatmulBlockScheduler,
+    MatmulFineGrainScheduler,
+    MatmulWeightPropagationScheduler,
+    MatmulINT4FineGrainScheduler,
+    MatmulINT4WeightPropagationScheduler,
 )
 
-from .matmul_tensorcore import (
-    MatmulBlockScheduler,  # noqa: F401
-    MatmulFineGrainScheduler,  # noqa: F401
-    MatmulWeightPropagationScheduler,  # noqa: F401
-)
-
-from .matmul_tensorcore_s4 import (
-    MatmulINT4FineGrainScheduler,  # noqa: F401
-    MatmulINT4WeightPropagationScheduler,  # noqa: F401
-)
-
-from bitblas.base.roller import TileDevice
-from bitblas.base.arch import (
-    is_ampere_arch,
-    is_volta_arch,
-)
-from bitblas.ops.common import TransformKind
+from .matmul import MatmulScheduler
+from bitblas.base.operator_common import TransformKind
 from typing import Union
 
 
@@ -74,7 +61,7 @@ def volta_select_schduler(
         return all(conditions)
 
     if not check_if_not_supported():
-        raise ValueError(f"Unsupported configuration: {layout}, {propagate_a}, {propagate_b}")
+        raise ValueError(f"Unsupported configuration: {layout=}, {propagate_a=}, {propagate_b=}")
 
     Scheduler = MatmulFineGrainSIMTScheduler
     return Scheduler(
@@ -183,7 +170,6 @@ def ampere_select_scheduler(
 
 
 def select_scheduler(
-    arch: TileDevice,
     M=None,
     N=16384,
     K=16384,
@@ -195,31 +181,23 @@ def select_scheduler(
     propagate_a: Union[int, TransformKind] = TransformKind.NonTransform,
     propagate_b: Union[int, TransformKind] = TransformKind.NonTransform,
 ):
-    if is_ampere_arch(arch):
-        return ampere_select_scheduler(
-            M=M,
-            N=N,
-            K=K,
-            in_dtype=in_dtype,
-            out_dtype=out_dtype,
-            accum_dtype=accum_dtype,
-            with_bias=with_bias,
-            layout=layout,
-            propagate_a=propagate_a,
-            propagate_b=propagate_b,
-        )
-    elif is_volta_arch(arch):
-        return volta_select_schduler(
-            M=M,
-            N=N,
-            K=K,
-            in_dtype=in_dtype,
-            out_dtype=out_dtype,
-            accum_dtype=accum_dtype,
-            with_bias=with_bias,
-            layout=layout,
-            propagate_a=propagate_a,
-            propagate_b=propagate_b,
-        )
-    else:
-        raise ValueError(f"Unsupported arch: {arch.name}")
+    if isinstance(propagate_a, int):
+        propagate_a = TransformKind(propagate_a)
+    if isinstance(propagate_b, int):
+        propagate_b = TransformKind(propagate_b)
+
+    trans_A, trans_B = parse_layout(layout)
+
+    return MatmulScheduler(
+        M=M,
+        N=N,
+        K=K,
+        trans_A=trans_A,
+        trans_B=trans_B,
+        in_dtype=in_dtype,
+        out_dtype=out_dtype,
+        accum_dtype=accum_dtype,
+        with_bias=with_bias,
+        input_transform_kind=propagate_a,
+        weight_transform_kind=propagate_b,
+    )

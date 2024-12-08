@@ -9,7 +9,7 @@ from tvm import DataType
 from tvm import tl as TL
 import tvm.tl.language as T
 from bitblas.tl.utils import get_swizzle_layout
-from bitblas.ops.base_scheduler import simplify_prim_func
+from bitblas.base import simplify_prim_func
 
 torch.manual_seed(0)
 

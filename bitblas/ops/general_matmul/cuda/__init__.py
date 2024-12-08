@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-from bitblas.ops.common import TransformKind
+from bitblas.base.operator_common import TransformKind
 from bitblas.base import TileDevice
 from .template import i4_scale_template_source
 

@@ -5,10 +5,11 @@ from tvm import DataType
 from tvm.target import Target
 import operator
 from functools import reduce
+from bitblas.base.arch import has_mma_support
 from bitblas.base.roller.hint import Hint
 from typing import Any, Literal, Optional, Tuple, Union
 from ..operator import OperatorConfig, Operator, OPExecutorCPU, BaseKernelNameGenerator
-from ..common import TransformKind, OptimizeStrategy
+from bitblas.base.operator_common import TransformKind, OptimizeStrategy
 from .tirscript.matmul_dequantize_impl import select_implementation as weight_dequantize_implementation
 from .tirscript.matmul_impl import select_implementation as consistent_implementation
 from .tilelang.dense import select_scheduler as consistent_scheduler
@@ -121,11 +122,11 @@ class MatmulConfig(OperatorConfig):
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
 
         if (self.M == 1 or (self.N % MICRO_KERNEL_SIZE) != 0 or (self.K % MICRO_KERNEL_SIZE) != 0 or
-                isinstance(self.M, Tuple) or (self.with_zeros and self.zeros_mode == "quantized")):
+                isinstance(self.M, Tuple)):
             object.__setattr__(self, "propagate_a", TransformKind.NonTransform)
             object.__setattr__(self, "propagate_b", TransformKind.NonTransform)
         else:
-            object.__setattr__(self, "propagate_b", TransformKind.IntraWarpTransform)
+            object.__setattr__(self, "propagate_b", TransformKind.LDMatrixTransform)
 
         # set a and b value if is not None
         if propagate_a is not None:
@@ -395,6 +396,8 @@ class Matmul(Operator):
             if self.is_tir_backend():
                 self.ir_module["main"] = self.ir_module["main"].with_attrs(
                     {"opt_shapes": self.dynamic_range})
+            elif self.is_tilelang_backend():
+                self.scheduler.set_dynamic_range(self.dynamic_range)
         else:
             self.dynamic_range = None
 
@@ -595,7 +598,6 @@ class Matmul(Operator):
     def _select_scheduler(self):
         if is_native_compute(self.A_dtype, self.W_dtype):
             return consistent_scheduler(
-                arch=self.arch,
                 M=self.M,
                 N=self.N,
                 K=self.K,
@@ -609,7 +611,6 @@ class Matmul(Operator):
             )
         else:
             return weight_dequantize_scheduler(
-                arch=self.arch,
                 M=self.M,
                 N=self.N,
                 K=self.K,
@@ -792,11 +793,17 @@ class Matmul(Operator):
 
     @property
     def propagate_a(self):
-        return self.config.propagate_a
+        if has_mma_support(self.arch):
+            return self.config.propagate_a
+        else:
+            return TransformKind.NonTransform
 
     @property
     def propagate_b(self):
-        return self.config.propagate_b
+        if has_mma_support(self.arch):
+            return self.config.propagate_b
+        else:
+            return TransformKind.NonTransform
 
     @property
     def layout(self):

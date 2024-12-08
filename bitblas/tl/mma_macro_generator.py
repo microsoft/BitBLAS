@@ -3,7 +3,7 @@
 
 import tvm.tl.language as T
 from typing import Union, Tuple, Optional
-from bitblas.ops.common import TransformKind
+from bitblas.base.operator_common import TransformKind
 from tvm import DataType
 from tvm.tir import PrimExpr
 from tvm.runtime import convert

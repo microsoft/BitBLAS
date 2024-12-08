@@ -3,7 +3,7 @@
 from bitblas import tvm
 from typing import Optional, List, Dict, Union
 from tvm import IRModule
-from bitblas.base.arch import TileDevice
+from bitblas.base.arch import TileDevice, is_cuda_arch, is_cdna_arch
 from bitblas.utils import match_global_kernel
 from bitblas.utils.rtmod_analysis import get_annotated_device_mod
 import re
@@ -32,6 +32,8 @@ class TIRCUDASourceWrapper(object):
         "int16": "int16_t",
         "uchar": "uint8_t",
     }
+
+    backend = "tir"
 
     def __init__(self, scheduled_ir_module: IRModule, source: str, arch: TileDevice):
         self.mod = scheduled_ir_module
@@ -405,9 +407,9 @@ class TIRWrapper(BaseWrapper):
     # Get Scheduled Rt Module and return source to be compiled
     def wrap(self, c_source: str, is_dynamic: bool = False):
         assert self.scheduled_ir_module is not None, "Please assign optimized module first."
-        if self.arch.platform == "CUDA":
+        if is_cuda_arch(self.arch):
             wrapper_class = TIRCUDASourceWrapper if not is_dynamic else TIRCUDASourceWrapperWithDynamic
-        elif self.arch.platform == "CDNA":
+        elif is_cdna_arch(self.arch):
             wrapper_class = TIRHIPSourceWrapper
         else:
             raise ValueError(f"Unsupported platform: {self.arch.platform}")

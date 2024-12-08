@@ -4,6 +4,7 @@ import pytest
 import os
 import torch
 import bitblas
+import bitblas.testing
 from bitblas import Matmul, MatmulConfig
 from bitblas.cache import global_operator_cache
 from bitblas import tvm as tvm

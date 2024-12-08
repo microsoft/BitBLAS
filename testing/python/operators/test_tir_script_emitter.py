@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+import bitblas.testing
 from bitblas import tvm
 import logging
 from bitblas import set_log_level
@@ -108,4 +109,4 @@ def test_check_eual_ref_scripts_with_emitter():
 
 
 if __name__ == "__main__":
-    test_check_eual_ref_scripts_with_emitter()
+    bitblas.testing.main()

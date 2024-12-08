@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
+import bitblas.testing
 from bitblas.ops.quant_compress import QuantCompressConfig, QuantCompress
 from bitblas import tvm
 import bitblas.quantization
