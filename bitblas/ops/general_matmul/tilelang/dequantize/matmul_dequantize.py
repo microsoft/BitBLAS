@@ -153,7 +153,13 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
 
     def detect_scheduler_from_hint(self, hint: BaseTLHint) -> BaseScheduler:
         for scheduler in [
-                self.matmul_dequantize_block_scheduler,
+            self.gemv_dequantize_simt_scheduler,
+            self.matmul_dequantize_simt_scheduler,
+            self.matmul_dequantize_block_scheduler,
+            self.matmul_dequantize_fine_grained_scheduler,
+            self.matmul_dequantize_weight_propagation_scheduler,
+            self.matmul_int4_dequantize_fine_grain_scheduler,
+            self.matmul_int4_dequantize_weight_propagation_scheduler,
         ]:
             if isinstance(hint, scheduler.TLHint):
                 return scheduler
