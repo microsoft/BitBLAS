@@ -18,6 +18,7 @@ from ..base.analysis import (
 )
 from tvm.target.target import Target
 from tvm.tir.stmt_functor import pre_order_visit
+from bitblas.base.arch import get_arch, is_tensorcore_supported_precision
 import logging
 
 logger = logging.getLogger(__name__)
@@ -527,8 +528,6 @@ def get_tensorized_func_and_tags(
     skip_normalize: bool = False,
     allow_gemv: bool = False,
 ) -> Tuple[tir.PrimFunc, Dict[str, Union[List[int], int]]]:
-    from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
-        get_mma_intrin_group,)
     """
         transform function to matmul if necessary (e.g. transform conv2d with im2col)
     """
@@ -648,18 +647,9 @@ def get_tensorized_func_and_tags(
 
     block_stmt = sch.get(main_block)
     if target.kind.name == "cuda" and check_sm_version(target.arch) >= 70:
-        # TODO(lei): we should consider the dtype of the input a and b
-        # instead of assuming both a and b share the same dtype.
-        # As the tensorcore may supports e4m3_float8 * e5m2_float8
         in_dtype, out_dtype = get_in_out_dtypes(block_stmt)
-        try:
-            _ = get_mma_intrin_group(
-                a_dtype=in_dtype,
-                b_dtype=in_dtype,
-                out_dtype=out_dtype,
-            )
-        except Exception:
-            logger.debug("Cannot find the corresponding mma intrin group")
+        if not is_tensorcore_supported_precision(in_dtype, out_dtype, arch=get_arch(target)):
+            logger.debug("The input and output dtype is not supported by tensorcore")
             return func, None
 
         # reindex and transform functions
@@ -697,7 +687,7 @@ def get_tensorized_func_and_tags(
 
 
 def get_propagate_map(trans: bool = True, dtype="float16", matrix_name="A", index_dtype="int32"):
-    from tvm.tir.tensor_intrin.cuda import (  # pylint: disable=import-outside-toplevel
+    from bitblas.tl.mma_layout import (  # pylint: disable=import-outside-toplevel
         ldmatrix_32x8_to_shared_16x16_layout, ldmatrix_trans_32x8_to_shared_16x16_layout,
         ldmatrix_32x16_to_shared_16x32_layout_a, ldmatrix_32x16_to_shared_16x32_layout_b,
     )

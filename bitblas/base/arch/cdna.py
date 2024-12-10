@@ -7,6 +7,10 @@ from .arch_base import TileDevice
 from typing import List, Union
 
 
+def is_cdna_arch(arch: TileDevice) -> bool:
+    return isinstance(arch, CDNA)
+
+
 class CDNA(TileDevice):
 
     def __init__(self, target: Union[Target, str]):
