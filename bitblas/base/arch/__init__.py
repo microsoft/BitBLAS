@@ -1,15 +1,16 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from .arch_base import TileDevice
-from .cuda import *
-from .cpu import *
-from .cdna import *
+from .cuda import CUDA
+from .cpu import CPU
+from .cdna import CDNA
 from typing import Union
+from tvm.target import Target
 
 
-def get_arch(target: Union[str, tvm.target.Target] = "cuda") -> TileDevice:
+def get_arch(target: Union[str, Target] = "cuda") -> TileDevice:
     if isinstance(target, str):
-        target = tvm.target.Target(target)
+        target = Target(target)
 
     if target.kind.name == "cuda":
         return CUDA(target)
@@ -27,57 +28,14 @@ def auto_infer_current_arch() -> TileDevice:
     return get_arch("cuda")
 
 
-def is_cpu_arch(arch: TileDevice) -> bool:
-    return isinstance(arch, CPU)
-
-
-def is_cuda_arch(arch: TileDevice) -> bool:
-    return isinstance(arch, CUDA)
-
-
-def is_ampere_arch(arch: TileDevice) -> bool:
-    conditions = [True]
-    conditions.append(is_cuda_arch(arch))
-    conditions.append(arch.sm_version >= 80 and arch.sm_version < 90)
-    return all(conditions)
-
-
-def is_volta_arch(arch: TileDevice) -> bool:
-    conditions = [True]
-    conditions.append(is_cuda_arch(arch))
-    conditions.append(arch.sm_version >= 70)
-    conditions.append(arch.sm_version < 80)
-    return all(conditions)
-
-
-def is_cdna_arch(arch: TileDevice) -> bool:
-    return isinstance(arch, CDNA)
-
-
-def has_mma_support(arch: TileDevice) -> bool:
-    conditions = [True]
-    conditions.append(is_cuda_arch(arch))
-    conditions.append(arch.sm_version >= 80)
-    return all(conditions)
-
-
-def is_tensorcore_supported_precision(in_dtype: str, accum_dtype: str, arch: TileDevice) -> bool:
-    volta_tensorcore_supported = [
-        ("float16", "float32"),
-        ("float16", "float16"),
-    ]
-    ampere_tensorcore_supported = [
-        ("float16", "float32"),
-        ("float16", "float16"),
-        ("int8", "int32"),
-        ("int4", "int32"),
-        ("int2", "int32"),
-        ("int1", "int32"),
-    ]
-
-    if is_volta_arch(arch):
-        return (in_dtype, accum_dtype) in volta_tensorcore_supported
-    elif is_ampere_arch(arch):
-        return (in_dtype, accum_dtype) in ampere_tensorcore_supported
-    else:
-        raise ValueError(f"Unsupported architecture: {arch}")
+from .cpu import is_cpu_arch  # noqa: F401
+from .cuda import (
+    is_cuda_arch,  # noqa: F401
+    is_volta_arch,  # noqa: F401
+    is_ampere_arch,  # noqa: F401
+    is_ada_arch,  # noqa: F401
+    is_hopper_arch,  # noqa: F401
+    is_tensorcore_supported_precision,  # noqa: F401
+    has_mma_support,  # noqa: F401
+)
+from .cdna import is_cdna_arch  # noqa: F401

@@ -4,7 +4,7 @@
 from bitblas import tvm
 from tvm.target import Target
 from .arch_base import TileDevice
-from typing import List, Dict, Union
+from typing import List, Union
 
 
 def check_sm_version(arch: str) -> int:
@@ -12,17 +12,94 @@ def check_sm_version(arch: str) -> int:
     return int(sm_version) if sm_version.isdigit() else -1
 
 
+def is_cuda_arch(arch: TileDevice) -> bool:
+    return isinstance(arch, CUDA)
+
+
+def is_volta_arch(arch: TileDevice) -> bool:
+    conditions = [True]
+    conditions.append(is_cuda_arch(arch))
+    conditions.append(arch.sm_version >= 70)
+    conditions.append(arch.sm_version < 80)
+    return all(conditions)
+
+
+def is_ampere_arch(arch: TileDevice) -> bool:
+    conditions = [True]
+    conditions.append(is_cuda_arch(arch))
+    conditions.append(arch.sm_version >= 80 and arch.sm_version < 90)
+    return all(conditions)
+
+
+def is_ada_arch(arch: TileDevice) -> bool:
+    conditions = [True]
+    conditions.append(is_cuda_arch(arch))
+    conditions.append(arch.sm_version == 89)
+    return all(conditions)
+
+
+def is_hopper_arch(arch: TileDevice) -> bool:
+    conditions = [True]
+    conditions.append(is_cuda_arch(arch))
+    conditions.append(arch.sm_version == 90)
+    return all(conditions)
+
+
+def has_mma_support(arch: TileDevice) -> bool:
+    conditions = [True]
+    conditions.append(is_cuda_arch(arch))
+    conditions.append(arch.sm_version >= 80)
+    return all(conditions)
+
+
+volta_tensorcore_supported = [
+    ("float16", "float32"),
+    ("float16", "float16"),
+]
+ampere_tensorcore_supported = [
+    ("float16", "float32"),
+    ("float16", "float16"),
+    ("int8", "int32"),
+    ("int4", "int32"),
+    ("int2", "int32"),
+    ("int1", "int32"),
+]
+ada_tensorcore_supported = [
+    ("float16", "float32"),
+    ("float16", "float16"),
+    ("int8", "int32"),
+    ("e5m2_float8", "float32"),
+    ("e4m3_float8", "float32"),
+]
+hopper_tensorcore_supported = ada_tensorcore_supported
+
+
+# TODO(lei): we should consider the dtype of the input a and b
+# instead of assuming both a and b share the same dtype.
+# As the tensorcore may supports e4m3_float8 * e5m2_float8
+def is_tensorcore_supported_precision(in_dtype: str, accum_dtype: str, arch: TileDevice) -> bool:
+
+    if is_volta_arch(arch):
+        return (in_dtype, accum_dtype) in volta_tensorcore_supported
+    elif is_ampere_arch(arch):
+        return (in_dtype, accum_dtype) in ampere_tensorcore_supported
+    elif is_ada_arch(arch):
+        return (in_dtype, accum_dtype) in ada_tensorcore_supported
+    elif is_hopper_arch(arch):
+        return (in_dtype, accum_dtype) in hopper_tensorcore_supported
+    else:
+        raise ValueError(f"Unsupported architecture: {arch}")
+
+
 class TensorInstruction(object):
 
     def __init__(
         self,
         name: str,
-        intrin_group: Dict,
         shape: List[int],
     ):
         self.name: str = name
-        self.intrin_group: Dict = intrin_group
-        # only maintain the shape of M and N
+        # only hold the shape of M and N
         self.shape: List[int] = shape
 
 
@@ -58,11 +135,9 @@ class CUDA(TileDevice):
         self.available_tensor_instructions: List[TensorInstruction] = None
 
     def get_avaliable_tensorintrin_shapes(self):
-        from tvm.tir.tensor_intrin.cuda import get_wmma_intrin_group, get_mma_intrin_group
-
         self.available_tensor_instructions = (
-            TensorInstruction("mma", get_mma_intrin_group, [16, 16]),
-            TensorInstruction("wmma", get_wmma_intrin_group, [16, 16]),
+            TensorInstruction("mma", [16, 16]),
+            TensorInstruction("wmma", [16, 16]),
         )
         return [t.shape for t in self.available_tensor_instructions]
 
