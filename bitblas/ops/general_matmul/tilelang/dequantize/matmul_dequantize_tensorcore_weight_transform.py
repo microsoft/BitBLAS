@@ -38,6 +38,9 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
     # force set default weight transform kind to LDMatrixTransform
     weight_transform_kind: TransformKind = TransformKind.LDMatrixTransform
 
+    class TLHint(MatmulDequantizeFineGrainedScheduler.TLHint):
+        pass
+
     def apply_config(
         self,
         block_row_warps: Optional[int] = None,
@@ -59,12 +62,14 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         N, K = self.N, self.K
         assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
         trans_A, trans_B = self.trans_A, self.trans_B
+        input_transform_kind = self.input_transform_kind
         weight_transform_kind = self.weight_transform_kind
 
         assert trans_A is False, "Dequantize only implement for trans_A=False currently"
         assert trans_B is True, "Dequantize only implement for trans_B=TRue currently"
-        assert (weight_transform_kind == TransformKind.LDMatrixTransform
-               ), f"Dequantize only implement for LDMatrixTransform currently, got {weight_transform_kind}"
+        assert (
+            weight_transform_kind == TransformKind.LDMatrixTransform
+        ), f"Dequantize only implement for LDMatrixTransform currently, got {weight_transform_kind}"
 
         in_dtype, out_dtype, accum_dtype = (
             self.in_dtype,
@@ -101,7 +106,6 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         if group_size == -1:
             group_size = K
 
-        A_shape = (M, K)
         B_shape = (
             N // micro_size_y,
             K // micro_size_k,
@@ -115,7 +119,21 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         C_shape = (M, N)
         Bias_shape = (N,)
 
-        A_shared_shape = (block_M, block_K)
+        is_a_smooth = self.is_a_smooth
+        is_b_smooth = self.is_b_smooth
+
+        if is_a_smooth:
+            A_shape = (M // micro_size_x, K // micro_size_k, micro_size_x, micro_size_k)
+            A_shared_shape = (
+                block_M // micro_size_x,
+                block_K // micro_size_k,
+                micro_size_x,
+                micro_size_k,
+            )
+        else:
+            A_shape = (M, K)
+            A_shared_shape = (block_M, block_K)
+
         B_shared_shape = (
             block_N // micro_size_y,
             block_K // micro_size_k,
@@ -164,6 +182,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
             warp_row_tiles=warp_row_tiles,
             warp_col_tiles=warp_col_tiles,
             chunk=chunk,
+            transform_kind_a=input_transform_kind,
             transform_kind_b=weight_transform_kind,
             num_elems_per_byte=num_elems_per_byte,
         )
@@ -200,7 +219,8 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                 tx = T.thread_binding(0, threads, thread="threadIdx.x")
 
                 T.annotate_layout({
-                    A_shared: make_swizzle_layout(A_shared),
+                    A_shared: make_swizzle_layout(A_shared, is_a_smooth),
+                    B_shared: make_swizzle_layout(B_shared, is_b_smooth),
                 })
 
                 T.use_swizzle(10, enable=enable_rasterization)
@@ -211,7 +231,16 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
 
                 for ko in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
 
-                    T.copy(A[by * block_M, ko * block_K], A_shared)
+                    if is_a_smooth:
+                        for i, k, ii, kk in T.Parallel(
+                                block_M // micro_size_x,
+                                block_K // micro_size_k,
+                                micro_size_x,
+                                micro_size_k,
+                        ):
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x), ko * (block_K // micro_size_k), ii, kk]
+                    else:
+                        T.copy(A[by * block_M, ko * block_K], A_shared)
 
                     for i in T.serial(block_N * block_K // num_elems_per_byte //
                                       (threads * vec_load_qb)):
@@ -530,19 +559,13 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                 else:
                     T.call_extern(
                         func_name,
-                        T.address_of(
-                            compressed_weight_local[
-                                j * local_size // num_elems_per_byte
-                            ]
-                        ),
+                        T.address_of(compressed_weight_local[j * local_size // num_elems_per_byte]),
                         T.address_of(dequant_weight_local[j * local_size]),
                         T.address_of(scale_buffer[remapped_i, remapped_j]),
-                        T.address_of(
-                            qzeros_buffer[
-                                qzeros_remapped_i,
-                                (qzeros_remapped_j // num_elems_per_byte),
-                            ]
-                        ),
+                        T.address_of(qzeros_buffer[
+                            qzeros_remapped_i,
+                            (qzeros_remapped_j // num_elems_per_byte),
+                        ]),
                         local_size * grouped_k,
                         local_size // num_elems_per_byte,
                         qzeros_remapped_j % num_elems_per_byte,
@@ -593,9 +616,20 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
 
         return new_indices
 
+    @property
+    def is_a_smooth(self):
+        return self.input_transform_kind > TransformKind.NonTransform
+
+    @property
+    def is_b_smooth(self):
+        return self.weight_transform_kind > TransformKind.NonTransform
+
 
 @dataclass
 class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropagationScheduler):
+
+    class TLHint(MatmulDequantizeWeightPropagationScheduler.TLHint):
+        pass
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
@@ -678,8 +712,9 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
 
         assert trans_A is False, "Dequantize only implement for trans_A=False currently"
         assert trans_B is True, "Dequantize only implement for trans_B=TRue currently"
-        assert (weight_transform_kind == TransformKind.LDMatrixTransform
-               ), f"Dequantize only implement for LDMatrixTransform currently, got {weight_transform_kind}"
+        assert (
+            weight_transform_kind == TransformKind.LDMatrixTransform
+        ), f"Dequantize only implement for LDMatrixTransform currently, got {weight_transform_kind}"
 
         in_dtype, out_dtype, accum_dtype = (
             self.in_dtype,
@@ -718,7 +753,21 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
         if group_size == -1:
             group_size = K
 
-        A_shape = (M, K)
+        is_a_smooth = self.is_a_smooth
+        is_b_smooth = self.is_b_smooth
+
+        if is_a_smooth:
+            A_shape = (M // micro_size_x, K // micro_size_k, micro_size_x, micro_size_k)
+            A_shared_shape = (
+                block_M // micro_size_x,
+                block_K // micro_size_k,
+                micro_size_x,
+                micro_size_k,
+            )
+        else:
+            A_shape = (M, K)
+            A_shared_shape = (block_M, block_K)
+
         B_shape = (
             N // micro_size_y,
             K // micro_size_k,
@@ -731,7 +780,6 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
             micro_size_y,
             micro_size_k,
         )
-        A_shared_shape = (block_M, block_K)
         B_shared_shape = (
             block_N // micro_size_y,
             block_K // micro_size_k,
@@ -810,7 +858,8 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
                 tx = T.thread_binding(0, threads, thread="threadIdx.x")
 
                 T.annotate_layout({
-                    A_shared: make_swizzle_layout(A_shared),
+                    A_shared: make_swizzle_layout(A_shared, is_a_smooth),
+                    B_shared: make_swizzle_layout(B_shared, is_b_smooth),
                 })
 
                 T.use_swizzle(10, enable=enable_rasterization)
@@ -821,7 +870,16 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
 
                 for ko in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
 
-                    T.copy(A[by * block_M, ko * block_K], A_shared)
+                    if is_a_smooth:
+                        for i, k, ii, kk in T.Parallel(
+                                block_M // micro_size_x,
+                                block_K // micro_size_k,
+                                micro_size_x,
+                                micro_size_k,
+                        ):
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x), ko * (block_K // micro_size_k), ii, kk]
+                    else:
+                        T.copy(A[by * block_M, ko * block_K], A_shared)
 
                     # Load B into shared memory
                     # TODO(lei): Layout Inference Pass is not efficient to handle the four dims int8 load

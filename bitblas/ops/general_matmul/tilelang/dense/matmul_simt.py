@@ -74,6 +74,8 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
 
     class TLHint(BaseTLHint):
 
+        hint_type: str = "MatmulFineGrainSIMTScheduler"
+
         def __init__(self):
             super().__init__()
 
@@ -118,6 +120,9 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                     f"thread_col_tiles: {self.thread_col_tiles}, "
                     f"chunk: {self.chunk}"
                     "}")
+
+    def get_hint_type(self):
+        return self.TLHint.hint_type
 
     def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []

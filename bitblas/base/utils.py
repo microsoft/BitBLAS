@@ -222,7 +222,7 @@ def apply_and_build_parallel(func,
                              arch,
                              num_repeats=3,
                              max_workers=10,
-                             timeout=30,
+                             timeout=60,
                              data_distribution="uniform") -> CompileResult:
     cpresults = []
 

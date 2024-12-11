@@ -403,6 +403,9 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
 @dataclass
 class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedScheduler):
 
+    class TLHint(MatmulDequantizeFineGrainedScheduler.TLHint):
+        pass
+
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
         M = self.M

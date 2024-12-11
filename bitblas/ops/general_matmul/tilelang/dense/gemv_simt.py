@@ -23,6 +23,8 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
     reduce_thread: int = 16
 
     class TLHint(BaseTLHint):
+        
+        hint_type: str = "GemvFineGrainSIMTScheduler"
 
         def __init__(self):
             super().__init__()
@@ -55,6 +57,9 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                     f"n_partition: {self.n_partition}, "
                     f"reduce_thread: {self.reduce_thread}, "
                     "}")
+
+    def get_hint_type(self):
+        return self.TLHint.hint_type
 
     def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
