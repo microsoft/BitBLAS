@@ -262,6 +262,11 @@ def apply_and_build_parallel(func,
             code = tensor_remove_make_int2(code)
             return code
 
+        # assume index_map to be registered
+        from tvm.tir.tensor_intrin.cuda import (
+            get_mma_intrin_group,  # noqa: F401
+        )
+
         with tvm.transform.PassContext(config={
                 "tir.use_async_copy": True,
                 "tir.disable_cse_tir": True,

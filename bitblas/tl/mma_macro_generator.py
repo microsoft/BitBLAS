@@ -397,10 +397,112 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
         else:
             raise ValueError("Unsupported transform_kind_b")
 
-        if self.transform_kind_a != TransformKind.NonTransform:
-            raise ValueError("TransformKind A is not supported yet")
+        assert transform_kind_a in [0, 1, 2, 3], "Input transform stage should be 0, 1, 2, or 3"
+        assert transform_kind_b in [0, 1, 2, 3], "Weight transform stage should be 0, 1, 2, or 3"
 
-        assert transform_kind_b in [0, 3], "Currently only support 0 and 3"
+    def ldmatrix_a(self, A_local_buf, A_shared_buf, ki, thread_bindings, rk=0):
+        warp_row_tiles = self.warp_row_tiles
+        warp_rows = self.warp_rows
+        chunk = self.chunk
+        micro_size_x = self.micro_size_x
+        micro_size_k = self.micro_size_k
+        local_size_a = self.local_size_a
+        a_dtype = self.a_dtype
+        a_transposed = self.a_transposed
+        transform_kind_a = self.transform_kind_a
+
+        @T.macro
+        def _warp_ldmatrix_a(
+            A_local_buf,
+            A_shared_buf,
+            ki,
+            thread_bindings,
+            rk=0,
+        ):
+            stride = A_shared_buf.shape[-1]
+            tx, _, warp_m = self.extract_thread_binding(thread_bindings)
+            if transform_kind_a == TransformKind.NonTransform:
+                for i in T.serial(warp_rows):
+                    T.ptx_ldmatrix(
+                        a_dtype,
+                        T.bool(False),
+                        4,
+                        ".b16",
+                        A_local_buf.data,
+                        i * local_size_a,
+                        T.address_of(A_shared_buf[
+                            warp_m * warp_row_tiles + i * micro_size_x,
+                            rk * chunk + ki * micro_size_k,
+                        ]),
+                        get_ldmatrix_offset("A", tx, 0, stride, a_dtype, a_transposed),
+                    )
+            elif transform_kind_a == TransformKind.InterWarpTransform:
+                for i in T.serial(warp_rows):
+                    # Assign B_shared_elem
+                    ri, rj = (
+                        warp_m * warp_row_tiles + i * micro_size_x,
+                        rk * chunk + ki * micro_size_k,
+                    )
+                    ni, nj, nii, njj = (
+                        (ri) // micro_size_x,
+                        (rj) // micro_size_k,
+                        (ri) % micro_size_x,
+                        (rj) % micro_size_k,
+                    )
+                    args = (ni, nj, nii, njj) if transform_kind_a > 0 else (ri, rj)
+                    A_shared_elem = A_shared_buf[args]
+
+                    T.ptx_ldmatrix(
+                        a_dtype,
+                        T.bool(False),
+                        4,
+                        ".b16",
+                        A_local_buf.data,
+                        i * local_size_a,
+                        T.address_of(A_shared_elem),
+                        get_ldmatrix_offset("A", tx, 0, stride, a_dtype, a_transposed),
+                    )
+            elif transform_kind_a == TransformKind.IntraWarpTransform:
+                for i in T.serial(warp_rows):
+                    # Assign B_shared_elem
+                    ri, rj = (
+                        warp_m * warp_row_tiles + i * micro_size_x,
+                        rk * chunk + ki * micro_size_k,
+                    )
+                    ni, nj, nii, njj = (
+                        (ri) // micro_size_x,
+                        (rj) // micro_size_k,
+                        (ri) % micro_size_x,
+                        (rj) % micro_size_k,
+                    )
+                    A_shared_elem = A_shared_buf[ni, nj, nii, njj]
+
+                    T.ptx_ldmatrix(
+                        a_dtype,
+                        T.bool(False),
+                        4,
+                        ".b16",
+                        A_local_buf.data,
+                        i * local_size_a,
+                        T.address_of(A_shared_elem),
+                        tx * local_size_a,
+                    )
+            elif transform_kind_a == TransformKind.LDMatrixTransform:
+                for j in T.serial(warp_rows):
+                    for local_id in T.vectorized(local_size_a):
+                        # Assign A_shared_elem
+                        ri, rj = (
+                            warp_m * warp_rows + j,
+                            rk * (chunk // micro_size_k) + ki,
+                        )
+                        rii, rjj = (tx * local_size_a +
+                                    local_id) // micro_size_k, (tx * local_size_a + local_id) % (
+                                        micro_size_k)
+                        A_local_buf[j * local_size_a + local_id] = (A_shared_buf[ri, rj, rii, rjj])
+            else:
+                raise ValueError("Unsupported TransformKind for Input A")
+
+        return _warp_ldmatrix_a(A_local_buf, A_shared_buf, ki, thread_bindings, rk)
 
     def ldmatrix_b(self, B_local_buf, B_shared_buf, ki, thread_bindings, rk=0):
         warp_col_tiles = self.warp_col_tiles
@@ -425,7 +527,26 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
             stride = B_shared_buf.shape[-1]
             tx, warp_n, _ = self.extract_thread_binding(thread_bindings)
 
-            if transform_kind_b < TransformKind.LDMatrixTransform:
+            if transform_kind_b == TransformKind.NonTransform:
+                for j in T.serial(warp_cols):
+                    # Assign B_shared_elem
+                    ri, rj = (
+                        warp_n * warp_col_tiles + j * micro_size_y,
+                        rk * chunk + ki * micro_size_k,
+                    )
+                    B_shared_elem = B_shared_buf[ri, rj]
+
+                    T.ptx_ldmatrix(
+                        b_dtype,
+                        T.bool(False),
+                        4,
+                        ".b16",
+                        B_local_buf.data,
+                        j * local_size_b,
+                        T.address_of(B_shared_elem),
+                        get_ldmatrix_offset("B", tx, 0, stride, b_dtype, b_transposed),
+                    )
+            elif transform_kind_b == TransformKind.InterWarpTransform:
                 for j in T.serial(warp_cols):
                     # Assign B_shared_elem
                     ri, rj = (
@@ -438,8 +559,7 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
                         (ri) % micro_size_y,
                         (rj) % micro_size_k,
                     )
-                    args = (ni, nj, nii, njj) if transform_kind_b > 0 else (ri, rj)
-                    B_shared_elem = B_shared_buf[args]
+                    B_shared_elem = B_shared_buf[ni, nj, nii, njj]
 
                     T.ptx_ldmatrix(
                         b_dtype,
@@ -451,7 +571,32 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
                         T.address_of(B_shared_elem),
                         get_ldmatrix_offset("B", tx, 0, stride, b_dtype, b_transposed),
                     )
-            else:
+            elif transform_kind_b == TransformKind.IntraWarpTransform:
+                for j in T.serial(warp_cols):
+                    # Assign B_shared_elem
+                    ri, rj = (
+                        warp_n * warp_col_tiles + j * micro_size_y,
+                        rk * chunk + ki * micro_size_k,
+                    )
+                    ni, nj, nii, njj = (
+                        (ri) // micro_size_y,
+                        (rj) // micro_size_k,
+                        (ri) % micro_size_y,
+                        (rj) % micro_size_k,
+                    )
+                    B_shared_elem = B_shared_buf[ni, nj, nii, njj]
+
+                    T.ptx_ldmatrix(
+                        b_dtype,
+                        T.bool(False),  # TODO(lei): should be optimized
+                        4,
+                        ".b16",
+                        B_local_buf.data,
+                        j * local_size_b,
+                        T.address_of(B_shared_elem),
+                        tx * local_size_b,
+                    )
+            elif transform_kind_b == TransformKind.LDMatrixTransform:
                 local_size_dequantize = local_size_b // num_elems_per_byte
                 for j in T.serial(warp_cols):
                     for local_id in T.vectorized(local_size_dequantize):
@@ -466,6 +611,8 @@ class TensorCoreIntrinEmitterWithLadderTransform(TensorCoreIntrinEmitter):
                                             micro_size_k // num_elems_per_byte)
                         B_local_buf[j * local_size_dequantize + local_id] = (
                             B_shared_buf[ri, rj, rii, rjj])
+            else:
+                raise ValueError("Unsupported TransformKind for Input B")
 
         return _warp_ldmatrix_b(B_local_buf, B_shared_buf, ki, thread_bindings, rk)
 
