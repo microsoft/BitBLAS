@@ -39,7 +39,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
     weight_transform_kind: TransformKind = TransformKind.LDMatrixTransform
 
     class TLHint(MatmulDequantizeFineGrainedScheduler.TLHint):
-        pass
+        hint_type: str = "MatmulDequantizeWeightPropagationScheduler"
 
     def apply_config(
         self,
@@ -629,7 +629,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
 class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropagationScheduler):
 
     class TLHint(MatmulDequantizeWeightPropagationScheduler.TLHint):
-        pass
+        hint_type: str = "MatmulINT4DequantizeWeightPropagationScheduler"
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"

@@ -478,6 +478,7 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
     enable_rasterization: bool = False  # Enhance L2 Locality
 
     class TLHint(BaseTLHint):
+        hint_type: str = "MatmulDequantizeBlockScheduler"
 
         def __init__(self):
             super().__init__()
@@ -531,6 +532,9 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
                 f"enable_rasterization={self.enable_rasterization}"
                 "}"
             )
+
+    def get_hint_type(self) -> str:
+        return self.TLHint.hint_type
 
     def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
