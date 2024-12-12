@@ -84,7 +84,7 @@ class MatmulBlockScheduler(MatmulBaseScheduler):
     enable_rasterization: bool = False  # Enhance L2 Locality
 
     class TLHint(BaseTLHint):
-        
+
         hint_type = "MatmulBlockScheduler"
 
         def __init__(self):
@@ -704,7 +704,8 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
                                 micro_size_x,
                                 micro_size_k,
                         ):
-                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x), ko * (block_K // micro_size_k), ii, kk]
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
+                                                       ko * (block_K // micro_size_k), ii, kk]
                     else:
                         T.copy(A[by * block_M, ko * block_K], A_shared)
 
@@ -789,14 +790,6 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
     @property
     def is_b_smooth(self):
         return self.weight_transform_kind > TransformKind.NonTransform
-
-    def __post_init__(self):
-        # Validate the matrix transpose settings
-        assert self.trans_A is False, "Currently only support Matrix A not transposed"
-        assert self.trans_B is True, "Currently only support Matrix B transposed"
-        assert self.weight_transform_kind > TransformKind.NonTransform, "Weight Transform Kind is required"
-
-        return
 
 
 @dataclass
@@ -943,7 +936,7 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
                 # Apply memory layout optimizations
                 T.annotate_layout({
                     A_shared: make_swizzle_layout(A_shared),
-                    B_shared: make_swizzle_layout(B_shared, is_smooth=True),
+                    B_shared: make_swizzle_layout(B_shared),
                 })
 
                 # Optional rasterization for L2 locality enhancement
@@ -1016,7 +1009,7 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
 
     class TLHint(MatmulWeightPropagationScheduler.TLHint):
         hint_type: str = "MatmulINT4WeightPropagationScheduler"
-    
+
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
         M = self.M
@@ -1194,7 +1187,8 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
                                 micro_size_x,
                                 micro_size_k,
                         ):
-                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x), ko * (block_K // micro_size_k), ii, kk]
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
+                                                       ko * (block_K // micro_size_k), ii, kk]
                     else:
                         T.copy(A[by * block_M, ko * block_K], A_shared)
 

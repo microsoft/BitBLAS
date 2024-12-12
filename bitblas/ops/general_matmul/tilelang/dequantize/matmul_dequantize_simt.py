@@ -442,7 +442,7 @@ class MatmulDequantizeSIMTScheduler(MatmulDequantizeSIMTBaseScheduler):
     chunk: int = 16  # Usually determines the K-dimension split size
 
     class TLHint(BaseTLHint):
-        
+
         hint_type = "MatmulDequantizeSIMTScheduler"
 
         def __init__(self):

@@ -238,7 +238,8 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                                 micro_size_x,
                                 micro_size_k,
                         ):
-                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x), ko * (block_K // micro_size_k), ii, kk]
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
+                                                       ko * (block_K // micro_size_k), ii, kk]
                     else:
                         T.copy(A[by * block_M, ko * block_K], A_shared)
 
@@ -877,7 +878,8 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
                                 micro_size_x,
                                 micro_size_k,
                         ):
-                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x), ko * (block_K // micro_size_k), ii, kk]
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
+                                                       ko * (block_K // micro_size_k), ii, kk]
                     else:
                         T.copy(A[by * block_M, ko * block_K], A_shared)
 

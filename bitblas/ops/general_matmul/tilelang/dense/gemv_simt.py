@@ -23,7 +23,7 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
     reduce_thread: int = 16
 
     class TLHint(BaseTLHint):
-        
+
         hint_type: str = "GemvFineGrainSIMTScheduler"
 
         def __init__(self):

@@ -150,9 +150,8 @@ class MatmulScheduler(MatmulBaseParams):
                 scheduler_hint_type = scheduler.get_hint_type()
                 if scheduler_hint_type == hint.hint_type:
                     return scheduler
-            except NotImplementedError:
-                raise ValueError(
-                    f"get_hint_type() is not implemented for {type(scheduler)}")
+            except NotImplementedError as e:
+                raise ValueError(f"get_hint_type() is not implemented for {type(scheduler)}") from e
 
         raise ValueError(f"Unsupported hint type: {type(hint)}")
 

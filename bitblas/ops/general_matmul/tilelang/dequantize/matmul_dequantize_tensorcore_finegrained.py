@@ -21,14 +21,6 @@ from bitblas.ops.general_matmul.tilelang.dequantize.matmul_dequantize_tensorcore
     MatmulDequantizeBaseScheduler,  # noqa: F401
 )
 from bitblas.tl.base_hint import BaseTLHint
-from bitblas.quantization import (
-    _tir_packed_int_to_int_convert,
-    _tir_packed_to_signed_convert,
-    _tir_packed_to_unsigned_convert,
-    _tir_packed_to_fp4_to_f16,
-    _tir_u8_to_f8_e4m3_to_f16,
-    _tir_packed_to_unsigned_convert_with_zeros,
-)
 
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
@@ -49,7 +41,7 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
     enable_rasterization: bool = False  # Enhance L2 Locality
 
     class TLHint(BaseTLHint):
-        
+
         hint_type: str = "MatmulDequantizeFineGrainedScheduler"
 
         def __init__(self):

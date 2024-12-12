@@ -24,12 +24,17 @@ parser.add_argument(
     choices=["tir", "tl"],  # Replace with actual modes if applicable
     help="Specify the mode for calculating zeros.")
 
+parser.add_argument("--verbose", type=bool, default=True, help="Enable verbose logging.")
+
 # [A_dtype, W_dtype, out_dtype, accum_dtype, layout, with_bias, group_size, with_scaling, with_zeros, zeros_mode]
 default_test_shapes = json.dumps([
     # ["MatmulConfig", "Matmul", [1, 16384, 16384, "float16", "int4", "float16", "float16", "nt", False, None, False, False, None]]
     [
         "MatmulConfig", "Matmul",
-        [1, 16384, 16384, "int8", "int8", "int32", "int32", "nt", False, None, False, False, None]
+        [
+            16384, 16384, 16384, "float16", "float16", "float16", "float16", "nt", False, None,
+            False, False, None
+        ]
     ]
 ])
 
@@ -46,6 +51,7 @@ args = parser.parse_args()
 # Assign arguments to variables
 target = args.target
 backend = args.backend
+verbose = args.verbose
 
 parsed_test_shapes = json.loads(args.test_shapes)
 name_to_class = {"MatmulConfig": MatmulConfig, "Matmul": Matmul}
@@ -72,6 +78,10 @@ for config, operator, input_args in benchmark_sets:
         kernel_latency += op_inst.ladder_permutate_a.profile_latency()
 
     print("Time cost of {} is: {:.3f} ms".format(str(config), kernel_latency))
+
+    if verbose:
+        print(op_inst.scheduled_ir_module)
+        print(op_inst.get_source())
 
     profile_config = {
         f"{operator.__name__}-{'-'.join([str(i) for i in input_args])}": {
@@ -116,4 +126,4 @@ for config, values in benchmark_results.items():
         input_args,
         f"{values['BitBLAS_top20_latency']:.3f} ms",
     ]
-    print("".join([str(i).ljust(col_widths[j]) for j, i in enumerate(row)]) + "\n")
+    print("".join([str(i).ljust(col_widths[j]) for j, i in enumerate(row)]))

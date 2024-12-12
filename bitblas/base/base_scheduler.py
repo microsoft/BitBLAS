@@ -115,7 +115,7 @@ class BaseScheduler(ABC):
 
     def get_hint_type(self) -> str:
         raise NotImplementedError("Get Hint type is not implemented")
-  
+
     def serialize_hints_to_configs(self, hints: List[Hint]) -> List[BaseTLHint]:
         # Convert Roller Hints to TileLang Hints
         raise NotImplementedError("Serialization of hints to configs is not implemented")

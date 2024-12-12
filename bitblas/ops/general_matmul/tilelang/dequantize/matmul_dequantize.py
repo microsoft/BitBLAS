@@ -165,9 +165,8 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
                 scheduler_hint_type = scheduler.get_hint_type()
                 if scheduler_hint_type == hint.hint_type:
                     return scheduler
-            except NotImplementedError:
-                raise ValueError(
-                    f"get_hint_type() is not implemented for {type(scheduler)}")
+            except NotImplementedError as e:
+                raise ValueError(f"get_hint_type() is not implemented for {type(scheduler)}") from e
 
         raise ValueError(f"Unsupported hint type: {type(hint)}")
 
@@ -258,8 +257,6 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
         # Validate the matrix transpose settings
         assert (self.trans_A is False), "Currently only support Matrix A not transposed"
         assert (self.trans_B is True), "Currently only support Matrix B transposed"
-        assert (self.input_transform_kind == TransformKind.NonTransform
-               ), "Currently only support NonTransform for input"
 
         # Legalize group_size
         if self.with_scaling and self.group_size == -1:
