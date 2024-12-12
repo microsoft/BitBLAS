@@ -383,7 +383,7 @@ class Operator(object):
     def get_profile_tensors(self, dynamic_symbolic_constraints: Optional[Dict] = None):
         if dynamic_symbolic_constraints is None:
             dynamic_symbolic_constraints = {}
-        func = retrieve_func_from_module(self.scheduled_ir_module)
+        func = self.prim_func or retrieve_func_from_module(self.scheduled_ir_module)
         device = self.arch.device
 
         def var_warpper(v):

@@ -57,6 +57,7 @@ volta_tensorcore_supported = [
     ("float16", "float16"),
 ]
 ampere_tensorcore_supported = [
+    ("bfloat16", "float32"),
     ("float16", "float32"),
     ("float16", "float16"),
     ("int8", "int32"),
@@ -65,6 +66,7 @@ ampere_tensorcore_supported = [
     ("int1", "int32"),
 ]
 ada_tensorcore_supported = [
+    ("bfloat16", "float32"),
     ("float16", "float32"),
     ("float16", "float16"),
     ("int8", "int32"),
