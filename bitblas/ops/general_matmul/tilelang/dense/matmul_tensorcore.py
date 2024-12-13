@@ -59,6 +59,8 @@ class MatmulBaseScheduler(MatmulBaseParams):
         return self.serialize_hints_to_configs(roller_hints)
 
     def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
+        if arch is None:
+            arch = self.arch
         return self.get_roller_configs(arch, topk)
 
     # check if required shared memory cache
@@ -1079,12 +1081,6 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
         block_N = block_col_warps * warp_col_tiles
         block_K = chunk
 
-        # TODO(lei): Can be generalized to analyzed from bank size
-        pad_factor = 8 if storage_dtype == "float16" else 16
-
-        can_swizzle_a = block_K * DataType(storage_dtype).bits == 512
-        apply_pad_a = not can_swizzle_a
-
         is_a_smooth = self.is_a_smooth
         is_b_smooth = self.is_b_smooth
 
@@ -1098,7 +1094,7 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
             )
         else:
             A_shape = (M, K)
-            A_shared_shape = (block_M, (block_K + pad_factor) if apply_pad_a else block_K)
+            A_shared_shape = (block_M, block_K)
 
         # Define the shapes of matrices and shared memory buffers
         B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y, micro_size_k)
