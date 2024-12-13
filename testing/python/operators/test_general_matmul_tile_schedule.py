@@ -11,7 +11,6 @@ import logging
 from bitblas import set_log_level
 import numpy as np
 
-print("bitblas. path is ", bitblas.__path__)
 np.random.seed(0)
 
 set_log_level(logging.DEBUG)

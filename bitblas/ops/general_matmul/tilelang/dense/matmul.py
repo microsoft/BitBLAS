@@ -146,8 +146,13 @@ class MatmulScheduler(MatmulBaseParams):
                 self.matmul_int4_fine_grain_scheduler,
                 self.matmul_int4_weight_propagation_scheduler,
         ]:
-            if isinstance(hint, scheduler.TLHint):
-                return scheduler
+            try:
+                scheduler_hint_type = scheduler.get_hint_type()
+                if scheduler_hint_type == hint.hint_type:
+                    return scheduler
+            except NotImplementedError as e:
+                raise ValueError(f"get_hint_type() is not implemented for {type(scheduler)}") from e
+
         raise ValueError(f"Unsupported hint type: {type(hint)}")
 
     def with_default_config(self, arch: Optional[TileDevice] = None) -> PrimFunc:

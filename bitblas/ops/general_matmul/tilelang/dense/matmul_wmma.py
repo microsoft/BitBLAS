@@ -31,6 +31,8 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
 
     class TLHint(BaseTLHint):
 
+        hint_type: str = "MatmulFineGrainScheduler"
+
         def __init__(self):
             super().__init__()
 

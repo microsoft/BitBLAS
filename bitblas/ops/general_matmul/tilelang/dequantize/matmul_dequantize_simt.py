@@ -443,6 +443,8 @@ class MatmulDequantizeSIMTScheduler(MatmulDequantizeSIMTBaseScheduler):
 
     class TLHint(BaseTLHint):
 
+        hint_type = "MatmulDequantizeSIMTScheduler"
+
         def __init__(self):
             super().__init__()
 
@@ -487,6 +489,9 @@ class MatmulDequantizeSIMTScheduler(MatmulDequantizeSIMTBaseScheduler):
                     f"thread_col_tiles: {self.thread_col_tiles}, "
                     f"chunk: {self.chunk}"
                     "}")
+
+    def get_hint_type(self) -> str:
+        return self.TLHint.hint_type
 
     def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []

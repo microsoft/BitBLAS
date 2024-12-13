@@ -8,6 +8,9 @@ from typing import Dict
 # Base class for Tensor Layout Hints that defines the interface and common functionality for derived classes.
 class BaseTLHint(ABC):
 
+    # hint identifier
+    hint_type: str = "base"
+
     # Constructor for the BaseTLHint class, takes variable arguments (*args and **kwargs) to allow flexibility.
     def __init__(self, *args, **kwargs):
         # Calls the superclass constructor (useful in complex inheritance hierarchies).

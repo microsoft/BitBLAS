@@ -153,10 +153,21 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
 
     def detect_scheduler_from_hint(self, hint: BaseTLHint) -> BaseScheduler:
         for scheduler in [
+                self.gemv_dequantize_simt_scheduler,
+                self.matmul_dequantize_simt_scheduler,
                 self.matmul_dequantize_block_scheduler,
+                self.matmul_dequantize_fine_grained_scheduler,
+                self.matmul_dequantize_weight_propagation_scheduler,
+                self.matmul_int4_dequantize_fine_grain_scheduler,
+                self.matmul_int4_dequantize_weight_propagation_scheduler,
         ]:
-            if isinstance(hint, scheduler.TLHint):
-                return scheduler
+            try:
+                scheduler_hint_type = scheduler.get_hint_type()
+                if scheduler_hint_type == hint.hint_type:
+                    return scheduler
+            except NotImplementedError as e:
+                raise ValueError(f"get_hint_type() is not implemented for {type(scheduler)}") from e
+
         raise ValueError(f"Unsupported hint type: {type(hint)}")
 
     def with_default_config(self, arch: Optional[TileDevice] = None) -> PrimFunc:
@@ -241,6 +252,16 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     def is_dynamic(self) -> bool:
         M, N, K = self.M, self.N, self.K
         return ((not isinstance(M, int)) or (not isinstance(N, int)) or (not isinstance(K, int)))
+
+    def __post_init__(self):
+        # Validate the matrix transpose settings
+        assert (self.trans_A is False), "Currently only support Matrix A not transposed"
+        assert (self.trans_B is True), "Currently only support Matrix B transposed"
+
+        # Legalize group_size
+        if self.with_scaling and self.group_size == -1:
+            object.__setattr__(self, "group_size", self.K)
+        return
 
 
 __all__ = ["MatmulDequantizeScheduler"]

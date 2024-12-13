@@ -26,6 +26,8 @@ class GemvDequantizeSIMTScheduler(MatmulDequantizeSIMTBaseScheduler):
 
     class TLHint(BaseTLHint):
 
+        hint_type: str = "GemvDequantizeSIMTScheduler"
+
         def __init__(self):
             super().__init__()
 
@@ -57,6 +59,9 @@ class GemvDequantizeSIMTScheduler(MatmulDequantizeSIMTBaseScheduler):
                     f"n_partition: {self.n_partition}, "
                     f"reduce_thread: {self.reduce_thread}, "
                     "}")
+
+    def get_hint_type(self):
+        return self.TLHint.hint_type
 
     def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []

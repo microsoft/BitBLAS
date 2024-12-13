@@ -59,6 +59,8 @@ class MatmulBaseScheduler(MatmulBaseParams):
         return self.serialize_hints_to_configs(roller_hints)
 
     def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
+        if arch is None:
+            arch = self.arch
         return self.get_roller_configs(arch, topk)
 
     # check if required shared memory cache
@@ -84,6 +86,8 @@ class MatmulBlockScheduler(MatmulBaseScheduler):
     enable_rasterization: bool = False  # Enhance L2 Locality
 
     class TLHint(BaseTLHint):
+
+        hint_type = "MatmulBlockScheduler"
 
         def __init__(self):
             super().__init__()
@@ -160,6 +164,9 @@ class MatmulBlockScheduler(MatmulBaseScheduler):
         ]
         configs = [{**c, 'num_stages': num_stages} for c in configs]
         return configs
+
+    def get_hint_type(self):
+        return self.TLHint.hint_type
 
     def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
@@ -274,6 +281,8 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
 
     class TLHint(BaseTLHint):
 
+        hint_type: str = "MatmulFineGrainScheduler"
+
         def __init__(self):
             super().__init__()
 
@@ -331,6 +340,9 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
                     f"num_stages={self.num_stages},"
                     f"enable_rasterization={self.enable_rasterization}"
                     "}")
+
+    def get_hint_type(self):
+        return self.TLHint.hint_type
 
     def serialize_hints_to_configs(self, hints: List[Hint]):
         configs = []
@@ -555,6 +567,9 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
     # force set default weight transform kind to LDMatrixTransform
     weight_transform_kind: TransformKind = TransformKind.LDMatrixTransform
 
+    class TLHint(MatmulFineGrainScheduler.TLHint):
+        hint_type: str = "MatmulWeightPropagationScheduler"
+
     def apply_config(
         self,
         block_row_warps=2,
@@ -573,6 +588,7 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
         trans_A, trans_B = self.trans_A, self.trans_B
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
         with_bias = self.with_bias
+        input_transform_kind, weight_transform_kind = self.input_transform_kind, self.weight_transform_kind
 
         # Calculate the micro size per warp using a helper function
         micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(in_dtype)
@@ -581,21 +597,28 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
         block_N = block_col_warps * warp_col_tiles
         block_K = chunk
 
-        # TODO(lei): Can be generalized to analyzed from bank size
-        pad_factor = 8 if in_dtype == "float16" else 16
-
-        can_swizzle_a = block_K * DataType(in_dtype).bits == 512
-        apply_pad_a = not can_swizzle_a
-
         micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(in_dtype)
 
         # Define the shapes of matrices and shared memory buffers
-        A_shape = (M, K)
         B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y, micro_size_k)
         C_shape = (M, N)
         Bias_shape = (N,)
 
-        A_shared_shape = (block_M, (block_K + pad_factor) if apply_pad_a else block_K)
+        is_a_smooth = self.is_a_smooth
+        is_b_smooth = self.is_b_smooth
+
+        if is_a_smooth:
+            A_shape = (M // micro_size_x, K // micro_size_k, micro_size_x, micro_size_k)
+            A_shared_shape = (
+                block_M // micro_size_x,
+                block_K // micro_size_k,
+                micro_size_x,
+                micro_size_k,
+            )
+        else:
+            A_shape = (M, K)
+            A_shared_shape = (block_M, block_K)
+
         B_shared_shape = (
             block_N // micro_size_y,
             block_K // micro_size_k,
@@ -634,7 +657,8 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
             warp_row_tiles=warp_row_tiles,
             warp_col_tiles=warp_col_tiles,
             chunk=chunk,
-            transform_kind_b=self.weight_transform_kind,
+            transform_kind_a=input_transform_kind,
+            transform_kind_b=weight_transform_kind,
         )
 
         cache_write_required = self.check_require_cache()
@@ -663,8 +687,8 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
 
                 # Apply memory layout optimizations
                 T.annotate_layout({
-                    A_shared: make_swizzle_layout(A_shared),
-                    B_shared: make_swizzle_layout(B_shared),
+                    A_shared: make_swizzle_layout(A_shared, is_smooth=is_a_smooth),
+                    B_shared: make_swizzle_layout(B_shared, is_smooth=is_b_smooth),
                 })
 
                 T.use_swizzle(panel_size=10, enable=enable_rasterization)
@@ -675,9 +699,17 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
                 # Main matrix multiplication pipeline with multiple stages
                 for ko in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
 
-                    # Load A matrix into shared memory
-                    for i, k in T.Parallel(block_M, block_K):
-                        A_shared[i, k] = A[by * block_M + i, ko * block_K + k]
+                    if is_a_smooth:
+                        for i, k, ii, kk in T.Parallel(
+                                block_M // micro_size_x,
+                                block_K // micro_size_k,
+                                micro_size_x,
+                                micro_size_k,
+                        ):
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
+                                                       ko * (block_K // micro_size_k), ii, kk]
+                    else:
+                        T.copy(A[by * block_M, ko * block_K], A_shared)
 
                     # Load B matrix into shared memory
                     for j, k, jj, kk in T.Parallel(
@@ -753,16 +785,21 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
 
         return self.post_process(main)
 
-    def __post_init__(self):
-        # Validate the matrix transpose settings
-        assert self.trans_A is False, "Currently only support Matrix A not transposed"
-        assert self.trans_B is True, "Currently only support Matrix B transposed"
+    @property
+    def is_a_smooth(self):
+        return self.input_transform_kind > TransformKind.NonTransform
 
-        return
+    @property
+    def is_b_smooth(self):
+        return self.weight_transform_kind > TransformKind.NonTransform
 
 
 @dataclass
 class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
+
+    @dataclass
+    class TLHint(MatmulFineGrainScheduler.TLHint):
+        hint_type: str = "MatmulINT4FineGrainScheduler"
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
@@ -901,7 +938,7 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
                 # Apply memory layout optimizations
                 T.annotate_layout({
                     A_shared: make_swizzle_layout(A_shared),
-                    B_shared: make_swizzle_layout(B_shared, is_smooth=True),
+                    B_shared: make_swizzle_layout(B_shared),
                 })
 
                 # Optional rasterization for L2 locality enhancement
@@ -972,6 +1009,9 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
 @dataclass
 class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
 
+    class TLHint(MatmulWeightPropagationScheduler.TLHint):
+        hint_type: str = "MatmulINT4WeightPropagationScheduler"
+
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"
         M = self.M
@@ -1041,16 +1081,23 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
         block_N = block_col_warps * warp_col_tiles
         block_K = chunk
 
-        # TODO(lei): Can be generalized to analyzed from bank size
-        pad_factor = 8 if storage_dtype == "float16" else 16
+        is_a_smooth = self.is_a_smooth
+        is_b_smooth = self.is_b_smooth
 
-        can_swizzle_a = block_K * DataType(storage_dtype).bits == 512
-        apply_pad_a = not can_swizzle_a
+        if is_a_smooth:
+            A_shape = (M // micro_size_x, K // micro_size_k, micro_size_x, micro_size_k)
+            A_shared_shape = (
+                block_M // micro_size_x,
+                block_K // micro_size_k,
+                micro_size_x,
+                micro_size_k,
+            )
+        else:
+            A_shape = (M, K)
+            A_shared_shape = (block_M, block_K)
 
         # Define the shapes of matrices and shared memory buffers
-        A_shape = (M, K)
         B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y, micro_size_k)
-        A_shared_shape = (block_M, (block_K + pad_factor) if apply_pad_a else block_K)
         B_shared_shape = (
             block_N // micro_size_y,
             block_K // micro_size_k,
@@ -1089,6 +1136,7 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
             warp_row_tiles=warp_row_tiles,
             warp_col_tiles=warp_col_tiles,
             chunk=chunk,
+            transform_kind_a=self.input_transform_kind,
             transform_kind_b=self.weight_transform_kind,
         )
 
@@ -1116,8 +1164,8 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
 
                 # Apply memory layout optimizations
                 T.annotate_layout({
-                    A_shared: make_swizzle_layout(A_shared),
-                    # B_shared: make_swizzle_layout(B_shared),
+                    A_shared: make_swizzle_layout(A_shared, is_smooth=is_a_smooth),
+                    B_shared: make_swizzle_layout(B_shared, is_smooth=is_b_smooth),
                 })
 
                 T.use_swizzle(panel_size=10, enable=enable_rasterization)
@@ -1128,9 +1176,17 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
                 # Main matrix multiplication pipeline with multiple stages
                 for ko in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
 
-                    # Load A matrix into shared memory
-                    for i, k in T.Parallel(block_M, block_K):
-                        A_shared[i, k] = A[by * block_M + i, ko * block_K + k]
+                    if is_a_smooth:
+                        for i, k, ii, kk in T.Parallel(
+                                block_M // micro_size_x,
+                                block_K // micro_size_k,
+                                micro_size_x,
+                                micro_size_k,
+                        ):
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
+                                                       ko * (block_K // micro_size_k), ii, kk]
+                    else:
+                        T.copy(A[by * block_M, ko * block_K], A_shared)
 
                     # Load B matrix into shared memory
                     for j, k, jj, kk in T.Parallel(
@@ -1398,17 +1454,11 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
     block_N = block_col_warps * warp_col_tiles
     block_K = chunk
 
-    # TODO(lei): Can be generalized to analyzed from bank size
-    pad_factor = 8 if in_dtype == "float16" else 16
-
-    can_swizzle_a = block_K * DataType(in_dtype).bits == 512
-    apply_pad_a = not can_swizzle_a
-
     micro_size_x, micro_size_y, micro_size_k = get_mma_micro_size(in_dtype)
 
     A_shape = (M, K)
     B_shape = (N // micro_size_y, K // micro_size_k, micro_size_y, micro_size_k)
-    A_shared_shape = (block_M, (block_K + pad_factor) if apply_pad_a else block_K)
+    A_shared_shape = (block_M, block_K)
     B_shared_shape = (
         block_N // micro_size_y,
         block_K // micro_size_k,

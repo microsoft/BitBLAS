@@ -6,6 +6,10 @@ from tvm.target import Target
 from .arch_base import TileDevice
 
 
+def is_cpu_arch(arch: TileDevice) -> bool:
+    return isinstance(arch, CPU)
+
+
 # For LLVM Backend, we do not provide the detailed information of the CPU
 # As the LLVM backend do not required tuning, just maintain the consistency
 class CPU(TileDevice):

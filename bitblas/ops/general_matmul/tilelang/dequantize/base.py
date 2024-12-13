@@ -76,8 +76,6 @@ class MatmulDequantizeBaseParams(BaseScheduler):
         # Validate the matrix transpose settings
         assert (self.trans_A is False), "Currently only support Matrix A not transposed"
         assert (self.trans_B is True), "Currently only support Matrix B transposed"
-        assert (self.input_transform_kind == TransformKind.NonTransform
-               ), "Currently only support NonTransform for input"
 
         # Legalize group_size
         if self.with_scaling and self.group_size == -1:
