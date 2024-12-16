@@ -95,7 +95,7 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
     else:
         raise NotImplementedError
 
-    inputs.append(torch.rand(output_shape, dtype=getattr(torch, out_dtype)).cuda())
+    inputs.append(torch.zeros(output_shape, dtype=getattr(torch, out_dtype)).cuda())
 
     intweight = inputs[1]
     intweight = intweight.cpu().to(torch.int8)

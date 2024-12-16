@@ -328,9 +328,8 @@ class TensorCorePolicy(DefaultPolicy):
         # TODO: This is a dummy mul which avoid reusing some shared memory.
         # Should be removed in the future.
         if td.smem_cost > (self.arch.smem_cap):
-            debug_message = f"Tile Dict: {td.output_tile} Shared memory exceeds the static capacity," \
-                " use dynamic shared memory."
-            logger.debug(debug_message)
+            # Tile Dict: {td.output_tile} Shared memory exceeds the static capacity
+            # use dynamic shared memory.
             codegen_dict.shared_scope = "shared.dyn"
 
         codegen_dict.shared_scope = "shared.dyn"

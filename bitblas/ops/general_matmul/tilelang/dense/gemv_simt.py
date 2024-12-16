@@ -186,5 +186,4 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
         # Validate the matrix transpose settings
         assert self.trans_A is False, "Currently only support Matrix A not transposed"
         assert self.trans_B is True, "Currently only support Matrix B transposed"
-        assert self.with_bias is False, "Currently only support without bias"
         return

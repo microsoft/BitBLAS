@@ -398,7 +398,7 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
                             local_size,
                             bx,
                             tx,
-                            ko,
+                            bz * T.ceildiv(splitK, block_K) + ko,
                             i,
                             block_N,
                             block_K,
@@ -454,14 +454,24 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
 
                     # Store results from shared memory to global memory
                     if enable_split_k:
-                        for i, j in T.Parallel(block_M, block_N // 2):
-                            T.atomic_addx2(
-                                C[by * block_M + i, bx * block_N + j * 2], C_shared[
-                                    i // micro_size_x,
-                                    j // micro_size_y,
-                                    i % micro_size_x,
-                                    j % micro_size_y,
-                                ])
+                        if DataType(out_dtype).bits == 16:
+                            for i, j in T.Parallel(block_M, block_N // 2):
+                                T.atomic_addx2(
+                                    C[by * block_M + i, bx * block_N + j * 2], C_shared[
+                                        i // micro_size_x,
+                                        j // micro_size_y,
+                                        i % micro_size_x,
+                                        j % micro_size_y,
+                                    ])
+                        else:
+                            for i, j in T.Parallel(block_M, block_N):
+                                T.atomic_add(
+                                    C[by * block_M + i, bx * block_N + j], C_shared[
+                                        i // micro_size_x,
+                                        j // micro_size_y,
+                                        i % micro_size_x,
+                                        j % micro_size_y,
+                                    ])
                     else:
                         for i, j in T.Parallel(block_M, block_N):
                             C[by * block_M + i, bx * block_N + j] = C_shared[
