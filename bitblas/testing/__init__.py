@@ -84,7 +84,7 @@ def torch_assert_close(tensor_a,
     if num_mismatched > max_allowed_mismatched:
         raise AssertionError(
             f"Too many mismatched elements: {num_mismatched} > {max_allowed_mismatched} "
-            f"({max_mismatched_ratio * 100:.2f}% allowed). "
+            f"({max_mismatched_ratio * 100:.2f}% allowed, but get {num_mismatched / total_elements * 100:.2f}%). "
             f"Greatest absolute difference: {diff.max().item()}, "
             f"Greatest relative difference: {(diff / (torch.abs(tensor_b) + 1e-12)).max().item()}.")
     else:
