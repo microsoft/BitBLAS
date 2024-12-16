@@ -66,6 +66,8 @@ class MatmulDequantizeSIMTBaseScheduler(MatmulDequantizeBaseParams):
         return self.serialize_hints_to_configs(roller_hints)
 
     def get_hardware_aware_configs(self, arch: TileDevice = None, topk=10):
+        if arch is None:
+            arch = self.arch
         return self.get_roller_configs(arch, topk)
 
     # check if required shared memory cache

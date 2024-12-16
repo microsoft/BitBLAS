@@ -50,6 +50,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         chunk: Optional[int] = None,
         num_stages: Optional[int] = None,
         enable_rasterization=False,
+        split_k_factor: Optional[int] = None,
     ):
         assert block_row_warps is not None, "block_row_warps is required"
         assert block_col_warps is not None, "block_col_warps is required"
@@ -140,13 +141,14 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
             micro_size_y,
             micro_size_k // num_elems_per_byte,
         )
-
         C_shared_shape = (
             block_M // micro_size_x,
             block_N // micro_size_y,
             micro_size_x,
             micro_size_y,
         )
+
+        shared_scope = "shared"
 
         import_source: Optional[str] = None
         func_name: str = ""
@@ -187,11 +189,20 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
             num_elems_per_byte=num_elems_per_byte,
         )
 
+        splitK = K // split_k_factor
+        enable_split_k = split_k_factor > 1
+
+        def check_require_cache():
+            conditions = [False]
+            conditions.append(self.check_require_cache())
+            conditions.append(enable_split_k)
+            return any(conditions)
+
+        cache_write_required = check_require_cache()
+
         vec_load_qb = 16
         if block_N * block_K // num_elems_per_byte // threads < vec_load_qb:
             vec_load_qb = block_N * block_K // num_elems_per_byte // threads
-
-        cache_write_required = self.check_require_cache()
 
         @T.prim_func
         def general_dequant_matmul(
@@ -205,10 +216,11 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                 Bias: T.Buffer(Bias_shape, in_dtype),
         ):
             with T.Kernel(
-                    T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
-                A_shared = T.alloc_shared(A_shared_shape, in_dtype)
-                B_shared = T.alloc_shared(B_shared_shape, storage_dtype)
-                C_shared = T.alloc_shared(C_shared_shape, out_dtype)
+                    T.ceildiv(N, block_N), T.ceildiv(M, block_M), split_k_factor,
+                    threads=threads) as (bx, by, bz):
+                A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
+                B_shared = T.alloc_shared(B_shared_shape, storage_dtype, scope=shared_scope)
+                C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
 
                 A_frag = T.alloc_local((warp_rows * fragement_size_a), in_dtype)
                 B_frag = T.alloc_local((warp_cols * fragement_size_b // num_elems_per_byte),
@@ -229,7 +241,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
 
                 T.clear(C_frag)
 
-                for ko in T.Pipelined(T.ceildiv(K, block_K), num_stages=num_stages):
+                for ko in T.Pipelined(T.ceildiv(splitK, block_K), num_stages=num_stages):
 
                     if is_a_smooth:
                         for i, k, ii, kk in T.Parallel(
@@ -238,28 +250,25 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                                 micro_size_x,
                                 micro_size_k,
                         ):
-                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
-                                                       ko * (block_K // micro_size_k), ii, kk]
+                            A_shared[i, k, ii,
+                                     kk] = A[by * (block_M // micro_size_x) + i,
+                                             bz * splitK + ko * (block_K // micro_size_k) + k, ii,
+                                             kk]
                     else:
-                        T.copy(A[by * block_M, ko * block_K], A_shared)
+                        T.copy(A[by * block_M, bz * splitK + ko * block_K], A_shared)
 
-                    for i in T.serial(block_N * block_K // num_elems_per_byte //
-                                      (threads * vec_load_qb)):
-                        for v in T.vectorized(0, vec_load_qb):
-                            idx = i * threads * vec_load_qb + tx * vec_load_qb + v
-                            vkk = idx % (micro_size_k // num_elems_per_byte)
-                            vjj = (idx // (micro_size_k // num_elems_per_byte)) % micro_size_y
-                            vk = (idx // (micro_size_k // num_elems_per_byte) // micro_size_y) % (
-                                block_K // micro_size_k)
-                            vj = (idx // (micro_size_k // num_elems_per_byte) // micro_size_y //
-                                  (block_K // micro_size_k)) % (
-                                      block_N // micro_size_y)
-                            B_shared[vj, vk, vjj, vkk] = B[
-                                bx * (block_N // micro_size_y) + vj,
-                                ko * (block_K // micro_size_k) + vk,
-                                vjj,
-                                vkk,
-                            ]
+                    for j, k, jj, kk in T.Parallel(
+                            block_N // micro_size_y,
+                            block_K // micro_size_k,
+                            micro_size_y,
+                        (micro_size_k // num_elems_per_byte),
+                    ):
+                        B_shared[j, k, jj, kk] = B[
+                            bx * (block_N // micro_size_y) + j,
+                            bz * (splitK // micro_size_k) + ko * (block_K // micro_size_k) + k,
+                            jj,
+                            kk,
+                        ]
 
                     # Perform the matrix multiplication on tensor core fragments
                     for ki in T.serial(0, (block_K // micro_size_k)):
@@ -336,14 +345,38 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                                 j % micro_size_y,
                             ] += Bias[j]
 
-                    # Store results from shared memory to global memory
-                    for i, j in T.Parallel(block_M, block_N):
-                        C[by * block_M + i, bx * block_N + j] = C_shared[
-                            i // micro_size_x,
-                            j // micro_size_y,
-                            i % micro_size_x,
-                            j % micro_size_y,
-                        ]
+                # Store results from shared memory to global memory
+                    if enable_split_k:
+                        # only for fp16
+                        if DataType(out_dtype).bits == 16:
+                            for i, j in T.Parallel(block_M, block_N // 2):
+                                m, n = by * block_M + i, bx * block_N + j * 2
+                                T.atomic_addx2(
+                                    C[m, n], C_shared[
+                                        i // micro_size_x,
+                                        (j * 2) // micro_size_y,
+                                        i % micro_size_x,
+                                        (j * 2) % micro_size_y,
+                                    ])
+                        else:
+                            for i, j in T.Parallel(block_M, block_N):
+                                m, n = by * block_M + i, bx * block_N + j
+                                C[m, n] = C_shared[
+                                    i // micro_size_x,
+                                    j // micro_size_y,
+                                    i % micro_size_x,
+                                    j % micro_size_y,
+                                ]
+                    else:
+                        for i, j in T.Parallel(block_M, block_N):
+                            m, n = by * block_M + i, bx * block_N + j
+                            C[m, n] = C_shared[
+                                i // micro_size_x,
+                                j // micro_size_y,
+                                i % micro_size_x,
+                                j % micro_size_y,
+                            ]
+
                 else:
                     mma_emitter.stmatrix(
                         C_frag,
@@ -878,8 +911,8 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
                                 micro_size_x,
                                 micro_size_k,
                         ):
-                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
-                                                       ko * (block_K // micro_size_k), ii, kk]
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x) + i,
+                                                       ko * (block_K // micro_size_k) + k, ii, kk]
                     else:
                         T.copy(A[by * block_M, ko * block_K], A_shared)
 

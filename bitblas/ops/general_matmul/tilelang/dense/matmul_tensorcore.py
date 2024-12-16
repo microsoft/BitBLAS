@@ -706,8 +706,8 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
                                 micro_size_x,
                                 micro_size_k,
                         ):
-                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
-                                                       ko * (block_K // micro_size_k), ii, kk]
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x) + i,
+                                                       ko * (block_K // micro_size_k) + k, ii, kk]
                     else:
                         T.copy(A[by * block_M, ko * block_K], A_shared)
 
@@ -1183,8 +1183,8 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
                                 micro_size_x,
                                 micro_size_k,
                         ):
-                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
-                                                       ko * (block_K // micro_size_k), ii, kk]
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x) + i,
+                                                       ko * (block_K // micro_size_k) + k, ii, kk]
                     else:
                         T.copy(A[by * block_M, ko * block_K], A_shared)
 
