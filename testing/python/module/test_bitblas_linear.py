@@ -2,7 +2,6 @@
 # Licensed under the MIT License.
 import bitblas
 import bitblas.testing
-from bitblas.cache import get_database_path
 from bitblas import Linear as BitBLASLinear
 import torch
 import time
