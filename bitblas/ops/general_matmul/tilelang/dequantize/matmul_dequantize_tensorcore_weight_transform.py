@@ -343,7 +343,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                                 j // micro_size_y,
                                 i % micro_size_x,
                                 j % micro_size_y,
-                            ] += Bias[j]
+                            ] += Bias[bx * block_N + j]
 
                 # Store results from shared memory to global memory
                     if enable_split_k:

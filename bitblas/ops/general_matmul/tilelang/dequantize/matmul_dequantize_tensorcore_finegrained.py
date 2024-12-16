@@ -212,13 +212,14 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
         assert chunk is not None, "chunk is required"
         assert num_stages is not None, "num_stages is required"
 
+        shared_scope = "shared.dyn"
         M = self.maybe_dynamic(self.M, "m")
         N, K = self.N, self.K
         assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
         trans_A, trans_B = self.trans_A, self.trans_B
 
         assert trans_A is False, "Dequantize only implement for trans_A=False currently"
-        assert trans_B is True, "Dequantize only implement for trans_B=TRue currently"
+        assert trans_B is True, "Dequantize only implement for trans_B=True currently"
 
         in_dtype, out_dtype, accum_dtype = (
             self.in_dtype,
@@ -340,10 +341,11 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), split_k_factor,
                     threads=threads) as (bx, by, bz):
-                A_shared = T.alloc_shared(A_shared_shape, in_dtype)
-                B_shared = T.alloc_shared(B_shared_shape, storage_dtype)
-                B_dequantize_shared = T.alloc_shared(B_dequantize_shared_shape, in_dtype)
-                C_shared = T.alloc_shared(C_shared_shape, out_dtype)
+                A_shared = T.alloc_shared(A_shared_shape, in_dtype, scope=shared_scope)
+                B_shared = T.alloc_shared(B_shared_shape, storage_dtype, scope=shared_scope)
+                B_dequantize_shared = T.alloc_shared(
+                    B_dequantize_shared_shape, in_dtype, scope=shared_scope)
+                C_shared = T.alloc_shared(C_shared_shape, out_dtype, scope=shared_scope)
 
                 A_frag = T.alloc_local((warp_rows * fragement_size_a), in_dtype)
                 B_frag = T.alloc_local((warp_cols * fragement_size_b), in_dtype)
@@ -456,12 +458,13 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
                     if enable_split_k:
                         if DataType(out_dtype).bits == 16:
                             for i, j in T.Parallel(block_M, block_N // 2):
+                                m, n = by * block_M + i, bx * block_N + j * 2
                                 T.atomic_addx2(
-                                    C[by * block_M + i, bx * block_N + j * 2], C_shared[
+                                    C[m, n], C_shared[
                                         i // micro_size_x,
-                                        j // micro_size_y,
+                                        (j * 2) // micro_size_y,
                                         i % micro_size_x,
-                                        j % micro_size_y,
+                                        (j * 2) % micro_size_y,
                                     ])
                         else:
                             for i, j in T.Parallel(block_M, block_N):

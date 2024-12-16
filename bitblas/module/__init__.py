@@ -274,7 +274,7 @@ class Linear(nn.Module):
         self.init_params()
         args = [A_void, *self.q_params]
         if output is None:
-            output = torch.empty(
+            output = torch.zeros(
                 A.shape[:-1] + (self.out_features,),
                 dtype=getattr(torch, self.bitblas_matmul.out_dtype),
                 device=A.device)
