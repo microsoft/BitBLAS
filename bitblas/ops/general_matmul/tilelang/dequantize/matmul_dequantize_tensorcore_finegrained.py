@@ -202,7 +202,7 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
         warp_col_tiles: Optional[int] = None,
         chunk: Optional[int] = None,
         num_stages: Optional[int] = None,
-        enable_rasterization: bool =False,
+        enable_rasterization: bool = False,
         split_k_factor: Optional[int] = None,
     ):
         assert block_row_warps is not None, "block_row_warps is required"
@@ -550,7 +550,7 @@ class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedSchedu
         warp_col_tiles: Optional[int] = None,
         chunk: Optional[int] = None,
         num_stages: Optional[int] = None,
-        enable_rasterization: bool =False,
+        enable_rasterization: bool = False,
         split_k_factor: Optional[int] = None,
     ):
         assert block_row_warps is not None, "block_row_warps is required"
