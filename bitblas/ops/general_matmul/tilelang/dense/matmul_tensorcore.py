@@ -381,7 +381,7 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
         warp_col_tiles: Optional[int] = None,
         chunk: Optional[int] = None,
         num_stages: Optional[int] = None,
-        enable_rasterization=False,
+        enable_rasterization: bool = False,
     ):
         assert block_row_warps is not None, "block_row_warps is required"
         assert block_col_warps is not None, "block_col_warps is required"
@@ -578,7 +578,7 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
         warp_col_tiles=32,
         chunk=16,
         num_stages=2,
-        enable_rasterization=False,
+        enable_rasterization: bool = False,
     ):
 
         M = self.maybe_dynamic(self.M, "m")
@@ -706,8 +706,8 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
                                 micro_size_x,
                                 micro_size_k,
                         ):
-                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
-                                                       ko * (block_K // micro_size_k), ii, kk]
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x) + i,
+                                                       ko * (block_K // micro_size_k) + k, ii, kk]
                     else:
                         T.copy(A[by * block_M, ko * block_K], A_shared)
 
@@ -850,7 +850,7 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
         warp_col_tiles: Optional[int] = None,
         chunk: Optional[int] = None,
         num_stages: Optional[int] = None,
-        enable_rasterization=False,
+        enable_rasterization: bool = False,
     ):
         assert block_row_warps is not None, "block_row_warps is required"
         assert block_col_warps is not None, "block_col_warps is required"
@@ -1061,7 +1061,7 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
         warp_col_tiles=32,
         chunk=16,
         num_stages=2,
-        enable_rasterization=False,
+        enable_rasterization: bool = False,
     ):
 
         M = self.maybe_dynamic(self.M, "m")
@@ -1183,8 +1183,8 @@ class MatmulINT4WeightPropagationScheduler(MatmulWeightPropagationScheduler):
                                 micro_size_x,
                                 micro_size_k,
                         ):
-                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x),
-                                                       ko * (block_K // micro_size_k), ii, kk]
+                            A_shared[i, k, ii, kk] = A[by * (block_M // micro_size_x) + i,
+                                                       ko * (block_K // micro_size_k) + k, ii, kk]
                     else:
                         T.copy(A[by * block_M, ko * block_K], A_shared)
 
@@ -1264,7 +1264,7 @@ def matmul_blocked(
         accum_dtype="float16",
         num_stages=2,
         threads=128,
-        enable_rasterization=False,  # Enhance L2 Locality
+        enable_rasterization: bool = False,  # Enhance L2 Locality
 ):
     A_shape = (K, M) if trans_A else (M, K)
     B_shape = (N, K) if trans_B else (K, N)
@@ -1316,7 +1316,7 @@ def matmul_macro_tensorcore(
     warp_col_tiles,
     chunk,
     num_stages=2,
-    enable_rasterization=False,
+    enable_rasterization: bool = False,
 ):
     assert trans_A is False, "Currently only support Matrix A is not transposed"
     assert trans_B is True, "Currently only support Matrix B is transposed"
@@ -1445,7 +1445,7 @@ def matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
     warp_col_tiles,
     chunk,
     num_stages=2,
-    enable_rasterization=False,
+    enable_rasterization: bool = False,
 ):
     assert trans_A is False, "Currently only support Matrix A is not transposed"
     assert trans_B is True, "Currently only support Matrix B is transposed"

@@ -173,6 +173,10 @@ class Hint(object):
         # Config for block reduction
         self.block_reduction_depth = None  # type: int
 
+        # TL Specific
+        # Split-K factor for SM waste optimization
+        self.split_k_factor: int = 1
+
         # Experimental
         self._raxis_order = []
         self._step = []
