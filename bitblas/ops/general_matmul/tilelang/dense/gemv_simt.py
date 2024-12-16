@@ -111,8 +111,8 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
 
         A_shape = (M, K)
         B_shape = (N, K)
-        C_shape = (M, N)
         Bias_shape = (N,)
+        C_shape = (M, N)
 
         dp4a_size = 4
         use_dp4a = in_dtype == "int8" and accum_dtype == "int32"
@@ -121,8 +121,8 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
         def main(
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, in_dtype),
-                C: T.Buffer(C_shape, out_dtype),
                 Bias: T.Buffer(Bias_shape, out_dtype),
+                C: T.Buffer(C_shape, out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, n_partition), M, threads=(reduce_thread, n_partition)) as (

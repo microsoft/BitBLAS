@@ -57,7 +57,7 @@ class MatmulSIMTBaseScheduler(MatmulBaseParams):
 
         conditions: List[bool] = []
         conditions.append(False)
-        # Bias Add should be done in shared memory
+        # Bias Add should be performed in shared memory
         conditions.append(with_bias)
         return any(conditions)  # Always set to False Currently
 
@@ -201,8 +201,8 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
         def main(
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, in_dtype),
-                C: T.Buffer(C_shape, out_dtype),
                 Bias: T.Buffer(Bias_shape, out_dtype),
+                C: T.Buffer(C_shape, out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):

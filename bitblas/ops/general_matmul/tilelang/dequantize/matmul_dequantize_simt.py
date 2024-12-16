@@ -624,8 +624,8 @@ class MatmulDequantizeSIMTScheduler(MatmulDequantizeSIMTBaseScheduler):
                 Scale: T.Buffer(Scale_shape, in_dtype),
                 Qzeros: T.Buffer(Qzeros_shape, storage_dtype),
                 Zeros: T.Buffer(Zeros_shape, in_dtype),
-                C: T.Buffer(C_shape, out_dtype),
                 Bias: T.Buffer(Bias_shape, in_dtype),
+                C: T.Buffer(C_shape, out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
