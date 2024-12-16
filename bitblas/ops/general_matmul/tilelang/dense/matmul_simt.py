@@ -171,7 +171,7 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
             self.out_dtype,
             self.accum_dtype,
         )
-        
+
         with_bias = self.with_bias
 
         shared_scope = "shared.dyn"
@@ -253,13 +253,16 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                                 else:
                                     for dp4a_idx in T.serial(dp4a_size):
                                         C_local[i * local_size_b + j] += (
-                                            A_local[i, mk * dp4a_size + dp4a_idx].astype(accum_dtype) *
-                                            B_local[j, mk * dp4a_size + dp4a_idx].astype(accum_dtype))
+                                            A_local[i,
+                                                    mk * dp4a_size + dp4a_idx].astype(accum_dtype) *
+                                            B_local[j,
+                                                    mk * dp4a_size + dp4a_idx].astype(accum_dtype))
 
                 if with_bias:
                     for i, j in T.grid(local_size_a, local_size_b):
-                        C_local[i * local_size_b + j] += Bias[bx * block_N + warp_n * local_size_b + j]
-                        
+                        C_local[i * local_size_b + j] += Bias[bx * block_N + warp_n * local_size_b +
+                                                              j]
+
                 for i in T.serial(local_size_a):
                     for j in T.vectorized(local_size_b):
                         C[

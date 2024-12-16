@@ -387,10 +387,10 @@ class Matmul(Operator):
         self.dispatch(target, from_database, source_format, enable_tuning)
 
     def dispatch(self,
-                     target: Target,
-                     from_database: bool = False,
-                     source_format: str = "uint",
-                     enable_tuning: bool = True):
+                 target: Target,
+                 from_database: bool = False,
+                 source_format: str = "uint",
+                 enable_tuning: bool = True):
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
@@ -640,21 +640,19 @@ class Matmul(Operator):
 
     def retrieve_weight_shape(self):
         prim_func = self.prim_func
-        
+
         # retrieve from tilelang backend
         if prim_func is None and self.scheduled_ir_module is not None:
             prim_func = retrieve_func_from_module(self.scheduled_ir_module)
-        
-        if prim_func is None and  self.is_tilelang_backend():
+
+        if prim_func is None and self.is_tilelang_backend():
             # If from_database and from tilelang backend, we should construct a default module
-            self._update_optimized_mod(
-                self.scheduler_with_default(self.scheduler)
-            )
+            self._update_optimized_mod(self.scheduler_with_default(self.scheduler))
             prim_func = retrieve_func_from_module(self.scheduled_ir_module)
-        
+
         if prim_func is not None:
             return [int(i) for i in prim_func.buffer_map[prim_func.params[1]].shape]
-        
+
         raise ValueError("The weight shape is not available.")
 
     def transform_weight(self, weight, scale=None, zeros=None, bias=None):

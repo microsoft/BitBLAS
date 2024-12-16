@@ -4,7 +4,6 @@ import bitblas
 import bitblas.testing
 import torch
 
-
 torch.manual_seed(0)
 bitblas.set_log_level("DEBUG")
 
@@ -61,6 +60,7 @@ def assert_output_with_gptq(m, in_features, out_features, group_size):
 
     # Verify the outputs are close within specified tolerances
     torch.testing.assert_close(res_bitblas, res_cuda_old, rtol=1e-0, atol=1e-1)
+
 
 @bitblas.testing.requires_package("auto_gptq")
 def test_assert_output_with_gptq():
