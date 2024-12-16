@@ -444,8 +444,7 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
             chunk=chunk,
         )
 
-        # cache_write_required = self.check_require_cache()
-        cache_write_required = False
+        cache_write_required = self.check_require_cache()
 
         # Define the main kernel using the generated configuration
         @T.prim_func

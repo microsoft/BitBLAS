@@ -37,6 +37,7 @@ def correctness_consistent(m, in_features, out_features, bias):
         input_data = torch.randn(m, in_features, dtype=torch.float16).cuda()
         output_torch = linear_torch(input_data)
         output_bitblas = linear_bitblas(input_data)
+
     bitblas.testing.torch_assert_close(output_torch, output_bitblas, rtol=1e-1, atol=1e-2)
 
 
@@ -199,4 +200,6 @@ def profile(model, input_data):
 
 
 if __name__ == "__main__":
-    bitblas.testing.main()
+    # bitblas.testing.main()
+    # test_correctness_consistent()
+    correctness_consistent([1, 1024], 1024, 1024, True)
