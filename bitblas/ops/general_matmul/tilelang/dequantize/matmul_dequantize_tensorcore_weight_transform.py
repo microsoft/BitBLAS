@@ -49,7 +49,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         warp_col_tiles: Optional[int] = None,
         chunk: Optional[int] = None,
         num_stages: Optional[int] = None,
-        enable_rasterization=False,
+        enable_rasterization: bool =False,
         split_k_factor: Optional[int] = None,
     ):
         assert block_row_warps is not None, "block_row_warps is required"
@@ -727,7 +727,8 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
         warp_col_tiles: Optional[int] = None,
         chunk: Optional[int] = None,
         num_stages: Optional[int] = None,
-        enable_rasterization=False,
+        enable_rasterization: bool =False,
+        split_k_factor: Optional[int] = None,
     ):
         assert block_row_warps is not None, "block_row_warps is required"
         assert block_col_warps is not None, "block_col_warps is required"
@@ -735,6 +736,8 @@ class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropa
         assert warp_col_tiles is not None, "warp_col_tiles is required"
         assert chunk is not None, "chunk is required"
         assert num_stages is not None, "num_stages is required"
+        # unused variable
+        split_k_factor = split_k_factor
 
         M = self.maybe_dynamic(self.M, "m")
         N, K = self.N, self.K

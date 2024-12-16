@@ -90,7 +90,7 @@ def assert_matmul_blocked_apply_config_correctness(
     accum_dtype="float16",
     num_stages=2,
     threads=128,
-    enable_rasterization=False,
+    enable_rasterization: bool =False,
 ):
     matmul = MatmulBlockScheduler(
         M=M,
@@ -196,7 +196,7 @@ def assert_matmul_fine_grained_apply_config_correctness(
     warp_col_tiles=16,
     chunk=32,
     num_stages=2,
-    enable_rasterization=False,
+    enable_rasterization: bool =False,
 ):
 
     matmul = MatmulFineGrainScheduler(
@@ -316,7 +316,7 @@ def assert_matmul_weight_propagation_apply_config_correctness(
     warp_col_tiles=16,
     chunk=32,
     num_stages=2,
-    enable_rasterization=False,
+    enable_rasterization: bool =False,
 ):
 
     matmul = MatmulWeightPropagationScheduler(
@@ -438,7 +438,7 @@ def assert_matmul_int4_fine_grained_apply_config_correctness(
     warp_col_tiles=16,
     chunk=32,
     num_stages=2,
-    enable_rasterization=False,
+    enable_rasterization: bool =False,
 ):
 
     matmul = MatmulINT4FineGrainScheduler(
@@ -566,7 +566,7 @@ def assert_matmul_int4_weight_propagation_apply_config__correctness(
     warp_col_tiles=16,
     chunk=32,
     num_stages=2,
-    enable_rasterization=False,
+    enable_rasterization: bool =False,
 ):
 
     matmul = MatmulINT4WeightPropagationScheduler(
@@ -737,7 +737,7 @@ def assert_matmul_fine_grained_dequant_int4_apply_config_correctness(
     warp_col_tiles=16,
     chunk=32,
     num_stages=2,
-    enable_rasterization=False,
+    enable_rasterization: bool =False,
 ):
     matmul = MatmulINT4DequantizeFineGrainedScheduler(
         M=M,
@@ -941,7 +941,7 @@ def assert_matmul_weight_transform_dequant_int4_apply_config_correctness(
     warp_col_tiles=16,
     chunk=32,
     num_stages=2,
-    enable_rasterization=False,
+    enable_rasterization: bool =False,
 ):
     matmul = MatmulINT4DequantizeWeightPropagationScheduler(
         M=M,

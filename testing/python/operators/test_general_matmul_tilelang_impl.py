@@ -86,7 +86,7 @@ def assert_matmul_macro_tensorcore_correctness(
     warp_col_tiles=16,
     chunk=32,
     num_stages=2,
-    enable_rasterization=False,
+    enable_rasterization: bool =False,
 ):
     matmul = matmul_macro_tensorcore(
         M=M,
@@ -144,7 +144,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_correctness(
     warp_col_tiles=16,
     chunk=32,
     num_stages=2,
-    enable_rasterization=False,
+    enable_rasterization: bool =False,
 ):
     matmul = matmul_macro_tensorcore_weight_propagation_level_ldmatrix(
         M=M,

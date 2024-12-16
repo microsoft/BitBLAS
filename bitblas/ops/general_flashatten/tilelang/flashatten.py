@@ -60,7 +60,7 @@ class FlashAttenScheduler(BaseScheduler):
         block_N=64,
         num_stages=2,
         threads=128,
-        enable_rasterization=False,
+        enable_rasterization: bool =False,
     ):
         batch, heads, seq_len, dim = self.batch, self.heads, self.seq_len, self.dim
         trans_K = self.trans_K
@@ -185,7 +185,7 @@ def flashatten_blocked(
         num_stages=2,
         threads=128,
         is_causal=False,
-        enable_rasterization=False,  # Enhance L2 Locality
+        enable_rasterization: bool =False,  # Enhance L2 Locality
 ):
     Q_shape = (batch, seq_len, heads, dim) if not trans_Q else (batch, dim, heads, seq_len)
     K_shape = (batch, seq_len, heads, dim) if not trans_K else (batch, dim, heads, seq_len)
