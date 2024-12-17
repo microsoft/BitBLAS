@@ -371,8 +371,14 @@ class Matmul(Operator):
         self.bit = bit
 
         # This is a hack to support the int4 and uint4
+        # legalize the backend (hacky implementation)
+        # TODO(lei): In future release we should remove
+        # by implementing all the operators in the tl backend.
         if config.A_dtype in ["int4", "uint4"]:
             backend = "tl"
+        if source_format in ["nf"]:
+            backend = "tir"
+
         super().__init__(name, config, target, backend)
 
         if source_format == "int" and self.with_zeros:
