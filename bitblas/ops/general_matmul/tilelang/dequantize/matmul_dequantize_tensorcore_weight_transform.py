@@ -212,8 +212,8 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                 Scale: T.Buffer(Scale_shape, in_dtype),
                 Qzeros: T.Buffer(Qzeros_shape, storage_dtype),
                 Zeros: T.Buffer(Zeros_shape, in_dtype),
-                C: T.Buffer(C_shape, out_dtype),
                 Bias: T.Buffer(Bias_shape, in_dtype),
+                C: T.Buffer(C_shape, out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), split_k_factor,
@@ -302,7 +302,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                                 bx,
                                 tx,
                                 mma_emitter,
-                                ko,
+                                bz * T.ceildiv(splitK, block_K) + ko,
                                 ki,
                                 block_N,
                                 block_K,
@@ -319,7 +319,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                                 bx,
                                 tx,
                                 mma_emitter,
-                                ko,
+                                bz * T.ceildiv(splitK, block_K) + ko,
                                 ki,
                                 block_N,
                                 block_K,
@@ -336,14 +336,15 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                         thread_bindings=tx,
                     )
 
-                    if with_bias:
-                        for i, j in T.Parallel(block_M, block_N):
-                            C_shared[
-                                i // micro_size_x,
-                                j // micro_size_y,
-                                i % micro_size_x,
-                                j % micro_size_y,
-                            ] += Bias[j]
+                    if with_bias:  # noqa: SIM102
+                        if bz == 0:  # as bz is the k-dim, otherwise, bias will be added multiple times
+                            for i, j in T.Parallel(block_M, block_N):
+                                C_shared[
+                                    i // micro_size_x,
+                                    j // micro_size_y,
+                                    i % micro_size_x,
+                                    j % micro_size_y,
+                                ] += Bias[bx * block_N + j]
 
                 # Store results from shared memory to global memory
                     if enable_split_k:

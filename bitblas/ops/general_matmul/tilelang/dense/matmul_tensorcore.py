@@ -69,7 +69,7 @@ class MatmulBaseScheduler(MatmulBaseParams):
 
         conditions: List[bool] = []
         conditions.append(False)
-        # Bias Add should be done in shared memory
+        # Bias Add should be performed in shared memory
         conditions.append(with_bias)
         return any(conditions)  # Always set to False Currently
 
@@ -227,8 +227,8 @@ class MatmulBlockScheduler(MatmulBaseScheduler):
         def main(
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, in_dtype),
-                C: T.Buffer(C_shape, out_dtype),
                 Bias: T.Buffer(Bias_shape, out_dtype),
+                C: T.Buffer(C_shape, out_dtype),
         ):
             with T.Kernel(
                     T.ceildiv(N, block_N), T.ceildiv(M, block_M), threads=threads) as (bx, by):
@@ -444,16 +444,15 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
             chunk=chunk,
         )
 
-        # cache_write_required = self.check_require_cache()
-        cache_write_required = False
+        cache_write_required = self.check_require_cache()
 
         # Define the main kernel using the generated configuration
         @T.prim_func
         def main(
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, in_dtype),
-                C: T.Buffer(C_shape, out_dtype),
                 Bias: T.Buffer(Bias_shape, out_dtype),
+                C: T.Buffer(C_shape, out_dtype),
         ):
             # Grid and thread configuration for CUDA kernel
             with T.Kernel(
@@ -667,8 +666,8 @@ class MatmulWeightPropagationScheduler(MatmulFineGrainScheduler):
         def main(
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, in_dtype),
-                C: T.Buffer(C_shape, out_dtype),
                 Bias: T.Buffer(Bias_shape, out_dtype),
+                C: T.Buffer(C_shape, out_dtype),
         ):
             # Grid and thread configuration for CUDA kernel
             with T.Kernel(
@@ -867,6 +866,8 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
         in_dtype, out_dtype, accum_dtype = self.in_dtype, self.out_dtype, self.accum_dtype
         assert in_dtype == "int4", "Only support int4 input"
         assert accum_dtype == "int32", "Only support int32 accumulation"
+        with_bias = self.with_bias
+        assert not with_bias, "Currently do not support bias"
         storage_dtype = "int8"
 
         # Calculate the micro size per warp using a helper function
@@ -879,6 +880,8 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
         # Define the shapes of matrices and shared memory buffers
         A_shape = (M, K)
         B_shape = (N, K)
+        Bias_shape = (N,)
+        C_shape = (M, N)
         A_shared_shape = (block_M, block_K)
         B_shared_shape = (block_N, block_K)
         C_shared_shape = (
@@ -918,7 +921,8 @@ class MatmulINT4FineGrainScheduler(MatmulFineGrainScheduler):
         def main(
                 A: T.Buffer(A_shape, storage_dtype),
                 B: T.Buffer(B_shape, storage_dtype),
-                C: T.Buffer((M, N), out_dtype),
+                Bias: T.Buffer(Bias_shape, out_dtype),
+                C: T.Buffer(C_shape, out_dtype),
         ):
             # Grid and thread configuration for CUDA kernel
             with T.Kernel(

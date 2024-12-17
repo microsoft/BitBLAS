@@ -38,7 +38,8 @@ def matmul_backend_code_wrap(
         out_dtype=out_dtype,
         with_bias=with_bias,
     )
-    matmul = Matmul(config=matmul_config, enable_tuning=False)
+    matmul = Matmul(config=matmul_config, enable_tuning=False, backend="tir")
+    assert matmul.is_tir_backend(), "Backend should be TIR"
     backend = TIRWrapper(arch=matmul.arch)
     backend.assign_optimized_module(matmul.scheduled_ir_module)
     is_dynamic = (

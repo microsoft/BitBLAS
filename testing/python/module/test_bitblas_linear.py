@@ -37,7 +37,8 @@ def correctness_consistent(m, in_features, out_features, bias):
         input_data = torch.randn(m, in_features, dtype=torch.float16).cuda()
         output_torch = linear_torch(input_data)
         output_bitblas = linear_bitblas(input_data)
-
+    print(output_torch)
+    print(output_bitblas)
     bitblas.testing.torch_assert_close(output_torch, output_bitblas, rtol=1e-1, atol=1e-2)
 
 
@@ -154,17 +155,15 @@ def correctness_weight_only_dequantize(
 
     with torch.no_grad():
         output_bitblas = linear_bitblas(inputs[0])
-    try:
-        rtol = 1e0
-        atol = 1e0
-        if zeros_mode == "original":
-            rtol = 1e2
-            atol = 1e2
-        torch.testing.assert_close(output_bitblas, ref_result, rtol=rtol, atol=atol)
-    except AssertionError as e:
-        print(ref_result, output_bitblas)
-        print(f"Failed with {e}")
-        raise e
+
+    rtol = 1e0
+    atol = 1e0
+    if zeros_mode == "original":
+        rtol = 1e2
+        atol = 1e2
+    print(output_bitblas)
+    print(ref_result)
+    torch.testing.assert_close(output_bitblas, ref_result, rtol=rtol, atol=atol)
 
 
 def test_correctness_weight_only_dequantize():

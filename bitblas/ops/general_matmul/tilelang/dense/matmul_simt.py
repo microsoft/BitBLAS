@@ -57,7 +57,7 @@ class MatmulSIMTBaseScheduler(MatmulBaseParams):
 
         conditions: List[bool] = []
         conditions.append(False)
-        # Bias Add should be done in shared memory
+        # Bias Add should be performed in shared memory
         conditions.append(with_bias)
         return any(conditions)  # Always set to False Currently
 
@@ -172,6 +172,8 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
             self.accum_dtype,
         )
 
+        with_bias = self.with_bias
+
         shared_scope = "shared.dyn"
 
         block_M = block_size_x * thread_row_tiles
@@ -183,6 +185,7 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
         C_shape = (M, N)
         A_shared_shape = (block_M, block_K)
         B_shared_shape = (block_N, block_K)
+        Bias_shape = (N,)
 
         threads = thread_row_tiles * thread_col_tiles
         local_size_a = block_M // thread_row_tiles
@@ -198,6 +201,7 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
         def main(
                 A: T.Buffer(A_shape, in_dtype),
                 B: T.Buffer(B_shape, in_dtype),
+                Bias: T.Buffer(Bias_shape, out_dtype),
                 C: T.Buffer(C_shape, out_dtype),
         ):
             with T.Kernel(
@@ -249,14 +253,22 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                                 else:
                                     for dp4a_idx in T.serial(dp4a_size):
                                         C_local[i * local_size_b + j] += (
-                                            A_local[i, mk * dp4a_size + dp4a_idx] *
-                                            B_local[j, mk * dp4a_size + dp4a_idx])
+                                            A_local[i,
+                                                    mk * dp4a_size + dp4a_idx].astype(accum_dtype) *
+                                            B_local[j,
+                                                    mk * dp4a_size + dp4a_idx].astype(accum_dtype))
 
-                for i, j in T.grid(local_size_a, local_size_b):
-                    C[
-                        by * block_M + warp_m * local_size_a + i,
-                        bx * block_N + warp_n * local_size_b + j,
-                    ] = C_local[i * local_size_b + j]
+                if with_bias:
+                    for i, j in T.grid(local_size_a, local_size_b):
+                        C_local[i * local_size_b + j] += Bias[bx * block_N + warp_n * local_size_b +
+                                                              j]
+
+                for i in T.serial(local_size_a):
+                    for j in T.vectorized(local_size_b):
+                        C[
+                            by * block_M + warp_m * local_size_a + i,
+                            bx * block_N + warp_n * local_size_b + j,
+                        ] = C_local[i * local_size_b + j]
 
         return self.post_process(main)
 
@@ -264,6 +276,5 @@ class MatmulFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
         # Validate the matrix transpose settings
         assert self.trans_A is False, "Currently only support Matrix A not transposed"
         assert self.trans_B is True, "Currently only support Matrix B transposed"
-        assert self.with_bias is False, "Currently only support without bias"
 
         return

@@ -236,7 +236,7 @@ class Operator(object):
                 raise ValueError(f"Unsupported target: {self.arch}")
         return rt_mod
 
-    def scheduler_with_default(self, scheduler: BaseScheduler):
+    def scheduler_with_default(self, scheduler: BaseScheduler) -> Optional[IRModule]:
         scheduled_ir_module = IRModule.from_expr(scheduler.with_default_config())
         if scheduled_ir_module is not None:
             self.ir_module = scheduled_ir_module
@@ -501,7 +501,10 @@ class Operator(object):
         raise NotImplementedError
 
     @property
-    def prim_func(self):
+    def prim_func(self) -> Optional[PrimFunc]:
+        if self.ir_module is None:
+            return None
+
         if len(self.ir_module.get_global_vars()) == 1:
             return self.ir_module[self.ir_module.get_global_vars()[0]]
         elif "main" in self.ir_module:

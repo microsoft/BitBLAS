@@ -163,7 +163,6 @@ def matmul_torch_forward_dequant(M,
         propagate_b=propagate_b,
     )
     matmul = Matmul(config=matmul_config, enable_tuning=False, backend="tl")
-
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
     output_shape = (M, N)

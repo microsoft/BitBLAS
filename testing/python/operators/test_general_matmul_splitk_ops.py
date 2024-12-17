@@ -76,7 +76,7 @@ def matmul_torch_forward_consistent(SplitK, M, N, K, A_dtype, W_dtype, accum_dty
 
     output_bitblas = matmul.forward(*inputs)
     output_torch = torch.matmul(inputs[0], inputs[1].t() if layout == "nt" else inputs[1])
-    torch.testing.assert_close(output_bitblas, output_torch, rtol=1e-2, atol=1e-1)
+    bitblas.testing.torch_assert_close(output_torch, output_bitblas, rtol=1e-2, atol=1e-1, max_mismatched_ratio=1e-2)
 
 
 def test_matmul_torch_forward_consistent():

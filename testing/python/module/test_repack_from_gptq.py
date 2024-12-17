@@ -4,19 +4,14 @@ import bitblas
 import bitblas.testing
 import torch
 
-try:
-    import auto_gptq  # noqa: F401
-except ImportError as e:
-    raise ImportError("Please install auto-gptq by running `pip install auto-gptq`") from e
-
-from auto_gptq.nn_modules.qlinear.qlinear_cuda_old import (
-    QuantLinear as CudaOldQuantLinear,)
-
 torch.manual_seed(0)
 bitblas.set_log_level("DEBUG")
 
 
 def assert_output_with_gptq(m, in_features, out_features, group_size):
+    from auto_gptq.nn_modules.qlinear.qlinear_cuda_old import (
+        QuantLinear as CudaOldQuantLinear,)
+
     if group_size == -1:
         group_size = in_features
     _, linear, s, _ = bitblas.quantization.gen_quant4(in_features, out_features, group_size)
@@ -67,6 +62,7 @@ def assert_output_with_gptq(m, in_features, out_features, group_size):
     torch.testing.assert_close(res_bitblas, res_cuda_old, rtol=1e-0, atol=1e-1)
 
 
+@bitblas.testing.requires_package("auto_gptq")
 def test_assert_output_with_gptq():
     assert_output_with_gptq(1, 256, 256, 64)
     assert_output_with_gptq(1, 256, 256, -1)

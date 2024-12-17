@@ -15,6 +15,7 @@ from .tirscript.matmul_impl import select_implementation as consistent_implement
 from .tilelang.dense import select_scheduler as consistent_scheduler
 from .tilelang.dequantize import select_scheduler as weight_dequantize_scheduler
 from ...base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
+from bitblas.utils import retrieve_func_from_module
 from bitblas.utils.target_detector import auto_detect_nvidia_target
 from dataclasses import dataclass
 from ..ladder_permutate import LadderPermutate, LadderPermutateConfig
@@ -350,7 +351,7 @@ class Matmul(Operator):
         target: Optional[Union[str, Target]] = None,
         enable_tuning: bool = True,
         from_database: bool = False,
-        backend: str = "tir",
+        backend: str = "tl",
     ):
         # if from database, we should disable default schedule
         # to save compilation time
@@ -383,13 +384,13 @@ class Matmul(Operator):
         if target.kind.name not in ("cuda", "hip"):
             raise ValueError("Currently only support cuda and hip target")
 
-        self.dispatch_tir(target, from_database, source_format, enable_tuning)
+        self.dispatch(target, from_database, source_format, enable_tuning)
 
-    def dispatch_tir(self,
-                     target: Target,
-                     from_database: bool = False,
-                     source_format: str = "uint",
-                     enable_tuning: bool = True):
+    def dispatch(self,
+                 target: Target,
+                 from_database: bool = False,
+                 source_format: str = "uint",
+                 enable_tuning: bool = True):
 
         if isinstance(self.M, Tuple):
             self.dynamic_range = {"m": self.M}
@@ -638,7 +639,21 @@ class Matmul(Operator):
         return code
 
     def retrieve_weight_shape(self):
-        return [int(i) for i in self.prim_func.buffer_map[self.prim_func.params[1]].shape]
+        prim_func = self.prim_func
+
+        # retrieve from tilelang backend
+        if prim_func is None and self.scheduled_ir_module is not None:
+            prim_func = retrieve_func_from_module(self.scheduled_ir_module)
+
+        if prim_func is None and self.is_tilelang_backend():
+            # If from_database and from tilelang backend, we should construct a default module
+            self._update_optimized_mod(self.scheduler_with_default(self.scheduler))
+            prim_func = retrieve_func_from_module(self.scheduled_ir_module)
+
+        if prim_func is not None:
+            return [int(i) for i in prim_func.buffer_map[prim_func.params[1]].shape]
+
+        raise ValueError("The weight shape is not available.")
 
     def transform_weight(self, weight, scale=None, zeros=None, bias=None):
         """
