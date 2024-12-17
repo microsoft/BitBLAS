@@ -148,7 +148,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
             micro_size_y,
         )
 
-        shared_scope = "shared"
+        shared_scope = "shared.dyn"
 
         import_source: Optional[str] = None
         func_name: str = ""
@@ -200,10 +200,6 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
 
         cache_write_required = check_require_cache()
 
-        vec_load_qb = 16
-        if block_N * block_K // num_elems_per_byte // threads < vec_load_qb:
-            vec_load_qb = block_N * block_K // num_elems_per_byte // threads
-
         @T.prim_func
         def general_dequant_matmul(
                 A: T.Buffer(A_shape, in_dtype),
@@ -240,6 +236,11 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                 T.import_source(import_source)
 
                 T.clear(C_frag)
+
+                if enable_split_k:
+                    for i, j in T.Parallel(block_M, block_N):
+                        m, n = by * block_M + i, bx * block_N + j
+                        C[m, n] = T.cast(0, out_dtype)
 
                 for ko in T.Pipelined(T.ceildiv(splitK, block_K), num_stages=num_stages):
 

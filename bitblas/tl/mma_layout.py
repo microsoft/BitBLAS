@@ -120,8 +120,7 @@ def make_mma_swizzle_layout(shared_buf, is_smooth: bool = False):
     dtype = shared_buf.dtype
     shape = shared_buf.shape
 
-    can_swizzle = shape[-1] * DataType(dtype).bits == 512
-    if is_smooth or not can_swizzle:
+    if is_smooth:
         return T.Layout(shape, lambda *args: args)
 
     def transform_func(i, j):
