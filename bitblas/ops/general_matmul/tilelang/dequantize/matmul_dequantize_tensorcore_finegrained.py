@@ -445,14 +445,15 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
                         thread_bindings=tx,
                     )
 
-                    if with_bias:
-                        for i, j in T.Parallel(block_M, block_N):
-                            C_shared[
-                                i // micro_size_x,
-                                j // micro_size_y,
-                                i % micro_size_x,
-                                j % micro_size_y,
-                            ] += Bias[bx * block_N + j]
+                    if with_bias:  # noqa: SIM102
+                        if bz == 0:  # as bz is the k-dim, otherwise, bias will be added multiple times
+                            for i, j in T.Parallel(block_M, block_N):
+                                C_shared[
+                                    i // micro_size_x,
+                                    j // micro_size_y,
+                                    i % micro_size_x,
+                                    j % micro_size_y,
+                                ] += Bias[bx * block_N + j]
 
                     # Store results from shared memory to global memory
                     if enable_split_k:
