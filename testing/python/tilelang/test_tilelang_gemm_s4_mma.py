@@ -413,4 +413,5 @@ def test_assert_tl_matmul_weight_only_transform():
 
 
 if __name__ == "__main__":
-    bitblas.testing.main()
+    # bitblas.testing.main()
+    test_assert_tl_matmul_weight_only_transform()

@@ -1116,4 +1116,5 @@ def test_assert_tl_matmul_with_ladder_input_weight_transform():
 
 
 if __name__ == "__main__":
-    bitblas.testing.main()
+    # bitblas.testing.main()
+    test_assert_tl_matmul_with_ladder_input_weight_transform()

@@ -120,12 +120,13 @@ def make_mma_swizzle_layout(shared_buf, is_smooth: bool = False):
     dtype = shared_buf.dtype
     shape = shared_buf.shape
 
-    can_swizzle = shape[-1] * DataType(dtype).bits == 512
-    if is_smooth or not can_swizzle:
+    can_swizzle = shape[-1] * DataType(dtype).bits % 512 == 0
+    if is_smooth or (not can_swizzle):
         return T.Layout(shape, lambda *args: args)
 
-    def transform_func(i, j):
+    def transform_func(*args):
+        i, j = args[-2:]
         new_warp_i, new_warp_j = get_swizzle_layout(i, j, shape[-1], dtype)
-        return [new_warp_i, new_warp_j]
+        return [*args[:-2], new_warp_i, new_warp_j]
 
     return T.Layout(shape, transform_func)
