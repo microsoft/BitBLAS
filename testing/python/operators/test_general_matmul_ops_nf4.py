@@ -13,11 +13,10 @@ def get_codegen_result(ops):
     code = ops.get_source()
     return code
 
+
 def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype):
     import torch
     torch.random.manual_seed(0)
-    import numpy as np
-    from bitblas.quantization import general_compress
 
     matmul_config = MatmulConfig(
         M=M,
@@ -35,7 +34,7 @@ def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype):
     weight_shape = (N, K)
     output_shape = (M, N)
     input_tensor = torch.rand(input_shape, dtype=torch.float16).cuda() - 0.5
-    
+
     _, bit = matmul.BITBLAS_TRICK_DTYPE_MAP[W_dtype]
     maxq = 2**(bit - 1)
     weight_tensor = torch.randint(0, maxq, weight_shape, dtype=torch.int8).cuda()
