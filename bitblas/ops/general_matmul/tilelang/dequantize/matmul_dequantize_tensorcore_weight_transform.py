@@ -113,7 +113,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
             micro_size_y,
             micro_size_k // num_elems_per_byte,
         )
-        LUT_shape = (group_size, K // num_elems_per_byte)
+        LUT_shape = (1 << num_bits,)
         Scale_shape = (N, K // group_size)
         Zeros_shape = (N, K // group_size)
         Qzeros_shape = ((K // group_size), N // storage_nbit * num_bits)
@@ -312,6 +312,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                             self._normal_dequant(
                                 B_frag,
                                 B_dequantize_frag,
+                                LUT,
                                 Scale,
                                 Zeros,
                                 Qzeros,
@@ -394,6 +395,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         self,
         compressed_weight_local: T.Buffer,
         dequant_weight_local: T.Buffer,
+        lut_buffer: T.Buffer,
         scale_buffer: T.Buffer,
         zeros_buffer: T.Buffer,
         qzeros_buffer: T.Buffer,
@@ -415,6 +417,8 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         in_dtype = self.in_dtype
         group_size = self.group_size
         storage_dtype = self.storage_dtype
+        source_format = self.source_format
+        is_lut = source_format == "nf"
         storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
         storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
         micro_size_k = mma_emitter.micro_size_k
@@ -424,6 +428,7 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
         def _normal_dequant_impl(
             compressed_weight_local: T.Buffer,
             dequant_weight_local: T.Buffer,
+            lut_buffer: T.Buffer,
             scale_buffer: T.Buffer,
             zeros_buffer: T.Buffer,
             qzeros_buffer: T.Buffer,
@@ -445,65 +450,77 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
                         matrix_name="B",
                         group_size=group_size,
                     )
-                    if not with_scaling:
-                        dequant_weight_local[j * local_size + v] = self._decode_func(
+                    if is_lut:
+                        index = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
                             num_bits,
                             compressed_weight_local[j * local_size // num_elems_per_byte +
                                                     v // num_elems_per_byte],
                             v % num_elems_per_byte,
-                            dtype=in_dtype,
+                            "int32"  # default index dtype
                         )
-                    elif not with_zeros:
-                        dequant_weight_local[j * local_size + v] = (
-                            self._decode_func(
+                        dequant_weight_local[j * local_size + v] = lut_buffer[index]
+                    else:
+                        if not with_scaling:
+                            dequant_weight_local[j * local_size + v] = self._decode_func(
                                 num_bits,
                                 compressed_weight_local[j * local_size // num_elems_per_byte +
                                                         v // num_elems_per_byte],
                                 v % num_elems_per_byte,
                                 dtype=in_dtype,
-                            ) * scale_buffer[remaped_i, remaped_j])
-                    elif zeros_mode == "original":
-                        dequant_weight_local[j * local_size + v] = (self._decode_func(
-                            num_bits,
-                            compressed_weight_local[j * local_size // num_elems_per_byte +
-                                                    v // num_elems_per_byte],
-                            v % num_elems_per_byte,
-                            dtype=in_dtype,
-                        ) - zeros_buffer[remaped_i, remaped_j]) * scale_buffer[remaped_i, remaped_j]
-                    elif zeros_mode == "rescale":
-                        dequant_weight_local[j * local_size + v] = (
-                            self._decode_func(
-                                num_bits,
-                                compressed_weight_local[j * local_size // num_elems_per_byte +
-                                                        v // num_elems_per_byte],
-                                v % num_elems_per_byte,
-                                dtype=in_dtype,
-                            ) * scale_buffer[remaped_i, remaped_j] -
-                            zeros_buffer[remaped_i, remaped_j])
-                    elif zeros_mode == "quantized":
-                        dequant_qzeros = _tir_packed_to_unsigned_convert(
-                            storage_type, storage_nbit)(
-                                num_bits,
-                                qzeros_buffer[
-                                    remaped_i,
-                                    remaped_j // num_elems_per_byte,
-                                ],
-                                (pid_n * stride_n + vi) % num_elems_per_byte,
-                                dtype=storage_dtype,
                             )
+                        elif not with_zeros:
+                            dequant_weight_local[j * local_size + v] = (
+                                self._decode_func(
+                                    num_bits,
+                                    compressed_weight_local[j * local_size // num_elems_per_byte +
+                                                            v // num_elems_per_byte],
+                                    v % num_elems_per_byte,
+                                    dtype=in_dtype,
+                                ) * scale_buffer[remaped_i, remaped_j])
+                        elif zeros_mode == "original":
+                            dequant_weight_local[j * local_size + v] = (self._decode_func(
+                                num_bits,
+                                compressed_weight_local[j * local_size // num_elems_per_byte +
+                                                        v // num_elems_per_byte],
+                                v % num_elems_per_byte,
+                                dtype=in_dtype,
+                            ) - zeros_buffer[remaped_i, remaped_j]) * scale_buffer[remaped_i,
+                                                                                   remaped_j]
+                        elif zeros_mode == "rescale":
+                            dequant_weight_local[j * local_size + v] = (
+                                self._decode_func(
+                                    num_bits,
+                                    compressed_weight_local[j * local_size // num_elems_per_byte +
+                                                            v // num_elems_per_byte],
+                                    v % num_elems_per_byte,
+                                    dtype=in_dtype,
+                                ) * scale_buffer[remaped_i, remaped_j] -
+                                zeros_buffer[remaped_i, remaped_j])
+                        elif zeros_mode == "quantized":
+                            dequant_qzeros = _tir_packed_to_unsigned_convert(
+                                storage_type, storage_nbit)(
+                                    num_bits,
+                                    qzeros_buffer[
+                                        remaped_i,
+                                        remaped_j // num_elems_per_byte,
+                                    ],
+                                    (pid_n * stride_n + vi) % num_elems_per_byte,
+                                    dtype=storage_dtype,
+                                )
 
-                        dequant_weight_local[j * local_size + v] = (self._decode_func(
-                            num_bits,
-                            compressed_weight_local[j * local_size // num_elems_per_byte +
-                                                    v // num_elems_per_byte],
-                            v % num_elems_per_byte,
-                            zero=dequant_qzeros,
-                            dtype=in_dtype,
-                        )) * scale_buffer[remaped_i, remaped_j]
+                            dequant_weight_local[j * local_size + v] = (self._decode_func(
+                                num_bits,
+                                compressed_weight_local[j * local_size // num_elems_per_byte +
+                                                        v // num_elems_per_byte],
+                                v % num_elems_per_byte,
+                                zero=dequant_qzeros,
+                                dtype=in_dtype,
+                            )) * scale_buffer[remaped_i, remaped_j]
 
         return _normal_dequant_impl(
             compressed_weight_local,
             dequant_weight_local,
+            lut_buffer,
             scale_buffer,
             zeros_buffer,
             qzeros_buffer,

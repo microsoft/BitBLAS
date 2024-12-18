@@ -10,9 +10,7 @@ from bitblas.gpu.matmul_analysis import get_tensorized_func_and_tags
 from bitblas.base.utils import apply_and_build
 
 # Initialize the parser
-parser = argparse.ArgumentParser(
-    description="Benchmark BitBLAS int4 on a specific target."
-)
+parser = argparse.ArgumentParser(description="Benchmark BitBLAS int4 on a specific target.")
 
 # Add arguments to the parser
 
@@ -101,20 +99,15 @@ parser.add_argument(
     choices=["nt", "nn"],  # Assuming these are the valid choices
     help="Matrix layout, 'nt' for non-transpose A and transpose W.",
 )
-parser.add_argument(
-    "--with_bias", action="store_true", help="Include bias in the benchmark."
-)
+parser.add_argument("--with_bias", action="store_true", help="Include bias in the benchmark.")
 parser.add_argument(
     "--with_scaling",
     action="store_true",
     help="Include scaling factor in the quantization.",
 )
 parser.add_argument(
-    "--group_size", type=int, default=None, help="Group size for grouped quantization."
-)
-parser.add_argument(
-    "--with_zeros", action="store_true", help="Include zeros in the quantization."
-)
+    "--group_size", type=int, default=None, help="Group size for grouped quantization.")
+parser.add_argument("--with_zeros", action="store_true", help="Include zeros in the quantization.")
 parser.add_argument(
     "--zeros_mode",
     type=str,

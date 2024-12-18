@@ -376,8 +376,6 @@ class Matmul(Operator):
         # by implementing all the operators in the tl backend.
         if config.A_dtype in ["int4", "uint4"]:
             backend = "tl"
-        if source_format in ["nf"]:
-            backend = "tir"
 
         super().__init__(name, config, target, backend)
 

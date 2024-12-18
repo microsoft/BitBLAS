@@ -399,6 +399,7 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
                             zeros_local,
                             dequant_qzeros_local,
                             B_dequantize_local,
+                            LUT,
                             Scale,
                             Zeros,
                             Qzeros,

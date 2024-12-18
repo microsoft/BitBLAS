@@ -132,6 +132,7 @@ class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
         zeros_local: T.Buffer,
         dequant_qzeros_local: T.Buffer,
         dequant_weight_local: T.Buffer,
+        lut_buffer: T.Buffer,
         scale_buffer: T.Buffer,
         zeros_buffer: T.Buffer,
         qzeros_buffer: T.Buffer,
@@ -152,6 +153,8 @@ class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
         in_dtype = self.in_dtype
         group_size = self.group_size
         storage_dtype = self.storage_dtype
+        source_format = self.source_format
+        is_lut = source_format == "nf"
         storage_nbit = int("".join(c for c in storage_dtype if c.isdigit()))
         storage_type = str("".join(c for c in storage_dtype if not c.isdigit()))
         (local_scale_size,) = scale_local.shape
@@ -162,94 +165,105 @@ class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
         def _normal_dequant_impl(
             compressed_weight_local: T.Buffer,
             dequant_weight_local: T.Buffer,
+            lut_buffer: T.Buffer,
             scale_buffer: T.Buffer,
             zeros_buffer: T.Buffer,
             qzeros_buffer: T.Buffer,
         ):
-            if with_scaling:
-                for v in T.vectorized(0, local_scale_size):
-                    # TODO: Enhance all to index2coord
-                    index = i * threads * local_size + tx * local_size + v
-                    vi = index // stride_k
-                    vj = index % stride_k
-                    scale_local[v] = scale_buffer[
-                        pid_n * stride_n + vi,
-                        (k * stride_k + vj) // group_size,
-                    ]
-
-            if with_scaling and with_zeros:
-                if zeros_mode in ["original", "rescale"]:
-                    for v in T.vectorized(0, local_zeros_size):
+            if is_lut:
+                for v in T.serial(0, local_size):
+                    index = _tir_packed_to_unsigned_convert(storage_type, storage_nbit)(
+                        num_bits,
+                        compressed_weight_local[v // num_elems_per_byte],
+                        v % num_elems_per_byte,
+                        "int32"  # default index dtype
+                    )
+                    dequant_weight_local[v] = lut_buffer[index]
+            else:
+                if with_scaling:
+                    for v in T.vectorized(0, local_scale_size):
+                        # TODO: Enhance all to index2coord
                         index = i * threads * local_size + tx * local_size + v
                         vi = index // stride_k
                         vj = index % stride_k
-                        zeros_local[v] = zeros_buffer[
+                        scale_local[v] = scale_buffer[
                             pid_n * stride_n + vi,
                             (k * stride_k + vj) // group_size,
                         ]
-                elif zeros_mode == "quantized":
-                    for v in T.vectorized(0, local_qzeros_size):
-                        index = i * threads * local_size + tx * local_size + v
-                        vi = index // stride_k
-                        vj = index % stride_k
-                        dequant_qzeros_local[v] = _tir_packed_to_unsigned_convert(
-                            storage_type, storage_nbit)(
-                                num_bits,
-                                qzeros_buffer[
-                                    (k * stride_k + vj) // group_size,
-                                    (pid_n * stride_n + vi) // num_elems_per_byte,
-                                ],
-                                (pid_n * stride_n + vi) % num_elems_per_byte,
-                                dtype=storage_dtype,
-                            )
-                else:
-                    raise ValueError(f"Unsupported zeros_mode: {zeros_mode}")
 
-            for v in T.serial(0, local_size):
-                index = i * threads * local_size + tx * local_size + v
-                vi = index // stride_k
-                vj = index % stride_k
-                if not with_scaling:
-                    dequant_weight_local[v] = self._decode_func(
-                        num_bits,
-                        compressed_weight_local[v // num_elems_per_byte],
-                        v % num_elems_per_byte,
-                        dtype=in_dtype,
-                    )
-                elif not with_zeros:
-                    # Scaling only
-                    dequant_weight_local[v] = (
-                        self._decode_func(
+                if with_scaling and with_zeros:
+                    if zeros_mode in ["original", "rescale"]:
+                        for v in T.vectorized(0, local_zeros_size):
+                            index = i * threads * local_size + tx * local_size + v
+                            vi = index // stride_k
+                            vj = index % stride_k
+                            zeros_local[v] = zeros_buffer[
+                                pid_n * stride_n + vi,
+                                (k * stride_k + vj) // group_size,
+                            ]
+                    elif zeros_mode == "quantized":
+                        for v in T.vectorized(0, local_qzeros_size):
+                            index = i * threads * local_size + tx * local_size + v
+                            vi = index // stride_k
+                            vj = index % stride_k
+                            dequant_qzeros_local[v] = _tir_packed_to_unsigned_convert(
+                                storage_type, storage_nbit)(
+                                    num_bits,
+                                    qzeros_buffer[
+                                        (k * stride_k + vj) // group_size,
+                                        (pid_n * stride_n + vi) // num_elems_per_byte,
+                                    ],
+                                    (pid_n * stride_n + vi) % num_elems_per_byte,
+                                    dtype=storage_dtype,
+                                )
+                    else:
+                        raise ValueError(f"Unsupported zeros_mode: {zeros_mode}")
+
+                for v in T.serial(0, local_size):
+                    index = i * threads * local_size + tx * local_size + v
+                    vi = index // stride_k
+                    vj = index % stride_k
+                    if not with_scaling:
+                        dequant_weight_local[v] = self._decode_func(
                             num_bits,
                             compressed_weight_local[v // num_elems_per_byte],
                             v % num_elems_per_byte,
                             dtype=in_dtype,
-                        ) * scale_local[v // group_size])
-                elif zeros_mode == "original":
-                    dequant_weight_local[v] = (self._decode_func(
-                        num_bits,
-                        compressed_weight_local[v // num_elems_per_byte],
-                        v % num_elems_per_byte,
-                        dtype=in_dtype,
-                    ) - zeros_local[v // group_size]) * scale_local[v // group_size]
-                elif zeros_mode == "rescale":
-                    dequant_weight_local[v] = (
-                        self._decode_func(
+                        )
+                    elif not with_zeros:
+                        # Scaling only
+                        dequant_weight_local[v] = (
+                            self._decode_func(
+                                num_bits,
+                                compressed_weight_local[v // num_elems_per_byte],
+                                v % num_elems_per_byte,
+                                dtype=in_dtype,
+                            ) * scale_local[v // group_size])
+                    elif zeros_mode == "original":
+                        dequant_weight_local[v] = (self._decode_func(
                             num_bits,
                             compressed_weight_local[v // num_elems_per_byte],
                             v % num_elems_per_byte,
                             dtype=in_dtype,
-                        ) * scale_local[v // group_size] - zeros_local[v // group_size])
-                elif zeros_mode == "quantized":
-                    dequant_weight_local[v] = (self._decode_func(
-                        num_bits,
-                        compressed_weight_local[v // num_elems_per_byte],
-                        v % num_elems_per_byte,
-                        zero=dequant_qzeros_local[v // group_size],
-                        dtype=in_dtype,
-                    )) * scale_local[v // group_size]
-                else:
-                    raise ValueError(f"Unsupported zeros_mode: {zeros_mode}")
+                        ) - zeros_local[v // group_size]) * scale_local[v // group_size]
+                    elif zeros_mode == "rescale":
+                        dequant_weight_local[v] = (
+                            self._decode_func(
+                                num_bits,
+                                compressed_weight_local[v // num_elems_per_byte],
+                                v % num_elems_per_byte,
+                                dtype=in_dtype,
+                            ) * scale_local[v // group_size] - zeros_local[v // group_size])
+                    elif zeros_mode == "quantized":
+                        dequant_weight_local[v] = (self._decode_func(
+                            num_bits,
+                            compressed_weight_local[v // num_elems_per_byte],
+                            v % num_elems_per_byte,
+                            zero=dequant_qzeros_local[v // group_size],
+                            dtype=in_dtype,
+                        )) * scale_local[v // group_size]
+                    else:
+                        raise ValueError(f"Unsupported zeros_mode: {zeros_mode}")
 
         return _normal_dequant_impl(
             compressed_weight_local,
@@ -388,6 +402,7 @@ class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
         zeros_local: T.Buffer,
         dequant_qzeros_local: T.Buffer,
         dequant_weight_local: T.Buffer,
+        lut_buffer: T.Buffer,
         scale_buffer: T.Buffer,
         zeros_buffer: T.Buffer,
         qzeros_buffer: T.Buffer,
@@ -424,9 +439,9 @@ class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
             )
         else:
             return self._normal_dequant(compressed_weight_local, scale_local, zeros_local,
-                                        dequant_qzeros_local, dequant_weight_local, scale_buffer,
-                                        zeros_buffer, qzeros_buffer, local_size, pid_n, tx, k, i,
-                                        stride_n, stride_k, threads)
+                                        dequant_qzeros_local, dequant_weight_local, lut_buffer,
+                                        scale_buffer, zeros_buffer, qzeros_buffer, local_size,
+                                        pid_n, tx, k, i, stride_n, stride_k, threads)
 
     @property
     def num_elems_per_byte(self):
@@ -576,7 +591,7 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
 
         A_shape = (M, K)
         B_shape = (N, K // storage_nbit * num_bits)
-        LUT_shape = (group_size, K // storage_nbit * num_bits)
+        LUT_shape = (1 << num_bits,)
         Scale_shape = (N, K // group_size)
         Zeros_shape = (N, K // group_size)
         Qzeros_shape = ((K // group_size), N // storage_nbit * num_bits)
@@ -667,6 +682,7 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
                             zeros_local,
                             dequant_qzeros_local,
                             B_dequantize_local,
+                            LUT,
                             Scale,
                             Zeros,
                             Qzeros,

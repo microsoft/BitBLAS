@@ -73,11 +73,22 @@ class MatmulDequantizeBaseParams(BaseScheduler):
         return f"{cls_name}({field_str})"
 
     def __post_init__(self):
-        # Validate the matrix transpose settings
-        assert (self.trans_A is False), "Currently only support Matrix A not transposed"
-        assert (self.trans_B is True), "Currently only support Matrix B transposed"
-
         # Legalize group_size
         if self.with_scaling and self.group_size == -1:
             object.__setattr__(self, "group_size", self.K)
+
+        # Legalization Check
+        # 1. Validate the matrix transpose settings
+        assert (self.trans_A is False), "Currently only support Matrix A not transposed"
+        assert (self.trans_B is True), "Currently only support Matrix B transposed"
+        # 2. Validate the Fast Decoding settings
+        if self.fast_decoding:
+            # TODO(lei): However, I think it's also possible for us to leverage fast
+            # decoding for nf4 format.
+            assert self.source_format in {"uint", "int"
+                                         }, "Fast Decoding only support uint/int source format"
+        # 3. Valiate the quant config
+        if self.source_format == "nf":
+            assert not self.with_scaling, "NF format does not support scaling"
+            assert not self.fast_decoding, "NF format does not support fast decoding"
         return
