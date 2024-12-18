@@ -268,6 +268,7 @@ class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
         return _normal_dequant_impl(
             compressed_weight_local,
             dequant_weight_local,
+            lut_buffer,
             scale_buffer,
             zeros_buffer,
             qzeros_buffer,

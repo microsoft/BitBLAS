@@ -370,10 +370,11 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
 
                 T.clear(C_frag)
 
-                if enable_split_k:
-                    for i, j in T.Parallel(block_M, block_N):
-                        m, n = by * block_M + i, bx * block_N + j
-                        C[m, n] = T.cast(0, out_dtype)
+                if enable_split_k:  # noqa: SIM102
+                    if bz == 0:
+                        for i, j in T.Parallel(block_M, block_N):
+                            m, n = by * block_M + i, bx * block_N + j
+                            C[m, n] = T.cast(0, out_dtype)
 
                 for ko in T.Pipelined(T.ceildiv(splitK, block_K), num_stages=num_stages):
 
