@@ -87,7 +87,7 @@ class MatmulDequantizeBaseParams(BaseScheduler):
             # decoding for nf4 format.
             assert self.source_format in {"uint", "int"
                                          }, "Fast Decoding only support uint/int source format"
-        # 3. Valiate the quant config
+        # 3. Validate the quant config
         if self.source_format == "nf":
             assert not self.with_scaling, "NF format does not support scaling"
             assert not self.fast_decoding, "NF format does not support fast decoding"
