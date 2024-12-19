@@ -155,6 +155,8 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
 
                     # Double the split-k factor and check if the resulting K-dimension size is too large
                     expand_split_k = split_k_factor * 2
+                    if K % (expand_split_k * block_K) != 0:
+                        break
                     if expand_split_k * block_K >= K:
                         break
 

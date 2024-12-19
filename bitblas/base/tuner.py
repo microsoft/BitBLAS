@@ -14,6 +14,7 @@ from tvm.ir.supply import GlobalVarSupply
 from bitblas.base.base_scheduler import BaseScheduler
 from bitblas.base.utils import apply_and_build as tir_apply_and_build
 from bitblas.tl.tuner import apply_and_build as tl_apply_and_build
+from bitblas.utils import retrieve_func_from_module
 import logging
 
 logger = logging.getLogger(__name__)
@@ -376,17 +377,14 @@ def fast_tune_with_dynamic_range_tilelang(
         _, best = fast_tune(unit_scheduler, target, topk, parallel_build)
         if best is None:
             return None
-        specialized_func = best.sch.mod["main"]
+        specialized_func = retrieve_func_from_module(best.sch.mod)
         function_symbol = global_symbol
         if kernel_name_generator is not None:
             scheduled_mod = best.sch.mod
             best_hint = best.config
-            assert len(scheduled_mod.get_global_vars()) == 1, (
-                "The optimized module should only have one global variable for default schedule.")
-            assert "main" in scheduled_mod, (
-                "The optimized module should have a function named 'main' for default schedule.")
             default_kernal_name = kernel_name_generator.generate(best_hint)
-            specialized_func = scheduled_mod["main"].with_attr("global_symbol", default_kernal_name)
+            prim_func = retrieve_func_from_module(scheduled_mod)
+            specialized_func = prim_func.with_attr("global_symbol", default_kernal_name)
             function_symbol = default_kernal_name
 
         function_symbols.append(function_symbol)
