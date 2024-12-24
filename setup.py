@@ -40,16 +40,18 @@ def get_requirements() -> List[str]:
     return requirements
 
 
-def find_version(filepath: str) -> str:
+def find_version(version_file_path: str) -> str:
     """Extract version information from the given filepath.
 
     Adapted from https://github.com/ray-project/ray/blob/0b190ee1160eeca9796bc091e07eaebf4c85b511/python/setup.py
     """
-    with open(filepath) as fp:
-        version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", fp.read(), re.M)
-        if version_match:
-            return version_match.group(1)
-        raise RuntimeError("Unable to find version string.")
+    # Read and store the version information from the VERSION file
+    # Use 'strip()' to remove any leading/trailing whitespace or newline characters
+    if not os.path.exists(version_file_path):
+        raise FileNotFoundError(f"Version file not found at {version_file_path}")
+    with open(version_file_path, "r") as version_file:
+        version = version_file.read().strip()
+    return version
 
 
 def get_nvcc_cuda_version():
@@ -65,7 +67,7 @@ def get_nvcc_cuda_version():
 
 
 def get_bitblas_version(with_cuda=True, with_system_info=True) -> str:
-    version = find_version(get_path("bitblas", "__init__.py"))
+    version = find_version(get_path(".", "VERSION"))
     local_version_parts = []
     if with_system_info:
         local_version_parts.append(get_system_info().replace("-", "."))
@@ -257,6 +259,35 @@ class BitBLASBuilPydCommand(build_py):
             "3rdparty/cutlass",
         ]
         for item in CUTLASS_PREBUILD_ITEMS:
+            source_dir = os.path.join(ROOT_DIR, item)
+            target_dir = os.path.join(self.build_lib, PACKAGE_NAME, item)
+            if os.path.isdir(source_dir):
+                self.mkpath(target_dir)
+                distutils.dir_util.copy_tree(source_dir, target_dir)
+            else:
+                target_dir = os.path.dirname(target_dir)
+                if not os.path.exists(target_dir):
+                    os.makedirs(target_dir)
+                shutil.copy2(source_dir, target_dir)
+        # copy compoable kernel to the package directory
+        CK_PREBUILD_ITEMS = [
+            "3rdparty/composable_kernel",
+        ]
+        for item in CK_PREBUILD_ITEMS:
+            source_dir = os.path.join(ROOT_DIR, item)
+            target_dir = os.path.join(self.build_lib, PACKAGE_NAME, item)
+            if os.path.isdir(source_dir):
+                self.mkpath(target_dir)
+                distutils.dir_util.copy_tree(source_dir, target_dir)
+            else:
+                target_dir = os.path.dirname(target_dir)
+                if not os.path.exists(target_dir):
+                    os.makedirs(target_dir)
+                shutil.copy2(source_dir, target_dir)
+
+        # copy compoable kernel to the package directory
+        CONFIG_ITEMS = ["VERSION", "README.md", "LICENSE"]
+        for item in CONFIG_ITEMS:
             source_dir = os.path.join(ROOT_DIR, item)
             target_dir = os.path.join(self.build_lib, PACKAGE_NAME, item)
             if os.path.isdir(source_dir):
