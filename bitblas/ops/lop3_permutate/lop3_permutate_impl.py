@@ -80,7 +80,7 @@ def tir_interleave_weight(
                 B_tmp_4[v0, v1] = ((B[v0, v1] & T.uint32(0x0000F000)) >> 12) << 24
                 B_tmp_5[v0, v1] = ((B[v0, v1] & T.uint32(0x000F0000)) >> 16) << 8
                 B_tmp_6[v0, v1] = ((B[v0, v1] & T.uint32(0x00F00000)) >> 20) << 12
-                B_tmp_7[v0, v1] = ((B[v0, v1] & T.uint32(0x00F00000)) >> 24) << 20
+                B_tmp_7[v0, v1] = ((B[v0, v1] & T.uint32(0x0F000000)) >> 24) << 20
                 B[v0, v1] = (
                     B_tmp_1[v0, v1]
                     | B_tmp_2[v0, v1]

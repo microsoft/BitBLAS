@@ -153,4 +153,4 @@ from .ops.general_matmul_splitk import MatmulConfigWithSplitK, MatmulWithSplitK 
 from .ops.general_flashatten import FlashAttenConfig, FlashAtten  # noqa: F401
 from .module import Linear  # noqa: F401
 
-__version__ = "0.1.0"
+from .version import __version__  # noqa: F401
