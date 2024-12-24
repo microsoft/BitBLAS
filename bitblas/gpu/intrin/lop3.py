@@ -685,15 +685,29 @@ __device__ void decode_i2u_to_f16_scale_zeros_quantized(T1 *_i2u, T2 *B_local_de
 """
 
 decode_i1_to_f16 = """
-template <typename T1, typename T2>
-__device__ void decode_i1u_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8)
+/*
+Kind 0: original
+Kind 1: rescale
+Kind 2: quantized
+# documents for zeros_mode:
+# original: target = (dequantize_weight - zero_point) * scale
+# rescale: target = dequantize_weight * scale - zero_point
+# quantized: target = (dequantize_weight - dequantize_zeros) * scale
+# Notice: only support "original" and "rescale" now
+zeros_mode: Literal["original", "rescale", "quantized"] = "original"
+*/
+template <typename T1, typename T2, bool isSigned = false, bool withScaling = false, bool withZeros = false, int ZerosKind = 1>
+__device__ void decode_i1b_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8, half *scale = nullptr, half *zeros = nullptr)
 {
     uint *h = reinterpret_cast<uint *>(B_local_decode);
 
     static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
     static constexpr uint BOTTOM_MASK = 0x00010001;
     static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
-    static constexpr uint MEDIAN_NUM = 0x64006400;
+    static constexpr uint MEDIAN_NUM = isSigned ? 0x64006400 : 0x64006400;
+    static constexpr uint TRANSFORM_SUBTRACT = 0xbc00bc00; // for signed int 2x - 1
+    // interleave {e31,e29,e27,e25,e23,e21,e19,e17,e15,e13,e11,e9,e7,e5,e3,e1,e30,e28,e26,e24,e22,e20,e18,e16,e14,e12,e10,e8,e6,e4,e2,e0}
+    // only decode e7,e5,e3,e1,e8,e6,e4,e2,e0
     int8_t const i1s_i16 = *reinterpret_cast<int8_t *>(_i1s);
     int i1s = (i1s_i16 & 0x0f);
     i1s |= ((i1s_i16 & 0xf0) << 12);
@@ -701,38 +715,41 @@ __device__ void decode_i1u_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8)
     // decode 2 elems at one time.
     for (int i = 0; i < (N / 2); i++)
     {
+
         asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
                      : "=r"(h[i])
                      : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
         asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
+        if constexpr (isSigned)
+        {
+            asm volatile("add.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(h[i]));
+            asm volatile("add.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(TRANSFORM_SUBTRACT));
+        }
+        if constexpr (withZeros && ZerosKind == 0)
+        {
+            asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*zeros, *zeros)));
+        }
+        if constexpr (withScaling)
+        {
+            asm volatile("fma.rn.f16x2 %0, %1, %2, %3;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*scale, *scale)), "r"(0));
+        }
+        if constexpr (withZeros && ZerosKind == 1)
+        {
+            asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(__pack_half2(*zeros, *zeros)));
+        }
     }
 }
 
 template <typename T1, typename T2>
 __device__ void decode_i1s_to_f16(T1 *_i1s, T2 *B_local_decode, const int N = 8)
 {
-    uint *h = reinterpret_cast<uint *>(B_local_decode);
+    decode_i1b_to_f16<T1, T2, true>(_i1s, B_local_decode, N);
+}
 
-    static constexpr uint immLut = (0xf0 & 0xcc) | 0xaa;
-    static constexpr uint BOTTOM_MASK = 0x00010001;
-    static constexpr uint FP16_TOP_MAGIC_NUM = 0x64006400;
-    static constexpr uint MEDIAN_NUM = 0x64006400;
-    static constexpr uint TRANSFORM_SUBTRACT = 0xbc00bc00; // for signed int 2x - 1
-
-    int8_t const i1s_i16 = *reinterpret_cast<int8_t *>(_i1s);
-    int i1s = (i1s_i16 & 0x0f);
-    i1s |= ((i1s_i16 & 0xf0) << 12);
-#pragma unroll
-    // decode 2 elems at one time.
-    for (int i = 0; i < (N / 2); i++)
-    {
-        asm volatile("lop3.b32 %0, %1, %2, %3, %4;\\n"
-                     : "=r"(h[i])
-                     : "r"(i1s >> (1 * i)), "n"(BOTTOM_MASK), "n"(FP16_TOP_MAGIC_NUM), "n"(immLut));
-        asm volatile("sub.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(MEDIAN_NUM));
-        asm volatile("add.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(h[i]));
-        asm volatile("add.f16x2 %0, %1, %2;\\n" : "=r"(h[i]) : "r"(h[i]), "r"(TRANSFORM_SUBTRACT));
-    }
+template <typename T1, typename T2>
+__device__ void decode_i1u_to_f16(T1 *_i1u, T2 *B_local_decode, const int N = 8)
+{
+    decode_i1b_to_f16<T1, T2, false>(_i1u, B_local_decode, N);
 }
 """
 
