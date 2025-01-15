@@ -16,7 +16,7 @@ from typing import List, Union, Optional
 from bitblas.cache import global_operator_cache, get_database_path
 from bitblas import Matmul, MatmulConfig
 from bitblas.quantization.utils import general_compress
-from bitblas import auto_detect_nvidia_target
+from bitblas import auto_detect_target
 
 BITBLAS_DATABASE_PATH = get_database_path()
 
@@ -240,7 +240,7 @@ class Linear(nn.Module):
         self.source_format = self.bitblas_matmul.source_format
 
     def _get_or_create_bitblas_operator(self, config, enable_tuning):
-        BITBLAS_TARGET = auto_detect_nvidia_target()
+        BITBLAS_TARGET = auto_detect_target()
 
         if global_operator_cache.size() == 0:
             global_operator_cache.load_from_database(BITBLAS_DATABASE_PATH, BITBLAS_TARGET)

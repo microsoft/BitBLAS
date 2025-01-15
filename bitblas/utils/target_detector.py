@@ -23,6 +23,7 @@ NVIDIA_GPU_REMAP = {
     "NVIDIA PG506-232": "NVIDIA A100",
 }
 
+
 def get_gpu_model_from_nvidia_smi(gpu_id: int = 0):
     """
     Executes the 'nvidia-smi' command to fetch the name of the first available NVIDIA GPU.
@@ -51,6 +52,7 @@ def get_gpu_model_from_nvidia_smi(gpu_id: int = 0):
         raise ValueError(f"Passed gpu_id:{gpu_id} but there are {len(gpus)} detected Nvidia gpus.")
 
     return gpus[gpu_id]
+
 
 def find_best_match(tags, query):
     """
@@ -100,4 +102,49 @@ def auto_detect_nvidia_target(gpu_id: int = 0) -> str:
         gpu_model = NVIDIA_GPU_REMAP[gpu_model]
 
     target = find_best_match(nvidia_tags, gpu_model) if gpu_model else "cuda"
+    return target
+
+
+def auto_detect_target(target: str = "auto", gpu_id: int = 0) -> str:
+    """Detect the computing target (CUDA or ROCm) based on the environment.
+
+    Args:
+        target (str): The target to detect. Use "auto" for automatic detection.
+                      Can also specify "cuda" or "hip" explicitly.
+
+    Returns:
+        str: The detected target, either "cuda" or "hip".
+
+    Raises:
+        ValueError: If auto-detection is enabled and no valid target is found.
+    """
+
+    from tvm.contrib import nvcc, rocm
+
+    def is_cuda_available() -> bool:
+        """Check if CUDA is available."""
+        try:
+            nvcc.find_cuda_path()
+            return True
+        except RuntimeError:
+            return False
+
+    def is_rocm_available() -> bool:
+        """Check if ROCm is available."""
+        try:
+            rocm.find_rocm_path()
+            return True
+        except RuntimeError:
+            return False
+
+    if target == "auto":
+        if is_cuda_available():
+            return auto_detect_nvidia_target(gpu_id=gpu_id)
+        if is_rocm_available():
+            return "hip"
+        raise ValueError("Cannot detect the target: no CUDA or ROCm installation found.")
+
+    if target not in {"cuda", "hip"}:
+        raise ValueError(f"Invalid target: {target}. Must be 'cuda', 'hip', or 'auto'.")
+
     return target

@@ -278,7 +278,7 @@ class Operator(object):
             self._update_optimized_mod(scheduled_ir_module)
         except Exception as apply_schedule_error:
             self.scheduled_ir_module = None
-            logger.warning(
+            logger.exception(
                 APPLY_SCHEDULE_FAILED_MESSAGE.format(self.__class__.__name__, target, "default",
                                                      apply_schedule_error))
 

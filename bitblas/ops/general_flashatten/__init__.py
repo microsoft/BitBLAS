@@ -6,7 +6,7 @@ from .tilelang import select_scheduler as consistent_scheduler
 from bitblas.base.base_scheduler import BaseScheduler
 from ..operator import OperatorConfig, Operator, BaseKernelNameGenerator
 from ...base.arch.cuda import CUDA
-from ...utils import auto_detect_nvidia_target
+from ...utils import auto_detect_target
 from dataclasses import dataclass
 from typing import Union, Tuple, Literal, Optional, Any
 import logging
@@ -93,7 +93,7 @@ class FlashAtten(Operator):
         backend: str = "tl",
     ):
         if target is None:
-            target = auto_detect_nvidia_target()
+            target = auto_detect_target()
             logger.info(f"Auto detected target: {target}")
 
         assert (config.Q_dtype

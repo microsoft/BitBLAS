@@ -16,7 +16,7 @@ from .tilelang.dense import select_scheduler as consistent_scheduler
 from .tilelang.dequantize import select_scheduler as weight_dequantize_scheduler
 from ...base.utils import tensor_replace_dp4a, tensor_remove_make_int4, tensor_remove_make_int2
 from bitblas.utils import retrieve_func_from_module
-from bitblas.utils.target_detector import auto_detect_nvidia_target
+from bitblas.utils.target_detector import auto_detect_target
 from dataclasses import dataclass
 from ..ladder_permutate import LadderPermutate, LadderPermutateConfig
 from ..quant_compress import QuantCompress, QuantCompressConfig
@@ -356,7 +356,7 @@ class Matmul(Operator):
         # if from database, we should disable default schedule
         # to save compilation time
         if target is None:
-            target = auto_detect_nvidia_target()
+            target = auto_detect_target()
             logger.info(f"Auto detected target: {target}")
 
         assert (config.A_dtype

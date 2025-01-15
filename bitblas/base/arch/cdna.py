@@ -11,6 +11,21 @@ def is_cdna_arch(arch: TileDevice) -> bool:
     return isinstance(arch, CDNA)
 
 
+# AMD Matrix Core Configurations
+cdna_matrixcore_supported = [
+    ("float16", "float32"),
+    ("int8", "int32"),
+]
+
+
+def is_matrixcore_supported_precision(in_dtype: str, accum_dtype: str, arch: TileDevice) -> bool:
+
+    if is_cdna_arch(arch):
+        return (in_dtype, accum_dtype) in cdna_matrixcore_supported
+    else:
+        raise ValueError(f"Unsupported architecture: {arch}")
+
+
 class CDNA(TileDevice):
 
     def __init__(self, target: Union[Target, str]):
