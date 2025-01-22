@@ -45,13 +45,16 @@ def find_version(version_file_path: str) -> str:
 
     Adapted from https://github.com/ray-project/ray/blob/0b190ee1160eeca9796bc091e07eaebf4c85b511/python/setup.py
     """
-    # Read and store the version information from the VERSION file
+    # Read and store the version information from the version.py file
     # Use 'strip()' to remove any leading/trailing whitespace or newline characters
     if not os.path.exists(version_file_path):
         raise FileNotFoundError(f"Version file not found at {version_file_path}")
     with open(version_file_path, "r") as version_file:
         version = version_file.read().strip()
-    return version
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", version, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
 
 
 def get_nvcc_cuda_version():
@@ -67,7 +70,7 @@ def get_nvcc_cuda_version():
 
 
 def get_bitblas_version(with_cuda=True, with_system_info=True) -> str:
-    version = find_version(get_path(".", "VERSION"))
+    version = find_version(get_path(".", "bitblas", "version.py"))
     local_version_parts = []
     if with_system_info:
         local_version_parts.append(get_system_info().replace("-", "."))
@@ -271,7 +274,7 @@ class BitBLASBuilPydCommand(build_py):
                 shutil.copy2(source_dir, target_dir)
 
         # copy compoable kernel to the package directory
-        CONFIG_ITEMS = ["VERSION", "README.md", "LICENSE"]
+        CONFIG_ITEMS = ["README.md", "LICENSE"]
         for item in CONFIG_ITEMS:
             source_dir = os.path.join(ROOT_DIR, item)
             target_dir = os.path.join(self.build_lib, PACKAGE_NAME, item)
