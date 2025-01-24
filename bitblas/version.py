@@ -6,11 +6,12 @@ import os
 # Get the absolute path of the current Python script's directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Get the absolute path of the project root directory (one level above the current directory)
-project_root_dir = os.path.abspath(os.path.join(current_dir, ".."))
+# Define the path to the VERSION file located in the package directory
+version_file_path = os.path.join(current_dir, "VERSION")
 
-# Define the path to the VERSION file located in the project root directory
-version_file_path = os.path.join(project_root_dir, "VERSION")
+# If the VERSION file is not found, locate it in the project root directory instead
+if not os.path.exists(version_file_path):
+    version_file_path = os.path.join(current_dir, "..", "VERSION")
 
 # Read and store the version information from the VERSION file
 # Use 'strip()' to remove any leading/trailing whitespace or newline characters
