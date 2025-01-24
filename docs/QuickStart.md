@@ -151,7 +151,7 @@ model = bitblas.Linear(
 )
 
 # Create an integer weight tensor
-intweight = torch.randint(-7, 7, (1024, 1024), dtype=torch.int8)
+intweight = torch.randint(-7, 7, (1024, 1024), dtype=torch.int8).cuda()
 
 # Load and transform weights into the BitBLAS linear module
 model.load_and_transform_weight(intweight)
@@ -166,7 +166,7 @@ model.load_state_dict(torch.load("./model.pth"))
 model.eval()
 
 # Create a dummy input tensor
-dummpy_input = torch.randn(1, 1024, dtype=torch.float16)
+dummpy_input = torch.randn(1, 1024, dtype=torch.float16).cuda()
 
 # Perform inference
 output = model(dummpy_input)
