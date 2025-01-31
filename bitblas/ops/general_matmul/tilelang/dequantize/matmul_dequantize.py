@@ -9,7 +9,9 @@ from bitblas.base.arch import (
     TileDevice,
     is_ampere_arch,
     is_volta_arch,
+    is_cdna_arch,
     is_tensorcore_supported_precision,
+    is_matrixcore_supported_precision,
 )
 from dataclasses import dataclass
 from bitblas.tl.base_hint import BaseTLHint
@@ -143,11 +145,57 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
             else:
                 return self.matmul_dequantize_simt_scheduler
 
+    def dispatch_cdna_scheduler(self, arch: TileDevice) -> BaseScheduler:
+        M = self.maybe_dynamic(self.M, "m")
+        N, K = self.N, self.K
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
+
+        is_dynamic = self.is_dynamic
+        in_dtype, accum_dtype = (
+            self.in_dtype,
+            self.accum_dtype,
+        )
+        weight_transform_kind = self.weight_transform_kind
+        if is_dynamic:
+            # Dynamic Dispatcher
+            if is_matrixcore_supported_precision(in_dtype, accum_dtype, arch):
+                if weight_transform_kind != TransformKind.NonTransform:
+                    raise NotImplementedError("Weight propagation is not supported for MatrixCore with Dequantization")
+                else:
+                    raise NotImplementedError("Fine-grained scheduler is not supported for MatrixCore with Dequantization")s
+                    return self.matmul_dequantize_fine_grained_scheduler
+            else:
+                if weight_transform_kind != TransformKind.NonTransform:
+                    raise ValueError(
+                        "Weight propagation is not supported for non-TensorCore architectures")
+                return self.matmul_dequantize_simt_scheduler
+        else:
+            minimal_tensorcore_threshold: List[int, int, int] = ([8, 16, 32] if accum_dtype
+                                                                 == "int32" else [8, 16, 16])
+            if (minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[1] > N or
+                    minimal_tensorcore_threshold[2] > K):
+                if in_dtype == "int4":
+                    raise ValueError("INT4 is not supported for non-TensorCore architectures")
+                if weight_transform_kind != TransformKind.NonTransform:
+                    raise ValueError(
+                        "Weight propagation is not supported for non-TensorCore architectures")
+                return self.gemv_dequantize_simt_scheduler
+            elif is_matrixcore_supported_precision(in_dtype, accum_dtype, arch):
+                if self.weight_transform_kind != TransformKind.NonTransform:
+                    raise NotImplementedError(
+                        "Weight propagation is not supported for MatrixCore with Dequantization")
+                else:
+                    return self.matmul_dequantize_fine_grained_scheduler
+            else:
+                return self.matmul_dequantize_simt_scheduler
+
     def dispatch_scheduler(self, arch: TileDevice) -> BaseScheduler:
         if is_ampere_arch(arch):
             return self.dispatch_ampere_scheduler(arch)
         elif is_volta_arch(arch):
             return self.dispatch_volta_scheduler(arch)
+        elif is_cdna_arch(arch):
+            return self.dispatch_cdna_scheduler(arch)
         else:
             raise ValueError(f"Unsupported architecture: {arch}")
 
