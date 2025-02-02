@@ -1,18 +1,18 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-from .matmul_dequantize_tensorcore import (
-    MatmulDequantizeBlockScheduler,  # noqa: F401
+from .matmul_dequantize_tile import (
+    MatmulDequantizeTileLibraryScheduler,  # noqa: F401
 )
 
-from .matmul_dequantize_tensorcore_finegrained import (
-    MatmulDequantizeFineGrainedScheduler,  # noqa: F401
-    MatmulINT4DequantizeFineGrainedScheduler,  # noqa: F401
+from .matmul_dequantize_mma import (
+    MatmulDequantizeMMAScheduler,  # noqa: F401
+    MatmulINT4DequantizeMMAScheduler,  # noqa: F401
 )
 
-from .matmul_dequantize_tensorcore_weight_transform import (
-    MatmulDequantizeWeightPropagationScheduler,  # noqa: F401
-    MatmulINT4DequantizeWeightPropagationScheduler,  # noqa: F401
+from .matmul_dequantize_mma_weight_transform import (
+    MatmulDequantizeMMAWeightPropagationScheduler,  # noqa: F401
+    MatmulINT4DequantizeMMAWeightPropagationScheduler,  # noqa: F401
 )
 
 from .matmul_dequantize import MatmulDequantizeScheduler

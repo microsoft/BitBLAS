@@ -1,5 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+# Tile represents Tile Library
+
 from bitblas import tvm as tvm
 from tvm import DataType
 import tvm.tl.language as T
@@ -452,7 +454,7 @@ class MatmulDequantizeBaseScheduler(MatmulDequantizeBaseParams):
 
 
 @dataclass
-class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
+class MatmulDequantizeTileLibraryScheduler(MatmulDequantizeBaseScheduler):
 
     # Default Tile Related Params
     block_M: int = 128
@@ -463,7 +465,7 @@ class MatmulDequantizeBlockScheduler(MatmulDequantizeBaseScheduler):
     enable_rasterization: bool = False  # Enhance L2 Locality
 
     class TLHint(BaseTLHint):
-        hint_type: str = "MatmulDequantizeBlockScheduler"
+        hint_type: str = "MatmulDequantizeTileLibraryScheduler"
 
         def __init__(self):
             super().__init__()

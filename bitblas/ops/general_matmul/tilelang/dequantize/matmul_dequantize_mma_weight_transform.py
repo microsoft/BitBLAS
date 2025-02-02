@@ -11,7 +11,7 @@ from bitblas.tl.utils import (
 )
 from bitblas.base.arch import TileDevice
 from bitblas.base.roller.hint import Hint
-from .matmul_dequantize_tensorcore_finegrained import MatmulDequantizeFineGrainedScheduler
+from .matmul_dequantize_mma import MatmulDequantizeMMAScheduler
 from bitblas.tl.mma_macro_generator import (
     TensorCoreIntrinEmitterWithLadderTransform,
     INT4TensorCoreIntrinEmitterWithLadderTransform,
@@ -33,13 +33,13 @@ warp_size = 32
 
 
 @dataclass
-class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedScheduler):
+class MatmulDequantizeMMAWeightPropagationScheduler(MatmulDequantizeMMAScheduler):
 
     # force set default weight transform kind to LDMatrixTransform
     weight_transform_kind: TransformKind = TransformKind.LDMatrixTransform
 
-    class TLHint(MatmulDequantizeFineGrainedScheduler.TLHint):
-        hint_type: str = "MatmulDequantizeWeightPropagationScheduler"
+    class TLHint(MatmulDequantizeMMAScheduler.TLHint):
+        hint_type: str = "MatmulDequantizeMMAWeightPropagationScheduler"
 
     def apply_config(
         self,
@@ -680,10 +680,10 @@ class MatmulDequantizeWeightPropagationScheduler(MatmulDequantizeFineGrainedSche
 
 
 @dataclass
-class MatmulINT4DequantizeWeightPropagationScheduler(MatmulDequantizeWeightPropagationScheduler):
+class MatmulINT4DequantizeMMAWeightPropagationScheduler(MatmulDequantizeMMAWeightPropagationScheduler):
 
-    class TLHint(MatmulDequantizeWeightPropagationScheduler.TLHint):
-        hint_type: str = "MatmulINT4DequantizeWeightPropagationScheduler"
+    class TLHint(MatmulDequantizeMMAWeightPropagationScheduler.TLHint):
+        hint_type: str = "MatmulINT4DequantizeMMAWeightPropagationScheduler"
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"

@@ -6,7 +6,7 @@ from bitblas.base.roller.hint import Hint
 from bitblas.base.roller.rasterization import NoRasterization
 from dataclasses import dataclass
 from bitblas.tl.base_hint import BaseTLHint
-from .matmul_tensorcore import MatmulBaseScheduler
+from .matmul_tile import MatmulBaseScheduler
 
 # GPU warp configuration for NVIDIA GPUs
 warp_size = 32
@@ -14,7 +14,7 @@ warp_size = 32
 
 # TODO(lei): This is not implemented in the current version of the codebase
 @dataclass
-class MatmulFineGrainScheduler(MatmulBaseScheduler):
+class MatmulMMAScheduler(MatmulBaseScheduler):
     # Fine-grained matrix multiplication scheduler
     # Allows for more detailed configuration.
 
@@ -31,7 +31,7 @@ class MatmulFineGrainScheduler(MatmulBaseScheduler):
 
     class TLHint(BaseTLHint):
 
-        hint_type: str = "MatmulFineGrainScheduler"
+        hint_type: str = "MatmulMMAScheduler"
 
         def __init__(self):
             super().__init__()

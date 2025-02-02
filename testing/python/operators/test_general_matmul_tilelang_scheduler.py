@@ -4,8 +4,8 @@
 from bitblas import tvm as tvm
 import bitblas.testing
 from tvm.ir import structural_equal
-from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
-    MatmulBlockScheduler,)
+from bitblas.ops.general_matmul.tilelang.dense.matmul_tile import (
+    MatmulTileLibraryScheduler,)
 from bitblas.ops.general_matmul.tilelang.dequantize import (MatmulDequantizeScheduler)
 from bitblas.ops.general_matmul.tilelang.dense.gemv_simt import GemvFineGrainSIMTScheduler
 from bitblas.ops.general_matmul.tilelang.dense import MatmulScheduler
@@ -49,7 +49,7 @@ def assert_dense_scheduler_simplify(M,
                                     in_dtype="float16",
                                     out_dtype="float16",
                                     accum_dtype="float16"):
-    matmul = MatmulBlockScheduler(
+    matmul = MatmulTileLibraryScheduler(
         M=M,
         N=N,
         K=K,
@@ -60,7 +60,7 @@ def assert_dense_scheduler_simplify(M,
         accum_dtype=accum_dtype,
     ).deactivate_simplify().with_default_config()
 
-    simplified = MatmulBlockScheduler.Simplify(matmul)
+    simplified = MatmulTileLibraryScheduler.Simplify(matmul)
 
     is_equal = structural_equal(matmul, simplified)
     if is_equal:

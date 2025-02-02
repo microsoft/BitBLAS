@@ -17,12 +17,13 @@ from bitblas.tl.base_hint import BaseTLHint
 from .base import MatmulBaseParams
 from .gemv_simt import GemvFineGrainSIMTScheduler
 from .matmul_simt import MatmulFineGrainSIMTScheduler
-from .matmul_tensorcore import (
-    MatmulBlockScheduler,
-    MatmulFineGrainScheduler,
-    MatmulWeightPropagationScheduler,
-    MatmulINT4FineGrainScheduler,
-    MatmulINT4WeightPropagationScheduler,
+from .matmul_tile import (
+    MatmulTileLibraryScheduler,)
+from .matmul_mma import (
+    MatmulMMAScheduler,
+    MatmulMMAWeightPropagationScheduler,
+    MatmulINT4MMAScheduler,
+    MatmulINT4MMAWeightPropagationScheduler,
 )
 
 import logging
@@ -37,20 +38,21 @@ class MatmulScheduler(MatmulBaseParams):
 
     gemv_scheduler: Optional[GemvFineGrainSIMTScheduler] = None
     matmul_simt_scheduler: Optional[MatmulFineGrainSIMTScheduler] = None
-    matmul_block_scheduler: Optional[MatmulBlockScheduler] = None
-    matmul_fine_grain_scheduler: Optional[MatmulFineGrainScheduler] = None
-    matmul_weight_propagation_scheduler: Optional[MatmulWeightPropagationScheduler] = None
-    matmul_int4_fine_grain_scheduler: Optional[MatmulINT4FineGrainScheduler] = None
-    matmul_int4_weight_propagation_scheduler: Optional[MatmulINT4WeightPropagationScheduler] = None
+    matmul_block_scheduler: Optional[MatmulTileLibraryScheduler] = None
+    matmul_fine_grain_scheduler: Optional[MatmulMMAScheduler] = None
+    matmul_weight_propagation_scheduler: Optional[MatmulMMAWeightPropagationScheduler] = None
+    matmul_int4_fine_grain_scheduler: Optional[MatmulINT4MMAScheduler] = None
+    matmul_int4_weight_propagation_scheduler: Optional[
+        MatmulINT4MMAWeightPropagationScheduler] = None
 
     def __init__(self, **kwargs):
         self.gemv_scheduler = GemvFineGrainSIMTScheduler(**kwargs)
         self.matmul_simt_scheduler = MatmulFineGrainSIMTScheduler(**kwargs)
-        self.matmul_block_scheduler = MatmulBlockScheduler(**kwargs)
-        self.matmul_fine_grain_scheduler = MatmulFineGrainScheduler(**kwargs)
-        self.matmul_weight_propagation_scheduler = MatmulWeightPropagationScheduler(**kwargs)
-        self.matmul_int4_fine_grain_scheduler = MatmulINT4FineGrainScheduler(**kwargs)
-        self.matmul_int4_weight_propagation_scheduler = MatmulINT4WeightPropagationScheduler(
+        self.matmul_block_scheduler = MatmulTileLibraryScheduler(**kwargs)
+        self.matmul_fine_grain_scheduler = MatmulMMAScheduler(**kwargs)
+        self.matmul_weight_propagation_scheduler = MatmulMMAWeightPropagationScheduler(**kwargs)
+        self.matmul_int4_fine_grain_scheduler = MatmulINT4MMAScheduler(**kwargs)
+        self.matmul_int4_weight_propagation_scheduler = MatmulINT4MMAWeightPropagationScheduler(
             **kwargs)
         super().__init__(**kwargs)
 

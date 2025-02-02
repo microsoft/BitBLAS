@@ -4,23 +4,22 @@
 from bitblas import tvm as tvm
 import bitblas.testing
 from tvm import tl
-from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
-    MatmulBlockScheduler,
-    MatmulFineGrainScheduler,
-    MatmulWeightPropagationScheduler,
-)
+from bitblas.ops.general_matmul.tilelang.dense.matmul_tile import (
+    MatmulTileLibraryScheduler,)
 
 from bitblas.ops.general_matmul.tilelang.dequantize import (
     MatmulDequantizeScheduler,
-    MatmulDequantizeFineGrainedScheduler,
-    MatmulDequantizeWeightPropagationScheduler,
-    MatmulINT4DequantizeFineGrainedScheduler,
-    MatmulINT4DequantizeWeightPropagationScheduler,
+    MatmulDequantizeMMAScheduler,
+    MatmulDequantizeMMAWeightPropagationScheduler,
+    MatmulINT4DequantizeMMAScheduler,
+    MatmulINT4DequantizeMMAWeightPropagationScheduler,
 )
 
-from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
-    MatmulINT4FineGrainScheduler,
-    MatmulINT4WeightPropagationScheduler,
+from bitblas.ops.general_matmul.tilelang.dense.matmul_mma import (
+    MatmulMMAScheduler,
+    MatmulMMAWeightPropagationScheduler,
+    MatmulINT4MMAScheduler,
+    MatmulINT4MMAWeightPropagationScheduler,
 )
 
 import torch
@@ -41,7 +40,7 @@ def assert_matmul_blocked_with_default_correctness(
     out_dtype="float16",
     accum_dtype="float16",
 ):
-    matmul = MatmulBlockScheduler(
+    matmul = MatmulTileLibraryScheduler(
         M=M,
         N=N,
         K=K,
@@ -92,7 +91,7 @@ def assert_matmul_blocked_apply_config_correctness(
     threads=128,
     enable_rasterization: bool = False,
 ):
-    matmul = MatmulBlockScheduler(
+    matmul = MatmulTileLibraryScheduler(
         M=M,
         N=N,
         K=K,
@@ -145,7 +144,7 @@ def assert_matmul_fine_grained_with_default_correctness(
     accum_dtype="float16",
 ):
 
-    matmul = MatmulFineGrainScheduler(
+    matmul = MatmulMMAScheduler(
         M=M,
         N=N,
         K=K,
@@ -199,7 +198,7 @@ def assert_matmul_fine_grained_apply_config_correctness(
     enable_rasterization: bool = False,
 ):
 
-    matmul = MatmulFineGrainScheduler(
+    matmul = MatmulMMAScheduler(
         M=M,
         N=N,
         K=K,
@@ -253,7 +252,7 @@ def assert_matmul_weight_propagation_with_default_correctness(
     accum_dtype="float16",
 ):
 
-    matmul = MatmulWeightPropagationScheduler(
+    matmul = MatmulMMAWeightPropagationScheduler(
         M=M,
         N=N,
         K=K,
@@ -319,7 +318,7 @@ def assert_matmul_weight_propagation_apply_config_correctness(
     enable_rasterization: bool = False,
 ):
 
-    matmul = MatmulWeightPropagationScheduler(
+    matmul = MatmulMMAWeightPropagationScheduler(
         M=M,
         N=N,
         K=K,
@@ -384,7 +383,7 @@ def assert_matmul_int4_fine_grained_with_default_correctness(
     accum_dtype="int32",
 ):
 
-    matmul = MatmulINT4FineGrainScheduler(
+    matmul = MatmulINT4MMAScheduler(
         M=M,
         N=N,
         K=K,
@@ -441,7 +440,7 @@ def assert_matmul_int4_fine_grained_apply_config_correctness(
     enable_rasterization: bool = False,
 ):
 
-    matmul = MatmulINT4FineGrainScheduler(
+    matmul = MatmulINT4MMAScheduler(
         M=M,
         N=N,
         K=K,
@@ -499,7 +498,7 @@ def assert_matmul_int4_weight_propagation_with_default_correctness(
     accum_dtype="int32",
 ):
 
-    matmul = MatmulINT4WeightPropagationScheduler(
+    matmul = MatmulINT4MMAWeightPropagationScheduler(
         M=M,
         N=N,
         K=K,
@@ -569,7 +568,7 @@ def assert_matmul_int4_weight_propagation_apply_config__correctness(
     enable_rasterization: bool = False,
 ):
 
-    matmul = MatmulINT4WeightPropagationScheduler(
+    matmul = MatmulINT4MMAWeightPropagationScheduler(
         M=M,
         N=N,
         K=K,
@@ -648,7 +647,7 @@ def assert_matmul_fine_grained_dequant_int4_with_default_correctness(
     fast_decoding=False,
     zeros_mode="original",
 ):
-    matmul = MatmulINT4DequantizeFineGrainedScheduler(
+    matmul = MatmulINT4DequantizeMMAScheduler(
         M=M,
         N=N,
         K=K,
@@ -739,7 +738,7 @@ def assert_matmul_fine_grained_dequant_int4_apply_config_correctness(
     num_stages=2,
     enable_rasterization: bool = False,
 ):
-    matmul = MatmulINT4DequantizeFineGrainedScheduler(
+    matmul = MatmulINT4DequantizeMMAScheduler(
         M=M,
         N=N,
         K=K,
@@ -831,7 +830,7 @@ def assert_matmul_weight_transform_dequant_int4_with_default_correctness(
     fast_decoding=False,
     zeros_mode="original",
 ):
-    matmul = MatmulINT4DequantizeWeightPropagationScheduler(
+    matmul = MatmulINT4DequantizeMMAWeightPropagationScheduler(
         M=M,
         N=N,
         K=K,
@@ -943,7 +942,7 @@ def assert_matmul_weight_transform_dequant_int4_apply_config_correctness(
     num_stages=2,
     enable_rasterization: bool = False,
 ):
-    matmul = MatmulINT4DequantizeWeightPropagationScheduler(
+    matmul = MatmulINT4DequantizeMMAWeightPropagationScheduler(
         M=M,
         N=N,
         K=K,
@@ -1195,7 +1194,7 @@ def assert_matmul_fine_grained_dequant_with_default_correctness(
     import numpy as np
     from bitblas.quantization import general_compress, interleave_weight
 
-    matmul = MatmulDequantizeFineGrainedScheduler(
+    matmul = MatmulDequantizeMMAScheduler(
         M=M,
         N=N,
         K=K,
@@ -1325,7 +1324,7 @@ def assert_matmul_weight_transform_dequant_with_default_correctness(
     import numpy as np
     from bitblas.quantization import general_compress, interleave_weight
 
-    matmul = MatmulDequantizeWeightPropagationScheduler(
+    matmul = MatmulDequantizeMMAWeightPropagationScheduler(
         M=M,
         N=N,
         K=K,

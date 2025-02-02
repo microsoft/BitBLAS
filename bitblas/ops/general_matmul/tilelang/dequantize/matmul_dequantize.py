@@ -17,14 +17,14 @@ from bitblas.tl.base_hint import BaseTLHint
 from .base import MatmulDequantizeBaseParams
 from .gemv_dequantize_simt import GemvDequantizeSIMTScheduler
 from .matmul_dequantize_simt import MatmulDequantizeSIMTScheduler
-from .matmul_dequantize_tensorcore import MatmulDequantizeBlockScheduler
-from .matmul_dequantize_tensorcore_finegrained import (
-    MatmulDequantizeFineGrainedScheduler,
-    MatmulINT4DequantizeFineGrainedScheduler,
+from .matmul_dequantize_tile import MatmulDequantizeTileLibraryScheduler
+from .matmul_dequantize_mma import (
+    MatmulDequantizeMMAScheduler,
+    MatmulINT4DequantizeMMAScheduler,
 )
-from .matmul_dequantize_tensorcore_weight_transform import (
-    MatmulDequantizeWeightPropagationScheduler,
-    MatmulINT4DequantizeWeightPropagationScheduler,
+from .matmul_dequantize_mma_weight_transform import (
+    MatmulDequantizeMMAWeightPropagationScheduler,
+    MatmulINT4DequantizeMMAWeightPropagationScheduler,
 )
 
 import logging
@@ -38,26 +38,24 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
     # Allows for more detailed configuration.
     gemv_dequantize_simt_scheduler: Optional[GemvDequantizeSIMTScheduler] = None
     matmul_dequantize_simt_scheduler: Optional[MatmulDequantizeSIMTScheduler] = None
-    matmul_dequantize_block_scheduler: Optional[MatmulDequantizeBlockScheduler] = None
-    matmul_dequantize_fine_grained_scheduler: Optional[MatmulDequantizeFineGrainedScheduler] = None
+    matmul_dequantize_block_scheduler: Optional[MatmulDequantizeTileLibraryScheduler] = None
+    matmul_dequantize_fine_grained_scheduler: Optional[MatmulDequantizeMMAScheduler] = None
     matmul_dequantize_weight_propagation_scheduler: Optional[
-        MatmulDequantizeWeightPropagationScheduler] = None
-    matmul_int4_dequantize_fine_grain_scheduler: Optional[
-        MatmulINT4DequantizeFineGrainedScheduler] = None
+        MatmulDequantizeMMAWeightPropagationScheduler] = None
+    matmul_int4_dequantize_fine_grain_scheduler: Optional[MatmulINT4DequantizeMMAScheduler] = None
     matmul_int4_dequantize_weight_propagation_scheduler: Optional[
-        MatmulINT4DequantizeWeightPropagationScheduler] = None
+        MatmulINT4DequantizeMMAWeightPropagationScheduler] = None
 
     def __init__(self, **kwargs):
         self.gemv_dequantize_simt_scheduler = GemvDequantizeSIMTScheduler(**kwargs)
         self.matmul_dequantize_simt_scheduler = MatmulDequantizeSIMTScheduler(**kwargs)
-        self.matmul_dequantize_block_scheduler = MatmulDequantizeBlockScheduler(**kwargs)
-        self.matmul_dequantize_fine_grained_scheduler = MatmulDequantizeFineGrainedScheduler(
+        self.matmul_dequantize_block_scheduler = MatmulDequantizeTileLibraryScheduler(**kwargs)
+        self.matmul_dequantize_fine_grained_scheduler = MatmulDequantizeMMAScheduler(**kwargs)
+        self.matmul_dequantize_weight_propagation_scheduler = MatmulDequantizeMMAWeightPropagationScheduler(
             **kwargs)
-        self.matmul_dequantize_weight_propagation_scheduler = MatmulDequantizeWeightPropagationScheduler(
+        self.matmul_int4_dequantize_fine_grain_scheduler = MatmulINT4DequantizeMMAScheduler(
             **kwargs)
-        self.matmul_int4_dequantize_fine_grain_scheduler = MatmulINT4DequantizeFineGrainedScheduler(
-            **kwargs)
-        self.matmul_int4_dequantize_weight_propagation_scheduler = MatmulINT4DequantizeWeightPropagationScheduler(
+        self.matmul_int4_dequantize_weight_propagation_scheduler = MatmulINT4DequantizeMMAWeightPropagationScheduler(
             **kwargs)
 
         super().__init__(**kwargs)
