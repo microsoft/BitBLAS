@@ -4,7 +4,7 @@
 from bitblas import tvm as tvm
 import bitblas.testing
 from tvm import tl
-from bitblas.ops.general_matmul.tilelang.dense.matmul_tensorcore import (
+from bitblas.ops.general_matmul.tilelang.dense.matmul_tile import (
     matmul_blocked,
     matmul_macro_tensorcore,
     matmul_macro_tensorcore_weight_propagation_level_ldmatrix,

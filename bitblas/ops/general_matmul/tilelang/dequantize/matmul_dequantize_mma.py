@@ -17,7 +17,7 @@ from bitblas.base.roller.hint import Hint
 from bitblas.base.roller.rasterization import NoRasterization
 from bitblas.base.utils import get_roller_hints_from_func
 from dataclasses import dataclass
-from bitblas.ops.general_matmul.tilelang.dequantize.matmul_dequantize_tensorcore import (
+from bitblas.ops.general_matmul.tilelang.dequantize.matmul_dequantize_tile import (
     MatmulDequantizeBaseScheduler,  # noqa: F401
 )
 from bitblas.tl.base_hint import BaseTLHint
@@ -27,7 +27,7 @@ warp_size = 32
 
 
 @dataclass
-class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
+class MatmulDequantizeMMAScheduler(MatmulDequantizeBaseScheduler):
 
     # Tensor Core Warp Configuration
     block_row_warps: int = 2
@@ -43,7 +43,7 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
 
     class TLHint(BaseTLHint):
 
-        hint_type: str = "MatmulDequantizeFineGrainedScheduler"
+        hint_type: str = "MatmulDequantizeMMAScheduler"
 
         def __init__(self):
             super().__init__()
@@ -508,10 +508,10 @@ class MatmulDequantizeFineGrainedScheduler(MatmulDequantizeBaseScheduler):
 
 
 @dataclass
-class MatmulINT4DequantizeFineGrainedScheduler(MatmulDequantizeFineGrainedScheduler):
+class MatmulINT4DequantizeMMAScheduler(MatmulDequantizeMMAScheduler):
 
-    class TLHint(MatmulDequantizeFineGrainedScheduler.TLHint):
-        hint_type: str = "MatmulINT4DequantizeFineGrainedScheduler"
+    class TLHint(MatmulDequantizeMMAScheduler.TLHint):
+        hint_type: str = "MatmulINT4DequantizeMMAScheduler"
 
     def get_roller_configs(self, arch: TileDevice = None, topk: int = 10):
         layout = f"{'t' if self.trans_A else 'n'}{'t' if self.trans_B else 'n'}"

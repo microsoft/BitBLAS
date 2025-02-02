@@ -5,12 +5,14 @@ from .matmul_simt import (
     MatmulFineGrainSIMTScheduler,  # noqa: F401
 )
 
-from .matmul_tensorcore import (
-    MatmulBlockScheduler,
-    MatmulFineGrainScheduler,
-    MatmulWeightPropagationScheduler,
-    MatmulINT4FineGrainScheduler,
-    MatmulINT4WeightPropagationScheduler,
+from .matmul_tile import (
+    MatmulTileLibraryScheduler,)
+
+from .matmul_mma import (
+    MatmulMMAScheduler,
+    MatmulMMAWeightPropagationScheduler,
+    MatmulINT4MMAScheduler,
+    MatmulINT4MMAWeightPropagationScheduler,
 )
 
 from .matmul import MatmulScheduler
@@ -126,8 +128,8 @@ def ampere_select_scheduler(
         return dtype == "int4" or dtype == "uint4"
 
     if can_apply_weight_propagation_scheduler(trans_A, trans_B, propagate_a, propagate_b):
-        Scheduler = MatmulWeightPropagationScheduler if not is_int4_dtype(
-            in_dtype) else MatmulINT4WeightPropagationScheduler
+        Scheduler = MatmulMMAWeightPropagationScheduler if not is_int4_dtype(
+            in_dtype) else MatmulINT4MMAWeightPropagationScheduler
         return Scheduler(
             M=M,
             N=N,
@@ -140,8 +142,7 @@ def ampere_select_scheduler(
             with_bias=with_bias,
         )
     if can_apply_fine_grain_scheduler(trans_A, trans_B, propagate_a, propagate_b):
-        Scheduler = MatmulFineGrainScheduler if not is_int4_dtype(
-            in_dtype) else MatmulINT4FineGrainScheduler
+        Scheduler = MatmulMMAScheduler if not is_int4_dtype(in_dtype) else MatmulINT4MMAScheduler
         return Scheduler(
             M=M,
             N=N,
@@ -154,7 +155,7 @@ def ampere_select_scheduler(
             with_bias=with_bias,
         )
     elif can_apply_block_scheduler(propagate_a, propagate_b):
-        return MatmulBlockScheduler(
+        return MatmulTileLibraryScheduler(
             M=M,
             N=N,
             K=K,
