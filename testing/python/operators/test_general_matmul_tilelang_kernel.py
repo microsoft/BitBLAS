@@ -5,8 +5,7 @@ from bitblas import tvm as tvm
 import bitblas.testing
 from tvm import tl
 from bitblas.ops.general_matmul.tilelang.dense.matmul_tile import (
-    MatmulTileLibraryScheduler,
-)
+    MatmulTileLibraryScheduler,)
 
 from bitblas.ops.general_matmul.tilelang.dequantize import (
     MatmulDequantizeScheduler,
