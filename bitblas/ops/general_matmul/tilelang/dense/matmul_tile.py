@@ -3,7 +3,6 @@
 # tile represents tile library
 
 from bitblas import tvm as tvm
-from tvm import DataType
 import tvm.tl.language as T
 from typing import Optional, List
 from bitblas.tl.utils import (
@@ -11,10 +10,8 @@ from bitblas.tl.utils import (
     make_mma_swizzle_layout as make_swizzle_layout,
 )
 
-from bitblas.tl.mma_macro_generator import (
-    TensorCoreIntrinEmitter,
-    TensorCoreIntrinEmitterWithLadderTransform
-)
+from bitblas.tl.mma_macro_generator import (TensorCoreIntrinEmitter,
+                                            TensorCoreIntrinEmitterWithLadderTransform)
 from bitblas.base.operator_common import TransformKind
 from bitblas.base.arch import TileDevice
 from bitblas.base.roller.hint import Hint
