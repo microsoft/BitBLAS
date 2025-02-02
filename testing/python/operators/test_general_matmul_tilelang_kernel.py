@@ -6,8 +6,6 @@ import bitblas.testing
 from tvm import tl
 from bitblas.ops.general_matmul.tilelang.dense.matmul_tile import (
     MatmulTileLibraryScheduler,
-    MatmulMMAScheduler,
-    MatmulMMAWeightPropagationScheduler,
 )
 
 from bitblas.ops.general_matmul.tilelang.dequantize import (
@@ -18,7 +16,9 @@ from bitblas.ops.general_matmul.tilelang.dequantize import (
     MatmulINT4DequantizeMMAWeightPropagationScheduler,
 )
 
-from bitblas.ops.general_matmul.tilelang.dense.matmul_tile import (
+from bitblas.ops.general_matmul.tilelang.dense.matmul_mma import (
+    MatmulMMAScheduler,
+    MatmulMMAWeightPropagationScheduler,
     MatmulINT4MMAScheduler,
     MatmulINT4MMAWeightPropagationScheduler,
 )

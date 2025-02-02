@@ -27,7 +27,7 @@ def matmul_torch_forward(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, layo
         with_zeros=with_zeros,
         zeros_mode=zeros_mode,
     )
-    matmul = Matmul(config=matmul_config, enable_tuning=True)
+    matmul = Matmul(config=matmul_config, enable_tuning=True, backend="tir")
 
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
@@ -93,7 +93,7 @@ def matmul_torch_forward_weight_dequantize(M, N, K, A_dtype, W_dtype, accum_dtyp
         propagate_a=False,
         propagate_b=False,
     )
-    matmul = Matmul(config=matmul_config, enable_tuning=False)
+    matmul = Matmul(config=matmul_config, enable_tuning=False, backend="tir")
     input_shape = (M, K)
     weight_shape = (N, K) if layout == "nt" else (K, N)
 
