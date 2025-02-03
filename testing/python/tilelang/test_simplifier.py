@@ -1,6 +1,6 @@
 import tvm
-from tvm import tl
-import tvm.tl.language as T
+from bitblas import tilelang as tilelang
+import tilelang.language as T
 
 
 def modify(
@@ -36,7 +36,7 @@ def modify(
 def test_modify(with_B=False, with_bias=False):
     tester = modify(with_B=with_B, with_bias=with_bias)
     mod = tvm.IRModule({tester.attrs["global_symbol"]: tester})
-    mod2 = tl.transform.Simplify()(mod)
+    mod2 = tilelang.transform.Simplify()(mod)
     assert mod != mod2
 
 
@@ -71,11 +71,11 @@ def matmul(M, N, K, block_M, block_N, block_K, dtype="float16", accum_dtype="flo
 def test_matmul():
     func = matmul(1024, 1024, 1024, 128, 128, 32)
     mod = tvm.IRModule({func.attrs["global_symbol"]: func})
-    mod = tl.transform.Simplify()(mod)
+    mod = tilelang.transform.Simplify()(mod)
 
-    rt_mod, params = tl.lower(mod.functions_items()[0][1], runtime_only=False)
+    rt_mod, params = tilelang.lower(mod.functions_items()[0][1], runtime_only=False)
     # TODO Profiler only support TensorType, not dynamic variable
-    profiler = tl.Profiler(rt_mod, params, result_idx=[2])
+    profiler = tilelang.Profiler(rt_mod, params, result_idx=[2])
 
     import torch
     a = torch.randn(1024, 1024, dtype=torch.float16).cuda().half()

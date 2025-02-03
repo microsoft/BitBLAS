@@ -1,7 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-from bitblas import tvm
+from bitblas import tvm as tvm
+from bitblas import tilelang as tilelang
 import os
 import logging
 import tempfile
@@ -10,7 +11,6 @@ from typing import List, Tuple, Optional
 from tvm import IRModule
 from tvm.runtime import Module
 from tvm.tir import Schedule
-import tvm.tl as tl
 from bitblas.tl.base_hint import BaseTLHint
 from bitblas.base.arch import TileDevice
 from bitblas.base.utils import get_dummy_input_arrays
@@ -122,7 +122,7 @@ def apply_and_build_parallel(scheduler,
                     "tir.disable_cse_tir": True,
                     **(config.pass_context if config.pass_context else {})
                 }):
-            rt_mod = tl.lower(tl_prim_func, arch.target, runtime_only=True)
+            rt_mod = tilelang.lower(tl_prim_func, arch.target, runtime_only=True)
 
         from tvm.contrib.tar import tar  # Import the tar module
 

@@ -3,7 +3,8 @@
 # tile represents tile library
 
 from bitblas import tvm as tvm
-import tvm.tl.language as T
+from bitblas import tilelang as tilelang
+import tilelang.language as T
 from typing import Optional, List
 from bitblas.tl.utils import (
     get_mma_micro_size,

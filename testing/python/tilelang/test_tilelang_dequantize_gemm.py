@@ -6,8 +6,8 @@ import bitblas
 import bitblas.testing
 from bitblas import tvm as tvm
 from tvm import DataType
-from tvm import tl as TL
-import tvm.tl.language as T
+from bitblas import tilelang as tilelang
+import tilelang.language as T
 from bitblas.quantization import _tir_packed_to_unsigned_convert
 from bitblas.tl.utils import make_mma_swizzle_layout as make_swizzle_layout
 from bitblas.tl.mma_macro_generator import (
@@ -45,7 +45,7 @@ def matmul(
     local_size = MAX_TRANSACTION_SIZE_IN_BITS // DataType(in_dtype).bits
     local_size_compressed = local_size // num_elems_per_byte
 
-    import tvm.tl.language as T
+    import tilelang.language as T
 
     @T.prim_func
     def main(
@@ -123,8 +123,8 @@ def run_gemm(
         num_threads,
     )
 
-    mod, params = TL.lower(program)
-    mod = TL.Profiler(mod, params, [2], TL.TensorSupplyType.Integer)
+    mod, params = tilelang.lower(program)
+    mod = tilelang.Profiler(mod, params, [2], tilelang.TensorSupplyType.Integer)
 
     out = mod.run_once()
     assert out is not None
@@ -367,7 +367,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
     matmul = tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
         M, N, K, in_dtype, out_dtype, accum_dtype, transform_b)
 
-    mod, params = TL.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -406,7 +406,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
     QLB = ladder_permutate(qB.cpu()).cuda()
     QLB = lop3_permutate(QLB.cpu()).cuda()
 
-    mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, QLB, C)
 

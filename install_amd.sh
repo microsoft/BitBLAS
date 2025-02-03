@@ -62,9 +62,37 @@ echo "set(USE_LLVM llvm-config-16)" >> config.cmake && echo "set(USE_ROCM /opt/r
 
 cmake .. && make -j && cd ../../..
 
+TVM_PREBUILD_PATH=$(realpath .)
+
+cd ../..
+
+echo "Building TileLang with CMake..."
+cd tilelang
+mkdir build
+cd build
+
+cmake .. -DTVM_PREBUILD_PATH=$TVM_PREBUILD_PATH
+if [ $? -ne 0 ]; then
+    echo "Error: CMake configuration failed."
+    exit 1
+fi
+
+make -j
+if [ $? -ne 0 ]; then
+    echo "Error: TileLang build failed."
+    exit 1
+else
+    echo "TileLang build completed successfully."
+fi
+
+echo "TileLang build completed successfully."
+
+cd ../../..
+
 # Define the lines to be added
 TVM_HOME_ENV="export TVM_HOME=$(pwd)/3rdparty/tvm"
-BITBLAS_PYPATH_ENV="export PYTHONPATH=\$TVM_HOME/python:$(pwd):\$PYTHONPATH"
+TILELANG_HOME_ENV="export TILELANG_HOME=$(pwd)/3rdparty/tilelang"
+BITBLAS_PYPATH_ENV="export PYTHONPATH=\$TVM_HOME/python:\$TILELANG_HOME:$(pwd):\$PYTHONPATH"
 CUDA_DEVICE_ORDER_ENV="export CUDA_DEVICE_ORDER=PCI_BUS_ID"
 
 # Check and add the first line if not already present

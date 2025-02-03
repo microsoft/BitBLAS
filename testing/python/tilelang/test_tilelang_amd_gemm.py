@@ -3,7 +3,7 @@
 
 from bitblas import tvm as tvm
 import bitblas.testing
-from tvm import tl
+from bitblas import tilelang as tilelang
 
 
 def matmul(
@@ -27,7 +27,7 @@ def matmul(
     A_shared_shape = (block_K, block_M) if trans_A else (block_M, block_K)
     B_shared_shape = (block_N, block_K) if trans_B else (block_K, block_N)
     vec_size = 4 * k_pack
-    import tvm.tl.language as T
+    import tilelang.language as T
 
     @T.prim_func
     def main(A: T.Buffer(A_shape, in_dtype), B: T.Buffer(B_shape, in_dtype), C: T.Buffer(
@@ -84,8 +84,8 @@ def run_gemm(
         num_threads,
         k_pack=k_pack,
     )
-    mod, params = tl.lower(program)
-    mod = tl.Profiler(mod, params, [2], tl.TensorSupplyType.Integer)
+    mod, params = tilelang.lower(program)
+    mod = tilelang.Profiler(mod, params, [2], tilelang.TensorSupplyType.Integer)
 
     def ref_program(A, B):
         import torch

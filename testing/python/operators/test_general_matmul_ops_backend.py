@@ -34,6 +34,10 @@ def matmul_codegen_default(M, N, K, A_dtype, W_dtype, accum_dtype, out_dtype, la
         zeros_mode=zeros_mode,
     )
     matmul = Matmul(config=matmul_config, enable_tuning=False)
+    func = matmul.prim_func
+    import tilelang
+    rt_mod, params = tilelang.lower(func)
+    print(rt_mod)
     assert get_codegen_result(matmul)
 
 

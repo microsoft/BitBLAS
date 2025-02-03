@@ -66,25 +66,25 @@ class LibraryGenerator(object):
         else:
             raise ValueError(f"Unsupported platform: {platform}")
 
-        if with_tl:
-            install_tvm_path = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), "../..", "3rdparty", "tvm")
-            develop_tvm_path = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), "../../..", "3rdparty", "tvm")
-
-            tvm_root = next((path for path in [install_tvm_path, develop_tvm_path]
-                             if os.path.exists(path) and path not in sys.path), None)
+        if with_tl:            
+            install_tilelang_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), "../..", "3rdparty", "tilelang")
+            develop_tilelang_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), "../../..", "3rdparty", "tilelang")
+            
+            tilelang_root = next((path for path in [install_tilelang_path, develop_tilelang_path]
+                                  if os.path.exists(path) and path not in sys.path), None)
 
             if "TL_TEMPLATE_PATH " in os.environ:
                 tl_template_path = os.environ["TL_TEMPLATE_PATH"]
             else:
-                tl_template_path = osp.abspath(osp.join(tvm_root, "src/tl"))
+                tl_template_path = osp.abspath(osp.join(tilelang_root, "src"))
 
-            tl_template_path = osp.abspath(osp.join(tvm_root, "src/tl"))
+            tl_template_path = osp.abspath(osp.join(tilelang_root, "src"))
             if "TL_CUTLASS_PATH" in os.environ:
                 cutlass_path = os.environ["TL_CUTLASS_PATH"]
             else:
-                cutlass_path = osp.abspath(osp.join(tvm_root, "3rdparty/cutlass/include"))
+                cutlass_path = osp.abspath(osp.join(tilelang_root, "3rdparty/cutlass/include"))
 
             command += [
                 "-I" + tl_template_path,
