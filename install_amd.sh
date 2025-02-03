@@ -95,6 +95,13 @@ TILELANG_HOME_ENV="export TILELANG_HOME=$(pwd)/3rdparty/tilelang"
 BITBLAS_PYPATH_ENV="export PYTHONPATH=\$TVM_HOME/python:\$TILELANG_HOME:$(pwd):\$PYTHONPATH"
 CUDA_DEVICE_ORDER_ENV="export CUDA_DEVICE_ORDER=PCI_BUS_ID"
 
+# Inject break line if the last line of the file is not empty
+if [ -s ~/.bashrc ]; then
+    if [ "$(tail -c 1 ~/.bashrc)" != "" ]; then
+        echo "" >> ~/.bashrc
+    fi
+fi
+
 # Check and add the first line if not already present
 if ! grep -qxF "$TVM_HOME_ENV" ~/.bashrc; then
     echo "$TVM_HOME_ENV" >> ~/.bashrc
