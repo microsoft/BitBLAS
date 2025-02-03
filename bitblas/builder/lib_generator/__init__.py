@@ -66,12 +66,12 @@ class LibraryGenerator(object):
         else:
             raise ValueError(f"Unsupported platform: {platform}")
 
-        if with_tl:            
+        if with_tl:
             install_tilelang_path = os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), "../..", "3rdparty", "tilelang")
             develop_tilelang_path = os.path.join(
                 os.path.dirname(os.path.abspath(__file__)), "../../..", "3rdparty", "tilelang")
-            
+
             tilelang_root = next((path for path in [install_tilelang_path, develop_tilelang_path]
                                   if os.path.exists(path) and path not in sys.path), None)
 

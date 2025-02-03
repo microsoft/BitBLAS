@@ -56,6 +56,4 @@ def test_matmul_transform_weight():
 
 # fmt: on
 if __name__ == "__main__":
-    # bitblas.testing.main()
-    matmul_backend_code_wrap(768, 768, 768, "float16", "uint4", "float16", "float16", False)
-
+    bitblas.testing.main()

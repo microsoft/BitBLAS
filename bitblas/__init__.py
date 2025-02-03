@@ -146,7 +146,7 @@ if os.environ.get("TL_CUTLASS_PATH", None) is None:
         logger.warning(CUTLASS_NOT_FOUND_MESSAGE)
 
 import tvm as tvm  # noqa: E402
-import tilelang as tilelang # noqa: E402
+import tilelang as tilelang  # noqa: E402
 
 from .base import (
     TileDevice,  # noqa: F401
