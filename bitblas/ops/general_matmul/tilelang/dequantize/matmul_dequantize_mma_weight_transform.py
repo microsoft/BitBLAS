@@ -681,7 +681,8 @@ class MatmulDequantizeMMAWeightPropagationScheduler(MatmulDequantizeMMAScheduler
 
 
 @dataclass
-class MatmulINT4DequantizeMMAWeightPropagationScheduler(MatmulDequantizeMMAWeightPropagationScheduler):
+class MatmulINT4DequantizeMMAWeightPropagationScheduler(
+        MatmulDequantizeMMAWeightPropagationScheduler):
 
     class TLHint(MatmulDequantizeMMAWeightPropagationScheduler.TLHint):
         hint_type: str = "MatmulINT4DequantizeMMAWeightPropagationScheduler"
