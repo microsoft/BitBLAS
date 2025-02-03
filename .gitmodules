@@ -4,7 +4,7 @@
 	branch = tilelang_codebase
 [submodule "3rdparty/tilelang"]
 	path = 3rdparty/tilelang
-	url = https://github.com/tile-ai/tilelang.git
+	url = https://github.com/tile-ai/tilelang
 	branch = bitblas
 [submodule "3rdparty/cutlass"]
 	path = 3rdparty/cutlass
