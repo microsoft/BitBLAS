@@ -8,5 +8,5 @@
 	branch = bitblas
 [submodule "3rdparty/cutlass"]
 	path = 3rdparty/cutlass
-	url = https://github.com/TileLang/cutlass
+	url = https://github.com/tile-ai/cutlass
 	branch = tldev
