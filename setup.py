@@ -240,9 +240,28 @@ class BitBLASBuilPydCommand(build_py):
             "3rdparty/tvm/mypy.ini",
             "3rdparty/tvm/pyproject.toml",
             "3rdparty/tvm/version.py",
-            "3rdparty/tvm/src/tl/tl_templates",
         ]
         for item in TVM_PREBUILD_ITEMS:
+            source_dir = os.path.join(ROOT_DIR, item)
+            target_dir = os.path.join(self.build_lib, PACKAGE_NAME, item)
+            if os.path.isdir(source_dir):
+                self.mkpath(target_dir)
+                distutils.dir_util.copy_tree(source_dir, target_dir)
+            else:
+                target_dir = os.path.dirname(target_dir)
+                if not os.path.exists(target_dir):
+                    os.makedirs(target_dir)
+                shutil.copy2(source_dir, target_dir)
+
+        # Copy the built TILELANG to the package directory
+        TILELANG_PREBUILD_ITEMS = [
+            "3rdparty/tilelang/build/libtilelang_module.so",
+            "3rdparty/tilelang/build/libtilelang.so",
+            "3rdparty/tilelang/tilelang",
+            "3rdparty/tilelang/src/tl_templates",
+            "3rdparty/tilelang/VERSION",
+        ]
+        for item in TILELANG_PREBUILD_ITEMS:
             source_dir = os.path.join(ROOT_DIR, item)
             target_dir = os.path.join(self.build_lib, PACKAGE_NAME, item)
             if os.path.isdir(source_dir):
