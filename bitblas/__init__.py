@@ -137,7 +137,6 @@ if os.environ.get("TILELANG_IMPORT_PATH", None) is None:
     else:
         logger.warning(TL_TEMPLATE_NOT_FOUND_MESSAGE)
 
-
 if os.environ.get("TL_CUTLASS_PATH", None) is None:
     install_cutlass_path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "3rdparty", "cutlass")
