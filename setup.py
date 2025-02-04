@@ -191,6 +191,27 @@ def build_tvm(llvm_config_path):
         os.chdir("../../..")
 
 
+def build_tilelang(TVM_PREBUILD_PATH: str = "./3rdparty/tvm/build"):
+    """Builds TILELANG."""
+    abs_tvm_prebuilt_path = os.path.abspath(TVM_PREBUILD_PATH)
+    print(f"Using TVM prebuilt path: {abs_tvm_prebuilt_path}")
+
+    os.chdir("3rdparty/tilelang")
+    if not os.path.exists("build"):
+        os.makedirs("build")
+    os.chdir("build")
+    # Run CMake and make
+    try:
+        subprocess.check_call(["cmake", "..", f"-DTVM_PREBUILD_PATH={abs_tvm_prebuilt_path}"])
+        num_jobs = multiprocessing.cpu_count()
+        subprocess.check_call(["make", f"-j{num_jobs}"])
+    except subprocess.CalledProcessError as error:
+        raise RuntimeError("Failed to build TILELANG") from error
+    finally:
+        # Go back to the original directory
+        os.chdir("../../..")
+
+
 def setup_llvm_for_tvm():
     """Downloads and extracts LLVM, then configures TVM to use it."""
     # Assume the download_and_extract_llvm function and its dependencies are defined elsewhere in this script
@@ -209,6 +230,8 @@ class BitBLASInstallCommand(install):
         _, llvm_path = setup_llvm_for_tvm()
         # Build TVM
         build_tvm(llvm_path)
+        # Build TILELANG
+        build_tilelang()
         # Continue with the standard installation process
         install.run(self)
 
