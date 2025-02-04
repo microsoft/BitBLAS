@@ -247,6 +247,8 @@ class BitBLASBuilPydCommand(build_py):
         _, llvm_path = setup_llvm_for_tvm()
         # Build TVM
         build_tvm(llvm_path)
+        # Build TILELANG
+        build_tilelang()
 
         # Copy the built TVM to the package directory
         TVM_PREBUILD_ITEMS = [
