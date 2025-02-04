@@ -18,40 +18,35 @@ def is_cuda_arch(arch: TileDevice) -> bool:
 
 def is_volta_arch(arch: TileDevice) -> bool:
     conditions = [True]
-    conditions.append(is_cuda_arch(arch))
-    conditions.append(arch.sm_version >= 70)
-    conditions.append(arch.sm_version < 80)
+    conditions.append(is_cuda_arch(arch) and arch.sm_version >= 70 and arch.sm_version < 80)
     return all(conditions)
 
 
 def is_ampere_arch(arch: TileDevice) -> bool:
     conditions = [True]
-    conditions.append(is_cuda_arch(arch))
-    conditions.append(arch.sm_version >= 80 and arch.sm_version < 90)
+    conditions.append(is_cuda_arch(arch) and arch.sm_version >= 80 and arch.sm_version < 90)
     return all(conditions)
 
 
 def is_ada_arch(arch: TileDevice) -> bool:
     conditions = [True]
-    conditions.append(is_cuda_arch(arch))
-    conditions.append(arch.sm_version == 89)
+    conditions.append(is_cuda_arch(arch) and arch.sm_version == 89)
     return all(conditions)
 
 
 def is_hopper_arch(arch: TileDevice) -> bool:
     conditions = [True]
-    conditions.append(is_cuda_arch(arch))
-    conditions.append(arch.sm_version == 90)
+    conditions.append(is_cuda_arch(arch) and arch.sm_version == 90)
     return all(conditions)
 
 
 def has_mma_support(arch: TileDevice) -> bool:
     conditions = [True]
-    conditions.append(is_cuda_arch(arch))
-    conditions.append(arch.sm_version >= 80)
+    conditions.append(is_cuda_arch(arch) and arch.sm_version >= 80)
     return all(conditions)
 
 
+# NVIDIA Tensor Core Configurations
 volta_tensorcore_supported = [
     ("float16", "float32"),
     ("float16", "float16"),

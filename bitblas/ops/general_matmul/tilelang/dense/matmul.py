@@ -5,12 +5,8 @@ from typing import Optional, List, Dict
 from tvm.tir import PrimFunc
 from bitblas.base.operator_common import TransformKind
 from bitblas.base.base_scheduler import BaseScheduler
-from bitblas.base.arch import (
-    TileDevice,
-    is_ampere_arch,
-    is_volta_arch,
-    is_tensorcore_supported_precision,
-)
+from bitblas.base.arch import (TileDevice, is_ampere_arch, is_volta_arch, is_cdna_arch,
+                               is_tensorcore_supported_precision, is_matrixcore_supported_precision)
 from dataclasses import dataclass
 from bitblas.tl.base_hint import BaseTLHint
 
@@ -130,11 +126,46 @@ class MatmulScheduler(MatmulBaseParams):
             else:
                 return self.matmul_simt_scheduler
 
+    def dispatch_cdna_scheduler(self, arch: TileDevice) -> BaseScheduler:
+        M = self.maybe_dynamic(self.M, "m")
+        N, K = self.N, self.K
+        assert isinstance(N, int) and isinstance(K, int), "Do not support dynamic N and K Currently"
+
+        is_dynamic = self.is_dynamic
+        in_dtype, accum_dtype = (
+            self.in_dtype,
+            self.accum_dtype,
+        )
+        if self.weight_transform_kind != TransformKind.NonTransform:
+            raise ValueError(
+                f"Weight propagation {self.weight_transform_kind} is not supported for CDNA")
+        if in_dtype not in ["int8", "float16", "float32", "float64"]:
+            raise ValueError(f"Unsupported input data type: {in_dtype}")
+
+        if is_dynamic:
+            # Dynamic Dispatcher
+            if is_matrixcore_supported_precision(in_dtype, accum_dtype, arch):
+                return self.matmul_block_scheduler
+            else:
+                return self.matmul_simt_scheduler
+        else:
+            minimal_tensorcore_threshold: List[int, int, int] = [8, 16, 16]
+            if minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[
+                    1] > N or minimal_tensorcore_threshold[2] > K:
+                return self.gemv_scheduler
+            elif is_matrixcore_supported_precision(in_dtype, accum_dtype, arch):
+                # Fine-grained scheduler (mma) is not implemented for CDNA
+                return self.matmul_block_scheduler
+            else:
+                return self.matmul_simt_scheduler
+
     def dispatch_scheduler(self, arch: TileDevice) -> BaseScheduler:
         if is_ampere_arch(arch):
             return self.dispatch_ampere_scheduler(arch)
         elif is_volta_arch(arch):
             return self.dispatch_volta_scheduler(arch)
+        elif is_cdna_arch(arch):
+            return self.dispatch_cdna_scheduler(arch)
         else:
             raise ValueError(f"Unsupported architecture: {arch}")
 

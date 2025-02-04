@@ -1,7 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 import bitblas
-from bitblas.utils import get_default_cache_path
+from bitblas.utils import get_default_cache_path, auto_detect_target
 from bitblas.ops.operator import OperatorConfig, Operator
 from dataclasses import asdict
 import os
@@ -186,7 +186,7 @@ def load_global_ops_cache(database_path=None, target=None):
     if database_path is None:
         database_path = get_database_path()
     if target is None:
-        target = bitblas.auto_detect_nvidia_target()
+        target = auto_detect_target()
     logger.info(f"Loading operators from database {database_path} for target {target}")
     global_operator_cache.load_from_database(database_path, target)
     return global_operator_cache

@@ -87,6 +87,9 @@ class TLCUDASourceWrapper(object):
         init_funcs = PREDEF_INIT_FUNC.format(call_str)
         return init_funcs
 
+    def get_stream_argument(self) -> Dict:
+        return {"name": "stream=cudaStreamDefault", "type": "cudaStream_t"}
+
     def update_lib_code(self, code: str):
         # Update the library code with the given code string
         self.lib_code = code
@@ -115,7 +118,7 @@ class TLCUDASourceWrapper(object):
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
 
-        function_args.append({"name": "stream=cudaStreamDefault", "type": "cudaStream_t"},)
+        function_args.append(self.get_stream_argument())
         # Format the function arguments for declaration
         def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
 
@@ -223,7 +226,7 @@ class TLCUDASourceWrapperWithDynamic(TLCUDASourceWrapper):
         for dyn_sym in dynamic_symbolic_set:
             function_args.append({"name": dyn_sym, "type": "int"})
 
-        function_args.append({"name": "stream=cudaStreamDefault", "type": "cudaStream_t"},)
+        function_args.append(self.get_stream_argument())
 
         # Format the argument definitions for function declaration
         def_args = ", ".join([f"{arg['type']} {arg['name']}" for arg in function_args])
@@ -392,8 +395,8 @@ class TLHIPSourceWrapper(TLCUDASourceWrapper):
         init_funcs = PREDEF_INIT_FUNC.format(call_str)
         return init_funcs
 
-    def get_stream_type(self, function_args):
-        function_args.append({"name": "stream=hipStreamDefault", "type": "hipStream_t"},)
+    def get_stream_argument(self) -> Dict:
+        return {"name": "stream=hipStreamDefault", "type": "hipStream_t"}
 
 
 class TLWrapper(BaseWrapper):

@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from typing import Dict, List, Tuple, Optional
 from bitblas.ops import Operator, OperatorConfig
 from bitblas.utils import get_default_cache_path
-from bitblas import auto_detect_nvidia_target
+from bitblas import auto_detect_target
 from bitblas import tvm as tvm
 from bitblas.cache import OperatorCache
 import logging
@@ -21,7 +21,7 @@ class BitblasOperatorBenchmarkBase(ABC):
     benchmark_sets: Dict[str, List[Tuple[Operator, OperatorConfig, Optional[int]]]] = {}
 
     # Currently we only support NVIDIA target for benchmarking
-    benchmark_target: str = auto_detect_nvidia_target()
+    benchmark_target: str = auto_detect_target()
 
     # Benchmark results: a list of tuples, each containing latency and tuning time
     benchmark_results: Dict[str, List[Tuple[Optional[float], Optional[float]]]] = {}
