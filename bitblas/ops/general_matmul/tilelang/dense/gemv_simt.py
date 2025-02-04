@@ -158,7 +158,8 @@ class GemvFineGrainSIMTScheduler(MatmulSIMTBaseScheduler):
                             )
                     else:
                         for ki in T.serial(micro_size_k):
-                            accum_res[0] += A_local[ki] * B_local[ki]
+                            accum_res[0] += A_local[ki].astype(accum_dtype) * B_local[ki].astype(
+                                accum_dtype)
 
                 with T.attr(
                         T.comm_reducer(lambda x, y: x + y, [T.Cast(accum_dtype, 0)]),
