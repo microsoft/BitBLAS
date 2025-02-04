@@ -1,8 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
+from bitblas import tilelang as tilelang
 from tvm import DataType
-import tvm.tl.language as T
+import tilelang.language as T
 from tvm.runtime import convert
 
 

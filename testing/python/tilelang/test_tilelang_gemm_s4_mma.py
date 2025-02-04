@@ -6,8 +6,8 @@ import torch.backends
 from bitblas import tvm as tvm
 import bitblas.testing
 from tvm import DataType
-from tvm import tl as TL
-import tvm.tl.language as T
+from bitblas import tilelang as tilelang
+import tilelang.language as T
 from bitblas.tl.utils import (
     make_mma_swizzle_layout as make_swizzle_layout,)
 
@@ -173,7 +173,7 @@ def tl_matmul(
 
 def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     matmul = tl_matmul(M, N, K, in_dtype, out_dtype, accum_dtype)
-    mod, params = TL.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -184,7 +184,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
 
     compressed_A = (A[:, ::2] & 0x0F) + ((A[:, 1::2] & 0x0F) << 4)
     compressed_B = (B[:, ::2] & 0x0F) + ((B[:, 1::2] & 0x0F) << 4)
-    mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
     mod(compressed_A, compressed_B, C)
     print(C)
     latency = mod.do_bench(mod.func, warmup=25, profiler="tvm")
@@ -368,7 +368,7 @@ def tl_matmul_weight_only_transform(
 
 def assert_tl_matmul_weight_only_transform_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     matmul = tl_matmul_weight_only_transform(M, N, K, in_dtype, out_dtype, accum_dtype)
-    mod, params = TL.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -391,7 +391,7 @@ def assert_tl_matmul_weight_only_transform_correctness(M, N, K, in_dtype, out_dt
 
     ladder_permutate = bitblas.ops.LadderPermutate(ladder_permutate_config)
 
-    mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
     LB = ladder_permutate(compressed_B.cpu()).cuda()
 
     mod(compressed_A, LB, C)

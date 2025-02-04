@@ -3,7 +3,8 @@
 
 from bitblas import tvm as tvm
 from bitblas.base.base_scheduler import BaseScheduler
-import tvm.tl.language as T
+from bitblas import tilelang as tilelang
+import tilelang.language as T
 from dataclasses import dataclass
 from typing import Optional
 import logging

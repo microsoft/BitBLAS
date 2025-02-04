@@ -1,5 +1,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
+from bitblas import tvm as tvm
+from bitblas import tilelang as tilelang
 from tvm.runtime import convert
 from tvm.tir.expr import Cast, IntImm
 from tvm.tir.function import TensorIntrin

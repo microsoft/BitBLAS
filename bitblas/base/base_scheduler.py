@@ -1,9 +1,13 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+from bitblas import tvm as tvm
+from bitblas import tilelang as tilelang
 from tvm import te
 from tvm import IRModule
 from tvm.tir import PrimFunc
 from typing import Optional, Union, Callable, List, Dict
 from dataclasses import dataclass, field
-from tvm.tl.transform import Simplify
+from tilelang.transform import Simplify
 from abc import ABC, abstractmethod
 from bitblas.base.arch import TileDevice, is_volta_arch, is_ampere_arch, is_cdna_arch, auto_infer_current_arch
 from bitblas.base.roller.hint import Hint

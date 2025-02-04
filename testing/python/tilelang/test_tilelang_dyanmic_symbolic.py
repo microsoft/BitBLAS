@@ -6,8 +6,8 @@ import torch.backends
 from bitblas import tvm as tvm
 import bitblas.testing
 from tvm import DataType
-from tvm import tl as TL
-import tvm.tl.language as T
+from bitblas import tilelang as tilelang
+import tilelang.language as T
 from bitblas.tl.utils import get_swizzle_layout
 from bitblas.tl.mma_macro_generator import (TensorCoreIntrinEmitter)
 
@@ -178,7 +178,7 @@ def tl_matmul_macro(
 def assert_tl_matmul_macro_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     matmul = tl_matmul_macro(N, K, in_dtype, out_dtype, accum_dtype)
 
-    mod, params = TL.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -188,7 +188,7 @@ def assert_tl_matmul_macro_correctness(M, N, K, in_dtype, out_dtype, accum_dtype
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
-    mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
@@ -217,7 +217,7 @@ def tl_matmul_block(
     A_shared_shape = (block_K, block_M) if trans_A else (block_M, block_K)
     B_shared_shape = (block_N, block_K) if trans_B else (block_K, block_N)
 
-    import tvm.tl.language as T
+    import tilelang.language as T
 
     @T.prim_func
     def main(A: T.Buffer(A_shape, in_dtype), B: T.Buffer(B_shape, in_dtype), C: T.Buffer(
@@ -271,13 +271,13 @@ def assert_tl_matmul_block_correctness(
         num_stages,
         num_threads,
     )
-    mod, params = TL.lower(program)
+    mod, params = tilelang.lower(program)
 
     A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
-    mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
     mod(A, B, C)
 
     def ref_program(A, B):
@@ -318,7 +318,7 @@ def tl_matmul_block_all_dynamic(
     A_shared_shape = (block_K, block_M) if trans_A else (block_M, block_K)
     B_shared_shape = (block_N, block_K) if trans_B else (block_K, block_N)
 
-    import tvm.tl.language as T
+    import tilelang.language as T
 
     @T.prim_func
     def main(A: T.Buffer(A_shape, in_dtype), B: T.Buffer(B_shape, in_dtype), C: T.Buffer(
@@ -370,7 +370,7 @@ def assert_tl_matmul_block_all_dynamic_correctness(
         num_stages,
         num_threads,
     )
-    mod, params = TL.lower(program)
+    mod, params = tilelang.lower(program)
     if trans_A:
         A = torch.rand(K, M, device="cuda", dtype=getattr(torch, in_dtype))
     else:
@@ -381,7 +381,7 @@ def assert_tl_matmul_block_all_dynamic_correctness(
         B = torch.rand(K, N, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
-    mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
     mod(A, B, C)
 
     def ref_program(A, B):

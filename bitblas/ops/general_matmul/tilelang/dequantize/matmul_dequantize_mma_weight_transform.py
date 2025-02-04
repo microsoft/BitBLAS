@@ -1,8 +1,9 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from bitblas import tvm as tvm
+from bitblas import tilelang as tilelang
 from tvm import DataType
-import tvm.tl.language as T
+import tilelang.language as T
 from typing import Optional, List
 from bitblas.tl.utils import (
     get_mma_micro_size,  # noqa: F401
@@ -680,7 +681,8 @@ class MatmulDequantizeMMAWeightPropagationScheduler(MatmulDequantizeMMAScheduler
 
 
 @dataclass
-class MatmulINT4DequantizeMMAWeightPropagationScheduler(MatmulDequantizeMMAWeightPropagationScheduler):
+class MatmulINT4DequantizeMMAWeightPropagationScheduler(
+        MatmulDequantizeMMAWeightPropagationScheduler):
 
     class TLHint(MatmulDequantizeMMAWeightPropagationScheduler.TLHint):
         hint_type: str = "MatmulINT4DequantizeMMAWeightPropagationScheduler"

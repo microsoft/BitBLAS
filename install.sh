@@ -119,22 +119,70 @@ else
     echo "TVM build completed successfully."
 fi
 
-cd ../../..
+TVM_PREBUILD_PATH=$(realpath .)
 
-# Step 11: Set environment variables
-echo "Configuring environment variables for TVM..."
-echo "export TVM_HOME=$(pwd)/3rdparty/tvm" >> ~/.bashrc
-echo "export PYTHONPATH=\$TVM_HOME/python:$(pwd):\$PYTHONPATH" >> ~/.bashrc
-echo "export CUDA_DEVICE_ORDER=PCI_BUS_ID" >> ~/.bashrc
+cd ../..
 
-# Step 12: Source .bashrc to apply changes
-echo "Applying environment changes by sourcing .bashrc..."
-source ~/.bashrc
+echo "Building TileLang with CMake..."
+cd tilelang
+mkdir build
+cd build
+
+cmake .. -DTVM_PREBUILD_PATH=$TVM_PREBUILD_PATH
 if [ $? -ne 0 ]; then
-    echo "Error: Failed to source .bashrc."
+    echo "Error: CMake configuration failed."
     exit 1
-else
-    echo "Environment configured successfully."
 fi
 
-echo "Installation script completed successfully."
+make -j
+if [ $? -ne 0 ]; then
+    echo "Error: TileLang build failed."
+    exit 1
+else
+    echo "TileLang build completed successfully."
+fi
+
+echo "TileLang build completed successfully."
+
+cd ../../..
+
+# Set environment variables
+TVM_HOME_ENV="export TVM_HOME=$(pwd)/3rdparty/tvm"
+TVM_EXPORT_ENV="export TVM_IMPORT_PYTHON_PATH=/root/BitBLAS/3rdparty/tvm/python"
+TILELANG_HOME_ENV="export TILELANG_HOME=$(pwd)/3rdparty/tilelang"
+BITBLAS_PYPATH_ENV="export PYTHONPATH=\$TVM_HOME/python:\$TILELANG_HOME:$(pwd):\$PYTHONPATH"
+CUDA_DEVICE_ORDER_ENV="export CUDA_DEVICE_ORDER=PCI_BUS_ID"
+
+# Inject break line if the last line of the file is not empty
+if [ -s ~/.bashrc ]; then
+    if [ "$(tail -c 1 ~/.bashrc)" != "" ]; then
+        echo "" >> ~/.bashrc
+    fi
+fi
+
+# Check and add the first line if not already present
+if ! grep -qxF "$TVM_HOME_ENV" ~/.bashrc; then
+    echo "$TVM_HOME_ENV" >> ~/.bashrc
+    echo "Added TVM_HOME to ~/.bashrc"
+else
+    echo "TVM_HOME is already set in ~/.bashrc"
+fi
+
+# Check and add the second line if not already present
+if ! grep -qxF "$BITBLAS_PYPATH_ENV" ~/.bashrc; then
+    echo "$BITBLAS_PYPATH_ENV" >> ~/.bashrc
+    echo "Added PYTHONPATH to ~/.bashrc"
+else
+    echo "PYTHONPATH is already set in ~/.bashrc"
+fi
+
+# Check and add the third line if not already present
+if ! grep -qxF "$CUDA_DEVICE_ORDER_ENV" ~/.bashrc; then
+    echo "$CUDA_DEVICE_ORDER_ENV" >> ~/.bashrc
+    echo "Added CUDA_DEVICE_ORDER to ~/.bashrc"
+else
+    echo "CUDA_DEVICE_ORDER is already set in ~/.bashrc"
+fi
+
+# Reload ~/.bashrc to apply the changes
+source ~/.bashrc

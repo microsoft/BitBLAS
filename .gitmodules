@@ -1,8 +1,12 @@
 [submodule "3rdparty/tvm"]
 	path = 3rdparty/tvm
-	url = https://github.com/TileLang/tvm.git
-	branch = upstream
+	url = https://github.com/tile-ai/tvm.git
+	branch = tilelang_codebase
+[submodule "3rdparty/tilelang"]
+	path = 3rdparty/tilelang
+	url = https://github.com/tile-ai/tilelang
+	branch = bitblas
 [submodule "3rdparty/cutlass"]
 	path = 3rdparty/cutlass
-	url = https://github.com/TileLang/cutlass
+	url = https://github.com/tile-ai/cutlass
 	branch = tldev

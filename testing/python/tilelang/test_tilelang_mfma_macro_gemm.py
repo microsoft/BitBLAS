@@ -5,8 +5,8 @@ import torch
 import torch.backends
 from bitblas import tvm as tvm
 import bitblas.testing
-from tvm import tl as TL
-import tvm.tl.language as T
+from bitblas import tilelang as tilelang
+import tilelang.language as T
 from bitblas.tl.utils import make_mfma_swizzle_layout as make_swizzle_layout
 from bitblas.tl.mfma_macro_generator import (
     MatrixCoreIntrinEmitter,)
@@ -172,7 +172,7 @@ def tl_matmul(
 
 def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype="float32"):
     matmul = tl_matmul(M, N, K, in_dtype, out_dtype, accum_dtype)
-    mod, params = TL.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -186,7 +186,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype="floa
 
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
-    mod = TL.Profiler(mod, params, [], TL.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 

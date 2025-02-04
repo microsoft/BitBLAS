@@ -3,7 +3,8 @@
 from bitblas import tvm as tvm
 from tvm import DataType
 from tvm.tir import PrimFunc
-import tvm.tl.language as T
+from bitblas import tilelang as tilelang
+import tilelang.language as T
 from typing import Optional, List
 from bitblas.base.arch import TileDevice
 from bitblas.base.roller.hint import Hint

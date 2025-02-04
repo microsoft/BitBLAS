@@ -191,6 +191,27 @@ def build_tvm(llvm_config_path):
         os.chdir("../../..")
 
 
+def build_tilelang(TVM_PREBUILD_PATH: str = "./3rdparty/tvm/build"):
+    """Builds TILELANG."""
+    abs_tvm_prebuilt_path = os.path.abspath(TVM_PREBUILD_PATH)
+    print(f"Using TVM prebuilt path: {abs_tvm_prebuilt_path}")
+
+    os.chdir("3rdparty/tilelang")
+    if not os.path.exists("build"):
+        os.makedirs("build")
+    os.chdir("build")
+    # Run CMake and make
+    try:
+        subprocess.check_call(["cmake", "..", f"-DTVM_PREBUILD_PATH={abs_tvm_prebuilt_path}"])
+        num_jobs = multiprocessing.cpu_count()
+        subprocess.check_call(["make", f"-j{num_jobs}"])
+    except subprocess.CalledProcessError as error:
+        raise RuntimeError("Failed to build TILELANG") from error
+    finally:
+        # Go back to the original directory
+        os.chdir("../../..")
+
+
 def setup_llvm_for_tvm():
     """Downloads and extracts LLVM, then configures TVM to use it."""
     # Assume the download_and_extract_llvm function and its dependencies are defined elsewhere in this script
@@ -209,6 +230,8 @@ class BitBLASInstallCommand(install):
         _, llvm_path = setup_llvm_for_tvm()
         # Build TVM
         build_tvm(llvm_path)
+        # Build TILELANG
+        build_tilelang()
         # Continue with the standard installation process
         install.run(self)
 
@@ -224,6 +247,8 @@ class BitBLASBuilPydCommand(build_py):
         _, llvm_path = setup_llvm_for_tvm()
         # Build TVM
         build_tvm(llvm_path)
+        # Build TILELANG
+        build_tilelang()
 
         # Copy the built TVM to the package directory
         TVM_PREBUILD_ITEMS = [
@@ -240,9 +265,28 @@ class BitBLASBuilPydCommand(build_py):
             "3rdparty/tvm/mypy.ini",
             "3rdparty/tvm/pyproject.toml",
             "3rdparty/tvm/version.py",
-            "3rdparty/tvm/src/tl/tl_templates",
         ]
         for item in TVM_PREBUILD_ITEMS:
+            source_dir = os.path.join(ROOT_DIR, item)
+            target_dir = os.path.join(self.build_lib, PACKAGE_NAME, item)
+            if os.path.isdir(source_dir):
+                self.mkpath(target_dir)
+                distutils.dir_util.copy_tree(source_dir, target_dir)
+            else:
+                target_dir = os.path.dirname(target_dir)
+                if not os.path.exists(target_dir):
+                    os.makedirs(target_dir)
+                shutil.copy2(source_dir, target_dir)
+
+        # Copy the built TILELANG to the package directory
+        TILELANG_PREBUILD_ITEMS = [
+            "3rdparty/tilelang/build/libtilelang_module.so",
+            "3rdparty/tilelang/build/libtilelang.so",
+            "3rdparty/tilelang/tilelang",
+            "3rdparty/tilelang/src/tl_templates",
+            "3rdparty/tilelang/VERSION",
+        ]
+        for item in TILELANG_PREBUILD_ITEMS:
             source_dir = os.path.join(ROOT_DIR, item)
             target_dir = os.path.join(self.build_lib, PACKAGE_NAME, item)
             if os.path.isdir(source_dir):

@@ -2,8 +2,8 @@
 # Licensed under the MIT License.
 
 from bitblas import tvm as tvm
+from bitblas import tilelang as tilelang
 import bitblas.testing
-from tvm import tl
 from bitblas.ops.general_matmul.tilelang.dense.matmul_tile import (
     matmul_blocked,
     matmul_macro_tensorcore,
@@ -47,7 +47,7 @@ def assert_matmul_blocked_correctness(M,
         enable_rasterization=enable_rasterization,
     )
 
-    mod, params = tl.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -57,7 +57,7 @@ def assert_matmul_blocked_correctness(M,
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
-    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
@@ -105,7 +105,7 @@ def assert_matmul_macro_tensorcore_correctness(
         num_stages=num_stages,
         enable_rasterization=enable_rasterization,
     )
-    mod, params = tl.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code represents generated cuda source
@@ -115,7 +115,7 @@ def assert_matmul_macro_tensorcore_correctness(
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
-    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
@@ -164,7 +164,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_correctness(
         enable_rasterization=enable_rasterization,
     )
 
-    mod, params = tl.lower(matmul)
+    mod, params = tilelang.lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -185,7 +185,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_correctness(
 
     LB = ladder_permutate(B.cpu()).cuda()
 
-    mod = tl.Profiler(mod, params, [], tl.TensorSupplyType.Integer)
+    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, LB, C)
 

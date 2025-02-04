@@ -7,8 +7,8 @@ from tvm.driver import lower
 from tvm.target import Target
 from typing import Tuple, List
 from tvm import tir
-from tvm import tl
-from tvm.tl.engine import is_device_call
+from bitblas import tilelang as tilelang
+from tilelang.engine import is_device_call
 
 
 def get_annotated_device_mod_from_tl(mod: IRModule, target: Target) -> "IRModule":
@@ -16,18 +16,18 @@ def get_annotated_device_mod_from_tl(mod: IRModule, target: Target) -> "IRModule
     target = tvm.target.Target(target, target_host)
     mod = tir.transform.BindTarget(target)(mod)
 
-    mod = tl.transform.FrontendLegalize()(mod)
+    mod = tilelang.transform.FrontendLegalize()(mod)
     mod = tir.transform.Simplify()(mod)
-    mod = tl.transform.LayoutInference()(mod)
-    mod = tl.transform.LowerTileOp()(mod)
+    mod = tilelang.transform.LayoutInference()(mod)
+    mod = tilelang.transform.LowerTileOp()(mod)
     mod = tir.transform.Simplify()(mod)
 
     if target.arch == "sm_90":
-        mod = tl.transform.WarpSpecializedPipeline()(mod)
+        mod = tilelang.transform.WarpSpecializedPipeline()(mod)
     else:
         mod = tir.transform.PlanAndUpdateBufferAllocationLocation()(mod)
-        mod = tl.transform.PipelinePlanning()(mod)
-        mod = tl.transform.InjectSoftwarePipeline()(mod)
+        mod = tilelang.transform.PipelinePlanning()(mod)
+        mod = tilelang.transform.InjectSoftwarePipeline()(mod)
 
     mod = tir.transform.LowerOpaqueBlock()(mod)
     mod = tir.transform.FlattenBuffer()(mod)
@@ -57,7 +57,7 @@ def get_annotated_device_mod_from_tl(mod: IRModule, target: Target) -> "IRModule
     # the Legalization.
     mod = tir.transform.LowerThreadAllreduce()(mod)
     mod = tir.transform.ThreadSync("shared.dyn")(mod)
-    mod = tl.transform.LowerHopperIntrin()(mod)
+    mod = tilelang.transform.LowerHopperIntrin()(mod)
     mod = tir.transform.InjectPTXAsyncCopy()(mod)
 
     mod = tir.transform.AnnotateDeviceRegions()(mod)

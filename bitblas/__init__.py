@@ -90,7 +90,7 @@ TVM_IMPORT_PYTHON_PATH = os.environ.get("TVM_IMPORT_PYTHON_PATH", None)
 
 if TVM_IMPORT_PYTHON_PATH is not None:
     os.environ["PYTHONPATH"] = (TVM_IMPORT_PYTHON_PATH + ":" + os.environ.get("PYTHONPATH", ""))
-    sys.path.insert(0, TVM_IMPORT_PYTHON_PATH + "/python")
+    sys.path.insert(0, TVM_IMPORT_PYTHON_PATH)
 else:
     # remove the existing tvm path in PYTHONPATH
     def remove_tvm_path(path):
@@ -107,6 +107,7 @@ else:
         os.environ["PYTHONPATH"] = (
             install_tvm_path + "/python:" + os.environ.get("PYTHONPATH", ""))
         sys.path.insert(0, install_tvm_path + "/python")
+        os.environ["TVM_IMPORT_PYTHON_PATH"] = install_tvm_path + "/python"
 
     # developed 3rdparty tvm
     develop_tvm_path = os.path.join(
@@ -119,6 +120,22 @@ else:
         os.environ["PYTHONPATH"] = (
             develop_tvm_path + "/python:" + os.environ.get("PYTHONPATH", ""))
         sys.path.insert(0, develop_tvm_path + "/python")
+        os.environ["TVM_IMPORT_PYTHON_PATH"] = develop_tvm_path + "/python"
+
+# TILELANG PATH
+if os.environ.get("TILELANG_IMPORT_PATH", None) is None:
+    install_tilelang_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "3rdparty", "tilelang")
+    develop_tilelang_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "3rdparty", "tilelang")
+    if os.path.exists(install_tilelang_path):
+        os.environ["PYTHONPATH"] = install_tilelang_path + ":" + os.environ.get("PYTHONPATH", "")
+        sys.path.insert(0, install_tilelang_path)
+    elif (os.path.exists(develop_tilelang_path) and develop_tilelang_path not in sys.path):
+        os.environ["PYTHONPATH"] = develop_tilelang_path + ":" + os.environ.get("PYTHONPATH", "")
+        sys.path.insert(0, develop_tilelang_path)
+    else:
+        logger.warning(TL_TEMPLATE_NOT_FOUND_MESSAGE)
 
 if os.environ.get("TL_CUTLASS_PATH", None) is None:
     install_cutlass_path = os.path.join(
@@ -133,6 +150,8 @@ if os.environ.get("TL_CUTLASS_PATH", None) is None:
         logger.warning(CUTLASS_NOT_FOUND_MESSAGE)
 
 import tvm as tvm  # noqa: E402
+import tilelang as tilelang  # noqa: E402
+
 from .base import (
     TileDevice,  # noqa: F401
     fast_tune,  # noqa: F401

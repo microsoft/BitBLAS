@@ -3,7 +3,8 @@
 
 from typing import Union
 from tvm import arith, DataType
-import tvm.tl.language as T
+from bitblas import tilelang as tilelang
+import tilelang.language as T
 
 
 def ldmatrix_32x8_to_shared_16x16_layout(thread_id, local_id):

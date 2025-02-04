@@ -1,8 +1,8 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 from abc import ABC, abstractmethod
-from bitblas import tvm
-from tvm import tl
+from bitblas import tvm as tvm
+from bitblas import tilelang as tilelang
 from tvm import IRModule
 from tvm.runtime.module import Module
 from tvm.target import Target
@@ -192,7 +192,7 @@ class Operator(object):
                     if self.is_tir_backend():
                         rt_mod = tvm.build(self.scheduled_ir_module, target=target)
                     elif self.is_tilelang_backend():
-                        rt_mod = tl.lower(
+                        rt_mod = tilelang.lower(
                             self.scheduled_ir_module, target=target, runtime_only=True)
                     else:
                         raise ValueError(f"Unsupported backend: {self.backend}")
