@@ -5,10 +5,10 @@ from tvm import DataType
 from bitblas import tilelang as tilelang
 import tilelang.language as T
 from typing import Optional, List
-from bitblas.tl.utils import (
-    get_mma_micro_size,  # noqa: F401
-    make_mma_swizzle_layout as make_swizzle_layout,  # noqa: F401
-    index_to_coordinates,  # noqa: F401
+from tilelang.intrinsics.utils import (
+    get_mma_micro_size,
+    make_mma_swizzle_layout as make_swizzle_layout,
+    index_to_coordinates,
 )
 from bitblas.ops.general_matmul.tirscript import (
     matmul_dequantize_select_implementation,)

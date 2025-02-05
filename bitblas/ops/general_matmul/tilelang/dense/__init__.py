@@ -102,7 +102,7 @@ def ampere_select_scheduler(
 
     trans_A, trans_B = parse_layout(layout)
 
-    def can_apply_fine_grain_scheduler(trans_A, trans_B, propagate_a, propagate_b):
+    def can_apply_mma_scheduler(trans_A, trans_B, propagate_a, propagate_b):
         conditions = []
         conditions.append(trans_A is False)
         conditions.append(trans_B is True)
@@ -116,7 +116,7 @@ def ampere_select_scheduler(
         conditions.append(propagate_b == TransformKind.NonTransform)
         return all(conditions)
 
-    def can_apply_weight_propagation_scheduler(trans_A, trans_B, propagate_a, propagate_b):
+    def can_apply_mma_weight_propagation_scheduler(trans_A, trans_B, propagate_a, propagate_b):
         conditions = []
         conditions.append(trans_A is False)
         conditions.append(trans_B is True)
@@ -127,7 +127,7 @@ def ampere_select_scheduler(
     def is_int4_dtype(dtype):
         return dtype == "int4" or dtype == "uint4"
 
-    if can_apply_weight_propagation_scheduler(trans_A, trans_B, propagate_a, propagate_b):
+    if can_apply_mma_weight_propagation_scheduler(trans_A, trans_B, propagate_a, propagate_b):
         Scheduler = MatmulMMAWeightPropagationScheduler if not is_int4_dtype(
             in_dtype) else MatmulINT4MMAWeightPropagationScheduler
         return Scheduler(
@@ -141,7 +141,7 @@ def ampere_select_scheduler(
             accum_dtype=accum_dtype,
             with_bias=with_bias,
         )
-    if can_apply_fine_grain_scheduler(trans_A, trans_B, propagate_a, propagate_b):
+    if can_apply_mma_scheduler(trans_A, trans_B, propagate_a, propagate_b):
         Scheduler = MatmulMMAScheduler if not is_int4_dtype(in_dtype) else MatmulINT4MMAScheduler
         return Scheduler(
             M=M,

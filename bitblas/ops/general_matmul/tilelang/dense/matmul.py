@@ -9,8 +9,11 @@ from bitblas.base.arch import (
     TileDevice,
     is_ampere_arch,
     is_volta_arch,
+    is_ada_arch,
+    is_hopper_arch,
     is_tensorcore_supported_precision,
 )
+from tilelang.intrinsics.utils import get_mma_micro_size
 from dataclasses import dataclass
 from bitblas.tl.base_hint import BaseTLHint
 
@@ -39,20 +42,20 @@ class MatmulScheduler(MatmulBaseParams):
     gemv_scheduler: Optional[GemvFineGrainSIMTScheduler] = None
     matmul_simt_scheduler: Optional[MatmulFineGrainSIMTScheduler] = None
     matmul_block_scheduler: Optional[MatmulTileLibraryScheduler] = None
-    matmul_fine_grain_scheduler: Optional[MatmulMMAScheduler] = None
-    matmul_weight_propagation_scheduler: Optional[MatmulMMAWeightPropagationScheduler] = None
-    matmul_int4_fine_grain_scheduler: Optional[MatmulINT4MMAScheduler] = None
-    matmul_int4_weight_propagation_scheduler: Optional[
+    matmul_mma_scheduler: Optional[MatmulMMAScheduler] = None
+    matmul_mma_weight_propagation_scheduler: Optional[MatmulMMAWeightPropagationScheduler] = None
+    matmul_int4_mma_scheduler: Optional[MatmulINT4MMAScheduler] = None
+    matmul_int4_mma_weight_propagation_scheduler: Optional[
         MatmulINT4MMAWeightPropagationScheduler] = None
 
     def __init__(self, **kwargs):
         self.gemv_scheduler = GemvFineGrainSIMTScheduler(**kwargs)
         self.matmul_simt_scheduler = MatmulFineGrainSIMTScheduler(**kwargs)
         self.matmul_block_scheduler = MatmulTileLibraryScheduler(**kwargs)
-        self.matmul_fine_grain_scheduler = MatmulMMAScheduler(**kwargs)
-        self.matmul_weight_propagation_scheduler = MatmulMMAWeightPropagationScheduler(**kwargs)
-        self.matmul_int4_fine_grain_scheduler = MatmulINT4MMAScheduler(**kwargs)
-        self.matmul_int4_weight_propagation_scheduler = MatmulINT4MMAWeightPropagationScheduler(
+        self.matmul_mma_scheduler = MatmulMMAScheduler(**kwargs)
+        self.matmul_mma_weight_propagation_scheduler = MatmulMMAWeightPropagationScheduler(**kwargs)
+        self.matmul_int4_mma_scheduler = MatmulINT4MMAScheduler(**kwargs)
+        self.matmul_int4_mma_weight_propagation_scheduler = MatmulINT4MMAWeightPropagationScheduler(
             **kwargs)
         super().__init__(**kwargs)
 
@@ -72,14 +75,14 @@ class MatmulScheduler(MatmulBaseParams):
             if is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 if weight_transform_kind != TransformKind.NonTransform:
                     # INT4 Can be fused into general dequantize
-                    return self.matmul_int4_weight_propagation_scheduler if in_dtype == "int4" else self.matmul_weight_propagation_scheduler
-                return self.matmul_int4_fine_grain_scheduler if in_dtype == "int4" else self.matmul_fine_grain_scheduler
+                    return self.matmul_int4_mma_weight_propagation_scheduler if in_dtype == "int4" else self.matmul_mma_weight_propagation_scheduler
+                return self.matmul_int4_mma_scheduler if in_dtype == "int4" else self.matmul_mma_scheduler
             else:
                 return self.matmul_simt_scheduler
         else:
+            _, _, micro_size_k = get_mma_micro_size(in_dtype)
             minimal_tensorcore_threshold: List[int, int,
-                                               int] = [8, 16, 32
-                                                      ] if accum_dtype == "int32" else [8, 16, 16]
+                                               int] = [8, 16, micro_size_k]
             if minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[
                     1] > N or minimal_tensorcore_threshold[2] > K:
                 if in_dtype == "int4":
@@ -90,10 +93,11 @@ class MatmulScheduler(MatmulBaseParams):
                 return self.gemv_scheduler
             elif is_tensorcore_supported_precision(in_dtype, accum_dtype, arch):
                 if self.weight_transform_kind != TransformKind.NonTransform:
-                    return (self.matmul_int4_weight_propagation_scheduler
-                            if in_dtype == "int4" else self.matmul_weight_propagation_scheduler)
+                    return (self.matmul_int4_mma_weight_propagation_scheduler
+                            if in_dtype == "int4" else self.matmul_mma_weight_propagation_scheduler)
                 else:
-                    return self.matmul_int4_fine_grain_scheduler if in_dtype == "int4" else self.matmul_block_scheduler
+                    # by default, use the mma_scheduler
+                    return self.matmul_int4_mma_scheduler if in_dtype == "int4" else self.matmul_mma_scheduler
             else:
                 return self.matmul_simt_scheduler
 
@@ -131,7 +135,10 @@ class MatmulScheduler(MatmulBaseParams):
                 return self.matmul_simt_scheduler
 
     def dispatch_scheduler(self, arch: TileDevice) -> BaseScheduler:
-        if is_ampere_arch(arch):
+        if is_hopper_arch(arch):
+            logger.warning("Hopper architecture is not fully supported yet, fallback to Ada")
+            return self.dispatch_ampere_scheduler(arch)
+        elif is_ampere_arch(arch) or is_ada_arch(arch):
             return self.dispatch_ampere_scheduler(arch)
         elif is_volta_arch(arch):
             return self.dispatch_volta_scheduler(arch)
@@ -143,10 +150,10 @@ class MatmulScheduler(MatmulBaseParams):
                 self.gemv_scheduler,
                 self.matmul_simt_scheduler,
                 self.matmul_block_scheduler,
-                self.matmul_fine_grain_scheduler,
-                self.matmul_weight_propagation_scheduler,
-                self.matmul_int4_fine_grain_scheduler,
-                self.matmul_int4_weight_propagation_scheduler,
+                self.matmul_mma_scheduler,
+                self.matmul_mma_weight_propagation_scheduler,
+                self.matmul_int4_mma_scheduler,
+                self.matmul_int4_mma_weight_propagation_scheduler,
         ]:
             try:
                 scheduler_hint_type = scheduler.get_hint_type()
@@ -213,10 +220,10 @@ class MatmulScheduler(MatmulBaseParams):
                 self.gemv_scheduler,
                 self.matmul_simt_scheduler,
                 self.matmul_block_scheduler,
-                self.matmul_fine_grain_scheduler,
-                self.matmul_weight_propagation_scheduler,
-                self.matmul_int4_fine_grain_scheduler,
-                self.matmul_int4_weight_propagation_scheduler,
+                self.matmul_mma_scheduler,
+                self.matmul_mma_weight_propagation_scheduler,
+                self.matmul_int4_mma_scheduler,
+                self.matmul_int4_mma_weight_propagation_scheduler,
         ]:
             scheduler.set_dynamic_range(dynamic_range)
         return self
@@ -227,10 +234,10 @@ class MatmulScheduler(MatmulBaseParams):
                 self.gemv_scheduler,
                 self.matmul_simt_scheduler,
                 self.matmul_block_scheduler,
-                self.matmul_fine_grain_scheduler,
-                self.matmul_weight_propagation_scheduler,
-                self.matmul_int4_fine_grain_scheduler,
-                self.matmul_int4_weight_propagation_scheduler,
+                self.matmul_mma_scheduler,
+                self.matmul_mma_weight_propagation_scheduler,
+                self.matmul_int4_mma_scheduler,
+                self.matmul_int4_mma_weight_propagation_scheduler,
         ]:
             scheduler.with_arch(arch)
         return self

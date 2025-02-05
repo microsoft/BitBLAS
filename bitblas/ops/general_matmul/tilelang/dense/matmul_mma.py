@@ -7,7 +7,7 @@ from bitblas import tilelang as tilelang
 from tvm import DataType
 import tilelang.language as T
 from typing import Optional, List
-from bitblas.tl.utils import (
+from tilelang.intrinsics.utils import (
     get_mma_micro_size,
     make_mma_swizzle_layout as make_swizzle_layout,
 )

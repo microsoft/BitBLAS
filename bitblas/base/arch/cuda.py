@@ -27,7 +27,7 @@ def is_volta_arch(arch: TileDevice) -> bool:
 def is_ampere_arch(arch: TileDevice) -> bool:
     conditions = [True]
     conditions.append(is_cuda_arch(arch))
-    conditions.append(arch.sm_version >= 80 and arch.sm_version < 90)
+    conditions.append(arch.sm_version >= 80 and arch.sm_version < 89)
     return all(conditions)
 
 
