@@ -81,8 +81,7 @@ class MatmulScheduler(MatmulBaseParams):
                 return self.matmul_simt_scheduler
         else:
             _, _, micro_size_k = get_mma_micro_size(in_dtype)
-            minimal_tensorcore_threshold: List[int, int,
-                                               int] = [8, 16, micro_size_k]
+            minimal_tensorcore_threshold: List[int, int, int] = [8, 16, micro_size_k]
             if minimal_tensorcore_threshold[0] > M or minimal_tensorcore_threshold[
                     1] > N or minimal_tensorcore_threshold[2] > K:
                 if in_dtype == "int4":

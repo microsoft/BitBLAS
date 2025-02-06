@@ -56,8 +56,7 @@ class MatmulDequantizeScheduler(MatmulDequantizeBaseParams):
         self.matmul_dequantize_mma_scheduler = MatmulDequantizeMMAScheduler(**kwargs)
         self.matmul_dequantize_mma_weight_propagation_scheduler = MatmulDequantizeMMAWeightPropagationScheduler(
             **kwargs)
-        self.matmul_int4_dequantize_mma_scheduler = MatmulINT4DequantizeMMAScheduler(
-            **kwargs)
+        self.matmul_int4_dequantize_mma_scheduler = MatmulINT4DequantizeMMAScheduler(**kwargs)
         self.matmul_int4_dequantize_mma_weight_propagation_scheduler = MatmulINT4DequantizeMMAWeightPropagationScheduler(
             **kwargs)
 

@@ -649,7 +649,9 @@ def get_tensorized_func_and_tags(
     if target.kind.name == "cuda" and check_sm_version(target.arch) >= 70:
         in_dtype, out_dtype = get_in_out_dtypes(block_stmt)
         if not is_tensorcore_supported_precision(in_dtype, out_dtype, arch=get_arch(target)):
-            logger.debug(f"The input and output dtype ({in_dtype}, {out_dtype})is not supported by tensorcore")
+            logger.debug(
+                f"The input and output dtype ({in_dtype}, {out_dtype})is not supported by tensorcore"
+            )
             return func, None
 
         # reindex and transform functions
