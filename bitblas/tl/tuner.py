@@ -140,11 +140,14 @@ def apply_and_build_parallel(scheduler,
 
         for future in as_completed(future_to_idx, timeout=timeout):
             idx = future_to_idx[future]
+            assert idx <= len(_scheduled_ir_modules), "Index out of range"
+            assert idx <= len(configs), "Index out of range"
+            
+            ir_module = _scheduled_ir_modules[idx]
+            config = configs[idx]
             try:
                 idx, code, artifact_path = future.result()
-                ir_module = _scheduled_ir_modules[idx]
                 sch = tvm.tir.Schedule(ir_module)
-                config = configs[idx]
 
                 if artifact_path is None:
                     ARTIFACT_NOT_FOUND = f"Apply config {config} failed, artifact path is None"
@@ -165,7 +168,7 @@ def apply_and_build_parallel(scheduler,
                     local_build_error = (
                         local_build_error[:MAX_ERROR_MESSAGE_LENGTH] + "\t...\t" +
                         local_build_error[-MAX_ERROR_MESSAGE_LENGTH:])
-                logger.error(f"An exception occurred for index {idx}: {local_build_error}")
+                logger.error(f"An exception occurred for hint {config}: {local_build_error}")
 
     best = None
     best_latency = 1e9
