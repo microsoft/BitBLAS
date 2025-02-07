@@ -23,7 +23,8 @@ log_path = "progress/" + fname
 
 @tvm.register_func
 def tvm_callback_cuda_postproc(code):
-    code = code.replace("mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32", "mma.sync.aligned.m16n8k32.row.col.f32.e4m3.e4m3.f32")
+    # code = code.replace("mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32", "mma.sync.aligned.m16n8k32.row.col.f32.e4m3.e4m3.f32")
+    code = code.replace("mma.sync.aligned.m16n8k32.row.col.s32.s8.s8.s32", "mma.sync.aligned.m16n8k32.row.col.f32.e5m2.e5m2.f32")
     return code
 
 # arch = 'cuda'
@@ -35,10 +36,10 @@ n_float_per_i8 = 8 // bit
 mask = (1 << bit) - 1
 def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p, warp_i = 16, warp_j = 16, warp_k = 32):
     
-    A = te.placeholder((n // warp_i, h, w, (c) // warp_k, warp_i, warp_k), name='input', dtype='int8')
-    B = te.placeholder((f // warp_j, kh*kw*(c) // warp_k, warp_j, warp_k), name='weight', dtype='int8')
+    A = te.placeholder((n // warp_i, h, w, c // warp_k, warp_i, warp_k), name='input', dtype='int8')
+    B = te.placeholder((f // warp_j, kh*kw*c // warp_k, warp_j, warp_k), name='weight', dtype='int8')
   
-    pad_shape = (n // warp_i, h + 2 * p, w + 2 * p, (c) // warp_k, warp_i, warp_k)
+    pad_shape = (n // warp_i, h + 2 * p, w + 2 * p, c // warp_k, warp_i, warp_k)
     pad_value = tir.const(0.0, A.dtype)
     pad = te.compute(
                     pad_shape,
@@ -57,7 +58,7 @@ def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p, warp_i = 16, warp_j = 
     kernel_h, kernel_w = kh, kw
     stride_h, stride_w = s, s
     dilation_h, dilation_w = d, d
-    k_size = kernel_h * kernel_w * (c)
+    k_size = kernel_h * kernel_w * c
     k_axis = te.reduce_axis((0, k_size // warp_k), name="k")
     wk_axis = te.reduce_axis((0, warp_k), name="wk")
     out_h = (
@@ -73,9 +74,9 @@ def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p, warp_i = 16, warp_j = 
                 lambda n, k, nn, kk: pad[
                     n // (out_h * out_w),
                     (n % (out_h * out_w) // out_w) * stride_h
-                    + (k // (kernel_w * ((c) // warp_k))) * dilation_h,
-                    (n % out_w) * stride_w + (k // ((c) // warp_k) % kernel_w) * dilation_w,
-                    k % (c),
+                    + (k // (kernel_w * (c // warp_k))) * dilation_h,
+                    (n % out_w) * stride_w + (k // (c // warp_k) % kernel_w) * dilation_w,
+                    k % c,
                     nn,
                     kk,
                 ],
@@ -89,7 +90,7 @@ def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p, warp_i = 16, warp_j = 
     # cast to int8
     D = te.compute(
         [n_size // warp_i, f // warp_j, warp_i, warp_j],
-        lambda n, f, i, j: C[n, f, i, j].astype('int8'),
+        lambda n, f, i, j: C[n, f, i, j].astype('float16'),
         name='D'
     )
 
@@ -274,14 +275,14 @@ for n, f, h, w, c, kh, kw, s, d, p in shapes:
     print("n: {}, f: {}, h: {}, w: {}, c: {}, kh: {}, kw: {}, s: {}, d: {}, p: {}, oh: {}, ow: {}".format(n, f, h, w, c, kh, kw, s, d, p, oh, ow))
     compute_flops = 2 * n * f * oh * ow * c * kh * kw
     arg1 = ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p)
-    arg2 = reshape(n, oh, ow, f, 16, 16)
-    arg3 = reshape_nhwc(n, oh, ow, f, 16, 16)
-    arg4 = bias(n, oh, ow, f)
-    arg5 = add_conv(n, oh, ow, f)
-    arg6 = relu(n, oh, ow, f)
-    arg7 = layout_transform(n, oh, ow, f)
-    arg8 = layout_transform_with_func(n, oh, ow, f, func=A_global_16x16_to_shared_load_16x16_layout)
-    arg9 = layout_transform_nhwc2nchw(n, oh, ow, f)
+    # arg2 = reshape(n, oh, ow, f, 16, 16)
+    # arg3 = reshape_nhwc(n, oh, ow, f, 16, 16)
+    # arg4 = bias(n, oh, ow, f)
+    # arg5 = add_conv(n, oh, ow, f)
+    # arg6 = relu(n, oh, ow, f)
+    # arg7 = layout_transform(n, oh, ow, f)
+    # arg8 = layout_transform_with_func(n, oh, ow, f, func=A_global_16x16_to_shared_load_16x16_layout)
+    # arg9 = layout_transform_nhwc2nchw(n, oh, ow, f)
     
     args = arg1
     # args = tuple(connect_tensor_graph(args, arg2, {arg2[0]:args[-1]}))
@@ -322,13 +323,24 @@ for n, f, h, w, c, kh, kw, s, d, p in shapes:
         if cpresult.lib is None:
             latency = 10000 
         else:
-            latency = cpresult.profile()
+            try:
+                latency = cpresult.profile()
+            except:
+                latency = 10000
         values.append(latency)
         if latency < best_latency:
             best_latency = latency
             best = cpresult
         print(latency)
+
     print('code: ', code)
+    torch.cuda.profiler.start()
+    # res = best.get_example_outputs()
+    # print(res)
+    best.profile()
+    torch.cuda.profiler.stop()
+    latency = best.profile()
+    print("latency: ", latency)
     # print("top1: {} \ttop10: {}".format(values[0], min(values)))
     # print("-" * 80, flush=True)
     # print("best config: {}".format(best.config))

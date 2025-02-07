@@ -14,6 +14,7 @@ def get_ref_tensor(shape:list, device:str, dtype:str) -> torch.Tensor:
     if dtype.is_floating_point:
         return torch.empty(*shape, device=device, dtype=dtype).uniform_(0.1, 1.0)
     else:
+        return torch.randint(-127, 127, shape, device=device, dtype=dtype)
         return torch.ones(*shape, device=device, dtype=dtype)
 
 def get_subgraph_reference_outputs(output_nodes, device="cuda:0", seed=0) -> List[np.ndarray]:

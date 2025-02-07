@@ -6,7 +6,9 @@ import numpy as np
 import matplotlib.ticker as ticker
 import argparse
 parser = argparse.ArgumentParser()
-
+import matplotlib
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 parser.add_argument("--reproduce", action="store_true", help="reproduce, otherwise use the paper results", default=False)
 
 args = parser.parse_args()

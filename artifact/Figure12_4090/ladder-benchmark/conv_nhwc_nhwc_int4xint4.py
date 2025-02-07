@@ -80,7 +80,7 @@ def ladder_conv_nhwc_hwnc(n, f, h, w, c, kh, kw, s, d, p, warp_i = 16, warp_j = 
             lambda i, j, ii, jj: te.sum(data[i, k_axis, ii, wk_axis].astype('int32') * B[j, k_axis, jj, wk_axis].astype('int32'), axis=[k_axis, wk_axis]),
             "T_conv",
         )
-    # cast to int8
+    # cast to float16
     D = te.compute(
         [n_size // warp_i, f // warp_j, warp_i, warp_j],
         lambda n, f, i, j: C[n, f, i, j].astype('int8'),

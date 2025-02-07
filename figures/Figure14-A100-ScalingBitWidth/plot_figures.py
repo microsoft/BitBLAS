@@ -5,7 +5,9 @@ import matplotlib.gridspec as gridspec
 import numpy as np
 import matplotlib.ticker as ticker
 import argparse
-
+import matplotlib
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--reproduce", action="store_true", help="reproduce, otherwise use the paper results", default=False)
@@ -52,7 +54,7 @@ else:
     )
 
 # 创建一个figure实例
-fig = plt.figure(figsize=(8, 4))
+fig = plt.figure(figsize=(14, 4))
 
 # 获取Torch-Inductor的时间值
 _1x_baseline = "Welder"
@@ -285,7 +287,7 @@ for i, (label, speedup) in enumerate(speed_up_data):
             )
 
 ax2_1.set_xticks(x + len(speed_up_data) * bar_width / 2)
-ax2_1.set_xticklabels(providers)
+ax2_1.set_xticklabels(providers, fontsize=13)
 # ax2_1.set_ylabel('Speedup Vs. Ladder', fontsize=12, labelpad=10, )
 
 ax2_2 = fig.add_subplot(gs[1, 1])
@@ -354,35 +356,35 @@ for i, (label, speedup) in enumerate(speed_up_data):
             )
 
 ax2_2.set_xticks(x + len(speed_up_data) * bar_width / 2)
-ax2_2.set_xticklabels(providers)
+ax2_2.set_xticklabels(providers, fontsize=13)
 
 handles, labels = ax1_1.get_legend_handles_labels()
-legend_fontsize = 9
+legend_fontsize = 15
 
 fig.legend(
     handles,
     labels,
     loc="upper center",
-    bbox_to_anchor=(0.5, 0.95),
+    bbox_to_anchor=(0.51, 1.05),
     ncol=len(labels) // 3,
     fontsize=legend_fontsize,
     frameon=True,
 )
 
-legand_font = 10
+legand_font = 16
 # text speedup vs Ladder-fp16, transpose and let it at the left
 fig.text(
-    0.07,
-    0.45,
+    0.09,
+    0.49,
     "Speedup Vs. Ladder-W$_{FP16}$A$_{FP16}$",
-    fontsize=14,
+    fontsize=18,
     rotation=90,
     va="center",
     ha="center",
 )
 fig.text(
     0.5,
-    -1.5,
+    -1.6,
     "(a) BS1 SEQ1",
     transform=ax1_1.transAxes,
     fontsize=legand_font,
@@ -391,7 +393,7 @@ fig.text(
 )
 fig.text(
     1.5,
-    -1.5,
+    -1.6,
     "(b) BS1 SEQ4096",
     transform=ax1_1.transAxes,
     fontsize=legand_font,

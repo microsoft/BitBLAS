@@ -3,7 +3,9 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
-
+import matplotlib
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -285,8 +287,17 @@ for ax in [ax1_1_2, ax1_1, ax2_1]:
                 labels_other.append(label)
         else:
             pass
+
+# remove _1x_baseline from handles_ladder and labels_ladder
+_1x_baseline_handle = handles_Ladder[0]
+_1x_baseline_label = labels_Ladder[0]
+handles_Ladder = handles_Ladder[1:]
+labels_Ladder = labels_Ladder[1:]
 handles_other.extend(handles_Ladder)
 labels_other.extend(labels_Ladder)
+handles_other.insert(0, _1x_baseline_handle)
+labels_other.insert(0, _1x_baseline_label)
+
 print(handles_other)
 # 调整图例位置和大小
 legend_fontsize = 7

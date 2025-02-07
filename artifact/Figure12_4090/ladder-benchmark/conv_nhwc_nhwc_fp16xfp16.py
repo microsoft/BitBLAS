@@ -239,10 +239,10 @@ unet_shapes = [
     [16, 640, 64, 64, 320, 3, 3, 1, 1, 1],
 ]
 shapes = [
-    [128, 64, 56, 56, 64, 3, 3, 1, 1, 1],
+    # [128, 64, 56, 56, 64, 3, 3, 1, 1, 1],
     [128, 64, 56, 56, 64, 1, 1, 1, 1, 0],
-    [128, 128, 28, 28, 128, 3, 3, 1, 1, 1],
-    [128, 512, 28, 28, 128, 1, 1, 1, 1, 0],
+    # [128, 128, 28, 28, 128, 3, 3, 1, 1, 1],
+    # [128, 512, 28, 28, 128, 1, 1, 1, 1, 0],
 ]
 perf_map = []
 for n, c, h, w, f, kh, kw, s, d, p in shapes:
@@ -314,7 +314,11 @@ for n, c, h, w, f, kh, kw, s, d, p in shapes:
     print("best config: {}".format(best.config))
     print("best latency: {}".format(best_latency))
     print(f"{(compute_flops/(best_latency * 1e-3))/ pow((1024), 4)} tflops, {(compute_flops/(best_latency * 1e-3))/ pow((1024), 4) / 145 * 100} %")
-    
+    torch.cuda.profiler.start()
+    best.get_example_outputs()
+    torch.cuda.profiler.stop()
+    latency = best.profile()
+    print("best latency: {}".format(latency))
     perf_map.append((key, best_latency))
 
 for key, latency in perf_map:

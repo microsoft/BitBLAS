@@ -5,6 +5,9 @@ import matplotlib.gridspec as gridspec
 import numpy as np
 import matplotlib.ticker as ticker
 import argparse
+import matplotlib
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 
 colormap = plt.cm.Set2# LinearSegmentedColormap
 

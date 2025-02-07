@@ -4,7 +4,9 @@ import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import argparse
-
+import matplotlib
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--reproduce", action="store_true", help="reproduce, otherwise use the paper results", default=False)

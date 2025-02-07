@@ -20,5 +20,7 @@ temp/
 output
 .tmp/*
 debug/*
-*.cu
+./*.cu
 *.log
+*.nsys-rep
+*.sqlite

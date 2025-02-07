@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import numpy as np
 import matplotlib.ticker as ticker
+import matplotlib
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
 import argparse
 parser = argparse.ArgumentParser()
 
