@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 class TLCUDASourceWrapper(object):
     _TYPE_MAP = {
         "float32": "float",
-        "float16": "half",
-        "bfloat16": "__nv_bfloat16",
+        "float16": "half_t",
+        "bfloat16": "bfloat16_t",
         "e4m3_float8": "__nv_fp8_e4m3",
         "e5m2_float8": "__nv_fp8_e5m2",
         "float64": "double",
