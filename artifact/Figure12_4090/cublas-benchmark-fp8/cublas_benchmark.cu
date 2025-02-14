@@ -35,15 +35,7 @@ inline void check_cublas_(cublasStatus_t status) {
 std::vector<std::tuple<int, int, int, bool, bool>> inference_server_set = {
     // gemm
     std::make_tuple(16384, 16384, 16384, false, true),
-    // std::make_tuple(1024, 1024, 1024, false, true),
-    // std::make_tuple(1024, 8192, 1024, false, true),
-    // std::make_tuple(4096, 4096, 4096, false, true),
-    // std::make_tuple(1, 14336, 57344, false, true),
-    // std::make_tuple(32, 14336, 57344, false, true),
-    // std::make_tuple(4096, 14336, 57344, false, true),
-    // std::make_tuple(1, 8192, 28672, false, true),
-    // std::make_tuple(32, 8192, 28672, false, true),
-    // std::make_tuple(4096, 8192, 28672, false, true),
+    std::make_tuple(4096, 4096, 1024, false, true),
 };
 
 
@@ -83,15 +75,16 @@ int time_gemm(Tensor<T1> A, Tensor<T1> B, Tensor<T2> C, bool a_t, bool b_t,
 {
     const int alpha = 1.f;
     const int beta = 1.f;
-    cublasOperation_t transa = CUBLAS_OP_T;
-    cublasOperation_t transb = CUBLAS_OP_N;
-    int n = 16384;
-    int m = 16384;
-    int k = 16384;
-    // n, m = n, k * m, k
-    int lda = k;
-    int ldb = k;
+    cublasOperation_t transa = a_t ? CUBLAS_OP_T : CUBLAS_OP_N;
+    cublasOperation_t transb = b_t ? CUBLAS_OP_T : CUBLAS_OP_N;
+    int m = a_t ? A.dims()[0] : A.dims()[1];
+    int n = b_t ? B.dims()[1] : B.dims()[0];
+    int k = a_t ? A.dims()[1] : A.dims()[0];
+
+    int lda = a_t ? k : m;
+    int ldb = b_t ? n : k;
     int ldc = m;
+
     void *workspace = nullptr;
     size_t workspaceSizeInBytes = 0;
     cublasLtMatmulDesc_t computeDesc = nullptr;
@@ -138,10 +131,16 @@ int time_gemm(Tensor<T1> A, Tensor<T1> B, Tensor<T2> C, bool a_t, bool b_t,
             A_type = CUDA_R_8F_E4M3;
             B_type = CUDA_R_8F_E4M3;
             C_type = CUDA_R_16F;
-            compute_type = CUDA_R_16F;
+            compute_type = CUDA_R_32F;
             gemm_compute_type = CUBLAS_COMPUTE_32F;
         }
     }
+
+    CUDA_CHECK_CUBLAS(cublasLtMatmulDescCreate(&computeDesc, gemm_compute_type, compute_type));
+    CUDA_CHECK_CUBLAS(cublasLtMatmulDescSetAttribute(computeDesc, CUBLASLT_MATMUL_DESC_TRANSA,
+                                                     &transa, sizeof(transa)));
+    CUDA_CHECK_CUBLAS(cublasLtMatmulDescSetAttribute(computeDesc, CUBLASLT_MATMUL_DESC_TRANSB,
+                                                     &transb, sizeof(transb)));
 
     CUDA_CHECK_CUBLAS(cublasLtMatrixLayoutCreate(&Adesc, A_type,
                                                     transa == CUBLAS_OP_N ? m : k,
@@ -153,11 +152,6 @@ int time_gemm(Tensor<T1> A, Tensor<T1> B, Tensor<T2> C, bool a_t, bool b_t,
                                                     ldb));
     CUDA_CHECK_CUBLAS(cublasLtMatrixLayoutCreate(&Cdesc, C_type, m, n, ldc));
 
-    CUDA_CHECK_CUBLAS(cublasLtMatmulDescCreate(&computeDesc, gemm_compute_type, compute_type));
-    CUDA_CHECK_CUBLAS(cublasLtMatmulDescSetAttribute(computeDesc, CUBLASLT_MATMUL_DESC_TRANSA,
-                                                     &transb, sizeof(transb)));
-    CUDA_CHECK_CUBLAS(cublasLtMatmulDescSetAttribute(computeDesc, CUBLASLT_MATMUL_DESC_TRANSB,
-                                                     &transa, sizeof(transa)));
 
     CUDA_CHECK_CUBLAS(cublasLtMatmulPreferenceCreate(&preference));
     CUDA_CHECK_CUBLAS(cublasLtMatmulPreferenceSetAttribute(
@@ -329,60 +323,42 @@ int main(int argc, char **argv)
             std::cout << (a_t ? "t" : "n") << ",";
             std::cout << (b_t ? "t" : "n") << ",";
             
-            // // fp16 benchmark
-            // {
-            //     auto a = rand<uint16_t>({a_t ? k : m, a_t ? m : k}, curand_gen);
-            //     auto b = rand<uint16_t>({b_t ? n : k, b_t ? k : n}, curand_gen);
-            //     auto c = zeros<uint16_t>({m, n});
-            //     time_us = time_gemm<uint16_t, uint16_t>(a, b, c, a_t, b_t,
-            //                                             cublaslt_handle, false);
-            //     std::cout << "," << std::setprecision(6) << time_us / 1000.0;
-            // }
-
-            // // int8 tensor core benchmark
-            // {
-            //     int pad_m;
-            //     pad_m = m;
-            //     if (pad_m % 4)
-            //     {
-            //         pad_kernels_count++;
-            //         pad_dim(pad_m, 4);
-            //     }
-
-            //     auto a = rand<uint8_t>({a_t ? k : pad_m, a_t ? pad_m : k}, curand_gen);
-            //     auto b = rand<uint8_t>({b_t ? n : k, b_t ? k : n}, curand_gen);
-            //     auto c = zeros<int>({pad_m, n});
-            //     time_us =
-            //         time_gemm<uint8_t, int>(a, b, c, a_t, b_t, cublaslt_handle, true);
-            //     std::cout << "," << std::setprecision(6) << time_us / 1000.0;
-            // }
-
-            // // fp8_e5m2 tensor core benchmark
-            // {
-            //     int pad_m;
-            //     pad_m = m;
-            //     if (pad_m % 4)
-            //     {
-            //         pad_kernels_count++;
-            //         pad_dim(pad_m, 4);
-            //     }
-
-            //     auto a = rand<uint8_t>({a_t ? k : pad_m, a_t ? pad_m : k}, curand_gen);
-            //     auto b = rand<uint8_t>({b_t ? n : k, b_t ? k : n}, curand_gen);
-            //     auto c = zeros<half>({pad_m, n});
-            //     time_us =
-            //         time_gemm<uint8_t, half, true, false>(a, b, c, a_t, b_t, cublaslt_handle, true);
-            //     std::cout << "," << std::setprecision(6) << time_us / 1000.0;
-            // }
-
-
-            // fp8_e4m3 tensor core benchmark
+            // fp16 benchmark
             {
-                auto a = rand<uint8_t>({m, k}, curand_gen);
-                auto b = rand<uint8_t>({n, k}, curand_gen);
-                auto c = zeros<half>({n, m});
+                auto a = rand<uint16_t>({a_t ? k : m, a_t ? m : k}, curand_gen);
+                auto b = rand<uint16_t>({b_t ? n : k, b_t ? k : n}, curand_gen);
+                auto c = zeros<uint16_t>({m, n});
+                time_us = time_gemm<uint16_t, uint16_t>(b, a, c, b_t, a_t, 
+                                                        cublaslt_handle, false);
+                std::cout << "," << std::setprecision(6) << time_us / 1000.0;
+            }
+
+            // int8 tensor core benchmark
+            {
+                int pad_m;
+                pad_m = m;
+                if (pad_m % 4)
+                {
+                    pad_kernels_count++;
+                    pad_dim(pad_m, 4);
+                }
+
+                auto a = rand<uint8_t>({a_t ? k : pad_m, a_t ? pad_m : k}, curand_gen);
+                auto b = rand<uint8_t>({b_t ? n : k, b_t ? k : n}, curand_gen);
+                auto c = zeros<int>({pad_m, n});
                 time_us =
-                    time_gemm<uint8_t, half, false, true>(a, b, c, a_t, b_t, cublaslt_handle, true);
+                    time_gemm<uint8_t, int>(b, a, c, b_t, a_t, cublaslt_handle, true);
+                std::cout << "," << std::setprecision(6) << time_us / 1000.0;
+            }
+
+            // fp8_e5m2 tensor core benchmark
+            {
+        
+                auto a = rand<uint8_t>({a_t ? k : m, a_t ? m : k}, curand_gen);
+                auto b = rand<uint8_t>({b_t ? n : k, b_t ? k : n}, curand_gen);
+                auto c = zeros<half>({m, n});
+                time_us =
+                    time_gemm<uint8_t, half, false, true>(b, a, c, b_t, a_t, cublaslt_handle, true);
                 std::cout << "," << std::setprecision(6) << time_us / 1000.0;
             }
 
