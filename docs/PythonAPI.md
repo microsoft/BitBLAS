@@ -184,7 +184,7 @@ Returns: The output tensor.
 
 #### `init_params()`
 
-Initializes parameters handles (convert constant params into ctypes void pointer) for the computation. We currently put this fuction in the forward function, so you do not need to call it manually. But if you lift this function out of the forward function, you can call it manually to aoid the transformation.
+Initializes parameters handles (convert constant params into ctypes void pointer) for the computation. We currently put this function in the forward function, so you do not need to call it manually. But if you lift this function out of the forward function, you can call it manually to aoid the transformation.
 
 #### `load_and_transform_weight(weight, scales=None, zeros=None, bias=None)`
 
