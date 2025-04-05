@@ -8,7 +8,7 @@ jobs:
   benchmark_base:
     # On pull requests and if the comment starts with `/run-benchmark`
     if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/run-benchmark')
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
@@ -40,21 +40,21 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
 
-      # - name: Install project in wheel mode
-      #   run: |
-      #     source bitblas_benchmark/bin/activate
-      #     python -m pip install .
+      - name: Install project in wheel mode
+        run: |
+          source bitblas_benchmark/bin/activate
+          python -m pip install .
       
-      # - name: Matmul Benchmark
-      #   run: |
-      #     source bitblas_benchmark/bin/activate
-      #     cd benchmark/operators
-      #     python ./benchmark_ops_matmul.py
+      - name: Matmul Benchmark
+        run: |
+          source bitblas_benchmark/bin/activate
+          cd benchmark/operators
+          python ./benchmark_ops_matmul.py
 
   benchmark_head:
     # On pull requests and if the comment starts with `/run-benchmark`
     if: github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/run-benchmark')
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [benchmark_base]
 
     steps:
@@ -82,16 +82,16 @@ jobs:
       - name: Create virtual environment
         run: python -m venv bitblas_benchmark
 
-      # - name: Activate virtual environment and install dependencies
-      #   run: |
-      #     source bitblas_benchmark/bin/activate
-      #     python -m pip install --upgrade pip
-      #     if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
+      - name: Activate virtual environment and install dependencies
+        run: |
+          source bitblas_benchmark/bin/activate
+          python -m pip install --upgrade pip
+          if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
 
-      # - name: Install project in wheel mode
-      #   run: |
-      #     source bitblas_benchmark/bin/activate
-      #     python -m pip install .
+      - name: Install project in wheel mode
+        run: |
+          source bitblas_benchmark/bin/activate
+          python -m pip install .
       
       - name: Matmul Benchmark
         run: |
@@ -102,7 +102,7 @@ jobs:
   benchmark_compare:
     if: github.event.issue.pull_request != null && contains(github.event.comment.body, '/run-benchmark')
     needs: [benchmark_base, benchmark_head]
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Download commit IDs
