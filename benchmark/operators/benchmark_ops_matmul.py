@@ -12,7 +12,7 @@ from os import path, makedirs
 from typing import Tuple, Dict, List, Union
 import argparse
 
-set_log_level("DEBUG")
+set_log_level("warning")
 
 HELPER_MESSAGE = """
 **Note**: Bitblas supports dynamic shape tensors as input, resulting in two possible formats for the \
