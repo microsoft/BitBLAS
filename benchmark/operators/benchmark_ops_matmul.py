@@ -11,7 +11,7 @@ import json
 from os import path, makedirs
 from typing import Tuple, Dict, List, Union
 import argparse
-
+print('warning test')
 set_log_level("warning")
 
 HELPER_MESSAGE = """
