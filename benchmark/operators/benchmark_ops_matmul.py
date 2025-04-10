@@ -315,6 +315,7 @@ class BitblasMatmulOpsBenchmark(BitblasOperatorBenchmarkBase):
 
 
 if __name__ == "__main__":
+    print("CI test")
     parser = argparse.ArgumentParser(description="Bitblas Matmul Operator Benchmark")
     parser.add_argument(
         "--enable_tuning",
