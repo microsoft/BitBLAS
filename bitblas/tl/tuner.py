@@ -118,17 +118,17 @@ def apply_and_build_parallel(scheduler,
 
         with tvm.transform.PassContext(
                 config={
-                    "tir.use_async_copy": True,
+                    "tir.use_async_xcopy": True,
                     "tir.disable_cse_tir": True,
                     **(config.pass_context if config.pass_context else {})
                 }):
-            rt_mod = tilelang.lower(tl_prim_func, arch.target, runtime_only=True)
+            rt_mod = tilelang.lower(tl_prim_func, arch.target, runtime_only=True, enable_host_codegen=True)
 
         from tvm.contrib.tar import tar  # Import the tar module
 
         artifact_path = os.path.join(tempfile.mkdtemp(), "tvm_tmp_mod." + tar.output_format)
-        code = rt_mod.imported_modules[0].get_source()
-        rt_mod.export_library(artifact_path, fcompile=tar)
+        code = rt_mod.kernel_source
+        rt_mod.rt_mod.export_library(artifact_path, fcompile=tar)
         return idx, code, artifact_path
 
     # Use ThreadPoolExecutor for parallel execution
