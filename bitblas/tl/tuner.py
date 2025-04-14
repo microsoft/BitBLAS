@@ -127,7 +127,7 @@ def apply_and_build_parallel(scheduler,
         from tvm.contrib.tar import tar  # Import the tar module
 
         artifact_path = os.path.join(tempfile.mkdtemp(), "tvm_tmp_mod." + tar.output_format)
-        code = rt_mod.kernel_source
+        code = rt_mod.rt_mod.imported_modules[0].get_source()
         rt_mod.rt_mod.export_library(artifact_path, fcompile=tar)
         return idx, code, artifact_path
 
@@ -307,5 +307,5 @@ def apply_and_build(
     data_distribution="uniform",
 ) -> Tuple[List[CompileResult], CompileResult]:
     max_workers = 10 if parallel_build else 1
-    return apply_and_build_serial(
+    return apply_and_build_parallel(
         scheduler, configs, arch, max_workers=max_workers, data_distribution=data_distribution)
