@@ -26,6 +26,7 @@ import logging
 import re
 
 logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.DEBUG)
 
 APPLY_SCHEDULE_FAILED_MESSAGE = ("Failed to apply default schedule for operator {} "
                                  "With target {} and hint {}. \n"
@@ -193,7 +194,7 @@ class Operator(object):
                         rt_mod = tvm.build(self.scheduled_ir_module, target=target)
                     elif self.is_tilelang_backend():
                         rt_mod = tilelang.lower(
-                            self.scheduled_ir_module, target=target, runtime_only=True, enable_device_compile=True).rt_mod
+                            self.prim_func, target=target, runtime_only=True, enable_host_codegen=True).rt_mod
                     else:
                         raise ValueError(f"Unsupported backend: {self.backend}")
             except Exception as build_runtime_error:  # noqa: F841

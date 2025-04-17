@@ -2,3 +2,7 @@
 	path = 3rdparty/tvm
 	url = https://github.com/tile-ai/tvm.git
 	branch = tilelang_codebase
+[submodule "3rdparty/tilelang"]
+	path = 3rdparty/tilelang
+	url = https://github.com/tile-ai/tilelang
+	branch = bitblas
