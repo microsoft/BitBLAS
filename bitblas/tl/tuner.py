@@ -263,7 +263,6 @@ def apply_and_build_serial(scheduler,
                 continue
 
             rt_mod = tvm.runtime.load_module(artifact_path)
-            print(f"rt_mod type: {type(rt_mod)}")
             cpresult = CompileResult(config, tvm.tir.Schedule(ir_module), rt_mod)
             timer_cuda_mod = rt_mod.time_evaluator(
                 rt_mod.entry_name, arch.device, number=num_repeats)
@@ -307,5 +306,5 @@ def apply_and_build(
     data_distribution="uniform",
 ) -> Tuple[List[CompileResult], CompileResult]:
     max_workers = 10 if parallel_build else 1
-    return apply_and_build_parallel(
+    return apply_and_build_serial(
         scheduler, configs, arch, max_workers=max_workers, data_distribution=data_distribution)

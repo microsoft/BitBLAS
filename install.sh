@@ -79,7 +79,7 @@ echo "LLVM config path determined as: $LLVM_CONFIG_PATH"
 
 # Step 9: Clone and build TVM
 echo "Cloning TVM repository and initializing submodules..."
-git submodule update --init --recursive
+# git submodule update --init --recursive
 if [ $? -ne 0 ]; then
     echo "Error: Failed to initialize submodules."
     exit 1
@@ -123,33 +123,15 @@ TVM_PREBUILD_PATH=$(realpath .)
 
 cd ../..
 
-echo "Building TileLang with CMake..."
-cd tilelang
-mkdir build
-cd build
+echo "Installing TileLang..."
 
-cmake .. -DTVM_PREBUILD_PATH=$TVM_PREBUILD_PATH
-if [ $? -ne 0 ]; then
-    echo "Error: CMake configuration failed."
-    exit 1
-fi
+pip install tilelang -f https://tile-ai.github.io/whl/nightly/cu121/
 
-make -j
-if [ $? -ne 0 ]; then
-    echo "Error: TileLang build failed."
-    exit 1
-else
-    echo "TileLang build completed successfully."
-fi
-
-echo "TileLang build completed successfully."
-
-cd ../../..
+echo "TileLang installation completed successfully."
 
 # Set environment variables
 TVM_HOME_ENV="export TVM_HOME=$(pwd)/3rdparty/tvm"
 TVM_EXPORT_ENV="export TVM_IMPORT_PYTHON_PATH=/root/BitBLAS/3rdparty/tvm/python"
-TILELANG_HOME_ENV="export TILELANG_HOME=$(pwd)/3rdparty/tilelang"
 BITBLAS_PYPATH_ENV="export PYTHONPATH=\$TVM_HOME/python:\$TILELANG_HOME:$(pwd):\$PYTHONPATH"
 CUDA_DEVICE_ORDER_ENV="export CUDA_DEVICE_ORDER=PCI_BUS_ID"
 
