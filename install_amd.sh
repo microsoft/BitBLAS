@@ -60,7 +60,9 @@ cp cmake/config.cmake build
 cd build
 echo "set(USE_LLVM llvm-config-16)" >> config.cmake && echo "set(USE_ROCM /opt/rocm)" >> config.cmake
 
-cmake .. && make -j && cd ../../..
+CORES=$(nproc)
+MAKE_JOBS=$(( CORES * 75 / 100 ))
+cmake .. && make -j${MAKE_JOBS} && cd ../../..
 
 TVM_PREBUILD_PATH=$(realpath .)
 
@@ -77,7 +79,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-make -j
+make -j${MAKE_JOBS}
 if [ $? -ne 0 ]; then
     echo "Error: TileLang build failed."
     exit 1
