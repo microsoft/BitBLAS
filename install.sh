@@ -110,8 +110,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+CORES=$(nproc)
+MAKE_JOBS=$(( CORES * 75 / 100 ))
+echo "Using $MAKE_JOBS jobs for make..."
+
 echo "Building TVM with make..."
-make -j
+make -j${MAKE_JOBS}
 if [ $? -ne 0 ]; then
     echo "Error: TVM build failed."
     exit 1
@@ -134,7 +138,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-make -j
+make -j${MAKE_JOBS}
 if [ $? -ne 0 ]; then
     echo "Error: TileLang build failed."
     exit 1
