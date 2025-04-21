@@ -15,9 +15,10 @@ def tl_lower(
         target,
         target_host=target_host,
         runtime_only=runtime_only,
+        enable_host_codegen=True,
     )
     if runtime_only is True:
-        return result.host_mod
+        return result.rt_mod
     else:
-        return result.host_mod, result.parms
+        return result.rt_mod, result.params
 
