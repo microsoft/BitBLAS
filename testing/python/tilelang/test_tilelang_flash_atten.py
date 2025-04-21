@@ -13,6 +13,7 @@ import logging
 from bitblas import set_log_level
 from bitblas.ops.general_flashatten.tilelang.flashatten import flashatten_blocked
 from bitblas.tl.lower import tl_lower
+from bitblas.tl.profiler import TLProfiler
 
 set_log_level(logging.DEBUG)
 
@@ -68,7 +69,7 @@ def flashattn_tilelang(batch, heads, seq_len, dim, trans_K, dtypeQKV, dtypeAccu,
         is_causal=is_causal,
     )
     mod, params = tl_lower(tl_prim_func)
-    mod = tilelang.Profiler(mod, params, [3], tilelang.TensorSupplyType.Normal)
+    mod = TLProfiler(mod, params, [3], tilelang.TensorSupplyType.Normal)
     from flash_attn.flash_attn_interface import flash_attn_func
     # TODO Now hack to internal function get the same input, may need to modify 3rdparty:tvm.tl.utils
     ins = mod._get_inputs()
@@ -179,7 +180,7 @@ def flashattn_ref(batch, heads, seq_len, dim, is_causal):
         return main
 
     mod, params = tl_lower(kernel())
-    mod = tilelang.Profiler(mod, params, [3], tilelang.TensorSupplyType.Normal)
+    mod = TLProfiler(mod, params, [3], tilelang.TensorSupplyType.Normal)
     mod.assert_allclose(partial(ref_program, causal=is_causal), rtol=0.01, atol=0.01)
 
 
@@ -400,7 +401,7 @@ def flashattn(batch, heads, seq_len, dim, is_causal):
         return main
 
     mod, params = tl_lower(kernel())
-    mod = tilelang.Profiler(mod, params, [3], tilelang.TensorSupplyType.Normal)
+    mod = TLProfiler(mod, params, [3], tilelang.TensorSupplyType.Normal)
     mod.assert_allclose(partial(ref_program, causal=is_causal), rtol=0.1, atol=0.1)
 
 

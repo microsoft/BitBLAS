@@ -10,6 +10,7 @@ from bitblas.ops.general_matmul.tilelang.dense.matmul_tile import (
     matmul_macro_tensorcore,
     matmul_macro_tensorcore_weight_propagation_level_ldmatrix,
 )
+from bitblas.tl.profiler import TLProfiler
 
 import torch
 import torch.backends
@@ -58,7 +59,7 @@ def assert_matmul_blocked_correctness(M,
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
@@ -116,7 +117,7 @@ def assert_matmul_macro_tensorcore_correctness(
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype)) - 0.5
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
@@ -186,7 +187,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_correctness(
 
     LB = ladder_permutate(B.cpu()).cuda()
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, LB, C)
 

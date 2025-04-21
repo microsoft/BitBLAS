@@ -2,7 +2,7 @@ import tvm
 from bitblas import tilelang as tilelang
 import tilelang.language as T
 from bitblas.tl.lower import tl_lower
-
+from bitblas.tl.profiler import TLProfiler
 
 def modify(
     with_B: bool = False,
@@ -76,7 +76,7 @@ def test_matmul():
 
     rt_mod, params = tl_lower(mod.functions_items()[0][1], runtime_only=False)
     # TODO Profiler only support TensorType, not dynamic variable
-    profiler = tilelang.Profiler(rt_mod, params, result_idx=[2])
+    profiler = TLProfiler(rt_mod, params, result_idx=[2])
 
     import torch
     a = torch.randn(1024, 1024, dtype=torch.float16).cuda().half()

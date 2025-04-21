@@ -17,6 +17,7 @@ from bitblas.tl.mma_macro_generator import (
 )
 from bitblas.base import simplify_prim_func
 from bitblas.tl.lower import tl_lower
+from bitblas.tl.profiler import TLProfiler
 
 torch.manual_seed(0)
 
@@ -185,7 +186,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
 
     compressed_A = (A[:, ::2] & 0x0F) + ((A[:, 1::2] & 0x0F) << 4)
     compressed_B = (B[:, ::2] & 0x0F) + ((B[:, 1::2] & 0x0F) << 4)
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
     mod(compressed_A, compressed_B, C)
     print(C)
     latency = mod.do_bench(mod.func, warmup=25, profiler="tvm")
@@ -392,7 +393,7 @@ def assert_tl_matmul_weight_only_transform_correctness(M, N, K, in_dtype, out_dt
 
     ladder_permutate = bitblas.ops.LadderPermutate(ladder_permutate_config)
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
     LB = ladder_permutate(compressed_B.cpu()).cuda()
 
     mod(compressed_A, LB, C)

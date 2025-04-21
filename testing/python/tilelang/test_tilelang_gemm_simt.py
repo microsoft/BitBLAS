@@ -11,6 +11,7 @@ import tilelang.language as T
 from bitblas.tl.utils import get_swizzle_layout
 from bitblas.base import simplify_prim_func
 from bitblas.tl.lower import tl_lower
+from bitblas.tl.profiler import TLProfiler
 
 torch.manual_seed(0)
 
@@ -158,7 +159,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
 
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 

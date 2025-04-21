@@ -16,6 +16,7 @@ from bitblas.tl.mma_macro_generator import (
 from bitblas.gpu.intrin.lop3 import decode_i4_to_f16
 from bitblas.base import simplify_prim_func
 from bitblas.tl.lower import tl_lower
+from bitblas.tl.profiler import TLProfiler
 
 torch.manual_seed(0)
 
@@ -201,7 +202,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
 
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
@@ -398,7 +399,7 @@ def assert_tl_matmul_with_block_reduce_correctness(M, N, K, in_dtype, out_dtype,
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
@@ -584,7 +585,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_correctness(M, N, K, in_d
 
     ladder_permutate = bitblas.ops.LadderPermutate(ladder_permutate_config)
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     LB = ladder_permutate(B.cpu()).cuda()
 
@@ -864,7 +865,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
     QLB = ladder_permutate(qB.cpu()).cuda()
     QLB = lop3_permutate(QLB.cpu()).cuda()
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, QLB, C)
 
@@ -1069,7 +1070,7 @@ def assert_tl_matmul_with_ladder_input_weight_transform_correctness(M, N, K, in_
 
     ladder_permutate_b = bitblas.ops.LadderPermutate(ladder_permutate_config_B)
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     LA = ladder_permutate_a(A.cpu()).cuda()
     LB = ladder_permutate_b(B.cpu()).cuda()

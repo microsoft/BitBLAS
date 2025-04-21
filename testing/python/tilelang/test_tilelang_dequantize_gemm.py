@@ -13,6 +13,7 @@ from bitblas.tl.utils import make_mma_swizzle_layout as make_swizzle_layout
 from bitblas.tl.mma_macro_generator import (
     TensorCoreIntrinEmitterWithLadderTransform,)
 from bitblas.tl.lower import tl_lower
+from bitblas.tl.profiler import TLProfiler
 from bitblas.gpu.intrin.lop3 import decode_i4_to_f16
 
 torch.manual_seed(0)
@@ -124,7 +125,7 @@ def run_gemm(
     )
 
     mod, params = tl_lower(program)
-    mod = tilelang.Profiler(mod, params, [2], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [2], tilelang.TensorSupplyType.Integer)
 
     out = mod.run_once()
     assert out is not None
@@ -406,7 +407,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
     QLB = ladder_permutate(qB.cpu()).cuda()
     QLB = lop3_permutate(QLB.cpu()).cuda()
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, QLB, C)
 

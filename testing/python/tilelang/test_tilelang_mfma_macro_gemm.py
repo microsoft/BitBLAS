@@ -11,6 +11,7 @@ from bitblas.tl.utils import make_mfma_swizzle_layout as make_swizzle_layout
 from bitblas.tl.mfma_macro_generator import (
     MatrixCoreIntrinEmitter,)
 from bitblas.base import simplify_prim_func
+from bitblas.tl.profiler import TLProfiler
 
 torch.manual_seed(0)
 
@@ -186,7 +187,7 @@ def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype="floa
 
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
