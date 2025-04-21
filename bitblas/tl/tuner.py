@@ -121,6 +121,7 @@ def apply_and_build_parallel(scheduler,
                 config={
                     "tir.use_async_copy": True,
                     "tir.disable_cse_tir": True,
+                    "tl.disable_dynamic_tail_split": False,
                     **(config.pass_context if config.pass_context else {})
                 }):
             rt_mod = tl_lower(tl_prim_func, arch.target, runtime_only=True)
