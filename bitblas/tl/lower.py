@@ -140,80 +140,16 @@ def tl_lower(
     runtime_only=False,
 ):
 
-    mod = func_or_mod
-    if isinstance(func_or_mod, tir.PrimFunc):
-        func = func_or_mod
-        params = extrac_params(func) if not runtime_only else None
-        mod = tvm.IRModule({func.attrs["global_symbol"]: func})
-
-    if isinstance(target, str):
-        target = determine_target(target)
-
-    target_host = canon_target_host(target, target_host)
-
-    target_host = tvm.target.Target.canon_target(target_host)
-    target = tvm.target.Target(target, target_host)
-
-    _is_host_call = get_host_call(is_device_c=is_cpu_device_backend(target))
-    _is_device_call = get_device_call(is_device_c=is_cpu_device_backend(target))
-
-    # Phase 1: Lower and legalize the IR
-    mod = LowerAndLegalize(mod, target)
-
-    # Phase 2: Optimize the IR for the target
-    mod = OptimizeForTarget(mod, target)
-
-    host_mod = tir.transform.Filter(_is_host_call)(mod)
-    host_mod = tir.transform.BindTarget(target_host)(host_mod)
-    host_mod = tir.transform.FP8StorageLegalize()(host_mod)
-    host_mod = tir.transform.BF16StorageLegalize()(host_mod)
-    host_mod = tir.transform.LowerTVMBuiltin()(host_mod)
-    host_mod = tir.transform.LowerCustomDatatypes()(host_mod)
-    host_mod = tir.transform.LowerIntrin()(host_mod)
-    host_mod = tir.transform.LowerDeviceStorageAccessInfo()(host_mod)
-    host_mod = tir.transform.CombineContextCall()(host_mod)
-
-    if target_host.kind.name == "llvm":
-        host_mod = tvm._ffi.get_global_func("target.build.llvm")(host_mod, target_host)
-    elif target_host.kind.name == "c":
-        if is_cpu_device_backend(target):
-            host_mod = tvm._ffi.get_global_func("target.build.tilelang_cpp")(host_mod, target_host)
-        else:
-            host_mod = tvm._ffi.get_global_func("target.build.c")(host_mod, target_host)
-    else:
-        raise ValueError(f"Target host {target_host.kind.name} is not supported")
-
-    device_mod = tir.transform.Filter(_is_device_call)(mod)
-    device_mod = tir.transform.LowerDeviceStorageAccessInfo()(device_mod)
-    device_mod = tir.transform.LowerIntrin()(device_mod)
-    device_mod = tir.transform.Simplify()(device_mod)
-
-    if target.kind.name == "cuda":
-        # Debug comments to get the code
-        # code = tvm._ffi.get_global_func("target.build.tl_debug_codegen")(device_mod, target)
-        device_mod = tvm._ffi.get_global_func("target.build.tilelang_cuda")(device_mod, target)
-    elif target.kind.name == "hip":
-        device_mod = tvm._ffi.get_global_func("target.build.tilelang_hip")(device_mod, target)
-    elif target.kind.name == "c":
-        device_mod = tvm._ffi.get_global_func("target.build.tilelang_cpp")(device_mod, target)
-    elif target.kind.name == "llvm":
-        device_mod = tvm._ffi.get_global_func("target.build.llvm")(device_mod, target)
-    elif target.kind.name == "webgpu":
-        device_mod = tvm._ffi.get_global_func("target.build.tilelang_webgpu")(device_mod, target)
-    else:
-        raise ValueError(f"Target {target.kind.name} is not supported")
-
-    host_mod.import_module(device_mod)
-
-    if target_host.kind.name == "c":
-        # cpu host should be recompiled
-        # TODO(lei): this is a hack to make the C host backend work
-        temp_dir = tvm.contrib.utils.tempdir()
-        tmp_lib_path = temp_dir.relpath("tmp.so")
-        host_mod.export_library(tmp_lib_path)
-        host_mod = tvm.runtime.load_module(tmp_lib_path)
+    result = tilelang.lower(
+        func_or_mod, 
+        target=target, 
+        target_host=target_host,
+        runtime_only=runtime_only,
+        enable_device_compile=True,
+        enable_host_codegen=True,
+    )
 
     if runtime_only is True:
-        return host_mod
+        return result.rt_mod
     else:
-        return host_mod, params
+        return result.rt_mod, result.params
