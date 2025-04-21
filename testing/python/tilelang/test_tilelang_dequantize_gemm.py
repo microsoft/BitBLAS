@@ -12,7 +12,7 @@ from bitblas.quantization import _tir_packed_to_unsigned_convert
 from bitblas.tl.utils import make_mma_swizzle_layout as make_swizzle_layout
 from bitblas.tl.mma_macro_generator import (
     TensorCoreIntrinEmitterWithLadderTransform,)
-
+from bitblas.tl.lower import tl_lower
 from bitblas.gpu.intrin.lop3 import decode_i4_to_f16
 
 torch.manual_seed(0)
@@ -123,7 +123,7 @@ def run_gemm(
         num_threads,
     )
 
-    mod, params = tilelang.lower(program)
+    mod, params = tl_lower(program)
     mod = tilelang.Profiler(mod, params, [2], tilelang.TensorSupplyType.Integer)
 
     out = mod.run_once()
@@ -367,7 +367,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
     matmul = tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
         M, N, K, in_dtype, out_dtype, accum_dtype, transform_b)
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source

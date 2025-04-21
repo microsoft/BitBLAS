@@ -21,6 +21,7 @@ from bitblas.builder.wrapper import TIRWrapper, TLWrapper
 from bitblas.builder.lib_generator import LibraryGenerator
 from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
 from bitblas.utils import retrieve_func_from_module
+from bitblas.tl.lower import tl_lower
 from dataclasses import dataclass
 import logging
 import re
@@ -192,7 +193,7 @@ class Operator(object):
                     if self.is_tir_backend():
                         rt_mod = tvm.build(self.scheduled_ir_module, target=target)
                     elif self.is_tilelang_backend():
-                        rt_mod = tilelang.lower(
+                        rt_mod = tl_lower(
                             self.scheduled_ir_module, target=target, runtime_only=True)
                     else:
                         raise ValueError(f"Unsupported backend: {self.backend}")

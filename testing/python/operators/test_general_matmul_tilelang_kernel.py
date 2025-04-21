@@ -4,6 +4,8 @@
 from bitblas import tvm as tvm
 import bitblas.testing
 from bitblas import tilelang as tilelang
+from bitblas.tl.lower import tl_lower
+
 from bitblas.ops.general_matmul.tilelang.dense.matmul_tile import (
     MatmulTileLibraryScheduler,)
 
@@ -51,7 +53,7 @@ def assert_matmul_blocked_with_default_correctness(
         accum_dtype=accum_dtype,
     ).with_default_config()
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -109,7 +111,7 @@ def assert_matmul_blocked_apply_config_correctness(
         enable_rasterization=enable_rasterization,
     )
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -155,7 +157,7 @@ def assert_matmul_fine_grained_with_default_correctness(
         accum_dtype=accum_dtype,
     ).with_default_config()
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -217,7 +219,7 @@ def assert_matmul_fine_grained_apply_config_correctness(
         enable_rasterization=enable_rasterization,
     )
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -263,7 +265,7 @@ def assert_matmul_weight_propagation_with_default_correctness(
         accum_dtype=accum_dtype,
     ).with_default_config()
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -337,7 +339,7 @@ def assert_matmul_weight_propagation_apply_config_correctness(
         enable_rasterization=enable_rasterization,
     )
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -394,7 +396,7 @@ def assert_matmul_int4_fine_grained_with_default_correctness(
         accum_dtype=accum_dtype,
     ).with_default_config()
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -459,7 +461,7 @@ def assert_matmul_int4_fine_grained_apply_config_correctness(
         enable_rasterization=enable_rasterization,
     )
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -509,7 +511,7 @@ def assert_matmul_int4_weight_propagation_with_default_correctness(
         accum_dtype=accum_dtype,
     ).with_default_config()
     print(matmul)
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -588,7 +590,7 @@ def assert_matmul_int4_weight_propagation_apply_config__correctness(
     )
 
     print(matmul)
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -666,7 +668,7 @@ def assert_matmul_fine_grained_dequant_int4_with_default_correctness(
         zeros_mode=zeros_mode,
     ).with_default_config()
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -765,7 +767,7 @@ def assert_matmul_fine_grained_dequant_int4_apply_config_correctness(
         enable_rasterization=enable_rasterization,
     )
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -849,7 +851,7 @@ def assert_matmul_weight_transform_dequant_int4_with_default_correctness(
         zeros_mode=zeros_mode,
     ).with_default_config()
     print(matmul)
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -970,7 +972,7 @@ def assert_matmul_weight_transform_dequant_int4_apply_config_correctness(
     )
 
     print(matmul)
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -1078,7 +1080,7 @@ def assert_matmul_blocked_dequant_with_default_correctness(
         zeros_mode=zeros_mode,
     ).with_default_config()
     print(matmul)
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -1213,7 +1215,7 @@ def assert_matmul_fine_grained_dequant_with_default_correctness(
         zeros_mode=zeros_mode,
     ).with_default_config()
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -1344,7 +1346,7 @@ def assert_matmul_weight_transform_dequant_with_default_correctness(
     ).with_default_config()
     if verbose:
         print(matmul)
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
 
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source

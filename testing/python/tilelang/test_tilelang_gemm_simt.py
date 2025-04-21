@@ -10,6 +10,7 @@ from bitblas import tilelang as tilelang
 import tilelang.language as T
 from bitblas.tl.utils import get_swizzle_layout
 from bitblas.base import simplify_prim_func
+from bitblas.tl.lower import tl_lower
 
 torch.manual_seed(0)
 
@@ -142,7 +143,7 @@ def tl_matmul_simt(
 
 def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     matmul = tl_matmul_simt(M, N, K, in_dtype, out_dtype, accum_dtype)
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     print(src_code)
     # src_code is the generated cuda source

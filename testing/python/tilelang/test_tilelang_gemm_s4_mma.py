@@ -16,6 +16,7 @@ from bitblas.tl.mma_macro_generator import (
     INT4TensorCoreIntrinEmitterWithLadderTransform,
 )
 from bitblas.base import simplify_prim_func
+from bitblas.tl.lower import tl_lower
 
 torch.manual_seed(0)
 
@@ -173,7 +174,7 @@ def tl_matmul(
 
 def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     matmul = tl_matmul(M, N, K, in_dtype, out_dtype, accum_dtype)
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -368,7 +369,7 @@ def tl_matmul_weight_only_transform(
 
 def assert_tl_matmul_weight_only_transform_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     matmul = tl_matmul_weight_only_transform(M, N, K, in_dtype, out_dtype, accum_dtype)
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None

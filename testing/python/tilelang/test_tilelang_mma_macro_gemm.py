@@ -15,6 +15,7 @@ from bitblas.tl.mma_macro_generator import (
 )
 from bitblas.gpu.intrin.lop3 import decode_i4_to_f16
 from bitblas.base import simplify_prim_func
+from bitblas.tl.lower import tl_lower
 
 torch.manual_seed(0)
 
@@ -186,7 +187,7 @@ def tl_matmul(
 
 def assert_tl_matmul_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     matmul = tl_matmul(M, N, K, in_dtype, out_dtype, accum_dtype)
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None
@@ -387,7 +388,7 @@ def tl_matmul_with_block_reduce(
 def assert_tl_matmul_with_block_reduce_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     matmul = tl_matmul_with_block_reduce(M, N, K, in_dtype, out_dtype, accum_dtype)
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -564,7 +565,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_correctness(M, N, K, in_d
     matmul = tl_matmul_with_ladder_weight_only_transform(M, N, K, in_dtype, out_dtype, accum_dtype,
                                                          transform_b)
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -824,7 +825,7 @@ def assert_tl_matmul_with_ladder_weight_only_transform_block_reduce_int4_correct
     matmul = tl_matmul_with_ladder_weight_only_transform_block_reduce_int4(
         M, N, K, in_dtype, out_dtype, accum_dtype, transform_b)
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -1035,7 +1036,7 @@ def assert_tl_matmul_with_ladder_input_weight_transform_correctness(M, N, K, in_
     matmul = tl_matmul_with_ladder_input_weight_transform(M, N, K, in_dtype, out_dtype, accum_dtype,
                                                           transform_a, transform_b)
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
     # src_code is the generated cuda source
     assert src_code is not None

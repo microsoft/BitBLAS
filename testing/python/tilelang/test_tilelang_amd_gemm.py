@@ -4,6 +4,7 @@
 from bitblas import tvm as tvm
 import bitblas.testing
 from bitblas import tilelang as tilelang
+from bitblas.tl.lower import tl_lower
 
 
 def matmul(
@@ -84,7 +85,7 @@ def run_gemm(
         num_threads,
         k_pack=k_pack,
     )
-    mod, params = tilelang.lower(program)
+    mod, params = tl_lower(program)
     mod = tilelang.Profiler(mod, params, [2], tilelang.TensorSupplyType.Integer)
 
     def ref_program(A, B):
