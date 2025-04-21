@@ -4,7 +4,7 @@ from tvm.target import Target
 from tvm import tir
 from typing import Optional, Union
 
-def lower(
+def tl_lower(
     func_or_mod: Union[tir.PrimFunc, tvm.IRModule],
     target: Union[str, Target] = "auto",
     target_host: Optional[Union[str, Target]] = None,
