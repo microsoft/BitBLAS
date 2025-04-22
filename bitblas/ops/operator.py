@@ -188,7 +188,6 @@ class Operator(object):
                         config={
                             "tir.use_async_copy": True,
                             "tir.disable_cse_tir": True,
-                            "tl.disable_dynamic_tail_split": False,
                             **(self.pass_context if self.pass_context else {}),
                         }):
                     if self.is_tir_backend():

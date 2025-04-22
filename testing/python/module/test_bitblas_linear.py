@@ -167,13 +167,13 @@ def correctness_weight_only_dequantize(
 
 
 def test_correctness_weight_only_dequantize():
-    # correctness_weight_only_dequantize(1, 1024, 1024, False, "uint4", -1, False, False, None)
-    # correctness_weight_only_dequantize(1, 1024, 1024, False, "uint4", -1, False, False, None)
-    # correctness_weight_only_dequantize(1024, 1024, 1024, True, "uint4", -1, False, False, None)
+    correctness_weight_only_dequantize(1, 1024, 1024, False, "uint4", -1, False, False, None)
+    correctness_weight_only_dequantize(1, 1024, 1024, False, "uint4", -1, False, False, None)
+    correctness_weight_only_dequantize(1024, 1024, 1024, True, "uint4", -1, False, False, None)
     correctness_weight_only_dequantize(1, 1024, 1024, True, "uint2", -1, True, False, None)
-    # correctness_weight_only_dequantize(1, 1024, 1024, True, "uint2", 128, True, True, "original")
-    # correctness_weight_only_dequantize(1024, 1024, 1024, True, "uint2", 128, True, True, "original")
-    # correctness_weight_only_dequantize(1, 1024, 1024, True, "uint2", 128, True, True, "rescale")
+    correctness_weight_only_dequantize(1, 1024, 1024, True, "uint2", 128, True, True, "original")
+    correctness_weight_only_dequantize(1024, 1024, 1024, True, "uint2", 128, True, True, "original")
+    correctness_weight_only_dequantize(1, 1024, 1024, True, "uint2", 128, True, True, "rescale")
 
 
 def profile(model, input_data):
