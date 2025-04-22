@@ -42,11 +42,11 @@ def correctness_consistent(m, in_features, out_features, bias):
     bitblas.testing.torch_assert_close(output_torch, output_bitblas, rtol=1e-1, atol=1e-2)
 
 
-# def test_correctness_consistent():
-#     correctness_consistent(1, 1024, 1024, False)
-#     correctness_consistent(1, 1024, 1024, True)
-#     correctness_consistent(1024, 1024, 1024, True)
-#     correctness_consistent([1, 1024], 1024, 1024, True)
+def test_correctness_consistent():
+    correctness_consistent(1, 1024, 1024, False)
+    correctness_consistent(1, 1024, 1024, True)
+    correctness_consistent(1024, 1024, 1024, True)
+    correctness_consistent([1, 1024], 1024, 1024, True)
 
 
 def correctness_weight_only_dequantize(
