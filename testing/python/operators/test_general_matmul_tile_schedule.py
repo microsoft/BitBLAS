@@ -73,7 +73,8 @@ def assert_correctness_with_block_reduce(
     )
     with tvm.transform.PassContext(config={
             "tir.use_async_copy": True,
-            "tir.merge_static_smem": True
+            "tir.merge_static_smem": True,
+            "tl.disable_dynamic_tail_split": False
     }):
         ref_rt_mod = tvm.build(ref_sch.mod, target=target)
 
@@ -97,7 +98,8 @@ def assert_correctness_with_block_reduce(
     )
     with tvm.transform.PassContext(config={
             "tir.use_async_copy": True,
-            "tir.merge_static_smem": True
+            "tir.merge_static_smem": True,
+            "tl.disable_dynamic_tail_split": False
     }):
         block_reduce_rt_mod = tvm.build(block_reduce_sch.mod, target=target)
 
@@ -173,7 +175,8 @@ def assert_correctness_with_ladder_ldmatrix_propagate(
     )
     with tvm.transform.PassContext(config={
             "tir.use_async_copy": True,
-            "tir.merge_static_smem": False
+            "tir.merge_static_smem": False,
+            "tl.disable_dynamic_tail_split": False
     }):
         block_reduce_rt_mod = tvm.build(block_reduce_sch.mod, target=target)
     # Evaluate the correctness
@@ -286,7 +289,8 @@ def assert_dequant_correctness_with_block_reduce(
     )
     with tvm.transform.PassContext(config={
             "tir.use_async_copy": True,
-            "tir.merge_static_smem": False
+            "tir.merge_static_smem": False,
+            "tl.disable_dynamic_tail_split": False,
     }):
         ref_rt_mod = tvm.build(ref_sch.mod, target=target)
 
@@ -310,7 +314,8 @@ def assert_dequant_correctness_with_block_reduce(
     )
     with tvm.transform.PassContext(config={
             "tir.use_async_copy": True,
-            "tir.merge_static_smem": False
+            "tir.merge_static_smem": False,
+            "tl.disable_dynamic_tail_split": False
     }):
         block_reduce_rt_mod = tvm.build(block_reduce_sch.mod, target=target)
 
@@ -427,7 +432,8 @@ def assert_dequantize_correctness_with_ladder_ldmatrix_propagate(
     with tvm.transform.PassContext(config={
             "tir.use_async_copy": True,
             "tir.merge_static_smem": False,
-            "tir.disable_cse_tir": True
+            "tir.disable_cse_tir": True,
+            "tl.disable_dynamic_tail_split": False
     }):
         rt_mod = tvm.build(block_reduce_sch.mod, target=target)
     src_code = rt_mod.imported_modules[0].get_source()
