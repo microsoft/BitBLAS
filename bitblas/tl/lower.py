@@ -12,8 +12,6 @@ def tl_lower(
 ):
     with tvm.transform.PassContext(
             config={
-                "tir.use_async_copy": True,
-                "tir.disable_cse_tir": True,
                 "tl.disable_dynamic_tail_split": False,
             }):
         result = tilelang.lower(
