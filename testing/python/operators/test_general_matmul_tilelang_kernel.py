@@ -410,7 +410,7 @@ def assert_matmul_int4_fine_grained_with_default_correctness(
     compressed_B = (B[:, ::2] & 0x0F) + ((B[:, 1::2] & 0x0F) << 4)
     mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
-    latency = mod.do_bench(mod.func, warmup=25, profiler="tvm")
+    latency = mod.do_bench(mod, warmup=25)
     print(latency)
 
     # Ensure that the latency is not None
@@ -475,7 +475,7 @@ def assert_matmul_int4_fine_grained_apply_config_correctness(
     compressed_B = (B[:, ::2] & 0x0F) + ((B[:, 1::2] & 0x0F) << 4)
     mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
-    latency = mod.do_bench(mod.func, warmup=25, profiler="tvm")
+    latency = mod.do_bench(mod.func, warmup=25)
     print(latency)
 
     # Ensure that the latency is not None
@@ -704,7 +704,7 @@ def assert_matmul_fine_grained_dequant_int4_with_default_correctness(
     print(f"{lop3_compressed_B=}")
     mod(compressed_A, lop3_compressed_B, C)
     print(C)
-    latency = mod.do_bench(mod.func, warmup=25, profiler="tvm")
+    latency = mod.do_bench(mod.func, warmup=25)
     print(latency)
     # Ensure that the latency is not None
     assert latency is not None
@@ -803,7 +803,7 @@ def assert_matmul_fine_grained_dequant_int4_apply_config_correctness(
     print(f"{lop3_compressed_B=}")
     mod(compressed_A, lop3_compressed_B, C)
     print(C)
-    latency = mod.do_bench(mod.func, warmup=25, profiler="tvm")
+    latency = mod.do_bench(mod.func, warmup=25)
     print(latency)
     # Ensure that the latency is not None
     assert latency is not None

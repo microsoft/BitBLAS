@@ -10,16 +10,22 @@ def tl_lower(
     target_host: Optional[Union[str, Target]] = None,
     runtime_only=False,
 ):
-
-    result = tilelang.lower(
-        func_or_mod, 
-        target=target, 
-        target_host=target_host,
-        runtime_only=runtime_only,
-        enable_device_compile=True,
-        enable_host_codegen=True,
-    )
-
+    with tvm.transform.PassContext(
+            config={
+                "tir.use_async_copy": True,
+                "tir.disable_cse_tir": True,
+                "tl.disable_dynamic_tail_split": False,
+            }):
+        result = tilelang.lower(
+            func_or_mod,
+            target=target,
+            target_host=target_host,
+            runtime_only=runtime_only,
+            enable_host_codegen=True,
+            enable_device_compile=True,
+        )
+    print("Lowering result:")
+    print(result.rt_mod)
     if runtime_only is True:
         return result.rt_mod
     else:
