@@ -33,9 +33,9 @@ class BestFit:
         size = (size + self.align - 1) // self.align * self.align
         found = None
         for block in self.list:
-            if block.is_free and block.size() >= size and (not found or 
-                                                           found.size() > block.size()):
-                    found = block
+            if block.is_free and block.size() >= size and (not found or
+                                                            found.size() > block.size()):
+                found = block
         if found:
             found.is_free = False
             remain = found.size() - size
