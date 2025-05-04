@@ -68,7 +68,7 @@ def test_lop3_transform():
             p_output0: T.handle,
         ):
             T.func_attr({"tir.noalias": T.bool(True)})
-            n = T.int64()
+            T.int64()
             lv41 = T.match_buffer(p_lv41, (T.int64(1), 1, T.int64(4096)), "float16")
             NT_matmul_intermediate = T.match_buffer(p_output0, (T.int64(1), 1, T.int64(4096)),
                                                     "float16")
@@ -165,7 +165,7 @@ def test_matmul_transform(transform_level=2):
                 p_output0: T.handle,
         ):
             T.func_attr({"tir.noalias": T.bool(True)})
-            n = T.int64()
+            T.int64()
             lv41 = T.match_buffer(p_lv41, (T.int64(1), 1, T.int64(4096)), "float16")
             NT_matmul_intermediate = T.match_buffer(p_output0, (T.int64(1), 1, T.int64(4096)),
                                                     "float16")
@@ -241,7 +241,7 @@ def test_dequantize_matmul_transform(transform_level=2):
             p_output0: T.handle,
         ):
             T.func_attr({"tir.noalias": T.bool(True)})
-            n = T.int64()
+            T.int64()
             lv41 = T.match_buffer(p_lv41, (T.int64(1), T.int64(1), T.int64(4096)), "float16")
             NT_matmul_intermediate = T.match_buffer(p_output0,
                                                     (T.int64(1), T.int64(1), T.int64(4096)),

@@ -188,10 +188,7 @@ class GeneralReduction(GPUScheduleRule):
             dim_offset = (
                 len(reduce_inner_axis) + len(reduce_outer_axis) + 2
             )  # outer loops are: blck_fused, thrd_fused, vthread_axis, reduce_outer_axis
-            if input_region.buffer.name in config.vectorize:
-                vectorize = config.vectorize[input_region.buffer.name]
-            else:
-                vectorize = 1
+            vectorize = config.vectorize.get(input_region.buffer.name, 1)
 
             loops = sch.get_loops(cache_shared)
             if len(loops) == dim_offset:
@@ -326,10 +323,7 @@ class GeneralReduction(GPUScheduleRule):
             dim_offset = (
                 len(vthread_axis) + len(reduce_outer_axis) + 2
             )  # outer loops are: blck_fused, thrd_fused, vthread_axis, reduce_outer_axis
-            if input_region.buffer.name in config.vectorize:
-                vectorize = config.vectorize[input_region.buffer.name]
-            else:
-                vectorize = 1
+            vectorize = config.vectorize.get(input_region.buffer.name, 1)
 
             loops = sch.get_loops(cache_shared)
             if len(loops) == dim_offset:

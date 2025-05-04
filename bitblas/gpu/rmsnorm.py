@@ -52,11 +52,7 @@ def identify_cast_or_load_block(block: Block) -> bool:
     if len(load.indices) != len(store.indices):
         return False
 
-    for lhs, rhs in zip(load.indices, store.indices):
-        if not lhs.same_as(rhs):
-            return False
-
-    return True
+    return all(lhs.same_as(rhs) for lhs, rhs in zip(load.indices, store.indices))
 
 
 def identify_rsqrt_block(block: Block) -> bool:
@@ -84,10 +80,7 @@ class RMSNorm(ScheduleRule):
         target: Target,
         _: bool,
     ) -> tir.Schedule:
-        if target.kind.name == "cuda":
-            num_tx = 512
-        else:
-            num_tx = 64
+        num_tx = 512 if target.kind.name == "cuda" else 64
 
         sch = tir.Schedule(func)
         root = sch.get_block(name="root", func_name="main")

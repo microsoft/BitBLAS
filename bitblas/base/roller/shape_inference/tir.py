@@ -246,8 +246,10 @@ class InputShapeInference:
 
     def infer(self,
               shape: Dict[str, List[arith.ConstIntBound]],
-              rstep: Dict[str, int] = {},
+              rstep: Dict[str, int] = None,
               targets=None):
+        if rstep is None:
+            rstep = {}
         compute_targets = tuple(shape.keys())
         input_vars, mapping = self.construct_dependency_target(compute_targets)
         ana = arith.Analyzer()
@@ -327,10 +329,7 @@ def region_exist_in_list(a, list) -> bool:
         return structural_equal(a, b)
 
     def region_is_same(a, b) -> bool:
-        for indice_a, indice_b in zip(a, b):
-            if not expr_is_same(indice_a, indice_b):
-                return False
-        return True
+        return all(expr_is_same(indice_a, indice_b) for indice_a, indice_b in zip(a, b))
 
     return any([region_is_same(a, x) for x in list])
 
@@ -343,7 +342,7 @@ def walk_indice(expr):
             return expr
         else:
             return None
-    elif isinstance(expr, tir.expr.ConstExpr) or isinstance(expr, tir.Var):
+    elif isinstance(expr, (tir.expr.ConstExpr, tir.Var)):
         return expr
     elif isinstance(expr, tir.ProducerLoad):
         return None

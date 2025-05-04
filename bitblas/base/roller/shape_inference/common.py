@@ -47,7 +47,9 @@ class InputShapeInference():
             shape[name] = [c.max_value - c.min_value + 1 for c in bounds]
         return shape
 
-    def infer(self, shape, rstep: Dict[str, int] = {}):
+    def infer(self, shape, rstep: Dict[str, int] = None):
+        if rstep is None:
+            rstep = {}
         if isinstance(shape, (list, tuple)):
             shape = {"output0": [arith.ConstIntBound(0, val - 1) for val in shape]}
         shape = self._infer(shape, rstep)
