@@ -15,7 +15,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# 
+#
 # Modifications Copyright (c) Microsoft.
 # The code below is mostly copied from apache/tvm rmsnorm.py in dlight.
 # pylint: disable=missing-docstring
@@ -117,8 +117,7 @@ class RMSNorm(ScheduleRule):
 
         block_loop, loops = sch.get_loops(block=read)
         thread_loop, _, _ = sch.split(
-            loop=loops, factors=[num_tx, None, 8], preserve_unit_iters=True
-        )
+            loop=loops, factors=[num_tx, None, 8], preserve_unit_iters=True)
         sch.bind(block_loop, thread_axis="blockIdx.x")
         sch.bind(thread_loop, thread_axis="threadIdx.x")
         sch.vectorize(sch.get_loops(block=read)[-1])
@@ -129,8 +128,7 @@ class RMSNorm(ScheduleRule):
         sch.reverse_compute_at(block=norm, loop=block_loop, index=-1)
         block_loop, loops = sch.get_loops(block=norm)
         thread_loop, _, _ = sch.split(
-            loop=loops, factors=[num_tx, None, 8], preserve_unit_iters=True
-        )
+            loop=loops, factors=[num_tx, None, 8], preserve_unit_iters=True)
         sch.bind(thread_loop, thread_axis="threadIdx.x")
 
         sch.reverse_compute_at(block=write, loop=thread_loop, index=-1)

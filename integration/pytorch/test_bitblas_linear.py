@@ -92,8 +92,8 @@ def test_profile_performance(m, in_features, out_features, bias):
         torch_latency = profile(linear_bitblas, input_data)
         bitblas_latency = linear_bitblas.bitblas_matmul.profile_latency()
     print(f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}")
-    assert (abs(torch_latency - bitblas_latency) / torch_latency <
-            0.1), f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}"
+    assert (abs(torch_latency - bitblas_latency) / torch_latency
+            < 0.1), f"torch_latency: {torch_latency}, bitblas_latency: {bitblas_latency}"
 
 
 if __name__ == "__main__":

@@ -36,7 +36,8 @@ def get_default_result(ref_mod, input_tensors, target, device):
             bitblas.gpu.Reduction(),
             bitblas.gpu.GeneralReduction(),
             bitblas.gpu.Fallback(),
-        )(ref_mod)
+        )(
+            ref_mod)
     ref_mod = tvm.tir.transform.MakePackedAPI()(ref_mod)
     ex = relax.build(ref_mod, target)
     vm = relax.VirtualMachine(ex, device)
@@ -55,8 +56,10 @@ def get_fast_tune_result(ref_mod, input_tensors, target, device):
 
 
 def test_lop3_transform():
+
     @I.ir_module
     class Before:
+
         @T.prim_func(private=True)
         def fused_fused_decode3_fused_NT_matmul8_add1(
             lv47: T.Buffer((T.int64(4096), T.int64(512)), "uint32"),
@@ -67,31 +70,26 @@ def test_lop3_transform():
             T.func_attr({"tir.noalias": T.bool(True)})
             n = T.int64()
             lv41 = T.match_buffer(p_lv41, (T.int64(1), 1, T.int64(4096)), "float16")
-            NT_matmul_intermediate = T.match_buffer(
-                p_output0, (T.int64(1), 1, T.int64(4096)), "float16"
-            )
+            NT_matmul_intermediate = T.match_buffer(p_output0, (T.int64(1), 1, T.int64(4096)),
+                                                    "float16")
             # with T.block("root"):
-            decode_intermediate_intermediate = T.alloc_buffer(
-                (T.int64(4096), T.int64(4096)), "float16"
-            )
+            decode_intermediate_intermediate = T.alloc_buffer((T.int64(4096), T.int64(4096)),
+                                                              "float16")
             for i, j in T.grid(T.int64(4096), T.int64(4096)):
                 with T.block("decode"):
                     v_i, v_j = T.axis.remap("SS", [i, j])
                     T.reads(lv47[v_i, v_j // T.int64(8)], lv48[v_i, v_j // T.int64(32)])
                     T.writes(decode_intermediate_intermediate[v_i, v_j])
-                    decode_intermediate_intermediate[v_i, v_j] = (
-                        T.Cast(
-                            "float16",
-                            T.bitwise_and(
-                                T.shift_right(
-                                    lv47[v_i, v_j // T.int64(8)],
-                                    T.Cast("uint32", v_j % T.int64(8)) * T.uint32(4),
-                                ),
-                                T.uint32(15),
+                    decode_intermediate_intermediate[v_i, v_j] = (T.Cast(
+                        "float16",
+                        T.bitwise_and(
+                            T.shift_right(
+                                lv47[v_i, v_j // T.int64(8)],
+                                T.Cast("uint32", v_j % T.int64(8)) * T.uint32(4),
                             ),
-                        )
-                        - T.float16(7)
-                    ) * lv48[v_i, v_j // T.int64(32)]
+                            T.uint32(15),
+                        ),
+                    ) - T.float16(7)) * lv48[v_i, v_j // T.int64(32)]
             for i0, i1, i2, k in T.grid(T.int64(1), 1, T.int64(4096), T.int64(4096)):
                 with T.block("NT_matmul"):
                     v_i0, v_i1, v_i2, v_k = T.axis.remap("SSSR", [i0, i1, i2, k])
@@ -103,10 +101,8 @@ def test_lop3_transform():
                     with T.init():
                         NT_matmul_intermediate[v_i0, v_i1, v_i2] = T.float16(0)
                     NT_matmul_intermediate[v_i0, v_i1, v_i2] = (
-                        NT_matmul_intermediate[v_i0, v_i1, v_i2]
-                        + lv41[v_i0, v_i1, v_k]
-                        * decode_intermediate_intermediate[v_i2, v_k]
-                    )
+                        NT_matmul_intermediate[v_i0, v_i1, v_i2] +
+                        lv41[v_i0, v_i1, v_k] * decode_intermediate_intermediate[v_i2, v_k])
 
         @R.function
         def main(
@@ -134,8 +130,8 @@ def test_lop3_transform():
     relax_mod = AnnotateDecodeInformation()(relax_mod)
     with dispatch_target:
         relax_mod = WeightOnlyLayoutPropagation(
-            transform_level=0, faster_conversion=False
-        )(relax_mod)
+            transform_level=0, faster_conversion=False)(
+                relax_mod)
 
     input_tensors = get_dummy_input_arrays(ref_mod["main"], tvm.cpu())
 
@@ -157,22 +153,22 @@ def test_lop3_transform():
     print("relax ", res)
 
 
-def test_matmul_transform(transform_level = 2):
+def test_matmul_transform(transform_level=2):
 
     @I.ir_module
     class Before:
+
         @T.prim_func(private=True)
         def fused_fused_decode3_fused_NT_matmul8_add1(
-            p_lv41: T.handle,
-            lv47: T.Buffer((T.int64(4096), T.int64(4096)), "float16"),
-            p_output0: T.handle,
+                p_lv41: T.handle,
+                lv47: T.Buffer((T.int64(4096), T.int64(4096)), "float16"),
+                p_output0: T.handle,
         ):
             T.func_attr({"tir.noalias": T.bool(True)})
             n = T.int64()
             lv41 = T.match_buffer(p_lv41, (T.int64(1), 1, T.int64(4096)), "float16")
-            NT_matmul_intermediate = T.match_buffer(
-                p_output0, (T.int64(1), 1, T.int64(4096)), "float16"
-            )
+            NT_matmul_intermediate = T.match_buffer(p_output0, (T.int64(1), 1, T.int64(4096)),
+                                                    "float16")
 
             for i0, i1, i2, k in T.grid(T.int64(1), 1, T.int64(4096), T.int64(4096)):
                 with T.block("NT_matmul"):
@@ -182,9 +178,8 @@ def test_matmul_transform(transform_level = 2):
                     with T.init():
                         NT_matmul_intermediate[v_i0, v_i1, v_i2] = T.float16(0)
                     NT_matmul_intermediate[v_i0, v_i1, v_i2] = (
-                        NT_matmul_intermediate[v_i0, v_i1, v_i2]
-                        + lv41[v_i0, v_i1, v_k] * lv47[v_i2, v_k]
-                    )
+                        NT_matmul_intermediate[v_i0, v_i1, v_i2] +
+                        lv41[v_i0, v_i1, v_k] * lv47[v_i2, v_k])
 
         @R.function
         def main(
@@ -210,8 +205,8 @@ def test_matmul_transform(transform_level = 2):
     relax_mod = AnnotateDecodeInformation()(relax_mod)
     with dispatch_target:
         relax_mod = WeightOnlyLayoutPropagation(
-            transform_level=transform_level, faster_conversion=False
-        )(relax_mod)
+            transform_level=transform_level, faster_conversion=False)(
+                relax_mod)
 
     input_tensors = get_dummy_input_arrays(ref_mod["main"], tvm.cpu())
 
@@ -237,6 +232,7 @@ def test_dequantize_matmul_transform(transform_level=2):
 
     @I.ir_module
     class Before:
+
         @T.prim_func(private=True)
         def fused_fused_decode3_fused_NT_matmul8_add1(
             lv47: T.Buffer((T.int64(4096), T.int64(512)), "uint32"),
@@ -246,34 +242,28 @@ def test_dequantize_matmul_transform(transform_level=2):
         ):
             T.func_attr({"tir.noalias": T.bool(True)})
             n = T.int64()
-            lv41 = T.match_buffer(
-                p_lv41, (T.int64(1), T.int64(1), T.int64(4096)), "float16"
-            )
-            NT_matmul_intermediate = T.match_buffer(
-                p_output0, (T.int64(1), T.int64(1), T.int64(4096)), "float16"
-            )
+            lv41 = T.match_buffer(p_lv41, (T.int64(1), T.int64(1), T.int64(4096)), "float16")
+            NT_matmul_intermediate = T.match_buffer(p_output0,
+                                                    (T.int64(1), T.int64(1), T.int64(4096)),
+                                                    "float16")
             # with T.block("root"):
-            decode_intermediate_intermediate = T.alloc_buffer(
-                (T.int64(4096), T.int64(4096)), "float16"
-            )
+            decode_intermediate_intermediate = T.alloc_buffer((T.int64(4096), T.int64(4096)),
+                                                              "float16")
             for i, j in T.grid(T.int64(4096), T.int64(4096)):
                 with T.block("decode"):
                     v_i, v_j = T.axis.remap("SS", [i, j])
                     T.reads(lv47[v_i, v_j // T.int64(8)], lv48[v_i, v_j // T.int64(32)])
                     T.writes(decode_intermediate_intermediate[v_i, v_j])
-                    decode_intermediate_intermediate[v_i, v_j] = (
-                        T.Cast(
-                            "float16",
-                            T.bitwise_and(
-                                T.shift_right(
-                                    lv47[v_i, v_j // T.int64(8)],
-                                    T.Cast("uint32", v_j % T.int64(8)) * T.uint32(4),
-                                ),
-                                T.uint32(15),
+                    decode_intermediate_intermediate[v_i, v_j] = (T.Cast(
+                        "float16",
+                        T.bitwise_and(
+                            T.shift_right(
+                                lv47[v_i, v_j // T.int64(8)],
+                                T.Cast("uint32", v_j % T.int64(8)) * T.uint32(4),
                             ),
-                        )
-                        - T.float16(7)
-                    ) * lv48[v_i, v_j // T.int64(32)]
+                            T.uint32(15),
+                        ),
+                    ) - T.float16(7)) * lv48[v_i, v_j // T.int64(32)]
             for i0, i1, i2, k in T.grid(T.int64(1), 1, T.int64(4096), T.int64(4096)):
                 with T.block("NT_matmul"):
                     v_i0, v_i1, v_i2, v_k = T.axis.remap("SSSR", [i0, i1, i2, k])
@@ -285,10 +275,8 @@ def test_dequantize_matmul_transform(transform_level=2):
                     with T.init():
                         NT_matmul_intermediate[v_i0, v_i1, v_i2] = T.float16(0)
                     NT_matmul_intermediate[v_i0, v_i1, v_i2] = (
-                        NT_matmul_intermediate[v_i0, v_i1, v_i2]
-                        + lv41[v_i0, v_i1, v_k]
-                        * decode_intermediate_intermediate[v_i2, v_k]
-                    )
+                        NT_matmul_intermediate[v_i0, v_i1, v_i2] +
+                        lv41[v_i0, v_i1, v_k] * decode_intermediate_intermediate[v_i2, v_k])
 
         @R.function
         def main(
@@ -319,8 +307,8 @@ def test_dequantize_matmul_transform(transform_level=2):
     relax_mod = AnnotateDecodeInformation()(relax_mod)
     with dispatch_target:
         relax_mod = WeightOnlyLayoutPropagation(
-            transform_level=transform_level, faster_conversion=False
-        )(relax_mod)
+            transform_level=transform_level, faster_conversion=False)(
+                relax_mod)
     input_tensors = get_dummy_input_arrays(ref_mod["main"], device)
     print(relax_mod)
     print("=======================ref llvm result=======================")
@@ -337,9 +325,7 @@ def test_dequantize_matmul_transform(transform_level=2):
     ref_res = get_fast_tune_result(ref_mod, input_tensors, dispatch_target, device)
     print("ref_mod", ref_res)
     print(relax_mod)
-    bitblas_res = get_fast_tune_result(
-        relax_mod, input_tensors, dispatch_target, device
-    )
+    bitblas_res = get_fast_tune_result(relax_mod, input_tensors, dispatch_target, device)
     print("bitblas_res", bitblas_res)
 
 

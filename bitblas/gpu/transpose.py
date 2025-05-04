@@ -15,7 +15,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# 
+#
 # Modifications Copyright (c) Microsoft.
 # The code below is mostly copied from apache/tvm transpose.py in dlight.
 """Reduction rule for operators including softmax, layer norm, RMS norm, etc"""
@@ -82,7 +82,7 @@ class Transpose(GPUScheduleRule):
 
         prologue = None  # the optional decoding block
         if transpose_block_idx > 0:
-            spatials = try_inline_contiguous_spatial(sch, blocks[: transpose_block_idx - 1])
+            spatials = try_inline_contiguous_spatial(sch, blocks[:transpose_block_idx - 1])
             assert len(spatials) == 0
             prologue = blocks[transpose_block_idx - 1].block_rv
 

@@ -4,16 +4,16 @@ from tilelang import tvm as tvm
 from tvm import tir
 from tvm.target import Target
 
+
 def tl_lower(
     func_or_mod: Union[tir.PrimFunc, tvm.IRModule],
     target: Union[str, Target] = "auto",
     target_host: Optional[Union[str, Target]] = None,
     runtime_only=False,
 ):
-    with tvm.transform.PassContext(
-            config={
-                "tl.disable_dynamic_tail_split": False,
-            }):
+    with tvm.transform.PassContext(config={
+            "tl.disable_dynamic_tail_split": False,
+    }):
         result = tilelang.lower(
             func_or_mod,
             target=target,

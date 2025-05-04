@@ -15,7 +15,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# 
+#
 # Modifications Copyright (c) Microsoft.
 # The code below is mostly copied from apache/tvm fallback.py in dlight.
 # pylint: disable=missing-docstring
@@ -61,15 +61,9 @@ class Fallback(GPUScheduleRule):
             dom_kind = block.dom_kind()
             block = block.block_rv
 
-            if (
-                any(
-                    [
-                        sch.get(loop_rv).thread_binding is not None
-                        for loop_rv in sch.get_loops(block)
-                    ]
-                )
-                or len(sch.get_loops(block)) == 0
-            ):
+            if (any([
+                    sch.get(loop_rv).thread_binding is not None for loop_rv in sch.get_loops(block)
+            ]) or len(sch.get_loops(block)) == 0):
                 continue
 
             for loop, iter_type in zip(sch.get_loops(block), dom_kind):
@@ -92,4 +86,3 @@ class Fallback(GPUScheduleRule):
             sch.decompose_reduction(block, r_loop)
 
         return sch
-    

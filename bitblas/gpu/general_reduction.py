@@ -47,10 +47,8 @@ class GeneralReduction(GPUScheduleRule):
         num_last_block_iter = len(block_infos[-1].dom_kind())
         if num_last_block_iter < len(dom_kind):
             index_map = tir.IndexMap.from_func(
-                lambda *iters: (
-                    [tir.const(0, iters[0].dtype)] * (len(dom_kind) - num_last_block_iter)
-                    + list(iters)
-                ),
+                lambda *iters: ([tir.const(0, iters[0].dtype)] *
+                                (len(dom_kind) - num_last_block_iter) + list(iters)),
                 ndim=num_last_block_iter,
             )
             sch.transform_block_layout(block_infos[-1].block_rv, index_map)
@@ -117,15 +115,10 @@ class GeneralReduction(GPUScheduleRule):
             dom_kind = block.dom_kind()
             block_rv = block.block_rv
 
-            if (
-                any(
-                    [
-                        sch.get(loop_rv).thread_binding is not None
-                        for loop_rv in sch.get_loops(block_rv)
-                    ]
-                )
-                or len(sch.get_loops(block.block_rv)) == 0
-            ):
+            if (any([
+                    sch.get(loop_rv).thread_binding is not None
+                    for loop_rv in sch.get_loops(block_rv)
+            ]) or len(sch.get_loops(block.block_rv)) == 0):
                 continue
 
             for loop, iter_type in zip(sch.get_loops(block_rv), dom_kind):
@@ -248,15 +241,10 @@ class GeneralReduction(GPUScheduleRule):
             dom_kind = block.dom_kind()
             block_rv = block.block_rv
 
-            if (
-                any(
-                    [
-                        sch.get(loop_rv).thread_binding is not None
-                        for loop_rv in sch.get_loops(block_rv)
-                    ]
-                )
-                or len(sch.get_loops(block.block_rv)) == 0
-            ):
+            if (any([
+                    sch.get(loop_rv).thread_binding is not None
+                    for loop_rv in sch.get_loops(block_rv)
+            ]) or len(sch.get_loops(block.block_rv)) == 0):
                 continue
 
             for loop, iter_type in zip(sch.get_loops(block_rv), dom_kind):
@@ -276,10 +264,8 @@ class GeneralReduction(GPUScheduleRule):
         num_last_block_iter = len(block_infos[-1].dom_kind())
         if num_last_block_iter < len(dom_kind):
             index_map = tir.IndexMap.from_func(
-                lambda *iters: (
-                    [tir.const(0, iters[0].dtype)] * (len(dom_kind) - num_last_block_iter)
-                    + list(iters)
-                ),
+                lambda *iters: ([tir.const(0, iters[0].dtype)] *
+                                (len(dom_kind) - num_last_block_iter) + list(iters)),
                 ndim=num_last_block_iter,
             )
             sch.transform_block_layout(block_infos[-1].block_rv, index_map)
@@ -295,13 +281,11 @@ class GeneralReduction(GPUScheduleRule):
         vthread_axis = []
         thread_axis = []
         inner_axis = []
-        for s_loop, block_factor, step_factor, thread_factor in zip(
-            s_loops, block_factors, step_factors, thread_factors
-        ):
+        for s_loop, block_factor, step_factor, thread_factor in zip(s_loops, block_factors,
+                                                                    step_factors, thread_factors):
             block_loop, inner_loop = sch.split(s_loop, factors=[None, block_factor])
             vthread_loop, inner_loop = sch.split(
-                inner_loop, factors=[None, thread_factor * step_factor]
-            )
+                inner_loop, factors=[None, thread_factor * step_factor])
             thread_loop, inner_loop = sch.split(inner_loop, factors=[None, step_factor])
             block_axis.append(block_loop)
             vthread_axis.append(vthread_loop)
@@ -317,13 +301,8 @@ class GeneralReduction(GPUScheduleRule):
 
         vthread_axis = list(reversed(vthread_axis))  # inner virtual thread first
         axis_order = (
-            block_axis
-            + vthread_axis
-            + thread_axis
-            + reduce_outer_axis
-            + reduce_inner_axis
-            + inner_axis
-        )
+            block_axis + vthread_axis + thread_axis + reduce_outer_axis + reduce_inner_axis +
+            inner_axis)
 
         sch.reorder(*axis_order)
         blck_fused = sch.fuse(*block_axis)
@@ -362,8 +341,8 @@ class GeneralReduction(GPUScheduleRule):
                 return reduce(lambda x, y: x * y, iterable, 1)
 
             _, tx, tv = sch.split(
-                sch.fuse(*loops[dim_offset:]), factors=[None, int(prod(thread_factors)), vectorize]
-            )
+                sch.fuse(*loops[dim_offset:]), factors=[None,
+                                                        int(prod(thread_factors)), vectorize])
             sch.vectorize(tv)
             sch.bind(tx, "threadIdx.x")
 
@@ -407,10 +386,8 @@ class GeneralReduction(GPUScheduleRule):
         num_last_block_iter = len(block_infos[-1].dom_kind())
         if num_last_block_iter < len(dom_kind):
             index_map = tir.IndexMap.from_func(
-                lambda *iters: (
-                    [tir.const(0, iters[0].dtype)] * (len(dom_kind) - num_last_block_iter)
-                    + list(iters)
-                ),
+                lambda *iters: ([tir.const(0, iters[0].dtype)] *
+                                (len(dom_kind) - num_last_block_iter) + list(iters)),
                 ndim=num_last_block_iter,
             )
             sch.transform_block_layout(block_infos[-1].block_rv, index_map)

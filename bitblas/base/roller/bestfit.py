@@ -1,8 +1,10 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-
 """Benifit For BitBLAS Schedule"""
+
+
 class Block:
+
     def __init__(self, start, end, is_free):
         self.start = start
         self.end = end
@@ -21,6 +23,7 @@ class Block:
 
 
 class BestFit:
+
     def __init__(self, align=32):
         self.limit = 0
         self.list = []
@@ -39,8 +42,7 @@ class BestFit:
             if remain != 0:
                 found.end -= remain
                 self.list.insert(
-                    self.list.index(found) + 1, Block(found.end, found.end + remain, True)
-                )
+                    self.list.index(found) + 1, Block(found.end, found.end + remain, True))
             return found
         elif len(self.list) > 0 and self.list[-1].is_free:
             add = size - self.list[-1].size()
