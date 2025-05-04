@@ -1,7 +1,6 @@
 import torch
 
 import numpy as np
-import torch.nn.functional as F
 
 from lm_eval.base import BaseLM
 from datasets import load_dataset
@@ -81,9 +80,7 @@ class LMEvalAdaptor(BaseLM):
             return 2048
         elif "llama" in self.model_name:
             return 2048  # TODO: did not check this
-        elif "mpt" in self.model_name:
-            return 2048
-        elif "falcon" in self.model_name:
+        elif "mpt" in self.model_name or "falcon" in self.model_name:
             return 2048
         else:
             print(self.model.config)

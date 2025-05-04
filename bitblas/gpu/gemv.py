@@ -500,7 +500,7 @@ class GEMV(GPUScheduleRule):
         if not isinstance(len_S, int):
             TS, TR = 1, 64
 
-        while TS * TR > target.max_num_threads:
+        while target.max_num_threads < TS * TR:
             if TS > 1:
                 TS //= 2
             else:

@@ -38,9 +38,7 @@ def suggest_threads_per_block(
 ) -> List[int]:
     if target.kind.name == "cuda":
         threads = 1024
-    elif target.kind.name == "rocm":
-        threads = 256
-    elif target.kind.name == "metal":
+    elif target.kind.name == "rocm" or target.kind.name == "metal":
         threads = 256
     else:
         threads = 64

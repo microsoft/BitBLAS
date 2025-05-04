@@ -343,9 +343,7 @@ def walk_indice(expr):
             return expr
         else:
             return None
-    elif isinstance(expr, tir.expr.ConstExpr):
-        return expr
-    elif isinstance(expr, tir.Var):
+    elif isinstance(expr, tir.expr.ConstExpr) or isinstance(expr, tir.Var):
         return expr
     elif isinstance(expr, tir.ProducerLoad):
         return None
