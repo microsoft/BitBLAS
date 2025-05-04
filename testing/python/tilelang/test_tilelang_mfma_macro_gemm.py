@@ -12,6 +12,7 @@ from bitblas.tl.mfma_macro_generator import (
     MatrixCoreIntrinEmitter,)
 from bitblas.base import simplify_prim_func
 from bitblas.tl.profiler import TLProfiler
+from bitblas.tl.lower import tl_lower
 
 torch.manual_seed(0)
 
