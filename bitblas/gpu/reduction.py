@@ -135,7 +135,7 @@ class Reduction(GPUScheduleRule):
                 s_loops.append(loop)
 
         if iter_to_info:
-            for var, info in iter_to_info.items():
+            for _var, info in iter_to_info.items():
                 if info.kind == "S" and info.dom.extent == 1:
                     s_loops.append(info.loop_rv)
                 else:
