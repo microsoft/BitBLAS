@@ -3,7 +3,7 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
-echo "Add MIT liscense boilerplate..."
+echo "Add MIT license boilerplate..."
 PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # TO source code root
 pushd "${PWD}/../../" > /dev/null

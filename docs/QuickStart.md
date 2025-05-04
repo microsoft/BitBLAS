@@ -116,7 +116,7 @@ print("BitBLAS output:", output_tensor)
 torch.testing.assert_close(output_tensor, ref_result, rtol=1e-2, atol=1e-2)
 ```
 
-The init stage of the ```bitblas.Matmul``` class will take minutes to finish, as it will use hardware informations to do a one-time kernel library initialization.
+The init stage of the ```bitblas.Matmul``` class will take minutes to finish, as it will use hardware information to do a one-time kernel library initialization.
 
 ## Example: bitblas.Linear module for PyTorch
 

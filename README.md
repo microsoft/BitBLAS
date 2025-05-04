@@ -98,7 +98,7 @@ We are continuously expanding the support matrix. If you have any specific requi
 - **Python Version**: >= 3.8
 - **CUDA Version**: >= 11.0
 
-The easiest way to install BitBLAS is direcly from the PyPi using pip. To install the latest version, run the following command in your terminal.
+The easiest way to install BitBLAS is directly from the PyPi using pip. To install the latest version, run the following command in your terminal.
 
 ```bash
 pip install bitblas

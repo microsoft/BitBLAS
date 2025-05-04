@@ -26,7 +26,7 @@ ignore = [
     "E402",
     # star imports
     "F405", "F403",
-    # ambigous name
+    # ambiguous name
     "E741",
     # line too long
     "E501",

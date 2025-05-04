@@ -6,9 +6,9 @@
 #include <cuda_fp16.h>
 #include "i4matmul.hpp"
 
-#define cudaCheckLastError(ans)               \
+#define cudaCheckLastError(and)               \
     {                                         \
-        gpuAssert((ans), __FILE__, __LINE__); \
+        gpuAssert((and), __FILE__, __LINE__); \
     }
 inline void gpuAssert(cudaError_t code, const char *file, int line, bool abort = true)
 {

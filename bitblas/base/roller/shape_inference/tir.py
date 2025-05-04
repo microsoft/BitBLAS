@@ -384,7 +384,7 @@ def _extract_dependent_region(block_analyzer, block: BlockRV) -> Dict[str, List[
                         with T.init():
                             T_dense_reindex[T.int64(0), v0, v1] = T.float16(0)
                         T_dense_reindex[T.int64(0), v0, v1] = T_dense_reindex[T.int64(0), v0, v1] + A_reindex[T.int64(0), v0, v2] * B_reindex[T.int64(0), v1, v2]
-                For exmaple, the T_dense_reindex has three dims, however there're only two spatial loops.
+                For example, the T_dense_reindex has three dims, however there're only two spatial loops.
                 """
                 continue
             index.append(expr)

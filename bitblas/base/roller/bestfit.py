@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
-"""Benifit For BitBLAS Schedule"""
+"""Benefit For BitBLAS Schedule"""
 
 
 class Block:

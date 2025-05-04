@@ -144,7 +144,7 @@ scheduled_ir_module = fast_tune_with_dynamic_range(
     }
 )
 
-# fianlly, we will generate a dispatch func to dispatch the kernel with dynamic symbolic.
+# finally, we will generate a dispatch func to dispatch the kernel with dynamic symbolic.
 '''
 @IRModule
 class MatmulNT:
