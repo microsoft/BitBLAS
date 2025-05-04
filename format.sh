@@ -193,7 +193,7 @@ if ! git diff --quiet &>/dev/null; then
     echo 'Reformatted files. Please review and stage the changes.'
     echo 'Changes not staged for commit:'
     echo
-    git --no-pager diff --name-only
+    git --no-pager diff 
 
     exit 1
 fi
