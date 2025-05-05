@@ -65,6 +65,7 @@ jobs:
     - name: Install project in wheel mode
       run: |
         source bitblas_ci/bin/activate
+        export PATH="/usr/bin:$PATH"
         python -m pip install .
 
     - name: Run tests
