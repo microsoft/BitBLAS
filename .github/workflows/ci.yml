@@ -66,6 +66,7 @@ jobs:
       run: |
         source bitblas_ci/bin/activate
         export PATH="/usr/bin:$PATH"
+        bash install.sh
         python -m pip install .
 
     - name: Run tests
