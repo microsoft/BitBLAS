@@ -10,6 +10,8 @@ from bitblas import tilelang as tilelang
 import tilelang.language as T
 from bitblas.tl.utils import get_swizzle_layout
 from bitblas.tl.mma_macro_generator import (TensorCoreIntrinEmitter)
+from bitblas.tl.lower import tl_lower
+from bitblas.tl.profiler import TLProfiler
 
 torch.manual_seed(0)
 
@@ -178,7 +180,7 @@ def tl_matmul_macro(
 def assert_tl_matmul_macro_correctness(M, N, K, in_dtype, out_dtype, accum_dtype):
     matmul = tl_matmul_macro(N, K, in_dtype, out_dtype, accum_dtype)
 
-    mod, params = tilelang.lower(matmul)
+    mod, params = tl_lower(matmul)
     src_code = mod.imported_modules[0].get_source()
 
     # src_code is the generated cuda source
@@ -188,7 +190,7 @@ def assert_tl_matmul_macro_correctness(M, N, K, in_dtype, out_dtype, accum_dtype
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, accum_dtype))
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
 
     mod(A, B, C)
 
@@ -271,13 +273,13 @@ def assert_tl_matmul_block_correctness(
         num_stages,
         num_threads,
     )
-    mod, params = tilelang.lower(program)
+    mod, params = tl_lower(program)
 
     A = torch.rand(M, K, device="cuda", dtype=getattr(torch, in_dtype))
     B = torch.rand(N, K, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
     mod(A, B, C)
 
     def ref_program(A, B):
@@ -370,7 +372,7 @@ def assert_tl_matmul_block_all_dynamic_correctness(
         num_stages,
         num_threads,
     )
-    mod, params = tilelang.lower(program)
+    mod, params = tl_lower(program)
     if trans_A:
         A = torch.rand(K, M, device="cuda", dtype=getattr(torch, in_dtype))
     else:
@@ -381,7 +383,7 @@ def assert_tl_matmul_block_all_dynamic_correctness(
         B = torch.rand(K, N, device="cuda", dtype=getattr(torch, in_dtype))
     C = torch.zeros(M, N, device="cuda", dtype=getattr(torch, out_dtype))
 
-    mod = tilelang.Profiler(mod, params, [], tilelang.TensorSupplyType.Integer)
+    mod = TLProfiler(mod, params, [], tilelang.TensorSupplyType.Integer)
     mod(A, B, C)
 
     def ref_program(A, B):

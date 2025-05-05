@@ -52,9 +52,13 @@ def conv2d_nhwc_ohwi(
     C = te.compute(
         out_shape,
         lambda n, h, w, f: te.sum(
-            pad[n, h * stride_h + kh * tir.any(dilation_h), w * stride_w + kw * tir.any(dilation_w),
-                c,].astype(accum_dtype) * B[f, kh - 1 - tir.any(dilation_h), kw - 1 - tir.any(
-                    dilation_w), c].astype(accum_dtype),
+            pad[
+                n,
+                h * stride_h + kh * tir.any(dilation_h),
+                w * stride_w + kw * tir.any(dilation_w),
+                c,
+            ].astype(accum_dtype) * B[f, kh - 1 - tir.any(dilation_h), kw - 1 - tir.any(dilation_w),
+                                      c].astype(accum_dtype),
             axis=[kh, kw, c],
         ),
         name="C",
@@ -117,9 +121,13 @@ def conv2d_nhwc_hwio(
     C = te.compute(
         out_shape,
         lambda n, h, w, f: te.sum(
-            pad[n, h * stride_h + kh * tir.any(dilation_h), w * stride_w + kw * tir.any(dilation_w),
-                c,].astype(accum_dtype) * B[kh - 1 - tir.any(dilation_h), kw - 1 - tir.any(
-                    dilation_w), c, f].astype(accum_dtype),
+            pad[
+                n,
+                h * stride_h + kh * tir.any(dilation_h),
+                w * stride_w + kw * tir.any(dilation_w),
+                c,
+            ].astype(accum_dtype) * B[kh - 1 - tir.any(dilation_h), kw - 1 - tir.any(dilation_w), c,
+                                      f].astype(accum_dtype),
             axis=[kh, kw, c],
         ),
         name="C",

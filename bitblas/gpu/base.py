@@ -15,7 +15,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# 
+#
 # /* Modifications Copyright (c) Microsoft. */
 # The code below is mostly copied from apache/tvm base.py in dlight.
 """Base schedule rule for GPU operators."""

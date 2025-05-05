@@ -23,6 +23,7 @@ NVIDIA_GPU_REMAP = {
     "NVIDIA PG506-232": "NVIDIA A100",
 }
 
+
 def get_gpu_model_from_nvidia_smi(gpu_id: int = 0):
     """
     Executes the 'nvidia-smi' command to fetch the name of the first available NVIDIA GPU.
@@ -51,6 +52,7 @@ def get_gpu_model_from_nvidia_smi(gpu_id: int = 0):
         raise ValueError(f"Passed gpu_id:{gpu_id} but there are {len(gpus)} detected Nvidia gpus.")
 
     return gpus[gpu_id]
+
 
 def find_best_match(tags, query):
     """

@@ -1,7 +1,6 @@
 import torch
 
 import numpy as np
-import torch.nn.functional as F
 
 from lm_eval.base import BaseLM
 from datasets import load_dataset
@@ -11,17 +10,24 @@ def set_seed(seed):
     np.random.seed(seed)
     torch.random.manual_seed(seed)
 
+
 def get_test_dataset(dataset_name, tokenizer, seqlen=2048):
     if dataset_name == "wikitext2":
         testdata = load_dataset('wikitext', 'wikitext-2-raw-v1', split='test')
         testdata = "".join(testdata['text']).split('\n')
     elif dataset_name == "c4":
-        testdata = load_dataset('allenai/c4', data_files={'validation': 'en/c4-validation.00000-of-00008.json.gz'}, split='validation')['text']
+        testdata = load_dataset(
+            'allenai/c4',
+            data_files={'validation': 'en/c4-validation.00000-of-00008.json.gz'},
+            split='validation')['text']
     else:
         raise NotImplementedError
-    
+
     testdata = [item for item in testdata if item != ""]
-    tokenized_text = [tokenizer(item, add_special_tokens=False)['input_ids'] + [tokenizer.eos_token_id] for item in testdata]
+    tokenized_text = [
+        tokenizer(item, add_special_tokens=False)['input_ids'] + [tokenizer.eos_token_id]
+        for item in testdata
+    ]
 
     data, doc = [], [tokenizer.bos_token_id]
     for sen in tokenized_text:
@@ -37,6 +43,7 @@ def get_test_dataset(dataset_name, tokenizer, seqlen=2048):
 
 
 class LMEvalAdaptor(BaseLM):
+
     def __init__(self, model_name, model, tokenizer, batch_size=1, max_length=-1):
         super().__init__()
 
@@ -73,9 +80,7 @@ class LMEvalAdaptor(BaseLM):
             return 2048
         elif "llama" in self.model_name:
             return 2048  # TODO: did not check this
-        elif "mpt" in self.model_name:
-            return 2048
-        elif "falcon" in self.model_name:
+        elif "mpt" in self.model_name or "falcon" in self.model_name:
             return 2048
         else:
             print(self.model.config)
@@ -129,5 +134,4 @@ class LMEvalAdaptor(BaseLM):
 
     def _model_generate(self, context, max_length, eos_token_id):
         return self.model.generate(
-            context, max_length=max_length, eos_token_id=eos_token_id, do_sample=False
-        )
+            context, max_length=max_length, eos_token_id=eos_token_id, do_sample=False)

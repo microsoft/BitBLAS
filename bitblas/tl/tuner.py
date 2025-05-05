@@ -22,6 +22,7 @@ from bitblas.utils import (
 )
 from bitblas.common import MAX_ERROR_MESSAGE_LENGTH
 from bitblas.base.base_scheduler import BaseScheduler
+from bitblas.tl.lower import tl_lower
 
 logger = logging.getLogger(__name__)
 
@@ -122,7 +123,7 @@ def apply_and_build_parallel(scheduler,
                     "tir.disable_cse_tir": True,
                     **(config.pass_context if config.pass_context else {})
                 }):
-            rt_mod = tilelang.lower(tl_prim_func, arch.target, runtime_only=True)
+            rt_mod = tl_lower(tl_prim_func, arch.target, runtime_only=True)
 
         from tvm.contrib.tar import tar  # Import the tar module
 

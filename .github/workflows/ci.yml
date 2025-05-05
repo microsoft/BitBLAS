@@ -57,10 +57,16 @@ jobs:
         source bitblas_ci/bin/activate
         python -m pip install --upgrade pip
         if [ -f requirements-test.txt ]; then python -m pip install -r requirements-test.txt; fi
+        if [ -f bitblas_ci/bin/cmake ]; then
+          rm bitblas_ci/bin/cmake
+          hash -r
+        fi
 
     - name: Install project in wheel mode
       run: |
         source bitblas_ci/bin/activate
+        export PATH="/usr/bin:$PATH"
+        bash install.sh
         python -m pip install .
 
     - name: Run tests

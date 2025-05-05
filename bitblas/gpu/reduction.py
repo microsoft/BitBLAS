@@ -15,7 +15,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# 
+#
 # Modifications Copyright (c) Microsoft.
 # The code below is mostly copied from apache/tvm reduction.py in dlight.
 """A rule for reduction. """
@@ -43,9 +43,9 @@ def _get_reduction_expr(block: tir.Block) -> Optional[tir.PrimExpr]:
     if not isinstance(buffer_store.value, tir.Add):
         return None
     if not ir.structural_equal(
-        buffer_store.value.a,
-        tir.BufferLoad(buffer_store.buffer, block.body.indices),
-        map_free_vars=True,
+            buffer_store.value.a,
+            tir.BufferLoad(buffer_store.buffer, block.body.indices),
+            map_free_vars=True,
     ):
         return None
     return buffer_store.value.b
@@ -81,11 +81,8 @@ class Reduction(GPUScheduleRule):
         block_stmt = sch.get(block)
 
         # Step 1. Check reduction block
-        if (
-            (not block_info.is_reduction())
-            or len(block_stmt.writes) != 1
-            or _get_reduction_expr(block_stmt) is None
-        ):
+        if ((not block_info.is_reduction()) or len(block_stmt.writes) != 1 or
+                _get_reduction_expr(block_stmt) is None):
             return None
         # Step 2. Normalize the block, merge spatial and reduction iters
         is_inner_reduction, c_factor, loop_order, s_split_index = self._normalize(
@@ -100,13 +97,11 @@ class Reduction(GPUScheduleRule):
             return None
         # Step 3. Do the scheduling
         if is_inner_reduction:
-            self._sch_inner_reduction(
-                sch, target, block, c_factor, epilogue, loop_order, s_split_index
-            )
+            self._sch_inner_reduction(sch, target, block, c_factor, epilogue, loop_order,
+                                      s_split_index)
         else:
-            self._sch_inner_spatial(
-                sch, target, block, block_info, c_factor, epilogue, loop_order, s_split_index
-            )
+            self._sch_inner_spatial(sch, target, block, block_info, c_factor, epilogue, loop_order,
+                                    s_split_index)
         return sch
 
     def _normalize(  # pylint: disable=too-many-branches
@@ -140,7 +135,7 @@ class Reduction(GPUScheduleRule):
                 s_loops.append(loop)
 
         if iter_to_info:
-            for var, info in iter_to_info.items():
+            for _var, info in iter_to_info.items():
                 if info.kind == "S" and info.dom.extent == 1:
                     s_loops.append(info.loop_rv)
                 else:
@@ -185,8 +180,7 @@ class Reduction(GPUScheduleRule):
         # pylint: disable=invalid-name
         _, r, _ = sch.get_loops(block)
         (len_tx,) = utils.suggest_threads_per_block(  # pylint: disable=unbalanced-tuple-unpacking
-            target, [sch.get(r)]
-        )
+            target, [sch.get(r)])
 
         _, tx = sch.split(r, factors=[None, len_tx])
         # Schedule the RF block
@@ -208,8 +202,7 @@ class Reduction(GPUScheduleRule):
             new_order_s = [s[loop_order[i]] for i in range(len(s))]
             sch.reorder(*new_order_s)
             new_order_s[s_split_index], c = sch.split(
-                new_order_s[s_split_index], factors=[None, unroll_spatial_factor]
-            )
+                new_order_s[s_split_index], factors=[None, unroll_spatial_factor])
             sch.reorder(*new_order_s, c)
             s = sch.fuse(*new_order_s)
             sch.reorder(s, tx, c)
@@ -270,8 +263,7 @@ class Reduction(GPUScheduleRule):
             new_order_s = [s[loop_order[i]] for i in range(len(s))]
             sch.reorder(*new_order_s)
             new_order_s[s_split_index], c = sch.split(
-                new_order_s[s_split_index], factors=[None, unroll_spatial_factor]
-            )
+                new_order_s[s_split_index], factors=[None, unroll_spatial_factor])
             sch.reorder(*new_order_s, c)
             s = sch.fuse(*new_order_s)
             sch.reorder(s, c, r)
