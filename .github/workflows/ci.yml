@@ -55,6 +55,8 @@ jobs:
     - name: Activate virtual environment and install dependencies
       run: |
         source bitblas_ci/bin/activate
+        rm bitblas_ci/bin/cmake
+        hash -r
         python -m pip install --upgrade pip
         if [ -f requirements-test.txt ]; then python -m pip install -r requirements-test.txt; fi
 
