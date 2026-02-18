@@ -1,5 +1,5 @@
 # formatting
-yapf==0.40.2
+yapf==0.90.2
 toml==0.10.2
 tomli==2.0.1
 ruff==0.6.5
